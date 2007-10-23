@@ -189,7 +189,13 @@ if pkg-config --atleast-version=2.6.0 gtk+-2.0; then
     AC_DEFINE(GTK_2_6,1,[At least 2.6 present])
 fi
 
-dnl Internationalisation stuff
+dnl ***********
+dnl GConf stuff
+dnl ***********
+AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+AM_GCONF_SOURCE_2
+
+dnl I18n stuff
 ALL_LINGUAS="en_AU ro sv"
 
 GETTEXT_PACKAGE=evolution-rss

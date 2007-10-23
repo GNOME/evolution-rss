@@ -182,7 +182,7 @@ msgstr ""
 
 #: ../src/rss.c:917
 msgid "Remove folder contents"
-msgstr ""
+msgstr "Sterge continutul directorului"
 
 #: ../src/rss.c:936
 msgid "Do not delete"

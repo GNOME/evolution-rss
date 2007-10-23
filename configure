@@ -940,6 +940,11 @@ HAVE_XULRUNNER
 WEBKIT_CFLAGS
 WEBKIT_LIBS
 HAVE_WEBKIT
+GCONFTOOL
+GCONF_SCHEMA_CONFIG_SOURCE
+GCONF_SCHEMA_FILE_DIR
+GCONF_SCHEMAS_INSTALL_TRUE
+GCONF_SCHEMAS_INSTALL_FALSE
 GETTEXT_PACKAGE
 USE_NLS
 MSGFMT
@@ -1580,6 +1585,7 @@ Optional Features:
                           enabled)
   --disable-webkit        Disable Webkit (Apple's Upstream Webkit) support
                           (default: enabled)
+  --disable-schemas-install	Disable the schemas installation
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1593,6 +1599,8 @@ Optional Packages:
   --with-gecko[=mozilla|firefox|seamonkey|xulrunner]
                           Which gecko engine to use (autodetected by default)
 
+  --with-gconf-source=sourceaddress      Config database for installing schema files.
+  --with-gconf-schema-file-dir=dir        Directory for installing schema files.
   --with-bonobo-servers-dir=PATH path to bonobo servers directory
 
 Some influential environment variables:
@@ -6183,7 +6191,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6186 "configure"' > conftest.$ac_ext
+  echo '#line 6194 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8509,11 +8517,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8512: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8520: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8516: \$? = $ac_status" >&5
+   echo "$as_me:8524: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8777,11 +8785,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8780: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8788: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8784: \$? = $ac_status" >&5
+   echo "$as_me:8792: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8881,11 +8889,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8884: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8892: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8888: \$? = $ac_status" >&5
+   echo "$as_me:8896: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10346,7 +10354,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*|s390x*|powerpc64*)
-    echo '#line 10349 "configure"' > conftest.$ac_ext
+    echo '#line 10357 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -11210,7 +11218,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11213 "configure"
+#line 11221 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11310,7 +11318,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11313 "configure"
+#line 11321 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13646,11 +13654,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13649: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13657: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13653: \$? = $ac_status" >&5
+   echo "$as_me:13661: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13750,11 +13758,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13753: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13761: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13757: \$? = $ac_status" >&5
+   echo "$as_me:13765: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14286,7 +14294,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*|s390x*|powerpc64*)
-    echo '#line 14289 "configure"' > conftest.$ac_ext
+    echo '#line 14297 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -15341,11 +15349,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15344: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15352: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15348: \$? = $ac_status" >&5
+   echo "$as_me:15356: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15445,11 +15453,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15448: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15456: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15452: \$? = $ac_status" >&5
+   echo "$as_me:15460: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16890,7 +16898,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*|s390x*|powerpc64*)
-    echo '#line 16893 "configure"' > conftest.$ac_ext
+    echo '#line 16901 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -17664,11 +17672,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17667: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17675: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17671: \$? = $ac_status" >&5
+   echo "$as_me:17679: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17932,11 +17940,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17935: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17943: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17939: \$? = $ac_status" >&5
+   echo "$as_me:17947: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -18036,11 +18044,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:18039: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:18047: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:18043: \$? = $ac_status" >&5
+   echo "$as_me:18051: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -19501,7 +19509,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*|s390x*|powerpc64*)
-    echo '#line 19504 "configure"' > conftest.$ac_ext
+    echo '#line 19512 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -21934,6 +21942,100 @@ _ACEOF
 
 fi
 
+# Extract the first word of "gconftool-2", so it can be a program name with args.
+set dummy gconftool-2; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_GCONFTOOL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $GCONFTOOL in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_GCONFTOOL="$GCONFTOOL" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_GCONFTOOL="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_GCONFTOOL" && ac_cv_path_GCONFTOOL="no"
+  ;;
+esac
+fi
+GCONFTOOL=$ac_cv_path_GCONFTOOL
+if test -n "$GCONFTOOL"; then
+  { echo "$as_me:$LINENO: result: $GCONFTOOL" >&5
+echo "${ECHO_T}$GCONFTOOL" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+
+  if test "x$GCONF_SCHEMA_INSTALL_SOURCE" = "x"; then
+    GCONF_SCHEMA_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+  else
+    GCONF_SCHEMA_CONFIG_SOURCE=$GCONF_SCHEMA_INSTALL_SOURCE
+  fi
+
+
+# Check whether --with-gconf-source was given.
+if test "${with_gconf_source+set}" = set; then
+  withval=$with_gconf_source; GCONF_SCHEMA_CONFIG_SOURCE="$withval"
+fi
+
+
+
+  { echo "$as_me:$LINENO: result: Using config source $GCONF_SCHEMA_CONFIG_SOURCE for schema installation" >&5
+echo "${ECHO_T}Using config source $GCONF_SCHEMA_CONFIG_SOURCE for schema installation" >&6; }
+
+  if test "x$GCONF_SCHEMA_FILE_DIR" = "x"; then
+    GCONF_SCHEMA_FILE_DIR='$(sysconfdir)/gconf/schemas'
+  fi
+
+
+# Check whether --with-gconf-schema-file-dir was given.
+if test "${with_gconf_schema_file_dir+set}" = set; then
+  withval=$with_gconf_schema_file_dir; GCONF_SCHEMA_FILE_DIR="$withval"
+fi
+
+
+
+  { echo "$as_me:$LINENO: result: Using $GCONF_SCHEMA_FILE_DIR as install directory for schema files" >&5
+echo "${ECHO_T}Using $GCONF_SCHEMA_FILE_DIR as install directory for schema files" >&6; }
+
+  # Check whether --enable-schemas-install was given.
+if test "${enable_schemas_install+set}" = set; then
+  enableval=$enable_schemas_install; case ${enableval} in
+       yes|no) ;;
+       *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-schemas-install" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-schemas-install" >&2;}
+   { (exit 1); exit 1; }; } ;;
+      esac
+fi
+
+   if test "$enable_schemas_install" != no; then
+  GCONF_SCHEMAS_INSTALL_TRUE=
+  GCONF_SCHEMAS_INSTALL_FALSE='#'
+else
+  GCONF_SCHEMAS_INSTALL_TRUE='#'
+  GCONF_SCHEMAS_INSTALL_FALSE=
+fi
+
+
+
 ALL_LINGUAS="en_AU ro sv"
 
 GETTEXT_PACKAGE=evolution-rss
@@ -23704,6 +23806,13 @@ echo "$as_me: error: conditional \"HAVE_GECKO_1_9\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${GCONF_SCHEMAS_INSTALL_TRUE}" && test -z "${GCONF_SCHEMAS_INSTALL_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GCONF_SCHEMAS_INSTALL\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"GCONF_SCHEMAS_INSTALL\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
@@ -24470,6 +24579,11 @@ HAVE_XULRUNNER!$HAVE_XULRUNNER$ac_delim
 WEBKIT_CFLAGS!$WEBKIT_CFLAGS$ac_delim
 WEBKIT_LIBS!$WEBKIT_LIBS$ac_delim
 HAVE_WEBKIT!$HAVE_WEBKIT$ac_delim
+GCONFTOOL!$GCONFTOOL$ac_delim
+GCONF_SCHEMA_CONFIG_SOURCE!$GCONF_SCHEMA_CONFIG_SOURCE$ac_delim
+GCONF_SCHEMA_FILE_DIR!$GCONF_SCHEMA_FILE_DIR$ac_delim
+GCONF_SCHEMAS_INSTALL_TRUE!$GCONF_SCHEMAS_INSTALL_TRUE$ac_delim
+GCONF_SCHEMAS_INSTALL_FALSE!$GCONF_SCHEMAS_INSTALL_FALSE$ac_delim
 GETTEXT_PACKAGE!$GETTEXT_PACKAGE$ac_delim
 USE_NLS!$USE_NLS$ac_delim
 MSGFMT!$MSGFMT$ac_delim
@@ -24485,11 +24599,6 @@ PO_IN_DATADIR_TRUE!$PO_IN_DATADIR_TRUE$ac_delim
 PO_IN_DATADIR_FALSE!$PO_IN_DATADIR_FALSE$ac_delim
 POFILES!$POFILES$ac_delim
 POSUB!$POSUB$ac_delim
-MKINSTALLDIRS!$MKINSTALLDIRS$ac_delim
-LOCALEDIR!$LOCALEDIR$ac_delim
-SOEXT!$SOEXT$ac_delim
-BONBONO_LIBDIR!$BONBONO_LIBDIR$ac_delim
-serverdir!$serverdir$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -24531,13 +24640,18 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+MKINSTALLDIRS!$MKINSTALLDIRS$ac_delim
+LOCALEDIR!$LOCALEDIR$ac_delim
+SOEXT!$SOEXT$ac_delim
+BONBONO_LIBDIR!$BONBONO_LIBDIR$ac_delim
+serverdir!$serverdir$ac_delim
 privdatadir!$privdatadir$ac_delim
 gladedir!$gladedir$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 4; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 9; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
