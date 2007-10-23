@@ -1,0 +1,460 @@
+3	open	/dev/tty	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+5	open	/dev/tty	#success
+-1	access	/home/cooly/evolution/evolution-rss/po/./LINGUAS	#No such file or directory
+5	open	/dev/tty	#success
+-1	access	/home/cooly/evolution/evolution-rss/po/./LINGUAS	#No such file or directory
+5	open	/dev/tty	#success
+5	open	/dev/tty	#success
+-1	access	/home/cooly/evolution/evolution-rss/po/./LINGUAS	#No such file or directory
+5	open	/dev/tty	#success
+-1	access	/home/cooly/evolution/evolution-rss/po/./LINGUAS	#No such file or directory
+5	open	/dev/tty	#success
+4	open	/dev/tty	#success
+-1	access	/home/cooly/evolution/evolution-rss/po/./LINGUAS	#No such file or directory
+4	open	/dev/tty	#success
+-1	access	/home/cooly/evolution/evolution-rss/po/./LINGUAS	#No such file or directory
+3	open	/dev/tty	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+3	open	/dev/tty	#success
+3	open	/dev/tty	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/home/cooly/evolution/evolution-rss/po/en_AU.gmo	#success
+0	access	/etc/selinux/	#success
+0	unlink	/usr/local/share/locale/en_AU/LC_MESSAGES/evolution-rss.mo	#success
+4	open	/usr/local/share/locale/en_AU/LC_MESSAGES/evolution-rss.mo	#success
+0	chmod	/usr/local/share/locale/en_AU/LC_MESSAGES/evolution-rss.mo	00600	#success
+0	chown	/usr/local/share/locale/en_AU/LC_MESSAGES/evolution-rss.mo	-1	-1	#success
+0	chmod	/usr/local/share/locale/en_AU/LC_MESSAGES/evolution-rss.mo	00644	#success
+-1	access	/home/cooly/evolution/evolution-rss/po/en_AU.gmo.m	#No such file or directory
+-1	access	/home/cooly/evolution/evolution-rss/po/./en_AU.gmo.m	#No such file or directory
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+3	open	/dev/tty	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/etc/selinux/	#success
+3	open	/dev/tty	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/etc/selinux/	#success
+0	unlink	/usr/share/evolution/2.8/errors/org-gnome-cooly-rss.error	#success
+4	open	/usr/share/evolution/2.8/errors/org-gnome-cooly-rss.error	#success
+0	chmod	/usr/share/evolution/2.8/errors/org-gnome-cooly-rss.error	00600	#success
+0	chown	/usr/share/evolution/2.8/errors/org-gnome-cooly-rss.error	-1	-1	#success
+0	chmod	/usr/share/evolution/2.8/errors/org-gnome-cooly-rss.error	00644	#success
+3	open	/dev/tty	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/etc/selinux/	#success
+3	open	/dev/tty	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/etc/selinux/	#success
+0	unlink	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.eplug	#success
+4	open	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.eplug	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.eplug	00600	#success
+0	chown	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.eplug	-1	-1	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.eplug	00644	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/etc/selinux/	#success
+0	unlink	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.xml	#success
+4	open	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.xml	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.xml	00600	#success
+0	chown	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.xml	-1	-1	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/org-gnome-cooly-rss.xml	00644	#success
+3	open	/dev/tty	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/bin/mkdir	#success
+0	access	/etc/selinux/	#success
+3	open	/dev/tty	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+0	access	/bin/sed	#success
+3	open	/dev/tty	#success
+3	open	/dev/null	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/specs	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/.	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+3	open	/dev/null	#success
+0	access	/usr/bin/tr	#success
+0	access	/usr/bin/tr	#success
+0	access	/usr/bin/tr	#success
+0	access	/usr/bin/tr	#success
+0	access	/bin/grep	#success
+0	access	/bin/grep	#success
+0	access	/bin/grep	#success
+0	access	/bin/grep	#success
+3	open	/dev/null	#success
+3	open	/dev/null	#success
+0	access	/bin/grep	#success
+0	access	/bin/grep	#success
+0	access	/bin/grep	#success
+0	access	/bin/grep	#success
+-1	access	/home/cooly/evolution/evolution-rss/src/./liborg-gnome-cooly-rss.la	#Permission denied
+0	access	/home/cooly/evolution/evolution-rss/src/./liborg-gnome-cooly-rss.la	#success
+0	access	/etc/selinux/	#success
+0	unlink	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.so	#success
+4	open	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.so	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.so	00600	#success
+0	chown	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.so	-1	-1	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.so	00755	#success
+0	access	/etc/selinux/	#success
+0	unlink	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.la	#success
+4	open	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.la	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.la	00600	#success
+0	chown	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.la	-1	-1	#success
+0	chmod	/usr/lib/evolution/2.8/plugins/liborg-gnome-cooly-rss.la	00755	#success
+3	open	/dev/tty	#success
+3	open	/dev/null	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/bin/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/bin/	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/i386-redhat-linux/4.1.1/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/../../	#success
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+0	access	/usr/lib/gcc/	#success
+0	access	/usr/lib/gcc/../	#success
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/specs	#No such file or directory
+0	access	/usr/lib/	#success
+-1	access	/usr/lib/../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../i386-redhat-linux/lib/specs	#No such file or directory
+-1	access	/usr/lib/gcc/i386-redhat-linux/specs	#No such file or directory
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../	#success
+0	access	/usr/lib/gcc/i386-redhat-linux/4.1.1/.	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+-1	access	/opt/mono-1.1.11/bin/gcc	#No such file or directory
+-1	access	/usr/lib/qt-3.3/bin/gcc	#No such file or directory
+-1	access	/usr/kerberos/sbin/gcc	#No such file or directory
+-1	access	/usr/kerberos/bin/gcc	#No such file or directory
+-1	access	/usr/local/sbin/gcc	#No such file or directory
+-1	access	/usr/local/bin/gcc	#No such file or directory
+-1	access	/sbin/gcc	#No such file or directory
+-1	access	/bin/gcc	#No such file or directory
+-1	access	/usr/sbin/gcc	#No such file or directory
+0	access	/usr/bin/gcc	#success
+3	open	/dev/null	#success
+0	access	/usr/bin/tr	#success
+0	access	/usr/bin/tr	#success
+0	access	/usr/bin/tr	#success
+0	access	/usr/bin/tr	#success
+0	access	/sbin/ldconfig	#success
+0	access	/sbin/ldconfig	#success
+0	access	/sbin/ldconfig	#success
+0	access	/sbin/ldconfig	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success
+0	access	/usr/bin/make	#success

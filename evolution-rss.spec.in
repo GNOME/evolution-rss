@@ -1,0 +1,72 @@
+%define name evolution-rss
+%define version @VERSION@
+%define release 1
+
+Summary: evolution-rss
+Name:	 %{name}
+Version: %{version}
+Release: %{release}
+Group: unknown
+License: GPL
+Source: http://mips.edu.ms/%{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+URL: http://mips.edu.ms/evo/index.php/Evolution_RSS_Reader_Plugin
+Distribution: Freshmeat RPMs
+Packager: Lucian Langa <cooly@mips.edu.ms>
+#Patch: evolution-rss-%{version}.patch
+#Prefix: /
+#BuildArch: noarch
+Requires: evolution, firefox-devel
+#Obsoletes: 
+BuildRequires: gettext, gettext-devel, evolution-devel, perl(XML::Parser)
+
+%description
+This is an evolution plugin which enables evolution to read rss feeds.
+
+%prep
+%setup -n evolution-rss-%{version}
+#%patch
+
+%build
+./configure --prefix="%{_prefix}" --disable-webkit
+make
+
+%install
+rm -rf %{buildroot}
+make install DESTDIR="%{buildroot}"
+
+%clean
+#[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf "$RPM_BUILD_ROOT"
+rm -rf %{buildroot}
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+
+%files
+%defattr(-,root,root)
+%{_datadir}/locale/*/LC_MESSAGES/evolution-rss.mo
+%{_datadir}/evolution/*/errors/org-gnome-evolution-rss.error
+%{_datadir}/evolution/*/glade/rss-ui.glade
+%{_datadir}/evolution/*/images/rss.png
+%{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.eplug
+%{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.xml
+%{_libdir}/evolution/*/plugins/liborg-gnome-evolution-rss.so
+%{_libdir}/evolution/*/plugins/liborg-gnome-evolution-rss.la
+%{_libdir}/bonobo/servers/GNOME_Evolution_RSS_*.server
+%doc AUTHORS
+%doc COPYING
+%doc ChangeLog
+%doc FAQ
+%doc INSTALL
+%doc NEWS
+%doc README
+%doc TODO
+
+%changelog
+* Tue Sep 04 2007 Lucian Langa <lucilanga@gnome.org>
+- Updated installed files
+* Mon Apr 23 2007 root <root@mayday>
+- Initial spec file created by autospec ver. 0.8 with rpm 3 compatibility

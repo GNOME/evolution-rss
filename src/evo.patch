@@ -1,0 +1,299 @@
+--- rss.c	2007-05-08 09:47:04.000000000 +0300
++++ /home/cooly/evolution/evo-rss/src/rss.c	2007-05-05 11:47:54.000000000 +0300
+@@ -66,6 +66,10 @@
+ static pthread_mutex_t rss_restart_lock = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t rss_operation_pending = PTHREAD_MUTEX_INITIALIZER;
+ 
++#define GCONF_KEY_START_CHECK "/apps/evolution/evolution-rss/startup_check"
++#define GCONF_KEY_REP_CHECK "/apps/evolution/evolution-rss/rep_check"
++#define GCONF_KEY_REP_CHECK_TIMEOUT "/apps/evolution/evolution-rss/rep_check_timeout"
++
+ GConfClient *rss_gconf;
+ 
+ rssfeed *rf;
+@@ -73,8 +77,6 @@
+ void setup_feed(gchar *feed_url);
+ gchar *display_doc (RDF *r);
+ void check_folders(void);
+-gboolean update_articles(gboolean disabler);
+-void update_channel(const char *chn_name, char *main_date, int items, xmlNodePtr *item);
+ 
+ struct _get_folder_msg {
+         struct _mail_msg msg;
+@@ -406,7 +408,7 @@
+ 	{
+ 		gtk_tree_model_get (model, &iter, 1, &name, -1);
+ 		g_hash_table_replace(rf->hre, name, 
+-			GINT_TO_POINTER(!g_hash_table_lookup(rf->hre, name)));
++			!g_hash_table_lookup(rf->hre, name));
+ 		gtk_button_set_label(data, g_hash_table_lookup(rf->hre, name) ? _("Disable") : _("Enable"));
+ 	}
+ 	//update list instead of rebuilding
+@@ -430,8 +432,8 @@
+   gtk_tree_model_get (model, &iter, 0, &fixed, -1);
+   gtk_tree_model_get (model, &iter, 1, &name, -1);
+   fixed ^= 1;
+-  g_hash_table_replace(rf->hre, name, GINT_TO_POINTER(fixed));
+-  gtk_button_set_label(GTK_BUTTON(rf->edbutton), fixed ? _("Disable") : _("Enable"));
++  g_hash_table_replace(rf->hre, name, fixed);
++  gtk_button_set_label(rf->edbutton, fixed ? _("Disable") : _("Enable"));
+   gtk_list_store_set (GTK_LIST_STORE (model), &iter, 0, fixed, -1);
+   gtk_tree_path_free (path);
+   update_feeds_file();
+@@ -467,37 +469,24 @@
+     gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+     /* Save the new setting to gconf */
+     gconf_client_set_bool (rss_gconf, GCONF_KEY_REP_CHECK, active, NULL);
+-    //if we already have a timeout set destroy it first
+-    if (rf->rc_id && !active)
+-	g_source_remove(rf->rc_id);
+-    if (active)
+-    {
+-    	//we have to make sure we have a timeout value
+-    	if (!gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL))
+-    		gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, 
+-			gtk_spin_button_get_value((GtkSpinButton *)data), NULL);
+-    	if (rf->rc_id)
+-		g_source_remove(rf->rc_id);
+-    	rf->rc_id = g_timeout_add (60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)data),
+-                           (GtkFunction) update_articles,
+-                           (gpointer)1);
+-    }
++    //we have to make sure we have a timeout value
++    if (active && !gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL))
++    	gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, 
++		gtk_spin_button_get_value((GtkSpinButton *)data), NULL);
+ }
+ 
+ static void
+ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
+ {
+-    gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data));
+     gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, 
+ 		gtk_spin_button_get_value((GtkSpinButton*)widget), NULL);
+-    if (active)
+-    {
+-    	if (rf->rc_id)
+-		g_source_remove(rf->rc_id);
+-    	rf->rc_id = g_timeout_add (60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)widget),
+-                           (GtkFunction) update_articles,
+-                           (gpointer)1);
+-    }
++}
++
++static void
++err_destroy (GtkWidget *widget, gpointer data)
++{
++	gtk_widget_destroy(widget);
++	rf->errdialog = NULL;
+ }
+ 
+ GtkWidget*
+@@ -523,7 +512,7 @@
+   GtkWidget *checkbutton3;
+   GtkWidget *label1;
+   GtkWidget *spinbutton1;
+-  GtkObject *spinbutton1_adj;
++  GtkWidget *spinbutton1_adj;
+   GtkWidget *frame1;
+   GtkWidget *alignment1;
+   GtkListStore  *store;
+@@ -640,9 +629,9 @@
+   g_signal_connect(treeview2, "cursor_changed", G_CALLBACK(tree_cb), button4);
+ 
+   //manualy update enable-disable button
+-  if (gtk_tree_selection_get_selected(selection, (GtkTreeModel **)&store, &iter))
++  if (gtk_tree_selection_get_selected(selection, &store, &iter))
+   {
+-          gtk_tree_model_get ((GtkTreeModel *)store, &iter, 1, &name, -1);
++          gtk_tree_model_get (store, &iter, 1, &name, -1);
+ 	  gtk_button_set_label((GtkButton *)button4, g_hash_table_lookup(rf->hre, name) ? _("Disable") : _("Enable"));
+   }
+ 
+@@ -685,9 +674,9 @@
+   gtk_box_pack_start (GTK_BOX (hbox3), spinbutton1, FALSE, TRUE, 0);
+   gdouble adj = gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL);
+   if (adj)
+-	gtk_spin_button_set_value((GtkSpinButton *)spinbutton1, adj);
++	gtk_spin_button_set_value( spinbutton1, adj);
+   g_signal_connect(checkbutton1, "clicked", G_CALLBACK(rep_check_cb), spinbutton1);
+-  g_signal_connect(spinbutton1, "changed", G_CALLBACK(rep_check_timeout_cb), checkbutton1);
++  g_signal_connect(spinbutton1, "changed", G_CALLBACK(rep_check_timeout_cb), NULL);
+ 
+   label1 = gtk_label_new (_("minutes"));
+   gtk_widget_show (label1);
+@@ -740,13 +729,13 @@
+ 	    g_mkdir_with_parents (feed_dir, 0755);
+ 	gchar *feed_file = g_strdup_printf("%s/evolution-feeds", feed_dir);
+ 	g_free(feed_dir);
+-	rf->hr = g_hash_table_new(g_str_hash, g_str_equal);
+-	rf->hre = g_hash_table_new(g_str_hash, g_str_equal);
+-	rf->hrt = g_hash_table_new(g_str_hash, g_str_equal);
+ 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
+ 	{
+ 		if (ffile = fopen(feed_file, "r"))
+ 		{
++		    rf->hr = g_hash_table_new(g_str_hash, g_str_equal);
++		    rf->hre = g_hash_table_new(g_str_hash, g_str_equal);
++		    rf->hrt = g_hash_table_new(g_str_hash, g_str_equal);
+ 		    while (fgets(rfeed, 511, ffile) != NULL)
+ 		    {
+ 			str = g_strsplit(rfeed, "--", 0);
+@@ -755,7 +744,7 @@
+ 			{
+ 				g_hash_table_insert(rf->hrt, g_strdup(str[0]), g_strstrip(str[3]));
+ 				g_hash_table_insert(rf->hre, g_strdup(str[0]), 
+-				GINT_TO_POINTER(atoi(str[2])));
++				(gpointer)atoi(str[2]));
+ 			}
+ 			else
+ 			{
+@@ -832,8 +821,8 @@
+         doc = xmlParseMemory (content->str, content->len);
+ 	g_print("content:%s\n", content->str);
+ 	if ((doc != NULL || xmlDocGetRootElement(doc) != NULL)
+-		&& (!strcasestr(doc->children->name, "rss")
+-		|| !strcasestr(doc->children->name, "rdf")))
++		&& (strcasestr(doc->children->name, "rss") != NULL
++		|| strcasestr(doc->children->name, "rdf") != NULL))
+ 	{
+         	r->cache = doc;
+         	gchar *chn_name = display_doc (r);
+@@ -858,7 +847,7 @@
+ void
+ fetch_feed(gpointer key, gpointer value, gpointer user_data)
+ { 
+-	GError *err;
++	GError *err = NULL;
+ 	GString *content;
+ 	GString *post;
+ 	RDF *r;
+@@ -868,16 +857,33 @@
+ 	if (g_hash_table_lookup(rf->hre, key) && !rf->cancel)
+ 	{
+ 		rf->pending = TRUE;
+-		g_print("\nFetching: %s..\n", g_hash_table_lookup(rf->hr, key));
++		g_print("Fetching: %s..\n", g_hash_table_lookup(rf->hr, key));
+ 		content = net_post_blocking(value, NULL, post, user_data, rf, &err);
+-		r = g_new0 (RDF, 1);
+-		r->shown = TRUE;
+-        	xmlDocPtr doc;
+-        	xmlSubstituteEntitiesDefaultValue = 1;
+-        	doc = xmlParseMemory (content->str, content->len);
+-        	r->cache = doc;
+-        	display_doc (r);
+-		rf->pending = FALSE;
++		if (!err)
++		{
++			r = g_new0 (RDF, 1);
++			r->shown = TRUE;
++        		xmlDocPtr doc;
++        		xmlSubstituteEntitiesDefaultValue = 1;
++        		doc = xmlParseMemory (content->str, content->len);
++        		r->cache = doc;
++        		display_doc (r);
++			rf->pending = FALSE;
++		}
++		else
++		{
++			GtkWidget *ed;
++			if (!rf->errdialog)
++			{
++				gchar *msg = g_strdup_printf("\n%s\n%s", key, err->message);
++				ed  = e_error_new(NULL, "org-gnome-cooly-rss:feederr",
++					"Error Fetching Feed", msg, NULL);
++				g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
++				gtk_widget_show(ed);
++				rf->errdialog = ed;
++				g_free(msg);
++			}
++		}
+ 	}
+ }
+ 
+@@ -914,12 +920,9 @@
+ 	}
+ 	gdouble timeout = gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL);
+     	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_REP_CHECK, NULL))
+-	{
+-		rf->rc_id = g_timeout_add (60 * 1000 * timeout,
++		g_timeout_add (60 * 1000 * timeout,
+                            (GtkFunction) update_articles,
+                            (gpointer)1);
+-		
+-	}
+ }
+ 
+ /* check if rss folders exists and create'em otherwise */
+@@ -1012,7 +1015,7 @@
+ 		rf->pending = FALSE;
+ 		rf->progress_dialog = NULL;
+ 		rf->cancel = FALSE;
+-		rf->rc_id = 0;
++		rf->errdialog = NULL;
+ 	} else {
+ 		printf("Plugin disabled\n");
+ 	}
+@@ -1046,9 +1049,7 @@
+ 
+ 	//evo will go crazy when it'll encounter ":" character
+ 	//it probably enforces strict rfc2047 compliance
+-	author = g_strdelimit(author, "><:", ' ');
+-	gchar *safe_author = g_strdup_printf("%s <%s>", author, author);
+-//	gchar *safe_author = g_strdup("ARRL Amateur Radio News <ARRL Amateur Radio News>");	
++	gchar *safe_author = g_strdelimit(author, ":", ' ');
+ 	g_print("author:%s\n", safe_author);
+ 	g_print("date:%s\n", date);
+ 
+@@ -1064,9 +1065,14 @@
+ 		/*fixme offset*/
+ 		strptime(date, "%A, %d %b %Y %H:%M:%S %Z", &tm);
+ 		time = mktime(&tm);
++		g_print("new time:%s\n", ctime(&time));
++		g_print("tzname:%s\n", tzname[0]);
++		g_print("timezone:%f\n", timezone);
+ 		//time = mktime(localtime(&time));
+ 		time_t actual_time = camel_header_decode_date (ctime(&time), &offset);
+ 		camel_mime_message_set_date(new, actual_time, offset);
++		g_print("offset:%d\n", offset);
++		g_print("offset:%d\n", ((offset / 100) * (60 * 60)) + (offset % 100) * 60);
+ 	}
+ 	else 
+ 	{
+@@ -1077,7 +1083,7 @@
+ 			time_t actual_time = camel_header_decode_date (ctime(&time), &offset);
+ 			camel_mime_message_set_date(new, actual_time, offset);
+ 		}
+-		else /*use now as time for failsafe*/
++		else /*use now for failsafe*/
+ 			camel_mime_message_set_date(new, CAMEL_MESSAGE_DATE_CURRENT, 0);
+ 	}
+ 
+@@ -1088,8 +1094,7 @@
+         camel_data_wrapper_set_mime_type_field (rtext, type);
+         camel_content_type_unref (type);
+         stream = camel_stream_mem_new ();
+-	// w/out an format argument this throws and seg fault
+-        camel_stream_printf (stream, "%s", body);
++        camel_stream_printf (stream, body);
+         camel_data_wrapper_construct_from_stream (rtext, stream);
+         camel_object_unref (stream);
+ 
+@@ -1246,7 +1251,7 @@
+ 	//items might not have a date
+ 	gchar *md2 = layer_find(channel->children, "date", "");
+ 
+-	update_channel(t, md2, items, (xmlNodePtr *)item);
++	update_channel(t, md2, items, item);
+ 	return t;
+ }
+ 
+@@ -1278,7 +1283,7 @@
+ }
+ 
+ void
+-update_channel(const char *chn_name, char *main_date, int items, xmlNodePtr *item)//item[])
++update_channel(const char *chn_name, const char *main_date, int items, xmlNodePtr item[])
+ {
+         gchar *tmp = NULL;
+         guint i;

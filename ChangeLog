@@ -1,0 +1,435 @@
+Sat 13 Oct 2007 02:30:34 PM EEST <lucilanga@gnome.org>
+
+	* decode html entities for channel name
+	* decode html entities for article title
+	
+Thu 11 Oct 2007 08:38:24 PM EEST <lucilanga@gnome.org>
+
+	* support network hooks
+	* fix enclosure fectching
+	
+Wed 10 Oct 2007 09:32:00 PM EEST <lucilanga@gnome.org>
+
+	* removing a directory removes name allocation
+	
+Tue 09 Oct 2007 09:50:48 AM EEST <lucilanga@gnome.org>
+
+	* fixed deletion of a feed while fetching
+	
+Mon 08 Oct 2007 10:28:43 AM EEST <lucilanga@gnome.org>
+
+	* prevend adding duplicate feeds when opml
+	importing
+	* fixed import/export menu creation
+	* fixed adding non-validated feeds
+	
+Sun 07 Oct 2007 06:25:12 PM EEST <lucilanga@gnome.org>
+
+	* cleanup pobjects - evo preferences was
+	crashing when browsing an mozembed enabled feed
+	fixes bug #2
+	* moved feeds setup to gconf
+	
+Sat 06 Oct 2007 04:29:06 PM EEST <lucilanga@gnome.org>
+
+	* fix migration from crc naming to md5 feed
+	 naming
+	 
+Wed 03 Oct 2007 10:53:07 AM EEST <lucilanga@gnome.org>
+
+	* fix #144946 on launchpad.net: evolution was
+	crashing when evolution-rss plugin is disabled
+
+	* added cleanups when quitting evolution
+	
+Tue 02 Oct 2007 09:23:50 PM EEST <lucilanga@gnome.org>
+
+	* https support fixups
+	* unqueing issues fixup
+	
+Sat 29 Sep 2007 04:29:04 PM EEST <lucilanga@gnome.org>
+
+	* remove old *cooly* files from previous
+	0.0.3 installation - thanks to David Richards
+	for spotting that
+	* added uniqueing channels name in case of
+	duplicate channel name
+	
+Fri 28 Sep 2007 09:59:25 AM EEST <lucilanga@gnome.org>
+
+	* move utility functions to src/misc.c
+	* fix for issue #8 - adding feeds with https
+	* feed folders rename option
+	
+Wed 26 Sep 2007 03:04:50 PM EEST <lucilanga@gnome.org>
+
+	* support for renaming main folder (News&Blogs)
+	
+Sun 23 Sep 2007 08:14:05 PM EEST <lucilanga@gnome.org>
+
+	* added support for feeds enclosures
+	
+Sun 16 Sep 2007 11:57:48 AM EEST <lucilanga@gnome.org>
+
+	* fixed build deps for SLED distros
+	* fixed detection of gecko to build for all
+	flavours of gecko
+	* fixed moz embed widget redraw when using
+	xulrunnel - apparently this wasn't redrawed
+	in case of resize
+	
+Thu 13 Sep 2007 09:10:43 PM EEST <lucilanga@gnome.org>
+
+	* added support for parsing multipart rss
+	articles
+	
+Fri 07 Sep 2007 08:55:56 PM EEST <lucilanga@gnome.org>
+
+	* escaping exported opmls
+	
+Tue 04 Sep 2007 11:37:17 AM EEST <lucilanga@gnome.org>
+
+	* evolution-rss.spec.in fixups
+	
+Fri 31 Aug 2007 09:53:15 AM EEST <lucilanga@gnome.org>
+
+	* added feeds version detection support
+	
+Thu 30 Aug 2007 03:24:34 PM EEST <lucilanga@gnome.org>
+
+	* removing a feed folder also removes status
+	feed file
+	* bump configure to 0.0.5
+	* added support for xml namespacing
+	* added initial support for rss.1 standard 
+	module: mod_content 
+	
+Wed 29 Aug 2007 10:29:24 AM EEST <lucilanga@gnome.org>
+
+	* fixed parsing entities of subject line
+	
+Tue 28 Aug 2007 12:39:18 PM EEST <lucilanga@gnome.org>
+
+	* make gtkmozembed proper startup
+	* dont update size if widget not present also
+	check size before updating
+	* added profile handling to gtkmozembed
+	
+Fri 17 Aug 2007 06:41:18 PM EEST <lucilanga@gnome.org>
+
+	* ATOM/RSS/RDF feeds: first element (top) might
+	not be the definition (feed, rfd, rss)
+	
+Fri 10 Aug 2007 03:21:16 PM EEST <lucilanga@gnome.org>
+
+	* make embeded html rendering resizable
+	* added gtkmozembed support (gecko)
+	
+Thu 09 Aug 2007 06:41:40 PM EEST <lucilanga@gnome.org>
+
+	* added support for rendering html with
+	 different engines
+	* added support for Webkit
+	
+Wed 01 Aug 2007 08:43:28 PM EEST <lucilanga@gnome.org>
+	
+	* better feed validation
+	* prevent adding duplicate feeds, that seems
+	screw things up
+	* editing a feed does not require refetching
+	
+Tue 31 Jul 2007 09:57:56 PM EEST <lucilanga@gnome.org>
+
+	* make summary/html button really work
+	
+Thu 19 Jul 2007 12:40:44 PM EEST <lucilanga@gnome.org>
+	
+	* double click edits the feed
+	* added export function
+	
+Wed 11 Jul 2007 08:33:57 AM EEST <lucilanga@gnome.org>
+
+	* setup_feed, finish_feed: add a more
+	relaxed xml parsing func (xml_parse_sux)
+	
+Tue 10 Jul 2007 08:51:16 PM EEST <lucilanga@gnome.org>
+
+	* layer_find_innerhtml: fail-safe when autor is
+	wrong
+
+Mon 09 Jul 2007 07:31:30 PM EEST <lucilanga@gnome.org>
+
+	* added remove option to deletion of a feed
+	
+Sun 08 Jul 2007 04:23:58 PM EEST <lucilanga@gnome.org>
+
+	* fixed wrong gladedir install
+	
+Fri 06 Jul 2007 12:50:45 PM EEST <lucilanga@gnome.org>
+
+	* changed priority of configuration page
+	* switched to md5 for unqueing feeds ids
+	
+Tue 03 Jul 2007 12:14:11 PM EEST <lucilanga@gnome.org>
+
+	* cleanups
+	* evolution detection fixes
+	* bonobo servers detection fixes
+	
+Fri 29 Jun 2007 10:48:28 AM EEST <lucilanga@gnome.org>
+
+	* small fix on html formatting
+	* fix soup session blocking to handle net
+	errors
+	
+Thu 28 Jun 2007 11:30:07 AM EEST <lucilanga@gnome.org>
+	
+	* let evo manage date conversion it's already
+	complicated enough, dublin core date handling
+	remains unchanged
+	* cleanups and bump configure.ac version to
+	0.0.4
+	* fixed segfaults when parsing html with libxml
+
+Wed 27 Jun 2007 08:18:02 PM EEST <lucilanga@gnome.org>
+
+	* add button to switch summary/HTML view
+	* add feed title/url in feed body for open
+	in browser
+	
+Tue 26 Jun 2007 11:52:39 AM EEST <lucilanga@gnome.org>
+
+	* force loading of images when browsing feeds
+	* user/password feeds full support
+	* fix g_hash table allocation/free
+	
+Mon 25 Jun 2007 10:46:23 AM EEST <cooly@mips.edu.ms>
+
+	* fix cancel function to proper close all
+	pending requests
+	
+2007-06-23  Lucian Langa  <cooly@mips.edu.ms>
+
+	* src/rss.c: (org_gnome_cooly_format_rss), (setup_feed),
+	(check_folders), (layer_find_tag), (update_channel):
+	fixed atom parsing content problems
+
+Thu 21 Jun 2007 09:15:12 PM EEST <cooly@mips.edu.ms>
+
+	* added proxy auth option
+	
+Wed 20 Jun 2007 12:45:05 PM EEST <cooly@mips.edu.ms>
+
+	* added network configuration
+	* added proxy option
+	
+Tue 19 Jun 2007 09:59:34 PM EEST <cooly@mips.edu.ms>
+	
+	* added libglade-2 to requirements thanks to
+	srag
+	* changed org-gnome-cooly
+	
+Tue 19 Jun 2007 11:34:47 AM EEST <cooly@mips.edu.ms>
+
+	* soup cleanups and fix "unblocking" error
+	 messages
+	 
+Mon 18 Jun 2007 12:50:30 PM EEST <cooly@mips.edu.ms>
+
+	* fixed progress when add/edit feed
+	* fixed cancel reading rss feeds
+	
+Fri 15 Jun 2007 08:30:16 AM EEST <cooly@mips.edu.ms>
+
+	* remove old setup feeds code
+	
+Thu 14 Jun 2007 05:29:59 PM EEST <cooly@mips.edu.ms>
+
+	* added code to use send receive hook provided
+	by srini and move fetch dialog to evolution
+	send and receive dialog
+	
+Tue 12 Jun 2007 08:14:16 PM EEST <cooly@mips.edu.ms>
+
+	* moveed config to evo pref
+
+Mon 11 Jun 2007 02:58:50 PM EEST <cooly@mips.edu.ms>
+
+	* moving setup page to Evolution Preferences
+	* added rss icon
+	* added bonobo server interface
+	
+Fri 08 Jun 2007 02:54:16 PM EEST <cooly@mips.edu.ms>
+
+	* soup connection cleanups -> soup sesions
+	were hanging when using	blocking as well
+	as unblocking
+	
+Thu 07 Jun 2007 07:23:27 PM EEST <cooly@mips.edu.ms>
+
+	* fixed HTML display on summary view
+	(aparently camel_stream won't correctly
+	interpret ? (query flag)
+	
+Tue 05 Jun 2007 03:03:04 PM EEST <cooly@mips.edu.ms>
+
+	* bump version to 0.0.3
+	* update build requirements
+	
+Sun 03 Jun 2007 10:00:36 PM EEST <cooly@mips.edu.ms>
+
+	* code cleanups
+	
+Thu 31 May 2007 10:59:15 AM EEST <cooly@mips.edu.ms>
+
+	* wasted about a week debugin evo
+	evo will wrongly process html mail if
+	encountes a <base href...> tag
+	
+Wed 30 May 2007 10:47:47 AM EEST <cooly@mips.edu.ms>
+
+	* fixed HTML parsing different enconding
+	* fixed parsing of HTML with base tag set
+	
+Sat 26 May 2007 05:51:52 PM EEST <cooly@mips.edu.ms>
+
+	* fixed html setting when adding new feed
+	
+Fri 25 May 2007 07:16:39 PM EEST <cooly@mips.edu.ms>
+	
+	* fix seting HTML property
+	* html parsing
+	
+Sun 20 May 2007 09:41:57 PM EEST <cooly@mips.edu.ms>
+
+	* implemented fetching of webpage and config
+	options
+	
+Tue 15 May 2007 09:25:19 PM EEST <cooly@mips.edu.ms>
+
+	* more network error fixes
+	* perma link handle
+	* ATOM support
+	
+Mon 14 May 2007 05:47:36 PM EEST <cooly@mips.edu.ms>
+
+	* implement innerxml walking
+	* move safe author from create_mail
+	
+Fri 11 May 2007 12:31:54 PM EEST <cooly@mips.edu.ms>
+
+	* switch feed items to g_array - remove 
+	stoopid 16 items limitation
+	
+Thu 10 May 2007 01:23:34 PM EEST <cooly@mips.edu.ms>
+
+	* set search col = feed name
+	* fix crash when using ATOM feeds thankx to
+	Black Penguin
+	* spec files fixes
+	* fix network error uninitialized
+	
+Tue 08 May 2007 09:47:20 AM EEST <cooly@mips.edu.ms>
+
+	* release 0.0.2
+	* some strange error when using
+	camel_stream_printf()
+	
+Mon 07 May 2007 12:29:57 PM EEST <cooly@mips.edu.ms>
+
+	* fix rf trees on startup: evo-rss was
+	crashing when there was no conf file
+	(evolution-feeds)
+	* fixed rep_check to actually enable timeout
+	without restart
+
+Sat 05 May 2007 11:48:06 AM EEST <cooly@mips.edu.ms>
+
+        * configure.ac: bump version to 0.0.2
+	* implemented error messages
+
+Fri 04 May 2007 01:16:39 PM EEST <cooly@mips.edu.ms>
+
+	* configure.ac update requirements
+	
+Thu 03 May 2007 10:30:56 AM EEST <cooly@mips.edu.ms>
+
+	* more date fixes
+	* added Cancel function for reading feeds
+	* configure.ac added translations
+	
+Wed 02 May 2007 09:12:48 PM EEST <cooly@mips.edu.ms>
+
+	* fixed configure.ac evolution checks
+	* fixed feeds file validation (setup_feeds)
+	
+Tue 01 May 2007 07:25:28 PM EEST <cooly@mips.edu.ms>
+
+	* update feeds file
+	* added feeds type
+	* treeview toggle button fix
+	
+Thu 26 Apr 2007 11:58:08 AM EEST <cooly@mips.edu.ms>
+
+	* fixed edit function
+	* configure.ac corrected evolution detection
+	* validate input feed
+	
+Wed 25 Apr 2007 09:35:04 PM EEST <cooly@mips.edu.ms>
+
+	* make readrss option one process with
+	periodical update_articles
+	
+Tue 24 Apr 2007 12:51:37 PM EEST <cooly@mips.edu.ms>
+
+	* modify soup_messages in order no to block
+	evo main.
+	
+Mon 23 Apr 2007 09:39:51 PM EEST <cooly@mips.edu.ms>
+
+	* added startup and periodical reading
+	options
+	* added disable/enable function
+	* added support for building rpm 
+	(evolution-rss.spec)
+	
+Mon 23 Apr 2007 10:01:21 AM EEST <cooly@mips.edu.ms>
+
+	* fix handling dc:date
+	
+Thu 19 Apr 2007 05:17:00 PM EEST <cooly@mips.edu.ms>
+
+	* release 0.0.1
+	* implement error messages
+
+Wed 18 Apr 2007 04:18:46 PM EEST <cooly@mips.edu.ms>
+
+	* finalize menu structure
+	* cleanup code
+	* add accels
+	
+Tue 17 Apr 2007 08:33:11 PM EEST <cooly@mips.edu.ms>
+
+	* implement remove function
+	
+Thu 12 Apr 2007 09:54:24 PM EEST <cooly@mips.edu.ms>
+
+	* feeds dialog implement add function
+
+Wed 11 Apr 2007 09:50:56 PM EEST <cooly@mips.edu.ms>
+
+	* main dialog cosmetics
+Sun 08 Apr 2007 05:12:01 PM EEST <cooly@mips.edu.ms>
+
+	* code cleanups and prepare for release
+	* added progress window while reading RSS
+	
+Thu 05 Apr 2007 05:08:06 PM EEST <cooly@mips.edu.ms>
+
+	* add folder creation
+
+2005-05-16  Not Zed  <NotZed@Ximian.com>
+
+	* configure.ac: remove the need for evolution source.  bumped
+	version of eplugin required.
+

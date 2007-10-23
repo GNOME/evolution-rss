@@ -1,0 +1,20 @@
+
+This is an evolution plugin which enables evolution to read rss feeds.
+
+Evolution RSS Readers Features
+==============================
+    * RDF,RSS and ATOM support
+    * Searching and filtering using Evolution support
+      (a feed article is infact an email message in Evolution)
+    * HTML articles page rendering
+    * Offline reading of feed content
+    * Webkit and Gecko support for rendering articles (firefox-devel si required for Gecko support, and
+		latest cvs from upstream apple's webkit see FAQ)
+    
+Tested:
+
+Evolution 2.11 - Fedora Core 7
+Evolution 2.10 - Ubuntu 7.06 Feisty Fawn
+Evolution 2.8  - Fedora 6
+Evolution 2.6  - Fedora 5
+Evolution 2.4  - Ubuntu 5.10 Breezy

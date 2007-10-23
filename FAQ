@@ -1,0 +1,34 @@
+
+Evolution crashes when using gtkmozembed as a render?
+=====================================================
+
+Problems have been spotting when running evolution under Ubuntu and prbably on Debian too.
+This is a well known bug (https://bugs.launchpad.net/ubuntu/+source/firefox/+bug/26436/),
+as many other application crash when they embed firefox with gtkmozembed.
+There are 2 fixes for that:
+
+ - either run evolution with LD_LIBRARY_PATH=/path/to/firefox/lib evolution
+ - either appd into ld.so.conf /path/to/firefox and run ldconfig afterwards
+ - or you can choose to render articles using Webkit
+
+How can enable webkit in evolution-rss?
+=======================================
+
+Enabling webkit in evolution-rss requires webkit especially Gdk part to be compiled.
+For complete instructions see:
+
+	http://mips.edu.ms/evo/index.php/WebKit
+
+After instalation is complete you have to recompile evolution-rss. Hopefully evolution-rss
+build script will detech webkit's gdk stuff. Hopefully this will sooner be a package on each
+distro, coz building webkit takes long ! (3+ hrs)
+After you recompiled evolution-rss you can setup HTML render in Edit->Preferences->News&Blogs
+under HTML tab.
+
+What does "Validate feed" mean?
+===============================
+
+Adding feed when poor conection can be really slow. Imagine you have a 350+ opml file and
+each feeds needs to be feched before setup, this will take enourmous amount of time, so
+you can just skip this step by unchecking Validate feed option. Feeds will be read,
+afterwards one by one.

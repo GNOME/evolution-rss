@@ -1,0 +1,21 @@
+
+	* move messages to status bar
+	* add expiry option (remove feeds before a certain date)
+	* maybe implement crc32 for uniqueing articles (for broken feeds)
+	* make setup dialog modal when fetch_feed active
+	* add syndicate icon for News&Blogs folder
+	* offline storage for article's home page
+	* bad request when setup_feeds
+	* probably move to soup_unblocking when rendering of an article
+	* when browsing a different feed/mail folder cancel all sessions
+	* resolve soup long timeouts
+	* more checks for feed article's author
+	* also create groups when importing
+	* create some sort of progress popup when render with an external engine (webkit/gecko)
+	* verify atom 1.0 feeds validation
+	* check webkit area sizing when using zoom in/out
+	* failback to old handler when formatting error
+	* optimize where needed using reversed rf->hrname
+	* when deleting a folder offer to delete feed also
+	* check mozembed widget / thread when quitting
+	* notify of LD_LIBRARY_PATH
