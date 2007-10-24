@@ -1,3 +1,7 @@
+Tue 23 Oct 2007 10:00:35 PM EEST <lucilanga@gnome.org>
+
+	* added gconf schema stuff
+	
 Sat 13 Oct 2007 02:30:34 PM EEST <lucilanga@gnome.org>
 
 	* decode html entities for channel name

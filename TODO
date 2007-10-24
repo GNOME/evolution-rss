@@ -19,3 +19,4 @@
 	* when deleting a folder offer to delete feed also
 	* check mozembed widget / thread when quitting
 	* notify of LD_LIBRARY_PATH
+	* change to mozilla/webkit if we have them.
