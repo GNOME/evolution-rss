@@ -21726,7 +21726,7 @@ echo "${ECHO_T}$enable_gecko" >&6; }
 
 if test "$enable_gecko" = "yes"; then
 
-if test "x$have_gecko" != "xno"; then
+	if test "x$have_gecko" != "xno"; then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for GECKO" >&5
@@ -21801,7 +21801,7 @@ fi
 
 
 
-if test "x$have_gecko" != "xno"; then
+		if test "x$have_gecko" != "xno"; then
 
 cat >>confdefs.h <<_ACEOF
 #define HAVE_RENDERKIT 1
@@ -21814,18 +21814,19 @@ _ACEOF
 
 
 
-GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
+		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
 
-if test "x$GECKO" == "xxulrunner"; then
+
+			if test "x$GECKO" == "xxulrunner"; then
 
 cat >>confdefs.h <<_ACEOF
 #define HAVE_XULRUNNER 1
 _ACEOF
 
 
-fi
-fi
-fi
+			fi
+		fi
+	fi
 fi
 # *******************************
 # webkit renderer

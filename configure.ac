@@ -143,24 +143,25 @@ AC_MSG_RESULT([$enable_gecko])
 
 if test "$enable_gecko" = "yes"; then
 
-if test "x$have_gecko" != "xno"; then
-PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version], [], [have_gecko=no])
-AC_SUBST([GECKO_CFLAGS])
-AC_SUBST([GECKO_LIBS])
+	if test "x$have_gecko" != "xno"; then
+	PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version], [], [have_gecko=no])
+	AC_SUBST([GECKO_CFLAGS])
+	AC_SUBST([GECKO_LIBS])
 
-if test "x$have_gecko" != "xno"; then
-AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
-AC_DEFINE_UNQUOTED(HAVE_GTKMOZEMBED,1, [gtkmozembed render engine present])
-AC_SUBST(HAVE_RENDERKIT)
-AC_SUBST(HAVE_GTKMOZEMEBED)
-GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
-AC_SUBST([GECKO_RPATH])
-if test "x$GECKO" == "xxulrunner"; then
-AC_DEFINE_UNQUOTED(HAVE_XULRUNNER, 1, [gecko flavour is xulrunner])
-AC_SUBST(HAVE_XULRUNNER)
-fi
-fi
-fi
+		if test "x$have_gecko" != "xno"; then
+		AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
+		AC_DEFINE_UNQUOTED(HAVE_GTKMOZEMBED,1, [gtkmozembed render engine present])
+		AC_SUBST(HAVE_RENDERKIT)
+		AC_SUBST(HAVE_GTKMOZEMEBED)
+		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
+		AC_SUBST([GECKO_RPATH])
+	
+			if test "x$GECKO" == "xxulrunner"; then
+			AC_DEFINE_UNQUOTED(HAVE_XULRUNNER, 1, [gecko flavour is xulrunner])
+			AC_SUBST(HAVE_XULRUNNER)
+			fi
+		fi
+	fi
 fi
 # *******************************
 # webkit renderer

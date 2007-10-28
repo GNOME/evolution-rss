@@ -2331,6 +2331,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 	}
 }
 
+#ifdef HAVE_GTKMOZEMBED
 void
 rss_mozilla_init(void)
 {
@@ -2347,6 +2348,7 @@ rss_mozilla_init(void)
         g_free (profile_dir);
 	gtk_moz_embed_push_startup ();
 }
+#endif
 
 #ifdef HAVE_RENDERKIT
 static gboolean
@@ -2447,6 +2449,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkRequisition req;
+	guint width, height;
 
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
 	gtk_widget_show (vbox);
@@ -2471,6 +2474,10 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
         gtk_container_add ((GtkContainer *) eb, vbox);
 	gtk_widget_size_request(eb, &req);
 	g_print("ww:%d,hh%d\n", req.width, req.height);
+	GtkWidget *w = (GtkWidget *)efh->html;
+	GtkWidget *w2 = (GtkWidget *)eb;
+	g_print("w:%d,h%d\n", w->allocation.width, w->allocation.height);
+	g_print("w:%d,h%d\n", w2->allocation.width, w2->allocation.height);
 	po->html = vbox;
 	po->mem = mem;
 
@@ -2492,8 +2499,10 @@ pfree(EMFormatHTMLPObject *o)
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
 	if (rf->mozembed)
 	{
+#ifdef HAVE_GTKMOZEBED
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
+#endif
 		g_print("popped\n");
 		gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
@@ -2570,6 +2579,14 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         	}
 #ifdef HAVE_RENDERKIT
 	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+#ifndef HAVE_GTKMOZEMBED
+	engine=0;
+#endif
+
+#ifndef HAVE_WEBKIT
+	engine=0;
+#endif
+
 	if (engine)
 	{ 
         	char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
@@ -3423,7 +3440,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 rf->pending = FALSE;
         }
 #endif
-//	check_feed_age();
+	check_feed_age();
 }
 
 void
@@ -4835,8 +4852,10 @@ render_engine_changed (GtkComboBox *dropdown, GCallback *user_data)
         if (id == -1 || !gtk_tree_model_iter_nth_child (model, &iter, NULL, id))
                 return;
 	gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, id, NULL);
+#ifdef HAVE_GTKMOZEMBED
 	if (id == 2)
 		rss_mozilla_init();
+#endif
 }
 
 EvolutionConfigControl*
@@ -4971,10 +4990,26 @@ rss_config_control_new (void)
 	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
 				    "text", 0,
 				    NULL);
-	gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 
-			GPOINTER_TO_INT(gconf_client_get_int(rss_gconf, 
-								GCONF_KEY_HTML_RENDER, 
-								NULL)));
+	guint render = GPOINTER_TO_INT(gconf_client_get_int(rss_gconf,
+                                    GCONF_KEY_HTML_RENDER,
+                                    NULL));
+
+	switch (render)
+	{
+		case 1: 
+#ifndef HAVE_WEBKIT
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+			break;
+#endif
+		case 2:
+#ifndef HAVE_GTKMOZEMBED
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+			break;
+#endif
+		default:
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), render);
+
+	}
 
 	gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo),
 					renderer,
