@@ -2449,6 +2449,8 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkRequisition req;
+	gtk_widget_size_request(eb, &req);
+	g_print("ww:%d,hh%d\n", req.width, req.height);
 
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
 	gtk_widget_show (vbox);
@@ -3435,7 +3437,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 rf->pending = FALSE;
         }
 #endif
-//	check_feed_age();
+	check_feed_age();
 }
 
 void
@@ -4588,15 +4590,47 @@ display_doc (RDF *r)
 void
 get_feed_age(gpointer key, gpointer value, gpointer user_data)
 {
+	CamelMessageInfo *info;
         CamelFolder *folder;
 	CamelStore *store = mail_component_peek_local_store(NULL);
-	guint total;
+	GPtrArray *uids;
+	time_t date, now;
+	char strbuf[200];
+	char strbuf2[200];
+	guint i,total;
+
+	time (&now);
+
 	g_print("key:%s,", key);
 	gchar *real_folder = lookup_feed_folder(key);
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
                         goto fail;
+	
+	uids = camel_folder_get_uids (folder);
+        camel_folder_freeze(folder);
+        for (i = 0; i < uids->len; i++)
+	{
+		info = camel_folder_get_message_info(folder, uids->pdata[i]);
+                if (info) {
+			date = camel_message_info_date_sent(info);
+			strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
+			if (date < now - 60*86400)
+				g_print("feed older than 2 days->Subj:%s, %s\n", camel_message_info_subject(info),
+				strbuf);
+//			strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
+//			strftime(strbuf2, sizeof(strbuf2), "%a, %d %b %Y %H:%M:%S %z", localtime(&now));
+                        camel_folder_free_message_info(folder, info);
+//			g_print("date:%s->%s\n", strbuf, strbuf2);
+                }
+	}
+        camel_folder_sync (folder, TRUE, NULL);
+        camel_folder_thaw(folder);
+        camel_folder_free_uids (folder, uids);
+
+
 	total = camel_folder_get_message_count (folder);
+	camel_object_unref (folder);
 	g_print("value:%s\n", value);
 	g_print("=> total:%d\n", total);
 fail:	g_free(real_name);
