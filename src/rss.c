@@ -2449,7 +2449,6 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkRequisition req;
-	guint width, height;
 
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
 	gtk_widget_show (vbox);
@@ -2474,10 +2473,6 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
         gtk_container_add ((GtkContainer *) eb, vbox);
 	gtk_widget_size_request(eb, &req);
 	g_print("ww:%d,hh%d\n", req.width, req.height);
-	GtkWidget *w = (GtkWidget *)efh->html;
-	GtkWidget *w2 = (GtkWidget *)eb;
-	g_print("w:%d,h%d\n", w->allocation.width, w->allocation.height);
-	g_print("w:%d,h%d\n", w2->allocation.width, w2->allocation.height);
 	po->html = vbox;
 	po->mem = mem;
 
@@ -3440,7 +3435,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 rf->pending = FALSE;
         }
 #endif
-	check_feed_age();
+//	check_feed_age();
 }
 
 void
