@@ -415,6 +415,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
   GtkWidget *dialog_vbox1;
   GtkWidget *vbox1;
   GtkWidget *hbox1;
+  GtkWidget *label1;
   GtkWidget *label2;
   GtkWidget *entry1;
   GtkWidget *checkbutton1;
@@ -493,6 +494,12 @@ create_dialog_add(gchar *text, gchar *feed_text)
 	gtk_entry_set_invisible_char (GTK_ENTRY (entry2), 8226);
   }
 
+  label1 = gtk_label_new (_("<b>Articles Settings</b>"));
+  gtk_widget_show (label1);
+  gtk_box_pack_start (GTK_BOX (vbox1), label1, FALSE, FALSE, 0);
+  gtk_label_set_use_markup (GTK_LABEL (label1), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+
   checkbutton1 = gtk_check_button_new_with_mnemonic (
 		_("Show the article summary instead of web page"));
   gtk_widget_show (checkbutton1);
@@ -513,6 +520,61 @@ create_dialog_add(gchar *text, gchar *feed_text)
   gtk_widget_show (checkbutton3);
   gtk_box_pack_start (GTK_BOX (vbox1), checkbutton3, FALSE, TRUE, 0);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton3), validate);
+
+
+GtkWidget *hbox2, *label3;
+GtkWidget *radiobutton1, *radiobutton2, *radiobutton3;
+GtkWidget *spinbutton1, *spinbutton2;
+GtkObject *spinbutton1_adj, *spinbutton2_adj;
+GSList *radiobutton1_group = NULL;
+
+ //editing
+ if (text != NULL)
+ {
+  label1 = gtk_label_new (_("<b>Articles Storage</b>"));
+  gtk_widget_show (label1);
+  gtk_box_pack_start (GTK_BOX (vbox1), label1, FALSE, FALSE, 0);
+  gtk_label_set_use_markup (GTK_LABEL (label1), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+  radiobutton1 = gtk_radio_button_new_with_mnemonic (NULL, _("Don't delete articles"));
+  gtk_widget_show (radiobutton1);
+  gtk_box_pack_start (GTK_BOX (vbox1), radiobutton1, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton1), radiobutton1_group);
+  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
+  hbox1 = gtk_hbox_new (FALSE, 10);
+  gtk_widget_show (hbox1);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 0);
+  radiobutton2 = gtk_radio_button_new_with_mnemonic (NULL, _("Delete all but the last"));
+  gtk_widget_show (radiobutton2);
+  gtk_box_pack_start (GTK_BOX (hbox1), radiobutton2, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton1_group);
+  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
+  spinbutton1_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
+  spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
+  gtk_widget_show (spinbutton1);
+  gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
+  label2 = gtk_label_new (_("messages"));
+  gtk_widget_show (label2);
+  gtk_box_pack_start (GTK_BOX (hbox1), label2, FALSE, FALSE, 0);
+  hbox2 = gtk_hbox_new (FALSE, 10);
+  gtk_widget_show (hbox2);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbox2, FALSE, FALSE, 0);
+  radiobutton3 = gtk_radio_button_new_with_mnemonic (NULL, _("Delete articles older than"));
+  gtk_widget_show (radiobutton3);
+  gtk_box_pack_start (GTK_BOX (hbox2), radiobutton3, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton3), radiobutton1_group);
+  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
+  spinbutton2_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
+  spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
+  gtk_widget_show (spinbutton2);
+  gtk_box_pack_start (GTK_BOX (hbox2), spinbutton2, FALSE, FALSE, 0);
+  label3 = gtk_label_new (_("day(s)"));
+  gtk_widget_show (label3);
+  gtk_box_pack_start (GTK_BOX (hbox2), label3, FALSE, FALSE, 0);
+  checkbutton1 = gtk_check_button_new_with_mnemonic (_("Always delete unread articles"));
+  gtk_widget_show (checkbutton1);
+  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, FALSE, 0);
+ }
 
   dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
   gtk_widget_show (dialog_action_area1);
@@ -2308,6 +2370,8 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 	{
         	int width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
+		g_print("mycall:width:%d\n", width);
+		g_print("mycall:height:%d\n", height);
 //			rf->headers_mode ? 194 : 100;
 //	EMFormat *myf = (EMFormat *)efh;
 //	g_print("w0:%d,h0:%d\n", width, height);
@@ -5047,15 +5111,6 @@ rss_config_control_new (void)
 	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
 	gtk_widget_show(combo);
 	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
-
-
-
-
-/*#ifdef HAVE_RENDERKIT
-	gtk_combo_box_set_active(sf->render_combo, 2);
-#else
-	gtk_combo_box_set_active(sf->render_combo, 0);
-#endif*/
 
 	/* Network tab */
 	sf->use_proxy = glade_xml_get_widget(sf->gui, "use_proxy");
