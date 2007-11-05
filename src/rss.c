@@ -2475,6 +2475,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	if (engine == 1)
 	{
 		g_print("Render engine Webkit\n");
+		g_print("po->website:%s\n", po->website);
         	webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), po->website);
 		g_print("page open\n");
 	}
@@ -2640,11 +2641,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         	}
 #ifdef HAVE_RENDERKIT
 	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
-#ifndef HAVE_GTKMOZEMBED
-	engine=0;
-#endif
-
-#ifndef HAVE_WEBKIT
+#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
 	engine=0;
 #endif
 

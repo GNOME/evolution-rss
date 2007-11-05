@@ -13,6 +13,7 @@ AC_SUBST(ACLOCAL_AMFLAGS, "\${ACLOCAL_FLAGS}")
 AC_PROG_INTLTOOL([0.21])
 
 AC_PROG_CC
+AC_PROG_CXX([g++])
 AC_ISC_POSIX
 AC_HEADER_STDC
 AM_DISABLE_STATIC
@@ -113,10 +114,12 @@ if test "x$ERROR_DIR" = "x"; then
 fi
 AC_SUBST(ERROR_DIR)
 
+dnl default renderer and fall it it in case no other render is found
+RENDER=gtkhtml
+
 # *******************************
 # gecko renderer
 # *******************************
-
 
 GECKO_INIT([GECKO], [have_gecko=yes], [have_gecko=no])
 
@@ -142,7 +145,6 @@ AC_ARG_ENABLE([gecko],
 AC_MSG_RESULT([$enable_gecko])
 
 if test "$enable_gecko" = "yes"; then
-
 	if test "x$have_gecko" != "xno"; then
 	PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version], [], [have_gecko=no])
 	AC_SUBST([GECKO_CFLAGS])
@@ -161,8 +163,18 @@ if test "$enable_gecko" = "yes"; then
 			AC_SUBST(HAVE_XULRUNNER)
 			fi
 		fi
+		AC_ARG_WITH([primary-render],
+        		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
+        			[RENDER=$with_primary_render], [RENDER=gtkhtml])
+		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xgecko"; then
+			AC_MSG_NOTICE([$RENDER set as primary HTML render])
+		else
+			dnl fall back to gtkhtml if selection is not valid
+			RENDER=gtkhtml
+		fi
 	fi
 fi
+
 # *******************************
 # webkit renderer
 # *******************************
@@ -183,9 +195,23 @@ if test "x$have_webkit" != "xno"; then
 	AC_DEFINE_UNQUOTED(HAVE_WEBKIT,1, [webkit render engine present])
 	AC_SUBST(HAVE_RENDERKIT)
 	AC_SUBST(HAVE_WEBKIT)
+	if test "x$RENDER" != "xgecko"; then
+		AC_ARG_WITH([primary-render],
+        		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
+        			[RENDER=$with_primary_render], [RENDER=gtkhtml])
+		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xwebkit"; then
+			AC_MSG_NOTICE([$RENDER set as primary HTML render])
+		else
+			dnl fall back to gtkhtml if selection is not valid
+			RENDER=gtkhtml
+		fi
+	fi
 fi
 fi
 
+AC_SUBST(RENDER)
+
+# check for ellipsize
 if pkg-config --atleast-version=2.6.0 gtk+-2.0; then
     AC_DEFINE(GTK_2_6,1,[At least 2.6 present])
 fi
@@ -242,18 +268,19 @@ po/Makefile.in
 pixmaps/Makefile
 ])
 
-AC_OUTPUT
-
-echo ""
-echo "Evolution RSS plugin successfully configured"
-echo ""
-echo "    Installation path: $PLUGIN_INSTALL_DIR"
-kit="HTML rendering   : gtkhtml "
+kits="gtkHTML, "
 if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
-	kit=$kit"WebKit "
+        kits=$kits"WebKit, "
 fi
-if test "x$have_gecko" != "xno" -a "$enable_gecko" = "yes"; then
-	kit=$kit"GECKO($GECKO)"
-fi
-	echo "    "$kit
-echo ""
+kits="$kits$gecko_cv_gecko (version $gecko_cv_gecko_version)"
+
+AC_OUTPUT
+echo "
+	Evolution RSS plugin successfully configured
+
+	Source code location	: $srcdir
+	Installation path	: $PLUGIN_INSTALL_DIR
+	Prefix			: $prefix
+	HTML renders		: $kits
+	Primary HTML render	: $RENDER
+	"

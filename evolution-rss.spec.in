@@ -18,7 +18,7 @@ Packager: Lucian Langa <cooly@mips.edu.ms>
 #BuildArch: noarch
 Requires: evolution, firefox-devel
 #Obsoletes: 
-BuildRequires: gettext, gettext-devel, evolution-devel, perl(XML::Parser)
+BuildRequires: gettext, gettext-devel, gcc-c++, evolution-devel, evolution-data-server-devel, perl(XML::Parser)
 
 %description
 This is an evolution plugin which enables evolution to read rss feeds.

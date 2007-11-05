@@ -1,3 +1,15 @@
+Mon 05 Nov 2007 08:36:37 AM EET <lucilanga@gnome.org>
+
+	* added primary render flag to setup default
+	render engine
+	* added checks for g++ in configure script
+	(needed for gecko.m4) fix for #25
+	
+Sat 03 Nov 2007 08:21:07 PM EET <lucilanga@gnome.org>
+
+	* fix for failback in case webkits not
+	 present
+	 
 Fri 02 Nov 2007 05:42:24 PM EET <lucilanga@gnome.org>
 
 	* implement article storage settings
@@ -5,7 +17,7 @@ Fri 02 Nov 2007 05:42:24 PM EET <lucilanga@gnome.org>
 Sun 28 Oct 2007 10:06:57 PM EET <lucilanga@gnome.org>
 
 	* safe failback to gtkhtml when webkits not
-	available
+	available and fixing bug #23
 	
 Tue 23 Oct 2007 10:00:35 PM EEST <lucilanga@gnome.org>
 

@@ -99,6 +99,7 @@ typedef struct ADD_FEED {
 	gboolean	changed;
 	gboolean	enabled;
 	gboolean	validate;
+	guint		del_feed;
 } add_feed;
 
 typedef struct USERPASS {
