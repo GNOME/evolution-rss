@@ -14,7 +14,8 @@ INCLUDES =							\
 	-DEVOLUTION_VERSION=\"$(EVOLUTION_EXEC_VERSION)\"    	\
 	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"            	\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
-	-DGECKO_HOME=\""$(GECKO_HOME)"\"				\
+	-DGECKO_HOME=\""$(GECKO_HOME)"\"			\
+	-DRENDER=\""$(RENDER)"\"				\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
 

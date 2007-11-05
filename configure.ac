@@ -13,7 +13,8 @@ AC_SUBST(ACLOCAL_AMFLAGS, "\${ACLOCAL_FLAGS}")
 AC_PROG_INTLTOOL([0.21])
 
 AC_PROG_CC
-AC_PROG_CXX([g++])
+AC_REQUIRE_CPP
+#AC_PROG_CXXCPP
 AC_ISC_POSIX
 AC_HEADER_STDC
 AM_DISABLE_STATIC
@@ -113,6 +114,8 @@ if test "x$ERROR_DIR" = "x"; then
    AC_MSG_ERROR(Unable to find error file directory)
 fi
 AC_SUBST(ERROR_DIR)
+echo $CPPFLAGS
+echo $CPP
 
 dnl default renderer and fall it it in case no other render is found
 RENDER=gtkhtml
@@ -272,7 +275,7 @@ kits="gtkHTML, "
 if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
         kits=$kits"WebKit, "
 fi
-kits="$kits$gecko_cv_gecko (version $gecko_cv_gecko_version)"
+kits="$kits$gecko_cv_gecko (gecko engine version $gecko_cv_gecko_version)"
 
 AC_OUTPUT
 echo "

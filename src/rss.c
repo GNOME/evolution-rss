@@ -2589,6 +2589,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         g_print("formatting\n");
         g_print("html\n");
 
+	g_print("RENDER:%s\n", RENDER);
+
 	CamelMimePart *message = CAMEL_IS_MIME_MESSAGE(t->part) ? 
 			t->part : 
 			(CamelMimePart *)t->format->message;
