@@ -114,11 +114,10 @@ if test "x$ERROR_DIR" = "x"; then
    AC_MSG_ERROR(Unable to find error file directory)
 fi
 AC_SUBST(ERROR_DIR)
-echo $CPPFLAGS
-echo $CPP
 
 dnl default renderer and fall it it in case no other render is found
 RENDER=gtkhtml
+RENDER_N=0
 
 # *******************************
 # gecko renderer
@@ -171,9 +170,11 @@ if test "$enable_gecko" = "yes"; then
         			[RENDER=$with_primary_render], [RENDER=gtkhtml])
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xgecko"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
+			RENDER_N=1
 		else
 			dnl fall back to gtkhtml if selection is not valid
 			RENDER=gtkhtml
+			RENDER_N=0
 		fi
 	fi
 fi
@@ -204,15 +205,18 @@ if test "x$have_webkit" != "xno"; then
         			[RENDER=$with_primary_render], [RENDER=gtkhtml])
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xwebkit"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
+			RENDER_N=2
 		else
 			dnl fall back to gtkhtml if selection is not valid
 			RENDER=gtkhtml
+			RENDER_N=0
 		fi
 	fi
 fi
 fi
 
 AC_SUBST(RENDER)
+AC_SUBST(RENDER_N)
 
 # check for ellipsize
 if pkg-config --atleast-version=2.6.0 gtk+-2.0; then

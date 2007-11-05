@@ -5086,6 +5086,10 @@ rss_config_control_new (void)
                                     GCONF_KEY_HTML_RENDER,
                                     NULL));
 
+	if (RENDER_N > 0)	// set render just in case it was forced in configure
+		render = RENDER_N;	
+	g_print("<!-----render------->:%d\n", render);
+
 	switch (render)
 	{
 		case 1: 

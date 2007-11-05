@@ -16,6 +16,7 @@ INCLUDES =							\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
 	-DGECKO_HOME=\""$(GECKO_HOME)"\"			\
 	-DRENDER=\""$(RENDER)"\"				\
+	-DRENDER_N=$(RENDER_N)					\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
 
