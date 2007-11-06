@@ -31,6 +31,10 @@ typedef struct _rssfeed {
         GHashTable      *hrh;   		//fetch html flag
         GHashTable      *hruser;   		//auth user hash
         GHashTable      *hrpass;   		//auth user hash
+        GHashTable      *hrdel_feed;   		//option to delete messages in current feed
+        GHashTable      *hrdel_days;   		//option to delete messages older then days
+        GHashTable      *hrdel_messages; 	//option to keep last messages
+        GHashTable      *hrdel_unread; 		//option to delete unread messages too
         GtkWidget       *feed_dialog;
         GtkWidget       *progress_dialog;
         GtkWidget       *progress_bar;
@@ -101,7 +105,7 @@ typedef struct ADD_FEED {
 	gboolean	validate;
 	guint		del_feed;
 	guint		del_days;	// delete messages over del_days old
-	guint		del_messsages;  // delete all messages but the last del_messages
+	guint		del_messages;	// delete all messages but the last del_messages
 	gboolean	del_unread;	// delete unread messages too
 } add_feed;
 

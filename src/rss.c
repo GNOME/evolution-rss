@@ -158,6 +158,8 @@ void check_feed_age(void);
 static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
 gchar *decode_html_entities(gchar *str);
 void delete_feed_folder_alloc(gchar *old_name);
+static void del_days_cb (GtkWidget *widget, add_feed *data);
+static void del_messages_cb (GtkWidget *widget, add_feed *data);
 
 /*======================================================================*/
 
@@ -420,13 +422,16 @@ create_dialog_add(gchar *text, gchar *feed_text)
   GtkWidget *entry1;
   GtkWidget *checkbutton1;
   GtkWidget *checkbutton2;
-  GtkWidget *checkbutton3;
+  GtkWidget *checkbutton3, *checkbutton4;
   GtkWidget *dialog_action_area1;
   GtkWidget *cancelbutton1;
   GtkWidget *okbutton1;
   add_feed *feed = g_new0(add_feed, 1);
   gboolean fhtml = FALSE;
   gboolean enabled = TRUE;
+  gboolean del_unread = FALSE;
+  guint del_days;
+  guint del_messages;
   GtkAccelGroup *accel_group = gtk_accel_group_new ();
   gchar *flabel = NULL;
 
@@ -465,6 +470,15 @@ create_dialog_add(gchar *text, gchar *feed_text)
 				lookup_key(feed_text)));
 	enabled = GPOINTER_TO_INT(
 		g_hash_table_lookup(rf->hre, 
+				lookup_key(feed_text)));
+	del_unread = GPOINTER_TO_INT(
+		g_hash_table_lookup(rf->hrdel_unread, 
+				lookup_key(feed_text)));
+	del_days = GPOINTER_TO_INT(
+		g_hash_table_lookup(rf->hrdel_days, 
+				lookup_key(feed_text)));
+	del_messages = GPOINTER_TO_INT(
+		g_hash_table_lookup(rf->hrdel_messages, 
 				lookup_key(feed_text)));
   }
 
@@ -552,6 +566,9 @@ GSList *radiobutton1_group = NULL;
   spinbutton1_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
   spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
   gtk_widget_show (spinbutton1);
+  if (del_days)
+  	gtk_spin_button_set_value(spinbutton1, del_days);
+  g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_days_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
   label2 = gtk_label_new (_("messages"));
   gtk_widget_show (label2);
@@ -566,15 +583,18 @@ GSList *radiobutton1_group = NULL;
   radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
   spinbutton2_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
   spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
+  if (del_messages)
+  	gtk_spin_button_set_value(spinbutton2, del_messages);
   gtk_widget_show (spinbutton2);
+  g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_messages_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox2), spinbutton2, FALSE, FALSE, 0);
   label3 = gtk_label_new (_("day(s)"));
   gtk_widget_show (label3);
   gtk_box_pack_start (GTK_BOX (hbox2), label3, FALSE, FALSE, 0);
-  checkbutton1 = gtk_check_button_new_with_mnemonic (_("Always delete unread articles"));
-  gtk_widget_show (checkbutton1);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), del_unread);
-  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, FALSE, 0);
+  checkbutton4 = gtk_check_button_new_with_mnemonic (_("Always delete unread articles"));
+  gtk_widget_show (checkbutton4);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
+  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton4, FALSE, FALSE, 0);
  }
 
   dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
@@ -614,6 +634,8 @@ GSList *radiobutton1_group = NULL;
 	validate = gtk_toggle_button_get_active(
 		GTK_TOGGLE_BUTTON(checkbutton3));
 	feed->validate = validate;
+	feed->del_unread = gtk_toggle_button_get_active(
+		GTK_TOGGLE_BUTTON(checkbutton4));
 	feed->add = 1;
 	// there's no reason to feetch feed if url isn't changed
 	if (text && !strncmp(text, feed->feed_url, strlen(text)))
@@ -720,6 +742,7 @@ feed_to_xml(gchar *key)
         xmlChar *xmlbuf;
         xmlDocPtr doc;
         int n;
+	gchar *ctmp;
 
         doc = xmlNewDoc ("1.0");
 
@@ -734,6 +757,18 @@ feed_to_xml(gchar *key)
         xmlNewTextChild (root, NULL, "name", key);
         xmlNewTextChild (root, NULL, "url", g_hash_table_lookup(rf->hr, lookup_key(key)));
         xmlNewTextChild (root, NULL, "type", g_hash_table_lookup(rf->hrt, lookup_key(key)));
+        src = xmlNewTextChild (root, NULL, "delete", NULL);
+        ctmp = g_hash_table_lookup(rf->hrdel_feed, lookup_key(key));
+        xmlSetProp (src, "option", ctmp);
+	g_free(ctmp);
+	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrdel_days, lookup_key(key)));
+        xmlSetProp (src, "days", ctmp);
+	g_free(ctmp);
+	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrdel_messages, lookup_key(key)));
+        xmlSetProp (src, "messages", ctmp);
+	g_free(ctmp);
+        xmlSetProp (src, "unread", 
+		g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false");
 
 /*        if (account->id->address)
                 xmlNewTextChild (id, NULL, "addr-spec", account->id->address);
@@ -923,6 +958,18 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 					g_hash_table_replace(rf->hre, 
 							g_strdup(key), 
 							GINT_TO_POINTER(feed->enabled));
+					g_hash_table_replace(rf->hrdel_feed, 
+							g_strdup(key), 
+							GINT_TO_POINTER(feed->del_feed));
+					g_hash_table_replace(rf->hrdel_days, 
+							g_strdup(key), 
+							GINT_TO_POINTER(feed->del_days));
+					g_hash_table_replace(rf->hrdel_messages, 
+							g_strdup(key), 
+							GINT_TO_POINTER(feed->del_messages));
+					g_hash_table_replace(rf->hrdel_unread, 
+							g_strdup(key), 
+							GINT_TO_POINTER(feed->del_unread));
 					g_free(key);
 					gtk_list_store_clear(GTK_LIST_STORE(model));
 					g_hash_table_foreach(rf->hrname, construct_list, model);
@@ -1855,6 +1902,20 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
+del_days_cb (GtkWidget *widget, add_feed *data)
+{
+	guint adj = gtk_spin_button_get_value((GtkSpinButton*)widget);
+	data->del_days = adj;
+}
+
+static void
+del_messages_cb (GtkWidget *widget, add_feed *data)
+{
+	guint adj = gtk_spin_button_get_value((GtkSpinButton*)widget);
+	data->del_messages = adj;
+}
+
+static void
 err_destroy (GtkWidget *widget, gpointer data)
 {
        gtk_widget_destroy(widget);
@@ -1942,6 +2003,10 @@ feed_new_from_xml(char *xml)
 	char *type = NULL;
 	gboolean enabled;
 	gboolean html;
+	guint del_feed=0;
+	guint del_days=0;
+	guint del_messages=0;
+	guint del_unread=0;
 
         if (!(doc = xmlParseDoc ((char *)xml)))
                 return FALSE;
@@ -1967,6 +2032,18 @@ feed_new_from_xml(char *xml)
 			xml_set_content (node, &type);
 		}
 	}
+
+/*		g_print("deletion\n");
+	if (strcmp (node->name, "delete") != 0)
+	{
+		g_print("deletion\n");
+		//deletion
+		xml_set_prop (node, "option", &del_feed);
+		xml_set_prop (node, "days", &del_days);
+		xml_set_prop (node, "messages", &del_messages);
+		xml_set_prop (node, "unread", &del_unread);
+	}*/
+
 	g_hash_table_insert(rf->hrname, name, uid);
 	g_hash_table_insert(rf->hrname_r, g_strdup(uid), g_strdup(name));
 	g_hash_table_insert(rf->hr, g_strdup(uid), url);
@@ -1977,6 +2054,18 @@ feed_new_from_xml(char *xml)
 	g_hash_table_insert(rf->hre, 
 				g_strdup(uid), 
 				GINT_TO_POINTER(enabled));
+	g_hash_table_insert(rf->hrdel_feed, 
+				g_strdup(uid), 
+				GINT_TO_POINTER(del_feed));
+	g_hash_table_insert(rf->hrdel_days, 
+				g_strdup(uid), 
+				GINT_TO_POINTER(del_days));
+	g_hash_table_insert(rf->hrdel_messages, 
+				g_strdup(uid), 
+				GINT_TO_POINTER(del_messages));
+	g_hash_table_insert(rf->hrdel_unread, 
+				g_strdup(uid), 
+				GINT_TO_POINTER(del_unread));
 }
 
 char *
@@ -2089,6 +2178,10 @@ read_feeds(rssfeed *rf)
 	rf->hrh = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
 	rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+	rf->hrdel_feed = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrdel_days = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrdel_messages = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrdel_unread = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
 		migrate_old_config(feed_file);
@@ -2848,6 +2941,26 @@ setup_feed(add_feed *feed)
 						 g_str_equal,
 						 g_free,
 						 NULL);
+	if (rf->hrdel_feed == NULL)	
+	    	rf->hrdel_feed = g_hash_table_new_full(g_str_hash,
+						 g_str_equal,
+						 g_free,
+						 NULL);
+	if (rf->hrdel_days == NULL)	
+	    	rf->hrdel_days = g_hash_table_new_full(g_str_hash,
+						 g_str_equal,
+						 g_free,
+						 NULL);
+	if (rf->hrdel_messages == NULL)	
+	    	rf->hrdel_messages = g_hash_table_new_full(g_str_hash,
+						 g_str_equal,
+						 g_free,
+						 NULL);
+	if (rf->hrdel_unread == NULL)	
+	    	rf->hrdel_unread = g_hash_table_new_full(g_str_hash,
+						 g_str_equal,
+						 g_free,
+						 NULL);
 
 	rf->pending = TRUE;
 
@@ -2903,6 +3016,18 @@ add:
 		g_hash_table_insert(rf->hre, 
 			g_strdup(crc_feed), 
 			GINT_TO_POINTER(feed->enabled));
+		g_hash_table_insert(rf->hrdel_feed,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(feed->del_feed));
+		g_hash_table_insert(rf->hrdel_days,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(feed->del_days));
+		g_hash_table_insert(rf->hrdel_messages,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(feed->del_messages));
+		g_hash_table_insert(rf->hrdel_unread,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(feed->del_unread));
 
 		gchar *ver = NULL;
 		if (r->type && r->version)
