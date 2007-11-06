@@ -430,6 +430,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
   gboolean fhtml = FALSE;
   gboolean enabled = TRUE;
   gboolean del_unread = FALSE;
+  guint del_feed;
   guint del_days;
   guint del_messages;
   GtkAccelGroup *accel_group = gtk_accel_group_new ();
@@ -471,13 +472,16 @@ create_dialog_add(gchar *text, gchar *feed_text)
 	enabled = GPOINTER_TO_INT(
 		g_hash_table_lookup(rf->hre, 
 				lookup_key(feed_text)));
+	del_feed = GPOINTER_TO_INT(
+		g_hash_table_lookup(rf->hrdel_feed, 
+				lookup_key(feed_text)));
 	del_unread = GPOINTER_TO_INT(
 		g_hash_table_lookup(rf->hrdel_unread, 
 				lookup_key(feed_text)));
-	del_days = GPOINTER_TO_INT(
+	feed->del_days = GPOINTER_TO_INT(
 		g_hash_table_lookup(rf->hrdel_days, 
 				lookup_key(feed_text)));
-	del_messages = GPOINTER_TO_INT(
+	feed->del_messages = GPOINTER_TO_INT(
 		g_hash_table_lookup(rf->hrdel_messages, 
 				lookup_key(feed_text)));
   }
@@ -566,8 +570,8 @@ GSList *radiobutton1_group = NULL;
   spinbutton1_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
   spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
   gtk_widget_show (spinbutton1);
-  if (del_days)
-  	gtk_spin_button_set_value(spinbutton1, del_days);
+  if (feed->del_days)
+  	gtk_spin_button_set_value(spinbutton1, feed->del_days);
   g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_days_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
   label2 = gtk_label_new (_("messages"));
@@ -581,10 +585,24 @@ GSList *radiobutton1_group = NULL;
   gtk_box_pack_start (GTK_BOX (hbox2), radiobutton3, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton3), radiobutton1_group);
   radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
+  switch (del_feed)
+  {
+	case 1:		//all but the last
+		gtk_toggle_button_set_active(
+			GTK_TOGGLE_BUTTON(radiobutton2), 1);
+		break;
+	case 2:		//older than days
+		gtk_toggle_button_set_active(
+			GTK_TOGGLE_BUTTON(radiobutton3), 1);
+		break;
+	default:
+		gtk_toggle_button_set_active(
+			GTK_TOGGLE_BUTTON(radiobutton1), 1);
+  }
   spinbutton2_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
   spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
-  if (del_messages)
-  	gtk_spin_button_set_value(spinbutton2, del_messages);
+  if (feed->del_messages)
+  	gtk_spin_button_set_value(spinbutton2, feed->del_messages);
   gtk_widget_show (spinbutton2);
   g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_messages_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox2), spinbutton2, FALSE, FALSE, 0);
@@ -634,6 +652,18 @@ GSList *radiobutton1_group = NULL;
 	validate = gtk_toggle_button_get_active(
 		GTK_TOGGLE_BUTTON(checkbutton3));
 	feed->validate = validate;
+	guint i=0;
+	while (i<3) {
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
+			break;
+		i++;
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton2)))
+			break;
+		i++;
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
+			break;
+	}
+	feed->del_feed=i;
 	feed->del_unread = gtk_toggle_button_get_active(
 		GTK_TOGGLE_BUTTON(checkbutton4));
 	feed->add = 1;
@@ -757,8 +787,9 @@ feed_to_xml(gchar *key)
         xmlNewTextChild (root, NULL, "name", key);
         xmlNewTextChild (root, NULL, "url", g_hash_table_lookup(rf->hr, lookup_key(key)));
         xmlNewTextChild (root, NULL, "type", g_hash_table_lookup(rf->hrt, lookup_key(key)));
+
         src = xmlNewTextChild (root, NULL, "delete", NULL);
-        ctmp = g_hash_table_lookup(rf->hrdel_feed, lookup_key(key));
+        ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrdel_feed, lookup_key(key)));
         xmlSetProp (src, "option", ctmp);
 	g_free(ctmp);
 	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrdel_days, lookup_key(key)));
@@ -769,6 +800,7 @@ feed_to_xml(gchar *key)
 	g_free(ctmp);
         xmlSetProp (src, "unread", 
 		g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false");
+
 
 /*        if (account->id->address)
                 xmlNewTextChild (id, NULL, "addr-spec", account->id->address);
@@ -795,12 +827,8 @@ feed_to_xml(gchar *key)
                 xmlNewTextChild (xport, NULL, "url", account->transport->url);
 
         xmlNewTextChild (root, NULL, "drafts-folder", account->drafts_folder_uri);
-        xmlNewTextChild (root, NULL, "sent-folder", account->sent_folder_uri);
+        xmlNewTextChild (root, NULL, "sent-folder", account->sent_folder_uri);*/
 
-        node = xmlNewChild (root, NULL, "auto-cc", NULL);
-        xmlSetProp (node, "always", account->always_cc ? "true" : "false");
-        if (account->cc_addrs)
-                xmlNewTextChild (node, NULL, "recipients", account->cc_addrs);*/
 	
 	xmlDocDumpMemory (doc, &xmlbuf, &n);
         xmlFreeDoc (doc);
@@ -2007,6 +2035,7 @@ feed_new_from_xml(char *xml)
 	guint del_days=0;
 	guint del_messages=0;
 	guint del_unread=0;
+	gchar *ctmp = NULL;
 
         if (!(doc = xmlParseDoc ((char *)xml)))
                 return FALSE;
@@ -2031,18 +2060,18 @@ feed_new_from_xml(char *xml)
                 if (!strcmp (node->name, "type")) {
 			xml_set_content (node, &type);
 		}
+		if (!strcmp (node->name, "delete")) {
+			xml_set_prop (node, "option", &ctmp);
+			del_feed = atoi(ctmp);
+			xml_set_prop (node, "days", &ctmp);
+			del_days = atoi(ctmp);
+			xml_set_prop (node, "messages", &ctmp);
+			del_messages = atoi(ctmp);
+			xml_set_prop (node, "unread", &del_unread);
+			del_unread = atoi(ctmp);
+			g_free(ctmp);
+		}
 	}
-
-/*		g_print("deletion\n");
-	if (strcmp (node->name, "delete") != 0)
-	{
-		g_print("deletion\n");
-		//deletion
-		xml_set_prop (node, "option", &del_feed);
-		xml_set_prop (node, "days", &del_days);
-		xml_set_prop (node, "messages", &del_messages);
-		xml_set_prop (node, "unread", &del_unread);
-	}*/
 
 	g_hash_table_insert(rf->hrname, name, uid);
 	g_hash_table_insert(rf->hrname_r, g_strdup(uid), g_strdup(name));
