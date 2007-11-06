@@ -1,3 +1,9 @@
+Tue 06 Nov 2007 08:47:41 AM EET <lucilanga@gnome.org>
+
+	* change gtkhtml render value from 0 to 10
+	in order not to confuse value return from
+	gconf
+	
 Mon 05 Nov 2007 08:36:37 AM EET <lucilanga@gnome.org>
 
 	* added primary render flag to setup default

@@ -573,6 +573,7 @@ GSList *radiobutton1_group = NULL;
   gtk_box_pack_start (GTK_BOX (hbox2), label3, FALSE, FALSE, 0);
   checkbutton1 = gtk_check_button_new_with_mnemonic (_("Always delete unread articles"));
   gtk_widget_show (checkbutton1);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), del_unread);
   gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, FALSE, 0);
  }
 
@@ -2647,7 +2648,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	engine=0;
 #endif
 
-	if (engine)
+	if (engine && engine != 10)
 	{ 
         	char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
 			org_gnome_rss_controls_counter_id);
@@ -3696,8 +3697,21 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		get_feed_folders();
 		atexit(rss_finalize);
 		upgrade = 2;
+		guint render = GPOINTER_TO_INT(
+			 gconf_client_get_int(rss_gconf, 
+						GCONF_KEY_HTML_RENDER, 
+						NULL));
+		
+		//render = 0 means gtkhtml however it could mean no value set
+		//perhaps we should change this number representing gtkhtml
+
+		if (!render)	// set render just in case it was forced in configure
+		{
+			render = RENDER_N;
+  			gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, render, NULL);
+		}
 #ifdef HAVE_GTKMOZEMBED
-		if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
+		if (2 == render)
 			rss_mozilla_init();
 #endif
 	} else {
@@ -4943,6 +4957,7 @@ render_engine_changed (GtkComboBox *dropdown, GCallback *user_data)
         model = gtk_combo_box_get_model (dropdown);
         if (id == -1 || !gtk_tree_model_iter_nth_child (model, &iter, NULL, id))
                 return;
+	if (!id) id = 10;
 	gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, id, NULL);
 #ifdef HAVE_GTKMOZEMBED
 	if (id == 2)
@@ -5085,10 +5100,6 @@ rss_config_control_new (void)
 	guint render = GPOINTER_TO_INT(gconf_client_get_int(rss_gconf,
                                     GCONF_KEY_HTML_RENDER,
                                     NULL));
-
-	if (RENDER_N > 0)	// set render just in case it was forced in configure
-		render = RENDER_N;	
-	g_print("<!-----render------->:%d\n", render);
 
 	switch (render)
 	{

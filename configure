@@ -21069,7 +21069,7 @@ fi
 
 
 RENDER=gtkhtml
-RENDER_N=0
+RENDER_N=10
 
 # *******************************
 # gecko renderer
@@ -21844,10 +21844,10 @@ fi
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xgecko"; then
 			{ echo "$as_me:$LINENO: $RENDER set as primary HTML render" >&5
 echo "$as_me: $RENDER set as primary HTML render" >&6;}
-			RENDER_N=1
+			RENDER_N=2
 		else
 						RENDER=gtkhtml
-			RENDER_N=0
+			RENDER_N=10
 		fi
 	fi
 fi
@@ -21968,10 +21968,10 @@ fi
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xwebkit"; then
 			{ echo "$as_me:$LINENO: $RENDER set as primary HTML render" >&5
 echo "$as_me: $RENDER set as primary HTML render" >&6;}
-			RENDER_N=2
+			RENDER_N=1
 		else
 						RENDER=gtkhtml
-			RENDER_N=0
+			RENDER_N=10
 		fi
 	fi
 fi

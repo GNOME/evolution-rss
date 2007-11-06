@@ -100,6 +100,9 @@ typedef struct ADD_FEED {
 	gboolean	enabled;
 	gboolean	validate;
 	guint		del_feed;
+	guint		del_days;	// delete messages over del_days old
+	guint		del_messsages;  // delete all messages but the last del_messages
+	gboolean	del_unread;	// delete unread messages too
 } add_feed;
 
 typedef struct USERPASS {
