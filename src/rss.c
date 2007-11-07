@@ -3202,6 +3202,9 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	g_free(r);
 	g_string_free(response, 1);
 	g_print("freed\n");
+
+	if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+		get_feed_age(user_data, lookup_key(user_data));
 //        rf->pending = FALSE;
 
 #ifdef EVOLUTION_2_12
@@ -3655,7 +3658,6 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 rf->pending = FALSE;
         }
 #endif
-	check_feed_age();
 }
 
 void
@@ -4819,7 +4821,7 @@ display_doc (RDF *r)
 }
 
 void
-get_feed_age(gpointer key, gpointer value, gpointer user_data)
+get_feed_age(gpointer key, gpointer value)
 {
 	CamelMessageInfo *info;
         CamelFolder *folder;
@@ -4830,34 +4832,38 @@ get_feed_age(gpointer key, gpointer value, gpointer user_data)
 	char strbuf2[200];
 	guint i,total;
 
-	time (&now);
-
-	g_print("key:%s,", key);
 	gchar *real_folder = lookup_feed_folder(key);
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
+	g_print("real_name:%s\n", real_name);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
                         goto fail;
+	time (&now);
 	
-	uids = camel_folder_get_uids (folder);
-        camel_folder_freeze(folder);
-        for (i = 0; i < uids->len; i++)
+	guint del_days = g_hash_table_lookup(rf->hrdel_days, value);
+	guint del_feed = g_hash_table_lookup(rf->hrdel_feed, value);
+	if (del_feed == 2)
 	{
-		info = camel_folder_get_message_info(folder, uids->pdata[i]);
-                if (info) {
-			date = camel_message_info_date_sent(info);
-			strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
-			if (date < now - 60*86400)
-				g_print("feed older than 2 days->Subj:%s, %s\n", camel_message_info_subject(info),
-				strbuf);
-//			strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
-//			strftime(strbuf2, sizeof(strbuf2), "%a, %d %b %Y %H:%M:%S %z", localtime(&now));
-                        camel_folder_free_message_info(folder, info);
-//			g_print("date:%s->%s\n", strbuf, strbuf2);
-                }
+		uids = camel_folder_get_uids (folder);
+        	camel_folder_freeze(folder);
+        	for (i = 0; i < uids->len; i++)
+		{
+			info = camel_folder_get_message_info(folder, uids->pdata[i]);
+                	if (info) {
+				date = camel_message_info_date_sent(info);
+				strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
+				if (date < now - del_days * 86400)
+					g_print("feed older than %d days->Subj:%s, %s\n", del_days, camel_message_info_subject(info),
+					strbuf);
+//				strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
+//				strftime(strbuf2, sizeof(strbuf2), "%a, %d %b %Y %H:%M:%S %z", localtime(&now));
+                        	camel_folder_free_message_info(folder, info);
+//				g_print("date:%s->%s\n", strbuf, strbuf2);
+                	}
+		}
+        	camel_folder_sync (folder, TRUE, NULL);
+        	camel_folder_thaw(folder);
+        	camel_folder_free_uids (folder, uids);
 	}
-        camel_folder_sync (folder, TRUE, NULL);
-        camel_folder_thaw(folder);
-        camel_folder_free_uids (folder, uids);
 
 
 	total = camel_folder_get_message_count (folder);
@@ -4870,7 +4876,7 @@ fail:	g_free(real_name);
 void
 check_feed_age(void)
 {
-	g_hash_table_foreach(rf->hrname, get_feed_age, NULL);	
+//	g_hash_table_foreach(rf->hrname, get_feed_age);	
 }
 
 /*static void
