@@ -21,3 +21,4 @@
 	* notify of LD_LIBRARY_PATH
 	* change to mozilla/webkit if we have them.
 	* find a way to include version of plugin
+	* perhaps select deleting between seen and unseen messages

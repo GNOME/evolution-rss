@@ -567,12 +567,12 @@ GSList *radiobutton1_group = NULL;
   gtk_box_pack_start (GTK_BOX (hbox1), radiobutton2, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton1_group);
   radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
-  spinbutton1_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
+  spinbutton1_adj = gtk_adjustment_new (10, 1, 100, 1, 10, 10);
   spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
   gtk_widget_show (spinbutton1);
-  if (feed->del_days)
-  	gtk_spin_button_set_value(spinbutton1, feed->del_days);
-  g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_days_cb), feed);
+  if (feed->del_messages)
+  	gtk_spin_button_set_value(spinbutton1, feed->del_messages);
+  g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
   label2 = gtk_label_new (_("messages"));
   gtk_widget_show (label2);
@@ -599,12 +599,12 @@ GSList *radiobutton1_group = NULL;
 		gtk_toggle_button_set_active(
 			GTK_TOGGLE_BUTTON(radiobutton1), 1);
   }
-  spinbutton2_adj = gtk_adjustment_new (10, 0, 100, 1, 10, 10);
+  spinbutton2_adj = gtk_adjustment_new (10, 1, 100, 1, 10, 10);
   spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
-  if (feed->del_messages)
-  	gtk_spin_button_set_value(spinbutton2, feed->del_messages);
+  if (feed->del_days)
+  	gtk_spin_button_set_value(spinbutton2, feed->del_days);
   gtk_widget_show (spinbutton2);
-  g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_messages_cb), feed);
+  g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_days_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox2), spinbutton2, FALSE, FALSE, 0);
   label3 = gtk_label_new (_("day(s)"));
   gtk_widget_show (label3);
@@ -2067,9 +2067,9 @@ feed_new_from_xml(char *xml)
 			del_days = atoi(ctmp);
 			xml_set_prop (node, "messages", &ctmp);
 			del_messages = atoi(ctmp);
-			xml_set_prop (node, "unread", &del_unread);
+			xml_set_prop (node, "unread", &ctmp);
 			del_unread = atoi(ctmp);
-			g_free(ctmp);
+			if (ctmp) g_free(ctmp);
 		}
 	}
 
@@ -4834,12 +4834,12 @@ get_feed_age(gpointer key, gpointer value)
 
 	gchar *real_folder = lookup_feed_folder(key);
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
-	g_print("real_name:%s\n", real_name);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
                         goto fail;
 	time (&now);
 	
 	guint del_days = g_hash_table_lookup(rf->hrdel_days, value);
+	guint del_unread = g_hash_table_lookup(rf->hrdel_unread, value);
 	guint del_feed = g_hash_table_lookup(rf->hrdel_feed, value);
 	if (del_feed == 2)
 	{
@@ -4850,14 +4850,13 @@ get_feed_age(gpointer key, gpointer value)
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
                 	if (info) {
 				date = camel_message_info_date_sent(info);
-				strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
 				if (date < now - del_days * 86400)
-					g_print("feed older than %d days->Subj:%s, %s\n", del_days, camel_message_info_subject(info),
-					strbuf);
-//				strftime(strbuf, sizeof(strbuf), "%a, %d %b %Y %H:%M:%S %z", localtime(&date));
-//				strftime(strbuf2, sizeof(strbuf2), "%a, %d %b %Y %H:%M:%S %z", localtime(&now));
+				{
+					guint32 flags = camel_message_info_flags(info);
+                                	if (del_unread && !(flags & CAMEL_MESSAGE_SEEN))
+						camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+				}
                         	camel_folder_free_message_info(folder, info);
-//				g_print("date:%s->%s\n", strbuf, strbuf2);
                 	}
 		}
         	camel_folder_sync (folder, TRUE, NULL);
@@ -4868,7 +4867,6 @@ get_feed_age(gpointer key, gpointer value)
 
 	total = camel_folder_get_message_count (folder);
 	camel_object_unref (folder);
-	g_print("value:%s\n", value);
 	g_print("=> total:%d\n", total);
 fail:	g_free(real_name);
 }
