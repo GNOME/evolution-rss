@@ -4825,9 +4825,9 @@ get_oldest_article(CamelFolder *folder, guint unread)
 {
 	CamelMessageInfo *info, *max = NULL;
 	GPtrArray *uids;
-	guint i;
+	guint i, imax;
 	guint32 flags;
-	time_t date, min_date;
+	time_t date, min_date = 0;
 	uids = camel_folder_get_uids (folder);
        	camel_folder_freeze(folder);
        	for (i = 0; i < uids->len; i++)
@@ -4835,44 +4835,43 @@ get_oldest_article(CamelFolder *folder, guint unread)
 		info = camel_folder_get_message_info(folder, uids->pdata[i]);
                	if (info) {
 			date = camel_message_info_date_sent(info);
+			if (!unread)
+			{
 				flags = camel_message_info_flags(info);
-			g_print("flags:%d\n", flags);
-//			if (!unread)
-//			{
-//				flags = camel_message_info_flags(info);
-  //             			if ((flags & CAMEL_MESSAGE_SEEN))
-//				{
+               			if ((flags & CAMEL_MESSAGE_SEEN))
+				{
 					if (!i)
+					{
 						min_date = date;
+						imax = i;
+					}
 					if (date < min_date)
 					{
-						if (max)
-                       					camel_folder_free_message_info(folder, max);
-						max = info;
+						imax = i;
 						min_date = date;
 					}
-					else
-                       				camel_folder_free_message_info(folder, info);
-//				}
-//			}
-//			else
-//			{
-/*				if (!i)
-                                                min_date = date;
-                                        if (date < min_date)
-                                        {
-                                                if (max)
-                                                        camel_folder_free_message_info(folder, max);
-                                                max = info;
-                                                min_date = date;
-                                        }
-                                        else
-                                                camel_folder_free_message_info(folder, info);
-			}*/
+				}
+			}
+			else
+			{
+				if (!i)
+				{
+                                        min_date = date;
+					imax = i;
+				}
+                                if (date < min_date)
+                                {
+                                        imax = i;
+                                        min_date = date;
+                                }
+			}
+              	camel_folder_free_message_info(folder, info);
                	}
 	}
        	camel_folder_sync (folder, TRUE, NULL);
        	camel_folder_thaw(folder);
+	if (min_date)
+		max = camel_folder_get_message_info(folder, uids->pdata[imax]);
        	camel_folder_free_uids (folder, uids);
 	return max;
 }
@@ -4934,20 +4933,25 @@ get_feed_age(gpointer key, gpointer value)
 		g_print("total:%d\n", total);
 		i=1;
         	camel_folder_freeze(folder);
-		while (del_messages < camel_folder_get_message_count(folder) || i <= total)
+		while (del_messages < camel_folder_get_message_count(folder) && i <= total)
 		{
 			info = get_oldest_article(folder, del_unread);
-//			flags = camel_message_info_flags(info);	
-			g_print("info:%p\n", info);
-//			g_print("flags:%d\n", flags);
-  //    			if (!(flags & CAMEL_MESSAGE_SEEN))
-//			{
+			if (info)
+			{
+//				flags = camel_message_info_flags(info);	
+				g_print("info:%p\n", info);
+				g_print("i:%d\n", i);
+//				g_print("flags:%d\n", flags);
+  //    				if (!(flags & CAMEL_MESSAGE_SEEN))
+//				{
 //				if (del_unread)
 					camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
-//			}
-//			else
-//				camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
-              		camel_folder_free_message_info(folder, info);
+					g_print("delete\n");
+//				}
+//				else
+//					camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+              			camel_folder_free_message_info(folder, info);
+			}
 			i++;
 		}
         	camel_folder_sync (folder, TRUE, NULL);
