@@ -4820,6 +4820,63 @@ display_doc (RDF *r)
 	return tree_walk (xmlDocGetRootElement (r->cache), r);
 }
 
+CamelMessageInfo *
+get_oldest_article(CamelFolder *folder, guint unread)
+{
+	CamelMessageInfo *info, *max = NULL;
+	GPtrArray *uids;
+	guint i;
+	guint32 flags;
+	time_t date, min_date;
+	uids = camel_folder_get_uids (folder);
+       	camel_folder_freeze(folder);
+       	for (i = 0; i < uids->len; i++)
+	{
+		info = camel_folder_get_message_info(folder, uids->pdata[i]);
+               	if (info) {
+			date = camel_message_info_date_sent(info);
+				flags = camel_message_info_flags(info);
+			g_print("flags:%d\n", flags);
+//			if (!unread)
+//			{
+//				flags = camel_message_info_flags(info);
+  //             			if ((flags & CAMEL_MESSAGE_SEEN))
+//				{
+					if (!i)
+						min_date = date;
+					if (date < min_date)
+					{
+						if (max)
+                       					camel_folder_free_message_info(folder, max);
+						max = info;
+						min_date = date;
+					}
+					else
+                       				camel_folder_free_message_info(folder, info);
+//				}
+//			}
+//			else
+//			{
+/*				if (!i)
+                                                min_date = date;
+                                        if (date < min_date)
+                                        {
+                                                if (max)
+                                                        camel_folder_free_message_info(folder, max);
+                                                max = info;
+                                                min_date = date;
+                                        }
+                                        else
+                                                camel_folder_free_message_info(folder, info);
+			}*/
+               	}
+	}
+       	camel_folder_sync (folder, TRUE, NULL);
+       	camel_folder_thaw(folder);
+       	camel_folder_free_uids (folder, uids);
+	return max;
+}
+
 void
 get_feed_age(gpointer key, gpointer value)
 {
@@ -4831,6 +4888,7 @@ get_feed_age(gpointer key, gpointer value)
 	char strbuf[200];
 	char strbuf2[200];
 	guint i,total;
+	guint32 flags;
 
 	gchar *real_folder = lookup_feed_folder(key);
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
@@ -4838,11 +4896,11 @@ get_feed_age(gpointer key, gpointer value)
                         goto fail;
 	time (&now);
 	
-	guint del_days = g_hash_table_lookup(rf->hrdel_days, value);
 	guint del_unread = g_hash_table_lookup(rf->hrdel_unread, value);
 	guint del_feed = g_hash_table_lookup(rf->hrdel_feed, value);
 	if (del_feed == 2)
-	{
+	{	
+		guint del_days = g_hash_table_lookup(rf->hrdel_days, value);
 		uids = camel_folder_get_uids (folder);
         	camel_folder_freeze(folder);
         	for (i = 0; i < uids->len; i++)
@@ -4852,8 +4910,13 @@ get_feed_age(gpointer key, gpointer value)
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400)
 				{
-					guint32 flags = camel_message_info_flags(info);
-                                	if (del_unread && !(flags & CAMEL_MESSAGE_SEEN))
+					flags = camel_message_info_flags(info);
+                               		if (!(flags & CAMEL_MESSAGE_SEEN))
+					{
+						if (del_unread)
+							camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+					}
+					else
 						camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
 				}
                         	camel_folder_free_message_info(folder, info);
@@ -4862,6 +4925,33 @@ get_feed_age(gpointer key, gpointer value)
         	camel_folder_sync (folder, TRUE, NULL);
         	camel_folder_thaw(folder);
         	camel_folder_free_uids (folder, uids);
+	}
+	if (del_feed == 1)
+	{
+		guint del_messages = g_hash_table_lookup(rf->hrdel_messages, value);
+		guint total = camel_folder_get_message_count(folder);
+		g_print("del_messages:%d\n", del_messages);
+		g_print("total:%d\n", total);
+		i=1;
+        	camel_folder_freeze(folder);
+		while (del_messages < camel_folder_get_message_count(folder) || i <= total)
+		{
+			info = get_oldest_article(folder, del_unread);
+//			flags = camel_message_info_flags(info);	
+			g_print("info:%p\n", info);
+//			g_print("flags:%d\n", flags);
+  //    			if (!(flags & CAMEL_MESSAGE_SEEN))
+//			{
+//				if (del_unread)
+					camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+//			}
+//			else
+//				camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+              		camel_folder_free_message_info(folder, info);
+			i++;
+		}
+        	camel_folder_sync (folder, TRUE, NULL);
+        	camel_folder_thaw(folder);
 	}
 
 
