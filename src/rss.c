@@ -243,10 +243,14 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, fraction);
 		if (rf->sr_feed)
 		{
-			g_print("type:%s\n", g_hash_table_lookup(rf->hrt, lookup_key(data)));
-			gchar *furl = g_strdup_printf("<b>%s</b>: %s", 
-				g_hash_table_lookup(rf->hrt, lookup_key(data)),
-				data);
+			gchar *furl;
+			gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(data));
+			if (strncmp(type, "-", 1) == 0)
+				furl = g_strdup_printf("<b>%s</b>: %s", 
+					"RSS",data);
+			else
+				furl = g_strdup_printf("<b>%s</b>: %s", 
+					type, data);
 			gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 			g_free(furl);
 		}
@@ -3210,9 +3214,14 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
 	{
-		gchar *furl = g_strdup_printf("<b>%s</b>: %s", 
-			g_hash_table_lookup(rf->hrt, lookup_key(user_data)),
-			user_data);
+		gchar *furl;
+		gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(user_data));
+		if (strncmp(type, "-",1) == 0)
+			furl = g_strdup_printf("<b>%s</b>: %s", 
+					"RSS", user_data);
+		else
+			furl = g_strdup_printf("<b>%s</b>: %s", 
+			type, user_data);
 		gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 		g_free(furl);
 	}
