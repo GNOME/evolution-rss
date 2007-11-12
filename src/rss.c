@@ -124,7 +124,7 @@ struct _org_gnome_rss_controls_pobject {
 
 extern int xmlSubstituteEntitiesDefaultValue;
 
-rssfeed *rf;
+rssfeed *rf = NULL;
 guint count = 0;
 gchar *buffer = NULL;
 
@@ -571,7 +571,7 @@ GSList *radiobutton1_group = NULL;
   gtk_box_pack_start (GTK_BOX (hbox1), radiobutton2, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton1_group);
   radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
-  spinbutton1_adj = gtk_adjustment_new (10, 1, 100, 1, 10, 10);
+  spinbutton1_adj = gtk_adjustment_new (10, 1, 1000, 1, 10, 10);
   spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
   gtk_widget_show (spinbutton1);
   if (feed->del_messages)
@@ -603,7 +603,7 @@ GSList *radiobutton1_group = NULL;
 		gtk_toggle_button_set_active(
 			GTK_TOGGLE_BUTTON(radiobutton1), 1);
   }
-  spinbutton2_adj = gtk_adjustment_new (10, 1, 100, 1, 10, 10);
+  spinbutton2_adj = gtk_adjustment_new (10, 1, 365, 1, 10, 10);
   spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
   if (feed->del_days)
   	gtk_spin_button_set_value(spinbutton2, feed->del_days);
@@ -670,6 +670,8 @@ GSList *radiobutton1_group = NULL;
 	feed->del_feed=i;
 	feed->del_unread = gtk_toggle_button_get_active(
 		GTK_TOGGLE_BUTTON(checkbutton4));
+	feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
+	feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
 	feed->add = 1;
 	// there's no reason to feetch feed if url isn't changed
 	if (text && !strncmp(text, feed->feed_url, strlen(text)))
@@ -2071,8 +2073,7 @@ feed_new_from_xml(char *xml)
 			del_days = atoi(ctmp);
 			xml_set_prop (node, "messages", &ctmp);
 			del_messages = atoi(ctmp);
-			xml_set_prop (node, "unread", &ctmp);
-			del_unread = atoi(ctmp);
+			xml_set_bool (node, "unread", &del_unread);
 			if (ctmp) g_free(ctmp);
 		}
 	}
@@ -3849,36 +3850,40 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		upgrade = 1;
 		printf("RSS Plugin enabled\n");
 		//initiate main rss structure
-		rf = malloc(sizeof(rssfeed));
-		memset(rf, 0, sizeof(rssfeed));
-		rf->setup = read_feeds(rf);
-		rf->pending = FALSE;
-		rf->progress_dialog = NULL;
-		rf->errdialog = NULL;
-		rf->cancel = FALSE;
-		rf->rc_id = 0;
-		rf->feed_queue = 0;
-		rf->main_folder = get_main_folder();
-		get_feed_folders();
-		atexit(rss_finalize);
-		upgrade = 2;
-		guint render = GPOINTER_TO_INT(
-			 gconf_client_get_int(rss_gconf, 
+		if (!rf)
+		{
+			rf = malloc(sizeof(rssfeed));
+			memset(rf, 0, sizeof(rssfeed));
+			rf->setup = read_feeds(rf);
+			rf->pending = FALSE;
+			rf->progress_dialog = NULL;
+			rf->errdialog = NULL;
+			rf->cancel = FALSE;
+			rf->rc_id = 0;
+			rf->feed_queue = 0;
+			rf->main_folder = get_main_folder();
+			get_feed_folders();
+			atexit(rss_finalize);
+			guint render = GPOINTER_TO_INT(
+			gconf_client_get_int(rss_gconf, 
 						GCONF_KEY_HTML_RENDER, 
 						NULL));
 		
-		//render = 0 means gtkhtml however it could mean no value set
-		//perhaps we should change this number representing gtkhtml
+			//render = 0 means gtkhtml however it could mean no value set
+			//perhaps we should change this number representing gtkhtml
 
-		if (!render)	// set render just in case it was forced in configure
-		{
-			render = RENDER_N;
-  			gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, render, NULL);
-		}
+			if (!render)	// set render just in case it was forced in configure
+			{
+				render = RENDER_N;
+  				gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, render, NULL);
+			}
 #ifdef HAVE_GTKMOZEMBED
-		if (2 == render)
-			rss_mozilla_init();
+			if (2 == render)
+				rss_mozilla_init();
 #endif
+		g_print("called\n");
+		}
+		upgrade = 2;
 	} else {
 		abort_all_soup();
 		printf("Plugin disabled\n");
@@ -4834,7 +4839,7 @@ get_oldest_article(CamelFolder *folder, guint unread)
 {
 	CamelMessageInfo *info, *max = NULL;
 	GPtrArray *uids;
-	guint i, imax;
+	guint i, j = 0, imax;
 	guint32 flags;
 	time_t date, min_date = 0;
 	uids = camel_folder_get_uids (folder);
@@ -4847,9 +4852,9 @@ get_oldest_article(CamelFolder *folder, guint unread)
 			if (!unread)
 			{
 				flags = camel_message_info_flags(info);
-               			if ((flags & CAMEL_MESSAGE_SEEN))
+               			if (flags & CAMEL_MESSAGE_SEEN)
 				{
-					if (!i)
+					if (!j++)
 					{
 						min_date = date;
 						imax = i;
@@ -4863,7 +4868,7 @@ get_oldest_article(CamelFolder *folder, guint unread)
 			}
 			else
 			{
-				if (!i)
+				if (!j++)
 				{
                                         min_date = date;
 					imax = i;
@@ -4899,6 +4904,7 @@ get_feed_age(gpointer key, gpointer value)
 	guint32 flags;
 
 	gchar *real_folder = lookup_feed_folder(key);
+	g_print("Cleaning folder: %s\n", real_folder);
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
                         goto fail;
@@ -4922,7 +4928,7 @@ get_feed_age(gpointer key, gpointer value)
                                		if (!(flags & CAMEL_MESSAGE_SEEN))
 					{
 						if (del_unread)
-							camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+							camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN|CAMEL_MESSAGE_DELETED, ~0);
 					}
 					else
 						camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
@@ -4938,8 +4944,6 @@ get_feed_age(gpointer key, gpointer value)
 	{
 		guint del_messages = g_hash_table_lookup(rf->hrdel_messages, value);
 		guint total = camel_folder_get_message_count(folder);
-		g_print("del_messages:%d\n", del_messages);
-		g_print("total:%d\n", total);
 		i=1;
         	camel_folder_freeze(folder);
 		while (del_messages < camel_folder_get_message_count(folder) && i <= total)
@@ -4947,18 +4951,7 @@ get_feed_age(gpointer key, gpointer value)
 			info = get_oldest_article(folder, del_unread);
 			if (info)
 			{
-//				flags = camel_message_info_flags(info);	
-				g_print("info:%p\n", info);
-				g_print("i:%d\n", i);
-//				g_print("flags:%d\n", flags);
-  //    				if (!(flags & CAMEL_MESSAGE_SEEN))
-//				{
-//				if (del_unread)
-					camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
-					g_print("delete\n");
-//				}
-//				else
-//					camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+				camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
               			camel_folder_free_message_info(folder, info);
 			}
 			i++;
