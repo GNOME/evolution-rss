@@ -1,4 +1,7 @@
 
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-lowlevel.h>
+
 #ifndef __RSS_H_
 #define __RSS_H_
 
@@ -73,6 +76,7 @@ typedef struct _rssfeed {
 	gchar		*main_folder;		// "News&Blogs" folder name
 	GHashTable	*feed_folders;		// defined feeds folders
 	GHashTable	*reversed_feed_folders;	// easyer when we lookup for the value
+	DBusConnection	*bus;			// DBUS
 } rssfeed;
 
 #define GCONF_KEY_DISPLAY_SUMMARY "/apps/evolution/evolution-rss/display_summary"
@@ -201,6 +205,7 @@ u_int32_t gen_crc(const char *msg);
 void create_user_pass_dialog(gchar *url);
 static void start_check_cb (GtkWidget *widget, gpointer data);
 static void err_destroy (GtkWidget *widget, gpointer data);
+static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
 
 typedef struct FEED_FOLDERS {
 	gchar *oname;		//original folder name

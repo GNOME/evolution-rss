@@ -96,6 +96,7 @@
 #include "rss.h"
 #include "network-soup.c"
 #include "misc.c"
+#include "dbus.c"
 
 int pop = 0;
 //#define RSS_DEBUG 1
@@ -160,6 +161,7 @@ gchar *decode_html_entities(gchar *str);
 void delete_feed_folder_alloc(gchar *old_name);
 static void del_days_cb (GtkWidget *widget, add_feed *data);
 static void del_messages_cb (GtkWidget *widget, add_feed *data);
+void add_new_feed(add_feed *feed);
 
 /*======================================================================*/
 
@@ -434,9 +436,9 @@ create_dialog_add(gchar *text, gchar *feed_text)
   gboolean fhtml = FALSE;
   gboolean enabled = TRUE;
   gboolean del_unread = FALSE;
-  guint del_feed;
-  guint del_days;
-  guint del_messages;
+  guint del_feed = 0;
+  guint del_days = 10;
+  guint del_messages = 10;
   GtkAccelGroup *accel_group = gtk_accel_group_new ();
   gchar *flabel = NULL;
 
@@ -656,6 +658,8 @@ GSList *radiobutton1_group = NULL;
 	validate = gtk_toggle_button_get_active(
 		GTK_TOGGLE_BUTTON(checkbutton3));
 	feed->validate = validate;
+if (text)
+{
 	guint i=0;
 	while (i<3) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
@@ -672,6 +676,7 @@ GSList *radiobutton1_group = NULL;
 		GTK_TOGGLE_BUTTON(checkbutton4));
 	feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
 	feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
+}
 	feed->add = 1;
 	// there's no reason to feetch feed if url isn't changed
 	if (text && !strncmp(text, feed->feed_url, strlen(text)))
@@ -883,11 +888,11 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 	gchar *text;
 	add_feed *feed = create_dialog_add(NULL, NULL);
 	if (feed->feed_url && strlen(feed->feed_url))
-	{
-		text = feed->feed_url;
-		feed->feed_url = sanitize_url(feed->feed_url);
-		g_free(text);
-		if (g_hash_table_find(rf->hr,
+        {
+                text = feed->feed_url;
+                feed->feed_url = sanitize_url(feed->feed_url);
+                g_free(text);
+                if (g_hash_table_find(rf->hr,
                                         check_if_match,
                                         feed->feed_url))
                 {
@@ -895,11 +900,11 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
                                            _("Feed already exists!"));
                            goto out;
                 }
-		setup_feed(feed);
-  		GtkTreeModel *model = gtk_tree_view_get_model ((GtkTreeView *)data);
-		gtk_list_store_clear(GTK_LIST_STORE(model));
-		g_hash_table_foreach(rf->hrname, construct_list, model);
-		save_gconf_feed();
+                setup_feed(feed);
+        	GtkTreeModel *model = gtk_tree_view_get_model ((GtkTreeView *)data);
+        	gtk_list_store_clear(GTK_LIST_STORE(model));
+        	g_hash_table_foreach(rf->hrname, construct_list, model);
+        	save_gconf_feed();
 	}
 out:	if (feed->dialog)
                 gtk_widget_destroy(feed->dialog);
@@ -3211,8 +3216,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	g_string_free(response, 1);
 	g_print("freed\n");
 
-	if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-		get_feed_age(user_data, lookup_key(user_data));
+///	if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+///		get_feed_age(user_data, lookup_key(user_data));
 //        rf->pending = FALSE;
 
 #ifdef EVOLUTION_2_12
@@ -3866,6 +3871,8 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->feed_queue = 0;
 			rf->main_folder = get_main_folder();
 			get_feed_folders();
+			/*D-BUS init*/
+			rf->bus = init_dbus ();
 			atexit(rss_finalize);
 			guint render = GPOINTER_TO_INT(
 			gconf_client_get_int(rss_gconf, 
@@ -3888,6 +3895,8 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		}
 		upgrade = 2;
 	} else {
+                if (rf->bus != NULL)
+                        dbus_connection_unref (rf->bus);
 		abort_all_soup();
 		printf("Plugin disabled\n");
 	}
@@ -4660,7 +4669,7 @@ gchar *
 update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 {
         guint i;
-	gchar *sender = g_strdup_printf("<%s>", chn_name);
+	gchar *sender = g_strdup_printf("%s <%s>", chn_name, chn_name);
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	char *d2 = NULL;
 	xmlNodePtr el;
@@ -4729,7 +4738,9 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 			freeb = 1;
 		else
                 	b = layer_find (el->children, "description",
-				layer_find (el->children, "content", "No information"));
+				layer_find (el->children, "content",
+				layer_find (el->children, "summary", "No information")));
+
 
                 char *d = layer_find (el->children, "pubDate", NULL);
 		//date in dc module format

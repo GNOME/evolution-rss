@@ -229,6 +229,19 @@ dnl ***********
 AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
 AM_GCONF_SOURCE_2
 
+dnl ***********
+dnl D-BUS stuff
+dnl ***********
+PKG_CHECK_MODULES(DBUS, dbus-glib-1)
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
+
+# Get the version of the DBus API, so we can hack around API changes until the API stabilises:
+# multiply by 1000 to convert decimal to integer; so e.g. 0.31 become 310
+# since preprocessor values must be integral
+DBUS_VERSION="`pkg-config --modversion dbus-1 | awk '{print 1000 * $1}'`"
+AC_SUBST(DBUS_VERSION)
+
 dnl I18n stuff
 ALL_LINGUAS="en_AU ro sv"
 
@@ -290,4 +303,5 @@ echo "
 	Prefix			: $prefix
 	HTML renders		: $kits
 	Primary HTML render	: $RENDER
+	D-BUS support		: $HAVE_DBUS
 	"

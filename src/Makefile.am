@@ -2,13 +2,9 @@
 INCLUDES =							\
 	-I$(EVOLUTION_SOURCE)					\
 	-I$(top_srcdir)						\
-	-I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 	\
-	-I/usr/include/libxml2 -I/usr/lib/gtk-2.0/include 	\
-	-I/usr/include/atk-1.0 -I/usr/include/cairo 		\
-	-I/usr/include/pango-1.0 -I/usr/include/glib-2.0 	\
-	-I/usr/lib/glib-2.0/include				\
-	$(GECKO_CFLAGS)					\
+	$(GECKO_CFLAGS)						\
 	$(WEBKIT_CFLAGS)					\
+	$(DBUS_CFLAGS)						\
 	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
 	-DLOCALEDIR="\"$(LOCALEDIR)\""				\
 	-DEVOLUTION_VERSION=\"$(EVOLUTION_EXEC_VERSION)\"    	\

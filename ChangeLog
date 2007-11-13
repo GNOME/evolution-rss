@@ -1,3 +1,13 @@
+Tue 13 Nov 2007 03:20:24 PM EET <lucilanga@gnome.org>
+
+	* added support for adding feeds from other
+	application using D-BUS.
+	* fixed wrong content parsing of ATOM feeds,
+	atom feeds might contain summary instead of
+	content.
+	* fixed sender name in case author was missing
+	format needs to be: sender <sender>
+	
 Mon 12 Nov 2007 08:34:56 AM EET <lucilanga@gnome.org>
 
 	* fix deleteing articles by message number
