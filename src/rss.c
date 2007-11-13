@@ -3188,6 +3188,9 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	{
 		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
         	chn_name = display_doc (r);
+		g_print("uzar data:%s\n", user_data);
+		g_print("chn_name:%s\n", chn_name);
+		g_print("rf->cancel:%s\n", rf->cancel);
 		if (g_ascii_strcasecmp(user_data, chn_name) != 0)
 		{
 			gchar *md5 = g_strdup(g_hash_table_lookup(rf->hrname, user_data));
