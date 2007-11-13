@@ -4535,7 +4535,7 @@ feed_is_new(gchar *file_name, gchar *needle)
 	    }
 	    fclose(fr);
 	}
-	if (occ)
+	if (!occ)
 	{
 		FILE *fw = fopen(file_name, "a+");
 		if (fw)

@@ -1,5 +1,6 @@
 Tue 13 Nov 2007 03:20:24 PM EET <lucilanga@gnome.org>
 
+	* fixed wrong fetching of enclosures
 	* added support for adding feeds from other
 	application using D-BUS.
 	* fixed wrong content parsing of ATOM feeds,

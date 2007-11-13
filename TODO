@@ -1,6 +1,6 @@
 
 	* move messages to status bar
-	* maybe implement crc32 for uniqueing articles (for broken feeds)
+	* maybe implement md5 for uniqueing articles (for broken feeds)
 	* make setup dialog modal when fetch_feed active
 	* add syndicate icon for News&Blogs folder
 	* offline storage for article's home page
@@ -20,5 +20,4 @@
 	* find a way to include version of plugin
 	* perhaps select deleting between seen and unseen messages
 	* test cancelation signal
-	* enclosures problem check arrl
 	* images on > evo-2.12
