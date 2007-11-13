@@ -1,22 +1,20 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-/*
- *  Author: Miguel Angel Lopez Hernandez <miguel@gulev.org.mx>
- *
- *  Copyright 2004 Novell, Inc.
- *
- *  This program is free software; you can redistribute it and/or
- *  modify it under the terms of version 2 of the GNU General Public
- *  License as published by the Free Software Foundation.
- *
+/*  Evoution RSS Reader Plugin
+ *  Copyright (C) 2007  Lucian Langa <cooly@mips.edu.ms> 
+ *  
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or 
+ *  (at your option) any later version.
+ *  
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *
+ *  
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
- *
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #ifdef HAVE_CONFIG_H
@@ -25,22 +23,13 @@
 
 #include <string.h>
 #include <glib.h>
-//#include <gconf/gconf-client.h>
-//include <e-util/e-config.h>
-//#include <mail/em-utils.h>
-//#include <mail/em-event.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
-//#include <camel/camel-folder.h>
 
 #include <rss.h>
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
 #define DBUS_INTERFACE "org.gnome.evolution.mail.dbus.Signal"
-
-/*int e_plugin_lib_enable (EPluginLib *ep, int enable);
-void org_gnome_new_mail_notify (EPlugin *ep, EMEventTargetFolder *t);
-void org_gnome_message_reading_notify (EPlugin *ep, EMEventTargetMessage *t);*/
 
 static DBusConnection *init_dbus (void);
 
@@ -65,39 +54,12 @@ send_dbus_message (const char *name, const char *data, guint new)
 #endif	
 				  DBUS_TYPE_INVALID);
 
-	if (new) {
-		char * display_name = em_utils_folder_name_from_uri(data);
-		dbus_message_append_args (message,
-#if DBUS_VERSION >= 310
-					  DBUS_TYPE_STRING, &display_name, DBUS_TYPE_UINT32, &new,
-#else
-					  DBUS_TYPE_STRING, display_name, DBUS_TYPE_UINT32, new,
-#endif	
-					  DBUS_TYPE_INVALID);
-		
-	}
-
 	/* Sends the message */
 //	dbus_connection_send (bus, message, NULL);
 	
 	/* Frees the message */
 /*	dbus_message_unref (message);
 }*/
-
-/*void
-org_gnome_message_reading_notify (EPlugin *ep, EMEventTargetMessage *t)
-{
-	if (bus != NULL)
-		send_dbus_message ("MessageReading", t->folder->name, 0);
-}
-
-void
-org_gnome_new_mail_notify (EPlugin *ep, EMEventTargetFolder *t)
-{
-	if (bus != NULL)
-		send_dbus_message ("Newmail", t->uri, t->new);
-}*/
-
 
 static gboolean
 reinit_dbus (gpointer user_data)
@@ -188,25 +150,4 @@ init_dbus (void)
 	
 	return bus;
 }
-
-
-/*int
-e_plugin_lib_enable (EPluginLib *ep, int enable)
-{
-	if (enable) {
-		if (!init_dbus ())
-			return -1;
-		
-		enabled = TRUE;
-	} else {
-		if (bus != NULL) {
-			dbus_connection_unref (bus);
-			bus = NULL;
-		}
-		
-		enabled = FALSE;
-	}
-	
-	return 0;
-}*/
 
