@@ -21,3 +21,4 @@
 	* perhaps select deleting between seen and unseen messages
 	* test cancelation signal
 	* images on > evo-2.12
+	* implement guid for RSS 2.0 (arrl)
