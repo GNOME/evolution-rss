@@ -161,7 +161,7 @@ gchar *decode_html_entities(gchar *str);
 void delete_feed_folder_alloc(gchar *old_name);
 static void del_days_cb (GtkWidget *widget, add_feed *data);
 static void del_messages_cb (GtkWidget *widget, add_feed *data);
-void add_new_feed(add_feed *feed);
+void get_feed_age(gpointer key, gpointer value);
 
 /*======================================================================*/
 
@@ -577,7 +577,7 @@ GSList *radiobutton1_group = NULL;
   spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
   gtk_widget_show (spinbutton1);
   if (feed->del_messages)
-  	gtk_spin_button_set_value(spinbutton1, feed->del_messages);
+  	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1), feed->del_messages);
   g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
   label2 = gtk_label_new (_("messages"));
@@ -608,7 +608,7 @@ GSList *radiobutton1_group = NULL;
   spinbutton2_adj = gtk_adjustment_new (10, 1, 365, 1, 10, 10);
   spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
   if (feed->del_days)
-  	gtk_spin_button_set_value(spinbutton2, feed->del_days);
+  	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton2), feed->del_days);
   gtk_widget_show (spinbutton2);
   g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_days_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox2), spinbutton2, FALSE, FALSE, 0);
@@ -3216,8 +3216,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	g_string_free(response, 1);
 	g_print("freed\n");
 
-///	if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-///		get_feed_age(user_data, lookup_key(user_data));
+	if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+		get_feed_age(user_data, lookup_key(user_data));
 //        rf->pending = FALSE;
 
 #ifdef EVOLUTION_2_12
@@ -4452,7 +4452,6 @@ tree_walk (xmlNodePtr root, RDF *r)
 		t = decode_html_entities(t);	
 		t = generate_safe_chn_name(t);
 	}
-		
 
 	//items might not have a date
 	// so try to grab channel/feed date
@@ -4926,11 +4925,11 @@ get_feed_age(gpointer key, gpointer value)
                         goto fail;
 	time (&now);
 	
-	guint del_unread = g_hash_table_lookup(rf->hrdel_unread, value);
-	guint del_feed = g_hash_table_lookup(rf->hrdel_feed, value);
+	guint del_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, value));
+	guint del_feed = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, value));
 	if (del_feed == 2)
 	{	
-		guint del_days = g_hash_table_lookup(rf->hrdel_days, value);
+		guint del_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, value));
 		uids = camel_folder_get_uids (folder);
         	camel_folder_freeze(folder);
         	for (i = 0; i < uids->len; i++)
@@ -4958,7 +4957,7 @@ get_feed_age(gpointer key, gpointer value)
 	}
 	if (del_feed == 1)
 	{
-		guint del_messages = g_hash_table_lookup(rf->hrdel_messages, value);
+		guint del_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, value));
 		guint total = camel_folder_get_message_count(folder);
 		i=1;
 		while (del_messages < camel_folder_get_message_count(folder) && i <= total)

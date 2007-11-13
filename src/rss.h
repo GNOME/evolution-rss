@@ -206,6 +206,8 @@ void create_user_pass_dialog(gchar *url);
 static void start_check_cb (GtkWidget *widget, gpointer data);
 static void err_destroy (GtkWidget *widget, gpointer data);
 static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
+void save_gconf_feed(void);
+void rss_error(gchar *name, gchar *error, gchar *emsg);
 
 typedef struct FEED_FOLDERS {
 	gchar *oname;		//original folder name
