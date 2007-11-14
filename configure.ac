@@ -14,6 +14,10 @@ AC_PROG_INTLTOOL([0.21])
 
 AC_PROG_CC
 AC_REQUIRE_CPP
+AC_PATH_PROG(GPP, g++, no)
+if test "x$GPP" = "xno"; then
+	AC_MSG_ERROR(C++ Compiler (g++) not installed)
+fi
 #AC_PROG_CXXCPP
 AC_ISC_POSIX
 AC_HEADER_STDC
@@ -243,6 +247,10 @@ DBUS_VERSION="`pkg-config --modversion dbus-1 | awk '{print 1000 * $1}'`"
 AC_SUBST(DBUS_VERSION)
 
 dnl I18n stuff
+AC_PATH_PROG(GETTEXT, gettext, no)
+if test "x$GETTEXT" = "xno"; then
+	AC_MSG_ERROR(Package gettext not installed)
+fi
 ALL_LINGUAS="en_AU ro sv"
 
 GETTEXT_PACKAGE=evolution-rss

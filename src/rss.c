@@ -2828,9 +2828,10 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		CamelDataWrapper *content = camel_medium_get_content_object(CAMEL_MEDIUM(t->part));
      		camel_data_wrapper_write_to_stream(content, (CamelStream *)stream);
 		g_byte_array_append (buffer, "", 1);
-#ifdef EVOLUTION_2_12	//aparently this ("?" char parsing) is fixed in 2.12
-		buff = buffer->data;
-#else
+//#ifdef EVOLUTION_2_12	//aparently this ("?" char parsing) is fixed in 2.12
+//		//then again this does not work in evo > 2.12 perhaps is gtkhtml related 
+//		buff = buffer->data;
+//#else
 		inlen = buffer->len;
 		utf8len = 5*inlen+1;
 		buffer2 = g_malloc(utf8len);
@@ -2856,7 +2857,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		}
 		else goto out;
 
-#endif
+//#endif
 #ifdef RSS_DEBUG
 		g_print("%s\n", buff);
 #endif

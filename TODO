@@ -15,8 +15,5 @@
 	* optimize where needed using reversed rf->hrname
 	* when deleting a folder offer to delete feed also
 	* check mozembed widget / thread when quitting
-	* notify of LD_LIBRARY_PATH
-	* change to mozilla/webkit if we have them.
 	* find a way to include version of plugin
 	* test cancelation signal
-	* images on > evo-2.12

@@ -1,5 +1,8 @@
 Wed 14 Nov 2007 07:54:22 AM EET <lucilanga@gnome.org>
 
+	* fallback to old fix for parsing "?" in url
+	* make g++ and gettext packages required in
+	configure.ac, evo-rss won't build witouth 'em
 	* decode html entities for summarry body too
 	* added guid parsing for RSS2.0
 	
