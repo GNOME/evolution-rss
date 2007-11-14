@@ -1,3 +1,8 @@
+Wed 14 Nov 2007 07:54:22 AM EET <lucilanga@gnome.org>
+
+	* decode html entities for summarry body too
+	* added guid parsing for RSS2.0
+	
 Tue 13 Nov 2007 03:20:24 PM EET <lucilanga@gnome.org>
 
 	* fixed wrong fetching of enclosures

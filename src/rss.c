@@ -4759,7 +4759,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		//we have to free this some how
                 char *link = layer_find (el->children, "link",						//RSS,
 			layer_find_innerelement(el->children, "link", "href", _("No Information")));	//ATOM
-		char *id = layer_find (el->children, "id", NULL);					//ATOM
+		char *id = layer_find (el->children, "id",				//ATOM
+				layer_find (el->children, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
 #ifdef RSS_DEBUG
 		g_print("link:%s\n", link);
@@ -4771,6 +4772,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		g_print("date:%s\n", d2);
 #endif
 		p =  decode_html_entities (p);
+		b = decode_html_entities(b);
 			
 		gchar rfeed[513];
 		memset(rfeed, 0, 512);
