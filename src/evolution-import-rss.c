@@ -39,7 +39,7 @@ static DBusConnection *bus = NULL;
 static gboolean enabled = FALSE;
 
 static void
-send_dbus_message (const char *name, const char *data, guint new)
+send_dbus_message (const char *name, const char *data)
 {
 	DBusMessage *message;
 	
@@ -49,24 +49,12 @@ send_dbus_message (const char *name, const char *data, guint new)
 	
 	/* Appends the data as an argument to the message */
 	dbus_message_append_args (message,
-//#if DBUS_VERSION >= 310
-				  DBUS_TYPE_STRING, &data,
-//#else
-//				  DBUS_TYPE_STRING, data,
-//#endif	
-				  DBUS_TYPE_INVALID);
-
-	if (new) {
-		char * display_name = g_strdup("www");
-		dbus_message_append_args (message,
 #if DBUS_VERSION >= 310
-					  DBUS_TYPE_STRING, &display_name, DBUS_TYPE_UINT32, &new,
+				  DBUS_TYPE_STRING, &data,
 #else
-					  DBUS_TYPE_STRING, display_name, DBUS_TYPE_UINT32, new,
+				  DBUS_TYPE_STRING, data,
 #endif	
-					  DBUS_TYPE_INVALID);
-		
-	}
+				  DBUS_TYPE_INVALID);
 
 	/* Sends the message */
 	dbus_connection_send (bus, message, NULL);
@@ -134,7 +122,7 @@ main (int argc, char *argv[])
 
 		char *s = argv[1];
 	if (bus != NULL)
-                send_dbus_message ("evolution_rss_feed", s, 0);
+                send_dbus_message ("evolution_rss_feed", s);
 	
 	if (bus != NULL) {
 		dbus_connection_unref (bus);
