@@ -1927,7 +1927,6 @@ export_cb (GtkWidget *widget, gpointer data)
 static void
 rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 {
-	g_print("rep check:%f\n", gtk_spin_button_get_value((GtkSpinButton *)widget));
     gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data));
     gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, 
 		gtk_spin_button_get_value((GtkSpinButton*)widget), NULL);
@@ -2497,6 +2496,33 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 }
 
 static void
+stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
+{
+	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
+}
+
+reload_cb (GtkWidget *button, gpointer data)
+{
+	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+	switch (engine)
+	{
+		case 2:
+#ifdef	HAVE_GTKMOZEMBED
+	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
+       	gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), data);
+#endif
+		break;
+		case 1:
+#ifdef	HAVE_WEBKIT
+	webkit_gtk_page_stop_loading(WEBKIT_GTK_PAGE(rf->mozembed));
+       	webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), data);
+#endif
+		break;
+	}
+}
+
+
+static void
 mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
 	guint k = rf->headers_mode ? 194 : 99;
@@ -2609,9 +2635,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	if (engine == 1)
 	{
 		g_print("Render engine Webkit\n");
-		g_print("po->website:%s\n", po->website);
         	webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), po->website);
-		g_print("page open\n");
 	}
 #endif
 
@@ -2669,6 +2693,21 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
         gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
+	if (rf->cur_format)
+	{
+        	GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+		g_signal_connect (button2, "clicked", G_CALLBACK(stop_cb), efh);
+		gtk_widget_set_size_request(button2, 100, -1);
+		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
+        	gtk_widget_show (button2);
+		gtk_box_pack_start (GTK_BOX (hbox2), button2, TRUE, TRUE, 0);
+        	GtkWidget *button3 = gtk_button_new_from_stock (GTK_STOCK_REFRESH);
+		g_signal_connect (button3, "clicked", G_CALLBACK(reload_cb), po->website);
+		gtk_widget_set_size_request(button3, 100, -1);
+		gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_HALF);
+        	gtk_widget_show (button3);
+		gtk_box_pack_start (GTK_BOX (hbox2), button3, TRUE, TRUE, 0);
+	}
 	gtk_box_pack_start (GTK_BOX (vbox), hbox2, TRUE, TRUE, 0);
 
         gtk_container_add ((GtkContainer *) eb, vbox);
@@ -2686,6 +2725,8 @@ free_rss_controls(EMFormatHTMLPObject *o)
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
 	if (po->mem)
 		g_free(po->mem);
+	if (po->website)
+		g_free(po->website);
 	gtk_widget_destroy(po->html);
 }
 
@@ -2755,6 +2796,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	org_gnome_rss_controls_counter_id++;
 	pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), classid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
 	pobj->is_html = GPOINTER_TO_INT(is_html);
+	pobj->website = g_strstrip(g_strdup((gchar *)website));
 	pobj->object.free = free_rss_controls;
         camel_stream_printf (t->stream, "<object classid=%s></object>\n", classid);
 

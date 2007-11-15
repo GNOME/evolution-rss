@@ -245,6 +245,7 @@ AC_SUBST(DBUS_LIBS)
 # since preprocessor values must be integral
 DBUS_VERSION="`pkg-config --modversion dbus-1 | awk '{print 1000 * $1}'`"
 AC_SUBST(DBUS_VERSION)
+echo $DBUS_VERSION
 if test "x$have_dbus" != "xno"; then
 	AC_DEFINE_UNQUOTED(HAVE_DBUS,1, [DBUS present])
 fi

@@ -17,5 +17,6 @@
 	* check mozembed widget / thread when quitting
 	* find a way to include version of plugin
 	* test cancelation signal
-	* add refresh button on article
 	* jump to folder when adding through d-bus
+	* check webkit rendering
+	* remove Read RSS menu option for evo > 2.12
