@@ -1,3 +1,8 @@
+Thu 15 Nov 2007 10:09:50 AM EET <lucilanga@gnome.org>
+
+	* fixed setting value for checking feeds
+	interval, also fixed network port setting
+
 Wed 14 Nov 2007 07:54:22 AM EET <lucilanga@gnome.org>
 
 	* fallback to old fix for parsing "?" in url

@@ -1927,7 +1927,7 @@ export_cb (GtkWidget *widget, gpointer data)
 static void
 rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 {
-	g_print("rep check:%d\n", gtk_spin_button_get_value((GtkSpinButton *)widget));
+	g_print("rep check:%f\n", gtk_spin_button_get_value((GtkSpinButton *)widget));
     gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data));
     gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, 
 		gtk_spin_button_get_value((GtkSpinButton*)widget), NULL);
@@ -5339,8 +5339,7 @@ rss_config_control_new (void)
 		gtk_spin_button_set_value((GtkSpinButton *)sf->spin, adj);
 	g_signal_connect(sf->check1, "clicked", G_CALLBACK(rep_check_cb), sf->spin);
 	g_signal_connect(sf->spin, "changed", G_CALLBACK(rep_check_timeout_cb), sf->check1);
-//	g_signal_connect(sf->spin, "change_value", G_CALLBACK(rep_check_timeout_cb), sf->check1);
-//	g_signal_connect(sf->spin, "editing_done", G_CALLBACK(rep_check_timeout_cb), sf->check1);
+	g_signal_connect(sf->spin, "value-changed", G_CALLBACK(rep_check_timeout_cb), sf->check1);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check2),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_START_CHECK, NULL));
 	g_signal_connect(sf->check2, 
@@ -5397,6 +5396,7 @@ rss_config_control_new (void)
 					set_sensitive,
 					NULL, NULL);
 	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
+	g_signal_connect (combo, "value-changed", G_CALLBACK (render_engine_changed), NULL);
 	gtk_widget_show(combo);
 	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
 
