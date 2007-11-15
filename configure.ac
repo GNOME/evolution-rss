@@ -121,7 +121,7 @@ AC_SUBST(ERROR_DIR)
 
 dnl default renderer and fall it it in case no other render is found
 RENDER=gtkhtml
-RENDER_N=10
+RENDER_N=0
 
 # *******************************
 # gecko renderer
@@ -178,7 +178,7 @@ if test "$enable_gecko" = "yes"; then
 		else
 			dnl fall back to gtkhtml if selection is not valid
 			RENDER=gtkhtml
-			RENDER_N=10
+			RENDER_N=0
 		fi
 	fi
 fi
@@ -213,7 +213,7 @@ if test "x$have_webkit" != "xno"; then
 		else
 			dnl fall back to gtkhtml if selection is not valid
 			RENDER=gtkhtml
-			RENDER_N=10
+			RENDER_N=0
 		fi
 	fi
 fi
@@ -236,7 +236,7 @@ AM_GCONF_SOURCE_2
 dnl ***********
 dnl D-BUS stuff
 dnl ***********
-PKG_CHECK_MODULES(DBUS, dbus-glib-1)
+PKG_CHECK_MODULES(DBUS, dbus-glib-1, [have_dbus=yes], [have_dbus=no])
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
 
@@ -245,6 +245,10 @@ AC_SUBST(DBUS_LIBS)
 # since preprocessor values must be integral
 DBUS_VERSION="`pkg-config --modversion dbus-1 | awk '{print 1000 * $1}'`"
 AC_SUBST(DBUS_VERSION)
+if test "x$have_dbus" != "xno"; then
+	AC_DEFINE_UNQUOTED(HAVE_DBUS,1, [DBUS present])
+fi
+AC_SUBST(HAVE_DBUS)
 
 dnl I18n stuff
 AC_PATH_PROG(GETTEXT, gettext, no)
@@ -311,5 +315,5 @@ echo "
 	Prefix			: $prefix
 	HTML renders		: $kits
 	Primary HTML render	: $RENDER
-	D-BUS support		: $HAVE_DBUS
+	D-BUS support		: $have_dbus
 	"

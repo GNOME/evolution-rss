@@ -2724,6 +2724,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         g_print("html\n");
 
 	g_print("RENDER:%s\n", RENDER);
+	g_print("RENDER:%d\n", RENDER_N);
 
 	CamelMimePart *message = CAMEL_IS_MIME_MESSAGE(t->part) ? 
 			t->part : 
@@ -3873,8 +3874,11 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->feed_queue = 0;
 			rf->main_folder = get_main_folder();
 			get_feed_folders();
+#ifdef HAVE_DBUS
+			g_print("init_dbus()\n");
 			/*D-BUS init*/
 			rf->bus = init_dbus ();
+#endif
 			atexit(rss_finalize);
 			guint render = GPOINTER_TO_INT(
 			gconf_client_get_int(rss_gconf, 
@@ -3884,7 +3888,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			//render = 0 means gtkhtml however it could mean no value set
 			//perhaps we should change this number representing gtkhtml
 
-			if (!render)	// set render just in case it was forced in configure
+			if (!render) 	// set render just in case it was forced in configure
 			{
 				render = RENDER_N;
   				gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, render, NULL);
@@ -5370,6 +5374,9 @@ rss_config_control_new (void)
 
 	switch (render)
 	{
+		case 10:
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+			break;
 		case 1: 
 #ifndef HAVE_WEBKIT
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
