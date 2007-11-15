@@ -46,6 +46,10 @@ plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 liborg_gnome_evolution_rss_la_SOURCES = rss.c
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
 
+evolution_import_rss_SOURCES = evolution-import-rss.c
+evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
+
+
 schemadir	= $(GCONF_SCHEMA_FILE_DIR)
 schema_in_files = evolution-rss.schemas.in
 schema_DATA	= $(schema_in_files:.schemas.in=.schemas)
@@ -54,8 +58,6 @@ server_in_files = GNOME_Evolution_RSS.server.in.in
 server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
 @EVO_SERVER_RULE@
 @INTLTOOL_SERVER_RULE@
-
-
 @INTLTOOL_SCHEMAS_RULE@
 
 install-data-local:
@@ -95,7 +97,8 @@ BUILT_SOURCES	= $(server_DATA)
 CLEANFILES	= $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.eplug	\
 	org-gnome-evolution-rss.error   \
-	GNOME_Evolution_RSS.server.in
+	GNOME_Evolution_RSS.server.in	\
+	evolution-rss.schemas
 
 EXTRA_DIST = 					\
 	$(glade_DATA)				\
@@ -104,7 +107,13 @@ EXTRA_DIST = 					\
 	rss.h network.h				\
 	network-soup.c				\
 	misc.c					\
+	dbus.c					\
+	evolution-import-rss.c			\
+	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\
 	org-gnome-evolution-rss.error.xml	\
 	org-gnome-evolution-rss.xml
+
+bin_PROGRAMS = \
+	evolution-import-rss
 

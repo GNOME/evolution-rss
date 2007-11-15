@@ -305,6 +305,13 @@ if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
         kits=$kits"WebKit, "
 fi
 kits="$kits$gecko_cv_gecko (gecko engine version $gecko_cv_gecko_version)"
+if test "x$have_dbus" != "xno"; then
+	have_dbus_build="evolution-import-rss module will be built"
+	import_feeds="evolution-import-rss"
+else
+	have_dbus_build="evolution-import-rss module will be not built"
+	import_feeds="no"
+fi
 
 AC_OUTPUT
 echo "
@@ -315,5 +322,7 @@ echo "
 	Prefix			: $prefix
 	HTML renders		: $kits
 	Primary HTML render	: $RENDER
-	D-BUS support		: $have_dbus
+	D-BUS support		: $have_dbus ($have_dbus_build)
+	Import feeds		: $import_feeds
+
 	"

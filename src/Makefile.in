@@ -15,6 +15,7 @@
 @SET_MAKE@
 
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -33,6 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+bin_PROGRAMS = evolution-import-rss$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -49,9 +51,10 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(errordir)" \
-	"$(DESTDIR)$(gladedir)" "$(DESTDIR)$(plugindir)" \
-	"$(DESTDIR)$(schemadir)" "$(DESTDIR)$(serverdir)"
+am__installdirs = "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(bindir)" \
+	"$(DESTDIR)$(errordir)" "$(DESTDIR)$(gladedir)" \
+	"$(DESTDIR)$(plugindir)" "$(DESTDIR)$(schemadir)" \
+	"$(DESTDIR)$(serverdir)"
 pluginLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(plugin_LTLIBRARIES)
 liborg_gnome_evolution_rss_la_LIBADD =
@@ -62,6 +65,14 @@ liborg_gnome_evolution_rss_la_LINK = $(LIBTOOL) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(AM_CFLAGS) $(CFLAGS) \
 	$(liborg_gnome_evolution_rss_la_LDFLAGS) $(LDFLAGS) -o $@
+binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+PROGRAMS = $(bin_PROGRAMS)
+am_evolution_import_rss_OBJECTS = evolution-import-rss.$(OBJEXT)
+evolution_import_rss_OBJECTS = $(am_evolution_import_rss_OBJECTS)
+evolution_import_rss_LDADD = $(LDADD)
+evolution_import_rss_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(evolution_import_rss_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -74,8 +85,10 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(liborg_gnome_evolution_rss_la_SOURCES)
-DIST_SOURCES = $(liborg_gnome_evolution_rss_la_SOURCES)
+SOURCES = $(liborg_gnome_evolution_rss_la_SOURCES) \
+	$(evolution_import_rss_SOURCES)
+DIST_SOURCES = $(liborg_gnome_evolution_rss_la_SOURCES) \
+	$(evolution_import_rss_SOURCES)
 errorDATA_INSTALL = $(INSTALL_DATA)
 gladeDATA_INSTALL = $(INSTALL_DATA)
 pluginDATA_INSTALL = $(INSTALL_DATA)
@@ -302,6 +315,8 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 liborg_gnome_evolution_rss_la_SOURCES = rss.c
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
+evolution_import_rss_SOURCES = evolution-import-rss.c
+evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
 schemadir = $(GCONF_SCHEMA_FILE_DIR)
 schema_in_files = evolution-rss.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
@@ -315,7 +330,8 @@ BUILT_SOURCES = $(server_DATA)
 CLEANFILES = $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.eplug	\
 	org-gnome-evolution-rss.error   \
-	GNOME_Evolution_RSS.server.in
+	GNOME_Evolution_RSS.server.in	\
+	evolution-rss.schemas
 
 EXTRA_DIST = \
 	$(glade_DATA)				\
@@ -324,6 +340,9 @@ EXTRA_DIST = \
 	rss.h network.h				\
 	network-soup.c				\
 	misc.c					\
+	dbus.c					\
+	evolution-import-rss.c			\
+	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\
 	org-gnome-evolution-rss.error.xml	\
 	org-gnome-evolution-rss.xml
@@ -391,6 +410,37 @@ clean-pluginLTLIBRARIES:
 	done
 liborg-gnome-evolution-rss.la: $(liborg_gnome_evolution_rss_la_OBJECTS) $(liborg_gnome_evolution_rss_la_DEPENDENCIES) 
 	$(liborg_gnome_evolution_rss_la_LINK) -rpath $(plugindir) $(liborg_gnome_evolution_rss_la_OBJECTS) $(liborg_gnome_evolution_rss_la_LIBADD) $(LIBS)
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
+	done
+
+clean-binPROGRAMS:
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  echo " rm -f $$p $$f"; \
+	  rm -f $$p $$f ; \
+	done
+evolution-import-rss$(EXEEXT): $(evolution_import_rss_OBJECTS) $(evolution_import_rss_DEPENDENCIES) 
+	@rm -f evolution-import-rss$(EXEEXT)
+	$(evolution_import_rss_LINK) $(evolution_import_rss_OBJECTS) $(evolution_import_rss_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -398,6 +448,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/evolution-import-rss.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rss.Plo@am__quote@
 
 .c.o:
@@ -589,9 +640,9 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA)
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(errordir)" "$(DESTDIR)$(gladedir)" "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(schemadir)" "$(DESTDIR)$(serverdir)"; do \
+	for dir in "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(errordir)" "$(DESTDIR)$(gladedir)" "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(schemadir)" "$(DESTDIR)$(serverdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -624,8 +675,8 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-pluginLTLIBRARIES \
-	mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libtool \
+	clean-pluginLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -649,7 +700,7 @@ install-data-am: install-data-local install-errorDATA \
 
 install-dvi: install-dvi-am
 
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 
 install-html: install-html-am
 
@@ -681,19 +732,20 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-errorDATA uninstall-gladeDATA \
-	uninstall-pluginDATA uninstall-pluginLTLIBRARIES \
-	uninstall-schemaDATA uninstall-serverDATA
+uninstall-am: uninstall-binPROGRAMS uninstall-errorDATA \
+	uninstall-gladeDATA uninstall-pluginDATA \
+	uninstall-pluginLTLIBRARIES uninstall-schemaDATA \
+	uninstall-serverDATA
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-pluginLTLIBRARIES ctags distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am \
-	install-data-local install-dvi install-dvi-am \
-	install-errorDATA install-exec install-exec-am \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic clean-libtool clean-pluginLTLIBRARIES ctags \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-data-local install-dvi \
+	install-dvi-am install-errorDATA install-exec install-exec-am \
 	install-gladeDATA install-html install-html-am install-info \
 	install-info-am install-man install-pdf install-pdf-am \
 	install-pluginDATA install-pluginLTLIBRARIES install-ps \
@@ -702,9 +754,9 @@ uninstall-am: uninstall-errorDATA uninstall-gladeDATA \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
-	uninstall-errorDATA uninstall-gladeDATA uninstall-pluginDATA \
-	uninstall-pluginLTLIBRARIES uninstall-schemaDATA \
-	uninstall-serverDATA
+	uninstall-binPROGRAMS uninstall-errorDATA uninstall-gladeDATA \
+	uninstall-pluginDATA uninstall-pluginLTLIBRARIES \
+	uninstall-schemaDATA uninstall-serverDATA
 
 
 %.eplug.in: %.eplug.xml
@@ -726,7 +778,6 @@ uninstall-am: uninstall-errorDATA uninstall-gladeDATA \
 	$< > $@
 @EVO_SERVER_RULE@
 @INTLTOOL_SERVER_RULE@
-
 @INTLTOOL_SCHEMAS_RULE@
 
 install-data-local:

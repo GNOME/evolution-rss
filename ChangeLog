@@ -1,5 +1,7 @@
 Thu 15 Nov 2007 10:09:50 AM EET <lucilanga@gnome.org>
 
+	* added evolution-import-rss for importing
+	feeds over DBUS
 	* fixed setting value for checking feeds
 	interval, also fixed network port setting
 
