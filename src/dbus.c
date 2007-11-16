@@ -120,6 +120,22 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
     		}
     		return DBUS_HANDLER_RESULT_HANDLED;
   	}
+	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "evolution_ping")) {
+		g_print("!!!PING!!!\n");
+		gchar *data = g_strdup("PONG");
+		dbus_message_append_args (message,
+//#if DBUS_VERSION >= 310
+                          DBUS_TYPE_STRING, &data,
+//#else
+//                        DBUS_TYPE_STRING, data,
+//#endif
+                          DBUS_TYPE_INVALID);
+
+                /* Sends the message */
+                dbus_connection_send (bus, message, NULL);
+    		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 

@@ -39,6 +39,24 @@ static DBusConnection *bus = NULL;
 static gboolean enabled = FALSE;
 
 static void
+send_dbus_ping (const char *name, const char *data)
+{
+	DBusMessage *message;
+	DBusPendingCall *pending;
+	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, name)))
+		return;
+	dbus_message_append_args (message,
+			  DBUS_TYPE_STRING, &data,
+			  DBUS_TYPE_INVALID);
+	int ret = dbus_connection_send (bus, message, NULL);
+	if (ret == FALSE)
+    	{
+     		printf("Could not send method call\n");
+	}
+	dbus_message_unref (message);
+}
+
+static void
 send_dbus_message (const char *name, const char *data)
 {
 	DBusMessage *message;
@@ -50,11 +68,11 @@ send_dbus_message (const char *name, const char *data)
 	/* Appends the data as an argument to the message */
 	dbus_message_append_args (message,
 //#if DBUS_VERSION >= 310
-				  DBUS_TYPE_STRING, &data,
+			  DBUS_TYPE_STRING, &data,
 //#else
-//				  DBUS_TYPE_STRING, data,
-//#endif	
-				  DBUS_TYPE_INVALID);
+//			  DBUS_TYPE_STRING, data,
+//#endif
+			  DBUS_TYPE_INVALID);
 
 	/* Sends the message */
 	dbus_connection_send (bus, message, NULL);
@@ -84,6 +102,10 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 		
 		g_timeout_add (3000, reinit_dbus, NULL);
 		
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "evolution_ping")) {
+		g_print("cotu si piscotu\n");
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 	
@@ -122,8 +144,11 @@ main (int argc, char *argv[])
 
 		char *s = argv[1];
 	if (bus != NULL)
+                send_dbus_ping ("evolution_ping", "PING");
                 send_dbus_message ("evolution_rss_feed", s);
 	
+	while (1) 
+	;
 	if (bus != NULL) {
 		dbus_connection_unref (bus);
 		bus = NULL;
