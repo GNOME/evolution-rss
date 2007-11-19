@@ -27,27 +27,28 @@
 #include <stdarg.h>
 #include <string.h>
 #include <glib.h>
+#include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
-#define DBUS_INTERFACE "org.gnome.evolution.mail.dbus.Signal"
+#define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
+#define DBUS_REPLY_INTERFACE "org.gnome.evolution.mail.rss.out"
 
 static gboolean init_dbus (void);
 
 static DBusConnection *bus = NULL;
 static gboolean enabled = FALSE;
+GMainLoop *loop;
+gboolean evo_running = FALSE;
 
 static void
-send_dbus_ping (const char *name, const char *data)
+send_dbus_ping (void)
 {
 	DBusMessage *message;
 	DBusPendingCall *pending;
-	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, name)))
+	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, "ping")))
 		return;
-	dbus_message_append_args (message,
-			  DBUS_TYPE_STRING, &data,
-			  DBUS_TYPE_INVALID);
 	int ret = dbus_connection_send (bus, message, NULL);
 	if (ret == FALSE)
     	{
@@ -60,6 +61,7 @@ static void
 send_dbus_message (const char *name, const char *data)
 {
 	DBusMessage *message;
+	int serial= 123;
 	
 	/* Create a new message on the DBUS_INTERFACE */
 	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, name)))
@@ -104,8 +106,10 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 		
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "evolution_ping")) {
-		g_print("cotu si piscotu\n");
+	else if (dbus_message_is_signal (message, DBUS_REPLY_INTERFACE, "pong")) {
+		g_print("pong!\n");
+		evo_running = TRUE;
+		g_main_loop_quit(loop);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 	
@@ -128,27 +132,62 @@ init_dbus (void)
 	}
 	
 	dbus_connection_setup_with_g_main (bus, NULL);
+	dbus_bus_add_match (bus, "type='signal'", NULL);
 	dbus_connection_set_exit_on_disconnect (bus, FALSE);
-	
-	dbus_connection_add_filter (bus, filter_function, NULL, NULL);
+	dbus_connection_add_filter (bus, filter_function, loop, NULL);
 	
 	return TRUE;
 }
 
+static gboolean
+no_evo_cb (gpointer user_data)
+{
+	g_print("no evolution running!\n");
+	g_print("trying to start...\n");
+	g_main_loop_quit(loop);
+}
+
+static gboolean
+err_evo_cb (gpointer user_data)
+{
+	g_print("cannot start evolution...retry %d\n", user_data);
+	g_main_loop_quit(loop);
+}
 
 int
 main (int argc, char *argv[])
 {
+	guint i=0;
+	loop = g_main_loop_new (NULL, FALSE);
+
 	if (!init_dbus ())
 		return -1;
 
-		char *s = argv[1];
+	char *s = argv[1];
+
 	if (bus != NULL)
-                send_dbus_ping ("evolution_ping", "PING");
-                send_dbus_message ("evolution_rss_feed", s);
+                send_dbus_ping ();
+	g_timeout_add (2000, no_evo_cb, NULL);
+	g_main_loop_run(loop);
+	while (!evo_running && i < 3)
+	{
+		system("evoltion&");
+		g_print("fireing evolution...\n");
+		sleep(10);
+        	send_dbus_ping ();
+		g_timeout_add (2000, err_evo_cb, i++);
+		g_main_loop_run(loop);
+	}
 	
-	while (1) 
-	;
+
+	if (evo_running)
+        	send_dbus_message ("evolution_rss_feed", s);
+	else
+	{
+		g_print("evolution repetably failed to start!\n");
+		g_print("Cannot add feed!");
+	}
+	
 	if (bus != NULL) {
 		dbus_connection_unref (bus);
 		bus = NULL;

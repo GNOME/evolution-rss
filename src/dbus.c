@@ -29,7 +29,8 @@
 #include <rss.h>
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
-#define DBUS_INTERFACE "org.gnome.evolution.mail.dbus.Signal"
+#define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
+#define DBUS_REPLY_INTERFACE "org.gnome.evolution.mail.rss.out"
 
 static DBusConnection *init_dbus (void);
 
@@ -113,6 +114,10 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
         			save_gconf_feed();
 			}
 
+
+    //  dbus_message_unref(reply);
+ //     return DBUS_HANDLER_RESULT_REMOVE_MESSAGE;
+
       			//dbus_free (s);
     		} else {
       			g_print("Feed received, but error getting message: %s\n", error.message);
@@ -120,19 +125,18 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
     		}
     		return DBUS_HANDLER_RESULT_HANDLED;
   	}
-	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "evolution_ping")) {
+	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "ping")) {
 		g_print("!!!PING!!!\n");
 		gchar *data = g_strdup("PONG");
-		dbus_message_append_args (message,
-//#if DBUS_VERSION >= 310
-                          DBUS_TYPE_STRING, &data,
-//#else
-//                        DBUS_TYPE_STRING, data,
-//#endif
-                          DBUS_TYPE_INVALID);
+	DBusMessage *reply;
+		fprintf(stderr, "Ping received from %s\n",
+              dbus_message_get_sender(message));
+      reply = dbus_message_new_signal (DBUS_PATH, DBUS_REPLY_INTERFACE, "pong");
+      dbus_message_set_reply_serial(reply,
+                                    dbus_message_get_serial(message));
+      dbus_connection_send (connection, reply, NULL);
+      dbus_connection_flush (connection);
 
-                /* Sends the message */
-                dbus_connection_send (bus, message, NULL);
     		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 
@@ -159,7 +163,7 @@ init_dbus (void)
 	}
 	
 	dbus_connection_setup_with_g_main (bus, NULL);
-	  dbus_bus_add_match (bus, "type='signal',interface='org.gnome.evolution.mail.dbus.Signal'", NULL);
+	dbus_bus_add_match (bus, "type='signal',interface='org.gnome.evolution.mail.rss.in'", NULL);
 	dbus_connection_set_exit_on_disconnect (bus, FALSE);
 	
 	dbus_connection_add_filter (bus, filter_function, loop, NULL);
