@@ -15,8 +15,6 @@ INCLUDES =							\
 	-DRENDER_N=$(RENDER_N)					\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
-
-
 %.eplug.in: %.eplug.xml
 	LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
 

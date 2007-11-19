@@ -171,7 +171,7 @@ main (int argc, char *argv[])
 	g_main_loop_run(loop);
 	while (!evo_running && i < 3)
 	{
-		system("evoltion&");
+		system("evolution&");
 		g_print("fireing evolution...\n");
 		sleep(10);
         	send_dbus_ping ();

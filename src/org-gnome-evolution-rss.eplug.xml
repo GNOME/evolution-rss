@@ -16,6 +16,7 @@
                  target="upgrade"/>
                                                                                                                                                                  </hook>
 
++RSS_MENU+
     <hook class="org.gnome.evolution.mail.bonobomenu:1.0">
       <menu target="select" id="org.gnome.evolution.mail.browser">
       
@@ -23,6 +24,7 @@
           <item verb="RSSTask" type="item" path="/commands/RSSTask" activate="org_gnome_cooly_rss_refresh"/>
 	</menu>
     </hook>
++MENU_END+
 
 
 	<hook class="org.gnome.evolution.mail.events:1.0">
