@@ -110,7 +110,11 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                         	                   _("Feed already exists!"));
                         	   exit;
                 		}
-                		setup_feed(feed);
+                		if (setup_feed(feed))
+				{
+					g_print("chn_name:%s\n", lookup_chn_name_by_url(feed->feed_url));
+					rss_select_folder(lookup_chn_name_by_url(feed->feed_url));
+				}	
         			save_gconf_feed();
 			}
 

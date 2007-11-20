@@ -225,6 +225,8 @@ static void err_destroy (GtkWidget *widget, gpointer data);
 static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
 void save_gconf_feed(void);
 void rss_error(gchar *name, gchar *error, gchar *emsg);
+void rss_select_folder(gchar *folder_name);
+gpointer lookup_chn_name_by_url(gchar *url);
 
 typedef struct FEED_FOLDERS {
 	gchar *oname;		//original folder name

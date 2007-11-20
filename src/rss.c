@@ -1033,6 +1033,23 @@ remove_feed_hash(gpointer name)
 	g_hash_table_remove(rf->hrname, name);
 }
 
+void
+rss_select_folder(gchar *folder_name)
+{
+	CamelStore *store = mail_component_peek_local_store(NULL);
+	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
+        gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), folder_name);
+        CamelFolder *folder = camel_store_get_folder (store, real_name, 0, NULL);
+	g_print("real_name:%s\n", real_name);
+        char *uri = mail_tools_folder_to_url (folder);
+	g_print("uri:%s\n", uri);
+        em_folder_tree_model_set_selected (model, uri);
+//        em_folder_tree_model_save_state (model);
+	g_free(uri);
+	camel_object_unref (folder);
+	g_free(real_name);
+}
+
 GtkWidget*
 remove_feed_dialog(gchar *msg)
 {
@@ -3443,6 +3460,16 @@ lookup_feed_folder(gchar *folder)
 {
 	gchar *new_folder = g_hash_table_lookup(rf->reversed_feed_folders, folder);
 	return new_folder ? new_folder : folder;
+}
+
+gpointer
+lookup_chn_name_by_url(gchar *url)
+{
+	gpointer crc_feed = gen_md5(url);
+        gpointer chn_name = g_hash_table_lookup(rf->hrname_r,
+                        g_strdup(crc_feed));
+	g_free(crc_feed);
+	return chn_name;
 }
 
 void
