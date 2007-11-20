@@ -15,8 +15,24 @@ INCLUDES =							\
 	-DRENDER_N=$(RENDER_N)					\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
-%.eplug.in: %.eplug.xml
+RSS_MENU = \
+	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
+      		<menu target=\"select\" id=\"org.gnome.evolution.mail.browser\">\n	\
+	\n								\
+      <ui file=\"+PLUGIN_INSTALL_DIR+/org-gnome-evolution-rss.xml\"/>\n	\
+          <item verb=\"RSSTask\" type=\"item\" path=\"/commands/RSSTask\" activate=\"org_gnome_cooly_rss_refresh\"/>\n		\
+        </menu>\n \
+    </hook>
+
+%.eplug.in.in: %.eplug.xml
 	LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
+
+%.eplug.in: %.eplug.in.in
+	@if test $(MAJOR_VERSION) -lt 2120; then		\
+		sed -e "s%+RSS_MENU+%$(RSS_MENU)%" $< > $@;	\
+	else							\
+		sed -e "s%+RSS_MENU+%%" $< > $@;		\
+	fi
 
 %.eplug: %.eplug.in
 	sed -e "s%+PLUGIN_INSTALL_DIR+%$(PLUGIN_INSTALL_DIR)%" \

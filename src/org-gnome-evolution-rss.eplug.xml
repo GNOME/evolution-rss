@@ -14,18 +14,9 @@
                  id="upgrade.done"
                  handle="org_gnome_cooly_rss_startup"
                  target="upgrade"/>
-                                                                                                                                                                 </hook>
-
-+RSS_MENU+
-    <hook class="org.gnome.evolution.mail.bonobomenu:1.0">
-      <menu target="select" id="org.gnome.evolution.mail.browser">
-      
-      <ui file="+PLUGIN_INSTALL_DIR+/org-gnome-evolution-rss.xml"/>
-          <item verb="RSSTask" type="item" path="/commands/RSSTask" activate="org_gnome_cooly_rss_refresh"/>
-	</menu>
     </hook>
-+MENU_END+
 
+	+RSS_MENU+
 
 	<hook class="org.gnome.evolution.mail.events:1.0">
         	<event type="pass" target="message" id="message.reading" handle="org_gnome_cooly_article_show"/>
