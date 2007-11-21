@@ -19,3 +19,5 @@
 	* test cancelation signal
 	* jump to folder when adding through d-bus
 	* check webkit rendering
+	* check parser errors (hide)
+	* check browser buttons

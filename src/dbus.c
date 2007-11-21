@@ -113,9 +113,11 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                 		if (setup_feed(feed))
 				{
 					g_print("chn_name:%s\n", lookup_chn_name_by_url(feed->feed_url));
-					rss_select_folder(lookup_chn_name_by_url(feed->feed_url));
 				}	
         			save_gconf_feed();
+        			camel_operation_end(NULL);
+				g_timeout_add (3000, rss_select_folder, lookup_chn_name_by_url(feed->feed_url));
+				g_print("end\n");
 			}
 
 

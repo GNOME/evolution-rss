@@ -69,6 +69,8 @@
 #include <glade/glade-xml.h>
 #include <glade/glade.h>
 #include <shell/evolution-config-control.h>
+#include <shell/e-component-view.h>
+#include <widgets/misc/e-info-label.h>
 
 #include <libxml/parserInternals.h>
 //#include <libxml/parser.h>
@@ -1040,11 +1042,22 @@ rss_select_folder(gchar *folder_name)
 	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), folder_name);
         CamelFolder *folder = camel_store_get_folder (store, real_name, 0, NULL);
+
 	g_print("real_name:%s\n", real_name);
         char *uri = mail_tools_folder_to_url (folder);
 	g_print("uri:%s\n", uri);
+	g_print("uri:%s\n", uri);
+	g_print("selected:%s\n", em_folder_tree_model_get_selected (model));
         em_folder_tree_model_set_selected (model, uri);
-//        em_folder_tree_model_save_state (model);
+	g_print("selected:%s\n", em_folder_tree_model_get_selected (model));
+
+	MailComponent *mail_component = mail_component_peek();
+	MailComponentPrivate *priv = mail_component->priv;
+	EComponentView *component_view;// = priv->component_view;
+        EInfoLabel *el = g_object_get_data((GObject *)component_view, "info-label");
+        EMFolderView *emfv = g_object_get_data((GObject *)el, "folderview");
+        em_folder_tree_set_selected ((EMFolderTree *)folder_view, uri, FALSE);
+//	camel_operation_end(NULL);
 	g_free(uri);
 	camel_object_unref (folder);
 	g_free(real_name);
@@ -3678,6 +3691,7 @@ void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
 void
 org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 {
+		rss_select_folder("Caolan McNamara");
 #ifndef EVOLUTION_2_12
 	GtkWidget *readrss_dialog;
         GtkWidget *readrss_label;
@@ -3764,6 +3778,9 @@ org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t)
 org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 #endif
 {
+		rss_select_folder("Caolan McNamara");
+	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
+	g_print("model:%p\n", model);
 	GtkWidget *readrss_dialog;
 	GtkWidget *readrss_label;
 	GtkWidget *readrss_progress;
