@@ -28,7 +28,7 @@ This is an evolution plugin which enables evolution to read rss feeds.
 #%patch
 
 %build
-./configure --prefix="%{_prefix}" --disable-webkit
+./configure --prefix="%{_prefix}" --sysconfdir="%{_sysconfdir}" --disable-webkit
 make
 
 %install
@@ -47,6 +47,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
+%{_prefix}/bin/evolution-import-rss
+%{_sysconfdir}/gconf/schemas/evolution-rss.schemas
 %{_datadir}/locale/*/LC_MESSAGES/evolution-rss.mo
 %{_datadir}/evolution/*/errors/org-gnome-evolution-rss.error
 %{_datadir}/evolution/*/glade/rss-ui.glade
@@ -66,6 +68,9 @@ rm -rf %{buildroot}
 %doc TODO
 
 %changelog
+* Thu Nov 22 2007 Lucian Langa <lucilanga@gnome.org>
+- Added gconf schemas
+- Added evolution-import-rss
 * Tue Sep 04 2007 Lucian Langa <lucilanga@gnome.org>
 - Updated installed files
 * Mon Apr 23 2007 root <root@mayday>

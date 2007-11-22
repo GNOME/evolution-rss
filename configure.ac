@@ -1,4 +1,4 @@
-AC_INIT([evolution-rss], [0.0.6], http://mips.edu.ms/bugs/bugs.html)
+AC_INIT([evolution-rss], [0.0.7], http://mips.edu.ms/bugs/bugs.html)
 AC_CONFIG_SRCDIR(src)
 
 AM_INIT_AUTOMAKE
@@ -30,7 +30,7 @@ AC_MSG_CHECKING(Evolution version)
 dnl is this a reasonable thing to do ?
 EVOLUTION_VERSION=`pkg-config --modversion evolution-shell 2>/dev/null`
 if test -n "$EVOLUTION_VERSION"; then
-	EVOLUTION_BASE_VERSION=$EVOLUTON_VERSION;
+	EVOLUTION_BASE_VERSION=$EVOLUTION_VERSION
 	EVOLUTION_BASE_VERSION_S=""
 	EVOLUTION_EXEC_VERSION=`pkg-config --variable=execversion evolution-shell 2>/dev/null`
 	if test -n "$EVOLUTION_EXEC_VERSION"; then

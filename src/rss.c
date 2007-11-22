@@ -1075,7 +1075,7 @@ rss_select_folder(gchar *folder_name)
         CamelFolder *folder = camel_store_get_folder (store, real_name, 0, NULL);
 
 	g_print("real_name:%s\n", real_name);
-        char *uri = mail_tools_folder_to_url (folder);
+        char *uri = (char *)mail_tools_folder_to_url (folder);
 	g_print("uri:%s\n", uri);
 	g_print("selected:%s\n", em_folder_tree_model_get_selected (model));
         em_folder_tree_model_set_selected (model, uri);
@@ -2750,7 +2750,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
 	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
-	gtk_widget_set_size_request (GTK_BOX(hbox2), -1, 31);
+	gtk_widget_set_size_request (GTK_WIDGET(hbox2), -1, 31);
 
 	GtkWidget *button = gtk_button_new_with_label(
 				rf->cur_format ? _("HTML") : _("Summary"));
@@ -3856,7 +3856,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	row+=2;
 	t->row = row;
 
-	gtk_table_resize(t->table, t->row, 4);
+	gtk_table_resize(GTK_TABLE(t->table), t->row, 4);
 
         char *pretty_url = g_strdup ("RSS");
         label = gtk_label_new (NULL);
