@@ -19,5 +19,6 @@
 	* test cancelation signal
 	* jump to folder when adding through d-bus
 	* check webkit rendering
-	* check browser buttons
+	* make Cancel All from S&R work
 	* remove notneeded includes
+	* obey ttl entity

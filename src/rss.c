@@ -789,6 +789,10 @@ readrss_dialog_cb (GtkWidget *widget, gpointer data)
 static void
 receive_cancel(GtkButton *button, struct _send_info *info)
 {
+	g_print("CANCEL\n");
+	g_print("CANCEL\n");
+	g_print("CANCEL\n");
+	g_print("CANCEL\n");
         if (info->state == SEND_ACTIVE) {
                 if (info->status_label)
 			gtk_label_set_markup (GTK_LABEL (info->status_label),
@@ -800,6 +804,8 @@ receive_cancel(GtkButton *button, struct _send_info *info)
         }
         if (info->cancel_button)
                 gtk_widget_set_sensitive(info->cancel_button, FALSE);
+
+	abort_all_soup();
 }
 
 gchar *
@@ -2743,12 +2749,13 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gchar *mem = g_strdup_printf(" <b>%s:</b>", _("Feed view"));
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
-	gtk_box_pack_start (GTK_BOX (hbox2), label3, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
+	gtk_widget_set_size_request (GTK_BOX(hbox2), -1, 31);
 
 	GtkWidget *button = gtk_button_new_with_label(
 				rf->cur_format ? _("HTML") : _("Summary"));
 	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
-	gtk_widget_set_size_request(button, 100, -1);
+	gtk_widget_set_size_request(button, 100, 10);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
         gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
@@ -2767,7 +2774,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
         	gtk_widget_show (button3);
 		gtk_box_pack_start (GTK_BOX (hbox2), button3, TRUE, TRUE, 0);
 	}
-	gtk_box_pack_start (GTK_BOX (vbox), hbox2, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
 
         gtk_container_add ((GtkContainer *) eb, vbox);
 	gtk_widget_size_request(eb, &req);
@@ -3808,8 +3815,6 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 #endif
 {
 		rss_select_folder("feudora");
-	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
-	g_print("model:%p\n", model);
 	GtkWidget *readrss_dialog;
 	GtkWidget *readrss_label;
 	GtkWidget *readrss_progress;
@@ -3830,8 +3835,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
         info = g_malloc0 (sizeof (*info));
 //        info->type = type;
                         
-        info->uri = g_strdup ("wwww");
-//        info->keep = source->keep_on_server;
+        info->uri = g_strdup ("feed");
 //        info->cancel = camel_operation_new (operation_status, info);
         info->state = SEND_ACTIVE;
 //        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
@@ -3851,6 +3855,8 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	guint row = t->row;
 	row+=2;
 	t->row = row;
+
+	gtk_table_resize(t->table, t->row, 4);
 
         char *pretty_url = g_strdup ("RSS");
         label = gtk_label_new (NULL);
@@ -3897,6 +3903,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
         info->status_label = status_label;
         info->cancel_button = cancel_button;
         info->data = (struct _send_data *)t->data;
+	g_print("CAN?:%d\n", info->data->cancelled);
 	rf->info = info;
 
 	rf->progress_bar = progress_bar;
@@ -3924,13 +3931,17 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 		rf->label	= label2;
 	}
 #endif
-	if (!rf->pending && !rf->feed_queue)
+bail:	if (!rf->pending && !rf->feed_queue)
 	{
 		rf->pending = TRUE;
 		check_folders();
 	
 		rf->err = NULL;
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
+		g_print("UNDERWAY\n\n\n");
+		g_print("UNDERWAY\n\n\n");
+		g_print("UNDERWAY\n\n\n");
+		g_print("UNDERWAY\n\n\n");
 		// reset cancelation signal
 		if (rf->cancel)
 			rf->cancel = 0;

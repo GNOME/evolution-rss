@@ -1,5 +1,8 @@
 Thu 22 Nov 2007 08:36:06 AM EET <lucilanga@gnome.org>
 
+	* fix drawing inside of send and receive
+	dialog
+	* fix drawing of browser buttons
 	* suppress html_entities decoding errors
 	
 Tue 20 Nov 2007 08:23:40 AM EET <lucilanga@gnome.org>
