@@ -20,3 +20,4 @@
 	* jump to folder when adding through d-bus
 	* check webkit rendering
 	* check browser buttons
+	* remove notneeded includes
