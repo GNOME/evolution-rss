@@ -1,3 +1,7 @@
+Thu 22 Nov 2007 08:36:06 AM EET <lucilanga@gnome.org>
+
+	* suppress html_entities decoding errors
+	
 Tue 20 Nov 2007 08:23:40 AM EET <lucilanga@gnome.org>
 
 	* remove Read RSS menu option for evo > 2.12
