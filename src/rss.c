@@ -62,8 +62,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
-#include <mail/mail-component.h>
-
 #include <bonobo/bonobo-shlib-factory.h>
 
 #include <glade/glade-xml.h>
@@ -791,10 +789,6 @@ readrss_dialog_cb (GtkWidget *widget, gpointer data)
 static void
 receive_cancel(GtkButton *button, struct _send_info *info)
 {
-	g_print("CANCEL\n");
-	g_print("CANCEL\n");
-	g_print("CANCEL\n");
-	g_print("CANCEL\n");
         if (info->state == SEND_ACTIVE) {
                 if (info->status_label)
 			gtk_label_set_markup (GTK_LABEL (info->status_label),
@@ -1084,11 +1078,11 @@ rss_select_folder(gchar *folder_name)
 	g_print("selected:%s\n", em_folder_tree_model_get_selected (model));
 //	 refresh_folder_tree (model, store);
 
-	MailComponent *mail_component = mail_component_peek();
+/*	MailComponent *mail_component = mail_component_peek();
 	MailComponentPrivate *priv = mail_component->priv;
 	EComponentView *cv = priv->component_view;
 	g_print("priv:%p", priv);
-	g_print("cv:%p", cv);
+	g_print("cv:%p", cv);*/
 //	void *el = g_object_get_data((GObject *)cv, "info-label");
   //      EMFolderView *emfv = g_object_get_data((GObject *)el, "folderview");
 //      	EMFolderView *emfv = g_object_new(em_folder_view_get_type(), NULL);
@@ -2756,6 +2750,10 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 
 	GtkWidget *button = gtk_button_new_with_label(
 				rf->cur_format ? _("HTML") : _("Summary"));
+	gtk_button_set_image (
+                GTK_BUTTON (button),
+                gtk_image_new_from_stock (
+                        GTK_STOCK_HOME, GTK_ICON_SIZE_BUTTON));
 	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
 	gtk_widget_set_size_request(button, 100, 10);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
@@ -3288,7 +3286,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
 //#endif
-//	rf->pending = TRUE;
+	g_print("CANCEL:%d\n", rf->cancel);
 
 	while (gtk_events_pending ())
             gtk_main_iteration ();
@@ -3729,7 +3727,6 @@ void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
 void
 org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 {
-		rss_select_folder("feudora");
 #ifndef EVOLUTION_2_12
 	GtkWidget *readrss_dialog;
         GtkWidget *readrss_label;
@@ -3802,6 +3799,34 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 #endif
 }
 
+static void
+set_send_status(struct _send_info *info, const char *desc, int pc)
+{
+        /* FIXME: LOCK */
+        g_free(info->what);
+        info->what = g_strdup(desc);
+        info->pc = pc;
+}
+
+/* for camel operation status */
+static void
+op_status(CamelOperation *op, const char *what, int pc, void *data)
+{
+        struct _send_info *info = data;
+
+        //printf("Operation '%s', percent %d\n");
+        switch (pc) {
+        case CAMEL_OPERATION_START:
+                pc = 0;
+                break;
+        case CAMEL_OPERATION_END:
+                pc = 100;
+                break;
+        }
+
+        set_send_status(info, what, pc);
+}
+
 void
 #ifdef EVOLUTION_2_12
 org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t);
@@ -3816,7 +3841,6 @@ org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t)
 org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 #endif
 {
-		rss_select_folder("feudora");
 	GtkWidget *readrss_dialog;
 	GtkWidget *readrss_label;
 	GtkWidget *readrss_progress;
@@ -3838,7 +3862,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 //        info->type = type;
                         
         info->uri = g_strdup ("feed");
-//        info->cancel = camel_operation_new (operation_status, info);
+        info->cancel = camel_operation_new (op_status, info);
         info->state = SEND_ACTIVE;
 //        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
                         
@@ -3905,7 +3929,6 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
         info->status_label = status_label;
         info->cancel_button = cancel_button;
         info->data = (struct _send_data *)t->data;
-	g_print("CAN?:%d\n", info->data->cancelled);
 	rf->info = info;
 
 	rf->progress_bar = progress_bar;
@@ -3940,11 +3963,6 @@ bail:	if (!rf->pending && !rf->feed_queue)
 	
 		rf->err = NULL;
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
-		g_print("UNDERWAY\n\n\n");
-		g_print("UNDERWAY\n\n\n");
-		g_print("UNDERWAY\n\n\n");
-		g_print("UNDERWAY\n\n\n");
-		g_print("CAN?:%d\n", info->data->cancelled);
 		// reset cancelation signal
 		if (rf->cancel)
 			rf->cancel = 0;

@@ -16,9 +16,8 @@
 	* when deleting a folder offer to delete feed also
 	* check mozembed widget / thread when quitting
 	* find a way to include version of plugin
-	* test cancelation signal
+	* test cancelation signal check rf->cancel fetch feed might reset it always 0 and crashing when finish_feed
 	* jump to folder when adding through d-bus
 	* check webkit rendering
 	* make Cancel All from S&R work
-	* remove notneeded includes
 	* obey ttl entity
