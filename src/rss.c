@@ -97,7 +97,9 @@
 #include "rss.h"
 #include "network-soup.c"
 #include "misc.c"
+#ifdef HAVE_DBUS
 #include "dbus.c"
+#endif
 
 int pop = 0;
 //#define RSS_DEBUG 1
@@ -3942,6 +3944,7 @@ bail:	if (!rf->pending && !rf->feed_queue)
 		g_print("UNDERWAY\n\n\n");
 		g_print("UNDERWAY\n\n\n");
 		g_print("UNDERWAY\n\n\n");
+		g_print("CAN?:%d\n", info->data->cancelled);
 		// reset cancelation signal
 		if (rf->cancel)
 			rf->cancel = 0;
@@ -4027,8 +4030,10 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		}
 		upgrade = 2;
 	} else {
+#ifdef HAVE_DBUS
                 if (rf->bus != NULL)
                         dbus_connection_unref (rf->bus);
+#endif
 		abort_all_soup();
 		printf("Plugin disabled\n");
 	}

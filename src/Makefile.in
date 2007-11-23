@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = evolution-import-rss$(EXEEXT)
+@HAVE_DBUS_TRUE@bin_PROGRAMS = evolution-import-rss$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -124,7 +124,6 @@ CYGPATH_W = @CYGPATH_W@
 DATADIRNAME = @DATADIRNAME@
 DBUS_CFLAGS = @DBUS_CFLAGS@
 DBUS_LIBS = @DBUS_LIBS@
-DBUS_VERSION = @DBUS_VERSION@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 ECHO = @ECHO@
@@ -160,7 +159,6 @@ GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GPP = @GPP@
 GREP = @GREP@
-HAVE_DBUS = @HAVE_DBUS@
 HAVE_GTKMOZEMEBED = @HAVE_GTKMOZEMEBED@
 HAVE_RENDERKIT = @HAVE_RENDERKIT@
 HAVE_WEBKIT = @HAVE_WEBKIT@
@@ -818,11 +816,7 @@ install-data-local:
 	@echo ""
 	@echo ""
 	@echo ""
-        if test -z "$(DESTDIR)" ; then                                                                                          \
-                for p in $(schema_DATA) ; do                                                                                    \
-                        GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $$p;             \
-                done                                                                                                            \
-        fi
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

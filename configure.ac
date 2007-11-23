@@ -238,20 +238,17 @@ AM_GCONF_SOURCE_2
 dnl ***********
 dnl D-BUS stuff
 dnl ***********
-PKG_CHECK_MODULES(DBUS, dbus-glib-1, [have_dbus=yes], [have_dbus=no])
-AC_SUBST(DBUS_CFLAGS)
-AC_SUBST(DBUS_LIBS)
+have_dbus=no
+AC_ARG_ENABLE([DBUS],
+        AS_HELP_STRING([--disable-dbus],[Disable D-BUS support (default: enabled)]),
+        [])
 
-# Get the version of the DBus API, so we can hack around API changes until the API stabilises:
-# multiply by 1000 to convert decimal to integer; so e.g. 0.31 become 310
-# since preprocessor values must be integral
-DBUS_VERSION="`pkg-config --modversion dbus-1 | awk '{print 1000 * $1}'`"
-AC_SUBST(DBUS_VERSION)
-echo $DBUS_VERSION
-if test "x$have_dbus" != "xno"; then
-	AC_DEFINE_UNQUOTED(HAVE_DBUS,1, [DBUS present])
+if test "x$enable_dbus" != "xno"; then
+	PKG_CHECK_MODULES(DBUS, dbus-glib-1, [have_dbus=yes], [have_dbus=no])
+	AC_SUBST(DBUS_CFLAGS)
+	AC_SUBST(DBUS_LIBS)
 fi
-AC_SUBST(HAVE_DBUS)
+AM_CONDITIONAL(HAVE_DBUS, test x$have_dbus = xyes)
 
 dnl I18n stuff
 AC_PATH_PROG(GETTEXT, gettext, no)
@@ -288,7 +285,7 @@ AC_SUBST(BONBONO_LIBDIR)
 serverdir="$BONOBO_LIBDIR/bonobo/servers"
 AC_SUBST(serverdir)
 
-privdatadir='${datadir}'/evolution/$EVOLUTION_BASE_VERSION
+privdatadir='${datadir}'/evolution/$EVOLUTION_EXEC_VERSION
 AC_SUBST(privdatadir)
 
 gladedir="$privdatadir/glade"
@@ -308,8 +305,9 @@ if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
         kits=$kits"WebKit, "
 fi
 kits="$kits$gecko_cv_gecko (gecko engine version $gecko_cv_gecko_version)"
-if test "x$have_dbus" != "xno"; then
-	have_dbus_build="evolution-import-rss module will be built"
+
+if test "x$have_dbus" == "xyes"; then
+	have_dbus_build="yes"
 	import_feeds="evolution-import-rss"
 else
 	have_dbus_build="evolution-import-rss module will be not built"
@@ -325,7 +323,7 @@ echo "
 	Prefix			: $prefix
 	HTML renders		: $kits
 	Primary HTML render	: $RENDER
-	D-BUS support		: $have_dbus ($have_dbus_build)
+	D-BUS support		: $have_dbus_build
 	Import feeds		: $import_feeds
 
 	"

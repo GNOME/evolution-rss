@@ -95,12 +95,7 @@ install-data-local:
 	@echo ""
 	@echo ""
 	@echo ""
-        if test -z "$(DESTDIR)" ; then                                                                                          \
-                for p in $(schema_DATA) ; do                                                                                    \
-                        GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $$p;             \
-                done                                                                                                            \
-        fi
-
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA)
 
 DISTCLEANFILES = $(schema_DATA)
 
@@ -128,6 +123,8 @@ EXTRA_DIST = 					\
 	org-gnome-evolution-rss.error.xml	\
 	org-gnome-evolution-rss.xml
 
+if HAVE_DBUS
 bin_PROGRAMS = \
 	evolution-import-rss
+endif
 

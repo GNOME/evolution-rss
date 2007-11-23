@@ -1,3 +1,7 @@
+Fri 23 Nov 2007 11:32:18 AM EET <lucilanga@gnome.org>
+
+	* proper installation of gconf schemas
+	
 Thu 22 Nov 2007 08:36:06 AM EET <lucilanga@gnome.org>
 
 	* fix drawing inside of send and receive
