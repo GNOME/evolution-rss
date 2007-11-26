@@ -95,7 +95,7 @@
 #include "rss.h"
 #include "network-soup.c"
 #include "misc.c"
-#ifdef HAVE_DBUS
+#if HAVE_DBUS
 #include "dbus.c"
 #endif
 
@@ -4081,7 +4081,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		}
 		upgrade = 2;
 	} else {
-#ifdef HAVE_DBUS
+#if HAVE_DBUS
                 if (rf->bus != NULL)
                         dbus_connection_unref (rf->bus);
 #endif

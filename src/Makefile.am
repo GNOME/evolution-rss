@@ -13,6 +13,7 @@ INCLUDES =							\
 	-DGECKO_HOME=\""$(GECKO_HOME)"\"			\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
+	-DHAVE_DBUS=$(DBD)					\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
 RSS_MENU = \
@@ -126,5 +127,8 @@ EXTRA_DIST = 					\
 if HAVE_DBUS
 bin_PROGRAMS = \
 	evolution-import-rss
+DBD=1
+else
+DBD=0
 endif
 

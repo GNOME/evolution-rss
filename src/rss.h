@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef HAVE_DBUS
+#if HAVE_DBUS
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 #endif
@@ -95,7 +95,7 @@ typedef struct _rssfeed {
 	gchar		*main_folder;		// "News&Blogs" folder name
 	GHashTable	*feed_folders;		// defined feeds folders
 	GHashTable	*reversed_feed_folders;	// easyer when we lookup for the value
-#ifdef HAVE_DBUS
+#if HAVE_DBUS
 	DBusConnection	*bus;			// DBUS
 #endif
 } rssfeed;
