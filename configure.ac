@@ -248,7 +248,11 @@ if test "x$enable_dbus" != "xno"; then
 	AC_SUBST(DBUS_CFLAGS)
 	AC_SUBST(DBUS_LIBS)
 fi
-AM_CONDITIONAL(HAVE_DBUS, test x$have_dbus = xyes)
+have_dbus="yes"
+echo $have_dbus
+AM_CONDITIONAL(HAVE_DBUS, true)
+AC_SUBST(HAVE_DBUS)
+echo $HAVE_DBUS
 
 dnl I18n stuff
 AC_PATH_PROG(GETTEXT, gettext, no)

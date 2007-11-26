@@ -950,6 +950,7 @@ DBUS_CFLAGS
 DBUS_LIBS
 HAVE_DBUS_TRUE
 HAVE_DBUS_FALSE
+HAVE_DBUS
 GETTEXT
 GETTEXT_PACKAGE
 USE_NLS
@@ -6099,7 +6100,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6102 "configure"' > conftest.$ac_ext
+  echo '#line 6103 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8437,11 +8438,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8440: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8441: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8444: \$? = $ac_status" >&5
+   echo "$as_me:8445: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8727,11 +8728,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8730: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8731: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8734: \$? = $ac_status" >&5
+   echo "$as_me:8735: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8831,11 +8832,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8834: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8835: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8838: \$? = $ac_status" >&5
+   echo "$as_me:8839: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11182,7 +11183,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11185 "configure"
+#line 11186 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11282,7 +11283,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11285 "configure"
+#line 11286 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13702,11 +13703,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13705: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13706: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13709: \$? = $ac_status" >&5
+   echo "$as_me:13710: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13806,11 +13807,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13809: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13810: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13813: \$? = $ac_status" >&5
+   echo "$as_me:13814: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -15370,11 +15371,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15373: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15374: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15377: \$? = $ac_status" >&5
+   echo "$as_me:15378: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15474,11 +15475,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15477: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15478: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15481: \$? = $ac_status" >&5
+   echo "$as_me:15482: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17663,11 +17664,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17666: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17667: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17670: \$? = $ac_status" >&5
+   echo "$as_me:17671: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17953,11 +17954,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17956: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17957: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17960: \$? = $ac_status" >&5
+   echo "$as_me:17961: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -18057,11 +18058,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:18060: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:18061: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:18064: \$? = $ac_status" >&5
+   echo "$as_me:18065: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -22145,7 +22146,9 @@ fi
 
 
 fi
- if test x$have_dbus = xyes; then
+have_dbus="yes"
+echo $have_dbus
+ if true; then
   HAVE_DBUS_TRUE=
   HAVE_DBUS_FALSE='#'
 else
@@ -22153,6 +22156,8 @@ else
   HAVE_DBUS_FALSE=
 fi
 
+
+echo $HAVE_DBUS
 
 # Extract the first word of "gettext", so it can be a program name with args.
 set dummy gettext; ac_word=$2
@@ -24772,6 +24777,7 @@ DBUS_CFLAGS!$DBUS_CFLAGS$ac_delim
 DBUS_LIBS!$DBUS_LIBS$ac_delim
 HAVE_DBUS_TRUE!$HAVE_DBUS_TRUE$ac_delim
 HAVE_DBUS_FALSE!$HAVE_DBUS_FALSE$ac_delim
+HAVE_DBUS!$HAVE_DBUS$ac_delim
 GETTEXT!$GETTEXT$ac_delim
 GETTEXT_PACKAGE!$GETTEXT_PACKAGE$ac_delim
 USE_NLS!$USE_NLS$ac_delim
@@ -24781,7 +24787,6 @@ GMSGFMT!$GMSGFMT$ac_delim
 XGETTEXT!$XGETTEXT$ac_delim
 CATALOGS!$CATALOGS$ac_delim
 CATOBJEXT!$CATOBJEXT$ac_delim
-GMOFILES!$GMOFILES$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -24823,6 +24828,7 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+GMOFILES!$GMOFILES$ac_delim
 INSTOBJEXT!$INSTOBJEXT$ac_delim
 INTLLIBS!$INTLLIBS$ac_delim
 PO_IN_DATADIR_TRUE!$PO_IN_DATADIR_TRUE$ac_delim
@@ -24840,7 +24846,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 15; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 16; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

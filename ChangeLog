@@ -1,3 +1,7 @@
+Sun 25 Nov 2007 09:22:52 PM EET <lucilanga@gnome.org>
+
+	* tell webkit not to fetch when evo is offline
+
 Fri 23 Nov 2007 11:32:18 AM EET <lucilanga@gnome.org>
 
 	* proper installation of gconf schemas

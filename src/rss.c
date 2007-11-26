@@ -2696,7 +2696,10 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	if (engine == 1)
 	{
 		g_print("Render engine Webkit\n");
-        	webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), po->website);
+		if (rf->online)
+        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), po->website);
+		else
+        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), "about:blank");
 	}
 #endif
 
@@ -2704,8 +2707,16 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	if (engine == 2)
 	{
 		g_print("Render engine Gecko\n");
-		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
-        	gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), po->website);
+		if (rf->online)
+		{
+			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
+        		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), po->website);
+		}
+		else	
+		{
+			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
+        		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), "about:blank");
+		}
 	}
 #endif
 
@@ -3217,6 +3228,7 @@ out:	rf->pending = FALSE;
 void
 finish_feed (SoupMessage *msg, gpointer user_data)
 {
+		g_print("begin data:%s\n", user_data);
 	GError *err = NULL;
 	gchar *chn_name = NULL;
 	//FIXME user_data might be out of bounds here
@@ -3229,6 +3241,9 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	if (rf->feed_queue)
 		rf->feed_queue--;
 
+	if (msg->status_code == SOUP_STATUS_CANCELLED)
+		goto out;
+
 #ifndef EVOLUTION_2_12
 	if(rf->progress_dialog && rf->feed_queue == 0)
         {
@@ -3237,6 +3252,12 @@ finish_feed (SoupMessage *msg, gpointer user_data)
               rf->progress_bar = NULL;
         }
 #endif
+
+	if (msg->status_code == SOUP_STATUS_CANCELLED)
+	{
+		g_print("PUSKALAU\n");
+		goto out;
+	}
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
@@ -3282,6 +3303,12 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 		goto out;
 	}
 	
+	if (!msg->response.length)
+		goto out;
+
+	if (msg->status_code == SOUP_STATUS_CANCELLED)
+		goto out;
+
 	GString *response = g_string_new_len(msg->response.body, msg->response.length);
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
@@ -3295,18 +3322,23 @@ finish_feed (SoupMessage *msg, gpointer user_data)
         r->shown = TRUE;
         xmlSubstituteEntitiesDefaultValue = 1;
         r->cache = xml_parse_sux (response->str, response->len);
+	g_print("response cache:%p\n", r->cache);
 	g_print("response size:%d\n", response->len);
+	 g_print("res:[%d]\n", msg->status_code);
 //        r->cache = xmlParseMemory (response->str, response->len);
 //        r->cache = xmlReadMemory (response->str, response->len,
 //				NULL, NULL,
 //				XML_PARSE_NOERROR|XML_PARSE_RECOVER);
+//
+	if (msg->status_code == SOUP_STATUS_CANCELLED)
+		goto out;
+
 	if (!deleted)
 	{
-		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
-        	chn_name = display_doc (r);
 		g_print("uzar data:%s\n", user_data);
-		g_print("chn_name:%s\n", chn_name);
-		g_print("rf->cancel:%s\n", rf->cancel);
+		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
+		g_print("uzar data:%s\n", user_data);
+        	chn_name = display_doc (r);
 		if (g_ascii_strcasecmp(user_data, chn_name) != 0)
 		{
 			gchar *md5 = g_strdup(g_hash_table_lookup(rf->hrname, user_data));
@@ -3365,7 +3397,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 		rf->info = NULL;
 	}
 #endif
-out:	g_free(user_data);
+out:	
+	g_free(user_data);
 	return;
 }
 
@@ -4021,7 +4054,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->feed_queue = 0;
 			rf->main_folder = get_main_folder();
 			get_feed_folders();
-#ifdef HAVE_DBUS
+#if HAVE_DBUS
 			g_print("init_dbus()\n");
 			/*D-BUS init*/
 			rf->bus = init_dbus ();
@@ -5005,7 +5038,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 gchar *
 display_doc (RDF *r)
 {
-	return tree_walk (xmlDocGetRootElement (r->cache), r);
+	xmlNodePtr root = xmlDocGetRootElement (r->cache);
+	return tree_walk (root, r);
 }
 
 static void
@@ -5080,7 +5114,9 @@ get_feed_age(gpointer key, gpointer value)
 	guint32 flags;
 
 	gchar *real_folder = lookup_feed_folder(key);
+#ifdef RSS_DEBUG
 	g_print("Cleaning folder: %s\n", real_folder);
+#endif
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
                         goto fail;
