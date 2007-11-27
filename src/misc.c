@@ -54,6 +54,30 @@ sanitize_url(gchar *text)
  	else
  		return g_strdup(text);
 }
+
+//evolution folder must not contain certain chars
+gchar *
+sanitize_folder(gchar *text)
+{
+	GString *str = g_string_new(NULL);
+        gchar *string;
+        const unsigned char *s = (const unsigned char *)text;
+        guint len = strlen(text);
+        while (*s != 0 || len)
+        {
+             if (*s == ".")
+             {
+                   *s++;
+             }
+             else
+                   g_string_append_c (str, *s++);
+             len--;
+        }
+        g_string_append_c(str, 0);
+        string = str->str;
+        g_string_free(str, 0);
+        return string;
+}
  
 static gchar *
 get_url_basename(gchar *url)
@@ -84,10 +108,10 @@ strplchr(gchar *source)
 {
  	GString *str = g_string_new(NULL);
  	gchar *string;
-         const unsigned char *s = (const unsigned char *)source;
-         guint len = strlen(source);
-         while (*s != 0 || len)
-         {
+        const unsigned char *s = (const unsigned char *)source;
+        guint len = strlen(source);
+        while (*s != 0 || len)
+        {
              if (*s == 0x3f)
              {
                    g_string_append(str, "%3F");
@@ -96,12 +120,67 @@ strplchr(gchar *source)
              else
                    g_string_append_c (str, *s++);
              len--;
-         }
-         g_string_append_c(str, 0);
+        }
+        g_string_append_c(str, 0);
  	string = str->str;
  	g_string_free(str, 0);	
  	return string;
 } 
+
+static gchar *
+markup_decode (gchar *str)
+{
+        char *iterator, *temp;
+        int cnt = 0;
+        GString *result = g_string_new (NULL);
+
+        g_return_val_if_fail (str != NULL, NULL);
+
+        iterator = str;
+
+        for (cnt = 0, iterator = str;
+             cnt <= (int)(strlen (str));
+             cnt++, iterator++) {
+                if (*iterator == '&') {
+                        int jump = 0;
+                        int i;
+
+                        if (g_ascii_strncasecmp (iterator, "&amp;", 5) == 0)
+                        {
+                                g_string_append_c (result, '&');
+                                jump = 5;
+                        }
+                        else if (g_ascii_strncasecmp (iterator, "&lt;", 4) == 0)
+                        {
+                                g_string_append_c (result, '<');
+                                jump = 4;
+                        }
+                        else if (g_ascii_strncasecmp (iterator, "&gt;", 4) == 0)
+                        {
+                                g_string_append_c (result, '>');
+                                jump = 4;
+                        }
+                        else if (g_ascii_strncasecmp (iterator, "&quot;", 6) == 0)
+                        {
+                                g_string_append_c (result, '\"');
+                                jump = 6;
+                        }
+                        for (i = jump - 1; i > 0; i--)
+                        {
+                                iterator++;
+                                if (*iterator == '\0')
+                                        break;
+                        }
+                }
+                else
+                {
+                        g_string_append_c (result, *iterator);
+                }
+        }
+        temp = result->str;
+        g_string_free (result, FALSE);
+        return temp;
+}
 
 u_int32_t
 gen_crc(const char *msg)

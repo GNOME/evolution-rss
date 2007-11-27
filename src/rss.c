@@ -4092,61 +4092,6 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 	return 0;
 }
 
-static gchar *
-markup_decode (gchar *str)
-{
-        char *iterator, *temp;
-        int cnt = 0;
-        GString *result = g_string_new (NULL);
-
-        g_return_val_if_fail (str != NULL, NULL);
-
-        iterator = str;
-
-        for (cnt = 0, iterator = str;
-             cnt <= (int)(strlen (str));
-             cnt++, iterator++) {
-                if (*iterator == '&') {
-                        int jump = 0;
-                        int i;
-
-                        if (g_ascii_strncasecmp (iterator, "&amp;", 5) == 0)
-                        {
-                                g_string_append_c (result, '&');
-                                jump = 5;
-                        }
-                        else if (g_ascii_strncasecmp (iterator, "&lt;", 4) == 0)
-                        {
-                                g_string_append_c (result, '<');
-                                jump = 4;
-                        }
-                        else if (g_ascii_strncasecmp (iterator, "&gt;", 4) == 0)
-                        {
-                                g_string_append_c (result, '>');
-                                jump = 4;
-                        }
-                        else if (g_ascii_strncasecmp (iterator, "&quot;", 6) == 0)
-                        {
-                                g_string_append_c (result, '\"');
-                                jump = 6;
-                        }
-			for (i = jump - 1; i > 0; i--)
-                        {
-                                iterator++;
-                                if (*iterator == '\0')
-                                        break;
-                        }
-                }
-                else
-                {
-                        g_string_append_c (result, *iterator);
-                }
-        }
-        temp = result->str;
-        g_string_free (result, FALSE);
-        return temp;
-}
-
 void
 create_mail(create_feed *CF)
 {
