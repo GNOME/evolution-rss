@@ -21,6 +21,6 @@
 	* check webkit rendering
 	* make Cancel All from S&R work
 	* obey ttl entity
-	* search page for feed
+	* search in the contennt of page for feed
 	* check decode entities for body
-	* ... must be replaced
+	* ... must be replaced - check for aditional unsupported chars

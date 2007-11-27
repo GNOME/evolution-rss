@@ -56,26 +56,31 @@ sanitize_url(gchar *text)
 }
 
 //evolution folder must not contain certain chars
+//for instance "..." at the start of the string
+//or "/" anywhere in the string
 gchar *
 sanitize_folder(gchar *text)
 {
+ 	g_return_val_if_fail( uri != NULL, NULL);
+	//first remove / character
+	char c = "-";
+	char *tmp = g_strdup(text);
+	g_strdelimit(tmp, "/", '|');
 	GString *str = g_string_new(NULL);
         gchar *string;
-        const unsigned char *s = (const unsigned char *)text;
-        guint len = strlen(text);
-        while (*s != 0 || len)
+        const unsigned char *s = (const unsigned char *)tmp;
+	g_string_append(str, tmp);
+        guint len = strlen(tmp);
+        while (*s == '.' && len)
         {
-             if (*s == ".")
-             {
-                   *s++;
-             }
-             else
-                   g_string_append_c (str, *s++);
-             len--;
+                str = g_string_erase (str, 0, 1);
+		s = str->str;
+             	len--;
         }
         g_string_append_c(str, 0);
         string = str->str;
         g_string_free(str, 0);
+	g_free(tmp);
         return string;
 }
  

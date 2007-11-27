@@ -3162,6 +3162,9 @@ add:
                 if (chn_name == NULL)
                         chn_name = g_strdup (DEFAULT_NO_CHANNEL);
                 //FIXME g_free
+		gchar *tmp = sanitize_folder(chn_name);
+		g_free(chn_name);
+		chn_name = tmp;
                	chn_name = generate_safe_chn_name(chn_name);
 		
 		gpointer crc_feed = gen_md5(feed->feed_url);
@@ -4583,6 +4586,9 @@ tree_walk (xmlNodePtr root, RDF *r)
 				"title", 
 				DEFAULT_NO_CHANNEL);
 		t = decode_html_entities(t);	
+		gchar *tmp = sanitize_folder(t);
+		g_free(t);
+		t = tmp;
 		t = generate_safe_chn_name(t);
 	}
 

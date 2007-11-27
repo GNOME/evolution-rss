@@ -1,3 +1,8 @@
+Tue 27 Nov 2007 01:15:31 PM EET <lucilanga@gnome.org>
+
+	* sanitizing wrong characters in folder name
+	or channel name
+	
 Sun 25 Nov 2007 09:22:52 PM EET <lucilanga@gnome.org>
 
 	* tell webkit not to fetch when evo is offline
