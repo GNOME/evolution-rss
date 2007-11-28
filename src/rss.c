@@ -2819,10 +2819,11 @@ pfree(EMFormatHTMLPObject *o)
 	if (rf->mozembed)
 	{
 		g_print("call pfree() for controls2\n");
-		gtk_widget_destroy(rf->mozembed);
-		rf->mozembed = NULL;
+//		gtk_widget_destroy(rf->mozembed);
+//		rf->mozembed = NULL;
 	}
-	gtk_widget_destroy(po->container);
+//	gtk_widget_destroy(po->container);
+	gtk_widget_hide(rf->mozembed);
 	g_free(po->website);
 }
 
@@ -4019,17 +4020,15 @@ rss_finalize(void)
 	gtk_widget_destroy(rf->mozembed);
 //	if (rf->mozembed)
 		gtk_moz_embed_pop_startup ();
-	gtk_main_quit();
 //	gtk_moz_embed_destroy(rf->mozembed);
 //	GtkMozEmbed *a = rf->mozembed;
 //	a->data->Destroy();
 //	a->priv->browser->Destroy();
-	gtk_widget_destroy(rf->mozembed);
+///	gtk_widget_destroy(rf->mozembed);
 //	g_thread_join(thread1);
 //	g_thread_yield();
 //	g_thread_exit(0);
 	g_print(".done\n");
-//	gtk_main_quit();
 //	gtk_exit(TRUE);
 }
 
