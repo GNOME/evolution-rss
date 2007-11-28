@@ -93,12 +93,6 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
     		dbus_error_init (&error);
     		if (dbus_message_get_args 
        			(message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID)) {
-			if (rf->dbus)
-			{
-				g_print("cannot handle!!!!\n");
-				return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-			}
-			rf->dbus = 1;
       			g_print("New Feed received: %s\n", s);
 			feed->feed_url = g_strdup(s);
 			feed->add=1;
@@ -115,7 +109,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                 		{
                         	   rss_error(NULL, _("Error adding feed."),
                         	                   _("Feed already exists!"));
-                        	   exit;
+    				   return DBUS_HANDLER_RESULT_HANDLED;
                 		}
                 		if (setup_feed(feed))
 				{
@@ -124,7 +118,6 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
         			save_gconf_feed();
         			camel_operation_end(NULL);
 				g_print("end\n");
-				rf->dbus=0;
 			}
 
 

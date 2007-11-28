@@ -34,6 +34,9 @@
 #define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
 #define DBUS_REPLY_INTERFACE "org.gnome.evolution.mail.rss.out"
 
+//evolution ping roud-trip time in ms, somebody suggest a real value here
+#define EVOLUTION_PING_TIMEOUT 5000
+
 static gboolean init_dbus (void);
 
 static DBusConnection *bus = NULL;

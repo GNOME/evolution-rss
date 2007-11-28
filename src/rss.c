@@ -954,6 +954,10 @@ check_if_match (gpointer key, gpointer value, gpointer user_data)
         char *sf_href = (char *)value;
         char *int_uri = (char *)user_data;
 
+#ifdef RSS_DEBUG
+	g_print("checking hay:%s fro neddle:%s\n", sf_href, int_uri);
+#endif
+
         if (!strcmp (sf_href, int_uri))
                 return TRUE; /* Quit calling the callback */
 

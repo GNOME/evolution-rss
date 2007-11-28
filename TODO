@@ -23,4 +23,5 @@
 	* search in the contennt of page for feed
 	* check decode entities for links in body
 	* implement g_timeout_add for long soup timeouts
-	* serialise evolution-import-feed
+	* move evolution detection to m4 to ease up integration in other plugins
+	* change ifdef labels for debuging by level
