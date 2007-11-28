@@ -1,8 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 /*
- *  Author: Miguel Angel Lopez Hernandez <miguel@gulev.org.mx>
- *
- *  Copyright 2004 Novell, Inc.
+ *  Evoution RSS Reader Plugin
+ *  Copyright (C) 2007  Lucian Langa <cooly@mips.edu.ms> 
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of version 2 of the GNU General Public

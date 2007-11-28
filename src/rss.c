@@ -119,6 +119,7 @@ struct _org_gnome_rss_controls_pobject {
         EMFormatHTML *format;
 	GtkWidget *html;
 	GtkWidget *container;
+	CamelStream *stream;
 	gchar *website;
 	guint is_html;
 	gchar *mem;
@@ -2559,7 +2560,9 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 static void
 stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
+#ifdef	HAVE_GTKMOZEMBED
 	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
+#endif
 }
 
 reload_cb (GtkWidget *button, gpointer data)
@@ -2635,13 +2638,6 @@ rss_mozilla_init(void)
 	gtk_moz_embed_push_startup ();
 }
 #endif
-
-void
-destr_cb (GtkMozEmbed *embed,
-              gpointer window)
-{
-	g_print("destroy\n");
-}
 
 #ifdef HAVE_RENDERKIT
 static gboolean
@@ -2731,10 +2727,6 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 //	gtk_box_pack_start (GTK_BOX (w), gpage, TRUE, TRUE, 0);
 	gtk_widget_show_all(moz);
         gtk_container_add ((GtkContainer *) eb, moz);
-		g_signal_connect_object (rf->mozembed, "destroy_browser",
-                                 //G_CALLBACK (gtk_widget_destroy),
-                                 G_CALLBACK (destr_cb),
-                                 moz, 0);
 	g_print("add\n");
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
@@ -2884,6 +2876,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), classid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
 	pobj->is_html = GPOINTER_TO_INT(is_html);
 	pobj->website = g_strstrip(g_strdup((gchar *)website));
+	pobj->stream = t->stream;
 	pobj->object.free = free_rss_controls;
         camel_stream_printf (t->stream, "<object classid=%s></object>\n", classid);
 
@@ -4027,7 +4020,9 @@ rss_finalize(void)
 	abort_all_soup();
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
+#ifdef HAVE_GTKMOZEMBED
 	gtk_moz_embed_pop_startup ();
+#endif
 //	gtk_moz_embed_destroy(rf->mozembed);
 //	GtkMozEmbed *a = rf->mozembed;
 //	a->data->Destroy();

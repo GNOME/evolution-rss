@@ -300,11 +300,13 @@ po/Makefile.in
 pixmaps/Makefile
 ])
 
-kits="gtkHTML, "
+kits="gtkHTML"
 if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
-        kits=$kits"WebKit, "
+        kits=$kits", WebKit"
 fi
-kits="$kits$gecko_cv_gecko (gecko engine version $gecko_cv_gecko_version)"
+if test "x$have_gecko" != "xno" -a "$enable_gecko" = "yes"; then
+kits="$kits, $gecko_cv_gecko (gecko engine version $gecko_cv_gecko_version)"
+fi
 
 if test "x$have_dbus" == "xyes"; then
 	have_dbus_build="yes"

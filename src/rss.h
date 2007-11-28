@@ -97,6 +97,7 @@ typedef struct _rssfeed {
 	GHashTable	*reversed_feed_folders;	// easyer when we lookup for the value
 #if HAVE_DBUS
 	DBusConnection	*bus;			// DBUS
+	gboolean	dbus			// DBUS message pending
 #endif
 } rssfeed;
 

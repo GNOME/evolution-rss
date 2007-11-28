@@ -7,7 +7,6 @@
 	* bad request when setup_feeds
 	* probably move to soup_unblocking when rendering of an article
 	* when browsing a different feed/mail folder cancel all sessions
-	* resolve soup long timeouts
 	* also create groups when importing
 	* create some sort of progress popup when render with an external engine (webkit/gecko)
 	* check webkit area sizing when using zoom in/out
@@ -23,3 +22,5 @@
 	* obey ttl entity
 	* search in the contennt of page for feed
 	* check decode entities for links in body
+	* implement g_timeout_add for long soup timeouts
+	* serialise evolution-import-feed
