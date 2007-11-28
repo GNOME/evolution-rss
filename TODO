@@ -22,5 +22,4 @@
 	* make Cancel All from S&R work
 	* obey ttl entity
 	* search in the contennt of page for feed
-	* check decode entities for body
-	* ... must be replaced - check for aditional unsupported chars
+	* check decode entities for links in body

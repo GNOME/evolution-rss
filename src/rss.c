@@ -2591,8 +2591,9 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 	{
         	int width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
-		g_print("mycall:width:%d\n", width);
-		g_print("mycall:height:%d\n", height);
+#ifdef RSS_DEBUG
+		g_print("resize webkit :width:%d, height: %d\n", width, height);
+#endif
 //			rf->headers_mode ? 194 : 100;
 //	EMFormat *myf = (EMFormat *)efh;
 //	g_print("w0:%d,h0:%d\n", width, height);
@@ -2675,7 +2676,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
         	}
 
 //		if (rf->mozembed)
-//			gtk_moz_embed_pop_startup ();
+//			gtk_moz_embed_push_startup ();
 
 		rf->mozembed = gtk_moz_embed_new();
 
@@ -2811,13 +2812,13 @@ void
 pfree(EMFormatHTMLPObject *o)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
-	if (rf->mozembed)
-	{
-#ifdef HAVE_GTKMOZEBED
+#ifdef HAVE_GTKMOZEMBED
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
 #endif
-		g_print("popped\n");
+	if (rf->mozembed)
+	{
+		g_print("call pfree() for controls2\n");
 		gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
 	}
@@ -2883,18 +2884,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format))
 	{
-		content = net_post_blocking(addr, NULL, NULL, textcb, NULL, &err);
-		if (err)
-        	{
-			//we do not need to setup a pop error menu since we're in 
-			//formatting process. But instead display mail body an error
-			//such proxy error or transport error
-			camel_stream_printf (t->stream, "<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
-			camel_stream_printf(t->stream, "<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
-     			camel_stream_printf (t->stream, "<td bgcolor=\"#ffffff\">%s</td>", err->message);
-    			camel_stream_printf (t->stream, "</tr></table></td></tr></table>");
-                	goto out;
-        	}
 #ifdef HAVE_RENDERKIT
 	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
 #if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
@@ -2914,6 +2903,18 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		goto out;
 	}
 #endif
+		content = net_post_blocking(addr, NULL, NULL, textcb, NULL, &err);
+		if (err)
+        	{
+			//we do not need to setup a pop error menu since we're in 
+			//formatting process. But instead display mail body an error
+			//such proxy error or transport error
+			camel_stream_printf (t->stream, "<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
+			camel_stream_printf(t->stream, "<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
+     			camel_stream_printf (t->stream, "<td bgcolor=\"#ffffff\">%s</td>", err->message);
+    			camel_stream_printf (t->stream, "</tr></table></td></tr></table>");
+                	goto out;
+        	}
 		xmlDoc *doc = parse_html(addr, content->str, content->len);
 		if (doc)
 		{
@@ -3740,7 +3741,7 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	camel_object_hook_event(store, "folder_renamed",
                                 (CamelObjectEventHookFunc)store_folder_renamed, NULL);
-	camel_object_hook_event(mail_component_peek_session(NULL),
+	camel_object_hook_event((void *)mail_component_peek_session(NULL),
 				 "online", rss_online, NULL);
 }
 
@@ -4017,7 +4018,8 @@ rss_finalize(void)
 	abort_all_soup();
 	gtk_widget_destroy(rf->mozembed);
 //	if (rf->mozembed)
-//		gtk_moz_embed_pop_startup ();
+		gtk_moz_embed_pop_startup ();
+	gtk_main_quit();
 //	gtk_moz_embed_destroy(rf->mozembed);
 //	GtkMozEmbed *a = rf->mozembed;
 //	a->data->Destroy();

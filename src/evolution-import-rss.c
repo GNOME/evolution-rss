@@ -175,7 +175,7 @@ main (int argc, char *argv[])
 		g_print("fireing evolution...\n");
 		sleep(10);
         	send_dbus_ping ();
-		g_timeout_add (2000, err_evo_cb, i++);
+		g_timeout_add (2000, err_evo_cb, (gpointer)i++);
 		g_main_loop_run(loop);
 	}
 	

@@ -61,9 +61,8 @@ sanitize_url(gchar *text)
 gchar *
 sanitize_folder(gchar *text)
 {
- 	g_return_val_if_fail( uri != NULL, NULL);
-	//first remove / character
-	char c = "-";
+ 	g_return_val_if_fail( text != NULL, NULL);
+	//first convert "/" character
 	char *tmp = g_strdup(text);
 	g_strdelimit(tmp, "/", '|');
 	GString *str = g_string_new(NULL);
