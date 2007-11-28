@@ -2636,6 +2636,13 @@ rss_mozilla_init(void)
 }
 #endif
 
+void
+destr_cb (GtkMozEmbed *embed,
+              gpointer window)
+{
+	g_print("destroy\n");
+}
+
 #ifdef HAVE_RENDERKIT
 static gboolean
 org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
@@ -2681,9 +2688,6 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 		rf->mozembed = gtk_moz_embed_new();
 
 		/* FIXME add all those profile shits */
-//		g_signal_connect_object (rf->mozembed, "destroy_browser",
-  //                               G_CALLBACK (gtk_widget_destroy),
-    //                             moz, G_CONNECT_SWAPPED);
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
 //		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
 //		gtk_box_pack_start(moz, rf->mozembed, FALSE, FALSE, 0);
@@ -2727,6 +2731,10 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 //	gtk_box_pack_start (GTK_BOX (w), gpage, TRUE, TRUE, 0);
 	gtk_widget_show_all(moz);
         gtk_container_add ((GtkContainer *) eb, moz);
+		g_signal_connect_object (rf->mozembed, "destroy_browser",
+                                 //G_CALLBACK (gtk_widget_destroy),
+                                 G_CALLBACK (destr_cb),
+                                 moz, 0);
 	g_print("add\n");
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
@@ -2739,6 +2747,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	return TRUE;
 }
 #endif
+
 
 static gboolean
 org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
@@ -2819,11 +2828,10 @@ pfree(EMFormatHTMLPObject *o)
 	if (rf->mozembed)
 	{
 		g_print("call pfree() for controls2\n");
-//		gtk_widget_destroy(rf->mozembed);
-//		rf->mozembed = NULL;
+		gtk_widget_destroy(rf->mozembed);
+		rf->mozembed = NULL;
 	}
-//	gtk_widget_destroy(po->container);
-	gtk_widget_hide(rf->mozembed);
+	gtk_widget_destroy(po->container);
 	g_free(po->website);
 }
 
@@ -4017,14 +4025,13 @@ rss_finalize(void)
 {
 	g_print("RSS: cleaning all remaining sessions ..");
 	abort_all_soup();
-	gtk_widget_destroy(rf->mozembed);
-//	if (rf->mozembed)
-		gtk_moz_embed_pop_startup ();
+	if (rf->mozembed)
+		gtk_widget_destroy(rf->mozembed);
+	gtk_moz_embed_pop_startup ();
 //	gtk_moz_embed_destroy(rf->mozembed);
 //	GtkMozEmbed *a = rf->mozembed;
 //	a->data->Destroy();
 //	a->priv->browser->Destroy();
-///	gtk_widget_destroy(rf->mozembed);
 //	g_thread_join(thread1);
 //	g_thread_yield();
 //	g_thread_exit(0);
