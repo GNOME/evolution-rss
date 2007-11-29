@@ -2665,9 +2665,9 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 #ifdef HAVE_WEBKIT
 	if (engine == 1)
 	{
-		if (!g_thread_supported ()) {
-                	g_thread_init (NULL);
-        	}
+//		if (!g_thread_supported ()) {
+  //              	g_thread_init (NULL);
+    //    	}
 		webkit_gtk_init();
 		gpage = (GtkWidget *)webkit_gtk_page_new();
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(gpage));
@@ -2817,6 +2817,7 @@ void
 pfree(EMFormatHTMLPObject *o)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
+	return;
 #ifdef HAVE_GTKMOZEMBED
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
@@ -4044,6 +4045,12 @@ int e_plugin_lib_enable(EPluginLib *ep, int enable);
 int
 e_plugin_lib_enable(EPluginLib *ep, int enable)
 {
+	GtkWidget *moz = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		webkit_gtk_init();
+	GtkWidget *gpage = (GtkWidget *)webkit_gtk_page_new();
+		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(gpage));
+	gtk_widget_show_all(moz);
+	webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), "http://mapes");
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");

@@ -169,7 +169,7 @@ main (int argc, char *argv[])
 
 	if (bus != NULL)
                 send_dbus_ping ();
-	g_timeout_add (2000, no_evo_cb, NULL);
+	g_timeout_add (EVOLUTION_PING_TIMEOUT, no_evo_cb, NULL);
 	g_main_loop_run(loop);
 	while (!evo_running && i < 3)
 	{
@@ -177,7 +177,7 @@ main (int argc, char *argv[])
 		g_print("fireing evolution...\n");
 		sleep(10);
         	send_dbus_ping ();
-		g_timeout_add (2000, err_evo_cb, (gpointer)i++);
+		g_timeout_add (EVOLUTION_PING_TIMEOUT, err_evo_cb, (gpointer)i++);
 		g_main_loop_run(loop);
 	}
 	
