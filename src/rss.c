@@ -2593,7 +2593,10 @@ reload_cb (GtkWidget *button, gpointer data)
 static void
 mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
-	guint k = rf->headers_mode ? 194 : 99;
+//	GtkAdjustment *a = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(widget));
+//	g_print("page size:%d\n", a->page_size);
+//	g_print("value size:%d\n", a->value);
+	guint k = rf->headers_mode ? 215 : 119;
 	if (GTK_IS_WIDGET(widget))
 	{
         	int width = widget->allocation.width - 16 - 2;// - 16;
@@ -2782,12 +2785,14 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 		g_signal_connect (button2, "clicked", G_CALLBACK(stop_cb), efh);
 		gtk_widget_set_size_request(button2, 100, 10);
 		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
+		gtk_widget_set_sensitive (button2, rf->online);
         	gtk_widget_show (button2);
 		gtk_box_pack_start (GTK_BOX (hbox2), button2, TRUE, TRUE, 0);
         	GtkWidget *button3 = gtk_button_new_from_stock (GTK_STOCK_REFRESH);
 		g_signal_connect (button3, "clicked", G_CALLBACK(reload_cb), po->website);
 		gtk_widget_set_size_request(button3, 100, -1);
 		gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_HALF);
+		gtk_widget_set_sensitive (button3, rf->online);
         	gtk_widget_show (button3);
 		gtk_box_pack_start (GTK_BOX (hbox2), button3, TRUE, TRUE, 0);
 	}
@@ -2984,7 +2989,10 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			}
 			xmlDocDumpMemory(src, &buff, &size);
 		}
-		else goto out;
+		else goto out;	
+		char *tmp = decode_html_entities(buff);
+		g_free(buff);
+		buff = tmp;
 
 //#endif
 #ifdef RSS_DEBUG
@@ -4045,12 +4053,6 @@ int e_plugin_lib_enable(EPluginLib *ep, int enable);
 int
 e_plugin_lib_enable(EPluginLib *ep, int enable)
 {
-	GtkWidget *moz = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-		webkit_gtk_init();
-	GtkWidget *gpage = (GtkWidget *)webkit_gtk_page_new();
-		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(gpage));
-	gtk_widget_show_all(moz);
-	webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), "http://mapes");
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");

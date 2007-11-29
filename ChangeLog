@@ -1,3 +1,10 @@
+Thu 29 Nov 2007 11:43:58 AM EET <lucilanga@gnome.org>
+
+	* added version string in description
+	plugins tab should contain a version paragraph
+	* decode html entities when displaying article
+	(links were wrongly displayed)
+	
 Wed 28 Nov 2007 08:39:27 AM EET <lucilanga@gnome.org>
 
 	* prevent extra content fetching when formatting

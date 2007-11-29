@@ -14,14 +14,12 @@
 	* optimize where needed using reversed rf->hrname
 	* when deleting a folder offer to delete feed also
 	* check mozembed widget / thread when quitting
-	* find a way to include version of plugin
 	* test cancelation signal check rf->cancel fetch feed might reset it always 0 and crashing when finish_feed
 	* jump to folder when adding through d-bus
 	* check webkit rendering
 	* make Cancel All from S&R work
 	* obey ttl entity
-	* search in the contennt of page for feed
-	* check decode entities for links in body
+	* search in the content of page for feed
 	* implement g_timeout_add for long soup timeouts
 	* move evolution detection to m4 to ease up integration in other plugins
 	* change ifdef labels for debuging by level
