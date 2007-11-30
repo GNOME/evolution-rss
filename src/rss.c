@@ -2620,10 +2620,10 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
   	EMFormatHTML *efh = data;
 
 //        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
-        gtk_widget_size_request (gtk_widget_get_parent((GtkWidget *)efh->html), &req);
-	g_print("BOX w:%d,h:%d\n", req.width, req.height);
-        width = ((GtkWidget *) efh->html)->allocation.height - 16;
-	g_print("WID:%d\n", width);
+//        gtk_widget_size_request (gtk_widget_get_parent((GtkWidget *)efh->html), &req);
+//	g_print("BOX w:%d,h:%d\n", req.width, req.height);
+  //      width = ((GtkWidget *) efh->html)->allocation.height - 16;
+//	g_print("WID:%d\n", width);
 	
 	guint k = rf->headers_mode ? 215 : 119;
 	if (GTK_IS_WIDGET(widget))
