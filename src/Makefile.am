@@ -14,6 +14,7 @@ INCLUDES =							\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
 	-DHAVE_DBUS=$(DBD)					\
+	`pkg-config --cflags --libs libgtkhtml-3.14`		\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
 RSS_MENU = \

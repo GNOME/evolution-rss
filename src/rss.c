@@ -48,10 +48,15 @@
 #include <mail/em-folder-view.h>
 #include <mail/mail-mt.h>
 
-#include "mail/em-format-html.h"
+#include <mail/em-format-html.h>
 
 #include <mail/em-format.h>
 #include <mail/em-format-hook.h>
+
+#include <gtkhtml/gtkhtml.h>
+#include <gtkhtml/gtkhtml-embedded.h>
+#include <gtkhtml/gtkhtml-search.h>
+
 #include <sys/types.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -124,6 +129,19 @@ struct _org_gnome_rss_controls_pobject {
 	guint is_html;
 	gchar *mem;
 };
+
+/*struct _GtkHTMLEmbedded {
+        HTMLObject object;
+
+        gchar *name;
+        gchar *value;
+        HTMLForm *form;
+        GtkWidget *widget, *parent;
+        gint width, height;
+
+        gint abs_x, abs_y;
+        guint changed_id;
+};*/
 
 extern int xmlSubstituteEntitiesDefaultValue;
 
@@ -2596,10 +2614,21 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	GtkAdjustment *a = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(widget));
 //	g_print("page size:%d\n", a->page_size);
 //	g_print("value size:%d\n", a->value);
+	int width;
+        GtkRequisition req;
+  //      EMFormatHTMLDisplay *efhd = (EMFormatHTMLDisplay *) efh;
+  	EMFormatHTML *efh = data;
+
+//        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
+        gtk_widget_size_request (gtk_widget_get_parent((GtkWidget *)efh->html), &req);
+	g_print("BOX w:%d,h:%d\n", req.width, req.height);
+        width = ((GtkWidget *) efh->html)->allocation.height - 16;
+	g_print("WID:%d\n", width);
+	
 	guint k = rf->headers_mode ? 215 : 119;
 	if (GTK_IS_WIDGET(widget))
 	{
-        	int width = widget->allocation.width - 16 - 2;// - 16;
+        	width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
 #ifdef RSS_DEBUG
 		g_print("resize webkit :width:%d, height: %d\n", width, height);
@@ -2798,9 +2827,15 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	}
 	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
 
+      	int width = vbox->allocation.width;
+       	int height = vbox->allocation.height;
+
         gtk_container_add ((GtkContainer *) eb, vbox);
-	gtk_widget_size_request(eb, &req);
-	g_print("ww:%d,hh%d\n", req.width, req.height);
+	GtkHTMLEmbedded *myeb = eb;
+//	gtk_widget_size_request(myeb->widget, &req);
+	g_print("BOX ww:%d,hh%d\n", myeb->width, myeb->height);
+//	g_print("BOX ww:%d,hh%d\n", width, height);
+
 	po->html = vbox;
 	po->mem = mem;
 
