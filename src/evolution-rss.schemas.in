@@ -133,7 +133,7 @@
       <key>/schemas/apps/evolution/evolution-rss/rep_check_timeout</key>
       <applyto>/apps/evolution/evolution-rss/rep_check_timeout</applyto>
       <owner>evolution-rss</owner>
-      <type>int</type>
+      <type>float</type>
       <default>60</default>
       <locale name="C">
         <short>New articles timeout</short>
