@@ -53,10 +53,6 @@
 #include <mail/em-format.h>
 #include <mail/em-format-hook.h>
 
-#include <gtkhtml/gtkhtml.h>
-#include <gtkhtml/gtkhtml-embedded.h>
-#include <gtkhtml/gtkhtml-search.h>
-
 #include <sys/types.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -2625,7 +2621,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
   //      width = ((GtkWidget *) efh->html)->allocation.height - 16;
 //	g_print("WID:%d\n", width);
 	
-	guint k = rf->headers_mode ? 215 : 119;
+	guint k = rf->headers_mode ? 199 : 105;
 	if (GTK_IS_WIDGET(widget))
 	{
         	width = widget->allocation.width - 16 - 2;// - 16;
@@ -2660,6 +2656,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 void
 rss_mozilla_init(void)
 {
+	GError *err = NULL;
        	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
 	g_unsetenv("MOZILLA_FIVE_HOME");
 
@@ -2671,6 +2668,9 @@ rss_mozilla_init(void)
 
         gtk_moz_embed_set_profile_path (profile_dir, "mozembed-rss");
         g_free (profile_dir);
+	if (!g_thread_supported ()) {
+               	g_thread_init (NULL);
+       	}
 	gtk_moz_embed_push_startup ();
 }
 #endif
@@ -2714,8 +2714,11 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 			gdk_threads_init();
         	}
 
-//		if (rf->mozembed)
-//			gtk_moz_embed_push_startup ();
+/*		if (!rf->test && rf->test < 2)
+		{
+			gtk_moz_embed_push_startup ();
+			rf->test++;
+		}*/
 
 		rf->mozembed = gtk_moz_embed_new();
 
@@ -2831,9 +2834,9 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
        	int height = vbox->allocation.height;
 
         gtk_container_add ((GtkContainer *) eb, vbox);
-	GtkHTMLEmbedded *myeb = eb;
+//	GtkHTMLEmbedded *myeb = eb;
 //	gtk_widget_size_request(myeb->widget, &req);
-	g_print("BOX ww:%d,hh%d\n", myeb->width, myeb->height);
+//	g_print("BOX ww:%d,hh%d\n", myeb->width, myeb->height);
 //	g_print("BOX ww:%d,hh%d\n", width, height);
 
 	po->html = vbox;
@@ -4069,7 +4072,8 @@ rss_finalize(void)
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
 #ifdef HAVE_GTKMOZEMBED
-	gtk_moz_embed_pop_startup ();
+//	gtk_moz_embed_push_startup ();
+//	gtk_moz_embed_pop_startup ();
 #endif
 //	gtk_moz_embed_destroy(rf->mozembed);
 //	GtkMozEmbed *a = rf->mozembed;
@@ -4079,7 +4083,7 @@ rss_finalize(void)
 //	g_thread_yield();
 //	g_thread_exit(0);
 	g_print(".done\n");
-//	gtk_exit(TRUE);
+	exit(TRUE);
 }
 
 

@@ -95,6 +95,7 @@ typedef struct _rssfeed {
 	gchar		*main_folder;		// "News&Blogs" folder name
 	GHashTable	*feed_folders;		// defined feeds folders
 	GHashTable	*reversed_feed_folders;	// easyer when we lookup for the value
+	guint		test;
 #if HAVE_DBUS
 	DBusConnection	*bus;			// DBUS
 #endif
