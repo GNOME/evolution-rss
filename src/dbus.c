@@ -134,15 +134,14 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "ping")) {
 		g_print("!!!PING!!!\n");
 		gchar *data = g_strdup("PONG");
-	DBusMessage *reply;
+		DBusMessage *reply;
 		fprintf(stderr, "Ping received from %s\n",
-              dbus_message_get_sender(message));
-      reply = dbus_message_new_signal (DBUS_PATH, DBUS_REPLY_INTERFACE, "pong");
-      dbus_message_set_reply_serial(reply,
-                                    dbus_message_get_serial(message));
-      dbus_connection_send (connection, reply, NULL);
-      dbus_connection_flush (connection);
-
+		dbus_message_get_sender(message));
+		reply = dbus_message_new_signal (DBUS_PATH, DBUS_REPLY_INTERFACE, "pong");
+		dbus_message_set_reply_serial(reply,
+			dbus_message_get_serial(message));
+		dbus_connection_send (connection, reply, NULL);
+		dbus_connection_flush (connection);
     		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 

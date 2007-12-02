@@ -99,6 +99,7 @@ reinit_dbus (gpointer user_data)
 static DBusHandlerResult
 filter_function (DBusConnection *connection, DBusMessage *message, void *user_data)
 {
+	g_print("reply dbus\n");
 	if (dbus_message_is_signal (message, DBUS_INTERFACE_LOCAL, "Disconnected") &&
 	    strcmp (dbus_message_get_path (message), DBUS_PATH_LOCAL) == 0) {
 		dbus_connection_unref (bus);
