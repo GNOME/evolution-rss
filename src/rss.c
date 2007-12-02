@@ -2621,7 +2621,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
   //      width = ((GtkWidget *) efh->html)->allocation.height - 16;
 //	g_print("WID:%d\n", width);
 	
-	guint k = rf->headers_mode ? 199 : 105;
+	guint k = rf->headers_mode ? 198 : 103;
 	if (GTK_IS_WIDGET(widget))
 	{
         	width = widget->allocation.width - 16 - 2;// - 16;
@@ -2860,7 +2860,6 @@ void
 pfree(EMFormatHTMLPObject *o)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
-	return;
 #ifdef HAVE_GTKMOZEMBED
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
