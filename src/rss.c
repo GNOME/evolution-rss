@@ -485,7 +485,10 @@ create_dialog_add(gchar *text, gchar *feed_text)
   gchar *flabel = NULL;
 
   dialog1 = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (dialog1), _("Add Feeds"));
+  if (text != NULL)
+  	gtk_window_set_title (GTK_WINDOW (dialog1), _("Edit Feed"));
+  else
+  	gtk_window_set_title (GTK_WINDOW (dialog1), _("Add Feed"));
   gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog1), TRUE);
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_window_set_modal (GTK_WINDOW (dialog1), FALSE);
@@ -567,7 +570,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
   gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 
   checkbutton1 = gtk_check_button_new_with_mnemonic (
-		_("Show the article summary instead of web page"));
+		_("Show article's web page"));
   gtk_widget_show (checkbutton1);
   gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, TRUE, 0);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1-fhtml);
@@ -595,8 +598,8 @@ GtkObject *spinbutton1_adj, *spinbutton2_adj;
 GSList *radiobutton1_group = NULL;
 
  //editing
- if (text != NULL)
- {
+// if (text != NULL)
+// {
   label1 = gtk_label_new (_("<b>Articles Storage</b>"));
   gtk_widget_show (label1);
   gtk_box_pack_start (GTK_BOX (vbox1), label1, FALSE, FALSE, 0);
@@ -661,7 +664,7 @@ GSList *radiobutton1_group = NULL;
   gtk_widget_show (checkbutton4);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
   gtk_box_pack_start (GTK_BOX (vbox1), checkbutton4, FALSE, FALSE, 0);
- }
+// }
 
   dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
   gtk_widget_show (dialog_action_area1);
@@ -700,8 +703,8 @@ GSList *radiobutton1_group = NULL;
 	validate = gtk_toggle_button_get_active(
 		GTK_TOGGLE_BUTTON(checkbutton3));
 	feed->validate = validate;
-if (text)
-{
+//if (text)
+//{
 	guint i=0;
 	while (i<3) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
@@ -718,7 +721,7 @@ if (text)
 		GTK_TOGGLE_BUTTON(checkbutton4));
 	feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
 	feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
-}
+//}
 	feed->add = 1;
 	// there's no reason to feetch feed if url isn't changed
 	if (text && !strncmp(text, feed->feed_url, strlen(text)))
@@ -1853,7 +1856,7 @@ decorate_import_fs (gpointer data)
 
 	vbox1 = gtk_vbox_new (FALSE, 0);
 	checkbutton1 = gtk_check_button_new_with_mnemonic (
-                               _("Show the article summary instead of web page"));
+                               _("Show article's web page"));
 	gtk_widget_show (checkbutton1);
 	gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, TRUE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1);
