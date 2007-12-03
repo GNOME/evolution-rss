@@ -570,7 +570,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
   gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 
   checkbutton1 = gtk_check_button_new_with_mnemonic (
-		_("Show article's web page"));
+		_("Show article's summary"));
   gtk_widget_show (checkbutton1);
   gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, TRUE, 0);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1-fhtml);
@@ -1268,7 +1268,7 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
 				//also remove status file
 				gchar *url =  g_hash_table_lookup(rf->hr, 
 							g_hash_table_lookup(rf->hrname, 
-									name));
+							name));
 				gchar *buf = gen_md5(url);
 				gchar *feed_dir = g_strdup_printf("%s/mail/rss", 
 					mail_component_peek_base_directory (mail_component_peek ()));
@@ -1856,7 +1856,7 @@ decorate_import_fs (gpointer data)
 
 	vbox1 = gtk_vbox_new (FALSE, 0);
 	checkbutton1 = gtk_check_button_new_with_mnemonic (
-                               _("Show article's web page"));
+                               _("Show article's summary"));
 	gtk_widget_show (checkbutton1);
 	gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, TRUE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1);
@@ -3295,7 +3295,11 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	gboolean deleted = 0;
 	//feed might get deleted while fetching
 	//so we need to test for the presence of key
-	if (NULL == key) deleted = 1;
+	if (!key)
+	{
+		g_print("key:%s\n", key);
+		deleted = 1;
+	}
 
 	if (rf->feed_queue)
 		rf->feed_queue--;
@@ -3383,7 +3387,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
         r->cache = xml_parse_sux (response->str, response->len);
 	g_print("response cache:%p\n", r->cache);
 	g_print("response size:%d\n", response->len);
-	 g_print("res:[%d]\n", msg->status_code);
+	g_print("res:[%d]\n", msg->status_code);
 //        r->cache = xmlParseMemory (response->str, response->len);
 //        r->cache = xmlReadMemory (response->str, response->len,
 //				NULL, NULL,
