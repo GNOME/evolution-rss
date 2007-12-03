@@ -3296,16 +3296,10 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	//feed might get deleted while fetching
 	//so we need to test for the presence of key
 	if (!key)
-	{
-		g_print("key:%s\n", key);
 		deleted = 1;
-	}
 
 	if (rf->feed_queue)
 		rf->feed_queue--;
-
-	if (msg->status_code == SOUP_STATUS_CANCELLED)
-		goto out;
 
 #ifndef EVOLUTION_2_12
 	if(rf->progress_dialog && rf->feed_queue == 0)
@@ -3317,10 +3311,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 #endif
 
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
-	{
-		g_print("PUSKALAU\n");
 		goto out;
-	}
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
@@ -3399,6 +3390,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	if (!deleted)
 	{
 		g_print("uzar data:%s\n", user_data);
+		if (!user_data || !lookup_key(user_data))
+			goto out;
 		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
 		g_print("uzar data:%s\n", user_data);
         	chn_name = display_doc (r);
@@ -3422,8 +3415,9 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	g_string_free(response, 1);
 	g_print("freed\n");
 
-	if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-		get_feed_age(user_data, lookup_key(user_data));
+	if (!deleted)
+		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+			get_feed_age(user_data, lookup_key(user_data));
 //        rf->pending = FALSE;
 
 #ifdef EVOLUTION_2_12
@@ -3461,7 +3455,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	}
 #endif
 out:	
-	g_free(user_data);
+	if (user_data)
+		g_free(user_data);
 	return;
 }
 
