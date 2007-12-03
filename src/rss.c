@@ -1690,7 +1690,7 @@ import_opml(gchar *file, add_feed *feed)
                                         check_if_match,
                                         feed->feed_url))
                 	{
-                           rss_error(NULL, _("Error adding feed."),
+                           rss_error(feed->feed_name, _("Error adding feed."),
                                            _("Feed already exists!"));
                            continue;
                 	}
@@ -3195,7 +3195,7 @@ setup_feed(add_feed *feed)
         content = net_post_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err)
 	{
-		rss_error("Unamed feed", _("Error while fetching feed."), err->message);
+		rss_error(feed->feed_name ? feed->feed_name: "Unamed feed", _("Error while fetching feed."), err->message);
 		goto out;
         }
         xmlDocPtr doc = NULL;
