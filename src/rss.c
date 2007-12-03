@@ -485,6 +485,8 @@ create_dialog_add(gchar *text, gchar *feed_text)
   gchar *flabel = NULL;
 
   dialog1 = gtk_dialog_new ();
+  gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
+
   if (text != NULL)
   	gtk_window_set_title (GTK_WINDOW (dialog1), _("Edit Feed"));
   else
@@ -1129,6 +1131,7 @@ remove_feed_dialog(gchar *msg)
   GtkWidget *okbutton1;
 
   dialog1 = gtk_dialog_new ();
+  gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
   gtk_window_set_title (GTK_WINDOW (dialog1), _("Delete Feed?"));
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
 
@@ -1554,6 +1557,7 @@ export_opml(gchar *file)
 
         gchar *msg = g_strdup(_("Exporting feeds..."));
         import_dialog = e_error_new((GtkWindow *)rf->preferences, "shell:importing", msg, NULL);
+	gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
 //        g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
         import_label = gtk_label_new(_("Please wait"));
         import_progress = gtk_progress_bar_new();
@@ -1630,6 +1634,7 @@ import_opml(gchar *file, add_feed *feed)
         xmlNode *doc = src;
         gchar *msg = g_strdup(_("Importing feeds..."));
         import_dialog = e_error_new((GtkWindow *)rf->preferences, "shell:importing", msg, NULL);
+	gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
         g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
         import_label = gtk_label_new(_("Please wait"));
         import_progress = gtk_progress_bar_new();
@@ -1788,6 +1793,7 @@ create_import_dialog (void)
   GtkWidget *button2;
 
   import_file_select = gtk_file_chooser_dialog_new (_("Select import file"), NULL, GTK_FILE_CHOOSER_ACTION_OPEN, NULL);
+  gtk_window_set_keep_above(GTK_WINDOW(import_file_select), TRUE);
   gtk_window_set_modal (GTK_WINDOW (import_file_select), TRUE);
   gtk_window_set_destroy_with_parent (GTK_WINDOW (import_file_select), TRUE);
   gtk_window_set_type_hint (GTK_WINDOW (import_file_select), GDK_WINDOW_TYPE_HINT_DIALOG);
@@ -1904,6 +1910,7 @@ create_export_dialog (void)
   GtkWidget *button4;
 
   export_file_select = gtk_file_chooser_dialog_new (_("Select file to export"), NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL);
+  gtk_window_set_keep_above(GTK_WINDOW(export_file_select), TRUE);
   g_object_set (export_file_select,
                 "local-only", FALSE,
                 NULL);
@@ -3323,6 +3330,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
                      gchar *msg = g_strdup_printf("\n%s\n%s", user_data, err->message);
                      ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                                        _("Error Fetching Feed"), msg, NULL);
+		     gtk_window_set_keep_above(GTK_WINDOW(ed), TRUE);
                      g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
                      gtk_widget_show(ed);
                      rf->errdialog = ed;

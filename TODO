@@ -24,4 +24,3 @@
 	* move evolution detection to m4 to ease up integration in other plugins
 	* change ifdef labels for debuging by level
 	* disable javascript alerts !?
-	* reoder window to prevent overlapping
