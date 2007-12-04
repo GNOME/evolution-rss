@@ -4954,7 +4954,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		//we have to free this some how
                 char *link = g_strdup(layer_find (el->children, "link", NULL));			//RSS,
 		if (!link) 
-			layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
+			link = layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
 		char *id = layer_find (el->children, "id",				//ATOM
 				layer_find (el->children, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
