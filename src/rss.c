@@ -4443,7 +4443,7 @@ layer_find_innerhtml (xmlNodePtr node,
 		printf("%s.\n", node->name);
 #endif
 		if (strcasecmp (node->name, match)==0 && node->children) {
-			return layer_find(node->children->next, submatch, NULL);
+			return layer_find(node->children->next, submatch, fail);
 		}
 		node = node->next;
 	}
@@ -4895,9 +4895,9 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 	{
                 char *p = layer_find (el->children, "title", "Untitled article");
 		//firstly try to parse as an ATOM author
-               	char *q1 = layer_find_innerhtml (el->children, "author", "name", NULL);
-		char *q2 = layer_find_innerhtml (el->children, "author", "uri", NULL);
-		char *q3 = layer_find_innerhtml (el->children, "author", "email", NULL);
+               	char *q1 = g_strdup(layer_find_innerhtml (el->children, "author", "name", NULL));
+		char *q2 = g_strdup(layer_find_innerhtml (el->children, "author", "uri", NULL));
+		char *q3 = g_strdup(layer_find_innerhtml (el->children, "author", "email", NULL));
 		if (q1)
 		{
         		q1 = g_strdelimit(q1, "><", ' ');
@@ -4905,26 +4905,35 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 			{
         			q3 = g_strdelimit(q3, "><", ' ');
                			q = g_strdup_printf("%s <%s>", q1, q3);
+				g_free(q1);
+				if (q2) g_free(q2);
+				g_free(q3);
 			}
 			else
 			{
 				if (q2)
         				q2 = g_strdelimit(q2, "><", ' ');
 				else 
-					q2 = q1;
+					q2 = g_strdup(q1);
                			q = g_strdup_printf("%s <%s>", q1, q2);
+				g_free(q1);
+				g_free(q2);
 			}
 		}
 		else	//then RSS or RDF
 		{
-                	q = layer_find (el->children, "author", 
-				layer_find (el->children, "creator", NULL));
+                	q = g_strdup(layer_find (el->children, "author", 
+				layer_find (el->children, "creator", NULL)));
 			if (q)
 			{
 				//evo will go crazy when it'll encounter ":" character
         			//it probably enforces strict rfc2047 compliance
         			q = g_strdelimit(q, "><:", ' ');
-        			q = g_strdup_printf("\"%s\" <\"%s\">", q, g_strdelimit(q, "><:", ' '));
+        			gchar *tmp = g_strdup_printf("\"%s\" <\"%s\">", q, q);
+				g_free(q);
+				q = tmp;
+				if (q2) g_free(q2);
+				if (q3) g_free(q3);
 			}
 		}
 		//FIXME this might need xmlFree when namespacing
