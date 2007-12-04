@@ -3294,7 +3294,6 @@ out:	rf->pending = FALSE;
 void
 finish_feed (SoupMessage *msg, gpointer user_data)
 {
-		g_print("begin data:%s\n", user_data);
 	GError *err = NULL;
 	gchar *chn_name = NULL;
 	//FIXME user_data might be out of bounds here
@@ -3375,7 +3374,6 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
 //#endif
-	g_print("CANCEL:%d\n", rf->cancel);
 
 	while (gtk_events_pending ())
             gtk_main_iteration ();
@@ -3384,25 +3382,17 @@ finish_feed (SoupMessage *msg, gpointer user_data)
         r->shown = TRUE;
         xmlSubstituteEntitiesDefaultValue = 1;
         r->cache = xml_parse_sux (response->str, response->len);
-	g_print("response cache:%p\n", r->cache);
-	g_print("response size:%d\n", response->len);
-	g_print("res:[%d]\n", msg->status_code);
-//        r->cache = xmlParseMemory (response->str, response->len);
-//        r->cache = xmlReadMemory (response->str, response->len,
-//				NULL, NULL,
-//				XML_PARSE_NOERROR|XML_PARSE_RECOVER);
-//
+
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;
 
 	if (!deleted)
 	{
-		g_print("uzar data:%s\n", user_data);
 		if (!user_data || !lookup_key(user_data))
 			goto out;
 		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
-		g_print("uzar data:%s\n", user_data);
         	chn_name = display_doc (r);
+
 		if (g_ascii_strcasecmp(user_data, chn_name) != 0)
 		{
 			gchar *md5 = g_strdup(g_hash_table_lookup(rf->hrname, user_data));
@@ -3421,12 +3411,10 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	}
 	g_free(r);
 	g_string_free(response, 1);
-	g_print("freed\n");
 
-	if (!deleted)
-		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-			get_feed_age(user_data, lookup_key(user_data));
-//        rf->pending = FALSE;
+///	if (!deleted)
+///		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+///			get_feed_age(user_data, lookup_key(user_data));
 
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
@@ -3960,7 +3948,8 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
         info = g_malloc0 (sizeof (*info));
 //        info->type = type;
                         
-        info->uri = g_strdup ("feed");
+        info->uri = "feed"; //g_stddup
+
         info->cancel = camel_operation_new (op_status, info);
         info->state = SEND_ACTIVE;
 //        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
@@ -4661,8 +4650,6 @@ tree_walk (xmlNodePtr root, RDF *r)
 	gchar *md2 = g_strdup(layer_find(channel->children, "date", 
 		layer_find(channel->children, "pubDate", 
 		layer_find(channel->children, "updated", NULL))));
-	g_print("md2:");
-	g_print("%s\n", md2);
 
 	r->feedid = update_channel(
 			//atempt to find real_channel name using url
@@ -4673,6 +4660,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	if (md2)
 		g_free(md2);
 	g_array_free(item, TRUE);
+	g_free(r->feedid);
 	return t;
 }
 
@@ -4714,6 +4702,8 @@ free_cf(create_feed *CF)
 	g_free(CF->website);
 	g_free(CF->feedid);
 	g_free(CF->encl);
+	g_free(CF->feed_fname);
+	g_free(CF->feed_uri);
 	g_free(CF);
 }
 
@@ -4859,7 +4849,7 @@ decode_html_entities(gchar *str)
 				| XML_PARSE_NOERROR
 				| XML_PARSE_NONET);
 
-	newstr =  (gchar *)xmlStringDecodeEntities(ctxt,
+	xmlChar *tmp =  (gchar *)xmlStringDecodeEntities(ctxt,
 					     BAD_CAST str,
 					     XML_SUBSTITUTE_REF,
 					     0,
@@ -4867,7 +4857,8 @@ decode_html_entities(gchar *str)
 					     0);
 
 	xmlFreeParserCtxt(ctxt);
-
+	newstr = g_strdup(tmp);
+	xmlFree(tmp);
 	return newstr;
 }
 
@@ -4940,13 +4931,10 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		b = layer_find_tag (el->children, "description",
 				layer_find_tag (el->children, "content", NULL));
 
-		if (b)
-			freeb = 1;
-		else
-                	b = layer_find (el->children, "description",
+		if (!b)
+                	b = g_strdup(layer_find (el->children, "description",
 				layer_find (el->children, "content",
-				layer_find (el->children, "summary", "No information")));
-
+				layer_find (el->children, "summary", "No information"))));
 
                 char *d = layer_find (el->children, "pubDate", NULL);
 		//date in dc module format
@@ -4964,8 +4952,9 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		encl = layer_find_innerelement(el->children, "enclosure", "url",			// RSS 2.0 Enclosure
 			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
 		//we have to free this some how
-                char *link = layer_find (el->children, "link",						//RSS,
-			layer_find_innerelement(el->children, "link", "href", _("No Information")));	//ATOM
+                char *link = g_strdup(layer_find (el->children, "link", NULL));			//RSS,
+		if (!link) 
+			layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
 		char *id = layer_find (el->children, "id",				//ATOM
 				layer_find (el->children, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
@@ -4979,7 +4968,9 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		g_print("date:%s\n", d2);
 #endif
 		p =  decode_html_entities (p);
-		b = decode_html_entities(b);
+		gchar *tmp = decode_html_entities(b);
+		g_free(b);
+		b = tmp;
 			
 		gchar rfeed[513];
 		memset(rfeed, 0, 512);
@@ -5036,17 +5027,19 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 #ifdef RSS_DEBUG
 		g_print("put success()\n");
 #endif
-		if (q) g_free(q);
+tout:		if (q) g_free(q);
+		g_free(b);
+		g_free(p);
+		if (feed) g_free(feed);
+		if (encl) g_free(encl);
+		g_free(link);
         }
-//	if (freeb)
-//		g_free(b);
-	g_free(sender);
+out:	g_free(sender);
 
 	if (fr) fclose(fr);
 	if (fw) fclose(fw);
 	
 	g_free(feed_name);
-	g_free(feed);
 	return buf;
 }
 
