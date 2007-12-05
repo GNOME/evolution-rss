@@ -2996,6 +2996,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
     		camel_stream_printf(fstream, "</tr></table></td></tr></table>");
 		if (buff)
 			g_free(buff);
+		g_free(subject);
 		g_string_free(content, 1);
 	}
 	else
@@ -3370,6 +3371,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;
 
+
 	GString *response = g_string_new_len(msg->response.body, msg->response.length);
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
@@ -3408,6 +3410,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 			xmlFreeDoc(r->cache);
 		if (r->type)
 			g_free(r->type);
+		if (r->version)
+			g_free(r->version);
 	}
 	g_free(r);
 	g_string_free(response, 1);
@@ -3415,7 +3419,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 ///	if (!deleted)
 ///		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 ///			get_feed_age(user_data, lookup_key(user_data));
-
+tout:
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
 	{
@@ -3506,6 +3510,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 gboolean
 update_articles(gboolean disabler)
 {
+	return disabler;
 	if (!rf->pending && !rf->feed_queue && rf->online)
 	{
 		g_print("Reading RSS articles...\n");
@@ -3536,10 +3541,12 @@ get_main_folder(void)
 			if (fgets(mf, 511, f) != NULL)
 			{
 				fclose(f);
+				g_free(feed_file);
 				return g_strdup(mf);
 			}
 		}
 	}
+	g_free(feed_file);
 	return g_strdup(DEFAULT_FEEDS_FOLDER);
 }
 
@@ -3570,6 +3577,7 @@ get_feed_folders(void)
 		}
 		fclose(f);
 	}
+	g_free(feed_file);
 	g_hash_table_foreach(rf->feed_folders, 
 				(GHFunc)populate_reversed, 
 				rf->reversed_feed_folders);
@@ -3807,6 +3815,7 @@ check_folders(void)
 	{
 		camel_store_create_folder (store, NULL, lookup_main_folder(), &ex);
 	}
+	camel_object_unref (mail_folder);
 }
 
 void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
@@ -3877,7 +3886,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 check_folders();
 
                 rf->err = NULL;
-                g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
+///                g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
                 // reset cancelation signal
                 if (rf->cancel)
                         rf->cancel = 0;
@@ -3940,7 +3949,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 		e_error_run(NULL, "org-gnome-evolution-rss:generr", "No RSS feeds configured!", NULL);
 		return;
 	}
-	
+
 #ifdef EVOLUTION_2_12
 	struct _send_info *info;
 	struct _send_data *data = (struct _send_data *)t->data;
@@ -4070,18 +4079,15 @@ rss_finalize(void)
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
 #ifdef HAVE_GTKMOZEMBED
-//	gtk_moz_embed_push_startup ();
 //	gtk_moz_embed_pop_startup ();
 #endif
 //	gtk_moz_embed_destroy(rf->mozembed);
 //	GtkMozEmbed *a = rf->mozembed;
 //	a->data->Destroy();
 //	a->priv->browser->Destroy();
-//	g_thread_join(thread1);
-//	g_thread_yield();
-//	g_thread_exit(0);
 	g_print(".done\n");
-	exit(TRUE);
+	//really find a better way to deal with this//
+	system("killall -SIGTERM evolution");
 }
 
 
@@ -4856,9 +4862,9 @@ decode_html_entities(gchar *str)
 					     0,
 					     0);
 
-	xmlFreeParserCtxt(ctxt);
 	newstr = g_strdup(tmp);
 	xmlFree(tmp);
+	xmlFreeParserCtxt(ctxt);
 	return newstr;
 }
 
@@ -5028,7 +5034,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 			else
 			{
 				if (fw) fputs(feed, fw);
-       	    			create_mail(CF);
+   	    	    			create_mail(CF);
 				free_cf(CF);
 			}
 		}
