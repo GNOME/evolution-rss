@@ -3510,7 +3510,6 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 gboolean
 update_articles(gboolean disabler)
 {
-	return disabler;
 	if (!rf->pending && !rf->feed_queue && rf->online)
 	{
 		g_print("Reading RSS articles...\n");
@@ -3886,7 +3885,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 check_folders();
 
                 rf->err = NULL;
-///                g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
+                g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
                 // reset cancelation signal
                 if (rf->cancel)
                         rf->cancel = 0;
@@ -4566,9 +4565,11 @@ tree_walk (xmlNodePtr root, RDF *r)
 				rewalk = walk->children;
 				walk = walk->next;
 				if (!r->type)
-				r->type = g_strdup("RDF");
+					r->type = g_strdup("RDF");
 				r->type_id = RDF_FEED;
 //                		gchar *ver = xmlGetProp(node, "version");
+                		if (r->version)
+					g_free(r->version);
 				r->version = g_strdup("(RSS 1.0)");
 //				if (ver)
 //					xmlFree(ver);
@@ -4582,6 +4583,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 				r->type = g_strdup("RSS");
 				r->type_id = RSS_FEED;
                 		gchar *ver = xmlGetProp(node, "version");
+                		if (r->version)
+					g_free(r->version);
 				r->version = g_strdup(ver);
 				if (ver)
 					xmlFree(ver);
@@ -4595,11 +4598,17 @@ tree_walk (xmlNodePtr root, RDF *r)
                 		gchar *ver = xmlGetProp(node, "version");
 				if (ver)
 				{
+                			if (r->version)
+						g_free(r->version);
 					r->version = g_strdup(ver);
 					xmlFree(ver);
 				}
 				else
+				{
+                			if (r->version)
+						g_free(r->version);
 					r->version = g_strdup("1.0");
+				}
 			}
 
 			/* This is the channel top level */
