@@ -1,5 +1,7 @@
 Tue 04 Dec 2007 01:15:04 PM EET <lucilanga@gnome.org>
 
+	* fix killing only when using gtk mozembed
+	* fix corectly detecting of minor evo version
 	* fix several memory leaks in fetch_feed
 	
 Mon 03 Dec 2007 12:32:48 PM EET <lucilanga@gnome.org>
