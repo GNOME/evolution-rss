@@ -73,8 +73,8 @@ if test "x$EVOLUTION_EXEC_VERSION" = "x2.12" ||
 	AC_DEFINE_UNQUOTED(EVOLUTION_2_12,1, [evolution mail 2.12 present])
 	AC_SUBST(EVOLUTION_2_12)
 fi
-MAJOR_VERSION=`echo $EVOLUTION_EXEC_VERSION|awk '{print 1000 * $1}'`
-AC_SUBST(MAJOR_VERSION)
+MINOR_VERSION=`echo $i|awk '{print 1000 * $1}'`
+AC_SUBST(MINOR_VERSION)
 
 dnl base packages and versions
 LIBGTK_REQUIRED=2.4.0
