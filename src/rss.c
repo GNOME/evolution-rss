@@ -4086,7 +4086,8 @@ rss_finalize(void)
 //	a->priv->browser->Destroy();
 	g_print(".done\n");
 	//really find a better way to deal with this//
-	system("killall -SIGTERM evolution");
+	if (2 == render)
+		system("killall -SIGTERM evolution");
 }
 
 
