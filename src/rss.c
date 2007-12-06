@@ -4085,6 +4085,10 @@ rss_finalize(void)
 //	a->data->Destroy();
 //	a->priv->browser->Destroy();
 	g_print(".done\n");
+	guint render = GPOINTER_TO_INT(
+	gconf_client_get_int(rss_gconf, 
+			GCONF_KEY_HTML_RENDER, 
+			NULL));
 	//really find a better way to deal with this//
 	if (2 == render)
 		system("killall -SIGTERM evolution");
