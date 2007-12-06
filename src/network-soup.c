@@ -334,7 +334,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 	soup_session_queue_message (soup_sess, msg,
            cb2, cbdata2);
 
-	g_object_add_weak_pointer (G_OBJECT(msg), info);
+	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
 //	GMainLoop *mainloop = g_main_loop_new (g_main_context_default (), FALSE);
   //	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);

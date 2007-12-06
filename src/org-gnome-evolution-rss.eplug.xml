@@ -11,11 +11,11 @@
 
 This plugin adds RSS Feeds support for evolution mail. RSS support was built upon the somewhat existing RSS support in evolution-1.4 branch. The motivation behind this was to have RSS in same place as mails, at this moment I do not see the point having a separate RSS reader since a RSS Article is like an email message.
 
-Evolution RSS can display article using summary view summary view or HTML view. 
+Evolution RSS can display article using summary view or HTML view. 
 
-HTML can be displayed using gtkHTML, Apple's Webkit or Firefox.
+HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Firefox/Gecko.
 
-<b>evolution-rss +VERSION+</b>
+<b>Version: evolution-rss +VERSION+</b>
 
 +URL+</_description>
     <author name="Lucian Langa" email="cooly@mips.edu.ms"/>

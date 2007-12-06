@@ -2,7 +2,7 @@
 %define version @VERSION@
 %define release 1
 
-Summary: evolution-rss
+Summary: Evolution RSS Reader
 Name:	 %{name}
 Version: %{version}
 Release: %{release}
@@ -13,6 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 URL: http://mips.edu.ms/evo/index.php/Evolution_RSS_Reader_Plugin
 Distribution: Freshmeat RPMs
 Packager: Lucian Langa <cooly@mips.edu.ms>
+Provides: evolution-import-rss
 #Patch: evolution-rss-%{version}.patch
 #Prefix: /
 #BuildArch: noarch
