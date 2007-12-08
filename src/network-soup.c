@@ -298,6 +298,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 	SoupSession *soup_sess = 
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
+			
 //	proxyfy_session(soup_sess);
 	info = g_new0(CallbackInfo, 1);
 	info->user_cb = cb;

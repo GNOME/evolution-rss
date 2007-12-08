@@ -25,4 +25,3 @@
 	* change ifdef labels for debuging by level
 	* disable javascript alerts !?
 	* check memory consumption when S&R
-	* add kill after g_timeout on exit
