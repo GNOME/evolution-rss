@@ -1,3 +1,8 @@
+Sun 09 Dec 2007 12:45:46 PM EET <lucilanga@gnome.org>
+
+	* justification for rss dialog for evo < 2.12
+	* schema fixes
+	
 Tue 04 Dec 2007 01:15:04 PM EET <lucilanga@gnome.org>
 
 	* fix killing only when using gtk mozembed

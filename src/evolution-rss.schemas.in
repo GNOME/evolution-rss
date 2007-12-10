@@ -35,7 +35,8 @@
       <applyto>/apps/evolution/evolution-rss/feeds</applyto>
       <owner>evolution-rss</owner>
       <type>list</type>
-      <list_type>true</list_type>
+      <list_type>string</list_type>
+      <default>[]</default>
       <locale name="C">
         <short>Feeds list</short>
         <long>
@@ -92,7 +93,7 @@
       <applyto>/apps/evolution/evolution-rss/port_proxy</applyto>
       <owner>evolution-rss</owner>
       <type>int</type>
-      <default></default>
+      <default>3128</default>
       <locale name="C">
         <short>Proxy server port</short>
         <long>

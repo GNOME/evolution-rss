@@ -98,6 +98,7 @@
 #include "misc.c"
 #if HAVE_DBUS
 #include "dbus.c"
+#define DBUS_API_SUBJECT_TO_CHANGE
 #endif
 
 int pop = 0;
@@ -3865,7 +3866,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 #if GTK_2_6
 	gtk_label_set_ellipsize (GTK_LABEL (label2), PANGO_ELLIPSIZE_START);
 #endif
-	gtk_label_set_justification(label2, GTK_JUSTIFY_CENTER);
+	gtk_label_set_justify(label2, GTK_JUSTIFY_CENTER);
         readrss_label = gtk_label_new(_("Please wait"));
         if (!rf->progress_dialog)
         {
