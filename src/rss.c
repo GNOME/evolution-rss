@@ -1500,8 +1500,8 @@ host_proxy_cb (GtkWidget *widget, gpointer data)
 static void
 port_proxy_cb (GtkWidget *widget, gpointer data)
 {
-    gconf_client_set_float (rss_gconf, GCONF_KEY_PORT_PROXY, 
-		gtk_spin_button_get_value((GtkSpinButton*)widget), NULL);
+    gconf_client_set_int (rss_gconf, GCONF_KEY_PORT_PROXY, 
+		gtk_spin_button_get_value_as_int((GtkSpinButton*)widget), NULL);
 }
 
 static void
