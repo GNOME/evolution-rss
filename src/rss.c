@@ -5644,9 +5644,9 @@ rss_config_control_new (void)
 		gtk_entry_set_text(GTK_ENTRY(sf->host_proxy), host);
 	g_signal_connect(sf->host_proxy, "changed", G_CALLBACK(host_proxy_cb), NULL);
 
-  	gdouble port = gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
+  	gint port = gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
   	if (port)
-		gtk_spin_button_set_value((GtkSpinButton *)sf->port_proxy, port);
+		gtk_spin_button_set_value((GtkSpinButton *)sf->port_proxy, (gdouble)port);
 	g_signal_connect(sf->port_proxy, "changed", G_CALLBACK(port_proxy_cb), NULL);
 	g_signal_connect(sf->port_proxy, "value_changed", G_CALLBACK(port_proxy_cb), NULL);
 

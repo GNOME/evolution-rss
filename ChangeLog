@@ -1,3 +1,7 @@
+Tue 11 Dec 2007 10:28:55 PM EET <lucilanga@gnome.org>
+
+	* fix get value as int for port_proxy
+	
 Sun 09 Dec 2007 12:45:46 PM EET <lucilanga@gnome.org>
 
 	* justification for rss dialog for evo < 2.12

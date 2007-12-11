@@ -124,8 +124,8 @@ proxyfy_session(SoupSession *session)
 {
 	gboolean use_proxy =
         gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL);
-    float port_proxy =
-        gconf_client_get_float(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
+    gint port_proxy =
+        gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
     gchar *host_proxy =
         gconf_client_get_string(rss_gconf, GCONF_KEY_HOST_PROXY, NULL);
 	gboolean auth_proxy =
@@ -139,7 +139,7 @@ proxyfy_session(SoupSession *session)
     if (use_proxy && host_proxy && port_proxy > 0)
     {
         gchar *proxy_uri = 
-            g_strdup_printf("http://%s:%.0f/", host_proxy, port_proxy); 
+            g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
 
         SoupUri *puri = soup_uri_new (proxy_uri);
 		if (auth_proxy)
