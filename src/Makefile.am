@@ -101,6 +101,22 @@ install-data-local:
 	@echo ""
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA)
 
+uninstall-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-uninstall-rule $(schema_DATA)
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/remove_folder
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/pass_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/startup_check
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/rep_check
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/rep_check_timeout
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/auth_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/host_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/html_render
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/use_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/user_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/port_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/display_summary
+
+
 DISTCLEANFILES = $(schema_DATA)
 
 glade_DATA =                    \

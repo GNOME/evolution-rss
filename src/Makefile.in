@@ -745,7 +745,7 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-errorDATA \
-	uninstall-gladeDATA uninstall-pluginDATA \
+	uninstall-gladeDATA uninstall-local uninstall-pluginDATA \
 	uninstall-pluginLTLIBRARIES uninstall-schemaDATA \
 	uninstall-serverDATA
 
@@ -767,8 +767,9 @@ uninstall-am: uninstall-binPROGRAMS uninstall-errorDATA \
 	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
 	uninstall-binPROGRAMS uninstall-errorDATA uninstall-gladeDATA \
-	uninstall-pluginDATA uninstall-pluginLTLIBRARIES \
-	uninstall-schemaDATA uninstall-serverDATA
+	uninstall-local uninstall-pluginDATA \
+	uninstall-pluginLTLIBRARIES uninstall-schemaDATA \
+	uninstall-serverDATA
 
 
 %.eplug.in.in: %.eplug.xml
@@ -823,6 +824,20 @@ install-data-local:
 	@echo ""
 	@echo ""
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA)
+
+uninstall-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-uninstall-rule $(schema_DATA)
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/remove_folder
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/pass_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/startup_check
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/rep_check
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/rep_check_timeout
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/auth_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/host_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/html_render
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/use_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/port_proxy
+	$(GCONFTOOL) -u /apps/evolution/evolution-rss/display_summary
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

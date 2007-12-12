@@ -1,3 +1,7 @@
+Wed 12 Dec 2007 10:35:41 AM EET <lucilanga@gnome.org>
+
+	* added schema uninstall rules
+	
 Tue 11 Dec 2007 10:28:55 PM EET <lucilanga@gnome.org>
 
 	* fix get value as int for port_proxy
