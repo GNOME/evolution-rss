@@ -202,8 +202,8 @@ LN_S = @LN_S@
 LOCALEDIR = @LOCALEDIR@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
-MAJOR_VERSION = @MAJOR_VERSION@
 MAKEINFO = @MAKEINFO@
+MINOR_VERSION = @MINOR_VERSION@
 MKDIR_P = @MKDIR_P@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
@@ -304,6 +304,7 @@ INCLUDES = \
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
 	-DHAVE_DBUS=$(DBD)					\
+	-DDBUS_API_SUBJECT_TO_CHANGE				\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
 RSS_MENU = \
@@ -774,7 +775,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-errorDATA \
 	LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
 
 %.eplug.in: %.eplug.in.in
-	@if test $(MAJOR_VERSION) -lt 2120; then		\
+	@if test $(MINOR_VERSION) -lt 11000; then		\
 		sed -e "s%+RSS_MENU+%$(RSS_MENU)%" $< > $@;	\
 	else							\
 		sed -e "s%+RSS_MENU+%%" $< > $@;		\

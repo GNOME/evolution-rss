@@ -98,7 +98,6 @@
 #include "misc.c"
 #if HAVE_DBUS
 #include "dbus.c"
-#define DBUS_API_SUBJECT_TO_CHANGE
 #endif
 
 int pop = 0;
@@ -1096,7 +1095,7 @@ rss_select_folder(gchar *folder_name)
         CamelFolder *folder = camel_store_get_folder (store, real_name, 0, NULL);
 
 	g_print("real_name:%s\n", real_name);
-        char *uri = (char *)mail_tools_folder_to_url (folder);
+        gchar *uri = mail_tools_folder_to_url (folder);
 	g_print("uri:%s\n", uri);
 	g_print("selected:%s\n", em_folder_tree_model_get_selected (model));
         em_folder_tree_model_set_selected (model, uri);
