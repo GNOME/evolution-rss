@@ -183,7 +183,8 @@ main (int argc, char *argv[])
 	
 
 	if (evo_running)
-        	send_dbus_message ("evolution_rss_feed", s);
+		if (s)
+        		send_dbus_message ("evolution_rss_feed", s);
 	else
 	{
 		g_print("evolution repetably failed to start!\n");

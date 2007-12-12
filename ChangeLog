@@ -1,5 +1,8 @@
 Wed 12 Dec 2007 10:35:41 AM EET <lucilanga@gnome.org>
 
+	* prevend evolution-import-rss import empty
+	feeds
+	* corrent MAJOR_VERSION configure var
 	* added schema uninstall rules
 	
 Tue 11 Dec 2007 10:28:55 PM EET <lucilanga@gnome.org>

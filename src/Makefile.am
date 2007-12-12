@@ -30,6 +30,7 @@ RSS_MENU = \
 	LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
 
 %.eplug.in: %.eplug.in.in
+	echo $(MINOR_VERSION)
 	@if test $(MINOR_VERSION) -lt 11000; then		\
 		sed -e "s%+RSS_MENU+%$(RSS_MENU)%" $< > $@;	\
 	else							\
