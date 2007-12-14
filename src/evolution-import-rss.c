@@ -183,8 +183,12 @@ main (int argc, char *argv[])
 	
 
 	if (evo_running)
+	{
 		if (s)
         		send_dbus_message ("evolution_rss_feed", s);
+		else
+			g_print("Syntax: evolution-import-rss URL\n");
+	}
 	else
 	{
 		g_print("evolution repetably failed to start!\n");
