@@ -3416,9 +3416,9 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	g_free(r);
 	g_string_free(response, 1);
 
-///	if (!deleted)
-///		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-///			get_feed_age(user_data, lookup_key(user_data));
+	if (!deleted)
+		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+			get_feed_age(user_data, lookup_key(user_data));
 tout:
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
