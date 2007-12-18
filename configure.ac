@@ -68,8 +68,8 @@ AC_SUBST(EVOLUTION_VERSION)
 AC_MSG_RESULT($EVOLUTION_VERSION)
 AC_SUBST(EVOLUTION_BASE_VERSION)
 AC_SUBST(EVOLUTION_EXEC_VERSION)
-if test "x$EVOLUTION_EXEC_VERSION" = "x2.12" || 
-   test	"x$EVOLUTION_EXEC_VERSION" = "x2.11"; then
+evolution_exec_int="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
+if test "$evolution_exec_int" -ge "21100"; then
 	AC_DEFINE_UNQUOTED(EVOLUTION_2_12,1, [evolution mail 2.12 present])
 	AC_SUBST(EVOLUTION_2_12)
 fi

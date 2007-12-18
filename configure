@@ -20756,8 +20756,8 @@ fi
 echo "${ECHO_T}$EVOLUTION_VERSION" >&6; }
 
 
-if test "x$EVOLUTION_EXEC_VERSION" = "x2.12" ||
-   test	"x$EVOLUTION_EXEC_VERSION" = "x2.11"; then
+evolution_exec_int="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print $1 * 10000 + $2 * 100 + $3}')"
+if test "$evolution_exec_int" -ge "21100"; then
 
 cat >>confdefs.h <<_ACEOF
 #define EVOLUTION_2_12 1

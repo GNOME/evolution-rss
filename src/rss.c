@@ -3957,7 +3957,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
         info = g_malloc0 (sizeof (*info));
 //        info->type = type;
                         
-        info->uri = "feed"; //g_stddup
+        info->uri = g_strdup("feed"); //g_stddup
 
         info->cancel = camel_operation_new (op_status, info);
         info->state = SEND_ACTIVE;
