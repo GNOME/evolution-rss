@@ -233,6 +233,19 @@ lookup_key(gpointer key)
 	return g_hash_table_lookup(rf->hrname, key);
 }
 
+/* hash table of ops->dialogue of active errors */
+static GHashTable *active_errors = NULL;
+
+static void error_destroy(GtkObject *o, void *data)
+{
+        g_hash_table_remove(active_errors, data);
+}
+
+static void error_response(GtkObject *o, int button, void *data)
+{
+        gtk_widget_destroy((GtkWidget *)o);
+}
+
 void
 rss_error(gchar *name, gchar *error, gchar *emsg)
 {
@@ -4144,7 +4157,6 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			if (2 == render)
 				rss_mozilla_init();
 #endif
-		g_print("called\n");
 		}
 		upgrade = 2;
 	} else {

@@ -25,3 +25,5 @@
 	* change ifdef labels for debuging by level
 	* disable javascript alerts !?
 	* check memory consumption when S&R
+	* fix dbus when not available
+	* non intrusive errors

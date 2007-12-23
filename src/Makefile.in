@@ -788,7 +788,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-errorDATA \
 	-e "s%+GETTEXT_PACKAGE+%$(GETTEXT_PACKAGE)%" \
 	-e "s%+LOCALEDIR+%$(LOCALEDIR)%" \
 	-e "s%+VERSION+%$(VERSION)%" \
-	-e "s%+URL+%http://mapes/evo/index.php/Evolution_RSS_Reader_Plugin%" \
+	-e "s%+URL+%http://mips.edu.ms/evo/index.php/Evolution_RSS_Reader_Plugin%" \
 	$< > $@
 
 %.error.in: %.error.xml
