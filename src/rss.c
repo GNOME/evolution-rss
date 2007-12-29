@@ -48,6 +48,8 @@
 #include <mail/em-folder-view.h>
 #include <mail/mail-mt.h>
 
+#include <misc/e-activity-handler.h>
+
 #include <mail/em-format-html.h>
 
 #include <mail/em-format.h>
@@ -4201,6 +4203,7 @@ create_mail(create_feed *CF)
 #ifdef RSS_DEBUG
 	g_print("date:%s\n", CF->date);
 #endif
+	g_print("date_fin:%s\n", CF->date);
    	camel_address_decode(CAMEL_ADDRESS(addr), author);
 	camel_mime_message_set_from(new, addr);
 	camel_object_unref(addr);
@@ -4210,9 +4213,15 @@ create_mail(create_feed *CF)
 	//handle pubdate
 	if (CF->date)
 	{
-		time_t actual_time;
-		actual_time = camel_header_decode_date(CF->date, &offset);
-		camel_mime_message_set_date(new, actual_time, offset);
+		//check if CF->date obeys rfc822
+		if (!is_rfc822(CF->date))
+			camel_mime_message_set_date(new, CAMEL_MESSAGE_DATE_CURRENT, 0);
+		else
+		{	
+			time_t actual_time;
+			actual_time = camel_header_decode_date(CF->date, &offset);
+			camel_mime_message_set_date(new, actual_time, offset);
+		}
 	}
 	else 
 	{
@@ -5167,6 +5176,7 @@ get_feed_age(gpointer key, gpointer value)
 #ifdef RSS_DEBUG
 	g_print("Cleaning folder: %s\n", real_folder);
 #endif
+
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
                         goto fail;

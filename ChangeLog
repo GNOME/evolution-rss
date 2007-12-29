@@ -1,3 +1,9 @@
+Sat 29 Dec 2007 02:15:47 PM EET <lucilanga@gnome.org>
+
+	* validate parsed date against rfc822,
+	and use system time in case
+	of broken date (planetgnomefr)
+	
 Tue 18 Dec 2007 09:38:56 PM EET <lucilanga@gnome.org>
 
 	* fix m4 support for evolution >= 2.11

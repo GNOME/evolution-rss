@@ -229,6 +229,128 @@ gen_md5(gchar *buffer)
  	*f++ = 0;
          return g_strdup(res);
 }
+
+static void
+header_decode_lwsp(const char **in)
+{
+        const char *inptr = *in;
+        char c;
+
+
+        while ((camel_mime_is_lwsp(*inptr) || *inptr =='(') && *inptr != '\0') {
+                while (camel_mime_is_lwsp(*inptr) && *inptr != '\0') {
+                        inptr++;
+                }
+
+                /* check for comments */
+                if (*inptr == '(') {
+                        int depth = 1;
+                        inptr++;
+                        while (depth && (c=*inptr) && *inptr != '\0') {
+                                if (c=='\\' && inptr[1]) {
+                                        inptr++;
+                                } else if (c=='(') {
+                                        depth++;
+                                } else if (c==')') {
+                                        depth--;
+                                }
+                                inptr++;
+                        }
+                }
+        }
+        *in = inptr;
+}
+
+static char *
+decode_token (const char **in)
+{
+        const char *inptr = *in;
+        const char *start;
+
+        header_decode_lwsp (&inptr);
+        start = inptr;
+        while (camel_mime_is_ttoken (*inptr))
+                inptr++;
+        if (inptr > start) {
+                *in = inptr;
+                return g_strndup (start, inptr - start);
+        } else {
+                return NULL;
+        }
+}
+
+/* hrm, is there a library for this shit? */
+static struct {
+        char *name;
+        int offset;
+} tz_offsets [] = {
+        { "UT", 0 },
+        { "GMT", 0 },
+        { "EST", -500 },        /* these are all US timezones.  bloody yanks */
+        { "EDT", -400 },
+        { "CST", -600 },
+        { "CDT", -500 },
+        { "MST", -700 },
+        { "MDT", -600 },
+        { "PST", -800 },
+        { "PDT", -700 },
+        { "Z", 0 },
+        { "A", -100 },
+        { "M", -1200 },
+        { "N", 100 },
+        { "Y", 1200 },
+};
+
+static const char tz_months [][4] = {
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+};
+
+static const char tz_days [][4] = {
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+};
+
+gboolean
+is_rfc822(char *in)
+{
+	const char *inptr = in;
+	struct tm tm;
+	guint i;
+
+        header_decode_lwsp (&inptr);
+        char *day =  decode_token(&inptr);
+        if (day)
+        {
+		g_free (day);
+                header_decode_lwsp (&inptr);
+                if (*inptr == ',')
+                        inptr++;
+                else
+                        goto notrfc;
+	}
+        tm.tm_mday = camel_header_decode_int(&inptr);
+        if (tm.tm_mday == 0)
+                goto notrfc;
+
+        char *monthname = decode_token(&inptr);
+        gboolean foundmonth = FALSE;
+        if (monthname) {
+                for (i=0;i<sizeof(tz_months)/sizeof(tz_months[0]);i++) {
+                if (!g_ascii_strcasecmp(tz_months[i], monthname)) {
+                               tm.tm_mon = i;
+                               foundmonth = TRUE;
+                               break;
+                         }
+        	}
+                        g_free(monthname);
+	}
+        if (!foundmonth)
+                goto notrfc;
+
+	return 1;
+
+notrfc:	return 0;
+}
  
 #endif
 
