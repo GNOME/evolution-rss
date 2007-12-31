@@ -1,3 +1,7 @@
+Mon 31 Dec 2007 02:45:23 PM EET <lucilanga@gnome.org>
+
+	* implemented taskbar messages
+	
 Sat 29 Dec 2007 02:15:47 PM EET <lucilanga@gnome.org>
 
 	* validate parsed date against rfc822,

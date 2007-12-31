@@ -268,6 +268,25 @@ rss_error(gchar *name, gchar *error, gchar *emsg)
                 g_free(msg);
 	}
 }
+
+void
+taskbar_push_message(gchar *message)
+{
+	static GdkPixbuf *progress_icon = NULL;
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	e_activity_handler_set_message(activity_handler, message);
+//	progress_icon = e_icon_factory_get_icon ("view-refresh", E_ICON_SIZE_STATUS);
+//	e_activity_handler_operation_started(activity_handler, mail_component_peek(),
+//						progress_icon, message, TRUE);
+}
+
+void
+taskbar_pop_message(void)
+{
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	e_activity_handler_unset_message(activity_handler);
+}
+
 static void
 statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 {
@@ -3332,6 +3351,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
         }
 #endif
 
+
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;
 
@@ -3387,6 +3407,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 		goto out;
 
 
+
 	GString *response = g_string_new_len(msg->response.body, msg->response.length);
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
@@ -3434,7 +3455,18 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	if (!deleted)
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 			get_feed_age(user_data, lookup_key(user_data));
-tout:
+//tout:	
+	gchar *tmsg;
+	gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(user_data));
+        if (strncmp(type, "-",1) == 0)
+                        tmsg = g_strdup_printf("Fetching %s: %s", 
+                                        "RSS", user_data);
+        else
+                        tmsg = g_strdup_printf("Fetching %s: %s", 
+                        type, user_data);
+	taskbar_push_message(tmsg);
+	g_free(tmsg);
+
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
 	{
@@ -3470,6 +3502,9 @@ tout:
 	}
 #endif
 out:	
+	if (rf->feed_queue == 0)
+		taskbar_pop_message();
+
 	if (user_data)
 		g_free(user_data);
 	return;
@@ -4203,7 +4238,6 @@ create_mail(create_feed *CF)
 #ifdef RSS_DEBUG
 	g_print("date:%s\n", CF->date);
 #endif
-	g_print("date_fin:%s\n", CF->date);
    	camel_address_decode(CAMEL_ADDRESS(addr), author);
 	camel_mime_message_set_from(new, addr);
 	camel_object_unref(addr);
