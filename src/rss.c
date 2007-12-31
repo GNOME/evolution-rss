@@ -269,14 +269,14 @@ rss_error(gchar *name, gchar *error, gchar *emsg)
 	}
 }
 
-void
+guint
 taskbar_push_message(gchar *message)
 {
 	static GdkPixbuf *progress_icon = NULL;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
 //	progress_icon = e_icon_factory_get_icon ("view-refresh", E_ICON_SIZE_STATUS);
-//	e_activity_handler_operation_started(activity_handler, mail_component_peek(),
+//	return e_activity_handler_operation_started(activity_handler, mail_component_peek(),
 //						progress_icon, message, TRUE);
 }
 
@@ -285,6 +285,7 @@ taskbar_pop_message(void)
 {
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_unset_message(activity_handler);
+//	e_activity_handler_operation_finished(activity_handler, activity_id);
 }
 
 static void
