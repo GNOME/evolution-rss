@@ -7,7 +7,8 @@ INCLUDES =							\
 	$(DBUS_CFLAGS)						\
 	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
 	-DLOCALEDIR="\"$(LOCALEDIR)\""				\
-	-DEVOLUTION_VERSION=\"$(EVOLUTION_EXEC_VERSION)\"    	\
+	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\"\
+	-DEVOLUTION_VERSION=$(evolution_exec_int)		\
 	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"            	\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
 	-DGECKO_HOME=\""$(GECKO_HOME)"\"			\

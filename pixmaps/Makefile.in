@@ -213,6 +213,7 @@ datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
+evolution_exec_int = @evolution_exec_int@
 exec_prefix = @exec_prefix@
 gladedir = @gladedir@
 host = @host@

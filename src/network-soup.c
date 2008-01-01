@@ -324,7 +324,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 	g_hash_table_insert(rf->session, soup_sess, msg);
 
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
-			EVOLUTION_VERSION, VERSION);
+			EVOLUTION_VERSION_STRING, VERSION);
 	soup_message_add_header (msg->request_headers, "User-Agent",
                                 agstr);
 	g_free(agstr);
@@ -383,7 +383,7 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
 		*colonpos = ':';
 	}
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
-			EVOLUTION_VERSION, VERSION);
+			EVOLUTION_VERSION_STRING, VERSION);
 	soup_message_add_header (req->request_headers, "User-Agent",
                                 agstr);
 	g_free(agstr);

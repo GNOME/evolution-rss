@@ -73,6 +73,8 @@ if test "$evolution_exec_int" -ge "21100"; then
 	AC_DEFINE_UNQUOTED(EVOLUTION_2_12,1, [evolution mail 2.12 present])
 	AC_SUBST(EVOLUTION_2_12)
 fi
+AC_SUBST(evolution_exec_int)
+
 MINOR_VERSION=`echo $EVOLUTION_EXEC_VERSION|cut -d. -f2|awk '{print 1000 * $1}'`
 AC_SUBST(MINOR_VERSION)
 

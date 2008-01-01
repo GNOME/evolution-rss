@@ -147,8 +147,8 @@ rssfeed *rf = NULL;
 guint count = 0;
 gchar *buffer = NULL;
 
-#define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION
-#define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION
+#define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
+#define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
 
 guint           upgrade = 0;                // set to 2 when initailization successfull
 
@@ -269,6 +269,15 @@ rss_error(gchar *name, gchar *error, gchar *emsg)
 	}
 }
 
+void newcb(gpointer key)
+{
+	g_print("canceling key:%p, value:%p\n", key,
+		g_hash_table_lookup(rf->session, key)); 
+	gpointer value = g_hash_table_lookup(rf->session, key); 
+	if (value)
+		cancel_soup_sess(key, value, NULL);
+}
+
 void
 taskbar_push_message(gchar *message)
 {
@@ -284,15 +293,28 @@ taskbar_pop_message(void)
 }
 
 guint
+
+#if (EVOLUTION_VERSION >= 22200)
+taskbar_op_new(gchar *message, gpointer key)
+#else
 taskbar_op_new(gchar *message)
+#endif
 {
 	static GdkPixbuf *progress_icon = NULL;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	progress_icon = e_icon_factory_get_icon ("stock_notes", E_ICON_SIZE_STATUS);
 //	progress_icon = NULL;
 	char *mcp = g_strdup_printf("%p", mail_component_peek());
-	guint activity_id = e_activity_handler_operation_started(activity_handler, mcp,
+	guint activity_id = 
+#if (EVOLUTION_VERSION >= 22200)
+		e_activity_handler_cancelable_operation_started(activity_handler, mcp,
+						progress_icon, message, FALSE,
+						newcb, key);
+#else
+		e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);
+#endif
+
 	g_free(mcp);
 	return activity_id;
 }
@@ -3631,7 +3653,12 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
         	else
                         tmsg = g_strdup_printf("Fetching %s: %s", 
                         type, key);
+
+#if (EVOLUTION_VERSION >= 22200)
+		guint activity_id = taskbar_op_new(tmsg, lookup_key(key));
+#else
 		guint activity_id = taskbar_op_new(tmsg);
+#endif
 		g_free(tmsg);
 		g_hash_table_insert(rf->activity, key, activity_id);
 
