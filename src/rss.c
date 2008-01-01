@@ -288,8 +288,8 @@ taskbar_op_new(gchar *message)
 {
 	static GdkPixbuf *progress_icon = NULL;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-//	progress_icon = e_icon_factory_get_icon ("stock_notes", E_ICON_SIZE_STATUS);
-	progress_icon = NULL;
+	progress_icon = e_icon_factory_get_icon ("stock_notes", E_ICON_SIZE_STATUS);
+//	progress_icon = NULL;
 	char *mcp = g_strdup_printf("%p", mail_component_peek());
 	guint activity_id = e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);
@@ -318,7 +318,7 @@ struct _EActivityHandlerPrivate {
         guint next_activity_id;
         GList *activity_infos;
         GSList *task_bars;
-        ELogger *logger;
+//        ELogger *logger;
         guint error_timer;
         guint error_flush_interval;
 
@@ -353,7 +353,7 @@ taskbar_op_set_progress(gpointer key, double progress)
 	guint activity_id = g_hash_table_lookup(rf->activity, key);
 
 	
-	/* does it makes sense to setup information everytime progress is updated ??? */
+	/* does it even makes sense to setup information everytime progress is updated ??? */
 	EActivityHandlerPrivate *priv = activity_handler->priv;
         ActivityInfo *activity_info;
         GList *p;
