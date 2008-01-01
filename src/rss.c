@@ -269,15 +269,11 @@ rss_error(gchar *name, gchar *error, gchar *emsg)
 	}
 }
 
-guint
+void
 taskbar_push_message(gchar *message)
 {
-	static GdkPixbuf *progress_icon = NULL;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
-//	progress_icon = e_icon_factory_get_icon ("view-refresh", E_ICON_SIZE_STATUS);
-//	return e_activity_handler_operation_started(activity_handler, mail_component_peek(),
-//						progress_icon, message, TRUE);
 }
 
 void
@@ -285,7 +281,109 @@ taskbar_pop_message(void)
 {
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_unset_message(activity_handler);
-//	e_activity_handler_operation_finished(activity_handler, activity_id);
+}
+
+guint
+taskbar_op_new(gchar *message)
+{
+	static GdkPixbuf *progress_icon = NULL;
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+//	progress_icon = e_icon_factory_get_icon ("stock_notes", E_ICON_SIZE_STATUS);
+	progress_icon = NULL;
+	char *mcp = g_strdup_printf("%p", mail_component_peek());
+	guint activity_id = e_activity_handler_operation_started(activity_handler, mcp,
+						progress_icon, message, FALSE);
+	g_free(mcp);
+	return activity_id;
+}
+
+/* I could really use this stuff exported through evolution include */
+
+struct _ActivityInfo {
+        char *component_id;
+        GdkPixbuf *icon_pixbuf;
+        guint id;
+        char *information;
+        gboolean cancellable;
+        double progress;
+        GtkWidget *menu;
+        void (*cancel_func) (gpointer data);
+        gpointer data;
+        gpointer error;
+        time_t  error_time;
+};
+typedef struct _ActivityInfo ActivityInfo;
+
+struct _EActivityHandlerPrivate {
+        guint next_activity_id;
+        GList *activity_infos;
+        GSList *task_bars;
+        ELogger *logger;
+        guint error_timer;
+        guint error_flush_interval;
+
+};
+
+static GList *
+lookup_activity (GList *list,
+                 guint activity_id,
+                 int *order_number_return)
+{
+        GList *p;
+        int i;
+
+        for (p = list, i = 0; p != NULL; p = p->next, i ++) {
+                ActivityInfo *activity_info;
+
+                activity_info = (ActivityInfo *) p->data;
+                if (activity_info->id == activity_id) {
+                        *order_number_return = i;
+                        return p;
+                }
+        }
+
+        *order_number_return = -1;
+        return NULL;
+}
+
+void
+taskbar_op_set_progress(gpointer key, double progress)
+{
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	guint activity_id = g_hash_table_lookup(rf->activity, key);
+
+	
+	/* does it makes sense to setup information everytime progress is updated ??? */
+	EActivityHandlerPrivate *priv = activity_handler->priv;
+        ActivityInfo *activity_info;
+        GList *p;
+	int order_number;
+
+        p = lookup_activity (priv->activity_infos, activity_id, &order_number);
+        if (p == NULL) {
+                g_warning ("EActivityHandler: unknown operation %d", activity_id);
+                return;
+        }
+
+        activity_info = (ActivityInfo *) p->data;
+
+	e_activity_handler_operation_progressing(activity_handler,
+				activity_id,
+                                g_strdup(activity_info->information), 
+                                progress);
+}
+
+void
+taskbar_op_finish(gpointer key)
+{
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	
+	if (rf->activity)
+	{
+		e_activity_handler_operation_finished(activity_handler, 
+			g_hash_table_lookup(rf->activity, key));
+		g_hash_table_remove(rf->activity, key);
+	}
 }
 
 static void
@@ -334,6 +432,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			g_free(furl);
 		}
 #endif
+		taskbar_op_set_progress(data, fraction);
         }
         break;
     case NET_STATUS_DONE:
@@ -3457,16 +3556,6 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 			get_feed_age(user_data, lookup_key(user_data));
 //tout:	
-	gchar *tmsg;
-	gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(user_data));
-        if (strncmp(type, "-",1) == 0)
-                        tmsg = g_strdup_printf("Fetching %s: %s", 
-                                        "RSS", user_data);
-        else
-                        tmsg = g_strdup_printf("Fetching %s: %s", 
-                        type, user_data);
-	taskbar_push_message(tmsg);
-	g_free(tmsg);
 
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
@@ -3503,11 +3592,12 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	}
 #endif
 out:	
-	if (rf->feed_queue == 0)
-		taskbar_pop_message();
 
 	if (user_data)
+	{
+		taskbar_op_finish(user_data);
 		g_free(user_data);
+	}
 	return;
 }
 
@@ -3520,6 +3610,9 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	GtkWidget *ed;
 	RDF *r;
 //	rf->cfeed = key;
+	
+	if (!rf->activity)
+		rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
@@ -3529,6 +3622,19 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 		g_print("\nFetching: %s..%s\n", g_hash_table_lookup(rf->hr, lookup_key(key)), key);
 #endif
 		rf->feed_queue++;
+
+		gchar *tmsg;
+		gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(key));
+        	if (strncmp(type, "-",1) == 0)
+                        tmsg = g_strdup_printf("Fetching %s: %s", 
+                                        "RSS", key);
+        	else
+                        tmsg = g_strdup_printf("Fetching %s: %s", 
+                        type, key);
+		guint activity_id = taskbar_op_new(tmsg);
+		g_free(tmsg);
+		g_hash_table_insert(rf->activity, key, activity_id);
+
 		net_get_unblocking(
 				g_hash_table_lookup(rf->hr, lookup_key(key)),
 				user_data,

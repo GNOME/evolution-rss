@@ -1,5 +1,4 @@
 
-	* move messages to status bar
 	* maybe implement md5 for uniqueing articles (for broken feeds)
 	* make setup dialog modal when fetch_feed active
 	* add syndicate icon for News&Blogs folder
