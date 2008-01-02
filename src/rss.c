@@ -249,24 +249,41 @@ static void error_response(GtkObject *o, int button, void *data)
 }
 
 void
-rss_error(gchar *name, gchar *error, gchar *emsg)
+rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 {
 	GtkWidget *ed;
 	gchar *msg;
+
+	if (name)
+               	msg = g_strdup_printf("\n%s\n%s", name, emsg);
+	else
+		msg = g_strdup(emsg); 
+
+#if (EVOLUTION_VERSION >= 22200)
+	if (key)
+	{
+        	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
+		guint activity_id = g_hash_table_lookup(rf->activity, key);
+                ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
+                             error, msg, NULL);
+                g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
+        	e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
+		g_hash_table_remove(rf->activity, key);
+	}
+	goto out;
+#endif
+
 	if (!rf->errdialog)
         {
-		if (name)
-                	msg = g_strdup_printf("\n%s\n%s", name, emsg);
-		else
-			msg = g_strdup(emsg); 
 
                 ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                              error, msg, NULL);
                 g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
                 gtk_widget_show(ed);
                 rf->errdialog = ed;
-                g_free(msg);
 	}
+
+out:    g_free(msg);
 }
 
 void newcb(gpointer key)
@@ -1101,7 +1118,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
                                         check_if_match,
                                         feed->feed_url))
                 {
-                           rss_error(NULL, _("Error adding feed."),
+                           rss_error(NULL, NULL, _("Error adding feed."),
                                            _("Feed already exists!"));
                            goto out;
                 }
@@ -1176,7 +1193,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 						check_if_match,
 						feed->feed_url))
 					{
-						rss_error(NULL, _("Error adding feed."), 
+						rss_error(NULL, NULL, _("Error adding feed."), 
 							_("Feed already exists!"));
 						goto out;
 					}
@@ -1846,7 +1863,7 @@ import_opml(gchar *file, add_feed *feed)
                                         check_if_match,
                                         feed->feed_url))
                 	{
-                           rss_error(feed->feed_name, _("Error adding feed."),
+                           rss_error(NULL, feed->feed_name, _("Error adding feed."),
                                            _("Feed already exists!"));
                            continue;
                 	}
@@ -3352,7 +3369,7 @@ setup_feed(add_feed *feed)
         content = net_post_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err)
 	{
-		rss_error(feed->feed_name ? feed->feed_name: "Unamed feed", _("Error while fetching feed."), err->message);
+		rss_error(NULL, feed->feed_name ? feed->feed_name: "Unamed feed", _("Error while fetching feed."), err->message);
 		goto out;
         }
         xmlDocPtr doc = NULL;
@@ -3441,7 +3458,7 @@ add:
 	}
 	else
 	{
-		rss_error(NULL, _("Error while fetching feed."), _("Invalid Feed"));
+		rss_error(NULL, NULL, _("Error while fetching feed."), _("Invalid Feed"));
 		ret = 0;
 	}
 out:	rf->pending = FALSE;
@@ -3482,7 +3499,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
         	g_set_error(&err, NET_ERROR, NET_ERROR_GENERIC,
                 	soup_status_get_phrase(msg->status_code));
                 gchar *msg = g_strdup_printf("\n%s\n%s", user_data, err->message);
-                rss_error(NULL, _("Error fetching feed."), msg);
+                rss_error(user_data, NULL, _("Error fetching feed."), msg);
                 g_free(msg);
         	goto out;
     	}
@@ -3646,7 +3663,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
                         type, key);
 
 #if (EVOLUTION_VERSION >= 22200)
-		guint activity_id = taskbar_op_new(tmsg, lookup_key(key));
+		guint activity_id = taskbar_op_new(tmsg, key);
 #else
 		guint activity_id = taskbar_op_new(tmsg);
 #endif
@@ -3666,7 +3683,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 			rf->feed_queue--;
                      	gchar *msg = g_strdup_printf("\n%s\n%s", 
 					key, err->message);
-                        rss_error(NULL, _("Error fetching feed."), msg);
+                        rss_error(key, NULL, _("Error fetching feed."), msg);
                      	g_free(msg);
 		}
 		

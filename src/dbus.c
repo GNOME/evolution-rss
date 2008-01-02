@@ -106,7 +106,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                                         check_if_match,
                         	        feed->feed_url))
                 		{
-                        	   rss_error(NULL, _("Error adding feed."),
+                        	   rss_error(NULL, NULL, _("Error adding feed."),
                         	                   _("Feed already exists!"));
     				   return DBUS_HANDLER_RESULT_HANDLED;
                 		}
