@@ -1,3 +1,7 @@
+Wed 02 Jan 2008 09:24:18 PM EET <lucilanga@gnome.org>
+
+	* move remaining error messages to rss_error
+	
 Tue 01 Jan 2008 08:17:40 PM EET <lucilanga@gnome.org>
 
 	* implemented task bar messages as operation

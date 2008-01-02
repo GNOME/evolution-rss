@@ -3481,18 +3481,9 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
         	g_set_error(&err, NET_ERROR, NET_ERROR_GENERIC,
                 	soup_status_get_phrase(msg->status_code));
-                GtkWidget *ed;
-                if (!rf->errdialog)
-                {
-                     gchar *msg = g_strdup_printf("\n%s\n%s", user_data, err->message);
-                     ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
-                                       _("Error Fetching Feed"), msg, NULL);
-		     gtk_window_set_keep_above(GTK_WINDOW(ed), TRUE);
-                     g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
-                     gtk_widget_show(ed);
-                     rf->errdialog = ed;
-                     g_free(msg);
-                }
+                gchar *msg = g_strdup_printf("\n%s\n%s", user_data, err->message);
+                rss_error(NULL, _("Error fetching feed."), msg);
+                g_free(msg);
         	goto out;
     	}
 
@@ -3673,17 +3664,10 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 		if (err)
 		{
 			rf->feed_queue--;
-			if (!rf->errdialog)
-                	{
-                     		gchar *msg = g_strdup_printf("\n%s\n%s", 
+                     	gchar *msg = g_strdup_printf("\n%s\n%s", 
 					key, err->message);
-                     		ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
-                                       _("Error Fetching Feed"), msg, NULL);
-                     		g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
-                     		gtk_widget_show(ed);
-                     		rf->errdialog = ed;
-                     		g_free(msg);
-                	}
+                        rss_error(NULL, _("Error fetching feed."), msg);
+                     	g_free(msg);
 		}
 		
 	}
