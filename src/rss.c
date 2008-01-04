@@ -262,21 +262,23 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		msg = g_strdup(emsg); 
 
 #if (EVOLUTION_VERSION >= 22200)
-	if (key && !g_hash_table_lookup(rf->error_hash, key))
-	{
-        	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
-		guint activity_id = g_hash_table_lookup(rf->activity, key);
-                ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
-                             error, msg, NULL);
-		gpointer newkey = g_strdup(key);
-                g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
-                g_signal_connect(ed, "destroy", G_CALLBACK(dialog_key_destroy), newkey);
-//        	e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
-        	guint id = e_activity_handler_make_error (activity_handler, mail_component_peek(), msg, ed);
-		g_hash_table_insert(rf->error_hash, newkey, id);
-
-	}
+	if (key)
+	{ 
+		if (!g_hash_table_lookup(rf->error_hash, key))
+		{
+        		EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
+//			guint activity_id = g_hash_table_lookup(rf->activity, key);
+                	ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
+                	             error, msg, NULL);
+			gpointer newkey = g_strdup(key);
+                	g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
+                	g_signal_connect(ed, "destroy", G_CALLBACK(dialog_key_destroy), newkey);
+//        		e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
+        		guint id = e_activity_handler_make_error (activity_handler, mail_component_peek(), msg, ed);
+			g_hash_table_insert(rf->error_hash, newkey, id);
+		}
 		taskbar_op_finish(key);
+	}
 	goto out;
 #endif
 
