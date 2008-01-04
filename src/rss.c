@@ -206,6 +206,8 @@ struct _MailComponentPrivate {
 
         EComponentView *component_view;
 };
+static void
+dialog_key_destroy (GtkWidget *widget, gpointer data);
 
 /*======================================================================*/
 
@@ -260,15 +262,19 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		msg = g_strdup(emsg); 
 
 #if (EVOLUTION_VERSION >= 22200)
-	if (key)
+	if (key && !g_hash_table_lookup(rf->error_hash, key))
 	{
         	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
 		guint activity_id = g_hash_table_lookup(rf->activity, key);
                 ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                              error, msg, NULL);
+		gpointer newkey = g_strdup(key);
                 g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
-        	e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
-		g_hash_table_remove(rf->activity, key);
+                g_signal_connect(ed, "destroy", G_CALLBACK(dialog_key_destroy), newkey);
+//        	e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
+        	guint id = e_activity_handler_make_error (activity_handler, mail_component_peek(), msg, ed);
+		g_hash_table_insert(rf->error_hash, newkey, id);
+
 	}
 	goto out;
 #endif
@@ -286,13 +292,13 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 out:    g_free(msg);
 }
 
-void newcb(gpointer key)
+void
+cancel_active_op(gpointer key)
 {
-	g_print("canceling key:%p, value:%p\n", key,
-		g_hash_table_lookup(rf->session, key)); 
-	gpointer value = g_hash_table_lookup(rf->session, key); 
+	gpointer key_session = g_hash_table_lookup(rf->key_session, key); 
+	gpointer value = g_hash_table_lookup(rf->session, key_session); 
 	if (value)
-		cancel_soup_sess(key, value, NULL);
+		cancel_soup_sess(key_session, value, NULL);
 }
 
 void
@@ -326,7 +332,7 @@ taskbar_op_new(gchar *message)
 #if (EVOLUTION_VERSION >= 22200)
 		e_activity_handler_cancelable_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE,
-						newcb, key);
+						cancel_active_op, key);
 #else
 		e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);
@@ -391,25 +397,28 @@ taskbar_op_set_progress(gpointer key, double progress)
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = g_hash_table_lookup(rf->activity, key);
 
+	if (activity_id)
+	{
 	
-	/* does it even makes sense to setup information everytime progress is updated ??? */
-	EActivityHandlerPrivate *priv = activity_handler->priv;
-        ActivityInfo *activity_info;
-        GList *p;
-	int order_number;
+		/* does it even makes sense to setup information everytime progress is updated ??? */
+		EActivityHandlerPrivate *priv = activity_handler->priv;
+        	ActivityInfo *activity_info;
+        	GList *p;
+		int order_number;
+	
+        	p = lookup_activity (priv->activity_infos, activity_id, &order_number);
+        	if (p == NULL) {
+                	g_warning ("EActivityHandler: unknown operation %d", activity_id);
+                	return;
+        	}
 
-        p = lookup_activity (priv->activity_infos, activity_id, &order_number);
-        if (p == NULL) {
-                g_warning ("EActivityHandler: unknown operation %d", activity_id);
-                return;
-        }
+        	activity_info = (ActivityInfo *) p->data;
 
-        activity_info = (ActivityInfo *) p->data;
-
-	e_activity_handler_operation_progressing(activity_handler,
+		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
                                 g_strdup(activity_info->information), 
                                 progress);
+	}
 }
 
 void
@@ -939,6 +948,9 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 	}
 	soup_session_abort(key);
 	g_hash_table_remove(rf->session, key);
+	g_hash_table_find(rf->key_session,
+                remove_if_match,
+                user_data);
 }
 
 void
@@ -2218,10 +2230,17 @@ del_messages_cb (GtkWidget *widget, add_feed *data)
 }
 
 static void
-err_destroy (GtkWidget *widget, gpointer data)
+dialog_key_destroy (GtkWidget *widget, gpointer data)
 {
-       gtk_widget_destroy(widget);
-       rf->errdialog = NULL;
+	if (data)
+		g_hash_table_remove(rf->error_hash, data);
+}
+
+static void
+err_destroy (GtkWidget *widget, guint response, gpointer data)
+{
+	gtk_widget_destroy(widget);
+	rf->errdialog = NULL;
 }
 
 static gboolean
@@ -3488,11 +3507,27 @@ finish_feed (SoupMessage *msg, gpointer user_data)
               rf->progress_dialog = NULL;
               rf->progress_bar = NULL;
         }
+#else
+	if(rf->label && rf->feed_queue == 0 && rf->info)
+	{
+                        gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
+                if (rf->info->cancel_button)
+                        gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
+
+                g_hash_table_remove(rf->info->data->active, rf->info->uri);
+                rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
+
+                if (g_hash_table_size(rf->info->data->active) == 0) {
+                        if (rf->info->data->gd)
+                                gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
+                }
+                //clean data that might hang on rf struct
+                rf->sr_feed = NULL;
+                rf->label = NULL;
+                rf->progress_bar = NULL;
+                rf->info = NULL;
+	}
 #endif
-
-
-	if (msg->status_code == SOUP_STATUS_CANCELLED)
-		goto out;
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
@@ -3622,7 +3657,6 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	}
 #endif
 out:	
-
 	if (user_data)
 	{
 		taskbar_op_finish(user_data);
@@ -3643,6 +3677,8 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	
 	if (!rf->activity)
 		rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+	if (!rf->error_hash)
+		rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
@@ -3682,7 +3718,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 		{
 			rf->feed_queue--;
                      	gchar *msg = g_strdup_printf("\n%s\n%s", 
-					key, err->message);
+				 	key, err->message);
                         rss_error(key, NULL, _("Error fetching feed."), msg);
                      	g_free(msg);
 		}
@@ -5813,6 +5849,12 @@ rss_config_control_new (void)
 					renderer,
 					set_sensitive,
 					NULL, NULL);
+
+#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
+	GtkWidget *label_webkit = glade_xml_get_widget(sf->gui, "label_webkits");
+	gtk_label_set_text(label_webkit, _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
+	gtk_widget_show(label_webkit);
+#endif
 	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
 	g_signal_connect (combo, "value-changed", G_CALLBACK (render_engine_changed), NULL);
 	gtk_widget_show(combo);

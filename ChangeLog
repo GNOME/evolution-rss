@@ -1,5 +1,15 @@
+Fri 04 Jan 2008 07:03:06 PM EET <lucilanga@gnome.org>
+
+	* make taskbar operation cancelable
+	* properly handle non-intrusive error
+	
+Thu 03 Jan 2008 06:50:24 PM EET <lucilanga@gnome.org>
+
+	* message if mozembed/webkits are not enabled
+	
 Wed 02 Jan 2008 09:24:18 PM EET <lucilanga@gnome.org>
 
+	* first implementation of non-intrusive error
 	* move remaining error messages to rss_error
 	
 Tue 01 Jan 2008 08:17:40 PM EET <lucilanga@gnome.org>

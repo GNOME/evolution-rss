@@ -104,6 +104,18 @@ recv_msg (SoupMessage *msg, gpointer user_data)
 #endif
 }
 
+static gboolean
+remove_if_match (gpointer key, gpointer value, gpointer user_data)
+{
+	if (value == user_data)
+	{
+		g_hash_table_remove(rf->key_session, key);
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
+
 static void
 unblock_free (gpointer user_data, GObject *ex_msg)
 {
@@ -116,6 +128,9 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 	if (prune)
 		g_object_unref(user_data);
 	g_hash_table_remove(rf->session, user_data);
+	g_hash_table_find(rf->key_session,
+		remove_if_match,
+		user_data);
 }
 
 //this will insert proxy in the session
@@ -307,6 +322,8 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 	info->total = 0;
 	if (!rf->session)
 		rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
+	if (!rf->key_session)
+		rf->key_session = g_hash_table_new(g_direct_hash, g_direct_equal);
 
 	g_signal_connect (soup_sess, "authenticate",
             G_CALLBACK (authenticate), (gpointer)url);
@@ -322,6 +339,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 		return -1;
 	}
 	g_hash_table_insert(rf->session, soup_sess, msg);
+	g_hash_table_insert(rf->key_session, data, soup_sess);
 
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);

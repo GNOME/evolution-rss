@@ -82,6 +82,7 @@ typedef struct _rssfeed {
 	guint		feed_queue;
         gboolean        cancel; 		//cancelation signal
         GHashTable      *session;		//queue of active unblocking sessions
+        GHashTable      *key_session;		//queue of active unblocking sessions and keys linked
         SoupSession     *b_session;		//active blocking session
         SoupMessage     *b_msg_session;		//message running in the blocking session
 	guint		rc_id;
@@ -96,6 +97,7 @@ typedef struct _rssfeed {
 	GHashTable	*feed_folders;		// defined feeds folders
 	GHashTable	*reversed_feed_folders;	// easyer when we lookup for the value
 	GHashTable	*activity;
+	GHashTable	*error_hash;
 	guint		test;
 #if HAVE_DBUS
 	DBusConnection	*bus;			// DBUS
@@ -227,7 +229,7 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 u_int32_t gen_crc(const char *msg);
 void create_user_pass_dialog(gchar *url);
 static void start_check_cb (GtkWidget *widget, gpointer data);
-static void err_destroy (GtkWidget *widget, gpointer data);
+static void err_destroy (GtkWidget *widget, guint response, gpointer data);
 static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
 void save_gconf_feed(void);
 void rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg);
