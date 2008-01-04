@@ -274,9 +274,9 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 //        	e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
         	guint id = e_activity_handler_make_error (activity_handler, mail_component_peek(), msg, ed);
 		g_hash_table_insert(rf->error_hash, newkey, id);
-		taskbar_op_finish(key);
 
 	}
+		taskbar_op_finish(key);
 	goto out;
 #endif
 
