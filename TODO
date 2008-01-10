@@ -26,3 +26,6 @@
 	* check memory consumption when S&R
 	* fix dbus when not available
 	* non intrusive errors
+	* implement other engines besides soup
+	* implement USM (universal subscription mechanism)
+	* feed://

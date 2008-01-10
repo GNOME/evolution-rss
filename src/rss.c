@@ -278,8 +278,8 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			g_hash_table_insert(rf->error_hash, newkey, id);
 		}
 		taskbar_op_finish(key);
+		goto out;
 	}
-	goto out;
 #endif
 
 	if (!rf->errdialog)
@@ -2831,6 +2831,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 	{
         	width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
+		g_print("resize webkit :width:%d, height: %d\n", width, height);
 #ifdef RSS_DEBUG
 		g_print("resize webkit :width:%d, height: %d\n", width, height);
 #endif
@@ -3391,9 +3392,11 @@ setup_feed(add_feed *feed)
         content = net_post_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err)
 	{
+		g_print("err:%s\n", err->message);
 		rss_error(NULL, feed->feed_name ? feed->feed_name: "Unamed feed", _("Error while fetching feed."), err->message);
 		goto out;
         }
+	g_print("here\n");
         xmlDocPtr doc = NULL;
         xmlNodePtr root = NULL;
         xmlSubstituteEntitiesDefaultValue = 0;
@@ -3401,6 +3404,7 @@ setup_feed(add_feed *feed)
 #ifdef RSS_DEBUG
 	g_print("content:%s\n", content->str);
 #endif
+	g_print("content:%s\n", content->str);
 	root = xmlDocGetRootElement(doc);
 
 	if ((doc != NULL && root != NULL)
