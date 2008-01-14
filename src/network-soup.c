@@ -138,7 +138,7 @@ void
 proxyfy_session(SoupSession *session)
 {
 	gboolean use_proxy =
-        gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL);
+       	gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL);
     gint port_proxy =
         gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
     gchar *host_proxy =
@@ -157,11 +157,11 @@ proxyfy_session(SoupSession *session)
             g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
 
         SoupUri *puri = soup_uri_new (proxy_uri);
-		if (auth_proxy)
-		{
-			puri->user = g_strdup(user_proxy);
-			puri->passwd = g_strdup(pass_proxy);
-		}
+	if (auth_proxy)
+	{
+		puri->user = g_strdup(user_proxy);
+		puri->passwd = g_strdup(pass_proxy);
+	}
         g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
         if (puri)
             g_free(puri);
@@ -314,7 +314,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
-//	proxyfy_session(soup_sess);
+	proxyfy_session(soup_sess);
 	info = g_new0(CallbackInfo, 1);
 	info->user_cb = cb;
 	info->user_data = data;

@@ -395,7 +395,7 @@ lookup_activity (GList *list,
 }
 
 void
-taskbar_op_set_progress(gpointer key, double progress)
+taskbar_op_set_progress(gpointer key, gdouble progress)
 {
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = g_hash_table_lookup(rf->activity, key);
@@ -416,6 +416,8 @@ taskbar_op_set_progress(gpointer key, double progress)
         	}
 
         	activity_info = (ActivityInfo *) p->data;
+
+		g_print("fraction:%f\n", progress);
 
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
@@ -483,7 +485,8 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			g_free(furl);
 		}
 #endif
-		taskbar_op_set_progress(data, fraction);
+//		taskbar_op_set_progress(data, (guint)fraction);
+		taskbar_op_set_progress(data, fraction/100);
         }
         break;
     case NET_STATUS_DONE:
