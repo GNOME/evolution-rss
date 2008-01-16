@@ -417,8 +417,6 @@ taskbar_op_set_progress(gpointer key, gdouble progress)
 
         	activity_info = (ActivityInfo *) p->data;
 
-		g_print("fraction:%f\n", progress);
-
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
                                 g_strdup(activity_info->information), 
@@ -2851,6 +2849,10 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	g_print("size:%d\n", wheight);
 //        height = req.height - 200;// - 16 - 194;
 //	g_print("my cal %d w:%d h:%d\n", GTK_IS_WIDGET(data), width, height);
+		g_print("data:%p\n", data);
+		if (GTK_IS_MOZ_EMBED(data))
+		{
+			g_print("is mozembed\n");
        		if (GTK_IS_WIDGET(data) && height > 50)
 			gtk_widget_set_size_request((GtkWidget *)data, width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
@@ -2858,7 +2860,9 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 #ifdef HAVE_XULRUNNER
 		gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
+		}
 	}
+	g_print("resize done\n");
 }
 
 #ifdef HAVE_GTKMOZEMBED
