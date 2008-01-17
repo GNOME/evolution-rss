@@ -29,3 +29,4 @@
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
 	* feed://
+	* fix authentication for proxy

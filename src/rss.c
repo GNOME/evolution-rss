@@ -416,6 +416,7 @@ taskbar_op_set_progress(gpointer key, gdouble progress)
         	}
 
         	activity_info = (ActivityInfo *) p->data;
+	g_print("--message:%s--\n", activity_info->information);
 
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
@@ -2850,17 +2851,21 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //        height = req.height - 200;// - 16 - 194;
 //	g_print("my cal %d w:%d h:%d\n", GTK_IS_WIDGET(data), width, height);
 		g_print("data:%p\n", data);
-		if (GTK_IS_MOZ_EMBED(data))
-		{
-			g_print("is mozembed\n");
+		g_print("is_widget:%d\n", GTK_IS_WIDGET(widget));
+		g_print("is_data:%d\n", GTK_IS_WIDGET(data));
+//		if (GTK_IS_MOZ_EMBED(data))
+//		{
+//			g_print("is mozembed\n");
        		if (GTK_IS_WIDGET(data) && height > 50)
+		{
 			gtk_widget_set_size_request((GtkWidget *)data, width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
 #ifdef HAVE_XULRUNNER
-		gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
+			gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
 		}
+//		}
 	}
 	g_print("resize done\n");
 }
@@ -4889,6 +4894,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	}
 
 	t = g_strdup(get_real_channel_name(r->uri, NULL));
+	g_print("t:%s\n", t);
 	//feed might be added with no validation
 	//so it could be named Untitled channel
 	//till validation process
