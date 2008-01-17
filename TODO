@@ -30,3 +30,4 @@
 	* implement USM (universal subscription mechanism)
 	* feed://
 	* fix authentication for proxy
+	* fix no channel information condition
