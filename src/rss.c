@@ -3615,17 +3615,21 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
         	chn_name = display_doc (r);
 
-		if (g_ascii_strcasecmp(user_data, chn_name) != 0)
-		{
-			gchar *md5 = g_strdup(g_hash_table_lookup(rf->hrname, user_data));
-			g_hash_table_remove(rf->hrname_r, md5);
-			g_hash_table_remove(rf->hrname, user_data);
-			g_hash_table_insert(rf->hrname, g_strdup(chn_name), md5);
-			g_hash_table_insert(rf->hrname_r, g_strdup(md5), g_strdup(chn_name));
-			save_gconf_feed();
-		}
 		if (chn_name)
+		{
+			if (g_ascii_strcasecmp(user_data, chn_name) != 0)
+			{
+				gchar *md5 = g_strdup(
+					g_hash_table_lookup(rf->hrname, user_data));
+				g_hash_table_remove(rf->hrname_r, md5);
+				g_hash_table_remove(rf->hrname, user_data);
+				g_hash_table_insert(rf->hrname, g_strdup(chn_name), md5);
+				g_hash_table_insert(rf->hrname_r, g_strdup(md5), 
+								g_strdup(chn_name));
+				save_gconf_feed();
+			}
 			g_free(chn_name);
+		}
 		if (r->cache)
 			xmlFreeDoc(r->cache);
 		if (r->type)
@@ -4894,7 +4898,6 @@ tree_walk (xmlNodePtr root, RDF *r)
 	}
 
 	t = g_strdup(get_real_channel_name(r->uri, NULL));
-	g_print("t:%s\n", t);
 	//feed might be added with no validation
 	//so it could be named Untitled channel
 	//till validation process
