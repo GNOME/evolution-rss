@@ -952,12 +952,15 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 void
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-	if (SOUP_IS_MESSAGE(value))
+	if (SOUP_IS_SESSION(key)
 	{
-		soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
-		soup_session_cancel_message(key, value);
+		if (SOUP_IS_MESSAGE(value))
+		{
+			soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
+			soup_session_cancel_message(key, value);
+		}
+		soup_session_abort(key);
 	}
-	soup_session_abort(key);
 	g_hash_table_remove(rf->session, key);
 	g_hash_table_find(rf->key_session,
                 remove_if_match,
@@ -4115,7 +4118,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 #if GTK_2_6
 	gtk_label_set_ellipsize (GTK_LABEL (label2), PANGO_ELLIPSIZE_START);
 #endif
-	gtk_label_set_justify(GTK_LABEL(label2), GTK_JUSTIFY_CENTER);
+	gtk_label_set_justify(GTK_LABEL(label2), GTK_JUSTIFY_FILL);
         readrss_label = gtk_label_new(_("Please wait"));
         if (!rf->progress_dialog)
         {
