@@ -952,19 +952,31 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 void
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-	if (SOUP_IS_SESSION(key)
+	// we need to check presence of the key because
+	// key might've disapeared due to weak ref
+	if (g_hash_table_lookup(rf->session, key))
 	{
-		if (SOUP_IS_MESSAGE(value))
+		if (SOUP_IS_SESSION(key))
 		{
-			soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
-			soup_session_cancel_message(key, value);
+			if (SOUP_IS_MESSAGE(value))
+			{
+				soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
+				soup_session_cancel_message(key, value);
+			}
+			soup_session_abort(key);
 		}
-		soup_session_abort(key);
-	}
-	g_hash_table_remove(rf->session, key);
+//	g_hash_table_remove(rf->session, key);
+//	we probably need to weak ref this also
 	g_hash_table_find(rf->key_session,
                 remove_if_match,
                 user_data);
+	}
+}
+
+gboolean
+force_remove(gpointer key, gpointer value, gpointer user_data)
+{
+	return TRUE;
 }
 
 void
@@ -972,7 +984,10 @@ abort_all_soup(void)
 {
 	//abort all session
 	if (rf->session)
+	{
 		g_hash_table_foreach(rf->session, cancel_soup_sess, NULL);
+		g_hash_table_foreach_remove(rf->session, force_remove, NULL);
+	}
 	if (rf->progress_bar)
 	{
 		gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
