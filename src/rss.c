@@ -523,7 +523,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
     }*/
 }
 
-void
+gboolean
 create_user_pass_dialog(gchar *url)
 {
 GtkWidget *dialog1;
@@ -538,6 +538,7 @@ GtkWidget *dialog1;
   GtkWidget *okbutton1;
   GtkWidget *checkbutton1;
   GtkWidget *vbox1;
+  guint resp;
 
   if (!rf->hruser)
         rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
@@ -628,21 +629,26 @@ GtkWidget *dialog1;
     case GTK_RESPONSE_OK:
         if (user)
             g_hash_table_remove(rf->hruser, url);
-        g_hash_table_insert(rf->hruser, url, g_strdup(gtk_entry_get_text (GTK_ENTRY (username))));
+        g_hash_table_insert(rf->hruser, url, 
+		g_strdup(gtk_entry_get_text (GTK_ENTRY (username))));
         if (pass)
             g_hash_table_remove(rf->hrpass, url);
-        g_hash_table_insert(rf->hrpass, url, g_strdup(gtk_entry_get_text (GTK_ENTRY (password))));
+        g_hash_table_insert(rf->hrpass, url, 
+		g_strdup(gtk_entry_get_text (GTK_ENTRY (password))));
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton1)))
 		save_up(url);
 	else
 		del_up(url);
 	
         gtk_widget_destroy (dialog1);
+	resp = 0;
         break;
     default:
         gtk_widget_destroy (dialog1);
+	resp = 1;
         break;
   }
+	return resp;
 }
 
 add_feed *
@@ -4364,6 +4370,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->rc_id = 0;
 			rf->feed_queue = 0;
 			rf->main_folder = get_main_folder();
+			rf->soup_auth_retry = 1;
 			get_feed_folders();
 #if HAVE_DBUS
 			g_print("init_dbus()\n");

@@ -53,6 +53,7 @@ typedef struct _rssfeed {
         GHashTable      *hrh;   		//fetch html flag
         GHashTable      *hruser;   		//auth user hash
         GHashTable      *hrpass;   		//auth user hash
+	gboolean	soup_auth_retry;	//wether to retry auth after an unsucessful auth
         GHashTable      *hrdel_feed;   		//option to delete messages in current feed
         GHashTable      *hrdel_days;   		//option to delete messages older then days
         GHashTable      *hrdel_messages; 	//option to keep last messages
@@ -227,7 +228,7 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 } create_feed;
 
 u_int32_t gen_crc(const char *msg);
-void create_user_pass_dialog(gchar *url);
+gboolean create_user_pass_dialog(gchar *url);
 static void start_check_cb (GtkWidget *widget, gpointer data);
 static void err_destroy (GtkWidget *widget, guint response, gpointer data);
 static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);

@@ -29,6 +29,9 @@
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
 	* feed://
-	* fix authentication for proxy
-	* fix no channel information condition
+	* fix authentication for proxy dialog
 	* fix 3270 lin
+	* use svn tag stuff when releasing
+	* fix when editing existing feeds
+	* fix ubuntu crashing when wrong entities
+	* do not remove hash key when iterate !

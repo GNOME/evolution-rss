@@ -1,5 +1,5 @@
 /*  Evolution RSS Reader Plugin
- *  Copyright (C) 2007  Lucian Langa <cooly@mips.edu.ms>
+ *  Copyright (C) 2007-2008  Lucian Langa <cooly@mips.edu.ms>
  *         
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -150,19 +150,18 @@ proxyfy_session(SoupSession *session)
     gchar *pass_proxy =
         gconf_client_get_string(rss_gconf, GCONF_KEY_PASS_PROXY, NULL);
 
-
     if (use_proxy && host_proxy && port_proxy > 0)
     {
         gchar *proxy_uri = 
             g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
 
         SoupUri *puri = soup_uri_new (proxy_uri);
-	if (auth_proxy)
+/*	if (auth_proxy)
 	{
 		puri->user = g_strdup(user_proxy);
 		puri->passwd = g_strdup(pass_proxy);
 	}
-        g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
+        g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);*/
         if (puri)
             g_free(puri);
         if (proxy_uri)
@@ -290,9 +289,13 @@ reauthenticate (SoupSession *session,
         char **password,
         gpointer data)
 {
-		create_user_pass_dialog(data);
-        *username = g_strdup(g_hash_table_lookup(rf->hruser, data));
-        *password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
+	if (rf->soup_auth_retry)
+	{
+		 if (create_user_pass_dialog(data))
+			rf->soup_auth_retry = FALSE;
+        	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
+        	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
+	}
 }
 
 static int
