@@ -35,3 +35,5 @@
 	* fix when editing existing feeds
 	* fix ubuntu crashing when wrong entities
 	* do not remove hash key when iterate !
+	* check importing as it won't run for the first time
+	* check gtk 2.6 detection
