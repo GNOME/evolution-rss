@@ -156,12 +156,12 @@ proxyfy_session(SoupSession *session)
             g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
 
         SoupUri *puri = soup_uri_new (proxy_uri);
-/*	if (auth_proxy)
+	if (auth_proxy)
 	{
 		puri->user = g_strdup(user_proxy);
 		puri->passwd = g_strdup(pass_proxy);
 	}
-        g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);*/
+        g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
         if (puri)
             g_free(puri);
         if (proxy_uri)
