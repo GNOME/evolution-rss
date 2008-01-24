@@ -5,78 +5,85 @@
 Summary: Evolution RSS Reader
 Name:	 %{name}
 Version: %{version}
-Release: %{release}
-Group: unknown
-License: GPL
+Release: 1%{?dist}
+Group: Applications/Internet
+License: GPLv2+
 Source: http://mips.edu.ms/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 URL: http://mips.edu.ms/evo/index.php/Evolution_RSS_Reader_Plugin
-Distribution: Freshmeat RPMs
-Packager: Lucian Langa <cooly@mips.edu.ms>
-Provides: evolution-import-rss
 #Patch: evolution-rss-%{version}.patch
-#Prefix: /
-#BuildArch: noarch
-Requires: evolution, firefox-devel
-#Obsoletes: 
-BuildRequires: gettext, gettext-devel, gcc-c++, evolution-devel, evolution-data-server-devel, perl(XML::Parser)
+Requires: evolution
+Requires: firefox-devel
+Requires: dbus-glib
+
+Requires(post): GConf2
+Requires(preun): GConf2
+
+BuildRequires: gettext
+BuildRequires: gettext-devel
+BuildRequires: gcc-c++
+BuildRequires: evolution-devel
+BuildRequires: evolution-data-server-devel 
+BuildRequires: perl(XML::Parser)
+BuildRequires: dbus-glib-devel
 
 %description
 This is an evolution plugin which enables evolution to read rss feeds.
 
 %prep
-%setup -n evolution-rss-%{version}
+%setup -q -n evolution-rss-%{version}
 #%patch
 
 %build
-./configure --prefix="%{_prefix}" --sysconfdir="%{_sysconfdir}" --disable-webkit
-make
+./configure --prefix="%{_prefix}" --sysconfdir="%{_sysconfdir}"  --libdir=%{_libdir} --disable-webkit
+make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
 make install DESTDIR="%{buildroot}"
+find %{buildroot} -name \*\.la -print | xargs rm -f
+%find_lang %{name}
 
 %clean
-#[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf "$RPM_BUILD_ROOT"
 rm -rf %{buildroot}
 
 %post
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule \
-        %{_sysconfdir}/gconf/schemas/evolution-rss.schemas >/dev/null
+	%{_sysconfdir}/gconf/schemas/evolution-rss.schemas >/dev/null
 /sbin/ldconfig
 
 %preun
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-uninstall-rule \
-        %{_sysconfdir}/gconf/schemas/evolution-rss.schemas >/dev/null
+	%{_sysconfdir}/gconf/schemas/evolution-rss.schemas >/dev/null
 
 %postun
 /sbin/ldconfig
 
-%files
-%defattr(-,root,root)
+%files -f %{name}.lang
+%defattr(-,root,root,-)
 %{_prefix}/bin/evolution-import-rss
 %{_sysconfdir}/gconf/schemas/evolution-rss.schemas
-%{_datadir}/locale/*/LC_MESSAGES/evolution-rss.mo
 %{_datadir}/evolution/*/errors/org-gnome-evolution-rss.error
 %{_datadir}/evolution/*/glade/rss-ui.glade
 %{_datadir}/evolution/*/images/rss.png
 %{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.eplug
 %{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.xml
 %{_libdir}/evolution/*/plugins/liborg-gnome-evolution-rss.so
-%{_libdir}/evolution/*/plugins/liborg-gnome-evolution-rss.la
 %{_libdir}/bonobo/servers/GNOME_Evolution_RSS_*.server
 %doc AUTHORS
 %doc COPYING
 %doc ChangeLog
 %doc FAQ
-%doc INSTALL
 %doc NEWS
 %doc README
 %doc TODO
 
 %changelog
+* Thu Jan 24 2008 Lucian Langa <lucilanga@gnome.org>
+- Fixed rpmlint warnings
+- Updated to Fedora Packaging Guidelines
 * Thu Nov 22 2007 Lucian Langa <lucilanga@gnome.org>
 - Added gconf schemas
 - Added evolution-import-rss

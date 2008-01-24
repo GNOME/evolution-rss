@@ -31,6 +31,7 @@
 	* feed://
 	* fix authentication for proxy dialog
 	* fix 3270 lin
+	* fix move->rename
 	* use svn tag stuff when releasing
 	* fix when editing existing feeds
 	* fix ubuntu crashing when wrong entities
