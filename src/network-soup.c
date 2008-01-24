@@ -143,12 +143,14 @@ proxyfy_session(SoupSession *session)
         gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
     gchar *host_proxy =
         gconf_client_get_string(rss_gconf, GCONF_KEY_HOST_PROXY, NULL);
-	gboolean auth_proxy =
+    gboolean auth_proxy =
         gconf_client_get_bool(rss_gconf, GCONF_KEY_AUTH_PROXY, NULL);
     gchar *user_proxy =
         gconf_client_get_string(rss_gconf, GCONF_KEY_USER_PROXY, NULL);
     gchar *pass_proxy =
         gconf_client_get_string(rss_gconf, GCONF_KEY_PASS_PROXY, NULL);
+
+	g_print("auth_proxy:%d\n", auth_proxy);
 
     if (use_proxy && host_proxy && port_proxy > 0)
     {
@@ -161,7 +163,7 @@ proxyfy_session(SoupSession *session)
 		puri->user = g_strdup(user_proxy);
 		puri->passwd = g_strdup(pass_proxy);
 	}
-        g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
+       	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
         if (puri)
             g_free(puri);
         if (proxy_uri)
@@ -261,22 +263,32 @@ authenticate (SoupSession *session,
         char **password,
         gpointer data)
 {
-	gchar *user = g_hash_table_lookup(rf->hruser, data);
-	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
-	if (user && pass)
+	if (rf->soup_auth_retry)
 	{
-		*username = g_strdup(user);
-		*password = g_strdup(pass);
-	}
-	else
-	{
-		if (!read_up(data))
-			create_user_pass_dialog(data);
+		//means we're already tested once and probably
+		//won't try again
+		rf->soup_auth_retry = FALSE;
+		g_print("simple auth\n");
+		gchar *user = g_hash_table_lookup(rf->hruser, data);
+		gchar *pass = g_hash_table_lookup(rf->hrpass, data);
+		if (user && pass)
+		{
+			*username = g_strdup(user);
+			*password = g_strdup(pass);
+		}
+		else
+		{
+			if (!read_up(data))
+				if (create_user_pass_dialog(data))
+					rf->soup_auth_retry = FALSE;
+				else
+					rf->soup_auth_retry = TRUE;
 
-		user = g_hash_table_lookup(rf->hruser, data);
-		pass = g_hash_table_lookup(rf->hrpass, data);
-		*username = g_strdup(user);
-		*password = g_strdup(pass);
+			user = g_hash_table_lookup(rf->hruser, data);
+			pass = g_hash_table_lookup(rf->hrpass, data);
+			*username = g_strdup(user);
+			*password = g_strdup(pass);
+		}
 	}
 }
 	
@@ -291,8 +303,13 @@ reauthenticate (SoupSession *session,
 {
 	if (rf->soup_auth_retry)
 	{
-		 if (create_user_pass_dialog(data))
+		//means we're already tested once and probably
+		//won't try again
+		rf->soup_auth_retry = FALSE;
+		if (create_user_pass_dialog(data))
 			rf->soup_auth_retry = FALSE;
+		else
+			rf->soup_auth_retry = TRUE;
         	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
         	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
 	}
