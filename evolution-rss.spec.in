@@ -14,6 +14,7 @@ URL: http://mips.edu.ms/evo/index.php/Evolution_RSS_Reader_Plugin
 #Patch: evolution-rss-%{version}.patch
 Requires: evolution
 Requires: firefox-devel
+Requires: dbus
 Requires: dbus-glib
 
 Requires(post): GConf2
@@ -24,8 +25,9 @@ BuildRequires: gettext-devel
 BuildRequires: gcc-c++
 BuildRequires: evolution-devel
 BuildRequires: evolution-data-server-devel 
-BuildRequires: perl(XML::Parser)
+BuildRequires: dbus
 BuildRequires: dbus-glib-devel
+BuildRequires: perl(XML::Parser)
 
 %description
 This is an evolution plugin which enables evolution to read rss feeds.
