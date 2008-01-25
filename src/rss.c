@@ -986,6 +986,8 @@ abort_all_soup(void)
 	{
 		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
 		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
+		g_hash_table_destroy(rf->session);
+                rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
 	}
 	if (rf->progress_bar)
 	{
