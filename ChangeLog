@@ -1,3 +1,8 @@
+Fri 25 Jan 2008 09:28:53 PM EET <lucilanga@gnome.org>
+
+	* fix incrementing when adding feeds with
+	the same name
+	
 Thu 24 Jan 2008 12:58:45 PM EET <lucilanga@gnome.org>
 
 	* update specfile for Fedora Package

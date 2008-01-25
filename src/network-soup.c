@@ -309,6 +309,7 @@ reauthenticate (SoupSession *session,
         char **password,
         gpointer data)
 {
+	g_print("authtype:%s\n", auth_type);
 	if (rf->soup_auth_retry)
 	{
 		//means we're already tested once and probably

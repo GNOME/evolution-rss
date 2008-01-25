@@ -3333,11 +3333,34 @@ check_chn_name(gchar *chn_name)
 gchar *
 generate_safe_chn_name(gchar *chn_name)
 {
-	guint i = 1;
+	guint i = 0;
+	gchar *c;
+	gchar *stmp;
 	while (check_chn_name(chn_name))
 	{
+		GString *result = g_string_new (NULL);
 		gchar *tmp = chn_name;
-		chn_name = g_strdup_printf("%s #%d", tmp, i++);
+		if (c = strrchr(tmp, '#'))
+		{
+			if (isdigit(*(c+1)))
+			{
+				stmp = g_strndup(tmp, c - tmp);
+				while (isdigit(*(c+1)))
+				{
+					g_string_append_c(result, *(c+1));
+					c++;
+				}
+				i = atoi(result->str);
+				chn_name = g_strdup_printf("%s#%d", stmp, i+1);
+				g_free(stmp);
+			}
+			else
+				chn_name = g_strdup_printf("%s #%d", tmp, i+1);
+		}
+		else
+			chn_name = g_strdup_printf("%s #%d", tmp, i+1);
+		memset(result->str, 0, result->len);
+		g_string_free (result, TRUE);
 		g_free(tmp);
 	}
 	return chn_name;
@@ -4410,8 +4433,10 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			if (!render) 	// set render just in case it was forced in configure
 			{
 				render = RENDER_N;
-  				gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, render, NULL);
+  				gconf_client_set_int(rss_gconf, 
+						GCONF_KEY_HTML_RENDER, render, NULL);
 			}
+			g_print("sfn:%s\n", generate_safe_chn_name("ora 7 buca dimineata #1234"));
 #ifdef HAVE_GTKMOZEMBED
 			if (2 == render)
 				rss_mozilla_init();
