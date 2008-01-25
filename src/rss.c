@@ -965,21 +965,27 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 			soup_session_cancel_message(key, value);
 		}
 		soup_session_abort(key);
-		g_hash_table_find(rf->key_session,
+/*		g_hash_table_find(rf->key_session,
                 	remove_if_match,
-                	user_data);
+                	user_data);*/
 	}
 	g_print(" key:%p, value:%p\n", key, value);
 	return TRUE;
+}
+void
+remove_weak(gpointer key, gpointer value, gpointer user_data)
+{
+	g_object_weak_unref(value, unblock_free, key);
 }
 
 void
 abort_all_soup(void)
 {
 	//abort all session
-	if (rf->session)
+	if (rf->abort_session)
 	{
-		g_hash_table_foreach_remove(rf->session, cancel_soup_sess, NULL);
+		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
+		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
 	}
 	if (rf->progress_bar)
 	{
@@ -3534,6 +3540,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	if (!key)
 		deleted = 1;
 
+	g_print("feed %s\n", user_data);
 	if (rf->feed_queue)
 		rf->feed_queue--;
 
