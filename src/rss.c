@@ -180,7 +180,7 @@ void delete_feed_folder_alloc(gchar *old_name);
 static void del_days_cb (GtkWidget *widget, add_feed *data);
 static void del_messages_cb (GtkWidget *widget, add_feed *data);
 void get_feed_age(gpointer key, gpointer value);
-void cancel_soup_sess(gpointer key, gpointer value, gpointer user_data);
+gboolean cancel_soup_sess(gpointer key, gpointer value, gpointer user_data);
 
 struct _MailComponentPrivate {
         GMutex *lock;
@@ -262,8 +262,6 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 	else
 		msg = g_strdup(emsg); 
 
-	goto out;
-
 #if (EVOLUTION_VERSION >= 22200)
 	if (key)
 	{ 
@@ -343,7 +341,6 @@ taskbar_op_new(gchar *message)
 		e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);
 #endif
-	g_print("activity_id:%d\n", activity_id);
 
 	g_free(mcp);
 	return activity_id;
@@ -412,22 +409,20 @@ taskbar_op_set_progress(gpointer key, gdouble progress)
         	ActivityInfo *activity_info;
         	GList *p;
 		int order_number;
-		g_print("searchin id:%x\n", activity_id);
 		g_hash_table_foreach(rf->activity, print_hash, NULL);
 	
-/*        	p = lookup_activity (priv->activity_infos, activity_id, &order_number);
+        	p = lookup_activity (priv->activity_infos, activity_id, &order_number);
         	if (p == NULL) {
                 	g_warning ("EActivityHandler: unknown operation %d", activity_id);
                 	return;
         	}
 
         	activity_info = (ActivityInfo *) p->data;
-	g_print("--message:%s--\n", activity_info->information);*/
+	g_print("--message:%s--\n", activity_info->information);
 
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
-//                                g_strdup(activity_info->information), 
-				"1234",
+                                g_strdup(activity_info->information), 
                                 progress);
 	}
 }
@@ -435,19 +430,14 @@ taskbar_op_set_progress(gpointer key, gdouble progress)
 void
 taskbar_op_finish(gpointer key)
 {
-	g_print("op_finish\n");
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	
 	if (rf->activity)
 	{
 		guint activity_key = g_hash_table_lookup(rf->activity, key);
-		g_print("key:%d\n", activity_key);
 		e_activity_handler_operation_finished(activity_handler, activity_key);
-//		g_hash_table_foreach(rf->activity, print_hash, NULL);
 		g_hash_table_remove(rf->activity, key);
-//		g_hash_table_foreach(rf->activity, print_hash, NULL);
 	}
-	g_print("kaput\n");
 }
 
 static void
@@ -600,6 +590,7 @@ GtkWidget *dialog1;
                     (GtkAttachOptions) (0), 0, 0);
   gtk_entry_set_invisible_char (GTK_ENTRY (username), 8226);
     gchar *user = g_hash_table_lookup(rf->hruser,  url);
+	g_print("user:%s\n", user);
     if (user)
         gtk_entry_set_text (GTK_ENTRY (username), user);
   password = gtk_entry_new ();
@@ -964,18 +955,22 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-       g_print("key:%p, value:%p ==", key, value);
-       if (SOUP_IS_SESSION(key))
-       {
-/*             if (SOUP_IS_MESSAGE(value))
-               {
-                       soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
-                       soup_session_cancel_message(key, value);
-               }*/
-               soup_session_abort(key);
-       }
-       g_print(" key:%p, value:%p\n", key, value);
-       return TRUE;
+	g_print("key:%p, value:%p ==", key, value);
+
+	if (SOUP_IS_SESSION(key))
+	{
+		if (SOUP_IS_MESSAGE(value))
+		{
+			soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
+			soup_session_cancel_message(key, value);
+		}
+		soup_session_abort(key);
+		g_hash_table_find(rf->key_session,
+                	remove_if_match,
+                	user_data);
+	}
+	g_print(" key:%p, value:%p\n", key, value);
+	return TRUE;
 }
 
 void
@@ -3705,9 +3700,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 out:	
 	if (user_data)
 	{
-//		taskbar_op_finish(user_data);
+		taskbar_op_finish(user_data);
 		g_free(user_data);
-	g_print("kaput\n");
 	}
 	return;
 }
@@ -3721,11 +3715,11 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	GtkWidget *ed;
 	RDF *r;
 //	rf->cfeed = key;
-	
-//	if (!rf->activity)
-//		rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
-//	if (!rf->error_hash)
-//		rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+
+	if (!rf->activity)
+		rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+	if (!rf->error_hash)
+		rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
@@ -3744,16 +3738,15 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
         	else
                         tmsg = g_strdup_printf("Fetching %s: %s", 
                         type, key);
-/*
+
 #if (EVOLUTION_VERSION >= 22200)
 		guint activity_id = taskbar_op_new(tmsg, key);
 #else
 		guint activity_id = taskbar_op_new(tmsg);
 #endif
-*/
+
 		g_free(tmsg);
-		g_print("insert key:%s\n", key);
-///		g_hash_table_insert(rf->activity, key, (gpointer)activity_id);
+		g_hash_table_insert(rf->activity, key, (gpointer)activity_id);
 
 		net_get_unblocking(
 				g_hash_table_lookup(rf->hr, lookup_key(key)),

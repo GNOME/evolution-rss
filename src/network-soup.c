@@ -127,7 +127,7 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 	//but I believe it won't hurt
 	if (prune)
 		g_object_unref(user_data);
-	g_hash_table_remove(rf->session, user_data);
+//	g_hash_table_remove(rf->session, user_data);
 	g_hash_table_find(rf->key_session,
 		remove_if_match,
 		user_data);
@@ -149,8 +149,6 @@ proxyfy_session(SoupSession *session)
         gconf_client_get_string(rss_gconf, GCONF_KEY_USER_PROXY, NULL);
     gchar *pass_proxy =
         gconf_client_get_string(rss_gconf, GCONF_KEY_PASS_PROXY, NULL);
-
-	g_print("auth_proxy:%d\n", auth_proxy);
 
     if (use_proxy && host_proxy && port_proxy > 0)
     {
@@ -279,10 +277,10 @@ authenticate (SoupSession *session,
 		else
 		{
 			if (!read_up(data))
-				if (create_user_pass_dialog(data))
+/*				if (create_user_pass_dialog(data))
 					rf->soup_auth_retry = FALSE;
 				else
-					rf->soup_auth_retry = TRUE;
+					rf->soup_auth_retry = TRUE;*/
 
 			user = g_hash_table_lookup(rf->hruser, data);
 			pass = g_hash_table_lookup(rf->hrpass, data);
