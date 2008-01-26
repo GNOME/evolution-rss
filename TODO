@@ -34,9 +34,8 @@
 	* fix move->rename
 	* use svn tag stuff when releasing
 	* fix when editing existing feeds
-	* fix ubuntu crashing when wrong entities (<0.0.6)
+	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* do not remove hash key when iterate !
 	* check importing, as it won't run for the first time
-	* check gtk 2.6 detection
 	* make auth dialog not intrusive (peek other software)
 	* when importing through dbus notify in status bar

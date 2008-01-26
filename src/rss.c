@@ -4437,7 +4437,6 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
   				gconf_client_set_int(rss_gconf, 
 						GCONF_KEY_HTML_RENDER, render, NULL);
 			}
-			g_print("sfn:%s\n", generate_safe_chn_name("ora 7 buca dimineata #1234"));
 #ifdef HAVE_GTKMOZEMBED
 			if (2 == render)
 				rss_mozilla_init();
