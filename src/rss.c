@@ -2653,7 +2653,9 @@ xml_parse_sux (const char *buf, int len)
         ctxt->vctxt.error = my_xml_parser_error_handler;
         ctxt->vctxt.warning = my_xml_parser_error_handler;
 
-	xmlCtxtUseOptions(ctxt, XML_PARSE_DTDLOAD| XML_PARSE_NOENT);
+	xmlCtxtUseOptions(ctxt, XML_PARSE_DTDLOAD
+				| XML_PARSE_NOENT
+				| XML_PARSE_NOCDATA);
 
         xmlParseDocument (ctxt);
 

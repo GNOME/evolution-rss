@@ -39,3 +39,4 @@
 	* check importing, as it won't run for the first time
 	* check gtk 2.6 detection
 	* make auth dialog not intrusive (peek other software)
+	* when importing through dbus notify in status bar

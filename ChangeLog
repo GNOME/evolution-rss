@@ -1,22 +1,28 @@
+Sat 26 Jan 2008 01:15:06 PM EET <lucilanga@gnome.org>
+
+	src/rss.c: xml_parse_sux() - add 
+	XML_PARSE_NOCDATA as gtkhtml won't interpret
+	it either
+
 Fri 25 Jan 2008 09:28:53 PM EET <lucilanga@gnome.org>
 
 	* fix incrementing when adding feeds with
 	the same name
-	
+
 Thu 24 Jan 2008 12:58:45 PM EET <lucilanga@gnome.org>
 
 	* update specfile for Fedora Package
 	Requirements
-	
+
 Wed 23 Jan 2008 10:03:46 PM EET <lucilanga@gnome.org>
 
 	* make auth dialog less annoying
-	
+
 Mon 21 Jan 2008 08:49:27 AM EET <lucilanga@gnome.org>
 
 	* more soup session check when aborting soup
-	session
-	
+	session	
+
 Sun 20 Jan 2008 02:39:44 PM EET <lucilanga@gnome.org>
 
 	* proxy auth information
@@ -24,21 +30,21 @@ Sun 20 Jan 2008 02:39:44 PM EET <lucilanga@gnome.org>
 Fri 18 Jan 2008 09:04:39 PM EET <lucilanga@gnome.org>
 
 	* fix warning when no channel name
-	
+
 Wed 16 Jan 2008 10:00:25 AM EET <lucilanga@gnome.org>
 
 	* make xulrunner check for data before reload
+
 Mon 14 Jan 2008 09:36:54 PM EET <lucilanga@gnome.org>
 
 	* make proxy options really (ingored till now)
 	* fix percent display on taskbar operations
 	
-	
 Fri 04 Jan 2008 07:03:06 PM EET <lucilanga@gnome.org>
 
 	* make taskbar operation cancelable
 	* properly handle non-intrusive error
-	
+
 Thu 03 Jan 2008 06:50:24 PM EET <lucilanga@gnome.org>
 
 	* message if mozembed/webkits are not enabled
