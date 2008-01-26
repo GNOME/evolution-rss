@@ -3467,7 +3467,6 @@ setup_feed(add_feed *feed)
 #ifdef RSS_DEBUG
 	g_print("content:%s\n", content->str);
 #endif
-	g_print("content:%s\n", content->str);
 	root = xmlDocGetRootElement(doc);
 
 	if ((doc != NULL && root != NULL)
