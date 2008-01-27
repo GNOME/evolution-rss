@@ -2843,7 +2843,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
 //	GtkAdjustment *a = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(widget));
 //	g_print("page size:%d\n", a->page_size);
-//	g_print("value size:%d\n", a->value);
+	g_print("mycall()\n");
 	int width;
         GtkRequisition req;
   //      EMFormatHTMLDisplay *efhd = (EMFormatHTMLDisplay *) efh;

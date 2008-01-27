@@ -39,3 +39,4 @@
 	* check importing, as it won't run for the first time
 	* make auth dialog not intrusive (peek other software)
 	* when importing through dbus notify in status bar
+	* check mycall resize, verify data is valid widget -> generates crash
