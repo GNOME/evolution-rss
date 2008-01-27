@@ -3012,6 +3012,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 //	gtk_box_pack_start (GTK_BOX (w), gpage, TRUE, TRUE, 0);
 	gtk_widget_show_all(moz);
         gtk_container_add ((GtkContainer *) eb, moz);
+        gtk_container_check_resize ((GtkContainer *) eb);
 	g_print("add\n");
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);

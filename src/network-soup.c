@@ -125,7 +125,6 @@ construct_abort(gpointer key, gpointer value, gpointer user_data)
 static void
 unblock_free (gpointer user_data, GObject *ex_msg)
 {
-	g_print("weak ref - trying to free object\n");
 #ifdef RSS_DEBUG
 	g_print("weak ref - trying to free object\n");
 #endif

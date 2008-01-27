@@ -40,3 +40,4 @@
 	* make auth dialog not intrusive (peek other software)
 	* when importing through dbus notify in status bar
 	* check mycall resize, verify data is valid widget -> generates crash
+	* check taskbar op when removing a feed
