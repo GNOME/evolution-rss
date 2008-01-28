@@ -42,9 +42,9 @@ Wed 16 Jan 2008 10:00:25 AM EET <lucilanga@gnome.org>
 
 Mon 14 Jan 2008 09:36:54 PM EET <lucilanga@gnome.org>
 
-	* make proxy options really (ingored till now)
+	* enable proxy options (ingored till now)
 	* fix percent display on taskbar operations
-	
+
 Fri 04 Jan 2008 07:03:06 PM EET <lucilanga@gnome.org>
 
 	* make taskbar operation cancelable
@@ -53,59 +53,59 @@ Fri 04 Jan 2008 07:03:06 PM EET <lucilanga@gnome.org>
 Thu 03 Jan 2008 06:50:24 PM EET <lucilanga@gnome.org>
 
 	* message if mozembed/webkits are not enabled
-	
+
 Wed 02 Jan 2008 09:24:18 PM EET <lucilanga@gnome.org>
 
 	* first implementation of non-intrusive error
 	* move remaining error messages to rss_error
-	
+
 Tue 01 Jan 2008 08:17:40 PM EET <lucilanga@gnome.org>
 
 	* implemented task bar messages as operation
-	
+
 Mon 31 Dec 2007 02:45:23 PM EET <lucilanga@gnome.org>
 
 	* implemented taskbar messages
-	
+
 Sat 29 Dec 2007 02:15:47 PM EET <lucilanga@gnome.org>
 
 	* validate parsed date against rfc822,
 	and use system time in case
 	of broken date (planetgnomefr)
-	
+
 Tue 18 Dec 2007 09:38:56 PM EET <lucilanga@gnome.org>
 
 	* fix m4 support for evolution >= 2.11
 	* fix send and receive dialog for
 	evolution > 2.12
-	
+
 Wed 12 Dec 2007 10:35:41 AM EET <lucilanga@gnome.org>
 
 	* prevend evolution-import-rss import empty
 	feeds
 	* corrent MAJOR_VERSION configure var
 	* added schema uninstall rules
-	
+
 Tue 11 Dec 2007 10:28:55 PM EET <lucilanga@gnome.org>
 
 	* fix get value as int for port_proxy
-	
+
 Sun 09 Dec 2007 12:45:46 PM EET <lucilanga@gnome.org>
 
 	* justification for rss dialog for evo < 2.12
 	* schema fixes
-	
+
 Tue 04 Dec 2007 01:15:04 PM EET <lucilanga@gnome.org>
 
 	* fix killing only when using gtk mozembed
 	* fix corectly detecting of minor evo version
 	* fix several memory leaks in fetch_feed
-	
+
 Mon 03 Dec 2007 12:32:48 PM EET <lucilanga@gnome.org>
 
 	* make policy for dialogs to be on top
 	* fixup when deleting feeds
-	
+
 Thu 29 Nov 2007 11:43:58 AM EET <lucilanga@gnome.org>
 
 	* added version string in description
