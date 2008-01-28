@@ -1,3 +1,8 @@
+Mon 28 Jan 2008 08:36:56 AM EET <lucilanga@gnome.org>
+
+	src/rss.c: org_gnome_cooly_format_rss() add
+	utf8 parsing for gtkhtml engine
+
 Sat 26 Jan 2008 01:15:06 PM EET <lucilanga@gnome.org>
 
 	src/rss.c: xml_parse_sux() - add 

@@ -3211,14 +3211,21 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
     			camel_stream_printf (t->stream, "</tr></table></td></tr></table>");
                 	goto out;
         	}
-		xmlDoc *doc = parse_html(addr, content->str, content->len);
-		if (doc)
+
+		inlen = content->len;
+		utf8len = 5*inlen+1;
+		buffer2 = g_malloc(utf8len);
+		UTF8ToHtml(buffer2, &utf8len, content->str, &inlen);
+//		g_byte_array_free (buffer, 1);
+		xmlDoc *src = (xmlDoc *)parse_html(addr, buffer2, strlen(buffer2));
+
+		if (src)
 		{
-			htmlDocDumpMemory(doc, &buff, &size);
+			htmlDocDumpMemory(src, &buff, &size);
 #ifdef RSS_DEBUG
 			g_print("%s\n", buff);
 #endif
-			xmlFree(doc);
+			xmlFree(src);
 		}
 		else
 			goto out;
