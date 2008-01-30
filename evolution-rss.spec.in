@@ -3,7 +3,7 @@
 %define release 1
 
 Summary: Evolution RSS Reader
-Name:	 %{name}
+Name: %{name}
 Version: %{version}
 Release: 1%{?dist}
 Group: Applications/Internet
@@ -14,19 +14,16 @@ URL: http://mips.edu.ms/evo/index.php/Evolution_RSS_Reader_Plugin
 #Patch: evolution-rss-%{version}.patch
 Requires: evolution
 Requires: firefox-devel
-Requires: dbus
-Requires: dbus-glib
 
+Requires(pre): GConf2
 Requires(post): GConf2
 Requires(preun): GConf2
 
 BuildRequires: gettext
-BuildRequires: gettext-devel
-BuildRequires: gcc-c++
 BuildRequires: evolution-devel
 BuildRequires: evolution-data-server-devel 
-BuildRequires: dbus
 BuildRequires: dbus-glib-devel
+BuildRequires: firefox-devel
 BuildRequires: perl(XML::Parser)
 
 %description
@@ -37,11 +34,12 @@ This is an evolution plugin which enables evolution to read rss feeds.
 #%patch
 
 %build
-./configure --prefix="%{_prefix}" --sysconfdir="%{_sysconfdir}"  --libdir=%{_libdir} --disable-webkit
+%configure --prefix="%{_prefix}" --sysconfdir="%{_sysconfdir}"  --libdir=%{_libdir} --disable-webkit
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make install DESTDIR="%{buildroot}"
 find %{buildroot} -name \*\.la -print | xargs rm -f
 %find_lang %{name}
@@ -49,22 +47,31 @@ find %{buildroot} -name \*\.la -print | xargs rm -f
 %clean
 rm -rf %{buildroot}
 
+%pre
+if [ "$1" -gt 1 ]; then
+	export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+	gconftool-2 --makefile-uninstall-rule \
+		%{_sysconfdir}/gconf/schemas/%{name}.schemas >/dev/null || :
+
 %post
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule \
-	%{_sysconfdir}/gconf/schemas/evolution-rss.schemas >/dev/null
+	%{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null ||| :
 /sbin/ldconfig
 
 %preun
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-gconftool-2 --makefile-uninstall-rule \
-	%{_sysconfdir}/gconf/schemas/evolution-rss.schemas >/dev/null
+if [ "$1" -eq 0 ]; then
+	export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+	gconftool-2 --makefile-uninstall-rule \
+		%{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
+fi
+/sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%{_prefix}/bin/evolution-import-rss
+%{_bindir}/evolution-import-rss
 %{_sysconfdir}/gconf/schemas/evolution-rss.schemas
 %{_datadir}/evolution/*/errors/org-gnome-evolution-rss.error
 %{_datadir}/evolution/*/glade/rss-ui.glade
@@ -82,6 +89,8 @@ gconftool-2 --makefile-uninstall-rule \
 %doc TODO
 
 %changelog
+* Wed Jan 30 2008 Lucian Langa <lucilanga@gnome.org>
+- Updates and sanitize
 * Thu Jan 24 2008 Lucian Langa <lucilanga@gnome.org>
 - Fixed rpmlint warnings
 - Updated to Fedora Packaging Guidelines
