@@ -170,6 +170,8 @@ proxyfy_session(SoupSession *session)
 		puri->user = g_strdup(user_proxy);
 		puri->passwd = g_strdup(pass_proxy);
 	}
+	g_print("user:%s\n", user_proxy);
+	g_print("pass:%s\n", pass_proxy);
        	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
         if (puri)
             g_free(puri);
@@ -286,13 +288,15 @@ authenticate (SoupSession *session,
 		else
 		{
 			if (!read_up(data))
-/*				if (create_user_pass_dialog(data))
+				if (create_user_pass_dialog(data))
 					rf->soup_auth_retry = FALSE;
 				else
-					rf->soup_auth_retry = TRUE;*/
+					rf->soup_auth_retry = TRUE;
 
 			user = g_hash_table_lookup(rf->hruser, data);
 			pass = g_hash_table_lookup(rf->hrpass, data);
+			g_print("user:%s\n", user);
+			g_print("pass:%s\n", pass);
 			*username = g_strdup(user);
 			*password = g_strdup(pass);
 		}
@@ -308,6 +312,8 @@ reauthenticate (SoupSession *session,
         char **password,
         gpointer data)
 {
+	gchar *user, *pass;
+	g_print("status:%d\n", msg->status);
 	g_print("authtype:%s\n", auth_type);
 	if (rf->soup_auth_retry)
 	{
@@ -315,11 +321,23 @@ reauthenticate (SoupSession *session,
 		//won't try again
 		rf->soup_auth_retry = FALSE;
 		if (create_user_pass_dialog(data))
+		{
 			rf->soup_auth_retry = FALSE;
+			user = g_hash_table_lookup(rf->hruser, data);
+			pass = g_hash_table_lookup(rf->hrpass, data);
+		}
 		else
+		{
 			rf->soup_auth_retry = TRUE;
-        	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
-        	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
+			user = g_hash_table_lookup(rf->hruser, data);
+			pass = g_hash_table_lookup(rf->hrpass, data);
+		}
+		g_print("user:%s\n", user);
+		g_print("pass:%s\n", pass);
+		*username = g_strdup(user);
+		*password = g_strdup(pass);
+//        	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
+  //      	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
 	}
 }
 

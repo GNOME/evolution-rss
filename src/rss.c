@@ -47,6 +47,9 @@
 #include <mail/em-folder-utils.h>
 #include <mail/em-folder-view.h>
 #include <mail/mail-mt.h>
+//////////////////////////////////
+#include <mail/mail-component.h>
+//////////////////////////////////
 
 #include <misc/e-activity-handler.h>
 
@@ -1331,6 +1334,22 @@ rss_select_folder(gchar *folder_name)
 	g_free(uri);
 	camel_object_unref (folder);
 	g_free(real_name);
+}
+
+void
+get_selected_mail(void)
+{
+	MailComponent *mail_component = mail_component_peek();
+	MailComponentPrivate *priv = mail_component->priv;
+	EComponentView *cv = priv->component_view;
+	g_print("priv:%p", priv);
+	g_print("cv:%p", cv);
+	GPtrArray *uids;
+	void *el = g_object_get_data((GObject *)cv, "info-label");
+        EMFolderView *emfv = g_object_get_data((GObject *)el, "folderview");
+	uids = message_list_get_selected(emfv->list);
+	g_print("%d", uids->len);
+	
 }
 
 GtkWidget*
@@ -3701,6 +3720,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 	if (!deleted)
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 			get_feed_age(user_data, lookup_key(user_data));
+//	get_selected_mail();
 //tout:	
 
 #ifdef EVOLUTION_2_12
