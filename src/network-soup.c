@@ -165,13 +165,11 @@ proxyfy_session(SoupSession *session)
             g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
 
         SoupUri *puri = soup_uri_new (proxy_uri);
-	if (auth_proxy)
+/*	if (auth_proxy)
 	{
 		puri->user = g_strdup(user_proxy);
 		puri->passwd = g_strdup(pass_proxy);
-	}
-	g_print("user:%s\n", user_proxy);
-	g_print("pass:%s\n", pass_proxy);
+	}*/
        	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
         if (puri)
             g_free(puri);
@@ -272,37 +270,32 @@ authenticate (SoupSession *session,
         char **password,
         gpointer data)
 {
-	if (rf->soup_auth_retry)
+	gchar *user = g_hash_table_lookup(rf->hruser, data);
+	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
+	if (user && pass)
 	{
+		*username = g_strdup(user);
+		*password = g_strdup(pass);
+	}
+	else
+	{
+		if (rf->soup_auth_retry)
+		{
 		//means we're already tested once and probably
 		//won't try again
 		rf->soup_auth_retry = FALSE;
-		g_print("simple auth\n");
-		gchar *user = g_hash_table_lookup(rf->hruser, data);
-		gchar *pass = g_hash_table_lookup(rf->hrpass, data);
-		if (user && pass)
+		if (!read_up(data))
 		{
-			*username = g_strdup(user);
-			*password = g_strdup(pass);
+			if (create_user_pass_dialog(data))
+				rf->soup_auth_retry = FALSE;
+			rf->soup_auth_retry = TRUE;
 		}
-		else
-		{
-			if (!read_up(data))
-				if (create_user_pass_dialog(data))
-					rf->soup_auth_retry = FALSE;
-				else
-					rf->soup_auth_retry = TRUE;
-
-			user = g_hash_table_lookup(rf->hruser, data);
-			pass = g_hash_table_lookup(rf->hrpass, data);
-			g_print("user:%s\n", user);
-			g_print("pass:%s\n", pass);
-			*username = g_strdup(user);
-			*password = g_strdup(pass);
+		*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
+		*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
 		}
 	}
 }
-	
+
 static void
 reauthenticate (SoupSession *session,
         SoupMessage *msg,
@@ -313,8 +306,6 @@ reauthenticate (SoupSession *session,
         gpointer data)
 {
 	gchar *user, *pass;
-	g_print("status:%d\n", msg->status);
-	g_print("authtype:%s\n", auth_type);
 	if (rf->soup_auth_retry)
 	{
 		//means we're already tested once and probably
@@ -323,21 +314,13 @@ reauthenticate (SoupSession *session,
 		if (create_user_pass_dialog(data))
 		{
 			rf->soup_auth_retry = FALSE;
-			user = g_hash_table_lookup(rf->hruser, data);
-			pass = g_hash_table_lookup(rf->hrpass, data);
 		}
 		else
 		{
 			rf->soup_auth_retry = TRUE;
-			user = g_hash_table_lookup(rf->hruser, data);
-			pass = g_hash_table_lookup(rf->hrpass, data);
 		}
-		g_print("user:%s\n", user);
-		g_print("pass:%s\n", pass);
-		*username = g_strdup(user);
-		*password = g_strdup(pass);
-//        	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
-  //      	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
+        	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
+        	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
 	}
 }
 
@@ -347,6 +330,15 @@ conn_mainloop_quit (void *data)
 	g_print("loop quit");
   g_main_loop_quit (data);
 }
+
+
+
+static void
+handler (SoupMessage *msg, gpointer data)
+{
+	g_print("yodrax\n");
+}
+
 
 gboolean
 net_get_unblocking(const char *url, NetStatusCallback cb, 

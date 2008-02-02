@@ -41,3 +41,4 @@
 	* when importing through dbus notify in status bar
 	* check mycall resize, verify data is valid widget -> generates crash
 	* check taskbar op when removing a feed
+	* check when adding feeds through dbus to pop for authentication if it's needed
