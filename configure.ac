@@ -78,6 +78,18 @@ AC_SUBST(evolution_exec_int)
 MINOR_VERSION=`echo $EVOLUTION_EXEC_VERSION|cut -d. -f2|awk '{print 1000 * $1}'`
 AC_SUBST(MINOR_VERSION)
 
+dnl locate libsoup flavour
+SOUP=
+PKG_CHECK_MODULES([LIBSOUP_24], libsoup-2.4, [SOUP=2.4], [SOUP=])
+if test "x$SOUP" != "x2.4"; then
+	PKG_CHECK_MODULES([LIBSOUP_22], libsoup-2.2, [SOUP=2.2], [SOUP=]) 
+fi
+if test "x$SOUP" == "x"; then
+	PKG_CHECK_MODULES(LIBSOUP, libsoup, [SOUP=], [])
+else
+SOUP="-$SOUP"
+fi
+
 dnl base packages and versions
 LIBGTK_REQUIRED=2.4.0
 LIBGNOME_REQUIRED=2.7.0
@@ -90,7 +102,7 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
   [libgnome-2.0 >= $LIBGNOME_REQUIRED dnl
    libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED dnl
    gtk+-2.0 >= $LIBGTK_REQUIRED dnl
-   libsoup-2.2 >= $LIBSOUP_REQUIRED dnl
+   libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    libglade-2.0 dnl
 ])
@@ -237,6 +249,13 @@ dnl ***********
 AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
 AM_GCONF_SOURCE_2
 
+dnl ********************
+dnl extract soup version
+dnl ********************
+SOUP_VERSION=`pkg-config --modversion libsoup$SOUP` 
+SOUP_VERSION=`echo $SOUP_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
+AC_SUBST(SOUP_VERSION)
+
 dnl ***********
 dnl D-BUS stuff
 dnl ***********
@@ -251,6 +270,7 @@ if test "x$enable_dbus" != "xno"; then
 	AC_SUBST(DBUS_LIBS)
 fi
 AM_CONDITIONAL([HAVE_DBUS], [test x$have_dbus = xyes])
+
 
 dnl I18n stuff
 AC_PATH_PROG(GETTEXT, gettext, no)

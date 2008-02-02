@@ -45,13 +45,22 @@ got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
     const char* clen;
 
     if (info->total == 0) {
+#if LIBSOUP_VERSION < 2003000
         clen = soup_message_get_header(msg->response_headers,
                 "Content-length");
+#else
+        clen = soup_message_headers_get(msg->response_headers,
+                "Content-length");
+#endif
         if (!clen)
             return;
         info->total = atoi(clen);
     }
+#if LIBSOUP_VERSION < 2003000
     info->current += msg->response.length;
+#else
+    info->current += msg->response_body->length;
+#endif
 
     progress.current = info->current;
     progress.total = info->total;
@@ -64,13 +73,22 @@ got_chunk_cb(SoupMessage *msg, CallbackInfo *info) {
 	const char* clen;
 	
 	if (info->total == 0) {
+#if LIBSOUP_VERSION < 2003000
 		clen = soup_message_get_header(msg->response_headers,
 				"Content-length");
+#else
+        	clen = soup_message_headers_get(msg->response_headers,
+				"Content-length");
+#endif
 		if (!clen)
 			return;
 		info->total = atoi(clen);
 	}
+#if LIBSOUP_VERSION < 2003000
 	info->current += msg->response.length;
+#else
+	info->current += msg->response_body->length;
+#endif
 	progress = g_new0(NetStatusProgress, 1);
 
 	progress->current = info->current;
@@ -97,7 +115,11 @@ void
 recv_msg (SoupMessage *msg, gpointer user_data)
 {
 	GString *response = NULL;
+#if LIBSOUP_VERSION < 2003000
 	response = g_string_new_len(msg->response.body, msg->response.length);
+#else
+	response = g_string_new_len(msg->response_body->data, msg->response_body->length);
+#endif
 #ifdef RSS_DEBUG
 	g_print("got it!\n");
 	g_print("res:[%s]\n", response->str);
@@ -164,7 +186,11 @@ proxyfy_session(SoupSession *session)
         gchar *proxy_uri = 
             g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
 
+#if LIBSOUP_VERSION < 2003000
         SoupUri *puri = soup_uri_new (proxy_uri);
+#else
+        SoupURI *puri = soup_uri_new (proxy_uri);
+#endif
 /*	if (auth_proxy)
 	{
 		puri->user = g_strdup(user_proxy);
@@ -288,7 +314,8 @@ authenticate (SoupSession *session,
 		{
 			if (create_user_pass_dialog(data))
 				rf->soup_auth_retry = FALSE;
-			rf->soup_auth_retry = TRUE;
+			else
+				rf->soup_auth_retry = TRUE;
 		}
 		*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
 		*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
@@ -332,14 +359,6 @@ conn_mainloop_quit (void *data)
 }
 
 
-
-static void
-handler (SoupMessage *msg, gpointer data)
-{
-	g_print("yodrax\n");
-}
-
-
 gboolean
 net_get_unblocking(const char *url, NetStatusCallback cb, 
 				gpointer data, gpointer cb2,
@@ -352,7 +371,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
-	proxyfy_session(soup_sess);
+///	proxyfy_session(soup_sess);
 	info = g_new0(CallbackInfo, 1);
 	info->user_cb = cb;
 	info->user_data = data;
@@ -367,8 +386,10 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 
 	g_signal_connect (soup_sess, "authenticate",
             G_CALLBACK (authenticate), (gpointer)url);
+#if LIBSOUP_VERSION < 2003000
 	g_signal_connect (soup_sess, "reauthenticate",
             G_CALLBACK (reauthenticate), (gpointer)url);
+#endif
 
 	/* Queue an async HTTP request */
 	msg = soup_message_new ("GET", url);
@@ -384,8 +405,13 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
+#if LIBSOUP_VERSION < 2003000
 	soup_message_add_header (msg->request_headers, "User-Agent",
                                 agstr);
+#else
+	soup_message_headers_append (msg->request_headers, "User-Agent",
+                                agstr);
+#endif
 	g_free(agstr);
 
 	g_signal_connect(G_OBJECT(msg), "got-chunk",
@@ -406,7 +432,11 @@ GString*
 net_post_blocking(const char *url, GSList *headers, GString *post,
                   NetStatusCallback cb, gpointer data,
                   GError **err) {
+#if LIBSOUP_VERSION < 2003000
 	SoupUri *suri = NULL;
+#else
+	SoupURI *suri = NULL;
+#endif
 	SoupMessage *req = NULL;
 	GString *response = NULL;
 	CallbackInfo info = { cb, data, 0, 0 };
@@ -420,8 +450,10 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
 
 	g_signal_connect (soup_sess, "authenticate",
             G_CALLBACK (authenticate), soup_sess);
+#if LIBSOUP_VERSION < 2003000
 	g_signal_connect (soup_sess, "reauthenticate",
             G_CALLBACK (reauthenticate), soup_sess);
+#endif
 
 	suri = soup_uri_new(url);
 	if (!suri)
@@ -439,13 +471,22 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
 		 * a bit. */
 		char *colonpos = strchr(header, ':');
 		*colonpos = 0;
+#if LIBSOUP_VERSION < 2003000
 		soup_message_add_header(req->request_headers, header, colonpos+1);
+#else
+		soup_message_headers_append(req->request_headers, header, colonpos+1);
+#endif
 		*colonpos = ':';
 	}
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
+#if LIBSOUP_VERSION < 2003000
 	soup_message_add_header (req->request_headers, "User-Agent",
                                 agstr);
+#else
+	soup_message_headers_append (req->request_headers, "User-Agent",
+                                agstr);
+#endif
 	g_free(agstr);
 
 	proxyfy_session(soup_sess);
@@ -463,7 +504,11 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
 		goto out;
 	}
 
+#if LIBSOUP_VERSION < 2003000
 	response = g_string_new_len(req->response.body, req->response.length);
+#else
+	response = g_string_new_len(req->response_body->data, req->response_body->length);
+#endif
 
 out:
 	if (suri) soup_uri_free(suri);

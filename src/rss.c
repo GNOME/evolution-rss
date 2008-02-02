@@ -96,7 +96,9 @@
 #include <errno.h>
 
 #include <libsoup/soup.h>
+#if LIBSOUP_VERSION < 2003000
 #include <libsoup/soup-message-queue.h>
+#endif
 
 #include "rss.h"
 #include "network-soup.c"
@@ -964,8 +966,12 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 	{
 		if (SOUP_IS_MESSAGE(value))
 		{
+#if LIBSOUP_VERSION < 2003000
 			soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
 			soup_session_cancel_message(key, value);
+#else
+			soup_session_cancel_message(key, value, SOUP_STATUS_CANCELLED);
+#endif
 		}
 		soup_session_abort(key);
 		g_hash_table_find(rf->key_session,
@@ -1001,8 +1007,12 @@ abort_all_soup(void)
 	{
 		if (SOUP_IS_MESSAGE(rf->b_msg_session))
 		{
+#if LIBSOUP_VERSION < 2003000
 			soup_message_set_status(rf->b_msg_session, SOUP_STATUS_CANCELLED);
 			soup_session_cancel_message(rf->b_session, rf->b_msg_session);
+#else
+			soup_session_cancel_message(rf->b_session, rf->b_msg_session, SOUP_STATUS_CANCELLED);
+#endif
 		}
 		soup_session_abort(rf->b_session);
 		rf->b_session = NULL;
@@ -2567,9 +2577,17 @@ void
 html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 {
 	gchar *url;
+#if LIBSOUP_VERSION < 2003000
 	SoupUri *newuri;
+#else
+	SoupURI *newuri;
+#endif
         gchar *newuristr;
+#if LIBSOUP_VERSION < 2003000
         SoupUri *base_uri = soup_uri_new (base);
+#else
+        SoupURI *base_uri = soup_uri_new (base);
+#endif
 	while (doc = html_find((xmlNode *)doc, tag))
 	{
 		if (url = xmlGetProp(doc, prop))
@@ -2605,7 +2623,11 @@ html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 				// all relative links
 				if (basehref != NULL)
 				{
+#if LIBSOUP_VERSION < 2003000
         				SoupUri *newbase_uri = soup_uri_new (basehref);
+#else
+        				SoupURI *newbase_uri = soup_uri_new (basehref);
+#endif
         				newuri = soup_uri_new_with_base (newbase_uri, url);
 					soup_uri_free(newbase_uri);
 				}
@@ -3661,15 +3683,22 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 		goto out;
 	}
 	
+#if LIBSOUP_VERSION < 2003000
 	if (!msg->response.length)
+#else
+	if (!msg->response_body->length)
+#endif
 		goto out;
 
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;
 
 
-
+#if LIBSOUP_VERSION < 2003000
 	GString *response = g_string_new_len(msg->response.body, msg->response.length);
+#else
+	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
+#endif
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
 //#endif
@@ -5105,7 +5134,11 @@ finish_enclosure (SoupMessage *msg, create_feed *user_data)
 	f = fopen(name, "wb+");
 	if (f)
 	{
+#if LIBSOUP_VERSION < 2003000
 		fwrite(msg->response.body, msg->response.length, 1, f);
+#else
+		fwrite(msg->response_body->data, msg->response_body->length, 1, f);
+#endif
 		fclose(f);
 		//replace encl with filename generated
 		g_free(user_data->encl);

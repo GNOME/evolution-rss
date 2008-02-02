@@ -11,6 +11,7 @@ INCLUDES =							\
 	-DEVOLUTION_VERSION=$(evolution_exec_int)		\
 	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"            	\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
+	-DLIBSOUP_VERSION="$(SOUP_VERSION)"	            	\
 	-DGECKO_HOME=\""$(GECKO_HOME)"\"			\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\

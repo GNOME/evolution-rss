@@ -1,5 +1,7 @@
 Sat 02 Feb 2008 01:54:03 PM EET <lucilanga@gnome.org>
 
+	* src/network-soup.c, src/rss.c: port to
+	libsoup-2.4
 	* src/network-soup.c: authenticate(), 
 	reauthenticate() make failed authentication
 	less painfull and less annoying.

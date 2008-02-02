@@ -30,14 +30,13 @@
 	* implement USM (universal subscription mechanism)
 	* feed://
 	* fix authentication for proxy dialog
-	* fix 3270 lin
+	* make auth dialog not intrusive (peek other software)
 	* fix move->rename
 	* use svn tag stuff when releasing
 	* fix when editing existing feeds
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* do not remove hash key when iterate !
 	* check importing, as it won't run for the first time
-	* make auth dialog not intrusive (peek other software)
 	* when importing through dbus notify in status bar
 	* check mycall resize, verify data is valid widget -> generates crash
 	* check taskbar op when removing a feed
