@@ -3603,7 +3603,11 @@ out:	rf->pending = FALSE;
 }
 
 void
+#if LIBSOUP_VERSION < 2003000
 finish_feed (SoupMessage *msg, gpointer user_data)
+#else
+finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
+#endif
 {
 	GError *err = NULL;
 	gchar *chn_name = NULL;

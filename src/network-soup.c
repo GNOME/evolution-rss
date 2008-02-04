@@ -40,10 +40,15 @@ typedef struct {
 } CallbackInfo;
 
 static void
+#if LIBSOUP_VERSION < 2003000
 got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
+#else
+got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
+#endif
     NetStatusProgress progress = {0};
     const char* clen;
 
+g_print("response_body1\n");
     if (info->total == 0) {
 #if LIBSOUP_VERSION < 2003000
         clen = soup_message_get_header(msg->response_headers,
@@ -56,11 +61,13 @@ got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
             return;
         info->total = atoi(clen);
     }
+g_print("response_body1\n");
 #if LIBSOUP_VERSION < 2003000
     info->current += msg->response.length;
 #else
     info->current += msg->response_body->length;
 #endif
+g_print("response_body2\n");
 
     progress.current = info->current;
     progress.total = info->total;
@@ -68,7 +75,12 @@ got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
 }
 
 static void
+#if LIBSOUP_VERSION < 2003000
 got_chunk_cb(SoupMessage *msg, CallbackInfo *info) {
+#else
+got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
+#endif
+
 	NetStatusProgress *progress = NULL;
 	const char* clen;
 	
@@ -87,7 +99,7 @@ got_chunk_cb(SoupMessage *msg, CallbackInfo *info) {
 #if LIBSOUP_VERSION < 2003000
 	info->current += msg->response.length;
 #else
-	info->current += msg->response_body->length;
+	info->current += chunk->length;
 #endif
 	progress = g_new0(NetStatusProgress, 1);
 
@@ -414,7 +426,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 #endif
 	g_free(agstr);
 
-	g_signal_connect(G_OBJECT(msg), "got-chunk",
+	g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
 
 	soup_session_queue_message (soup_sess, msg,
