@@ -43,12 +43,11 @@ static void
 #if LIBSOUP_VERSION < 2003000
 got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
 #else
-got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
+got_chunk_blocking_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 #endif
     NetStatusProgress progress = {0};
     const char* clen;
 
-g_print("response_body1\n");
     if (info->total == 0) {
 #if LIBSOUP_VERSION < 2003000
         clen = soup_message_get_header(msg->response_headers,
@@ -61,13 +60,11 @@ g_print("response_body1\n");
             return;
         info->total = atoi(clen);
     }
-g_print("response_body1\n");
 #if LIBSOUP_VERSION < 2003000
     info->current += msg->response.length;
 #else
-    info->current += msg->response_body->length;
+    info->current += chunk->length;
 #endif
-g_print("response_body2\n");
 
     progress.current = info->current;
     progress.total = info->total;
@@ -178,7 +175,7 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 
 //this will insert proxy in the session
 void
-proxyfy_session(SoupSession *session)
+proxify_session(SoupSession *session)
 {
 	gboolean use_proxy =
        	gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL);
@@ -209,8 +206,10 @@ proxyfy_session(SoupSession *session)
 		puri->passwd = g_strdup(pass_proxy);
 	}*/
        	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
+#if LIBSOUP_VERSION < 2003000
         if (puri)
             g_free(puri);
+#endif
         if (proxy_uri)
             g_free(proxy_uri);
     }
@@ -300,6 +299,7 @@ del_up(gpointer data)
 }
 
 static void
+#if LIBSOUP_VERSION < 2003000
 authenticate (SoupSession *session,
         SoupMessage *msg,
         const char *auth_type,
@@ -307,13 +307,25 @@ authenticate (SoupSession *session,
         char **username,
         char **password,
         gpointer data)
+#else
+authenticate (SoupSession *session,
+	SoupMessage *msg,
+        SoupAuth *auth,
+	gboolean retrying,
+	gpointer data)
+#endif
 {
 	gchar *user = g_hash_table_lookup(rf->hruser, data);
 	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
 	if (user && pass)
 	{
+#if LIBSOUP_VERSION < 2003000
 		*username = g_strdup(user);
 		*password = g_strdup(pass);
+#else
+	if (!retrying)
+		soup_auth_authenticate (auth, user, pass);
+#endif
 	}
 	else
 	{
@@ -329,8 +341,13 @@ authenticate (SoupSession *session,
 			else
 				rf->soup_auth_retry = TRUE;
 		}
+#if LIBSOUP_VERSION < 2003000
 		*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
 		*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
+#else
+	if (!retrying)
+		soup_auth_authenticate (auth, user, pass);
+#endif
 		}
 	}
 }
@@ -383,7 +400,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
-///	proxyfy_session(soup_sess);
+	proxify_session(soup_sess);
 	info = g_new0(CallbackInfo, 1);
 	info->user_cb = cb;
 	info->user_data = data;
@@ -501,7 +518,7 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
 #endif
 	g_free(agstr);
 
-	proxyfy_session(soup_sess);
+	proxify_session(soup_sess);
 	rf->b_session = soup_sess;
 	rf->b_msg_session = req;
 	soup_session_send_message(soup_sess, req);

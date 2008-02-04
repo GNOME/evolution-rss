@@ -3957,7 +3957,9 @@ lookup_main_folder(void)
 gchar *
 lookup_feed_folder(gchar *folder)
 {
+	g_print("folder:%s\n", folder);
 	gchar *new_folder = g_hash_table_lookup(rf->reversed_feed_folders, folder);
+	g_print("folder:%s\n", new_folder);
 	return new_folder ? new_folder : folder;
 }
 
@@ -5125,7 +5127,11 @@ feed_is_new(gchar *file_name, gchar *needle)
 }
 
 static void
+#if LIBSOUP_VERSION < 2003000
 finish_enclosure (SoupMessage *msg, create_feed *user_data)
+#else
+finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data)
+#endif
 {
 	gchar *tmpdir = NULL;
 	gchar *name = NULL;
