@@ -89,6 +89,8 @@ fi
 %doc TODO
 
 %changelog
+* Wed Feb 06 2008 Lucian Langa <lucilanga@gnome.org>
+- Modified firefox-devel requirement for build
 * Wed Jan 30 2008 Lucian Langa <lucilanga@gnome.org>
 - Updates and sanitize
 * Thu Jan 24 2008 Lucian Langa <lucilanga@gnome.org>
