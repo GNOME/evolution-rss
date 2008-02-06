@@ -2921,6 +2921,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 		g_print("data:%p\n", data);
 		g_print("is_widget:%d\n", GTK_IS_WIDGET(widget));
 		g_print("is_data:%p\n", data);
+		g_print("is_is_data:%d\n", GTK_IS_WIDGET(gtk_bin_get_child(data)));
 		g_print("is_is_data:%d\n", GTK_IS_WIDGET(data));
 //		if (GTK_IS_MOZ_EMBED(data))
 //		{
@@ -3152,6 +3153,7 @@ pfree(EMFormatHTMLPObject *o)
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
 #endif
+	g_signal_stop_emission_by_name(po->format->html, "size_allocate");
 	if (rf->mozembed)
 	{
 		g_print("call pfree() for controls2\n");
@@ -3235,6 +3237,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), classid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_controls2);
 		pobj->website = g_strstrip(g_strdup((gchar *)website));
 		pobj->is_html = GPOINTER_TO_INT(is_html);
+		pobj->format = (EMFormatHTML *)t->format;
 		pobj->object.free = pfree;
         	camel_stream_printf (t->stream, "<table><tr><td width=100%% valign=top><object classid=%s></object></td></tr></table>\n", classid);
 		goto out;
@@ -3630,6 +3633,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
               rf->progress_bar = NULL;
         }
 #else
+		g_print("shtatus:%d\n", msg->status_code);
 	if(rf->label && rf->feed_queue == 0 && rf->info)
 	{
                         gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
@@ -3637,7 +3641,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                         gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 
                 g_hash_table_remove(rf->info->data->active, rf->info->uri);
-                rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
+//                rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
 
                 if (g_hash_table_size(rf->info->data->active) == 0) {
                         if (rf->info->data->gd)
@@ -3723,6 +3727,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		if (!user_data || !lookup_key(user_data))
 			goto out;
 		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
+	
         	chn_name = display_doc (r);
 
 		if (chn_name)
@@ -4525,6 +4530,7 @@ create_mail(create_feed *CF)
 	CamelMimeMessage *new = camel_mime_message_new();
 	CamelInternetAddress *addr;
 	CamelMessageInfo *info;
+	CamelException *ex;
 	struct tm tm;
 	time_t time;
 	CamelDataWrapper *rtext;
@@ -4612,7 +4618,9 @@ create_mail(create_feed *CF)
         else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 
-	camel_folder_append_message(mail_folder, new, info, NULL, NULL);
+	g_print("date:%s\n", CF->date);
+	camel_folder_append_message(mail_folder, new, info, NULL, ex);
+	g_print("date:%s\n", CF->date);
 	camel_folder_sync(mail_folder, FALSE, NULL);
         camel_folder_thaw(mail_folder);
         camel_operation_end(NULL);

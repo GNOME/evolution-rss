@@ -426,6 +426,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 	{
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
 				soup_status_get_phrase(2));			//invalid url
+		g_print("status:%s\n", soup_status_get_phrase(2));		//invalid url
 		return -1;
 	}
 	g_hash_table_insert(rf->session, soup_sess, msg);
