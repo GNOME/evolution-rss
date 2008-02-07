@@ -154,6 +154,7 @@ gchar *buffer = NULL;
 
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
+#define COMPONENT_ID	"OAFIID:GNOME_Evolution_RSS_Component:" EVOLUTION_VERSION_STRING
 
 guint           upgrade = 0;                // set to 2 when initailization successfull
 
@@ -6053,6 +6054,11 @@ rss_config_control_new (void)
         return evolution_config_control_new (control_widget);
 }
 
+EvolutionConfigControl*
+rss_component_new (void)
+{
+	g_print("component\n");
+}
 
 static BonoboObject *
 factory (BonoboGenericFactory *factory,
@@ -6065,6 +6071,9 @@ factory (BonoboGenericFactory *factory,
 
         if (strcmp (component_id, RSS_CONTROL_ID) == 0)
                 return BONOBO_OBJECT (rss_config_control_new ());
+
+        if (strcmp (component_id, COMPONENT_ID) == 0)
+                return BONOBO_OBJECT (rss_component_new ());
 
         g_warning (FACTORY_ID ": Don't know what to do with %s", component_id);
         return NULL;
