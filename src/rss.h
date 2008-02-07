@@ -24,6 +24,8 @@
 #ifndef __RSS_H_
 #define __RSS_H_
 
+#include "src/rss-component.h"
+
 #define PLUGIN_INSTALL_DIR @PLUGIN_INSTALL_DIR@
 
 GConfClient *rss_gconf;

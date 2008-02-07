@@ -111,6 +111,16 @@ int pop = 0;
 //#define RSS_DEBUG 1
 #define d(x)
 
+#include <bonobo/bonobo-control.h>
+#include <bonobo/bonobo-exception.h>
+#include <e-util/e-dialog-utils.h>
+#include <libgnome/gnome-i18n.h>
+#include <libgnome/gnome-util.h>
+#include <libsoup/soup-session-async.h>
+#include <shell/evolution-shell-component-utils.h>
+
+
+#include "src/rss-component.c"
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -6054,12 +6064,6 @@ rss_config_control_new (void)
         return evolution_config_control_new (control_widget);
 }
 
-EvolutionConfigControl*
-rss_component_new (void)
-{
-	g_print("component\n");
-}
-
 static BonoboObject *
 factory (BonoboGenericFactory *factory,
          const char *component_id,
@@ -6069,11 +6073,15 @@ factory (BonoboGenericFactory *factory,
 
 	g_print("component_id:%s\n", component_id);
 
-        if (strcmp (component_id, RSS_CONTROL_ID) == 0)
-                return BONOBO_OBJECT (rss_config_control_new ());
+       if (strcmp (component_id, RSS_CONTROL_ID) == 0)
+             return BONOBO_OBJECT (rss_config_control_new ());
 
         if (strcmp (component_id, COMPONENT_ID) == 0)
-                return BONOBO_OBJECT (rss_component_new ());
+	{
+		BonoboObject *object = BONOBO_OBJECT (g_object_new (RSS_TYPE_COMPONENT, NULL));
+                bonobo_object_ref (object);
+                return object;
+	}
 
         g_warning (FACTORY_ID ": Don't know what to do with %s", component_id);
         return NULL;

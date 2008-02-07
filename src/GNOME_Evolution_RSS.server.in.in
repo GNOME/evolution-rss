@@ -24,29 +24,17 @@
         <oaf_attribute name="name" type="string"
                        _value="Evolution RSS Reader"/>
 
-        <!-- The short name of the component. Used internally by the
-           - shell. Should be the same as the component's GConf
-           - subtree (under /apps/evolution) and its local storage
-           - directory (under ~/.evolution)
-           -->
         <oaf_attribute name="evolution:component_alias" type="string"
                        value="evolution-rss"/>
 
-        <!-- This determines the label and icon displayed on the
-           - component's sidebar button, and the ordering of that
-           - button relative to the others.
-           -->
         <oaf_attribute name="evolution:button_label" type="string"
                        _value="RSS"/>
         <oaf_attribute name="evolution:button_icon" type="string"
-                       value="@ICONDIR@/rss.png"/>
+                       value="@ICON_DIR@/rss.png"/>
         <oaf_attribute name="evolution:button_sort_order" type="string"
                        value="10"/>
 
-        <!-- This determines the label and shortcut displayed in the
-           - shell's view menu.
-           -->
-        <oaf_attribute name="evolution:menu_label" type="string" _value="_Calendars"/>
+        <oaf_attribute name="evolution:menu_label" type="string" _value="_News"/>
         <oaf_attribute name="evolution:menu_accelerator" type="string" _value="*Control*F10"/>
     </oaf_server>
 
