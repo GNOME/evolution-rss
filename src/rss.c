@@ -111,17 +111,6 @@ int pop = 0;
 //#define RSS_DEBUG 1
 #define d(x)
 
-#include <bonobo/bonobo-control.h>
-#include <bonobo/bonobo-exception.h>
-#include <e-util/e-dialog-utils.h>
-#include <libgnome/gnome-i18n.h>
-#include <libgnome/gnome-util.h>
-#include <libsoup/soup-session-async.h>
-#include <shell/evolution-shell-component-utils.h>
-
-
-#include "src/rss-component.c"
-
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
 
@@ -164,7 +153,6 @@ gchar *buffer = NULL;
 
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
-#define COMPONENT_ID	"OAFIID:GNOME_Evolution_RSS_Component:" EVOLUTION_VERSION_STRING
 
 guint           upgrade = 0;                // set to 2 when initailization successfull
 
@@ -6075,13 +6063,6 @@ factory (BonoboGenericFactory *factory,
 
        if (strcmp (component_id, RSS_CONTROL_ID) == 0)
              return BONOBO_OBJECT (rss_config_control_new ());
-
-        if (strcmp (component_id, COMPONENT_ID) == 0)
-	{
-		BonoboObject *object = BONOBO_OBJECT (g_object_new (RSS_TYPE_COMPONENT, NULL));
-                bonobo_object_ref (object);
-                return object;
-	}
 
         g_warning (FACTORY_ID ": Don't know what to do with %s", component_id);
         return NULL;
