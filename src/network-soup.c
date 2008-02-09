@@ -18,10 +18,7 @@
  * vim: tabstop=4 shiftwidth=4 noexpandtab :
  */
 
-#include <libsoup/soup.h>
 #include <string.h>
-
-#include <gdk/gdkkeysyms.h>
 
 #include "network.h"
 #include "rss.h"

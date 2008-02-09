@@ -3,7 +3,6 @@
 	* make setup dialog modal when fetch_feed active
 	* add syndicate icon for News&Blogs folder
 	* offline storage for article's home page
-	* bad request when setup_feeds
 	* probably move to soup_unblocking when rendering of an article
 	* when browsing a different feed/mail folder cancel all sessions
 	* also create groups when importing
@@ -19,7 +18,6 @@
 	* make Cancel All from S&R work
 	* obey ttl entity
 	* search in the content of page for feed
-	* implement g_timeout_add for long soup timeouts
 	* move evolution detection to m4 to ease up integration in other plugins
 	* change ifdef labels for debuging by level
 	* disable javascript alerts !?
@@ -33,12 +31,9 @@
 	* make auth dialog not intrusive (peek other software)
 	* fix move->rename
 	* use svn tag stuff when releasing
-	* fix when editing existing feeds
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* do not remove hash key when iterate !
 	* check importing, as it won't run for the first time
-	* when importing through dbus notify in status bar
 	* check mycall resize, verify data is valid widget -> generates crash
 	* check taskbar op when removing a feed
 	* crash (mail_append_message) if folder contains .lock file ? or ibex crashes
-	* check when adding feeds through dbus to pop for authentication if it's needed

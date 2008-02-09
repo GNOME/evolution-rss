@@ -229,6 +229,11 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar *encl;
 } create_feed;
 
+guint count = 0;
+gchar *buffer = NULL;
+
+guint           upgrade = 0;                // set to 2 when initailization successfull
+
 u_int32_t gen_crc(const char *msg);
 gboolean create_user_pass_dialog(gchar *url);
 static void start_check_cb (GtkWidget *widget, gpointer data);
@@ -238,6 +243,23 @@ void save_gconf_feed(void);
 void rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg);
 void rss_select_folder(gchar *folder_name);
 gpointer lookup_chn_name_by_url(gchar *url);
+gboolean update_articles(gboolean disabler);
+static xmlNode *html_find (xmlNode *node, char *match);
+gchar *lookup_main_folder(void);
+gchar *lookup_feed_folder(gchar *folder);
+gchar *decode_html_entities(gchar *str);
+#ifdef HAVE_GTKMOZEMBED
+void rss_mozilla_init(void);
+#endif
+gpointer lookup_key(gpointer key);
+void taskbar_op_set_progress(gpointer key, gdouble progress);
+void taskbar_op_finish(gpointer key);
+void taskbar_push_message(gchar *message);
+void taskbar_pop_message(void);
+void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
+void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
+
+
 
 typedef struct FEED_FOLDERS {
 	gchar *oname;		//original folder name

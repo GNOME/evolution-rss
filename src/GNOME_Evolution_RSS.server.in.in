@@ -10,6 +10,7 @@
 
 	<oaf_attribute name="name" type="string"
                        _value="Evolution RSS Reader"/>
+</oaf_server>
 
 <oaf_server iid="OAFIID:GNOME_Evolution_RSS:@VERSION@"
             type="factory"
