@@ -340,6 +340,7 @@ taskbar_op_new(gchar *message)
 struct _ActivityInfo {
         char *component_id;
         GdkPixbuf *icon_pixbuf;
+	int error_type;
         guint id;
         char *information;
         gboolean cancellable;
@@ -389,7 +390,6 @@ taskbar_op_set_progress(gpointer key, gdouble progress)
 {
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
-	g_print("activity_id:%d\n", activity_id);
 
 	if (activity_id)
 	{
@@ -399,7 +399,7 @@ taskbar_op_set_progress(gpointer key, gdouble progress)
         	ActivityInfo *activity_info;
         	GList *p;
 		int order_number;
-		g_hash_table_foreach(rf->activity, print_hash, NULL);
+//		g_hash_table_foreach(rf->activity, print_hash, NULL);
 	
         	p = lookup_activity (priv->activity_infos, activity_id, &order_number);
         	if (p == NULL) {
@@ -408,7 +408,7 @@ taskbar_op_set_progress(gpointer key, gdouble progress)
         	}
 
         	activity_info = (ActivityInfo *) p->data;
-	g_print("--message:%s--\n", activity_info->information);
+//	g_print("--message:%s--\n", activity_info->information);
 
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
@@ -476,8 +476,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			g_free(furl);
 		}
 #endif
-		taskbar_op_set_progress(data, (guint)fraction);
-//		taskbar_op_set_progress(data, fraction/100);
+		taskbar_op_set_progress(data, (gdouble)fraction);
         }
         break;
     case NET_STATUS_DONE:
