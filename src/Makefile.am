@@ -44,7 +44,7 @@ RSS_MENU = \
 	-e "s%+GETTEXT_PACKAGE+%$(GETTEXT_PACKAGE)%" \
 	-e "s%+LOCALEDIR+%$(LOCALEDIR)%" \
 	-e "s%+VERSION+%$(VERSION)%" \
-	-e "s%+URL+%http://mips.edu.ms/evo/index.php/Evolution_RSS_Reader_Plugin%" \
+	-e "s%+URL+%http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin%" \
 	$< > $@
 
 %.error.in: %.error.xml

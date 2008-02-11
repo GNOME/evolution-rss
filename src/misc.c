@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007  Lucian Langa <cooly@mips.edu.ms> 
+ *  Copyright (C) 2007  Lucian Langa <cooly@gnome.eu.org> 
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

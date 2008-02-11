@@ -19,7 +19,7 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
 <b>Version: evolution-rss +VERSION+</b>
 
 +URL+</_description>
-    <author name="Lucian Langa" email="cooly@mips.edu.ms"/>
+    <author name="Lucian Langa" email="cooly@gnome.eu.org"/>
     <hook class="org.gnome.evolution.shell.events:1.0">
          <event
                  id="upgrade.done"

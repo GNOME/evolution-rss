@@ -17,7 +17,7 @@ How can enable webkit in evolution-rss?
 Enabling webkit in evolution-rss requires webkit especially Gdk part to be compiled.
 For complete instructions see:
 
-	http://mips.edu.ms/evo/index.php/WebKit
+	http://gnome.eu.org/evo/index.php/WebKit
 
 After instalation is complete you have to recompile evolution-rss. Hopefully evolution-rss
 build script will detech webkit's gdk stuff. Hopefully this will sooner be a package on each
