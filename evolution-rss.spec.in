@@ -1,15 +1,11 @@
-%define name evolution-rss
-%define version @VERSION@
-%define release 1
-
 Summary: Evolution RSS Reader
-Name: %{name}
-Version: %{version}
+Name: evolution-rss
+Version: @VERSION@
 Release: 1%{?dist}
 Group: Applications/Internet
 License: GPLv2+
 Source: http://gnome.eu.org/%{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin
 #Patch: evolution-rss-%{version}.patch
 Requires: evolution
@@ -89,6 +85,8 @@ fi
 %doc TODO
 
 %changelog
+* Tue Feb 12 2008 Lucian Langa <lucilanga@gnome.org>
+- buildroot fixes
 * Wed Feb 06 2008 Lucian Langa <lucilanga@gnome.org>
 - Modified firefox-devel requirement for build
 * Wed Jan 30 2008 Lucian Langa <lucilanga@gnome.org>
