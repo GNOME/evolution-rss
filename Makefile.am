@@ -1,10 +1,14 @@
 SUBDIRS = pixmaps po src
 
-## We dist autogen.sh since this is an example program
-## Real-world programs do not need to distribute autogen.sh
-## But there is no harm in it, and you probably should.
+ACLOCAL_AMFLAGS = -I m4
+
+INTLTOOL =                      \
+        intltool-extract.in     \
+        intltool-merge.in       \
+        intltool-update.in
 
 EXTRA_DIST = \
+	$(INTLTOOL)		\
 	autogen.sh		\
 	intltool-extract.in	\
 	intltool-merge.in	\

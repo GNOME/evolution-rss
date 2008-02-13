@@ -1,3 +1,7 @@
+Wed 13 Feb 2008 08:03:55 AM EET <lucilanga@gnome.org>
+
+	* Makefile.am: include m4 macros
+
 Sun 10 Feb 2008 09:17:51 PM EET <lucilanga@gnome.org>
 
 	* src/rss.c: fix operations progress updating

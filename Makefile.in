@@ -73,7 +73,7 @@ GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
-ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
+ACLOCAL_AMFLAGS = -I m4
 ALL_LINGUAS = @ALL_LINGUAS@
 AMTAR = @AMTAR@
 AR = @AR@
@@ -271,7 +271,13 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = pixmaps po src
+INTLTOOL = \
+        intltool-extract.in     \
+        intltool-merge.in       \
+        intltool-update.in
+
 EXTRA_DIST = \
+	$(INTLTOOL)		\
 	autogen.sh		\
 	intltool-extract.in	\
 	intltool-merge.in	\
