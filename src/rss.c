@@ -1535,11 +1535,11 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	g_print("size:%d\n", wheight);
 //        height = req.height - 200;// - 16 - 194;
 //	g_print("my cal %d w:%d h:%d\n", GTK_IS_WIDGET(data), width, height);
-		g_print("data:%p\n", data);
+/*		g_print("data:%p\n", data);
 		g_print("is_widget:%d\n", GTK_IS_WIDGET(widget));
 		g_print("is_data:%p\n", data);
 		g_print("is_is_data:%d\n", GTK_IS_WIDGET(gtk_bin_get_child(data)));
-		g_print("is_is_data:%d\n", GTK_IS_WIDGET(data));
+		g_print("is_is_data:%d\n", GTK_IS_WIDGET(data));*/
 //		if (GTK_IS_MOZ_EMBED(data))
 //		{
 //			g_print("is mozembed\n");
@@ -1689,10 +1689,14 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 static gboolean
 org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
+	g_print("controls\n");
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
-	GtkRequisition req;
-	gtk_widget_size_request(eb, &req);
-	g_print("ww:%d,hh%d\n", req.width, req.height);
+	if (GTK_IS_WIDGET(eb))
+	{
+		GtkRequisition req;
+		gtk_widget_size_request(eb, &req);
+		g_print("ww:%d,hh%d\n", req.width, req.height);
+	}
 
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
 	gtk_widget_show (vbox);
@@ -1739,7 +1743,8 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
       	int width = vbox->allocation.width;
        	int height = vbox->allocation.height;
 
-        gtk_container_add ((GtkContainer *) eb, vbox);
+	if (GTK_IS_WIDGET(eb))
+        	gtk_container_add ((GtkContainer *) eb, vbox);
 //	GtkHTMLEmbedded *myeb = eb;
 //	gtk_widget_size_request(myeb->widget, &req);
 //	g_print("BOX ww:%d,hh%d\n", myeb->width, myeb->height);

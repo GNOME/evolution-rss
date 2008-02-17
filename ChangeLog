@@ -1,5 +1,7 @@
 Sun 17 Feb 2008 03:54:45 PM EET <lucilanga@gnome.org>
 
+	* src/evolution-rss.spec.in: misc cleanups
+	* src/rss.c: sanitize rss-controls
 	* src/configure.ac: bump version to 0.0.8
 	* src/rss.c: drop lookup_activity as it is an
 	evolution internal function and changes
@@ -117,7 +119,7 @@ Tue 18 Dec 2007 09:38:56 PM EET <lucilanga@gnome.org>
 
 Wed 12 Dec 2007 10:35:41 AM EET <lucilanga@gnome.org>
 
-	* prevend evolution-import-rss import empty
+	* prevent evolution-import-rss import empty
 	feeds
 	* corrent MAJOR_VERSION configure var
 	* added schema uninstall rules
