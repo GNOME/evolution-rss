@@ -335,84 +335,17 @@ taskbar_op_new(gchar *message)
 	return activity_id;
 }
 
-/* I could really use this stuff exported through evolution include */
-
-struct _ActivityInfo {
-        char *component_id;
-        GdkPixbuf *icon_pixbuf;
-	int error_type;
-        guint id;
-        char *information;
-        gboolean cancellable;
-        double progress;
-        GtkWidget *menu;
-        void (*cancel_func) (gpointer data);
-        gpointer data;
-        gpointer error;
-        time_t  error_time;
-};
-typedef struct _ActivityInfo ActivityInfo;
-
-struct _EActivityHandlerPrivate {
-        guint next_activity_id;
-        GList *activity_infos;
-        GSList *task_bars;
-//        ELogger *logger;
-        guint error_timer;
-        guint error_flush_interval;
-
-};
-
-static GList *
-lookup_activity (GList *list,
-                 guint activity_id,
-                 int *order_number_return)
-{
-        GList *p;
-        int i;
-
-        for (p = list, i = 0; p != NULL; p = p->next, i ++) {
-                ActivityInfo *activity_info;
-
-                activity_info = (ActivityInfo *) p->data;
-                if (activity_info->id == activity_id) {
-                        *order_number_return = i;
-                        return p;
-                }
-        }
-
-        *order_number_return = -1;
-        return NULL;
-}
-
 void
-taskbar_op_set_progress(gpointer key, gdouble progress)
+taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress)
 {
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 
 	if (activity_id)
 	{
-	
-		/* does it even makes sense to setup information everytime progress is updated ??? */
-		EActivityHandlerPrivate *priv = activity_handler->priv;
-        	ActivityInfo *activity_info;
-        	GList *p;
-		int order_number;
-//		g_hash_table_foreach(rf->activity, print_hash, NULL);
-	
-        	p = lookup_activity (priv->activity_infos, activity_id, &order_number);
-        	if (p == NULL) {
-                	g_warning ("EActivityHandler: unknown operation %d", activity_id);
-                	return;
-        	}
-
-        	activity_info = (ActivityInfo *) p->data;
-//	g_print("--message:%s--\n", activity_info->information);
-
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
-                                g_strdup(activity_info->information), 
+                                g_strdup(msg), 
                                 progress);
 	}
 }
@@ -476,7 +409,16 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			g_free(furl);
 		}
 #endif
-		taskbar_op_set_progress(data, (gdouble)fraction);
+		gchar *tmsg;
+		gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(data));
+        	if (strncmp(type, "-",1) == 0)
+                        tmsg = g_strdup_printf("Fetching %s: %s", 
+                                        "RSS", data);
+        	else
+                        tmsg = g_strdup_printf("Fetching %s: %s", 
+                        type, data);
+		taskbar_op_set_progress(data, tmsg, (gdouble)fraction);
+		g_free(tmsg);
         }
         break;
     case NET_STATUS_DONE:

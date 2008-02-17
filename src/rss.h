@@ -252,7 +252,7 @@ gchar *decode_html_entities(gchar *str);
 void rss_mozilla_init(void);
 #endif
 gpointer lookup_key(gpointer key);
-void taskbar_op_set_progress(gpointer key, gdouble progress);
+void taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress);
 void taskbar_op_finish(gpointer key);
 void taskbar_push_message(gchar *message);
 void taskbar_pop_message(void);

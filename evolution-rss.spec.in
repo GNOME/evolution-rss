@@ -18,7 +18,7 @@ BuildRequires: gettext
 BuildRequires: evolution-devel
 BuildRequires: evolution-data-server-devel 
 BuildRequires: dbus-glib-devel
-BuildRequires: firefox-devel
+#BuildRequires: firefox-devel
 BuildRequires: perl(XML::Parser)
 
 %description
@@ -29,7 +29,7 @@ This is an evolution plugin which enables evolution to read rss feeds.
 #%patch
 
 %build
-%configure --prefix="%{_prefix}" --sysconfdir="%{_sysconfdir}"  --libdir=%{_libdir} --disable-webkit
+%configure --prefix="%{_prefix}" --sysconfdir="%{_sysconfdir}"  --libdir=%{_libdir} --disable-webkit --disable-gecko
 make %{?_smp_mflags}
 
 %install
@@ -85,6 +85,8 @@ fi
 %doc TODO
 
 %changelog
+* Sat Feb 16 2008 Lucian Langa <cooly@gnome.eu.org>
+- Drop gecko requirements till xulrunner is fixed
 * Tue Feb 12 2008 Lucian Langa <lucilanga@gnome.org>
 - buildroot fixes
 * Wed Feb 06 2008 Lucian Langa <lucilanga@gnome.org>

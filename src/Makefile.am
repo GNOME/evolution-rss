@@ -140,6 +140,7 @@ EXTRA_DIST = 					\
 	network-soup.c				\
 	misc.c					\
 	dbus.c					\
+	rss-config-factory.c			\
 	evolution-import-rss.c			\
 	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\
