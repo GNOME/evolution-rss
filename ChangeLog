@@ -1,3 +1,11 @@
+Thu 21 Feb 2008 10:34:21 AM EET <cooly@gnome.eu.org>
+
+	* src/rss-config-factory.c: fix taskbar
+	operation when removing a feed
+	* src/dbus.c: reconstruct feeds store when
+	importing
+	* src/rss.c: sanitize webkit resizing
+
 Sun 17 Feb 2008 03:54:45 PM EET <lucilanga@gnome.org>
 
 	* src/evolution-rss.spec.in: misc cleanups

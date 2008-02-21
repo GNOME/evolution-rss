@@ -528,7 +528,13 @@ GSList *radiobutton1_group = NULL;
   return feed;
 }
 
-
+void
+store_redraw(GtkTreeView *data)
+{
+        GtkTreeModel *model = gtk_tree_view_get_model (data);
+	gtk_list_store_clear(GTK_LIST_STORE(model));
+        g_hash_table_foreach(rf->hrname, construct_list, model);
+}
 
 ////////////////////
 //feeds processing//
@@ -623,6 +629,7 @@ remove_feed_hash(gpointer name)
 {
 	//we need to make sure we won't fetch_feed iterate over those hashes
 	rf->pending = TRUE;
+	taskbar_op_finish(name);
         g_hash_table_remove(rf->hre, lookup_key(name));
         g_hash_table_remove(rf->hrt, lookup_key(name));
         g_hash_table_remove(rf->hrh, lookup_key(name));

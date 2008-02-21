@@ -1543,15 +1543,16 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //		if (GTK_IS_MOZ_EMBED(data))
 //		{
 //			g_print("is mozembed\n");
-       		if (data && GTK_IS_WIDGET(data) && height > 50)
-		{
-			gtk_widget_set_size_request((GtkWidget *)data, width, height);
+		if (data)
+			if(GTK_IS_WIDGET(data) && height > 50)
+			{
+				gtk_widget_set_size_request((GtkWidget *)data, width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
 #ifdef HAVE_XULRUNNER
-			gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
+				gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
-		}
+			}
 //		}
 	}
 	g_print("resize done\n");
@@ -3072,7 +3073,9 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->soup_auth_retry = 1;
 			get_feed_folders();
 #if HAVE_DBUS
+#if RSS_DEBUG
 			g_print("init_dbus()\n");
+#endif
 			/*D-BUS init*/
 			rf->bus = init_dbus ();
 #endif
