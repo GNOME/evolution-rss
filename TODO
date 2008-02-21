@@ -36,3 +36,5 @@
 	* check mycall resize, verify data is valid widget -> generates crash
 	* crash (mail_append_message) if folder contains .lock file ? or ibex crashes
 	* implement notify back of imported feed perhaps libnotify
+	* prefetch html content for all webkits (perhaps temp file)
+	* implement web controls for diferent redering <Webkits> or <Gecko>

@@ -1473,6 +1473,9 @@ stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #ifdef	HAVE_GTKMOZEMBED
 	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 #endif
+#ifdef	HAVE_WEBKIT
+	webkit_gtk_page_stop_loading(WEBKIT_GTK_PAGE(rf->mozembed));
+#endif
 }
 
 reload_cb (GtkWidget *button, gpointer data)
@@ -1489,7 +1492,7 @@ reload_cb (GtkWidget *button, gpointer data)
 		case 1:
 #ifdef	HAVE_WEBKIT
 	webkit_gtk_page_stop_loading(WEBKIT_GTK_PAGE(rf->mozembed));
-       	webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), data);
+     	webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), data);
 #endif
 		break;
 	}
@@ -1588,8 +1591,6 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
 	int width, height;
         GtkRequisition req;
-	GtkWidget *gpage;
-	GtkWidget *gpage2;
 	GtkWidget *moz;
 
 //        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
@@ -1607,8 +1608,8 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
   //              	g_thread_init (NULL);
     //    	}
 		webkit_gtk_init();
-		gpage = (GtkWidget *)webkit_gtk_page_new();
-		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(gpage));
+		rf->mozembed = (GtkWidget *)webkit_gtk_page_new();
+		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
 	}
 #endif
 
@@ -1643,9 +1644,9 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	{
 		g_print("Render engine Webkit\n");
 		if (rf->online)
-        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), po->website);
+        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), po->website);
 		else
-        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(gpage), "about:blank");
+        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), "about:blank");
 	}
 #endif
 
@@ -1669,11 +1670,9 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 
 //	gtk_container_set_resize_mode(w, GTK_RESIZE_PARENT);
 //	gtk_scrolled_window_set_policy(w, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-//	gtk_box_pack_start (GTK_BOX (w), gpage, TRUE, TRUE, 0);
 	gtk_widget_show_all(moz);
         gtk_container_add ((GtkContainer *) eb, moz);
         gtk_container_check_resize ((GtkContainer *) eb);
-	g_print("add\n");
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	EMFormat *myf = (EMFormat *)efh;
