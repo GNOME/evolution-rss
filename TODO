@@ -22,15 +22,13 @@
 	* change ifdef labels for debuging by level
 	* disable javascript alerts !?
 	* check memory consumption when S&R
-	* fix dbus when not available
-	* non intrusive errors
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
 	* feed://
 	* fix authentication for proxy dialog
 	* make auth dialog not intrusive (peek other software)
 	* fix move->rename
-	* use svn tag stuff when releasing
+	* use tagging stuff when releasing
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* do not remove hash key when iterate !
 	* check mycall resize, verify data is valid widget -> generates crash
