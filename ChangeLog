@@ -1,3 +1,14 @@
+Sun 24 Feb 2008 10:09:09 AM EET <cooly@gnome.eu.org>
+
+	* src/rss.c: update_channel() update main
+	iteration after	feeds uid check
+
+Sat 23 Feb 2008 07:52:52 PM EET <cooly@gnome.eu.org>
+
+	* src/rss.c: decode_html_entities() xhange
+	to XML_SUBSTITUTE_PEREF in order to correctly
+	parse link in article (eg. slashdot)
+
 Thu 21 Feb 2008 10:34:21 AM EET <cooly@gnome.eu.org>
 
 	* src/rss-config-factory.c: fix taskbar

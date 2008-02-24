@@ -36,3 +36,4 @@
 	* implement notify back of imported feed perhaps libnotify
 	* prefetch html content for all webkits (perhaps temp file)
 	* implement web controls for diferent redering <Webkits> or <Gecko>
+	* convert reading feeds progress bar to articles number that will actually be read

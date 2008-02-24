@@ -3839,7 +3839,8 @@ decode_html_entities(gchar *str)
 
 	xmlChar *tmp =  (gchar *)xmlStringDecodeEntities(ctxt,
 					     BAD_CAST str,
-					     XML_SUBSTITUTE_REF,
+					     XML_SUBSTITUTE_REF
+					     & XML_SUBSTITUTE_PEREF,
 					     0,
 					     0,
 					     0);
@@ -3972,6 +3973,9 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		gchar rfeed[513];
 		memset(rfeed, 0, 512);
 		int occ = 0;
+		while (gtk_events_pending())
+                  gtk_main_iteration ();
+
 		if (fr)
 		{
 		    while (fgets(rfeed, 511, fr) != NULL)
@@ -3984,6 +3988,9 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		    }
 		    (void)fseek(fr, 0L, SEEK_SET);
 		}
+
+		while (gtk_events_pending())
+                  gtk_main_iteration ();
 
 		if (!occ)
 		{
