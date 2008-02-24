@@ -434,7 +434,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 static void
 textcb(NetStatusType status, gpointer statusdata, gpointer data)
 {
-/*    NetStatusProgress *progress;
+    NetStatusProgress *progress;
     float fraction = 0;
     switch (status) {
     case NET_STATUS_PROGRESS:
@@ -453,7 +453,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
         break;
     default:
         g_warning("unhandled network status %d\n", status);
-    }*/
+    }
 }
 
 gboolean
@@ -2140,6 +2140,8 @@ setup_feed(add_feed *feed)
 #ifdef RSS_DEBUG
 	g_print("content:%s\n", content->str);
 #endif
+	g_print("content_len:%d|||\n", content->len);
+	g_print("content:%s|||\n", doc);
 	root = xmlDocGetRootElement(doc);
 
 	if ((doc != NULL && root != NULL)

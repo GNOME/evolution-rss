@@ -27,6 +27,7 @@
 #include <dbus/dbus-glib-lowlevel.h>
 
 #include <rss.h>
+#include <rss-config-factory.h>
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
 #define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
@@ -122,7 +123,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 					g_print("chn_name:%s\n", lookup_chn_name_by_url(feed->feed_url));
 #endif
 				}	
-				store_redraw(rf->treeview);
+				store_redraw(GTK_TREE_VIEW(rf->treeview));
         			save_gconf_feed();
         			camel_operation_end(NULL);
 			}
