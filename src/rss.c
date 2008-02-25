@@ -1505,7 +1505,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
 //	GtkAdjustment *a = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(widget));
 //	g_print("page size:%d\n", a->page_size);
-	g_print("mycall()\n");
 	int width;
         GtkRequisition req;
   //      EMFormatHTMLDisplay *efhd = (EMFormatHTMLDisplay *) efh;
@@ -1544,9 +1543,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 		g_print("is_data:%p\n", data);
 		g_print("is_is_data:%d\n", GTK_IS_WIDGET(gtk_bin_get_child(data)));
 		g_print("is_is_data:%d\n", GTK_IS_WIDGET(data));*/
-//		if (GTK_IS_MOZ_EMBED(data))
-//		{
-//			g_print("is mozembed\n");
 		if (data)
 			if(GTK_IS_WIDGET(data) && height > 50)
 			{
@@ -1557,7 +1553,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 				gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
 			}
-//		}
 	}
 	g_print("resize done\n");
 }

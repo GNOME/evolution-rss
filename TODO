@@ -38,3 +38,4 @@
 	* implement web controls for diferent redering <Webkits> or <Gecko>
 	* convert reading feeds progress bar to articles number that will actually be read
 	* force soup to follow redirects (304) test on fedora weekly news
+	* check loading of images in certain feeds
