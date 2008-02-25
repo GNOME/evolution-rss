@@ -835,7 +835,7 @@ rss_select_folder(gchar *folder_name)
 	g_free(real_name);
 }
 
-void
+/*void
 get_selected_mail(void)
 {
 	MailComponent *mail_component = mail_component_peek();
@@ -849,7 +849,7 @@ get_selected_mail(void)
 	uids = message_list_get_selected(emfv->list);
 	g_print("%d", uids->len);
 	
-}
+}*/
 
 static void
 enable_html_cb(GtkCellRendererToggle *cell,
@@ -1991,11 +1991,13 @@ fmerror:
 	return;
 }
 
-void org_gnome_cooly_article_show(void *ep, EMPopupTargetSelect *t);
+void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t);
 
-void org_gnome_cooly_article_show(void *ep, EMPopupTargetSelect *t)
+void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t)
 {
-	g_print("(l)user is reading mail\n");
+	if (rf)
+		rf->current_uid = t->uid;
+	g_print("uid:%s\n", t->uid);
 }
 
 gboolean
@@ -2380,7 +2382,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	if (!deleted)
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 			get_feed_age(user_data, lookup_key(user_data));
-//	get_selected_mail();
 //tout:	
 
 #ifdef EVOLUTION_2_12
@@ -4068,7 +4069,7 @@ delete_oldest_article(CamelFolder *folder, guint unread)
        	for (i = 0; i < uids->len; i++)
 	{
 		info = camel_folder_get_message_info(folder, uids->pdata[i]);
-               	if (info) {
+               	if (info && rf->current_uid != uids->pdata[i]) {
 			date = camel_message_info_date_sent(info);
 			flags = camel_message_info_flags(info);
        			if (flags & CAMEL_MESSAGE_SEEN)
@@ -4147,7 +4148,7 @@ get_feed_age(gpointer key, gpointer value)
         	for (i = 0; i < uids->len; i++)
 		{
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
-                	if (info) {
+                	if (info && rf->current_uid != uids->pdata[i]) {
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400)
 				{

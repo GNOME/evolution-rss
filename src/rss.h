@@ -102,6 +102,7 @@ typedef struct _rssfeed {
 	GHashTable	*activity;
 	GHashTable	*error_hash;
 	guint		test;
+	char 		*current_uid;		// currently read article	
 #if HAVE_DBUS
 	DBusConnection	*bus;			// DBUS
 #endif
