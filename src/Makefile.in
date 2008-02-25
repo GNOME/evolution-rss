@@ -362,6 +362,7 @@ EXTRA_DIST = \
 	misc.c					\
 	dbus.c					\
 	rss-config-factory.c			\
+	rss-config-factory.h			\
 	evolution-import-rss.c			\
 	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\
