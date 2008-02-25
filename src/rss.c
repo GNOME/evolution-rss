@@ -131,6 +131,7 @@ struct _org_gnome_rss_controls_pobject {
 	gchar *website;
 	guint is_html;
 	gchar *mem;
+	guint shandler;		//mycall handler_id
 };
 
 /*struct _GtkHTMLEmbedded {
@@ -1677,7 +1678,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	EMFormat *myf = (EMFormat *)efh;
 	rf->headers_mode = myf->mode;
-	g_signal_connect(efh->html,
+	po->shandler = g_signal_connect(efh->html,
 		"size_allocate",
 		G_CALLBACK(mycall),
 		moz);
@@ -1771,11 +1772,15 @@ void
 pfree(EMFormatHTMLPObject *o)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
+	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
 #ifdef HAVE_GTKMOZEMBED
+	if (engine == 1)
+	{
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
+	}
 #endif
-	g_signal_stop_emission_by_name(po->format->html, "size_allocate");
+	g_signal_handler_disconnect(po->format->html, po->shandler);
 	if (rf->mozembed)
 	{
 		g_print("call pfree() for controls2\n");
@@ -1799,11 +1804,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
-        g_print("formatting\n");
-        g_print("html\n");
-
-	g_print("RENDER:%s\n", RENDER);
-	g_print("RENDER:%d\n", RENDER_N);
+        g_print("Formatting...\n");
 
 	CamelMimePart *message = CAMEL_IS_MIME_MESSAGE(t->part) ? 
 			t->part : 
@@ -1997,7 +1998,6 @@ void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t)
 {
 	if (rf)
 		rf->current_uid = t->uid;
-	g_print("uid:%s\n", t->uid);
 }
 
 gboolean

@@ -1,5 +1,7 @@
 Mon 25 Feb 2008 10:06:32 PM EET <cooly@gnome.eu.org>
 
+	* src/rss.c: pfree() correctly disconnect
+	webkit size_allocate signal
 	* src/rss.c: org_gnome_cooly_article_show(),
 	get_feed_age(), 
 	delete_oldest_article() prevent current
