@@ -1690,15 +1690,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 static gboolean
 org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
-	g_print("controls\n");
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
-	if (GTK_IS_WIDGET(eb))
-	{
-		GtkRequisition req;
-		gtk_widget_size_request(eb, &req);
-		g_print("ww:%d,hh%d\n", req.width, req.height);
-	}
-
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
 	gtk_widget_show (vbox);
 	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
@@ -1774,7 +1766,7 @@ pfree(EMFormatHTMLPObject *o)
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
 	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
 #ifdef HAVE_GTKMOZEMBED
-	if (engine == 1)
+	if (engine == 2)
 	{
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
@@ -1804,7 +1796,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
+#ifdef RSS_DEBUG
         g_print("Formatting...\n");
+#endif
 
 	CamelMimePart *message = CAMEL_IS_MIME_MESSAGE(t->part) ? 
 			t->part : 
@@ -1912,7 +1906,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	}
 	else
 	{
+#ifdef RSS_DEBUG
 		g_print("normal html rendering\n");
+#endif
 		GByteArray *buffer;
 		CamelStreamMem *stream = (CamelStreamMem *)camel_stream_mem_new();
 		buffer = g_byte_array_new ();
@@ -1979,7 +1975,6 @@ out:	if (addr)
 		g_free(addr);
 	if (buffer2)
 		g_free(buffer2);
-	g_print("out\n");
 	return;
 fmerror:
 	camel_stream_printf (t->stream, 
