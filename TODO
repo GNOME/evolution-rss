@@ -30,7 +30,6 @@
 	* fix move->rename
 	* use tagging stuff when releasing
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
-	! do not remove hash key when iterate !
 	! check mycall resize, verify data is valid widget -> generates crash
 	* crash (mail_append_message) if folder contains .lock file ? or ibex crashes
 	* implement notify back of imported feed perhaps libnotify

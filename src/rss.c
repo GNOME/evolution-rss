@@ -841,14 +841,14 @@ get_selected_mail(void)
 {
 	MailComponent *mail_component = mail_component_peek();
 	MailComponentPrivate *priv = mail_component->priv;
-	EComponentView *cv = priv->component_view;
+//	EComponentView *cv = priv->component_view;
 	g_print("priv:%p", priv);
 	g_print("cv:%p", cv);
 	GPtrArray *uids;
 	void *el = g_object_get_data((GObject *)cv, "info-label");
         EMFolderView *emfv = g_object_get_data((GObject *)el, "folderview");
 	uids = message_list_get_selected(emfv->list);
-	g_print("%d", uids->len);
+	g_print("selec:%d", uids->len);
 	
 }*/
 
@@ -2457,7 +2457,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 #endif
 
 		g_free(tmsg);
-		g_hash_table_insert(rf->activity, key, (gpointer)activity_id);
+		g_hash_table_insert(rf->activity, key, GUINT_TO_POINTER(activity_id));
 
 		net_get_unblocking(
 				g_hash_table_lookup(rf->hr, lookup_key(key)),
