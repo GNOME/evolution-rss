@@ -1,3 +1,9 @@
+Tue 26 Feb 2008 08:26:57 PM EET <cooly@gnome.eu.org>
+
+	* src/rss-config-factory.c: fix import window
+	label
+	* src/rss.c: fix rss read label
+
 Mon 25 Feb 2008 10:06:32 PM EET <cooly@gnome.eu.org>
 
 	* src/rss.c: fix EMEventTargetMessage for

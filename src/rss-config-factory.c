@@ -1000,6 +1000,7 @@ import_opml(gchar *file, add_feed *feed)
 #if GTK_2_6
                         gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
+                        gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
                         feed->feed_name = name;
                         /* we'll get rid of this as soon as we fetch unblocking */
                         if (g_hash_table_find(rf->hr,
