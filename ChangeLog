@@ -1,5 +1,6 @@
 Tue 26 Feb 2008 08:26:57 PM EET <cooly@gnome.eu.org>
 
+	* misc cleanups
 	* src/rss-config-factory.c: fix import window
 	label
 	* src/rss.c: fix rss read label

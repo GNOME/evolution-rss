@@ -445,9 +445,6 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 #ifdef RSS_DEBUG
 	g_print("%f.", fraction*100);
 #endif
-	g_print("%f->", fraction*100);
-	g_print("%f->", progress->current);
-	g_print("%f.\n", progress->total);
 	}
 	while (gtk_events_pending())
       		gtk_main_iteration ();
@@ -2142,8 +2139,6 @@ setup_feed(add_feed *feed)
 #ifdef RSS_DEBUG
 	g_print("content:%s\n", content->str);
 #endif
-	g_print("content_len:%d|||\n", content->len);
-	g_print("content:%s|||\n", doc);
 	root = xmlDocGetRootElement(doc);
 
 	if ((doc != NULL && root != NULL)
