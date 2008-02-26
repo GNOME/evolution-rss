@@ -1982,13 +1982,23 @@ fmerror:
 	return;
 }
 
+#ifdef EVOLUTION_2_12
 void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t);
+#else
+void org_gnome_cooly_article_show(void *ep, void *t);
+#endif
 
+#ifdef EVOLUTION_2_12
 void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t)
 {
 	if (rf)
 		rf->current_uid = t->uid;
 }
+#else
+void org_gnome_cooly_article_show(void *ep, void *t)
+{
+}
+#endif
 
 gboolean
 check_chn_name(gchar *chn_name)
