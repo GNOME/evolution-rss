@@ -586,10 +586,11 @@ GtkWidget *dialog1;
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-	g_print("key:%p, value:%p ==", key, value);
+//	g_print("key:%p, value:%p ==", key, value);
+	g_print("key:%p ==", key);
 
-	if (SOUP_IS_SESSION(key))
-	{
+//	if (SOUP_IS_SESSION(key))
+/*	{
 		if (SOUP_IS_MESSAGE(value))
 		{
 #if LIBSOUP_VERSION < 2003000
@@ -598,14 +599,18 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 #else
 			soup_session_cancel_message(key, value, SOUP_STATUS_CANCELLED);
 #endif
-		}
+		}*/
+//			soup_session_cancel_message(key, value);
+//		g_object_weak_unref(value, unblock_free, key);
+			if (key)
 		soup_session_abort(key);
-		g_hash_table_find(rf->key_session,
+/*		g_hash_table_find(rf->key_session,
                 	remove_if_match,
                 	user_data);
-	}
-	g_print(" key:%p, value:%p\n", key, value);
-	return TRUE;
+	}*/
+//	g_print(" key:%p, value:%p\n", key, value);
+	g_print(" key:%p, \n", key);
+	return FALSE;
 }
 void
 remove_weak(gpointer key, gpointer value, gpointer user_data)
@@ -617,13 +622,16 @@ void
 abort_all_soup(void)
 {
 	//abort all session
-	if (rf->abort_session)
-	{
-		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
-		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
+//	if (rf->abort_session)
+//	{
+//		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
+//		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
+//		g_hash_table_foreach(rf->abort_session, cancel_soup_sess, NULL);
+		g_hash_table_foreach(rf->session, cancel_soup_sess, NULL);
 		g_hash_table_destroy(rf->session);
                 rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
-	}
+		g_print("purdup\n");
+//	}
 	if (rf->progress_bar)
 	{
 		gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
@@ -675,7 +683,8 @@ receive_cancel(GtkButton *button, struct _send_info *info)
         if (info->cancel_button)
                 gtk_widget_set_sensitive(info->cancel_button, FALSE);
 
-	abort_all_soup();
+//	abort_all_soup();
+	g_print("\nCancel reading feeds\n");
 }
 
 gchar *
@@ -2232,6 +2241,7 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
+	g_print("finish feed\n");
 	GError *err = NULL;
 	gchar *chn_name = NULL;
 	//FIXME user_data might be out of bounds here
@@ -2416,7 +2426,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 out:	
 	if (user_data)
 	{
-		taskbar_op_finish(user_data);
+//		taskbar_op_finish(user_data);
 		g_free(user_data);
 	}
 	return;
@@ -3012,6 +3022,7 @@ bail:	if (!rf->pending && !rf->feed_queue)
 			rf->cancel = 0;
 		rf->pending = FALSE;
 	}
+	g_print("REVE bailk\n");
 	
 
 //camel_store_subscribe_folder (store, ->node->info->full_name, &mm->ex);
