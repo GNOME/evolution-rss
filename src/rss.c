@@ -2249,6 +2249,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	if (rf->feed_queue)
 		rf->feed_queue--;
 
+
 #ifndef EVOLUTION_2_12
 	if(rf->progress_dialog && rf->feed_queue == 0)
         {
@@ -2333,11 +2334,11 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
 //#endif
-
+//
 	while (gtk_events_pending ())
             gtk_main_iteration ();
 
-/*	RDF *r = g_new0 (RDF, 1);
+	RDF *r = g_new0 (RDF, 1);
         r->shown = TRUE;
         xmlSubstituteEntitiesDefaultValue = 1;
         r->cache = xml_parse_sux (response->str, response->len);
@@ -2351,9 +2352,9 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 			goto out;
 		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
 	
-        	chn_name = display_doc (r);
+//        	chn_name = display_doc (r);
 
-		if (chn_name)
+/*		if (chn_name)
 		{
 			if (g_ascii_strcasecmp(user_data, chn_name) != 0)
 			{
@@ -2367,7 +2368,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 				save_gconf_feed();
 			}
 			g_free(chn_name);
-		}
+		}*/
 		if (r->cache)
 			xmlFreeDoc(r->cache);
 		if (r->type)
@@ -2380,7 +2381,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 
 	if (!deleted)
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-			get_feed_age(user_data, lookup_key(user_data));*/
+			get_feed_age(user_data, lookup_key(user_data));
 //tout:	
 
 #ifdef EVOLUTION_2_12
@@ -2429,7 +2430,6 @@ out:
 void
 fetch_feed(gpointer key, gpointer value, gpointer user_data)
 { 
-	g_print("fetch feed\n");
 	GError *err = NULL;
 	GString *content;
 	GString *post;
@@ -3017,7 +3017,6 @@ bail:	if (!rf->pending && !rf->feed_queue)
 			rf->cancel = 0;
 		rf->pending = FALSE;
 	}
-	g_print("REVE bailk\n");
 	
 
 //camel_store_subscribe_folder (store, ->node->info->full_name, &mm->ex);
