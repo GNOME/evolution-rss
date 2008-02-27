@@ -418,7 +418,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
         	else
                         tmsg = g_strdup_printf("Fetching %s: %s", 
                         type, data);
-		taskbar_op_set_progress(data, tmsg, (gdouble)fraction);
+/*cancel*/	taskbar_op_set_progress(data, tmsg, (gdouble)fraction);
 		g_free(tmsg);
         }
         break;
@@ -586,10 +586,9 @@ GtkWidget *dialog1;
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-//	g_print("key:%p, value:%p ==", key, value);
-	g_print("key:%p ==", key);
+	g_print("key:%p ==\n", key);
 
-//	if (SOUP_IS_SESSION(key))
+	if (SOUP_IS_SESSION(key))
 /*	{
 		if (SOUP_IS_MESSAGE(value))
 		{
@@ -600,16 +599,11 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 			soup_session_cancel_message(key, value, SOUP_STATUS_CANCELLED);
 #endif
 		}*/
-//			soup_session_cancel_message(key, value);
-//		g_object_weak_unref(value, unblock_free, key);
-			if (key)
 		soup_session_abort(key);
 /*		g_hash_table_find(rf->key_session,
                 	remove_if_match,
-                	user_data);
-	}*/
-//	g_print(" key:%p, value:%p\n", key, value);
-	g_print(" key:%p, \n", key);
+                	user_data);*/
+//	}
 	return FALSE;
 }
 void
@@ -631,6 +625,7 @@ abort_all_soup(void)
 		g_hash_table_destroy(rf->session);
                 rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
 		g_print("purdup\n");
+		return;
 //	}
 	if (rf->progress_bar)
 	{
@@ -2241,7 +2236,6 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
-	g_print("finish feed\n");
 	GError *err = NULL;
 	gchar *chn_name = NULL;
 	//FIXME user_data might be out of bounds here
@@ -2343,7 +2337,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	while (gtk_events_pending ())
             gtk_main_iteration ();
 
-	RDF *r = g_new0 (RDF, 1);
+/*	RDF *r = g_new0 (RDF, 1);
         r->shown = TRUE;
         xmlSubstituteEntitiesDefaultValue = 1;
         r->cache = xml_parse_sux (response->str, response->len);
@@ -2386,7 +2380,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 
 	if (!deleted)
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-			get_feed_age(user_data, lookup_key(user_data));
+			get_feed_age(user_data, lookup_key(user_data));*/
 //tout:	
 
 #ifdef EVOLUTION_2_12
@@ -2435,6 +2429,7 @@ out:
 void
 fetch_feed(gpointer key, gpointer value, gpointer user_data)
 { 
+	g_print("fetch feed\n");
 	GError *err = NULL;
 	GString *content;
 	GString *post;
