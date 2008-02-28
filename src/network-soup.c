@@ -161,9 +161,9 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 //	g_hash_table_destroy(rf->abort_session);
 //	rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
 //	g_hash_table_foreach(rf->session, construct_abort, NULL);
-/*	g_hash_table_find(rf->key_session,
+	g_hash_table_find(rf->key_session,
 		remove_if_match,
-		user_data);*/
+		user_data);
 	gboolean prune = soup_session_try_prune_connection (user_data);
 	//I really don't know if his is necesarry
 	//but I believe it won't hurt
@@ -428,7 +428,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 	}
 	g_hash_table_insert(rf->session, soup_sess, msg);
 //	g_hash_table_insert(rf->abort_session, soup_sess, msg);
-//	g_hash_table_insert(rf->key_session, data, soup_sess);
+	g_hash_table_insert(rf->key_session, data, soup_sess);
 
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);

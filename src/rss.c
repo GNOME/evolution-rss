@@ -589,8 +589,8 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 	g_print("key:%p ==\n", key);
 
 	if (SOUP_IS_SESSION(key))
-/*	{
-		if (SOUP_IS_MESSAGE(value))
+	{
+/*		if (SOUP_IS_MESSAGE(value))
 		{
 #if LIBSOUP_VERSION < 2003000
 			soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
@@ -600,10 +600,10 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 #endif
 		}*/
 		soup_session_abort(key);
-/*		g_hash_table_find(rf->key_session,
+		g_hash_table_find(rf->key_session,
                 	remove_if_match,
-                	user_data);*/
-//	}
+                	user_data);
+	}
 	return FALSE;
 }
 void
@@ -2352,7 +2352,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 			goto out;
 		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
 	
-//        	chn_name = display_doc (r);
+        	chn_name = display_doc (r);
 
 /*		if (chn_name)
 		{
@@ -2422,7 +2422,7 @@ out:
 	if (user_data)
 	{
 //		taskbar_op_finish(user_data);
-		g_free(user_data);
+//		g_free(user_data);
 	}
 	return;
 }
