@@ -2946,8 +2946,128 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
                 GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 #endif
 #if GTK_VERSION < 2008000
-        gtk_label_set_markup (GTK_LABEL (label), pretty_url);
+	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
 #endif
+        readrss_label = gtk_label_new(_("Please wait"));
+        if (!rf->progress_dialog)
+        {
+                readrss_progress = gtk_progress_bar_new();
+                gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), label2, TRUE, TRUE, 10);
+                gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_label, FALSE, FALSE, 0);
+                gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_progress, FALSE, FALSE, 0);
+                gtk_progress_bar_set_fraction((GtkProgressBar *)readrss_progress, 0);
+                gtk_progress_bar_set_text((GtkProgressBar *)readrss_progress, _("0% done"));
+                gtk_widget_show_all(readrss_dialog);
+                rf->progress_dialog = readrss_dialog;
+                rf->progress_bar = readrss_progress;
+                rf->label       = label2;
+        }
+        if (!rf->pending && !rf->feed_queue)
+        {
+                rf->pending = TRUE;
+                check_folders();
+
+                rf->err = NULL;
+                g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
+                // reset cancelation signal
+                if (rf->cancel)
+                        rf->cancel = 0;
+                rf->pending = FALSE;
+        }
+#endif
+}
+
+static void
+set_send_status(struct _send_info *info, const char *desc, int pc)
+{
+        /* FIXME: LOCK */
+        g_free(info->what);
+        info->what = g_strdup(desc);
+        info->pc = pc;
+}
+
+/* for camel operation status */
+static void
+op_status(CamelOperation *op, const char *what, int pc, void *data)
+{
+        struct _send_info *info = data;
+
+        //printf("Operation '%s', percent %d\n");
+        switch (pc) {
+        case CAMEL_OPERATION_START:
+                pc = 0;
+                break;
+        case CAMEL_OPERATION_END:
+                pc = 100;
+                break;
+        }
+
+        set_send_status(info, what, pc);
+}
+
+void
+#ifdef EVOLUTION_2_12
+org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t);
+#else
+org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t);
+#endif
+
+void
+#ifdef EVOLUTION_2_12
+org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t)
+#else
+org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
+#endif
+{
+	GtkWidget *readrss_dialog;
+	GtkWidget *readrss_label;
+	GtkWidget *readrss_progress;
+	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
+
+	rf->t = t;
+
+	if (!rf->setup || g_hash_table_size(rf->hrname)<1)
+	{
+		e_error_run(NULL, "org-gnome-evolution-rss:generr", "No RSS feeds configured!", NULL);
+		return;
+	}
+
+#ifdef EVOLUTION_2_12
+	struct _send_info *info;
+	struct _send_data *data = (struct _send_data *)t->data;
+
+        info = g_malloc0 (sizeof (*info));
+//        info->type = type;
+                        
+        info->uri = g_strdup("feed"); //g_stddup
+
+        info->cancel = camel_operation_new (op_status, info);
+        info->state = SEND_ACTIVE;
+//        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
+                        
+        g_hash_table_insert (data->active, info->uri, info);
+//        list = g_list_prepend (list, info);
+
+	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+	                                    "rss.png",
+                                            NULL);
+
+	GtkWidget *recv_icon = e_icon_factory_get_image (
+                        iconfile, E_ICON_SIZE_LARGE_TOOLBAR);
+	g_free(iconfile);
+
+
+	guint row = t->row;
+	row+=2;
+	t->row = row;
+
+	gtk_table_resize(GTK_TABLE(t->table), t->row, 4);
+
+        char *pretty_url = g_strdup ("RSS");
+        label = gtk_label_new (NULL);
+#if 
+#endif
+        gtk_label_set_markup (GTK_LABEL (label), pretty_url);
         g_free (pretty_url);
 
         progress_bar = gtk_progress_bar_new ();
