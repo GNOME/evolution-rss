@@ -418,7 +418,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
         	else
                         tmsg = g_strdup_printf("Fetching %s: %s", 
                         type, data);
-/*cancel*/	taskbar_op_set_progress(data, tmsg, (gdouble)fraction);
+		taskbar_op_set_progress(data, tmsg, (gdouble)fraction);
 		g_free(tmsg);
         }
         break;
@@ -604,7 +604,7 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
                 	remove_if_match,
                 	user_data);
 	}
-	return FALSE;
+	return TRUE;
 }
 void
 remove_weak(gpointer key, gpointer value, gpointer user_data)
@@ -616,17 +616,14 @@ void
 abort_all_soup(void)
 {
 	//abort all session
-//	if (rf->abort_session)
-//	{
-//		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
-//		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
+	if (rf->abort_session)
+	{
+		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
+		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
 //		g_hash_table_foreach(rf->abort_session, cancel_soup_sess, NULL);
-		g_hash_table_foreach(rf->session, cancel_soup_sess, NULL);
 		g_hash_table_destroy(rf->session);
                 rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
-		g_print("purdup\n");
-		return;
-//	}
+	}
 	if (rf->progress_bar)
 	{
 		gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
@@ -679,7 +676,6 @@ receive_cancel(GtkButton *button, struct _send_info *info)
                 gtk_widget_set_sensitive(info->cancel_button, FALSE);
 
 //	abort_all_soup();
-	g_print("\nCancel reading feeds\n");
 }
 
 gchar *
@@ -2236,6 +2232,8 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
+	g_print("key:%s\n", user_data);
+	g_print("key:%p\n", user_data);
 	GError *err = NULL;
 	gchar *chn_name = NULL;
 	//FIXME user_data might be out of bounds here
@@ -2289,6 +2287,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
         	goto out;
     	}
 
+	g_print("here1\n");
 	if (rf->cancel)
 	{
 #ifdef EVOLUTION_2_12
@@ -2422,7 +2421,9 @@ out:
 	if (user_data)
 	{
 //		taskbar_op_finish(user_data);
-//		g_free(user_data);
+		g_print("g_free(%s)", user_data);
+		g_free(user_data);
+		g_print("g_free(%p)\n", user_data);
 	}
 	return;
 }
@@ -2468,13 +2469,13 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 
 		g_free(tmsg);
 		g_hash_table_insert(rf->activity, key, GUINT_TO_POINTER(activity_id));
-
+		g_print("fetch key:%s\n", key);
 		net_get_unblocking(
 				g_hash_table_lookup(rf->hr, lookup_key(key)),
 				user_data,
 				key,
 				(gpointer)finish_feed,
-				g_strdup(key),		// we need to dupe key here
+				g_strdup(key),	// we need to dupe key here
 				&err);			// because we might lose it if
 							// feed gets deleted
 		if (err)
@@ -4185,11 +4186,5 @@ get_feed_age(gpointer key, gpointer value)
 	camel_object_unref (folder);
 	g_print("=> total:%d\n", total);
 fail:	g_free(real_name);
-}
-
-void
-check_feed_age(void)
-{
-//	g_hash_table_foreach(rf->hrname, get_feed_age);	
 }
 

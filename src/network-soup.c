@@ -153,14 +153,13 @@ construct_abort(gpointer key, gpointer value, gpointer user_data)
 static void
 unblock_free (gpointer user_data, GObject *ex_msg)
 {
-	g_print("weak ref - trying to free object\n");
 #ifdef RSS_DEBUG
 	g_print("weak ref - trying to free object\n");
 #endif
 	g_hash_table_remove(rf->session, user_data);
-//	g_hash_table_destroy(rf->abort_session);
-//	rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
-//	g_hash_table_foreach(rf->session, construct_abort, NULL);
+	g_hash_table_destroy(rf->abort_session);
+	rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
+	g_hash_table_foreach(rf->session, construct_abort, NULL);
 	g_hash_table_find(rf->key_session,
 		remove_if_match,
 		user_data);
@@ -427,7 +426,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 		return -1;
 	}
 	g_hash_table_insert(rf->session, soup_sess, msg);
-//	g_hash_table_insert(rf->abort_session, soup_sess, msg);
+	g_hash_table_insert(rf->abort_session, soup_sess, msg);
 	g_hash_table_insert(rf->key_session, data, soup_sess);
 
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
@@ -448,7 +447,7 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
            cb2, cbdata2);
 
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
-////	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
+	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
 //	g_object_weak_ref (G_OBJECT(soup_sess), unblock_free, soup_sess);
 //	GMainLoop *mainloop = g_main_loop_new (g_main_context_default (), FALSE);
   //	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);

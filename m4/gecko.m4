@@ -51,22 +51,32 @@ AC_PROG_AWK
 AC_MSG_CHECKING([which gecko to use])
 
 AC_ARG_WITH([gecko],
-	AS_HELP_STRING([--with-gecko@<:@=mozilla|firefox|seamonkey|xulrunner@:>@],
+	AS_HELP_STRING([--with-gecko@<:@=mozilla|firefox|seamonkey|xulrunner|libxul@:>@],
 		       [Which gecko engine to use (autodetected by default)]))
 
 # Backward compat
 AC_ARG_WITH([mozilla],[],[with_gecko=$withval],[])
 
 gecko_cv_gecko=$with_gecko
+if $PKG_CONFIG --exists $with_gecko-xpcom; then
+	gecko_cv_gecko_xpcom=$with_gecko-xpcom
+else
+	gecko_cv_gecko_xpcom=$with_gecko
+fi
 
 # Autodetect gecko
-_geckos="xulrunner firefox mozilla-firefox seamonkey mozilla"
+_geckos="xulrunner firefox mozilla-firefox seamonkey mozilla libxul"
 if test -z "$gecko_cv_gecko"; then
 	for lizard in $_geckos; do
 		if $PKG_CONFIG --exists $lizard-xpcom; then
 			gecko_cv_gecko=$lizard
+			gecko_cv_gecko_xpcom=$lizard-xpcom
 			break;
-		fi
+		elif $PKG_CONFIG --exists $lizard; then
+			gecko_cv_gecko=$lizard
+			gecko_cv_gecko_xpcom=$lizard
+			break;			
+		fi		
 	done
 fi
 
@@ -93,12 +103,13 @@ mozilla) gecko_cv_gecko_flavour=mozilla ;;
 seamonkey) gecko_cv_gecko_flavour=mozilla ;;
 *firefox) gecko_cv_gecko_flavour=toolkit ;;
 xulrunner) gecko_cv_gecko_flavour=toolkit ;;
+libxul*) gecko_cv_gecko_flavour=toolkit ;;
 esac
 
-_GECKO_INCLUDE_ROOT="`$PKG_CONFIG --variable=includedir ${gecko_cv_gecko}-xpcom`"
-_GECKO_LIBDIR="`$PKG_CONFIG --variable=libdir ${gecko_cv_gecko}-xpcom`"
-_GECKO_HOME="`$PKG_CONFIG --variable=libdir ${gecko_cv_gecko}-xpcom`"
-_GECKO_PREFIX="`$PKG_CONFIG --variable=prefix ${gecko_cv_gecko}-xpcom`"
+_GECKO_INCLUDE_ROOT="`$PKG_CONFIG --variable=includedir ${gecko_cv_gecko_xpcom}`"
+_GECKO_LIBDIR="`$PKG_CONFIG --variable=libdir ${gecko_cv_gecko_xpcom}`"
+_GECKO_HOME="`$PKG_CONFIG --variable=libdir ${gecko_cv_gecko_xpcom}`"
+_GECKO_PREFIX="`$PKG_CONFIG --variable=prefix ${gecko_cv_gecko_xpcom}`"
 
 fi # if gecko_cv_have_gecko
 
@@ -114,6 +125,7 @@ $1[]_INCLUDE_ROOT=$_GECKO_INCLUDE_ROOT
 $1[]_LIBDIR=$_GECKO_LIBDIR
 $1[]_HOME=$_GECKO_HOME
 $1[]_PREFIX=$_GECKO_PREFIX
+$1[]_XPCOM=$gecko_cv_gecko_xpcom
 
 # **************************************************************
 # This is really gcc-only
@@ -359,10 +371,10 @@ _SAVE_CPPFLAGS="$CPPFLAGS"
 _SAVE_CXXFLAGS="$CXXFLAGS"
 _SAVE_LDFLAGS="$LDFLAGS"
 _SAVE_LIBS="$LIBS"
-CPPFLAGS="$CPPFLAGS $_GECKO_EXTRA_CPPFLAGS -I$_GECKO_INCLUDE_ROOT $($PKG_CONFIG --cflags-only-I ${gecko_cv_gecko}-xpcom)"
-CXXFLAGS="$CXXFLAGS $_GECKO_EXTRA_CXXFLAGS $($PKG_CONFIG --cflags-only-other ${gecko_cv_gecko}-xpcom)"
+CPPFLAGS="$CPPFLAGS $_GECKO_EXTRA_CPPFLAGS -I$_GECKO_INCLUDE_ROOT $($PKG_CONFIG --cflags-only-I ${gecko_cv_gecko_xpcom})"
+CXXFLAGS="$CXXFLAGS $_GECKO_EXTRA_CXXFLAGS $($PKG_CONFIG --cflags-only-other ${gecko_cv_gecko_xpcom})"
 LDFLAGS="$LDFLAGS $_GECKO_EXTRA_LDFLAGS -Wl,--rpath=$_GECKO_HOME"
-LIBS="$LIBS $($PKG_CONFIG --libs ${gecko_cv_gecko}-xpcom)"
+LIBS="$LIBS $($PKG_CONFIG --libs ${gecko_cv_gecko_xpcom})"
 
 _GECKO_DISPATCH_INCLUDEDIRS="$2"
 
@@ -595,11 +607,11 @@ fi
 AC_DEFUN([GECKO_XPIDL],
 [AC_REQUIRE([GECKO_INIT])dnl
 
-_GECKO_LIBDIR="`$PKG_CONFIG --variable=libdir ${gecko_cv_gecko}-xpcom`"
+_GECKO_LIBDIR="`$PKG_CONFIG --variable=libdir ${gecko_cv_gecko_xpcom}`"
 
 AC_PATH_PROG([XPIDL],[xpidl],[no],[$_GECKO_LIBDIR:$PATH])
 
-XPIDL_IDLDIR="`$PKG_CONFIG --variable=idldir ${gecko_cv_gecko}-xpcom`"
+XPIDL_IDLDIR="`$PKG_CONFIG --variable=idldir ${gecko_cv_gecko_xpcom}`"
 
 # Older geckos don't have this variable, see
 # https://bugzilla.mozilla.org/show_bug.cgi?id=240473

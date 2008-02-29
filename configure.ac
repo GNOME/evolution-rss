@@ -151,6 +151,7 @@ AC_SUBST([GECKO_INCLUDE_ROOT])
 AC_SUBST([GECKO_HOME])
 AC_SUBST([GECKO_PREFIX])
 AC_SUBST([GECKO_EXTRA_LIBS])
+AC_SUBST([GECKO_XPCOM])
 
 case "$GECKO" in
 mozilla) gecko_min_version=1.7 ;;
@@ -158,6 +159,7 @@ seamonkey) gecko_min_version=1.0 ;;
 *firefox) gecko_min_version=1.0 ;;
 *thunderbird) gecko_min_version=1.0 ;;
 xulrunner) gecko_min_version=1.8 ;;
+libxul*) gecko_min_version=1.9 ;;
 esac
 
 AC_MSG_CHECKING([whether to include Gecko support])
@@ -168,7 +170,7 @@ AC_MSG_RESULT([$enable_gecko])
 
 if test "$enable_gecko" = "yes"; then
 	if test "x$have_gecko" != "xno"; then
-	PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version], [], [have_gecko=no])
+	PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO_XPCOM >= $gecko_min_version], [], [have_gecko=no])
 	AC_SUBST([GECKO_CFLAGS])
 	AC_SUBST([GECKO_LIBS])
 
