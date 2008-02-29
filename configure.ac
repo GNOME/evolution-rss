@@ -241,9 +241,9 @@ AC_SUBST(RENDER)
 AC_SUBST(RENDER_N)
 
 # check for ellipsize
-if pkg-config --atleast-version=2.6.0 gtk+-2.0; then
-    AC_DEFINE(GTK_2_6,1,[At least 2.6 present])
-fi
+GTK_VERSION=`pkg-config --modversion gtk+-2.0` 
+GTK_VERSION=`echo $GTK_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
+AC_SUBST(GTK_VERSION)
 
 dnl ***********
 dnl GConf stuff

@@ -2818,10 +2818,12 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 		G_CALLBACK(readrss_dialog_cb),
 		NULL);
         GtkWidget *label2 = gtk_label_new(NULL);
-#if GTK_2_6
+#if GTK_VERSION > 2006000
 	gtk_label_set_ellipsize (GTK_LABEL (label2), PANGO_ELLIPSIZE_START);
 #endif
+#if GTK_VERSION < 2008000
 	gtk_label_set_justify(GTK_LABEL(label2), GTK_JUSTIFY_CENTER);
+#endif
         readrss_label = gtk_label_new(_("Please wait"));
         if (!rf->progress_dialog)
         {

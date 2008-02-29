@@ -1,5 +1,6 @@
 Fri 29 Feb 2008 07:52:51 AM EET <lucilanga@gnome.org>
 
+	* src/rss.c: gtk version fine tunning
 	* m4/gecko.m4: added support for libxul
 	(xulrunner 1.9)
 
