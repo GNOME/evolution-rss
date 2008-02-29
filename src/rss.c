@@ -586,7 +586,9 @@ GtkWidget *dialog1;
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-	g_print("key:%p ==\n", key);
+#if RSS_DEBUG 
+	g_print("key:%p\n", key);
+#endif
 
 	if (SOUP_IS_SESSION(key))
 	{
@@ -616,6 +618,7 @@ void
 abort_all_soup(void)
 {
 	//abort all session
+	rf->cancel_all = 1;
 	if (rf->abort_session)
 	{
 		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
@@ -644,6 +647,7 @@ abort_all_soup(void)
 		rf->b_session = NULL;
 		rf->b_msg_session = NULL;
 	}
+	rf->cancel_all = 0;
 }
 
 static void
@@ -2232,8 +2236,6 @@ finish_feed (SoupMessage *msg, gpointer user_data)
 finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
-	g_print("key:%s\n", user_data);
-	g_print("key:%p\n", user_data);
 	GError *err = NULL;
 	gchar *chn_name = NULL;
 	//FIXME user_data might be out of bounds here
@@ -2277,6 +2279,9 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	}
 #endif
 
+	if (rf->cancel_all)
+		goto out;
+
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
         	g_set_error(&err, NET_ERROR, NET_ERROR_GENERIC,
@@ -2287,7 +2292,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
         	goto out;
     	}
 
-	g_print("here1\n");
 	if (rf->cancel)
 	{
 #ifdef EVOLUTION_2_12
@@ -2313,7 +2317,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 		goto out;
 	}
-	g_print("here2\n");
 	
 #if LIBSOUP_VERSION < 2003000
 	if (!msg->response.length)
@@ -2354,7 +2357,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	
         	chn_name = display_doc (r);
 
-/*		if (chn_name)
+		if (chn_name)
 		{
 			if (g_ascii_strcasecmp(user_data, chn_name) != 0)
 			{
@@ -2368,7 +2371,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 				save_gconf_feed();
 			}
 			g_free(chn_name);
-		}*/
+		}
 		if (r->cache)
 			xmlFreeDoc(r->cache);
 		if (r->type)
@@ -2421,10 +2424,10 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 out:	
 	if (user_data)
 	{
-//		taskbar_op_finish(user_data);
-		g_print("g_free(%s)", user_data);
-		g_free(user_data);
-		g_print("g_free(%p)\n", user_data);
+		taskbar_op_finish(user_data);
+		//not sure why it dies here
+		if (!rf->cancel && !rf->cancel_all)
+			g_free(user_data);
 	}
 	return;
 }

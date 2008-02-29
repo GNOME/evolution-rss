@@ -82,6 +82,7 @@ typedef struct _rssfeed {
         gboolean        import;			//import going on
 	guint		feed_queue;
         gboolean        cancel; 		//cancelation signal
+        gboolean        cancel_all; 		//cancelation signal
         GHashTable      *session;		//queue of active unblocking sessions
         GHashTable      *abort_session;		//this is a hack to be able to iterate when
 						//we remove keys from seesion with weak_ref
