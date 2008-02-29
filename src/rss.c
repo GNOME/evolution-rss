@@ -2941,11 +2941,13 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 
         char *pretty_url = g_strdup ("RSS");
         label = gtk_label_new (NULL);
-#if GTK_2_6
+#if GTK_VERSION > 2006000
         gtk_label_set_ellipsize (
                 GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 #endif
+#if GTK_VERSION < 2008000
         gtk_label_set_markup (GTK_LABEL (label), pretty_url);
+#endif
         g_free (pretty_url);
 
         progress_bar = gtk_progress_bar_new ();
