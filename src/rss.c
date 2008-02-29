@@ -2313,6 +2313,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 		goto out;
 	}
+	g_print("here2\n");
 	
 #if LIBSOUP_VERSION < 2003000
 	if (!msg->response.length)
@@ -2469,7 +2470,6 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 
 		g_free(tmsg);
 		g_hash_table_insert(rf->activity, key, GUINT_TO_POINTER(activity_id));
-		g_print("fetch key:%s\n", key);
 		net_get_unblocking(
 				g_hash_table_lookup(rf->hr, lookup_key(key)),
 				user_data,
