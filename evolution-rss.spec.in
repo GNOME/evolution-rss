@@ -1,15 +1,12 @@
 Summary: Evolution RSS Reader
 Name: evolution-rss
 Version: @VERSION@
-Release: 6%{?dist}
+Release: 1%{?dist}
 Group: Applications/Internet
 License: GPLv2 and GPLv2+
 Source: http://gnome.eu.org/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin
-Patch0: evolution-rss-0.0.7-fix-detect.patch
-Patch1: evolution-rss-0.0.7-libsoup-2.4.patch
-Patch2: evolution-rss-0.0.7-autoreconf.patch
 Requires: evolution
 
 Requires(pre): GConf2
@@ -29,9 +26,6 @@ This is an evolution plugin which enables evolution to read rss feeds.
 
 %prep
 %setup -q -n evolution-rss-%{version}
-%patch0 -p1 -b fixdetect
-%patch1 -p1 -b libsoup24
-%patch2 -p1 -b autoreconf
 
 %build
 autoreconf -i -f
@@ -92,6 +86,9 @@ fi
 %doc TODO
 
 %changelog
+* Sat Mar  1 2008 Lucian Langa <lucilanga@gnome.org> - 0.0.8-1
+- Misc cleanup
+
 * Sat Feb 16 2008 Lucian Langa <cooly@gnome.eu.org> - 0.0.7-6
 - Misc cleanup
 - Drop gecko requirements till xulrunner is fixed
