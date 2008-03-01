@@ -2945,7 +2945,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
         gtk_label_set_ellipsize (
                 GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 #endif
-#if GTK_VERSION > 2008000
+#if GTK_VERSION > 2008011
 	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
 #endif
         gtk_label_set_markup (GTK_LABEL (label), pretty_url);
