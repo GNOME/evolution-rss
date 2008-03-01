@@ -1,0 +1,15 @@
+<Root>
+  <commands>
+    <cmd name="RSSTask" _label="_Read RSS" _tip="Update RSS feeds" pixtype="stock" pixname="stock_todo"/>
+    <cmd name="RSSSetup" _label="Setup RSS" _tip="Setup RSS feeds" pixtype="stock" pixname="stock_todo"/>
+  </commands>
+
+  <menu>
+    <placeholder name="MessagePlaceholder">
+      <submenu name="Message">
+          <separator f="" name="emaillist5"/>
+          <menuitem name="RSSTask" verb="" accel="F11"/>
+      </submenu>
+   </placeholder>
+  </menu>
+</Root>

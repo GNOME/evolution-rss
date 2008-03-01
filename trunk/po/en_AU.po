@@ -1,0 +1,264 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-04-19 20:45+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/rss.c:118
+#, c-format
+msgid "%2.0f%% done"
+msgstr ""
+
+#: ../src/rss.c:158
+msgid "Add Feeds"
+msgstr ""
+
+#: ../src/rss.c:175
+msgid "Feed URL: "
+msgstr ""
+
+#: ../src/rss.c:186
+msgid "Show the article summary instead of loading the web page"
+msgstr ""
+
+#: ../src/rss.c:356
+msgid "Setup Feeds"
+msgstr ""
+
+#: ../src/rss.c:384
+msgid "Enabled"
+msgstr ""
+
+#: ../src/rss.c:394
+msgid "Feed Name"
+msgstr ""
+
+#: ../src/rss.c:402
+msgid "URI"
+msgstr ""
+
+#: ../src/rss.c:411
+msgid "Type"
+msgstr ""
+
+#: ../src/rss.c:455
+msgid "Disable"
+msgstr ""
+
+#: ../src/rss.c:542 ../src/rss.c:544 ../src/rss.c:642 ../src/rss.c:644
+msgid "News&Blogs"
+msgstr ""
+
+#: ../src/rss.c:628
+msgid "Reading RSS feeds..."
+msgstr ""
+
+#: ../src/rss.c:630
+msgid "Please wait"
+msgstr ""
+
+#: ../src/rss.c:636
+#, c-format
+msgid "0% done"
+msgstr ""
+
+#. static void
+#. rdf_free (RDF *r)
+#. {
+#. /* Stop the download
+#. if (r->message) {
+#. soup_message_cancel (r->message);
+#. }
+#.
+#. g_free (r->uri);
+#. g_free (r->html);
+#.
+#. if (r->cache) {
+#. xmlFreeDoc (r->cache);
+#. }
+#.
+#. g_free (r);
+#. }
+#.
+#. static void
+#. e_summary_rdf_set_online (ESummary *summary,
+#. GNOME_Evolution_OfflineProgressListener progress,
+#. gboolean online,
+#. void *data)
+#. {
+#. ESummaryRDF *rdf;
+#. GList *p;
+#.
+#. rdf = summary->rdf;
+#. if (rdf->online == online) {
+#. return;
+#. }
+#.
+#. if (online == TRUE) {
+#. e_summary_rdf_update (summary);
+#.
+#. if (summary->preferences->rdf_refresh_time != 0)
+#. rdf->timeout = gtk_timeout_add (summary->preferences->rdf_refresh_time * 1000,
+#. (GtkFunction) e_summary_rdf_update,
+#. summary);
+#. } else {
+#. for (p = rdf->rdfs; p; p = p->next) {
+#. RDF *r;
+#.
+#. r = p->data;
+#. if (r->message) {
+#. soup_message_cancel (r->message);
+#. r->message = NULL;
+#. }
+#. }
+#.
+#. gtk_timeout_remove (rdf->timeout);
+#. rdf->timeout = 0;
+#. }
+#.
+#. rdf->online = online;
+#. }
+#.
+#. void
+#. e_summary_rdf_init (ESummary *summary)
+#. {
+#. ESummaryPrefs *prefs;
+#. ESummaryRDF *rdf;
+#. ESummaryConnection *connection;
+#. GSList *p;
+#. int timeout;
+#.
+#. g_return_if_fail (summary != NULL);
+#. g_return_if_fail (IS_E_SUMMARY (summary));
+#.
+#. prefs = summary->preferences;
+#. g_assert (prefs != NULL);
+#.
+#. rdf = g_new0 (ESummaryRDF, 1);
+#. summary->rdf = rdf;
+#.
+#. connection = g_new (ESummaryConnection, 1);
+#. connection->count = e_summary_rdf_count;
+#. connection->add = e_summary_rdf_add;
+#. connection->set_online = e_summary_rdf_set_online;
+#. connection->closure = NULL;
+#. connection->callback = NULL;
+#. connection->callback_closure = NULL;
+#.
+#. rdf->connection = connection;
+#. rdf->online = TRUE;
+#. e_summary_add_online_connection (summary, connection);
+#.
+#. e_summary_add_protocol_listener (summary, "rdf", e_summary_rdf_protocol, rdf);
+#.
+#. for (p = prefs->rdf_urls; p; p = p->next) {
+#. e_summary_rdf_add_uri (summary, p->data);
+#. }
+#. timeout = prefs->rdf_refresh_time;
+#.
+#. e_summary_rdf_update (summary);
+#.
+#. if (rdf->timeout == 0)
+#. rdf->timeout = 0;
+#. else
+#. rdf->timeout = gtk_timeout_add (timeout * 1000,
+#. (GtkFunction) e_summary_rdf_update, summary);
+#.
+#. return;
+#. }
+#.
+#. void
+#. e_summary_rdf_reconfigure (ESummary *summary)
+#. {
+#. ESummaryRDF *rdf;
+#. GList *old, *p;
+#. GSList *sp;
+#.
+#. g_return_if_fail (summary != NULL);
+#. g_return_if_fail (IS_E_SUMMARY (summary));
+#.
+#. rdf = summary->rdf;
+#.
+#. /* Stop timeout
+#. if (rdf->timeout != 0) {
+#. gtk_timeout_remove (rdf->timeout);
+#. rdf->timeout = 0;
+#. }
+#.
+#. old = rdf->rdfs;
+#. rdf->rdfs = NULL;
+#. for (p = old; p; p = p->next) {
+#. RDF *r;
+#.
+#. r = p->data;
+#. rdf_free (r);
+#. }
+#. g_list_free (old);
+#.
+#. for (sp = summary->preferences->rdf_urls; sp; sp = sp->next) {
+#. e_summary_rdf_add_uri (summary, sp->data);
+#. }
+#.
+#. if (summary->preferences->rdf_refresh_time != 0)
+#. rdf->timeout = gtk_timeout_add (summary->preferences->rdf_refresh_time * 1000,
+#. (GtkFunction) e_summary_rdf_update, summary);
+#.
+#. e_summary_rdf_update (summary);
+#. }
+#.
+#. void
+#. e_summary_rdf_free (ESummary *summary)
+#. {
+#. ESummaryRDF *rdf;
+#. GList *p;
+#.
+#. g_return_if_fail (summary != NULL);
+#. g_return_if_fail (IS_E_SUMMARY (summary));
+#.
+#. rdf = summary->rdf;
+#.
+#. if (rdf->timeout != 0)
+#. gtk_timeout_remove (rdf->timeout);
+#.
+#. for (p = rdf->rdfs; p; p = p->next) {
+#. RDF *r = p->data;
+#.
+#. rdf_free (r);
+#. }
+#. g_list_free (rdf->rdfs);
+#. g_free (rdf->html);
+#.
+#. e_summary_remove_online_connection (summary, rdf->connection);
+#. g_free (rdf->connection);
+#.
+#. g_free (rdf);
+#. summary->rdf = NULL;
+#. }
+#.
+#: ../src/org-gnome-cooly-rss.eplug.xml.h:1
+msgid "Evolutin RSS Reader Plugin."
+msgstr ""
+
+#: ../src/org-gnome-cooly-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr ""
+
+#: ../src/org-gnome-cooly-rss.error.xml.h:2
+msgid "{0}"
+msgstr ""
+
+#: ../src/org-gnome-cooly-rss.error.xml.h:3
+msgid "{1}"
+msgstr ""
