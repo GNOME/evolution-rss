@@ -2337,7 +2337,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
 //#endif
-//
+
 	while (gtk_events_pending ())
             gtk_main_iteration ();
 
@@ -3383,7 +3383,6 @@ layer_find_tag (xmlNodePtr node,
 #endif
 		if (node->ns && node->ns->prefix)
 		{
-//                	printf("ns:%s\n", node->ns->prefix);
 			for (i=0; i < 3; i++)
 			{
 				if (!strcasecmp (node->ns->prefix, standard_rss_modules[i][1]))
@@ -3395,11 +3394,12 @@ layer_find_tag (xmlNodePtr node,
 			}
 		}
                 if (strcasecmp (node->name, match)==0) {
-                        if (node->children != NULL && node->children->next != NULL) {
+                        if (node->children != NULL 
+			&& node->children->next != NULL) {
 #ifdef RDF_DEBUG
 				g_print("NODE DUMP:%s\n", xmlNodeGetContent(node->children->next));
 #endif
-				len = xmlNodeDump(buf, node->doc, node->children->next, 0, 0);
+				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
 				xmlBufferFree(buf);
 				return content;

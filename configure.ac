@@ -186,6 +186,10 @@ if test "$enable_gecko" = "yes"; then
 			AC_DEFINE_UNQUOTED(HAVE_XULRUNNER, 1, [gecko flavour is xulrunner])
 			AC_SUBST(HAVE_XULRUNNER)
 			fi
+			if test "x$GECKO" == "xlibxul"; then
+			AC_DEFINE_UNQUOTED(HAVE_LIBXUL, 1, [libxul flavour of xulrunner])
+			AC_SUBST(HAVE_LIBXUL)
+			fi
 		fi
 		AC_ARG_WITH([primary-render],
         		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),

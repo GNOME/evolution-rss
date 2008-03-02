@@ -1,3 +1,9 @@
+Sun 02 Mar 2008 01:07:45 PM EET <lucilanga@gnome.org>
+
+	* src/rss.c: layer_find_tag() changed parsing
+	of node->children->next in content for atoms
+	* src/configure.ac: libxul support (f9)
+
 Fri 29 Feb 2008 07:52:51 AM EET <lucilanga@gnome.org>
 
 	* src/rss.c: gtk version fine tunning
