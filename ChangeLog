@@ -1,3 +1,8 @@
+Mon 03 Mar 2008 08:42:14 AM EET <lucilanga@gnome.org>
+
+	* ATOM parse summary in case content is
+	missing
+
 Sun 02 Mar 2008 01:07:45 PM EET <lucilanga@gnome.org>
 
 	* src/rss.c: layer_find_tag() changed parsing

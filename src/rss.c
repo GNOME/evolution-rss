@@ -3196,6 +3196,7 @@ create_mail(create_feed *CF)
         stream = camel_stream_mem_new ();
 	// w/out an format argument this throws and seg fault
         camel_stream_printf (stream, "%s", CF->body);
+        g_print ("mybody:%s\n", CF->body);
         camel_data_wrapper_construct_from_stream (rtext, stream);
         camel_object_unref (stream);
 
@@ -3394,6 +3395,9 @@ layer_find_tag (xmlNodePtr node,
 			}
 		}
                 if (strcasecmp (node->name, match)==0) {
+//		g_print("node children:%s|\n", node->children);
+//		if (node->children)
+//		g_print("node children next:%s|\n", node->children->next);
                         if (node->children != NULL 
 			&& node->children->next != NULL) {
 #ifdef RDF_DEBUG
@@ -3939,12 +3943,15 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		}
 		//FIXME this might need xmlFree when namespacing
 		b = layer_find_tag (el->children, "description",
-				layer_find_tag (el->children, "content", NULL));
+				layer_find_tag (el->children, "content", 
+					layer_find_tag (el->children, "summary", 
+					NULL)));
 
 		if (!b)
                 	b = g_strdup(layer_find (el->children, "description",
 				layer_find (el->children, "content",
 				layer_find (el->children, "summary", "No information"))));
+		g_print("b2:%s|\n", b);
 
                 char *d = layer_find (el->children, "pubDate", NULL);
 		//date in dc module format
@@ -4001,8 +4008,10 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		    (void)fseek(fr, 0L, SEEK_SET);
 		}
 
+//			g_print("body1:%s\n", b);
 		while (gtk_events_pending())
                   gtk_main_iteration ();
+//			g_print("body2:%s\n", b);
 
 		if (!occ)
 		{
@@ -4012,6 +4021,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 			CF->q 		= g_strdup(q);
 			CF->sender 	= g_strdup(sender);
 			CF->subj 	= g_strdup(p);
+//			g_print("body3:%s\n", b);
 			CF->body 	= g_strdup(b);
 			CF->date 	= g_strdup(d);
 			CF->dcdate 	= g_strdup(d2);
