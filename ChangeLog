@@ -1,5 +1,7 @@
 Mon 03 Mar 2008 08:42:14 AM EET <lucilanga@gnome.org>
 
+	* corectly parse xml element and xml text
+	nodes
 	* ATOM parse summary in case content is
 	missing
 

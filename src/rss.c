@@ -3332,6 +3332,7 @@ content_rss(xmlNode *node, gchar *fail)
 	gchar *content;
 
 	content = xmlNodeGetContent(node);
+	g_print("dublin content:%s|\n", content);
 	if (content)
 		return content;
 	else
@@ -3390,21 +3391,29 @@ layer_find_tag (xmlNodePtr node,
 				{
 					func = (gpointer)standard_rss_modules[i][2];
 					if (strcasecmp (node->ns->prefix, match)==0)
+					{
+						xmlBufferFree(buf);
 						return func(node, fail);
+					}
 				}
 			}
 		}
                 if (strcasecmp (node->name, match)==0) {
-//		g_print("node children:%s|\n", node->children);
-//		if (node->children)
-//		g_print("node children next:%s|\n", node->children->next);
-                        if (node->children != NULL 
-			&& node->children->next != NULL) {
+		g_print("node children:%s|\n", node->children);
+		if (node->children)
+		{
+		g_print("node type:%d|\n", node->children->type);
+		g_print("node children next:%s|\n", node->children->next);
+		}
+                        if (node->children->type == 1 && (node->children != NULL 
+			|| node->children->next != NULL)) {
 #ifdef RDF_DEBUG
 				g_print("NODE DUMP:%s\n", xmlNodeGetContent(node->children->next));
 #endif
+				g_print("NODE DUMP:%s\n", xmlNodeGetContent(node->children));
 				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
+				g_print("NODE DUMP:%s\n", content);
 				xmlBufferFree(buf);
 				return content;
                         } else {
