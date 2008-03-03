@@ -3399,21 +3399,13 @@ layer_find_tag (xmlNodePtr node,
 			}
 		}
                 if (strcasecmp (node->name, match)==0) {
-		g_print("node children:%s|\n", node->children);
-		if (node->children)
-		{
-		g_print("node type:%d|\n", node->children->type);
-		g_print("node children next:%s|\n", node->children->next);
-		}
                         if (node->children->type == 1 && (node->children != NULL 
 			|| node->children->next != NULL)) {
 #ifdef RDF_DEBUG
 				g_print("NODE DUMP:%s\n", xmlNodeGetContent(node->children->next));
 #endif
-				g_print("NODE DUMP:%s\n", xmlNodeGetContent(node->children));
 				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
-				g_print("NODE DUMP:%s\n", content);
 				xmlBufferFree(buf);
 				return content;
                         } else {
@@ -3960,7 +3952,6 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
                 	b = g_strdup(layer_find (el->children, "description",
 				layer_find (el->children, "content",
 				layer_find (el->children, "summary", "No information"))));
-		g_print("b2:%s|\n", b);
 
                 char *d = layer_find (el->children, "pubDate", NULL);
 		//date in dc module format
@@ -4017,10 +4008,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		    (void)fseek(fr, 0L, SEEK_SET);
 		}
 
-//			g_print("body1:%s\n", b);
 		while (gtk_events_pending())
                   gtk_main_iteration ();
-//			g_print("body2:%s\n", b);
 
 		if (!occ)
 		{
@@ -4030,7 +4019,6 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 			CF->q 		= g_strdup(q);
 			CF->sender 	= g_strdup(sender);
 			CF->subj 	= g_strdup(p);
-//			g_print("body3:%s\n", b);
 			CF->body 	= g_strdup(b);
 			CF->date 	= g_strdup(d);
 			CF->dcdate 	= g_strdup(d2);
