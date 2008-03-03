@@ -3196,7 +3196,6 @@ create_mail(create_feed *CF)
         stream = camel_stream_mem_new ();
 	// w/out an format argument this throws and seg fault
         camel_stream_printf (stream, "%s", CF->body);
-        g_print ("mybody:%s\n", CF->body);
         camel_data_wrapper_construct_from_stream (rtext, stream);
         camel_object_unref (stream);
 
