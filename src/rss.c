@@ -3398,8 +3398,10 @@ layer_find_tag (xmlNodePtr node,
 			}
 		}
                 if (strcasecmp (node->name, match)==0) {
-                        if (node->children->type == 1 && (node->children != NULL 
-			|| node->children->next != NULL)) {
+                        if (node->children != NULL)
+			{
+				if (node->children->type == 1
+					|| node->children->next != NULL) {
 #ifdef RDF_DEBUG
 				g_print("NODE DUMP:%s\n", xmlNodeGetContent(node->children->next));
 #endif
@@ -3407,10 +3409,11 @@ layer_find_tag (xmlNodePtr node,
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
 				xmlBufferFree(buf);
 				return content;
-                        } else {
-				xmlBufferFree(buf);
-                                return fail;
-                        }
+                        	} else {
+					xmlBufferFree(buf);
+                                	return fail;
+                        	}
+			}
                 }
                 node = node->next;
         }
@@ -3445,10 +3448,11 @@ layer_find_pos (xmlNodePtr node,
                 xmlDebugDumpNode (stdout, node, 32);
                 printf("%s.\n", node->name);
 #endif
-                if (strcasecmp (node->name, match)==0) {
-                        return node;
+                if (strcasecmp (node->name, match)==0 && node->children) {
+                        return node->children->next;
                 }
-                node = node->children->next;
+                //node = node->children->next;
+                node = node->next;
         }
         return NULL;
 }
@@ -3900,6 +3904,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 	{
                 char *p = layer_find (el->children, "title", "Untitled article");
 		//firstly try to parse as an ATOM author
+		//process person construct
                	char *q1 = g_strdup(layer_find_innerhtml (el->children, "author", "name", NULL));
 		char *q2 = g_strdup(layer_find_innerhtml (el->children, "author", "uri", NULL));
 		char *q3 = g_strdup(layer_find_innerhtml (el->children, "author", "email", NULL));
@@ -3924,6 +3929,18 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 				g_free(q1);
 				g_free(q2);
 			}
+		}
+		//try the source construct
+		xmlNodePtr source;
+		source = layer_find_pos(el->children, "source", "author");
+//		source = layer_find_pos(el->children, "source", "contributor");
+		if (source != NULL)
+			 if (source->children != NULL)
+		{
+			char *aut=NULL;
+			//auth = g_strdup(layer_find_innerhtml(source->children, "author", "name", NULL));
+			if (aut)
+				g_print("AUT:%s\n", aut);
 		}
 		else	//then RSS or RDF
 		{
