@@ -3334,7 +3334,6 @@ content_rss(xmlNode *node, gchar *fail)
 	gchar *content;
 
 	content = xmlNodeGetContent(node);
-	g_print("dublin content:%s|\n", content);
 	if (content)
 		return content;
 	else
@@ -3452,7 +3451,15 @@ layer_find_pos (xmlNodePtr node,
                 printf("%s.\n", node->name);
 #endif
                 if (strcasecmp (node->name, match)==0 && node->children) {
-                        return node->children->next;
+			xmlNodePtr subnode = node->children;
+			while (subnode!=NULL) {
+                		if (strcasecmp (subnode->name, submatch)==0 && subnode->children)
+				{
+					g_print("HIT\n");
+                        		return subnode->children->next;
+				}
+				subnode = subnode->next;
+			}
                 }
                 //node = node->children->next;
                 node = node->next;
@@ -3937,21 +3944,16 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 				g_free(q2);
 			}
 		}
-		//try the source construct
-//		xmlNodePtr source;
-//		source = layer_find_pos(el->children, "source", "author");
-//		source = layer_find_pos(el->children, "source", "contributor");
-//		if (source != NULL)
-//			 if (source->children != NULL)
-//		{
-//			char *aut=NULL;
-			//auth = g_strdup(layer_find_innerhtml(source->children, "author", "name", NULL));
-//			if (aut)
-//				g_print("AUT:%s\n", aut);
-//		}
 		else	//then RSS or RDF
 		{
-                	q = g_strdup(layer_find (el->children, "author", 
+			xmlNodePtr source;
+			source = layer_find_pos(el->children, "source", "author");
+			//try the source construct
+			//source = layer_find_pos(el->children, "source", "contributor");
+			if (source != NULL)
+				q = g_strdup(layer_find(source, "name", NULL));
+			else
+               			q = g_strdup(layer_find (el->children, "author", 
 				layer_find (el->children, "creator", NULL)));
 			if (q)
 			{
@@ -4007,6 +4009,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		g_print("date:%s\n", d);
 		g_print("date:%s\n", d2);
 #endif
+		g_print("author:%s\n", q);
 		p =  decode_html_entities (p);
 		gchar *tmp = decode_html_entities(b);
 		g_free(b);
