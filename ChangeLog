@@ -1,3 +1,7 @@
+Thu 06 Mar 2008 09:06:20 AM EET <lucilanga@gnome.org>
+
+	* src/rss.c: sanitize file_to_message()
+
 Mon 03 Mar 2008 08:42:14 AM EET <lucilanga@gnome.org>
 
 	* corectly parse xml element and xml text

@@ -3210,8 +3210,11 @@ create_mail(create_feed *CF)
 		camel_multipart_add_part(mp, part);
 		camel_object_unref(part);
 		CamelMimePart *msgp = file_to_message(CF->encl);
-		camel_multipart_add_part(mp, msgp);
-		camel_object_unref(msgp);
+		if (msgp)
+		{
+			camel_multipart_add_part(mp, msgp);
+			camel_object_unref(msgp);
+		}
 	      	camel_medium_set_content_object((CamelMedium *)new, (CamelDataWrapper *)mp);
 		camel_object_unref(mp);
 	}
@@ -3674,7 +3677,11 @@ file_to_message(const char *name)
 	camel_mime_part_set_encoding(msg, CAMEL_TRANSFER_ENCODING_BINARY);
 	CamelDataWrapper *content = camel_data_wrapper_new();
 	
-        file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDONLY, 0);
+        //file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDONLY, 0);
+        file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDWR|O_CREAT, 0666);
+
+	if (!file)
+		return NULL;
 
         camel_data_wrapper_construct_from_stream(content, (CamelStream *)file);
         camel_object_unref((CamelObject *)file);
@@ -3931,17 +3938,17 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 			}
 		}
 		//try the source construct
-		xmlNodePtr source;
-		source = layer_find_pos(el->children, "source", "author");
+//		xmlNodePtr source;
+//		source = layer_find_pos(el->children, "source", "author");
 //		source = layer_find_pos(el->children, "source", "contributor");
-		if (source != NULL)
-			 if (source->children != NULL)
-		{
-			char *aut=NULL;
+//		if (source != NULL)
+//			 if (source->children != NULL)
+//		{
+//			char *aut=NULL;
 			//auth = g_strdup(layer_find_innerhtml(source->children, "author", "name", NULL));
-			if (aut)
-				g_print("AUT:%s\n", aut);
-		}
+//			if (aut)
+//				g_print("AUT:%s\n", aut);
+//		}
 		else	//then RSS or RDF
 		{
                 	q = g_strdup(layer_find (el->children, "author", 
