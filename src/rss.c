@@ -3454,14 +3454,10 @@ layer_find_pos (xmlNodePtr node,
 			xmlNodePtr subnode = node->children;
 			while (subnode!=NULL) {
                 		if (strcasecmp (subnode->name, submatch)==0 && subnode->children)
-				{
-					g_print("HIT\n");
                         		return subnode->children->next;
-				}
 				subnode = subnode->next;
 			}
                 }
-                //node = node->children->next;
                 node = node->next;
         }
         return NULL;
@@ -4009,7 +4005,6 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		g_print("date:%s\n", d);
 		g_print("date:%s\n", d2);
 #endif
-		g_print("author:%s\n", q);
 		p =  decode_html_entities (p);
 		gchar *tmp = decode_html_entities(b);
 		g_free(b);
