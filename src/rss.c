@@ -87,11 +87,17 @@
 #include <gtkmozembed.h>
 #endif
 
-#ifdef HAVE_WEBKIT
+#ifdef HAVE_OLD_WEBKIT
 #include "webkitgtkglobal.h"
 #include "webkitgtkpage.h"
+#define webkit_web_view_stop_loading(obj) webkit_gtk_page_stop_loading(obj)
+#define webkit_web_view_open(obj, data) webkit_gtk_page_open(obj, data)
+#define webkit_web_view_new() webkit_gtk_page_new()
+#else
+#ifdef HAVE_WEBKIT
+#include "webkitglobal.h"
+#include "webkitwebview.h"
 #endif
-
 #endif
 
 #include <errno.h>
@@ -974,15 +980,15 @@ xml_set_prop (xmlNodePtr node, const char *name, char **val)
 static gboolean
 xml_set_bool (xmlNodePtr node, const char *name, gboolean *val)
 {
-        gboolean bool;
+        gboolean gbool;
         char *buf;
 
         if ((buf = xmlGetProp (node, name))) {
-                bool = (!strcmp (buf, "true") || !strcmp (buf, "yes"));
+                gbool = (!strcmp (buf, "true") || !strcmp (buf, "yes"));
                 xmlFree (buf);
 
-                if (bool != *val) {
-                        *val = bool;
+                if (gbool != *val) {
+                        *val = gbool;
                         return TRUE;
                 }
         }
@@ -1475,8 +1481,8 @@ stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #ifdef	HAVE_GTKMOZEMBED
 	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 #endif
-#ifdef	HAVE_WEBKIT
-	webkit_gtk_page_stop_loading(WEBKIT_GTK_PAGE(rf->mozembed));
+#if HAVE_WEBKIT
+	webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
 #endif
 }
 
@@ -1493,8 +1499,8 @@ reload_cb (GtkWidget *button, gpointer data)
 		break;
 		case 1:
 #ifdef	HAVE_WEBKIT
-	webkit_gtk_page_stop_loading(WEBKIT_GTK_PAGE(rf->mozembed));
-     	webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), data);
+	webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
+     	webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), data);
 #endif
 		break;
 	}
@@ -1604,8 +1610,8 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 //		if (!g_thread_supported ()) {
   //              	g_thread_init (NULL);
     //    	}
-		webkit_gtk_init();
-		rf->mozembed = (GtkWidget *)webkit_gtk_page_new();
+//		webkit_gtk_init();
+		rf->mozembed = (GtkWidget *)webkit_web_view_new();
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
 	}
 #endif
@@ -1641,9 +1647,9 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	{
 		g_print("Render engine Webkit\n");
 		if (rf->online)
-        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), po->website);
+        		webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), po->website);
 		else
-        		webkit_gtk_page_open(WEBKIT_GTK_PAGE(rf->mozembed), "about:blank");
+        		webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), "about:blank");
 	}
 #endif
 
@@ -3675,18 +3681,18 @@ file_to_message(const char *name)
 {
 	g_return_if_fail (g_file_test(name, G_FILE_TEST_IS_REGULAR));
 	const char *type;
-        CamelStream *file;
+        CamelStreamFs *file;
         CamelMimePart *msg = camel_mime_part_new();
 	camel_mime_part_set_encoding(msg, CAMEL_TRANSFER_ENCODING_BINARY);
 	CamelDataWrapper *content = camel_data_wrapper_new();
 	
-        file = camel_stream_fs_new_with_name(name, O_RDONLY, 0);
-        //file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDWR|O_CREAT, 0666);
+        //file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDONLY, 0);
+        file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDWR|O_CREAT, 0666);
 
 	if (!file)
 		return NULL;
 
-        camel_data_wrapper_construct_from_stream(content, file);
+        camel_data_wrapper_construct_from_stream(content, (CamelStream *)file);
         camel_object_unref((CamelObject *)file);
 	camel_medium_set_content_object((CamelMedium *)msg, content);
         camel_object_unref(content);
