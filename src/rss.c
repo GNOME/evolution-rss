@@ -95,7 +95,6 @@
 #define webkit_web_view_new() webkit_gtk_page_new()
 #else
 	#ifdef HAVE_WEBKIT
-	//#include "webkitglobal.h"
 	#include "webkitwebview.h"
 	#endif
 #endif
