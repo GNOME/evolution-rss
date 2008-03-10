@@ -94,10 +94,12 @@
 #define webkit_web_view_open(obj, data) webkit_gtk_page_open(obj, data)
 #define webkit_web_view_new() webkit_gtk_page_new()
 #else
-#ifdef HAVE_WEBKIT
-#include "webkitglobal.h"
-#include "webkitwebview.h"
+	#ifdef HAVE_WEBKIT
+	//#include "webkitglobal.h"
+	#include "webkitwebview.h"
+	#endif
 #endif
+
 #endif
 
 #include <errno.h>
