@@ -3675,18 +3675,18 @@ file_to_message(const char *name)
 {
 	g_return_if_fail (g_file_test(name, G_FILE_TEST_IS_REGULAR));
 	const char *type;
-        CamelStreamFs *file;
+        CamelStream *file;
         CamelMimePart *msg = camel_mime_part_new();
 	camel_mime_part_set_encoding(msg, CAMEL_TRANSFER_ENCODING_BINARY);
 	CamelDataWrapper *content = camel_data_wrapper_new();
 	
-        //file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDONLY, 0);
-        file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDWR|O_CREAT, 0666);
+        file = camel_stream_fs_new_with_name(name, O_RDONLY, 0);
+        //file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDWR|O_CREAT, 0666);
 
 	if (!file)
 		return NULL;
 
-        camel_data_wrapper_construct_from_stream(content, (CamelStream *)file);
+        camel_data_wrapper_construct_from_stream(content, file);
         camel_object_unref((CamelObject *)file);
 	camel_medium_set_content_object((CamelMedium *)msg, content);
         camel_object_unref(content);
