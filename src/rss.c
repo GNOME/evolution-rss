@@ -1529,7 +1529,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 	{
         	width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
-		g_print("resize webkit :width:%d, height: %d\n", width, height);
 #ifdef RSS_DEBUG
 		g_print("resize webkit :width:%d, height: %d\n", width, height);
 #endif
@@ -1546,11 +1545,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	g_print("size:%d\n", wheight);
 //        height = req.height - 200;// - 16 - 194;
 //	g_print("my cal %d w:%d h:%d\n", GTK_IS_WIDGET(data), width, height);
-/*		g_print("data:%p\n", data);
-		g_print("is_widget:%d\n", GTK_IS_WIDGET(widget));
-		g_print("is_data:%p\n", data);
-		g_print("is_is_data:%d\n", GTK_IS_WIDGET(gtk_bin_get_child(data)));
-		g_print("is_is_data:%d\n", GTK_IS_WIDGET(data));*/
 		if (data)
 			if(GTK_IS_WIDGET(data) && height > 50)
 			{
@@ -1562,7 +1556,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 #endif
 			}
 	}
-	g_print("resize done\n");
 }
 
 #ifdef HAVE_GTKMOZEMBED
@@ -1640,13 +1633,14 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	}
 #endif
 
-//	po->html = rf->mozembed;
 	po->container = moz;
 
 #ifdef HAVE_WEBKIT
 	if (engine == 1)
 	{
+#ifdef RSS_DEBUG
 		g_print("Render engine Webkit\n");
+#endif
 		if (rf->online)
         		webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), po->website);
 		else
@@ -1657,7 +1651,9 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 #ifdef HAVE_GTKMOZEMBED
 	if (engine == 2)
 	{
+#ifdef RSS_DEBUG
 		g_print("Render engine Gecko\n");
+#endif
 		if (rf->online)
 		{
 			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
@@ -1778,7 +1774,6 @@ pfree(EMFormatHTMLPObject *o)
 	g_signal_handler_disconnect(po->format->html, po->shandler);
 	if (rf->mozembed)
 	{
-		g_print("call pfree() for controls2\n");
 		gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
 	}
@@ -4111,11 +4106,18 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 	time_t date, min_date = 0;
 	uids = camel_folder_get_uids (folder);
        	for (i = 0; i < uids->len; i++)
+		g_print("uids->pdata:%d\n", uids->pdata[i]);
+
+       	for (i = 0; i < uids->len; i++)
 	{
 		info = camel_folder_get_message_info(folder, uids->pdata[i]);
-               	if (info && rf->current_uid != uids->pdata[i]) {
+		g_print("rf->current_uid:%d\n",rf->current_uid);
+		g_print("uds_pdata:%d\n",uids->pdata[i]);
+               	if (info && &rf->current_uid != &uids->pdata[i]) {
 			date = camel_message_info_date_sent(info);
 			flags = camel_message_info_flags(info);
+			if (flags & CAMEL_MESSAGE_FLAGGED)
+				goto out;
        			if (flags & CAMEL_MESSAGE_SEEN)
 			{
 				
@@ -4146,7 +4148,7 @@ delete_oldest_article(CamelFolder *folder, guint unread)
                                		}
 				}
 			}
-              	camel_message_info_free(info);
+out:           	camel_message_info_free(info);
                	}
 	}
        	camel_folder_freeze(folder);
@@ -4192,6 +4194,8 @@ get_feed_age(gpointer key, gpointer value)
         	for (i = 0; i < uids->len; i++)
 		{
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
+		g_print("rf->current_uid:%d\n",rf->current_uid);
+		g_print("uds_pdata:%d\n",uids->pdata[i]);
                 	if (info && rf->current_uid != uids->pdata[i]) {
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400)
@@ -4199,11 +4203,12 @@ get_feed_age(gpointer key, gpointer value)
 					flags = camel_message_info_flags(info);
                                		if (!(flags & CAMEL_MESSAGE_SEEN))
 					{
-						if (del_unread)
+						if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED))
 							camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN|CAMEL_MESSAGE_DELETED, ~0);
 					}
 					else
-						camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+						if (!(flags & CAMEL_MESSAGE_FLAGGED))
+							camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
 				}
                         	camel_folder_free_message_info(folder, info);
                 	}
