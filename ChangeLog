@@ -1,3 +1,8 @@
+Tue 18 Mar 2008 10:33:48 AM EET <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c: create_dalog_add()
+	fix del messages, days spin buttons update
+
 Mon 10 Mar 2008 09:10:28 PM EET <lucilanga@gnome.org>
 
 	* src/rss.c: update to newer webkit API

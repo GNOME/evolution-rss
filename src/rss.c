@@ -1996,6 +1996,7 @@ void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t)
 {
 	if (rf)
 		rf->current_uid = t->uid;
+	g_print("rf->current_uid:%s\n", t->uid);
 }
 #else
 void org_gnome_cooly_article_show(void *ep, void *t)
@@ -4106,14 +4107,12 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 	time_t date, min_date = 0;
 	uids = camel_folder_get_uids (folder);
        	for (i = 0; i < uids->len; i++)
-		g_print("uids->pdata:%d\n", uids->pdata[i]);
-
-       	for (i = 0; i < uids->len; i++)
 	{
 		info = camel_folder_get_message_info(folder, uids->pdata[i]);
-		g_print("rf->current_uid:%d\n",rf->current_uid);
-		g_print("uds_pdata:%d\n",uids->pdata[i]);
-               	if (info && &rf->current_uid != &uids->pdata[i]) {
+//		g_print("rf->current_uid:%s\n",rf->current_uid);
+//		g_print("uds_pdata:%s\n",uids->pdata[i]);
+               	if (info && 
+			strncmp(rf->current_uid, uids->pdata[i], strlen(rf->current_uid))) {
 			date = camel_message_info_date_sent(info);
 			flags = camel_message_info_flags(info);
 			if (flags & CAMEL_MESSAGE_FLAGGED)
@@ -4148,8 +4147,8 @@ delete_oldest_article(CamelFolder *folder, guint unread)
                                		}
 				}
 			}
-out:           	camel_message_info_free(info);
                	}
+out:           	camel_message_info_free(info);
 	}
        	camel_folder_freeze(folder);
 	if (min_date)
@@ -4196,7 +4195,7 @@ get_feed_age(gpointer key, gpointer value)
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
 		g_print("rf->current_uid:%d\n",rf->current_uid);
 		g_print("uds_pdata:%d\n",uids->pdata[i]);
-                	if (info && rf->current_uid != uids->pdata[i]) {
+                	if (info && strncmp(rf->current_uid, uids->pdata[i], strlen(rf->current_uid))) {
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400)
 				{

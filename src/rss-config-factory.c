@@ -139,10 +139,11 @@ rep_check_cb (GtkWidget *widget, gpointer data)
          g_source_remove(rf->rc_id);
          if (active)
          {
+	     gtk_spin_button_update((GtkSpinButton *)data);
              //we have to make sure we have a timeout value
              if (!gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL))
                         gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT,
-             gtk_spin_button_get_value((GtkSpinButton *)data), NULL);
+             			gtk_spin_button_get_value((GtkSpinButton *)data), NULL);
              if (rf->rc_id)
                         g_source_remove(rf->rc_id);
 		rf->rc_id = g_timeout_add (60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)data),
@@ -155,6 +156,7 @@ static void
 rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 {
     gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data));
+    gtk_spin_button_update((GtkSpinButton *)widget);
     gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT,
                 gtk_spin_button_get_value((GtkSpinButton*)widget), NULL);
     if (active)
@@ -416,6 +418,7 @@ GSList *radiobutton1_group = NULL;
   if (feed->del_messages)
         gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1), feed->del_messages);
   g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
+  g_signal_connect(spinbutton1, "editing-done", G_CALLBACK(del_messages_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
   label2 = gtk_label_new (_("messages"));
   gtk_widget_show (label2);
@@ -480,6 +483,7 @@ GSList *radiobutton1_group = NULL;
   gtk_window_add_accel_group (GTK_WINDOW (dialog1), accel_group);
 
   gint result = gtk_dialog_run(GTK_DIALOG(dialog1));
+  g_print("result:%d\n", result);
   switch (result)
   {
     case GTK_RESPONSE_OK:
@@ -508,7 +512,9 @@ GSList *radiobutton1_group = NULL;
         feed->del_feed=i;
         feed->del_unread = gtk_toggle_button_get_active(
                 GTK_TOGGLE_BUTTON(checkbutton4));
+	gtk_spin_button_update((GtkSpinButton *)spinbutton1);
         feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
+	gtk_spin_button_update((GtkSpinButton *)spinbutton2);
         feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
         feed->add = 1;
         // there's no reason to feetch feed if url isn't changed
