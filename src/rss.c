@@ -157,6 +157,7 @@ struct _org_gnome_rss_controls_pobject {
 extern int xmlSubstituteEntitiesDefaultValue;
 
 rssfeed *rf = NULL;
+gboolean inhibit_read = FALSE;	//prevent mail selection when deleting folder
 
 gboolean setup_feed(add_feed *feed);
 gchar *display_doc (RDF *r);
@@ -1994,9 +1995,8 @@ void org_gnome_cooly_article_show(void *ep, void *t);
 #ifdef EVOLUTION_2_12
 void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t)
 {
-	if (rf)
-		rf->current_uid = t->uid;
-	g_print("rf->current_uid:%s\n", t->uid);
+	if (rf && !inhibit_read)
+		rf->current_uid = g_strdup(t->uid);
 }
 #else
 void org_gnome_cooly_article_show(void *ep, void *t)
@@ -4102,17 +4102,16 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 {
 	CamelMessageInfo *info;
 	GPtrArray *uids;
-	guint i, j = 0, imax;
+	guint i, j = 0, imax = 0;
 	guint32 flags;
 	time_t date, min_date = 0;
 	uids = camel_folder_get_uids (folder);
        	for (i = 0; i < uids->len; i++)
 	{
 		info = camel_folder_get_message_info(folder, uids->pdata[i]);
-//		g_print("rf->current_uid:%s\n",rf->current_uid);
-//		g_print("uds_pdata:%s\n",uids->pdata[i]);
-               	if (info && 
-			strncmp(rf->current_uid, uids->pdata[i], strlen(rf->current_uid))) {
+               	if (info) {
+			if (!strcmp(rf->current_uid, uids->pdata[i]))
+				goto out;
 			date = camel_message_info_date_sent(info);
 			flags = camel_message_info_flags(info);
 			if (flags & CAMEL_MESSAGE_FLAGGED)
@@ -4185,6 +4184,7 @@ get_feed_age(gpointer key, gpointer value)
 	
 	guint del_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, value));
 	guint del_feed = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, value));
+	inhibit_read = 1;
 	if (del_feed == 2)
 	{	
 		guint del_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, value));
@@ -4193,9 +4193,7 @@ get_feed_age(gpointer key, gpointer value)
         	for (i = 0; i < uids->len; i++)
 		{
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
-		g_print("rf->current_uid:%d\n",rf->current_uid);
-		g_print("uds_pdata:%d\n",uids->pdata[i]);
-                	if (info && strncmp(rf->current_uid, uids->pdata[i], strlen(rf->current_uid))) {
+                	if (info && strcmp(rf->current_uid, uids->pdata[i])) {
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400)
 				{
@@ -4233,5 +4231,6 @@ get_feed_age(gpointer key, gpointer value)
 	camel_object_unref (folder);
 	g_print("=> total:%d\n", total);
 fail:	g_free(real_name);
+	inhibit_read = 0;
 }
 

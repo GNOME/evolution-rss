@@ -418,7 +418,6 @@ GSList *radiobutton1_group = NULL;
   if (feed->del_messages)
         gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1), feed->del_messages);
   g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
-  g_signal_connect(spinbutton1, "editing-done", G_CALLBACK(del_messages_cb), feed);
   gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
   label2 = gtk_label_new (_("messages"));
   gtk_widget_show (label2);
@@ -483,7 +482,6 @@ GSList *radiobutton1_group = NULL;
   gtk_window_add_accel_group (GTK_WINDOW (dialog1), accel_group);
 
   gint result = gtk_dialog_run(GTK_DIALOG(dialog1));
-  g_print("result:%d\n", result);
   switch (result)
   {
     case GTK_RESPONSE_OK:
