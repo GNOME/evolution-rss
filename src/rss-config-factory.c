@@ -545,10 +545,28 @@ store_redraw(GtkTreeView *data)
 ////////////////////
 
 static void
+msg_feeds_response(GtkWidget *selector, guint response, gpointer user_data)
+{
+        while (gtk_events_pending ())
+                gtk_main_iteration ();
+        if (response == GTK_RESPONSE_CANCEL)
+                rf->cancel = 1;
+	gtk_widget_destroy(selector);
+}
+
+static void
 feeds_dialog_add(GtkDialog *d, gpointer data)
 {
         gchar *text;
         add_feed *feed = create_dialog_add(NULL, NULL);
+	if (feed->dialog)
+                gtk_widget_destroy(feed->dialog);
+        GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", NULL);
+        gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);
+        g_signal_connect(msg_feeds, "response", G_CALLBACK(msg_feeds_response), NULL);
+	gtk_widget_show_all(msg_feeds);
+        while (gtk_events_pending ())
+                gtk_main_iteration ();
         if (feed->feed_url && strlen(feed->feed_url))
         {
                 text = feed->feed_url;
@@ -568,8 +586,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
                 g_hash_table_foreach(rf->hrname, construct_list, model);
                 save_gconf_feed();
         }
-out:    if (feed->dialog)
-                gtk_widget_destroy(feed->dialog);
+out:    gtk_widget_destroy(msg_feeds);
         g_free(feed);
 }
 
@@ -854,8 +871,18 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                 if (name)
                 {
                         add_feed *feed = create_dialog_add(name, feed_name);
+                    	if (feed->dialog)
+                                gtk_widget_destroy(feed->dialog);
+        		GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", NULL);
+        		gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);
+        		g_signal_connect(msg_feeds, "response", G_CALLBACK(msg_feeds_response), NULL);
+			gtk_widget_show_all(msg_feeds);
+        		while (gtk_events_pending ())
+                		gtk_main_iteration ();
                         if (!feed->add)
                                 goto out;
+			g_print("name:%s\n", name);
+			g_print("feed_url:%s\n", feed->feed_url);
                         text = feed->feed_url;
                         feed->feed_url = sanitize_url(feed->feed_url);
                         g_free(text);
@@ -920,8 +947,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                         save_gconf_feed();
                                 }
                         }
-out:                    if (feed->dialog)
-                                gtk_widget_destroy(feed->dialog);
+out:			gtk_widget_destroy(msg_feeds);
                         g_free(feed);
                 }
         }

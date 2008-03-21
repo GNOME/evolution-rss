@@ -2794,15 +2794,15 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 	if (!rf->online)
 		return;
 
-//        if (!rf->setup || g_hash_table_size(rf->hrname)<1)
-//        {
+        if (!rf->setup || g_hash_table_size(rf->hrname)<1)
+        {
 /*                e_error_run(NULL,
 			"org-gnome-evolution-rss:generr",
 			_("No RSS feeds configured!"),
 			NULL);*/
-		taskbar_push_message("No RSS feeds configured!");
+		taskbar_push_message(_("No RSS feeds configured!"));
                 return;
-  //      }
+        }
 	if (!feeds_enabled())
 	{
                 e_error_run(NULL,
@@ -2906,12 +2906,12 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 
 	rf->t = t;
 
-/*	if (!rf->setup || g_hash_table_size(rf->hrname)<1)
+	if (!rf->setup || g_hash_table_size(rf->hrname)<1)
 	{
-		e_error_run(NULL, "org-gnome-evolution-rss:generr", "No RSS feeds configured!", NULL);*/
-		taskbar_push_message("No RSS feeds configured!");
+		//e_error_run(NULL, "org-gnome-evolution-rss:generr", "No RSS feeds configured!", NULL);*/
+		taskbar_push_message(_("No RSS feeds configured!"));
 		return;
-//	}
+	}
 
 #ifdef EVOLUTION_2_12
 	struct _send_info *info;

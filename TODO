@@ -2,7 +2,6 @@
 	* maybe implement md5 for uniqueing articles (for broken feeds)
 	* make setup dialog modal when fetch_feed active
 	* add syndicate icon for News&Blogs folder
-	* offline storage for article's home page
 	* probably move to soup_unblocking when rendering of an article
 	* when browsing a different feed/mail folder cancel all sessions
 	* also create groups when importing
@@ -14,10 +13,7 @@
 	* check mozembed widget / thread when quitting
 	* test cancelation signal check rf->cancel fetch feed might reset it always 0 and crashing when finish_feed
 	* jump to folder when adding through d-bus
-	* check webkit rendering
 	* make Cancel All from S&R work
-	* obey ttl entity
-	* search in the content of page for feed
 	* move evolution detection to m4 to ease up integration in other plugins
 	* change ifdef labels for debuging by level
 	* disable javascript alerts !?
@@ -33,9 +29,11 @@
 	* crash (mail_append_message) if folder contains .lock file ? or ibex crashes
 	* implement notify back of imported feed perhaps libnotify
 	* prefetch html content for all webkits (perhaps temp file)
+	* offline storage for article's home page
 	* implement web controls for diferent redering <Webkits> or <Gecko>
 	* convert reading feeds progress bar to articles number that will actually be read
 	* force soup to follow redirects (304) test on fedora weekly news
 	* check loading of images in certain feeds
 	* convert rest of non-intrusive error messages 
-	* close dialog window after addiong/editing a feed an put some progress.
+	* search in the content of page for feed
+	* obey ttl entity

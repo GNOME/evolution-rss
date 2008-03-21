@@ -8,6 +8,11 @@
     <button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
   </error>
   
+  <error id="rssmsg" type="info">
+    <_primary>Updating Feeds...</_primary>
+    <button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
+  </error>
+
   <error id="generr" type="error">
     <_primary>{0}</_primary>
     <button stock="gtk-ok" response="GTK_RESPONSE_OK"/>
