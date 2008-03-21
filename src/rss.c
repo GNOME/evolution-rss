@@ -1547,7 +1547,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //        height = req.height - 200;// - 16 - 194;
 //	g_print("my cal %d w:%d h:%d\n", GTK_IS_WIDGET(data), width, height);
 		if (data)
-			if(GTK_IS_WIDGET(data) && height > 50)
+			if(GTK_IS_WIDGET(data) && height > 0)
 			{
 				gtk_widget_set_size_request((GtkWidget *)data, width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
@@ -2794,14 +2794,15 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 	if (!rf->online)
 		return;
 
-        if (!rf->setup || g_hash_table_size(rf->hrname)<1)
-        {
-                e_error_run(NULL,
+//        if (!rf->setup || g_hash_table_size(rf->hrname)<1)
+//        {
+/*                e_error_run(NULL,
 			"org-gnome-evolution-rss:generr",
 			_("No RSS feeds configured!"),
-			NULL);
+			NULL);*/
+		taskbar_push_message("No RSS feeds configured!");
                 return;
-        }
+  //      }
 	if (!feeds_enabled())
 	{
                 e_error_run(NULL,
@@ -2905,11 +2906,12 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 
 	rf->t = t;
 
-	if (!rf->setup || g_hash_table_size(rf->hrname)<1)
+/*	if (!rf->setup || g_hash_table_size(rf->hrname)<1)
 	{
-		e_error_run(NULL, "org-gnome-evolution-rss:generr", "No RSS feeds configured!", NULL);
+		e_error_run(NULL, "org-gnome-evolution-rss:generr", "No RSS feeds configured!", NULL);*/
+		taskbar_push_message("No RSS feeds configured!");
 		return;
-	}
+//	}
 
 #ifdef EVOLUTION_2_12
 	struct _send_info *info;
