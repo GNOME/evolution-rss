@@ -38,3 +38,4 @@
 	* force soup to follow redirects (304) test on fedora weekly news
 	* check loading of images in certain feeds
 	* convert rest of non-intrusive error messages 
+	* close dialog window after addiong/editing a feed an put some progress.
