@@ -21,7 +21,8 @@
 #include "config.h"
 #endif
 
-#define d(x)
+int rss_verbose_debug = 0;
+#define d(x) (rss_verbose_debug?(x):0)
 
 #include <string.h>
 #include <stdio.h>
@@ -378,9 +379,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 //	rssfeed *rf = data;
     NetStatusProgress *progress;
     float fraction = 0;
-#ifdef RSS_DEBUG
-	g_print("status:%d\n", status);
-#endif
+    d(g_print("status:%d\n", status));
 
     switch (status) {
     case NET_STATUS_BEGIN:
@@ -450,9 +449,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
         progress = (NetStatusProgress*)statusdata;
         if (progress->current > 0 && progress->total > 0) {
 	fraction = (float)progress->current / progress->total;
-#ifdef RSS_DEBUG
-	g_print("%f.", fraction*100);
-#endif
+	d(g_print("%f.", fraction*100));
 	}
 	while (gtk_events_pending())
       		gtk_main_iteration ();
@@ -594,9 +591,7 @@ GtkWidget *dialog1;
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-#if RSS_DEBUG 
-	g_print("key:%p\n", key);
-#endif
+	d(g_print("key:%p\n", key));
 
 	if (SOUP_IS_SESSION(key))
 	{
@@ -661,9 +656,7 @@ abort_all_soup(void)
 static void
 readrss_dialog_cb (GtkWidget *widget, gpointer data)
 {
-#ifdef RSS_DEBUG
-	g_print("\nCancel reading feeds\n");
-#endif
+	d(g_print("\nCancel reading feeds\n"));
 	abort_all_soup();
 #ifndef EVOLUTION_2_12
 	gtk_widget_destroy(widget);
@@ -803,9 +796,7 @@ check_if_match (gpointer key, gpointer value, gpointer user_data)
         char *sf_href = (char *)value;
         char *int_uri = (char *)user_data;
 
-#ifdef RSS_DEBUG
-	g_print("checking hay:%s fro neddle:%s\n", sf_href, int_uri);
-#endif
+	d(g_print("checking hay:%s for neddle:%s\n", sf_href, int_uri));
 
         if (!strcmp (sf_href, int_uri))
                 return TRUE; /* Quit calling the callback */
@@ -1225,9 +1216,7 @@ html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 				xmlSetProp(doc, prop, tmpurl);
 				g_free(tmpurl);
 			}
-#ifdef RSS_DEBUG
-			g_print("DEBUG: parsing: %s\n", url);
-#endif
+			d(g_print("DEBUG: parsing: %s\n", url));
 			if (url[0] == '/' && url[1] != '/')
 			{
 				gchar *server = get_server_from_uri(base);
@@ -1392,9 +1381,7 @@ parse_html(char *url, const char *html, int len)
 	doc = src;
 	gchar *newbase = NULL;
 	newbase = xmlGetProp(html_find((xmlNode *)doc, "base"), "href");
-#ifdef RSS_DEBUG
-	g_print("newbase:|%s|\n", newbase);
-#endif
+	d(g_print("newbase:|%s|\n", newbase));
 	xmlDoc *tmpdoc = (xmlDoc *)html_find((xmlNode *)doc, "base");
 	xmlUnlinkNode((xmlNode *)tmpdoc);
 	html_set_base((xmlNode *)doc, url, "a", "href", newbase);
@@ -1523,29 +1510,22 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //        gtk_widget_size_request (gtk_widget_get_parent((GtkWidget *)efh->html), &req);
 //	g_print("BOX w:%d,h:%d\n", req.width, req.height);
   //      width = ((GtkWidget *) efh->html)->allocation.height - 16;
-//	g_print("WID:%d\n", width);
 	
 	guint k = rf->headers_mode ? 198 : 103;
 	if (GTK_IS_WIDGET(widget))
 	{
         	width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
-#ifdef RSS_DEBUG
-		g_print("resize webkit :width:%d, height: %d\n", width, height);
-#endif
+		d(g_print("resize webkit :width:%d, height: %d\n", width, height));
 //			rf->headers_mode ? 194 : 100;
 //	EMFormat *myf = (EMFormat *)efh;
-//	g_print("w0:%d,h0:%d\n", width, height);
 //	GtkRequisition req;
-	//get eb
 //	gtk_widget_size_request(data, &req);
 //	GtkWidget *my = data;
 //	g_print("w:%d,h:%d\n", req.width, req.height);
 //	g_print("w2:%d,h2:%d\n", my->allocation.width, my->allocation.height);
 //	int wheight = height - (req.height - height) - 20;
-//	g_print("size:%d\n", wheight);
 //        height = req.height - 200;// - 16 - 194;
-//	g_print("my cal %d w:%d h:%d\n", GTK_IS_WIDGET(data), width, height);
 		if (data)
 			if(GTK_IS_WIDGET(data) && height > 0)
 			{
@@ -1639,9 +1619,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 #ifdef HAVE_WEBKIT
 	if (engine == 1)
 	{
-#ifdef RSS_DEBUG
-		g_print("Render engine Webkit\n");
-#endif
+		d(g_print("Render engine Webkit\n"));
 		if (rf->online)
         		webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), po->website);
 		else
@@ -1652,9 +1630,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 #ifdef HAVE_GTKMOZEMBED
 	if (engine == 2)
 	{
-#ifdef RSS_DEBUG
-		g_print("Render engine Gecko\n");
-#endif
+		d(g_print("Render engine Gecko\n"));
 		if (rf->online)
 		{
 			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
@@ -1795,9 +1771,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
-#ifdef RSS_DEBUG
-        g_print("Formatting...\n");
-#endif
+        d(g_print("Formatting...\n"));
 
 	CamelMimePart *message = CAMEL_IS_MIME_MESSAGE(t->part) ? 
 			t->part : 
@@ -1881,10 +1855,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		if (src)
 		{
 			htmlDocDumpMemory(src, &buff, &size);
-#ifdef RSS_DEBUG
-			g_print("%s\n", buff);
-#endif
-			g_print("%s\n", buff);
+			d(g_print("htmlDocDumpMemory:%s\n", buff));
 			xmlFree(src);
 		}
 		else
@@ -1905,9 +1876,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	}
 	else
 	{
-#ifdef RSS_DEBUG
-		g_print("normal html rendering\n");
-#endif
+		d(g_print("normal html rendering\n"));
 		GByteArray *buffer;
 		CamelStreamMem *stream = (CamelStreamMem *)camel_stream_mem_new();
 		buffer = g_byte_array_new ();
@@ -2143,9 +2112,7 @@ setup_feed(add_feed *feed)
         xmlNodePtr root = NULL;
         xmlSubstituteEntitiesDefaultValue = 0;
         doc = xml_parse_sux (content->str, content->len);
-#ifdef RSS_DEBUG
-	g_print("content:%s\n", content->str);
-#endif
+	d(g_print("content:%s\n", content->str));
 	root = xmlDocGetRootElement(doc);
 
 	if ((doc != NULL && root != NULL)
@@ -2454,9 +2421,8 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	// and no imports pending
 	if (g_hash_table_lookup(rf->hre, lookup_key(key)) && !rf->cancel && !rf->import)
 	{
-#ifdef RSS_DEBUG
-		g_print("\nFetching: %s..%s\n", g_hash_table_lookup(rf->hr, lookup_key(key)), key);
-#endif
+		d(g_print("\nFetching: %s..%s\n", 
+			g_hash_table_lookup(rf->hr, lookup_key(key)), key));
 		rf->feed_queue++;
 
 		gchar *tmsg;
@@ -2796,10 +2762,6 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 
         if (!rf->setup || g_hash_table_size(rf->hrname)<1)
         {
-/*                e_error_run(NULL,
-			"org-gnome-evolution-rss:generr",
-			_("No RSS feeds configured!"),
-			NULL);*/
 		taskbar_push_message(_("No RSS feeds configured!"));
                 return;
         }
@@ -2908,7 +2870,6 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 
 	if (!rf->setup || g_hash_table_size(rf->hrname)<1)
 	{
-		//e_error_run(NULL, "org-gnome-evolution-rss:generr", "No RSS feeds configured!", NULL);*/
 		taskbar_push_message(_("No RSS feeds configured!"));
 		return;
 	}
@@ -3040,7 +3001,7 @@ bail:	if (!rf->pending && !rf->feed_queue)
 void
 rss_finalize(void)
 {
-	g_print("RSS: cleaning all remaining sessions ..");
+	d(g_print("RSS: cleaning all remaining sessions .."));
 	abort_all_soup();
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
@@ -3073,6 +3034,11 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		rss_gconf = gconf_client_get_default();
 		upgrade = 1;
 		printf("RSS Plugin enabled\n");
+		char *d;
+        	d = getenv("RSS_VERBOSE_DEBUG");
+        	if (d)
+                	rss_verbose_debug = atoi(d);
+
 		//initiate main rss structure
 		if (!rf)
 		{
@@ -3089,9 +3055,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->soup_auth_retry = 1;
 			get_feed_folders();
 #if HAVE_DBUS
-#if RSS_DEBUG
-			g_print("init_dbus()\n");
-#endif
+			d(g_print("init_dbus()\n"));
 			/*D-BUS init*/
 			rf->bus = init_dbus ();
 #endif
@@ -3156,9 +3120,7 @@ create_mail(create_feed *CF)
 	g_free(tmp);
 
 	addr = camel_internet_address_new(); 
-#ifdef RSS_DEBUG
-	g_print("date:%s\n", CF->date);
-#endif
+	d(g_print("date:%s\n", CF->date));
    	camel_address_decode(CAMEL_ADDRESS(addr), author);
 	camel_mime_message_set_from(new, addr);
 	camel_object_unref(addr);
@@ -4001,15 +3963,13 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 		char *id = layer_find (el->children, "id",				//ATOM
 				layer_find (el->children, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
-#ifdef RSS_DEBUG
-		g_print("link:%s\n", link);
-		g_print("body:%s\n", b);
-		g_print("author:%s\n", q);
-		g_print("sender:%s\n", sender);
-		g_print("title:%s\n", p);
-		g_print("date:%s\n", d);
-		g_print("date:%s\n", d2);
-#endif
+		d(g_print("link:%s\n", link));
+//		d(g_print("body:%s\n", b));
+		d(g_print("author:%s\n", q));
+		d(g_print("sender:%s\n", sender));
+		d(g_print("title:%s\n", p));
+		d(g_print("date:%s\n", d));
+		d(g_print("date:%s\n", d2));
 		p =  decode_html_entities (p);
 		gchar *tmp = decode_html_entities(b);
 		g_free(b);
@@ -4072,10 +4032,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 				free_cf(CF);
 			}
 		}
-
-#ifdef RSS_DEBUG
-		g_print("put success()\n");
-#endif
+		d(g_print("put success()\n"));
 tout:		if (q) g_free(q);
 		g_free(b);
 		g_free(p);
@@ -4175,9 +4132,7 @@ get_feed_age(gpointer key, gpointer value)
 	guint32 flags;
 
 	gchar *real_folder = lookup_feed_folder(key);
-#ifdef RSS_DEBUG
-	g_print("Cleaning folder: %s\n", real_folder);
-#endif
+	d(g_print("Cleaning folder: %s\n", real_folder));
 
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))

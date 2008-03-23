@@ -1045,9 +1045,7 @@ import_opml(gchar *file, add_feed *feed)
 
                         while (gtk_events_pending ())
                                 gtk_main_iteration ();
-#if RSS_DEBUG
-                        g_print("feed imported:%d\n", res);
-#endif
+                        d(g_print("feed imported:%d\n", res));
                         current++;
                         float fr = ((current*100)/total);
                         gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);

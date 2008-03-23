@@ -126,10 +126,8 @@ recv_msg (SoupMessage *msg, gpointer user_data)
 #else
 	response = g_string_new_len(msg->response_body->data, msg->response_body->length);
 #endif
-#ifdef RSS_DEBUG
-	g_print("got it!\n");
-	g_print("res:[%s]\n", response->str);
-#endif
+	d(g_print("got it!\n"));
+	d(g_print("res:[%s]\n", response->str));
 }
 
 static gboolean
@@ -153,9 +151,7 @@ construct_abort(gpointer key, gpointer value, gpointer user_data)
 static void
 unblock_free (gpointer user_data, GObject *ex_msg)
 {
-#ifdef RSS_DEBUG
-	g_print("weak ref - trying to free object\n");
-#endif
+	d(g_print("weak ref - trying to free object\n"));
 	g_hash_table_remove(rf->session, user_data);
 	g_hash_table_destroy(rf->abort_session);
 	rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);

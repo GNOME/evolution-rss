@@ -1,3 +1,13 @@
+Sun 23 Mar 2008 08:02:49 PM EET <lucilanga@gnome.org>
+
+	* src/rss.c, src/rss-config-factory.c add
+	RSS_VERBOSE_DEBUG option
+
+Sat 22 Mar 2008 06:40:33 PM EET <lucilanga@gnome.org>
+
+	* src/rss.c: org_gnome_cooly_rss() make no
+	feeds configure a little less annoying
+
 Fri 21 Mar 2008 12:28:09 PM EET <lucilanga@gnome.org>
 
 	* src/rss-config-factory.c: add progress
