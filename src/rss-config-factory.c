@@ -645,6 +645,37 @@ rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex
         camel_store_free_folder_info (store, fi);
 }
 
+feed*
+save_feed_hash(gpointer name)
+{
+        feed *saved_feed = g_new0(feed, 1);
+	saved_feed->hrname = g_strdup(g_hash_table_lookup(rf->hrname, name));
+	saved_feed->hrname_r = g_strdup(g_hash_table_lookup(rf->hrname_r, lookup_key(name)));
+	saved_feed->hre = g_hash_table_lookup(rf->hre, lookup_key(name));
+	saved_feed->hrt = g_strdup(g_hash_table_lookup(rf->hrt, lookup_key(name)));
+	saved_feed->hrh = g_hash_table_lookup(rf->hrh, lookup_key(name));
+	saved_feed->hr = g_strdup(g_hash_table_lookup(rf->hr, lookup_key(name)));
+	saved_feed->hrdel_feed = g_hash_table_lookup(rf->hrdel_feed, lookup_key(name));
+	saved_feed->hrdel_days = g_hash_table_lookup(rf->hrdel_days, lookup_key(name));
+	saved_feed->hrdel_messages = g_hash_table_lookup(rf->hrdel_messages, lookup_key(name));
+	saved_feed->hrdel_unread = g_hash_table_lookup(rf->hrdel_unread, lookup_key(name));
+	return saved_feed;
+}
+
+// restores a feed structure removed from hash
+// name - key to restore
+// s - feed structure to restore
+void
+restore_feed_hash(gpointer name, feed *s)
+{
+	g_hash_table_insert(rf->hre, g_strdup(lookup_key(name)), s->hre);
+	g_hash_table_insert(rf->hrh, g_strdup(lookup_key(name)), s->hre);
+	g_hash_table_insert(rf->hrdel_feed, g_strdup(lookup_key(name)), s->hre);
+	g_hash_table_insert(rf->hrdel_days, g_strdup(lookup_key(name)), s->hre);
+	g_hash_table_insert(rf->hrdel_messages, g_strdup(lookup_key(name)), s->hre);
+	g_hash_table_insert(rf->hrdel_unread, g_strdup(lookup_key(name)), s->hre);
+}
+
 void
 remove_feed_hash(gpointer name)
 {
@@ -655,6 +686,10 @@ remove_feed_hash(gpointer name)
         g_hash_table_remove(rf->hrt, lookup_key(name));
         g_hash_table_remove(rf->hrh, lookup_key(name));
         g_hash_table_remove(rf->hr, lookup_key(name));
+	g_hash_table_remove(rf->hrdel_feed, lookup_key(name));
+	g_hash_table_remove(rf->hrdel_days, lookup_key(name));
+	g_hash_table_remove(rf->hrdel_messages, lookup_key(name));
+	g_hash_table_remove(rf->hrdel_unread, lookup_key(name));
         g_hash_table_remove(rf->hrname_r, lookup_key(name));
         g_hash_table_remove(rf->hrname, name);
 	rf->pending = FALSE;

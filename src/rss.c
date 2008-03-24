@@ -524,7 +524,7 @@ GtkWidget *dialog1;
                     (GtkAttachOptions) (0), 0, 0);
   gtk_entry_set_invisible_char (GTK_ENTRY (username), 8226);
     gchar *user = g_hash_table_lookup(rf->hruser,  url);
-	g_print("user:%s\n", user);
+	d(g_print("user:%s\n", user));
     if (user)
         gtk_entry_set_text (GTK_ENTRY (username), user);
   password = gtk_entry_new ();
