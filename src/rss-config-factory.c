@@ -645,35 +645,51 @@ rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex
         camel_store_free_folder_info (store, fi);
 }
 
+void
+destroy_feed_hash_content(hrfeed *s)
+{
+	g_free(s->hrname);
+	g_free(s->hrname_r);
+	g_free(s->hrt);
+	g_free(s->hr);
+	g_free(s);
+}
+
 hrfeed*
 save_feed_hash(gpointer name)
 {
         hrfeed *saved_feed = g_new0(hrfeed, 1);
 	saved_feed->hrname = g_strdup(g_hash_table_lookup(rf->hrname, name));
 	saved_feed->hrname_r = g_strdup(g_hash_table_lookup(rf->hrname_r, lookup_key(name)));
-	saved_feed->hre = g_hash_table_lookup(rf->hre, lookup_key(name));
+	saved_feed->hre = GPOINTER_TO_INT(g_hash_table_lookup(rf->hre, lookup_key(name)));
 	saved_feed->hrt = g_strdup(g_hash_table_lookup(rf->hrt, lookup_key(name)));
-	saved_feed->hrh = g_hash_table_lookup(rf->hrh, lookup_key(name));
+	saved_feed->hrh = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrh, lookup_key(name)));
 	saved_feed->hr = g_strdup(g_hash_table_lookup(rf->hr, lookup_key(name)));
-	saved_feed->hrdel_feed = g_hash_table_lookup(rf->hrdel_feed, lookup_key(name));
-	saved_feed->hrdel_days = g_hash_table_lookup(rf->hrdel_days, lookup_key(name));
-	saved_feed->hrdel_messages = g_hash_table_lookup(rf->hrdel_messages, lookup_key(name));
-	saved_feed->hrdel_unread = g_hash_table_lookup(rf->hrdel_unread, lookup_key(name));
+	saved_feed->hrdel_feed = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, lookup_key(name)));
+	saved_feed->hrdel_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, lookup_key(name)));
+	saved_feed->hrdel_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(name)));
+	saved_feed->hrdel_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, lookup_key(name)));
 	return saved_feed;
 }
 
 // restores a feed structure removed from hash
 // name - key to restore
 // s - feed structure to restore
+// upon return s structure is destroyed
 void
 restore_feed_hash(gpointer name, hrfeed *s)
 {
-	g_hash_table_insert(rf->hre, g_strdup(lookup_key(name)), s->hre);
-	g_hash_table_insert(rf->hrh, g_strdup(lookup_key(name)), s->hrh);
-	g_hash_table_insert(rf->hrdel_feed, g_strdup(lookup_key(name)), s->hrdel_feed);
-	g_hash_table_insert(rf->hrdel_days, g_strdup(lookup_key(name)), s->hrdel_days);
-	g_hash_table_insert(rf->hrdel_messages, g_strdup(lookup_key(name)), s->hrdel_messages);
-	g_hash_table_insert(rf->hrdel_unread, g_strdup(lookup_key(name)), s->hrdel_unread);
+	g_hash_table_insert(rf->hrname, g_strdup(name), s->hrname);
+	g_hash_table_insert(rf->hrname_r, g_strdup(lookup_key(name)), s->hrname_r);
+	g_hash_table_insert(rf->hre, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hre));
+	g_hash_table_insert(rf->hrh, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrh));
+	g_hash_table_insert(rf->hrt, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrt));
+	g_hash_table_insert(rf->hr, g_strdup(lookup_key(name)), s->hr);
+	g_hash_table_insert(rf->hrdel_feed, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_feed));
+	g_hash_table_insert(rf->hrdel_days, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_days));
+	g_hash_table_insert(rf->hrdel_messages, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_messages));
+	g_hash_table_insert(rf->hrdel_unread, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_unread));
+	g_free(s);
 }
 
 void
@@ -938,21 +954,17 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                                         _("Feed already exists!"));
                                                 goto out;
                                         }
-//                                      gchar *value1 = g_strdup(g_hash_table_lookup(rf->hr, key));
-					hrfeed *saved_feed;
-					saved_feed = save_feed_hash(key);
+					hrfeed *saved_feed = save_feed_hash(name);
                                       	remove_feed_hash(name);
-                                        g_hash_table_remove(rf->hr, key);
                                         gpointer md5 = gen_md5(feed->feed_url);
                                         if (!setup_feed(feed))
                                         {
                                                 //editing might loose a corectly setup feed
                                                 //so re-add previous deleted feed
-//                                                g_hash_table_insert(rf->hr, g_strdup(key), value1);
                                                 restore_feed_hash(key, saved_feed);
                                         }
-//                                        else
-//                                                g_free(value1);
+                                        else
+                                              destroy_feed_hash_content(saved_feed);
                                         gtk_list_store_clear(GTK_LIST_STORE(model));
                                         g_hash_table_foreach(rf->hrname, construct_list, model);
                                         save_gconf_feed();
