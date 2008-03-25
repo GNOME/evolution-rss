@@ -45,7 +45,7 @@ typedef struct _RDF {
 //we keep these values of a feed to be deleted in order
 //to easily restore in case delete does not success or
 //it is canceled
-typedef struct _feed {
+typedef struct _hrfeed {
 	gchar *hrname;
 	gchar *hrname_r;
 	gchar *hr;
@@ -56,7 +56,7 @@ typedef struct _feed {
 	guint hrdel_days;
 	guint hrdel_messages;
 	guint hrdel_unread;
-} feed;
+} hrfeed;
 
 typedef struct _rssfeed {
         GHashTable      *hrname;            	//bind feed name to key
