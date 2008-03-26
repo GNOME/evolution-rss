@@ -2744,6 +2744,12 @@ check_folders(void)
 
 void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
 
+gboolean 
+check_if_enabled (gpointer key, gpointer value, gpointer user_data)
+{
+	return value;
+}
+
 void
 org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 {
@@ -2758,6 +2764,10 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 	//don't waste anytime - we do not have network
 	//should we fake it ? :D
 	if (!rf->online)
+		return;
+
+	//no feeds enabled
+	if (!g_hash_table_find(rf->hre, check_if_enabled, NULL))
 		return;
 
         if (!rf->setup || g_hash_table_size(rf->hrname)<1)
@@ -2867,6 +2877,10 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
 
 	rf->t = t;
+
+	//no feeds enabled
+	if (!g_hash_table_find(rf->hre, check_if_enabled, NULL))
+		return;
 
 	if (!rf->setup || g_hash_table_size(rf->hrname)<1)
 	{
