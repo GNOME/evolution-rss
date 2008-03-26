@@ -212,26 +212,6 @@ dialog_key_destroy (GtkWidget *widget, gpointer data);
 
 /*======================================================================*/
 
-static void
-hash_check_value(gpointer key, gpointer value, gpointer user_data)
-{
-	if (value) rf->fe = 1;
-}
-
-gboolean
-feeds_enabled(void)
-{
-	gboolean res = 0;
-	rf->fe = 0;
-	g_hash_table_foreach(rf->hre, hash_check_value, NULL);
-	if (rf->fe)
-	{
-		res = rf->fe;
-		rf->fe = 0;
-	}
-	return res;
-}
-
 gpointer
 lookup_key(gpointer key)
 {
@@ -2775,15 +2755,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 		taskbar_push_message(_("No RSS feeds configured!"));
                 return;
         }
-	if (!feeds_enabled())
-	{
-                e_error_run(NULL,
-			"org-gnome-evolution-rss:feederr",
-			_("No RSS feeds enabled!"),
-			_("Go to Edit->Preferences->News & Blogs to enable feeds."),
-			NULL);
-                return;
-	}
+
 	readrss_dialog = e_error_new(NULL, 
 		"org-gnome-evolution-rss:readrss",
                 _("Reading RSS feeds..."),
