@@ -1,5 +1,6 @@
 Wed 26 Mar 2008 10:24:29 AM EET <lucilanga@gnome.org>
 
+	* src/rss.c get_feed_age() sanitize
 	* src/rss.c org_gnome_evolution_rss() fix
 	no feeds enabled
 

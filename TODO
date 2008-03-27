@@ -36,4 +36,3 @@
 	* convert rest of non-intrusive error messages 
 	* search in the content of page for feed
 	* obey ttl entity
-	* fix editing (reading possible deleted feed)

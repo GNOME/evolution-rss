@@ -4055,7 +4055,7 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 	{
 		info = camel_folder_get_message_info(folder, uids->pdata[i]);
                	if (info) {
-			if (!strcmp(rf->current_uid, uids->pdata[i]))
+			if (rf->current_uid && !strcmp(rf->current_uid, uids->pdata[i]))
 				goto out;
 			date = camel_message_info_date_sent(info);
 			flags = camel_message_info_flags(info);
@@ -4136,7 +4136,7 @@ get_feed_age(gpointer key, gpointer value)
         	for (i = 0; i < uids->len; i++)
 		{
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
-                	if (info && strcmp(rf->current_uid, uids->pdata[i])) {
+                	if (info && rf->current_uid && strcmp(rf->current_uid, uids->pdata[i])) {
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400)
 				{
