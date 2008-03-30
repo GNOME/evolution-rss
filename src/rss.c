@@ -3057,7 +3057,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 #endif
 			atexit(rss_finalize);
 			guint render = GPOINTER_TO_INT(
-			gconf_client_get_int(rss_gconf, 
+				gconf_client_get_int(rss_gconf, 
 						GCONF_KEY_HTML_RENDER, 
 						NULL));
 		

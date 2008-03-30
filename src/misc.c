@@ -49,7 +49,9 @@ free_hash(gpointer key, gpointer value, gpointer user_data)
 gchar *
 sanitize_url(gchar *text)
 {
- 	if (!strstr (text, "http://") && !strstr (text, "https://"))
+ 	if (!strstr (text, "http://") 
+	&& !strstr (text, "https://") 
+	&& !strstr (text, "feed://"))
  		return g_strconcat("http://", text, NULL);
  	else
  		return g_strdup(text);
