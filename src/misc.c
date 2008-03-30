@@ -43,33 +43,38 @@ free_hash(gpointer key, gpointer value, gpointer user_data)
  	g_print("FREE - key:%p, value:%p\n", key, value);
  //	xmlFreeDoc(key);
 }
- 
-//prefixes uri with http:// if it's misssing
-//resulting text should be freed when no longer needed
-gchar *
-sanitize_url(gchar *text)
-{
- 	if (!strstr (text, "http://") 
-	&& !strstr (text, "https://") 
-	&& !strstr (text, "feed://"))
- 		return g_strconcat("http://", text, NULL);
- 	else
- 		return g_strdup(text);
-}
 
 gchar *
-extract_feed(gchar *text)
+strextr(gchar *text, gchar *substr)
 {
  	g_return_val_if_fail( text != NULL, NULL);
 	char *tmp = g_strdup(text);
 	GString *str = g_string_new(NULL);
         const unsigned char *s = (const unsigned char *)tmp;
 	g_string_append(str, tmp);
-	str = g_string_erase(str, strstr(str, "feed://"), strlen("feed://"));
+	str = g_string_erase(str, strstr(str, substr), strlen(substr));
 	gchar *string = str->str;	
 	g_string_free(str, 0);
 	g_free(tmp);
 	return string;
+}
+ 
+//prefixes uri with http:// if it's misssing
+//resulting text should be freed when no longer needed
+gchar *
+sanitize_url(gchar *text)
+{
+	if (strstr(text, "feed://"))
+	{
+		gchar *tmp = strextr(text, "feed://");
+		g_free(text);
+		text = tmp;
+	}
+ 	if (!strstr (text, "http://") 
+	&& !strstr (text, "https://"))
+ 		return g_strconcat("http://", text, NULL);
+ 	else
+ 		return g_strdup(text);
 }
 
 //evolution folder must not contain certain chars
