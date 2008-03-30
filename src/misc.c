@@ -57,6 +57,21 @@ sanitize_url(gchar *text)
  		return g_strdup(text);
 }
 
+gchar *
+extract_feed(gchar *text)
+{
+ 	g_return_val_if_fail( text != NULL, NULL);
+	char *tmp = g_strdup(text);
+	GString *str = g_string_new(NULL);
+        const unsigned char *s = (const unsigned char *)tmp;
+	g_string_append(str, tmp);
+	str = g_string_erase(str, strstr(str, "feed://"), strlen("feed://"));
+	gchar *string = str->str;	
+	g_string_free(str, 0);
+	g_free(tmp);
+	return string;
+}
+
 //evolution folder must not contain certain chars
 //for instance "..." at the start of the string
 //or "/" anywhere in the string

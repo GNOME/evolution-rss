@@ -103,6 +103,8 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 			if (feed->feed_url && strlen(feed->feed_url))
         		{
                 		gchar *text = feed->feed_url;
+				g_print("feed:%s\n", feed->feed_url);
+				g_print("feed san:%s\n", extract_feed(feed->feed_url));
                 		feed->feed_url = sanitize_url(feed->feed_url);
                 		g_free(text);
                 		if (g_hash_table_find(rf->hr,
