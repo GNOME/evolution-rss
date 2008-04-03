@@ -1,5 +1,7 @@
 Sun 30 Mar 2008 04:00:30 PM EEST <lucilanga@gnome.org>
 
+	* src/rss.c: abort_all_soup() do not set
+	message status
 	* src/misc.c: sanitize_url() accept feed://
 	protocol
 

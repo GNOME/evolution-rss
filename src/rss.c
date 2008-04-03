@@ -621,7 +621,7 @@ abort_all_soup(void)
 	}
 	if (rf->b_session)
 	{
-		if (SOUP_IS_MESSAGE(rf->b_msg_session))
+/*		if (SOUP_IS_MESSAGE(rf->b_msg_session))
 		{
 #if LIBSOUP_VERSION < 2003000
 			soup_message_set_status(rf->b_msg_session, SOUP_STATUS_CANCELLED);
@@ -629,7 +629,7 @@ abort_all_soup(void)
 #else
 			soup_session_cancel_message(rf->b_session, rf->b_msg_session, SOUP_STATUS_CANCELLED);
 #endif
-		}
+		}*/
 		soup_session_abort(rf->b_session);
 		rf->b_session = NULL;
 		rf->b_msg_session = NULL;
