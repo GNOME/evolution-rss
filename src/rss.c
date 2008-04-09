@@ -3145,10 +3145,13 @@ create_mail(create_feed *CF)
 			time_t actual_time = camel_header_decode_date (ctime(&time), &offset);
 			camel_mime_message_set_date(new, actual_time, offset);
 		}
-		else /*use now as time for failsafe*/
+		else /*use 'now' as time for failsafe*/
 			camel_mime_message_set_date(new, CAMEL_MESSAGE_DATE_CURRENT, 0);
 	}
-
+	time = camel_mime_message_get_date (new, NULL) ;
+	gchar *time_str = asctime(gmtime(&time));
+	char *buf = g_strdup_printf("from mayday by mayday via evolution-rss with libsoup; %s\r\n", time_str);
+	camel_medium_set_header(CAMEL_MEDIUM(new), "Received", buf);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);
 	rtext = camel_data_wrapper_new ();
@@ -3192,6 +3195,7 @@ create_mail(create_feed *CF)
 	camel_object_unref(new);
 	camel_message_info_free(info);
 	camel_object_unref(mail_folder);
+	g_free(buf);
 }
 
 /************ RDF Parser *******************/

@@ -1,3 +1,8 @@
+Wed 09 Apr 2008 08:25:21 AM EEST <lucilanga@gnome.org>
+
+	* src/rss.c: create_mail() populate Received
+	header
+
 Sun 30 Mar 2008 04:00:30 PM EEST <lucilanga@gnome.org>
 
 	* src/rss.c: abort_all_soup() do not set
