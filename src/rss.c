@@ -3150,7 +3150,7 @@ create_mail(create_feed *CF)
 	}
 	time = camel_mime_message_get_date (new, NULL) ;
 	gchar *time_str = asctime(gmtime(&time));
-	char *buf = g_strdup_printf("from mayday by mayday via evolution-rss with libsoup; %s\r\n", time_str);
+	char *buf = g_strdup_printf("from %s by localhost via evolution-rss-%s with libsoup-%s; %s\r\n", CF->website, VERSION, LIBSOUP_VERSION, time_str);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Received", buf);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);
