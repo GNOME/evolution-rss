@@ -1,3 +1,10 @@
+Fri 18 Apr 2008 05:31:58 PM EEST <lucilanga@gnome.org>
+
+	* src/rss.c: rss_online() append version to
+	enabled message
+	* src/rss.c: org_gnome_cooly_folder_icon()
+	create image for RSS folder
+
 Wed 09 Apr 2008 08:25:21 AM EEST <lucilanga@gnome.org>
 
 	* src/rss.c: create_mail() populate Received

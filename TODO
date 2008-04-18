@@ -36,3 +36,4 @@
 	* convert rest of non-intrusive error messages 
 	* search in the content of page for feed
 	* obey ttl entity
+	* check rename feed when evo 2.24 x86_64 

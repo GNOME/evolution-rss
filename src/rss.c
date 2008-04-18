@@ -159,6 +159,7 @@ struct _org_gnome_rss_controls_pobject {
         guint changed_id;
 };*/
 
+static GdkPixbuf *folder_icon;
 extern int xmlSubstituteEntitiesDefaultValue;
 
 rssfeed *rf = NULL;
@@ -1945,6 +1946,22 @@ fmerror:
 	return;
 }
 
+//make it work only for 2.24
+void org_gnome_cooly_folder_icon(void *ep, EMEventTargetFolderIcon *t)
+{
+	static gboolean initialised = FALSE;
+	if (!initialised)
+	{
+		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+	                                    "rss.png",
+						NULL);
+		folder_icon = e_icon_factory_get_icon (iconfile, E_ICON_SIZE_MENU);
+		g_free(iconfile);
+		initialised = TRUE;
+	}
+	g_object_set (t->renderer, "pixbuf", folder_icon, "visible", 1, NULL);
+}
+
 #ifdef EVOLUTION_2_12
 void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t);
 #else
@@ -2683,6 +2700,12 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 }
 
 static void
+store_folder_update(CamelObject *o, void *event_data, void *data)
+{
+	g_print("folder update\n");
+}
+
+static void
 rss_online(CamelObject *o, void *event_data, void *data)
 {
 	rf->online =  camel_session_is_online (o);
@@ -3029,7 +3052,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 		rss_gconf = gconf_client_get_default();
 		upgrade = 1;
-		printf("RSS Plugin enabled\n");
+		printf("RSS Plugin enabled (evolution-rss %s)\n", VERSION);
 		char *d;
         	d = getenv("RSS_VERBOSE_DEBUG");
         	if (d)
@@ -3150,7 +3173,7 @@ create_mail(create_feed *CF)
 	}
 	time = camel_mime_message_get_date (new, NULL) ;
 	gchar *time_str = asctime(gmtime(&time));
-	char *buf = g_strdup_printf("from %s by localhost via evolution-rss-%s with libsoup-%s; %s\r\n", CF->website, VERSION, LIBSOUP_VERSION, time_str);
+	char *buf = g_strdup_printf("from %s by localhost via evolution-rss-%s with libsoup-%d; %s\r\n", CF->website, VERSION, LIBSOUP_VERSION, time_str);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Received", buf);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);
