@@ -37,3 +37,4 @@
 	* search in the content of page for feed
 	* obey ttl entity
 	* check rename feed when evo 2.24 x86_64 
+	* make send receive dialog remember its size

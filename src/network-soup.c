@@ -217,8 +217,7 @@ read_up(gpointer data)
 	g_free(tmp);
 	guint res = 0;
 
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
 
@@ -248,8 +247,7 @@ save_up(gpointer data)
 	g_free(tmp);
 	guint res = 0;
 
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
 
@@ -278,8 +276,7 @@ del_up(gpointer data)
 	gchar *tmp = gen_md5(data);
 	gchar *buf = g_strconcat(tmp, ".rec", NULL);
 	g_free(tmp);
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
 

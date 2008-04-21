@@ -1,3 +1,11 @@
+Mon 21 Apr 2008 10:05:42 AM EEST <lucilanga@gnome.org>
+
+	* src/rss.c finish_feed() fix removing feed
+	message from rf->info->data->active hash
+	* src/rss.c rss_componet_peek_base_directory()
+	provide path to feeds settings as suggested in
+	#513951
+
 Fri 18 Apr 2008 05:31:58 PM EEST <lucilanga@gnome.org>
 
 	* src/rss.c: rss_online() append version to

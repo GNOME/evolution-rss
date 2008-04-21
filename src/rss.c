@@ -1147,8 +1147,7 @@ read_feeds(rssfeed *rf)
 {
 	guint res = 0;
 	//contruct feeds
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss", 
-	    mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 	gchar *feed_file = g_strdup_printf("%s/evolution-feeds", feed_dir);
@@ -2241,10 +2240,10 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                 if (rf->info->cancel_button)
                         gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 
-                g_hash_table_remove(rf->info->data->active, rf->info->uri);
-//                rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
+                g_hash_table_steal(rf->info->data->active, rf->info->uri);
+                rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
 
-                if (g_hash_table_size(rf->info->data->active) == 0) {
+		if (g_hash_table_size(rf->info->data->active) == 0) {
                         if (rf->info->data->gd)
                                 gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
                 }
@@ -2278,7 +2277,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                 if (rf->info->cancel_button)
                         gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 
-                g_hash_table_remove(rf->info->data->active, rf->info->uri);
+                g_hash_table_steal(rf->info->data->active, rf->info->uri);
                 rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
 
                 if (g_hash_table_size(rf->info->data->active) == 0) {
@@ -2384,7 +2383,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
         	if (rf->info->cancel_button)
                 	gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 
-        	g_hash_table_remove(rf->info->data->active, rf->info->uri);
+        	g_hash_table_steal(rf->info->data->active, rf->info->uri);
         	rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
 
         	if (g_hash_table_size(rf->info->data->active) == 0) {
@@ -2487,15 +2486,28 @@ update_articles(gboolean disabler)
 }
 
 gchar *
+rss_component_peek_base_directory(MailComponent *component)
+{
+/* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
+#if (EVOLUTION_VERSION >= 22400)
+	return g_strdup_printf("%s/rss",
+            mail_component_peek_base_directory (component));
+#else
+	return g_strdup_printf("%s/mail/rss",
+            mail_component_peek_base_directory (component));
+#endif
+}
+
+gchar *
 get_main_folder(void)
 {
 	gchar mf[512];
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/main_folder", feed_dir);
         g_free(feed_dir);
+	g_print("feed_file:%s\n", feed_file);
         if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
 	{
 		FILE *f = fopen(feed_file, "r");
@@ -2521,8 +2533,7 @@ get_feed_folders(void)
 	
 	rf->feed_folders = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 	rf->reversed_feed_folders = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
@@ -2587,8 +2598,7 @@ update_main_folder(gchar *new_name)
 		g_free(rf->main_folder);
 	rf->main_folder = g_strdup(new_name);
 	
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/main_folder", feed_dir);
@@ -2629,8 +2639,7 @@ update_feed_folder(gchar *old_name, gchar *new_name)
 	gchar *oname = g_path_get_basename(old_name);
 	gchar *nname = g_path_get_basename(new_name);
 	FILE *f;
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
@@ -3788,8 +3797,7 @@ migrate_crc_md5(const char *name, gchar *url)
 	u_int32_t crc2 = gen_crc(url);
 	gchar *md5 = gen_md5(url);
 
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss", 
-	    mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 
@@ -3889,8 +3897,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 
 	gchar *buf = gen_md5(url);
 
-	gchar *feed_dir = g_strdup_printf("%s/mail/rss", 
-	    mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 
