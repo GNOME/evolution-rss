@@ -33,10 +33,12 @@ int rss_verbose_debug = 0;
 #include <camel/camel-exception.h>
 #include <camel/camel-multipart.h>
 #include <camel/camel-stream-mem.h>
+#include <camel/camel-stream-fs.h>
 
 #include <mail/em-popup.h>
 #include <e-util/e-error.h>
 #include <e-util/e-icon-factory.h>
+#include <e-util/e-mktemp.h>
 
 #include <mail/em-config.h>
 
@@ -50,9 +52,8 @@ int rss_verbose_debug = 0;
 #include <mail/em-folder-utils.h>
 #include <mail/em-folder-view.h>
 #include <mail/mail-mt.h>
-//////////////////////////////////
 #include <mail/mail-component.h>
-//////////////////////////////////
+#include <mail/mail-tools.h>
 
 #include <misc/e-activity-handler.h>
 
@@ -1946,6 +1947,7 @@ fmerror:
 }
 
 //make it work only for 2.24
+/*
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetFolderIcon *t)
 {
 	static gboolean initialised = FALSE;
@@ -1959,7 +1961,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetFolderIcon *t)
 		initialised = TRUE;
 	}
 	g_object_set (t->renderer, "pixbuf", folder_icon, "visible", 1, NULL);
-}
+}*/
 
 #ifdef EVOLUTION_2_12
 void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t);
@@ -2507,7 +2509,6 @@ get_main_folder(void)
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/main_folder", feed_dir);
         g_free(feed_dir);
-	g_print("feed_file:%s\n", feed_file);
         if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
 	{
 		FILE *f = fopen(feed_file, "r");
@@ -2856,6 +2857,7 @@ set_send_status(struct _send_info *info, const char *desc, int pc)
 static void
 op_status(CamelOperation *op, const char *what, int pc, void *data)
 {
+	g_print("CANCEL!!!!\n");
         struct _send_info *info = data;
 
         //printf("Operation '%s', percent %d\n");

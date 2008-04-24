@@ -277,7 +277,6 @@ if test "x$enable_dbus" != "xno"; then
 fi
 AM_CONDITIONAL([HAVE_DBUS], [test x$have_dbus = xyes])
 
-
 dnl I18n stuff
 AC_PATH_PROG(GETTEXT, gettext, no)
 if test "x$GETTEXT" = "xno"; then

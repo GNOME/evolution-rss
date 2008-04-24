@@ -1,5 +1,7 @@
-Mon 21 Apr 2008 10:05:42 AM EEST <lucilanga@gnome.org>
+Mon 21 Apr 2008 07:19:49 PM EEST <lucilanga@gnome.org>
 
+	* src/rss.c: merge patch from Pedro Fragoso
+	fixes deb #477053
 	* src/rss.c finish_feed() fix removing feed
 	message from rf->info->data->active hash
 	* src/rss.c rss_componet_peek_base_directory()
