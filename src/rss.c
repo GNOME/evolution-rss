@@ -2770,7 +2770,7 @@ void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
 gboolean 
 check_if_enabled (gpointer key, gpointer value, gpointer user_data)
 {
-	return value;
+	return GPOINTER_TO_INT(value);
 }
 
 void
@@ -3097,9 +3097,6 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 						GCONF_KEY_HTML_RENDER, 
 						NULL));
 		
-			//render = 0 means gtkhtml however it could mean no value set
-			//perhaps we should change this number representing gtkhtml
-
 			if (!render) 	// set render just in case it was forced in configure
 			{
 				render = RENDER_N;

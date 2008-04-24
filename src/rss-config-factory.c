@@ -1661,6 +1661,7 @@ rss_config_control_new (void)
 			break;
 #endif
 		default:
+			g_printf("Selected render not supported! Failling back to default.\n");
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), render);
 
 	}
