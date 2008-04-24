@@ -654,6 +654,7 @@ readrss_dialog_cb (GtkWidget *widget, gpointer data)
 static void
 receive_cancel(GtkButton *button, struct _send_info *info)
 {
+	g_print("canceling\n");
         if (info->state == SEND_ACTIVE) {
                 if (info->status_label)
 			gtk_label_set_markup (GTK_LABEL (info->status_label),
@@ -1947,8 +1948,7 @@ fmerror:
 }
 
 //make it work only for 2.24
-/*
-void org_gnome_cooly_folder_icon(void *ep, EMEventTargetFolderIcon *t)
+/*void org_gnome_cooly_folder_icon(void *ep, EMEventTargetFolderIcon *t)
 {
 	static gboolean initialised = FALSE;
 	if (!initialised)
@@ -2857,10 +2857,12 @@ set_send_status(struct _send_info *info, const char *desc, int pc)
 static void
 op_status(CamelOperation *op, const char *what, int pc, void *data)
 {
+	g_print("OP STATUS\n");
 	g_print("CANCEL!!!!\n");
+
         struct _send_info *info = data;
 
-        //printf("Operation '%s', percent %d\n");
+        printf("Operation '%s', percent %d\n");
         switch (pc) {
         case CAMEL_OPERATION_START:
                 pc = 0;

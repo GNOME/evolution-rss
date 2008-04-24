@@ -2,9 +2,7 @@
 INCLUDES =							\
 	-I$(EVOLUTION_SOURCE)					\
 	-I$(top_srcdir)						\
-	$(GECKO_CFLAGS)						\
-	-I$(GECKO_INCLUDE_ROOT)					\
-	$(WEBKIT_CFLAGS)					\
+	$(RENDER_CFLAGS)					\
 	$(DBUS_CFLAGS)						\
 	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
 	-DLOCALEDIR="\"$(LOCALEDIR)\""				\

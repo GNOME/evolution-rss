@@ -179,6 +179,7 @@ if test "$enable_gecko" = "yes"; then
 		AC_DEFINE_UNQUOTED(HAVE_GTKMOZEMBED,1, [gtkmozembed render engine present])
 		AC_SUBST(HAVE_RENDERKIT)
 		AC_SUBST(HAVE_GTKMOZEMEBED)
+		RENDER_CFLAGS="$GECKO_CFLAGS -I$GECKO_INCLUDE_ROOT" 
 		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
 		AC_SUBST([GECKO_RPATH])
 	
@@ -225,6 +226,7 @@ if test "x$have_webkit" != "xno"; then
 	AC_DEFINE_UNQUOTED(HAVE_WEBKIT,1, [webkit render engine present])
 	AC_SUBST(HAVE_RENDERKIT)
 	AC_SUBST(HAVE_WEBKIT)
+	RENDER_CFLAGS="$RENDER_CFLAGS $WEBKIT_CFLAGS" 
 	if test "x$RENDER" != "xgecko"; then
 		AC_ARG_WITH([primary-render],
         		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
@@ -241,6 +243,7 @@ if test "x$have_webkit" != "xno"; then
 fi
 fi
 
+AC_SUBST(RENDER_CFLAGS)
 AC_SUBST(RENDER)
 AC_SUBST(RENDER_N)
 

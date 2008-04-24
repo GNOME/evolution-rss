@@ -55,10 +55,10 @@ AC_ARG_WITH([gecko],
 		       [Which gecko engine to use (autodetected by default)]))
 
 # Backward compat
-AC_ARG_WITH([mozilla],[],[with_gecko=$withval],[])
+#AC_ARG_WITH([mozilla],[],[with_gecko=$withval],[])
 
 gecko_cv_gecko=$with_gecko
-if $PKG_CONFIG --exists $with_gecko-xpcom; then
+if test -n "$with_gecko" && $PKG_CONFIG --exists $with_gecko-xpcom; then
 	gecko_cv_gecko_xpcom=$with_gecko-xpcom
 else
 	gecko_cv_gecko_xpcom=$with_gecko
@@ -79,6 +79,8 @@ if test -z "$gecko_cv_gecko"; then
 		fi		
 	done
 fi
+echo $gecko_cv_gecko
+echo $gecko_cv_gecko_xpcom
 
 AC_MSG_RESULT([$gecko_cv_gecko])
 
