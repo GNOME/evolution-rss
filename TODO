@@ -38,7 +38,6 @@
 	* obey ttl entity
 	* present alt with feed folder in preferences window
 	* make feed message forwardable/replayable
-	* limit number of taskbar operations
 	* check rename feed when evo 2.24 x86_64 
 	* make send receive dialog remember its size
 	* disable browser alerts messages

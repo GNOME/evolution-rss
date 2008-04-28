@@ -264,7 +264,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
         		guint id = e_activity_handler_make_error (activity_handler, mail_component_peek(), msg, ed);
 			g_hash_table_insert(rf->error_hash, newkey, id);
 		}
-		taskbar_op_finish(key);
+/*		taskbar_op_finish(key);*/
 		goto out;
 	}
 #endif
@@ -403,16 +403,6 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			g_free(furl);
 		}
 #endif
-		gchar *tmsg;
-		gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(data));
-        	if (strncmp(type, "-",1) == 0)
-                        tmsg = g_strdup_printf("Fetching %s: %s", 
-                                        "RSS", data);
-        	else
-                        tmsg = g_strdup_printf("Fetching %s: %s", 
-                        type, data);
-		taskbar_op_set_progress(data, tmsg, (gdouble)fraction);
-		g_free(tmsg);
         }
         break;
     case NET_STATUS_DONE:
@@ -2225,7 +2215,12 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		deleted = 1;
 
 	if (rf->feed_queue)
+	{
 		rf->feed_queue--;
+		gchar *tmsg = g_strdup_printf(_("Fetching %d feed(s)"), g_hash_table_size(rf->hrname));
+		taskbar_op_set_progress("main", tmsg, rf->feed_queue ? ((gfloat)((100-(rf->feed_queue*100/g_hash_table_size(rf->hrname))))/100): 1);
+		g_free(tmsg);
+	}
 
 
 #ifndef EVOLUTION_2_12
@@ -2254,6 +2249,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                 rf->label = NULL;
                 rf->progress_bar = NULL;
                 rf->info = NULL;
+		taskbar_op_finish("main");
 	}
 #endif
 
@@ -2402,7 +2398,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 out:	
 	if (user_data)
 	{
-		taskbar_op_finish(user_data);
 		//not sure why it dies here
 		if (!rf->cancel && !rf->cancel_all)
 			g_free(user_data);
@@ -2433,23 +2428,6 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 			g_hash_table_lookup(rf->hr, lookup_key(key)), key));
 		rf->feed_queue++;
 
-		gchar *tmsg;
-		gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(key));
-        	if (strncmp(type, "-",1) == 0)
-                        tmsg = g_strdup_printf("Fetching %s: %s", 
-                                        "RSS", key);
-        	else
-                        tmsg = g_strdup_printf("Fetching %s: %s", 
-                        type, key);
-
-#if (EVOLUTION_VERSION >= 22200)
-		guint activity_id = taskbar_op_new(tmsg, key);
-#else
-		guint activity_id = taskbar_op_new(tmsg);
-#endif
-
-		g_free(tmsg);
-		g_hash_table_insert(rf->activity, key, GUINT_TO_POINTER(activity_id));
 		net_get_unblocking(
 				g_hash_table_lookup(rf->hr, lookup_key(key)),
 				user_data,
@@ -2491,7 +2469,7 @@ gchar *
 rss_component_peek_base_directory(MailComponent *component)
 {
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
-#if (EVOLUTION_VERSION >= 22400)
+#if (EVOLUTION_VERSION >= 22300)		// include devel too
 	return g_strdup_printf("%s/rss",
             mail_component_peek_base_directory (component));
 #else
@@ -2835,6 +2813,14 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 check_folders();
 
                 rf->err = NULL;
+		gchar *tmsg = g_strdup_printf(_("Fetching %d feed(s)"), g_hash_table_size(rf->hrname));
+#if (EVOLUTION_VERSION >= 22200)
+		guint activity_id = taskbar_op_new(tmsg, "main");
+#else
+		guint activity_id = taskbar_op_new(tmsg);
+#endif
+		g_hash_table_insert(rf->activity, "main", GUINT_TO_POINTER(activity_id));
+		g_free(tmsg);
                 g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
                 // reset cancelation signal
                 if (rf->cancel)
@@ -3018,6 +3004,13 @@ bail:	if (!rf->pending && !rf->feed_queue)
 		check_folders();
 	
 		rf->err = NULL;
+		gchar *tmsg = g_strdup_printf(_("Fetching %d feed(s)"), g_hash_table_size(rf->hrname));
+#if (EVOLUTION_VERSION >= 22200)
+                guint activity_id = taskbar_op_new(tmsg, "main");
+#else
+                guint activity_id = taskbar_op_new(tmgs);
+#endif
+                g_hash_table_insert(rf->activity, "main", GUINT_TO_POINTER(activity_id));
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		// reset cancelation signal
 		if (rf->cancel)
