@@ -101,7 +101,7 @@ int rss_verbose_debug = 0;
 #define webkit_web_view_new() webkit_gtk_page_new()
 #else
 	#ifdef HAVE_WEBKIT
-	#include "webkitwebview.h"
+	#include "webkit/webkitwebview.h"
 	#endif
 #endif
 
@@ -187,6 +187,7 @@ static void del_days_cb (GtkWidget *widget, add_feed *data);
 static void del_messages_cb (GtkWidget *widget, add_feed *data);
 void get_feed_age(gpointer key, gpointer value);
 gboolean cancel_soup_sess(gpointer key, gpointer value, gpointer user_data);
+void abort_all_soup(void);
 
 struct _MailComponentPrivate {
         GMutex *lock;
@@ -262,7 +263,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
                 	g_signal_connect(ed, "destroy", G_CALLBACK(dialog_key_destroy), newkey);
 //        		e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
         		guint id = e_activity_handler_make_error (activity_handler, mail_component_peek(), msg, ed);
-			g_hash_table_insert(rf->error_hash, newkey, id);
+			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
 		}
 /*		taskbar_op_finish(key);*/
 		goto out;
@@ -321,7 +322,7 @@ taskbar_op_new(gchar *message)
 #if (EVOLUTION_VERSION >= 22200)
 		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						progress_icon, message, TRUE,
-						cancel_active_op, key);
+						abort_all_soup, key);
 #else
 		e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);

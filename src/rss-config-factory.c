@@ -1673,7 +1673,7 @@ rss_config_control_new (void)
 
 #if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
 	GtkWidget *label_webkit = glade_xml_get_widget(sf->gui, "label_webkits");
-	gtk_label_set_text(label_webkit, _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
+	gtk_label_set_text(GTK_LABEL(label_webkit), _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
 	gtk_widget_show(label_webkit);
 #endif
 	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);

@@ -217,7 +217,7 @@ AC_ARG_ENABLE([webkit],
 AC_MSG_RESULT([$enable_webkit])
 
 if test "$enable_webkit" = "yes"; then
-PKG_CHECK_MODULES([WEBKIT], WebKitGtk, [], [have_webkit=no])
+PKG_CHECK_MODULES([WEBKIT], webkit-1.0, [], [have_webkit=no])
 AC_SUBST([WEBKIT_CFLAGS])
 AC_SUBST([WEBKIT_LIBS])
 
