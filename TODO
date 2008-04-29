@@ -24,7 +24,6 @@
 	* make auth dialog not intrusive (peek other software)
 	* fix move->rename
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
-	! check mycall resize, verify data is valid widget -> generates crash
 	* crash (mail_append_message) if folder contains .lock file ? or ibex crashes
 	* implement notify back of imported feed perhaps libnotify
 	* prefetch html content for all webkits (perhaps temp file)
@@ -39,6 +38,5 @@
 	* present alt with feed folder in preferences window
 	* make feed message forwardable/replayable
 	* check rename feed when evo 2.24 x86_64 
-	* make send receive dialog remember its size
 	* disable browser alerts messages
-	* check fallback of renders
+	* make cancel all button work

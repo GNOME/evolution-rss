@@ -2217,7 +2217,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	if (rf->feed_queue)
 	{
 		rf->feed_queue--;
-		gchar *tmsg = g_strdup_printf(_("Fetching %d feed(s)"), g_hash_table_size(rf->hrname));
+		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
 		taskbar_op_set_progress("main", tmsg, rf->feed_queue ? ((gfloat)((100-(rf->feed_queue*100/g_hash_table_size(rf->hrname))))/100): 1);
 		g_free(tmsg);
 	}
@@ -2226,9 +2226,10 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #ifndef EVOLUTION_2_12
 	if(rf->progress_dialog && rf->feed_queue == 0)
         {
-              gtk_widget_destroy(rf->progress_dialog);
-              rf->progress_dialog = NULL;
-              rf->progress_bar = NULL;
+             	gtk_widget_destroy(rf->progress_dialog);
+       		rf->progress_dialog = NULL;
+		rf->progress_bar = NULL;
+		taskbar_op_finish("main");
         }
 #else
 	if(rf->label && rf->feed_queue == 0 && rf->info)
@@ -2281,6 +2282,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                 if (g_hash_table_size(rf->info->data->active) == 0) {
                         if (rf->info->data->gd)
                                 gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
+			taskbar_op_finish("main");
                 }
                 //clean data that might hang on rf struct
                 rf->sr_feed = NULL;
@@ -2387,6 +2389,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
         	if (g_hash_table_size(rf->info->data->active) == 0) {
                 	if (rf->info->data->gd)
                         	gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
+			taskbar_op_finish("main");
         	}
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
@@ -2415,10 +2418,6 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	RDF *r;
 //	rf->cfeed = key;
 
-	if (!rf->activity)
-		rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
-	if (!rf->error_hash)
-		rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
@@ -2813,7 +2812,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 check_folders();
 
                 rf->err = NULL;
-		gchar *tmsg = g_strdup_printf(_("Fetching %d feed(s)"), g_hash_table_size(rf->hrname));
+		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
 #if (EVOLUTION_VERSION >= 22200)
 		guint activity_id = taskbar_op_new(tmsg, "main");
 #else
@@ -3004,11 +3003,11 @@ bail:	if (!rf->pending && !rf->feed_queue)
 		check_folders();
 	
 		rf->err = NULL;
-		gchar *tmsg = g_strdup_printf(_("Fetching %d feed(s)"), g_hash_table_size(rf->hrname));
+		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
 #if (EVOLUTION_VERSION >= 22200)
                 guint activity_id = taskbar_op_new(tmsg, "main");
 #else
-                guint activity_id = taskbar_op_new(tmgs);
+                guint activity_id = taskbar_op_new(tmsg);
 #endif
                 g_hash_table_insert(rf->activity, "main", GUINT_TO_POINTER(activity_id));
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
@@ -3084,6 +3083,10 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			/*D-BUS init*/
 			rf->bus = init_dbus ();
 #endif
+			if (!rf->activity)	//keeping track of taskbar operations
+				rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+			if (!rf->error_hash)	//keeping trask of taskbar errors
+				rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 			atexit(rss_finalize);
 			guint render = GPOINTER_TO_INT(
 				gconf_client_get_int(rss_gconf, 
