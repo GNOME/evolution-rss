@@ -2101,11 +2101,11 @@ setup_feed(add_feed *feed)
 	if (!feed->validate)
 		goto add;
 		
-	g_print("feed->feed_url:%s\n", feed->feed_url);
+	d(g_print("feed->feed_url:%s\n", feed->feed_url));
         content = net_post_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err)
 	{
-		g_print("err:%s\n", err->message);
+		d(g_print("setup_feed() -> err:%s\n", err->message));
 		rss_error(NULL, feed->feed_name ? feed->feed_name: "Unamed feed", _("Error while fetching feed."), err->message);
 		goto out;
         }
@@ -2113,7 +2113,7 @@ setup_feed(add_feed *feed)
         xmlNodePtr root = NULL;
         xmlSubstituteEntitiesDefaultValue = 0;
         doc = xml_parse_sux (content->str, content->len);
-	d(g_print("content:%s\n", content->str));
+	d(g_print("content:\n%s\n", content->str));
 	root = xmlDocGetRootElement(doc);
 
 	if ((doc != NULL && root != NULL)
@@ -2217,6 +2217,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	if (!key)
 		deleted = 1;
 
+	d(g_print("taskbar_op_finish() queue:%d\n", rf->feed_queue));
+
 	if (rf->feed_queue)
 	{
 		rf->feed_queue--;
@@ -2226,36 +2228,39 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	}
 
 
-#ifndef EVOLUTION_2_12
-	if(rf->progress_dialog && rf->feed_queue == 0)
-        {
-             	gtk_widget_destroy(rf->progress_dialog);
-       		rf->progress_dialog = NULL;
-		rf->progress_bar = NULL;
-		taskbar_op_finish("main");
-        }
-#else
-	if(rf->label && rf->feed_queue == 0 && rf->info)
+	if (rf->feed_queue == 0)
 	{
-                        gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
-                if (rf->info->cancel_button)
-                        gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
-
-                g_hash_table_steal(rf->info->data->active, rf->info->uri);
-                rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
-
-		if (g_hash_table_size(rf->info->data->active) == 0) {
-                        if (rf->info->data->gd)
-                                gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
-                }
-                //clean data that might hang on rf struct
-                rf->sr_feed = NULL;
-                rf->label = NULL;
-                rf->progress_bar = NULL;
-                rf->info = NULL;
+		d(g_print("taskbar_op_finish()\n"));
 		taskbar_op_finish("main");
-	}
+#ifndef EVOLUTION_2_12
+		if(rf->progress_dialog)
+        	{
+        	     	gtk_widget_destroy(rf->progress_dialog);
+       			rf->progress_dialog = NULL;
+			rf->progress_bar = NULL;
+        	}
+#else
+		if(rf->label && rf->info)
+		{
+                        gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
+                	if (rf->info->cancel_button)
+                        	gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
+
+                	g_hash_table_steal(rf->info->data->active, rf->info->uri);
+                	rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
+
+			if (g_hash_table_size(rf->info->data->active) == 0) {
+                        	if (rf->info->data->gd)
+                                	gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
+                	}
+                	//clean data that might hang on rf struct
+                	rf->sr_feed = NULL;
+                	rf->label = NULL;
+                	rf->progress_bar = NULL;
+                	rf->info = NULL;
+		}
 #endif
+	}
 
 	if (rf->cancel_all)
 		goto out;
@@ -2285,8 +2290,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                 if (g_hash_table_size(rf->info->data->active) == 0) {
                         if (rf->info->data->gd)
                                 gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
-			taskbar_op_finish("main");
                 }
+		taskbar_op_finish("main");
                 //clean data that might hang on rf struct
                 rf->sr_feed = NULL;
                 rf->label = NULL;
@@ -2385,8 +2390,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
         	if (g_hash_table_size(rf->info->data->active) == 0) {
                 	if (rf->info->data->gd)
                         	gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
-			taskbar_op_finish("main");
         	}
+		taskbar_op_finish("main");
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
 		rf->label = NULL;
