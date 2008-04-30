@@ -1,3 +1,7 @@
+Wed 30 Apr 2008 09:31:40 PM EEST <lucilanga@gnome.org>
+
+	Gracefully fallback to other render
+
 Mon 28 Apr 2008 09:55:27 PM EEST <lucilanga@gnome.org>
 
 	Modify taskbar_operation meaning to have only

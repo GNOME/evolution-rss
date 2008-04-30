@@ -216,6 +216,7 @@ struct _MailComponentPrivate {
 };
 static void
 dialog_key_destroy (GtkWidget *widget, gpointer data);
+guint fallback_engine(void);
 
 /*======================================================================*/
 
@@ -1561,7 +1562,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	GtkWidget *moz;
 
 //        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
-	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+	guint engine = fallback_engine();
 	moz = gtk_scrolled_window_new(NULL,NULL);
 //	moz = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(moz),
@@ -1802,26 +1803,21 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format))
 	{
-#ifdef HAVE_RENDERKIT
-	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
-#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
-	engine=0;
-#endif
-
-	if (engine && engine != 10)
-	{ 
-        	char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
-			org_gnome_rss_controls_counter_id);
-		org_gnome_rss_controls_counter_id++;
-		pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), classid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_controls2);
-		pobj->website = g_strstrip(g_strdup((gchar *)website));
-		pobj->is_html = GPOINTER_TO_INT(is_html);
-		pobj->format = (EMFormatHTML *)t->format;
-		pobj->object.free = pfree;
-        	camel_stream_printf (t->stream, "<table><tr><td width=100%% valign=top><object classid=%s></object></td></tr></table>\n", classid);
-		goto out;
-	}
-#endif
+		guint engine = fallback_engine();
+		if (engine && engine != 10)
+		{ 
+        		char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
+				org_gnome_rss_controls_counter_id);
+			org_gnome_rss_controls_counter_id++;
+			pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), classid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_controls2);
+			pobj->website = g_strstrip(g_strdup((gchar *)website));
+			pobj->is_html = GPOINTER_TO_INT(is_html);
+			pobj->format = (EMFormatHTML *)t->format;
+			pobj->object.free = pfree;
+        		camel_stream_printf (t->stream, 
+				"<table><tr><td width=100%% valign=top><object classid=%s></object></td></tr></table>\n", classid);
+			goto out;
+		}
 		content = net_post_blocking(addr, NULL, NULL, textcb, NULL, &err);
 		if (err)
         	{
@@ -2458,7 +2454,7 @@ update_articles(gboolean disabler)
 		rf->pending = TRUE;
 		check_folders();
 		rf->err = NULL;
-//		taskbar_op_message();
+		taskbar_op_message();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		rf->pending = FALSE;
 	}
@@ -3034,6 +3030,26 @@ rss_finalize(void)
 		system("killall -SIGTERM evolution");
 }
 
+guint
+fallback_engine(void)
+{
+#ifdef HAVE_RENDERKIT
+        guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
+        engine=0;
+#endif
+if (engine == 2)
+#if !defined(HAVE_GTKMOZEMBED)
+        engine=1;
+#endif
+if (engine == 1)
+#if !defined (HAVE_WEBKIT)
+        engine=2;
+#endif
+	return engine;
+#endif
+	return 0;
+}
 
 int e_plugin_lib_enable(EPluginLib *ep, int enable);
 
