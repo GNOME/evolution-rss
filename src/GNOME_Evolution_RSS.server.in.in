@@ -21,7 +21,7 @@
         </oaf_attribute>
                                                                                           
         <oaf_attribute name="evolution2:config_item:title" type="string"
-                       _value="News &amp; Blogs"/>
+                       _value="News and Blogs"/>
                                                                                           
         <oaf_attribute name="evolution2:config_item:description" type="string"
                        _value="Manage your RDF,RSS,ATOM feeds here"/>

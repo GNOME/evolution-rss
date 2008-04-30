@@ -360,6 +360,19 @@ taskbar_op_finish(gpointer key)
 	}
 }
 
+void
+taskbar_op_message(void)
+{
+		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
+#if (EVOLUTION_VERSION >= 22200)
+		guint activity_id = taskbar_op_new(tmsg, "main");
+#else
+		guint activity_id = taskbar_op_new(tmsg);
+#endif
+		g_hash_table_insert(rf->activity, "main", GUINT_TO_POINTER(activity_id));
+		g_free(tmsg);
+}
+
 static void
 statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 {
@@ -392,14 +405,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, fraction);
 		if (rf->sr_feed)
 		{
-			gchar *furl;
-			gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(data));
-			if (strncmp(type, "-", 1) == 0)
-				furl = g_strdup_printf("<b>%s</b>: %s", 
-					"RSS",data);
-			else
-				furl = g_strdup_printf("<b>%s</b>: %s", 
-					type, data);
+			gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"),data);
 			gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 			g_free(furl);
 		}
@@ -1945,7 +1951,7 @@ fmerror:
 	if (!initialised)
 	{
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss.png",
+	                                    "rss-22.png",
 						NULL);
 		folder_icon = e_icon_factory_get_icon (iconfile, E_ICON_SIZE_MENU);
 		g_free(iconfile);
@@ -2367,14 +2373,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
 	{
-		gchar *furl;
-		gchar *type = g_hash_table_lookup(rf->hrt, lookup_key(user_data));
-		if (strncmp(type, "-",1) == 0)
-			furl = g_strdup_printf("<b>%s</b>: %s", 
-					"RSS", user_data);
-		else
-			furl = g_strdup_printf("<b>%s</b>: %s", 
-			type, user_data);
+		gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), user_data);
 		gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 		g_free(furl);
 	}
@@ -2459,6 +2458,7 @@ update_articles(gboolean disabler)
 		rf->pending = TRUE;
 		check_folders();
 		rf->err = NULL;
+//		taskbar_op_message();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		rf->pending = FALSE;
 	}
@@ -2813,14 +2813,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 check_folders();
 
                 rf->err = NULL;
-		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
-#if (EVOLUTION_VERSION >= 22200)
-		guint activity_id = taskbar_op_new(tmsg, "main");
-#else
-		guint activity_id = taskbar_op_new(tmsg);
-#endif
-		g_hash_table_insert(rf->activity, "main", GUINT_TO_POINTER(activity_id));
-		g_free(tmsg);
+		taskbar_op_message();
                 g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
                 // reset cancelation signal
                 if (rf->cancel)
@@ -2909,7 +2902,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 //        list = g_list_prepend (list, info);
 
 	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss.png",
+	                                    "rss-22.png",
                                             NULL);
 
 	GtkWidget *recv_icon = e_icon_factory_get_image (
@@ -3004,13 +2997,7 @@ bail:	if (!rf->pending && !rf->feed_queue)
 		check_folders();
 	
 		rf->err = NULL;
-		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
-#if (EVOLUTION_VERSION >= 22200)
-                guint activity_id = taskbar_op_new(tmsg, "main");
-#else
-                guint activity_id = taskbar_op_new(tmsg);
-#endif
-                g_hash_table_insert(rf->activity, "main", GUINT_TO_POINTER(activity_id));
+		taskbar_op_message();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		// reset cancelation signal
 		if (rf->cancel)
