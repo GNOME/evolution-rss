@@ -36,6 +36,9 @@
 /* Define if gecko is a debug build */
 #undef HAVE_GECKO_DEBUG
 
+/* Define if xpcom glue is used */
+#undef HAVE_GECKO_XPCOM_GLUE
+
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
 
@@ -89,6 +92,9 @@
 
 /* gecko flavour is xulrunner */
 #undef HAVE_XULRUNNER
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE

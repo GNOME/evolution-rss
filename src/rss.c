@@ -87,7 +87,9 @@ int rss_verbose_debug = 0;
 
 #ifdef HAVE_GTKMOZEMBED
 #ifdef HAVE_LIBXUL
-#include <gtkembedmoz/gtkmozembed.h>
+//#include <gtkembedmoz/gtkmozembed.h>
+#include <gtkmozembed.h>
+//#include <gtkmozembed_internal.h>
 #else
 #include <gtkmozembed.h>
 #endif

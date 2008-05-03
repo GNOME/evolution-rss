@@ -13,6 +13,7 @@ AC_SUBST(ACLOCAL_AMFLAGS, "\${ACLOCAL_FLAGS}")
 AC_PROG_INTLTOOL([0.21])
 
 AC_PROG_CC
+AM_PROG_CC_C_O
 AC_REQUIRE_CPP
 AC_PATH_PROG(GPP, g++, no)
 if test "x$GPP" = "xno"; then
@@ -144,6 +145,7 @@ RENDER_N=0
 # *******************************
 
 GECKO_INIT([GECKO], [have_gecko=yes], [have_gecko=no])
+GECKO_DEFINES
 
 AC_SUBST([GECKO])
 AC_SUBST([GECKO_FLAVOUR])
@@ -151,6 +153,7 @@ AC_SUBST([GECKO_INCLUDE_ROOT])
 AC_SUBST([GECKO_HOME])
 AC_SUBST([GECKO_PREFIX])
 AC_SUBST([GECKO_EXTRA_LIBS])
+AC_SUBST([GECKO_GLUE_LIBS])
 AC_SUBST([GECKO_XPCOM])
 
 case "$GECKO" in
@@ -160,6 +163,7 @@ seamonkey) gecko_min_version=1.0 ;;
 *thunderbird) gecko_min_version=1.0 ;;
 xulrunner) gecko_min_version=1.8 ;;
 libxul*) gecko_min_version=1.9 ;;
+*) AC_MSG_ERROR([$gecko_cv_gecko is not supported])
 esac
 
 AC_MSG_CHECKING([whether to include Gecko support])
@@ -170,9 +174,19 @@ AC_MSG_RESULT([$enable_gecko])
 
 if test "$enable_gecko" = "yes"; then
 	if test "x$have_gecko" != "xno"; then
-	PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO_XPCOM >= $gecko_min_version], [], [have_gecko=no])
+		if test $GECKO = libxul-embedding; then
+			PKG_CHECK_MODULES([GECKO],[libxul-embedding $gecko_cv_extra_pkg_dependencies  >= $gecko_min_version])
+		else
+	    		#PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
+	    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
+		fi
 	AC_SUBST([GECKO_CFLAGS])
 	AC_SUBST([GECKO_LIBS])
+echo $GECKO
+echo $GECKO_HOME
+echo $GECKO_INCLUDE_ROOT
+echo $GECKO_CFLAGS
+echo $GECKO_LIBS
 
 		if test "x$have_gecko" != "xno"; then
 		AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
@@ -187,7 +201,7 @@ if test "$enable_gecko" = "yes"; then
 			AC_DEFINE_UNQUOTED(HAVE_XULRUNNER, 1, [gecko flavour is xulrunner])
 			AC_SUBST(HAVE_XULRUNNER)
 			fi
-			if test "x$GECKO" == "xlibxul"; then
+			if test "x$GECKO" == "xlibxul" -o "x$GECKO" == "xlibxul-embedding"; then
 			AC_DEFINE_UNQUOTED(HAVE_LIBXUL, 1, [libxul flavour of xulrunner])
 			AC_SUBST(HAVE_LIBXUL)
 			fi
