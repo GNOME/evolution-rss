@@ -1640,7 +1640,6 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 			rf->test++;
 		}*/
 
-		g_print("DUDICI\n");
 		rf->mozembed = gtk_moz_embed_new();
 
 		/* FIXME add all those profile shits */
