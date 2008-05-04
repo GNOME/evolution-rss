@@ -189,7 +189,7 @@ if test "$enable_gecko" = "yes"; then
 		AC_SUBST(HAVE_RENDERKIT)
 		AC_SUBST(HAVE_GTKMOZEMEBED)
 		RENDER_CFLAGS="$GECKO_CFLAGS -I$GECKO_INCLUDE_ROOT" 
-		#GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
+		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
 		AC_SUBST([GECKO_RPATH])
 	
 			if test "x$GECKO" == "xxulrunner"; then
