@@ -85,14 +85,22 @@ int rss_verbose_debug = 0;
 
 #ifdef HAVE_RENDERKIT
 
+#ifndef XPCOM_GLUE
+#  define MOZILLA_INTERNAL_API
+#endif
+
+#ifdef XPCOM_GLUE
+#  include <gtkmozembed_glue.cpp>
+#endif
+
 #ifdef HAVE_GTKMOZEMBED
-#ifdef HAVE_LIBXUL
+//#ifdef HAVE_LIBXUL
 //#include <gtkembedmoz/gtkmozembed.h>
 #include <gtkmozembed.h>
 //#include <gtkmozembed_internal.h>
-#else
-#include <gtkmozembed.h>
-#endif
+//#else
+//#include <gtkmozembed.h>
+//#endif
 #endif
 
 #ifdef HAVE_OLD_WEBKIT
@@ -1533,6 +1541,41 @@ rss_mozilla_init(void)
        	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
 	g_unsetenv("MOZILLA_FIVE_HOME");
 
+#ifdef XPCOM_GLUE
+    static const GREVersionRange greVersion = {
+    "1.9a", PR_TRUE,
+    "2", PR_TRUE
+    };
+    char xpcomLocation[4096];
+    nsresult rv = GRE_GetGREPathWithProperties(&greVersion, 1, nsnull, 0, xpcomLocation, 4096);
+    if (NS_FAILED(rv)) {
+       printf("failed 1\n");
+       return;
+    }
+
+    // Startup the XPCOM Glue that links us up with XPCOM.
+    XPCOMGlueStartup(xpcomLocation);
+    if (NS_FAILED(rv)) {
+        printf("failed 2\n");
+        return;
+    }
+    printf("before 3\n");
+
+    rv = GTKEmbedGlueStartup();
+    if (NS_FAILED(rv)) {
+        printf("failed 3\n");
+        return;
+    }
+
+    //gtk_moz_embed_set_comp_path(xpcomLocation);
+
+    char *lastSlash = strrchr(xpcomLocation, '/');
+    if (lastSlash)
+      *lastSlash = '\0';
+
+    gtk_moz_embed_set_path(xpcomLocation);
+#endif
+
 // this means xulrunner at least 1.9
 #ifdef HAVE_LIBXUL
 	gtk_moz_embed_set_path(GECKO_HOME);
@@ -1597,6 +1640,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 			rf->test++;
 		}*/
 
+		g_print("DUDICI\n");
 		rf->mozembed = gtk_moz_embed_new();
 
 		/* FIXME add all those profile shits */
@@ -3045,14 +3089,16 @@ fallback_engine(void)
 #if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
         engine=0;
 #endif
-if (engine == 2)
+if (engine == 2) {
 #if !defined(HAVE_GTKMOZEMBED)
         engine=1;
 #endif
-if (engine == 1)
+}
+if (engine == 1) {
 #if !defined (HAVE_WEBKIT)
         engine=2;
 #endif
+}
 	return engine;
 #endif
 	return 0;

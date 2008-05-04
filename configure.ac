@@ -176,25 +176,20 @@ if test "$enable_gecko" = "yes"; then
 	if test "x$have_gecko" != "xno"; then
 		if test $GECKO = libxul-embedding; then
 			PKG_CHECK_MODULES([GECKO],[libxul-embedding $gecko_cv_extra_pkg_dependencies  >= $gecko_min_version])
+			GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags --define-variable=includetype=unstable libxul-embedding)"
 		else
 	    		#PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
 	    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
 		fi
 	AC_SUBST([GECKO_CFLAGS])
 	AC_SUBST([GECKO_LIBS])
-echo $GECKO
-echo $GECKO_HOME
-echo $GECKO_INCLUDE_ROOT
-echo $GECKO_CFLAGS
-echo $GECKO_LIBS
-
 		if test "x$have_gecko" != "xno"; then
 		AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
 		AC_DEFINE_UNQUOTED(HAVE_GTKMOZEMBED,1, [gtkmozembed render engine present])
 		AC_SUBST(HAVE_RENDERKIT)
 		AC_SUBST(HAVE_GTKMOZEMEBED)
 		RENDER_CFLAGS="$GECKO_CFLAGS -I$GECKO_INCLUDE_ROOT" 
-		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
+		#GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_HOME
 		AC_SUBST([GECKO_RPATH])
 	
 			if test "x$GECKO" == "xxulrunner"; then
