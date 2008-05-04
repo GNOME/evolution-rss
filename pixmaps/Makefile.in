@@ -259,8 +259,9 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 pixmapdir = $(ICON_DIR)
-pixmap_DATA = rss.png \
-		rss-22.png
+pixmap_DATA = rss.png 		\
+		rss-22.png 	\
+		rss-24.png
 
 EXTRA_DIST = $(pixmap_DATA)
 all: all-am

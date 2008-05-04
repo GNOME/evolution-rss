@@ -2948,7 +2948,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 //        list = g_list_prepend (list, info);
 
 	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss-22.png",
+	                                    "rss-24.png",
                                             NULL);
 
 	GtkWidget *recv_icon = e_icon_factory_get_image (

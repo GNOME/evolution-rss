@@ -2,8 +2,9 @@
 
 pixmapdir = $(ICON_DIR)
 
-pixmap_DATA = rss.png \
-		rss-22.png
+pixmap_DATA = rss.png 		\
+		rss-22.png 	\
+		rss-24.png
 
 EXTRA_DIST = $(pixmap_DATA)
 
