@@ -144,8 +144,15 @@ RENDER_N=0
 # gecko renderer
 # *******************************
 
-GECKO_INIT([GECKO], [have_gecko=yes], [have_gecko=no])
 GECKO_DEFINES
+AC_MSG_CHECKING([whether to include Gecko support])
+AC_ARG_ENABLE([gecko],
+        AS_HELP_STRING([--disable-gecko],[Disable Gecko (gtkmozembed) support (default: enabled)]),
+        [],[enable_gecko=yes])
+AC_MSG_RESULT([$enable_gecko])
+
+if test "$enable_gecko" = "yes"; then
+GECKO_INIT([GECKO], [have_gecko=yes], [have_gecko=no])
 
 AC_SUBST([GECKO])
 AC_SUBST([GECKO_FLAVOUR])
@@ -166,23 +173,16 @@ libxul*) gecko_min_version=1.9 ;;
 *) AC_MSG_ERROR([$gecko_cv_gecko is not supported])
 esac
 
-AC_MSG_CHECKING([whether to include Gecko support])
-AC_ARG_ENABLE([gecko],
-        AS_HELP_STRING([--disable-gecko],[Disable Gecko (gtkmozembed) support (default: enabled)]),
-        [],[enable_gecko=yes])
-AC_MSG_RESULT([$enable_gecko])
-
-if test "$enable_gecko" = "yes"; then
-	if test "x$have_gecko" != "xno"; then
-		if test $GECKO = libxul-embedding; then
-			PKG_CHECK_MODULES([GECKO],[libxul-embedding $gecko_cv_extra_pkg_dependencies  >= $gecko_min_version])
-			GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags --define-variable=includetype=unstable libxul-embedding)"
-		else
-	    		#PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
-	    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
-		fi
-	AC_SUBST([GECKO_CFLAGS])
-	AC_SUBST([GECKO_LIBS])
+if test "x$have_gecko" != "xno"; then
+	if test $GECKO = libxul-embedding -o $GECKO = libxul; then
+		PKG_CHECK_MODULES([GECKO],[libxul-embedding $gecko_cv_extra_pkg_dependencies  >= $gecko_min_version])
+		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags --define-variable=includetype=unstable libxul-embedding)"
+	else
+    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
+    		#PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
+	fi
+AC_SUBST([GECKO_CFLAGS])
+AC_SUBST([GECKO_LIBS])
 		if test "x$have_gecko" != "xno"; then
 		AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
 		AC_DEFINE_UNQUOTED(HAVE_GTKMOZEMBED,1, [gtkmozembed render engine present])
