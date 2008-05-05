@@ -170,7 +170,7 @@ seamonkey) gecko_min_version=1.0 ;;
 *thunderbird) gecko_min_version=1.0 ;;
 xulrunner) gecko_min_version=1.8 ;;
 libxul*) gecko_min_version=1.9 ;;
-*) AC_MSG_ERROR([$gecko_cv_gecko is not supported])
+*) AC_MSG_ERROR([No supported render found. Pleae install one of: mozilla-devel, firefox-devel, xulrunner-devel, libxul, webkit])
 esac
 
 if test "x$have_gecko" != "xno"; then
