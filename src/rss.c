@@ -84,23 +84,12 @@ int rss_verbose_debug = 0;
 #include <libxml/HTMLparser.h>
 
 #ifdef HAVE_RENDERKIT
-
-#ifndef XPCOM_GLUE
-#  define MOZILLA_INTERNAL_API
-#endif
-
-#ifdef XPCOM_GLUE
-#  include <gtkmozembed_glue.cpp>
-#endif
-
 #ifdef HAVE_GTKMOZEMBED
-//#ifdef HAVE_LIBXUL
-//#include <gtkembedmoz/gtkmozembed.h>
+#ifdef HAVE_LIBXUL
 #include <gtkmozembed.h>
-//#include <gtkmozembed_internal.h>
-//#else
-//#include <gtkmozembed.h>
-//#endif
+#else
+#include <gtkembedmoz/gtkmozembed.h>
+#endif
 #endif
 
 #ifdef HAVE_OLD_WEBKIT
@@ -1541,41 +1530,6 @@ rss_mozilla_init(void)
        	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
 	g_unsetenv("MOZILLA_FIVE_HOME");
 
-#ifdef XPCOM_GLUE
-    static const GREVersionRange greVersion = {
-    "1.9a", PR_TRUE,
-    "2", PR_TRUE
-    };
-    char xpcomLocation[4096];
-    nsresult rv = GRE_GetGREPathWithProperties(&greVersion, 1, nsnull, 0, xpcomLocation, 4096);
-    if (NS_FAILED(rv)) {
-       printf("failed 1\n");
-       return;
-    }
-
-    // Startup the XPCOM Glue that links us up with XPCOM.
-    XPCOMGlueStartup(xpcomLocation);
-    if (NS_FAILED(rv)) {
-        printf("failed 2\n");
-        return;
-    }
-    printf("before 3\n");
-
-    rv = GTKEmbedGlueStartup();
-    if (NS_FAILED(rv)) {
-        printf("failed 3\n");
-        return;
-    }
-
-    //gtk_moz_embed_set_comp_path(xpcomLocation);
-
-    char *lastSlash = strrchr(xpcomLocation, '/');
-    if (lastSlash)
-      *lastSlash = '\0';
-
-    gtk_moz_embed_set_path(xpcomLocation);
-#endif
-
 // this means xulrunner at least 1.9
 #ifdef HAVE_LIBXUL
 	gtk_moz_embed_set_path(GECKO_HOME);
@@ -1849,6 +1803,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	if (rf->cur_format || (feedid && is_html && rf->cur_format))
 	{
 		guint engine = fallback_engine();
+#ifdef HAVE_RENDERKIT
 		if (engine && engine != 10)
 		{ 
         		char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
@@ -1863,6 +1818,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				"<table><tr><td width=100%% valign=top><object classid=%s></object></td></tr></table>\n", classid);
 			goto out;
 		}
+#endif
 		content = net_post_blocking(addr, NULL, NULL, textcb, NULL, &err);
 		if (err)
         	{

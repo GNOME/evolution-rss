@@ -183,7 +183,7 @@ if test "x$have_gecko" != "xno"; then
 	fi
 AC_SUBST([GECKO_CFLAGS])
 AC_SUBST([GECKO_LIBS])
-		if test "x$have_gecko" != "xno"; then
+		#if test "x$have_gecko" != "xno"; then
 		AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
 		AC_DEFINE_UNQUOTED(HAVE_GTKMOZEMBED,1, [gtkmozembed render engine present])
 		AC_SUBST(HAVE_RENDERKIT)
@@ -202,7 +202,7 @@ AC_SUBST([GECKO_LIBS])
 			AC_DEFINE_UNQUOTED(HAVE_LIBXUL, 1, [libxul flavour of xulrunner])
 			AC_SUBST(HAVE_LIBXUL)
 			fi
-		fi
+		#fi
 		AC_ARG_WITH([primary-render],
         		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
         			[RENDER=$with_primary_render], [RENDER=gtkhtml])

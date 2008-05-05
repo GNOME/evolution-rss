@@ -1,3 +1,7 @@
+Mon 05 May 2008 08:34:22 AM EEST <lucilanga@gnome.org>
+
+	support for building against libxul
+
 Wed 30 Apr 2008 09:31:40 PM EEST <lucilanga@gnome.org>
 
 	Gracefully fallback to other render
