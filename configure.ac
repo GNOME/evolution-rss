@@ -82,6 +82,9 @@ AC_SUBST(MINOR_VERSION)
 dnl locate libsoup flavour
 SOUP=
 PKG_CHECK_MODULES([LIBSOUP_24], libsoup-2.4, [SOUP=2.4], [SOUP=])
+if test "x$SOUP" != "x2.4" -a "$evolution_exec_int" -ge "22190"; then
+	AC_MSG_ERROR([libsoup-2.4 devel headers required])
+else
 if test "x$SOUP" != "x2.4"; then
 	PKG_CHECK_MODULES([LIBSOUP_22], libsoup-2.2, [SOUP=2.2], [SOUP=]) 
 fi
@@ -89,6 +92,7 @@ if test "x$SOUP" == "x"; then
 	PKG_CHECK_MODULES(LIBSOUP, libsoup, [SOUP=], [])
 else
 SOUP="-$SOUP"
+fi
 fi
 
 dnl base packages and versions

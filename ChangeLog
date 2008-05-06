@@ -1,3 +1,8 @@
+Tue 06 May 2008 08:11:07 AM EEST <lucilanga@gnome.org>
+
+	Enforce libsoup-2.4 devel requirement for
+	evolution >= 2.21.90
+
 Mon 05 May 2008 08:34:22 AM EEST <lucilanga@gnome.org>
 
 	support for building against libxul
