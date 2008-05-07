@@ -29,6 +29,12 @@
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
 
+typedef struct {
+        GladeXML *xml;
+        GConfClient *gconf;
+        GtkWidget   *combobox;
+} UIData;
+
 static void feeds_dialog_edit(GtkDialog *d, gpointer data);
 
 static void
@@ -1504,6 +1510,101 @@ export_cb (GtkWidget *widget, gpointer data)
         return;
 }
 
+static void
+destroy_ui_data (gpointer data)
+{
+        UIData *ui = (UIData *) data;
+
+        if (!ui)
+                return;
+
+        g_object_unref (ui->xml);
+        g_object_unref (ui->gconf);
+        g_free (ui);
+}
+
+GtkWidget *
+e_plugin_lib_get_configure_widget (EPlugin *epl)
+{
+	GtkListStore  *store;
+        GtkTreeIter iter;
+        GConfClient *gconf = gconf_client_get_default();
+        GtkWidget *hbox;
+	guint i;
+
+        UIData *ui = g_new0 (UIData, 1);
+
+        char *gladefile;
+
+        gladefile = g_build_filename (EVOLUTION_GLADEDIR,
+                        "rss-html-rendering.glade",
+                        NULL);
+        ui->xml = glade_xml_new (gladefile, "html-rendering", NULL);
+        g_free (gladefile);
+
+
+	ui->combobox = glade_xml_get_widget(ui->xml, "hbox1");
+        GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+        store = gtk_list_store_new(1, G_TYPE_STRING);
+        GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
+        for (i=0;i<3;i++) {
+                gtk_list_store_append(store, &iter);
+                gtk_list_store_set(store, &iter, 0, _(engines[i].label), -1);
+        }
+        gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
+        gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
+                                    "text", 0,
+                                    NULL);
+        guint render = GPOINTER_TO_INT(gconf_client_get_int(rss_gconf,
+                                    GCONF_KEY_HTML_RENDER,
+                                    NULL));
+
+        switch (render)
+        {
+                case 10:
+                        gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+                        break;
+                case 1:
+#ifndef HAVE_WEBKIT
+                        gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+                        break;
+#endif
+                case 2:
+#ifndef HAVE_GTKMOZEMBED
+                        gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+                        break;
+#endif
+                default:
+                        g_printf("Selected render not supported! Failling back to default.\n");
+                        gtk_combo_box_set_active(GTK_COMBO_BOX(combo), render);
+
+        }
+
+        gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo),
+                                        renderer,
+                                        set_sensitive,
+                                        NULL, NULL);
+
+#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
+        GtkWidget *label_webkit = glade_xml_get_widget(ui->xml, "label_webkits");
+        gtk_label_set_text(GTK_LABEL(label_webkit), _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
+        gtk_widget_show(label_webkit);
+#endif
+        g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
+        g_signal_connect (combo, "value-changed", G_CALLBACK (render_engine_changed), NULL);
+        gtk_widget_show(combo);
+        gtk_box_pack_start(GTK_BOX(ui->combobox), combo, FALSE, FALSE, 0);
+
+        ui->gconf = gconf_client_get_default ();
+	 hbox = gtk_vbox_new (FALSE, 0);
+
+        gtk_box_pack_start (GTK_BOX (hbox), glade_xml_get_widget (ui->xml, "html-rendering"), FALSE, FALSE, 0);
+
+       g_object_set_data_full (G_OBJECT (hbox), "ui-data", ui, destroy_ui_data);
+
+        return hbox;
+}
+
 /*=============*
  * BONOBO part *
  *=============*/
@@ -1629,7 +1730,7 @@ rss_config_control_new (void)
 
 
 	/* HTML tab */
-	sf->combo_hbox = glade_xml_get_widget(sf->gui, "hbox17");
+/*	sf->combo_hbox = glade_xml_get_widget(sf->gui, "hbox17");
 	GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
         store = gtk_list_store_new(1, G_TYPE_STRING);
 	GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
@@ -1679,7 +1780,7 @@ rss_config_control_new (void)
 	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
 	g_signal_connect (combo, "value-changed", G_CALLBACK (render_engine_changed), NULL);
 	gtk_widget_show(combo);
-	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);*/
 
 	/* Network tab */
 	sf->use_proxy = glade_xml_get_widget(sf->gui, "use_proxy");

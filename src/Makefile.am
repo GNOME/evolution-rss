@@ -122,7 +122,8 @@ uninstall-local:
 DISTCLEANFILES = $(schema_DATA)
 
 glade_DATA =                    \
-	rss-ui.glade
+	rss-ui.glade		\
+	rss-html-rendering.glade
 
 BUILT_SOURCES	= $(server_DATA)
 CLEANFILES	= $(BUILT_SOURCES)	\
