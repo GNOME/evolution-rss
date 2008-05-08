@@ -1623,7 +1623,7 @@ rss_config_control_new (void)
 	GtkTreeSelection *selection;
 	GtkTreeViewColumn *column;
 
-	g_print("rf->%p\n", rf);
+	d(g_print("rf->%p\n", rf));
 	sf = g_new0(setupfeed, 1);
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
@@ -1636,7 +1636,6 @@ rss_config_control_new (void)
 	rf->treeview = (GtkWidget *)treeview;
 	sf->treeview = (GtkWidget *)treeview;
 
-	//gtk_widget_set_size_request ((GtkWidget *)treeview, 395, -1);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
 
 	store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING,
@@ -1656,6 +1655,9 @@ rss_config_control_new (void)
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview),
                                column);
 	cell = gtk_cell_renderer_text_new ();
+	g_object_set (cell,
+                "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
+                NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Feed Name"),
                                                   cell,
                                                   "text", 1,
