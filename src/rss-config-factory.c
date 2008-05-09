@@ -1657,11 +1657,15 @@ rss_config_control_new (void)
 	g_object_set (cell,
                 "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
                 NULL);
+	g_object_set (cell,
+                "is-expanded", TRUE,
+                NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Feed Name"),
                                                   cell,
                                                   "text", 1,
                                                   NULL);
 	gtk_tree_view_column_set_resizable(column, TRUE);
+	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview),
                                column);
 	gtk_tree_view_column_set_sort_column_id (column, 1);
@@ -1671,6 +1675,9 @@ rss_config_control_new (void)
                                                   "text", 2,
                                                   NULL);
 	gtk_tree_view_column_set_resizable(column, TRUE);
+	//gtk_tree_view_column_set_expand(column, TRUE);
+//	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_column_set_min_width (column, -1);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview),
                                column);
 	gtk_tree_view_column_set_sort_column_id (column, 2);
