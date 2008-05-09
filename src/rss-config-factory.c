@@ -1733,8 +1733,12 @@ rss_config_control_new (void)
 #if (EVOLUTION_VERSION < 21900)		// include devel too
 
 	/*first make the tab visible */
-	g_object_set(glade_xml_get_widget(sf->gui, "label_HTML"), "visible", TRUE);
-	g_object_set(glade_xml_get_widget(sf->gui, "vbox_HTML"), "visible", TRUE);
+	g_object_set(glade_xml_get_widget(sf->gui, "label_HTML"),
+					"visible", TRUE, 
+					NULL);
+	g_object_set(glade_xml_get_widget(sf->gui, "vbox_HTML"),
+					"visible", TRUE, 
+					NULL);
 	/* HTML tab */
 	sf->combo_hbox = glade_xml_get_widget(sf->gui, "hbox17");
 	GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
