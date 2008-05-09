@@ -1591,16 +1591,15 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         gtk_widget_show(label_webkit);
 #endif
         g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
-        g_signal_connect (combo, "value-changed", G_CALLBACK (render_engine_changed), NULL);
         gtk_widget_show(combo);
         gtk_box_pack_start(GTK_BOX(ui->combobox), combo, FALSE, FALSE, 0);
 
         ui->gconf = gconf_client_get_default ();
-	 hbox = gtk_vbox_new (FALSE, 0);
+	hbox = gtk_vbox_new (FALSE, 0);
 
         gtk_box_pack_start (GTK_BOX (hbox), glade_xml_get_widget (ui->xml, "html-rendering"), FALSE, FALSE, 0);
 
-       g_object_set_data_full (G_OBJECT (hbox), "ui-data", ui, destroy_ui_data);
+	g_object_set_data_full (G_OBJECT (hbox), "ui-data", ui, destroy_ui_data);
 
         return hbox;
 }
@@ -1731,8 +1730,13 @@ rss_config_control_new (void)
 		GCONF_KEY_DISPLAY_SUMMARY);
 
 
+#if (EVOLUTION_VERSION < 21900)		// include devel too
+
+	/*first make the tab visible */
+	g_object_set(glade_xml_get_widget(sf->gui, "label_HTML"), "visible", TRUE);
+	g_object_set(glade_xml_get_widget(sf->gui, "vbox_HTML"), "visible", TRUE);
 	/* HTML tab */
-/*	sf->combo_hbox = glade_xml_get_widget(sf->gui, "hbox17");
+	sf->combo_hbox = glade_xml_get_widget(sf->gui, "hbox17");
 	GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
         store = gtk_list_store_new(1, G_TYPE_STRING);
 	GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
@@ -1780,9 +1784,9 @@ rss_config_control_new (void)
 	gtk_widget_show(label_webkit);
 #endif
 	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
-	g_signal_connect (combo, "value-changed", G_CALLBACK (render_engine_changed), NULL);
 	gtk_widget_show(combo);
-	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);*/
+	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
+#endif
 
 	/* Network tab */
 	sf->use_proxy = glade_xml_get_widget(sf->gui, "use_proxy");

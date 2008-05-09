@@ -1516,7 +1516,8 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
 #if defined(HAVE_XULRUNNER) || defined(HAVE_LIBXUL)
-				gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
+if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
+	gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
 			}
 	}
@@ -1576,7 +1577,9 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
     //    	}
 //		webkit_gtk_init();
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
-		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
+		//gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
+		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 	}
 #endif
 
@@ -1598,8 +1601,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 
 		/* FIXME add all those profile shits */
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-//		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
-//		gtk_box_pack_start(moz, rf->mozembed, FALSE, FALSE, 0);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 	}
 #endif
 

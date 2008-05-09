@@ -1,19 +1,25 @@
+Fri 09 May 2008 07:43:14 AM EEST <lucilanga@gnome.org>
+
+	* increase timeout (30) for evolution complete
+	startup (Jasper Lievisse Adriaanse)
+	* allow config HTML tab for evo < 2.19
+
 Tue 06 May 2008 08:11:07 AM EEST <lucilanga@gnome.org>
 
-	Enforce libsoup-2.4 devel requirement for
+	* Enforce libsoup-2.4 devel requirement for
 	evolution >= 2.21.90
 
 Mon 05 May 2008 08:34:22 AM EEST <lucilanga@gnome.org>
 
-	support for building against libxul
+	* support for building against libxul
 
 Wed 30 Apr 2008 09:31:40 PM EEST <lucilanga@gnome.org>
 
-	Gracefully fallback to other render
+	* Gracefully fallback to other render
 
 Mon 28 Apr 2008 09:55:27 PM EEST <lucilanga@gnome.org>
 
-	Modify taskbar_operation meaning to have only
+	* Modify taskbar_operation meaning to have only
 	one operation for whole feeds fetching
 
 Thu 24 Apr 2008 11:21:10 AM EEST <lucilanga@gnome.org>
