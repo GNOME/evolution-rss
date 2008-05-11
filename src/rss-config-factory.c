@@ -1674,10 +1674,10 @@ rss_config_control_new (void)
                                                   cell,
                                                   "text", 2,
                                                   NULL);
-	gtk_tree_view_column_set_resizable(column, TRUE);
-	//gtk_tree_view_column_set_expand(column, TRUE);
-//	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-	gtk_tree_view_column_set_min_width (column, -1);
+//	gtk_tree_view_column_set_resizable(column, TRUE);
+//	gtk_tree_view_column_set_expand(column, TRUE);
+	gtk_tree_view_column_set_min_width(column, 111);
+//	gtk_tree_view_column_set_min_width (column, -1);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview),
                                column);
 	gtk_tree_view_column_set_sort_column_id (column, 2);
@@ -1692,6 +1692,7 @@ rss_config_control_new (void)
        gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(store), &iter, NULL, 0);
        gtk_tree_selection_select_iter(selection, &iter);
  
+	gtk_tree_view_columns_autosize (treeview);
 	g_signal_connect((gpointer) treeview, 
 			"row_activated", 
 			G_CALLBACK(treeview_row_activated), 
