@@ -1,3 +1,7 @@
+Mon 12 May 2008 07:26:39 AM EEST <lucilanga@gnome.org>
+
+	Allow fallback to older webkit in configure
+
 Sun 11 May 2008 07:16:00 PM EEST <lucilanga@gnome.org>
 
 	* shorten the feed names with ellipsize to 

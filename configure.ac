@@ -233,9 +233,14 @@ AC_ARG_ENABLE([webkit],
 AC_MSG_RESULT([$enable_webkit])
 
 if test "$enable_webkit" = "yes"; then
-PKG_CHECK_MODULES([WEBKIT], webkit-1.0, [], [have_webkit=no])
+PKG_CHECK_MODULES([WEBKIT], webkit-1.0, [have_webkit=], [have_webkit=no])
+if test "x$have_webkit" == "x"; then
+	PKG_CHECK_MODULES([WEBKIT], WebKitGtk, [have_webkit=yes], [have_webkit=no])
+	WEBKIT_UNSTD=1
+fi
 AC_SUBST([WEBKIT_CFLAGS])
 AC_SUBST([WEBKIT_LIBS])
+AC_SUBST([WEBKIT_UNSTD])
 
 if test "x$have_webkit" != "xno"; then
 	AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gecko render engines are present])

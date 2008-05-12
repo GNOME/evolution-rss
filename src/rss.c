@@ -100,7 +100,11 @@ int rss_verbose_debug = 0;
 #define webkit_web_view_new() webkit_gtk_page_new()
 #else
 	#ifdef HAVE_WEBKIT
-	#include "webkit/webkitwebview.h"
+	#ifdef WEBKIT_UNSTD
+	#include <WebKitGtk/webkitwebview.h>
+	#else
+	#include <webkit/webkitwebview.h>
+	#endif
 	#endif
 #endif
 
