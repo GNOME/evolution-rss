@@ -236,7 +236,7 @@ if test "$enable_webkit" = "yes"; then
 PKG_CHECK_MODULES([WEBKIT], webkit-1.0, [], [have_webkit=no])
 if test "x$have_webkit" == "xno"; then
 	PKG_CHECK_MODULES([WEBKIT], WebKitGtk, [], [have_webkit=no])
-	WEBKIT_UNSTD=1
+	AC_DEFINE_UNQUOTED(WEBKIT_UNSTD, 1, [unstandard webkit installation])
 fi
 AC_SUBST([WEBKIT_CFLAGS])
 AC_SUBST([WEBKIT_LIBS])

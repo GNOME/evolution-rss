@@ -101,7 +101,7 @@ int rss_verbose_debug = 0;
 #else
 	#ifdef HAVE_WEBKIT
 	#ifdef WEBKIT_UNSTD
-	#include <WebKitGtk/webkitwebview.h>
+	#include <WebKit/webkitwebview.h>
 	#else
 	#include <webkit/webkitwebview.h>
 	#endif
