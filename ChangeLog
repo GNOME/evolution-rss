@@ -1,6 +1,10 @@
+Tue 13 May 2008 09:32:47 PM EEST <lucilanga@gnome.org>
+
+	* Implement progress operation for add/edit feeds
+
 Mon 12 May 2008 07:26:39 AM EEST <lucilanga@gnome.org>
 
-	Allow fallback to older webkit in configure
+	* Allow fallback to older webkit in configure
 
 Sun 11 May 2008 07:16:00 PM EEST <lucilanga@gnome.org>
 

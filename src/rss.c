@@ -126,6 +126,7 @@ int rss_verbose_debug = 0;
 #include "rss-config-factory.c"
 
 int pop = 0;
+int article;
 //#define RSS_DEBUG 1
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
@@ -174,7 +175,7 @@ gchar *display_doc (RDF *r);
 void check_folders(void);
 //u_int32_t 
 gchar *
-update_channel(const char *chn_name, char *url, char *main_date, GArray *item);
+update_channel(const char *chn_name, char *url, char *main_date, GArray *item, GtkWidget *progress);
 static char *layer_find (xmlNodePtr node, char *match, char *fail);
 static char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fail);
 static gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char *fail);
@@ -608,6 +609,7 @@ void
 abort_all_soup(void)
 {
 	//abort all session
+	rf->cancel = 1;
 	rf->cancel_all = 1;
 	if (rf->abort_session)
 	{
@@ -2130,6 +2132,7 @@ setup_feed(add_feed *feed)
 	{
         	r->cache = doc;
 		r->uri = feed->feed_url;
+		r->progress = feed->progress;
 
         	chn_name = display_doc (r);
 add:
@@ -3676,7 +3679,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 			t,
 			r->uri,
 			md2, 
-			item);
+			item,
+			r->progress);
 	if (md2)
 		g_free(md2);
 	g_array_free(item, TRUE);
@@ -3895,7 +3899,7 @@ decode_html_entities(gchar *str)
 }
 
 gchar *
-update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
+update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, GtkWidget *progress)
 {
         guint i;
 	gchar *sender = g_strdup_printf("%s <%s>", chn_name, chn_name);
@@ -3924,6 +3928,17 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item)
 
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++)
 	{
+		if (rf->cancel) goto out;
+
+		if (progress)
+		{
+			gdouble fraction = (gdouble)i/item->len;
+                	gtk_progress_bar_set_fraction((GtkProgressBar *)progress, fraction);
+			gchar *msg = g_strdup_printf("%2.0f%% done", fraction*100);
+                	gtk_progress_bar_set_text((GtkProgressBar *)progress, msg);
+			g_free(msg);
+		}
+		
                 char *p = layer_find (el->children, "title", "Untitled article");
 		//firstly try to parse as an ATOM author
 		//process person construct
@@ -4153,12 +4168,12 @@ delete_oldest_article(CamelFolder *folder, guint unread)
                	}
 out:           	camel_message_info_free(info);
 	}
-       	camel_folder_freeze(folder);
+//       	camel_folder_freeze(folder);
 	if (min_date)
 		camel_folder_delete_message (folder, uids->pdata[imax]);
-      	camel_folder_sync (folder, TRUE, NULL);
-      	camel_folder_expunge (folder, NULL);
-       	camel_folder_thaw(folder);
+  //    	camel_folder_sync (folder, TRUE, NULL);
+//      	camel_folder_expunge (folder, NULL);
+  //     	camel_folder_thaw(folder);
 	while (gtk_events_pending())
                   gtk_main_iteration ();
        	camel_folder_free_uids (folder, uids);

@@ -38,6 +38,7 @@ typedef struct _RDF {
         guint 		type_id; 	//num type
 	gchar		*version;	//feed version
         gchar		*feedid;  	//md5 string id of feed
+	GtkWidget	*progress;
         /* Soup stuff */
         SoupMessage *message;
 } RDF;
@@ -146,6 +147,7 @@ enum {
 
 typedef struct ADD_FEED {
 	GtkWidget	*dialog;
+	GtkWidget	*progress;
         gchar           *feed_url;
 	gchar		*feed_name;
         gboolean        fetch_html;	//show webpage instead of summary
