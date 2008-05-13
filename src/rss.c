@@ -4157,6 +4157,7 @@ out:           	camel_message_info_free(info);
 	if (min_date)
 		camel_folder_delete_message (folder, uids->pdata[imax]);
       	camel_folder_sync (folder, TRUE, NULL);
+      	camel_folder_expunge (folder, NULL);
        	camel_folder_thaw(folder);
 	while (gtk_events_pending())
                   gtk_main_iteration ();
@@ -4203,11 +4204,17 @@ get_feed_age(gpointer key, gpointer value)
                                		if (!(flags & CAMEL_MESSAGE_SEEN))
 					{
 						if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED))
-							camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN|CAMEL_MESSAGE_DELETED, ~0);
+						{
+							//camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN|CAMEL_MESSAGE_DELETED, ~0);
+							camel_folder_delete_message(folder, uids->pdata[i]);
+						}
 					}
 					else
 						if (!(flags & CAMEL_MESSAGE_FLAGGED))
-							camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+						{
+							//camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
+							camel_folder_delete_message(folder, uids->pdata[i]);
+						}
 				}
                         	camel_folder_free_message_info(folder, info);
                 	}
