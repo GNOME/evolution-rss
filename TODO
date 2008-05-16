@@ -1,6 +1,5 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
-	* make setup dialog modal when fetch_feed active
 	* add syndicate icon for News&Blogs folder
 	* probably move to soup_unblocking when rendering of an article
 	* when browsing a different feed/mail folder cancel all sessions
@@ -13,13 +12,10 @@
 	* check mozembed widget / thread when quitting
 	* test cancelation signal check rf->cancel fetch feed might reset it always 0 and crashing when finish_feed
 	* jump to folder when adding through d-bus
-	* make Cancel All from S&R work
 	* move evolution detection to m4 to ease up integration in other plugins
-	* disable javascript alerts !?
 	* check memory consumption when S&R
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
-	* feed://
 	* fix authentication for proxy dialog
 	* make auth dialog not intrusive (peek other software)
 	* fix move->rename
@@ -29,16 +25,15 @@
 	* prefetch html content for all webkits (perhaps temp file)
 	* offline storage for article's home page
 	* implement web controls for diferent redering <Webkits> or <Gecko>
-	* convert reading feeds progress bar to articles number that will actually be read
 	* force soup to follow redirects (304) test on fedora weekly news
 	* check loading of images in certain feeds
 	* convert rest of non-intrusive error messages 
 	* search in the content of page for feed
 	* obey ttl entity
-	* present alt with feed folder in preferences window
 	* make feed message forwardable/replayable
 	* check rename feed when evo 2.24 x86_64 
 	* disable browser alerts messages
 	* make cancel all button work
-	* add debug points for showing steps of current operation
-	* make ellipsize play nice with feeds list
+	* add debug points for showing steps of current operation (group operations)
+	* when adding a feed as opml file offer to import (file detection)
+	* convert reading feeds progress bar to articles number that will actually be read

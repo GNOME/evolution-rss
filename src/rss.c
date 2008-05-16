@@ -126,7 +126,8 @@ int rss_verbose_debug = 0;
 #include "rss-config-factory.c"
 
 int pop = 0;
-int article;
+guint ftotal;
+guint farticle;
 //#define RSS_DEBUG 1
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
@@ -2373,12 +2374,16 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		if (r->version)
 			g_free(r->version);
 	}
+	ftotal+=r->total;
+	g_print("feed articles:%d\n", ftotal);
 	g_free(r);
 	g_string_free(response, 1);
 
 	if (!deleted)
+	{
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 			get_feed_age(user_data, lookup_key(user_data));
+	}
 //tout:	
 
 #ifdef EVOLUTION_2_12
@@ -3673,6 +3678,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 	gchar *md2 = g_strdup(layer_find(channel->children, "date", 
 		layer_find(channel->children, "pubDate", 
 		layer_find(channel->children, "updated", NULL))));
+
+	r->total = item->len;
 
 	r->feedid = update_channel(
 			//atempt to find real_channel name using url

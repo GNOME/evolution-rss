@@ -39,6 +39,7 @@ typedef struct _RDF {
 	gchar		*version;	//feed version
         gchar		*feedid;  	//md5 string id of feed
 	GtkWidget	*progress;
+	guint		total;		//total articles
         /* Soup stuff */
         SoupMessage *message;
 } RDF;
