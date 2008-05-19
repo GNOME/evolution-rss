@@ -128,6 +128,7 @@ int rss_verbose_debug = 0;
 int pop = 0;
 guint ftotal;
 guint farticle;
+GtkWidget *flabel;
 //#define RSS_DEBUG 1
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
@@ -2212,6 +2213,17 @@ out:	rf->pending = FALSE;
 }
 
 void
+update_sr_message(void)
+{
+	if (flabel)
+	{
+		gchar *fmsg = g_strdup_printf(_("Getting message %d of %d"), farticle, ftotal);
+		gtk_label_set_text (GTK_LABEL (flabel), fmsg);
+		g_free(fmsg);
+	}
+}
+
+void
 #if LIBSOUP_VERSION < 2003000
 finish_feed (SoupMessage *msg, gpointer user_data)
 #else
@@ -2253,6 +2265,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #else
 		if(rf->label && rf->info)
 		{
+			farticle=0;
+			ftotal=0;
                         gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
                 	if (rf->info->cancel_button)
                         	gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
@@ -2267,6 +2281,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                 	//clean data that might hang on rf struct
                 	rf->sr_feed = NULL;
                 	rf->label = NULL;
+                	flabel = NULL;
                 	rf->progress_bar = NULL;
                 	rf->info = NULL;
 		}
@@ -2291,6 +2306,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #ifdef EVOLUTION_2_12
 		if(rf->label && rf->feed_queue == 0 && rf->info)
         	{
+			farticle=0;
+			ftotal=0;
                 	gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
                 if (rf->info->cancel_button)
                         gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
@@ -2306,6 +2323,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
                 //clean data that might hang on rf struct
                 rf->sr_feed = NULL;
                 rf->label = NULL;
+                flabel = NULL;
                 rf->progress_bar = NULL;
                 rf->info = NULL;
 		}
@@ -2374,8 +2392,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		if (r->version)
 			g_free(r->version);
 	}
-	ftotal+=r->total;
-	g_print("feed articles:%d\n", ftotal);
+	//ftotal+=r->total;
+	update_sr_message();
 	g_free(r);
 	g_string_free(response, 1);
 
@@ -2395,6 +2413,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	}
 	if(rf->label && rf->feed_queue == 0 && rf->info)
 	{
+		farticle=0;
+		ftotal=0;
 		gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete"));
         	if (rf->info->cancel_button)
                 	gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
@@ -2410,6 +2430,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
 		rf->label = NULL;
+		flabel = NULL;
 		rf->progress_bar = NULL;
 		rf->info = NULL;
 	}
@@ -2822,6 +2843,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 rf->progress_dialog = readrss_dialog;
                 rf->progress_bar = readrss_progress;
                 rf->label       = label2;
+                flabel       = label2;
         }
         if (!rf->pending && !rf->feed_queue)
         {
@@ -2985,6 +3007,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	rf->progress_bar = progress_bar;
 	rf->sr_feed	= label;
 	rf->label	= status_label;
+	flabel		= status_label;
 #else
 
 	readrss_dialog = e_error_new(NULL, "org-gnome-evolution-rss:readrss",
@@ -3005,6 +3028,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 		rf->progress_dialog = readrss_dialog;
 		rf->progress_bar = readrss_progress;
 		rf->label	= label2;
+		flabel		= label2;
 	}
 #endif
 bail:	if (!rf->pending && !rf->feed_queue)
@@ -3933,8 +3957,12 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 	FILE *fr = fopen(feed_name, "r");
 	FILE *fw = fopen(feed_name, "a+");
 
+	ftotal+=item->len;
+
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++)
 	{
+		farticle++;
+		update_sr_message();
 		if (rf->cancel) goto out;
 
 		if (progress)
