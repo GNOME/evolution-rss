@@ -204,8 +204,8 @@ AC_SUBST([GECKO_LIBS])
 			AC_SUBST(HAVE_XULRUNNER)
 			fi
 			if test "x$GECKO" == "xlibxul" -o "x$GECKO" == "xlibxul-embedding"; then
-			AC_DEFINE_UNQUOTED(HAVE_LIBXUL, 1, [libxul flavour of xulrunner])
-			AC_SUBST(HAVE_LIBXUL)
+			AC_DEFINE_UNQUOTED(HAVE_GECKO_1_9, 1, [at least gecko 1.9])
+			AC_SUBST(HAVE_GECKO_1_9)
 			fi
 		#fi
 		AC_ARG_WITH([primary-render],

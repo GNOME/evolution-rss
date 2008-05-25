@@ -139,6 +139,8 @@ typedef struct _rssfeed {
 #define GCONF_KEY_PASS_PROXY "/apps/evolution/evolution-rss/pass_proxy"
 #define GCONF_KEY_REMOVE_FOLDER "/apps/evolution/evolution-rss/remove_folder"
 #define GCONF_KEY_HTML_RENDER "/apps/evolution/evolution-rss/html_render"
+#define GCONF_KEY_HTML_JS "/apps/evolution/evolution-rss/html_js"
+#define GCONF_KEY_HTML_JAVA "/apps/evolution/evolution-rss/html_java"
 
 enum {
 	RSS_FEED,

@@ -85,12 +85,13 @@ int rss_verbose_debug = 0;
 
 #ifdef HAVE_RENDERKIT
 #ifdef HAVE_GTKMOZEMBED
-#ifdef HAVE_LIBXUL
+#ifdef HAVE_GECKO_1_9
 #include <gtkmozembed.h>
 #else
 #include <gtkembedmoz/gtkmozembed.h>
 #endif
 #endif
+#include "gecko-utils.h"
 
 #ifdef HAVE_OLD_WEBKIT
 #include "webkitgtkglobal.h"
@@ -130,12 +131,15 @@ guint ftotal;
 guint farticle;
 GtkWidget *flabel;
 //#define RSS_DEBUG 1
+guint nettime_id = 0;
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
 
 /* ms between status updates to the gui */
 #define STATUS_TIMEOUT (250)
+
+#define NETWORK_TIMEOUT (180000)
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -605,6 +609,25 @@ void
 remove_weak(gpointer key, gpointer value, gpointer user_data)
 {
 	g_object_weak_unref(value, unblock_free, key);
+}
+
+gboolean
+timeout_soup(void)
+{
+	g_print("Network timeout occured. Cancel active operations.\n");
+	abort_all_soup();
+	return FALSE;
+}
+
+void
+network_timeout(void)
+{
+	if (nettime_id)
+		g_source_remove(nettime_id);
+
+	nettime_id = g_timeout_add (NETWORK_TIMEOUT,
+                           (GtkFunction) timeout_soup,
+                           0);
 }
 
 void
@@ -1523,7 +1546,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 				gtk_widget_set_size_request((GtkWidget *)data, width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
-#if defined(HAVE_XULRUNNER) || defined(HAVE_LIBXUL)
+#if defined(HAVE_XULRUNNER) || defined(HAVE_GECKO_1_9)
 if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
 	gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
@@ -1539,12 +1562,7 @@ rss_mozilla_init(void)
        	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
 	g_unsetenv("MOZILLA_FIVE_HOME");
 
-// this means xulrunner at least 1.9
-#ifdef HAVE_LIBXUL
-	gtk_moz_embed_set_path(GECKO_HOME);
-#else
-	gtk_moz_embed_set_comp_path(GECKO_HOME);
-#endif
+	gecko_init();
 
 	gchar *profile_dir = g_build_filename (g_get_home_dir (),
                                               ".evolution",
@@ -1553,12 +1571,23 @@ rss_mozilla_init(void)
 
         gtk_moz_embed_set_profile_path (profile_dir, "mozembed-rss");
         g_free (profile_dir);
-	if (!g_thread_supported ()) {
-               	g_thread_init (NULL);
-       	}
-	gtk_moz_embed_push_startup ();
 }
 #endif
+
+void
+render_set_preferences(void)
+{
+	gecko_prefs_set_bool("javascript.enabled", 
+		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL));
+	gecko_prefs_set_bool("security.enable_java", 
+		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL));
+	gecko_prefs_set_bool("plugin.scan.plid.all", FALSE);
+	gecko_prefs_set_bool("plugin.default_plugin_disabled", TRUE); 
+	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
+                        EVOLUTION_VERSION_STRING, VERSION);
+	gecko_prefs_set_string("general.useragent.extra.firefox", agstr); 
+	g_free(agstr);
+}
 
 #ifdef HAVE_RENDERKIT
 static gboolean
@@ -1599,13 +1628,8 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 			gdk_threads_init();
         	}
 
-/*		if (!rf->test && rf->test < 2)
-		{
-			gtk_moz_embed_push_startup ();
-			rf->test++;
-		}*/
-
 		rf->mozembed = gtk_moz_embed_new();
+		render_set_preferences();
 
 		/* FIXME add all those profile shits */
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
@@ -1638,7 +1662,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 		else	
 		{
 			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
-        		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), "about:blank");
+        		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), "about:config");
 		}
 	}
 #endif
@@ -2255,6 +2279,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	{
 		d(g_print("taskbar_op_finish()\n"));
 		taskbar_op_finish("main");
+		farticle=0;
+		ftotal=0;
 #ifndef EVOLUTION_2_12
 		if(rf->progress_dialog)
         	{
@@ -2265,8 +2291,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #else
 		if(rf->label && rf->info)
 		{
-			farticle=0;
-			ftotal=0;
                         gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
                 	if (rf->info->cancel_button)
                         	gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
@@ -2496,6 +2520,7 @@ update_articles(gboolean disabler)
 		check_folders();
 		rf->err = NULL;
 		taskbar_op_message();
+		network_timeout();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		rf->pending = FALSE;
 	}
@@ -2852,6 +2877,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 
                 rf->err = NULL;
 		taskbar_op_message();
+		network_timeout();
                 g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
                 // reset cancelation signal
                 if (rf->cancel)
@@ -3038,6 +3064,7 @@ bail:	if (!rf->pending && !rf->feed_queue)
 	
 		rf->err = NULL;
 		taskbar_op_message();
+		network_timeout();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		// reset cancelation signal
 		if (rf->cancel)
@@ -3055,23 +3082,10 @@ rss_finalize(void)
 {
 	d(g_print("RSS: cleaning all remaining sessions .."));
 	abort_all_soup();
+	d(g_print(".done\n"));
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
-#ifdef HAVE_GTKMOZEMBED
-//	gtk_moz_embed_pop_startup ();
-#endif
-//	gtk_moz_embed_destroy(rf->mozembed);
-//	GtkMozEmbed *a = rf->mozembed;
-//	a->data->Destroy();
-//	a->priv->browser->Destroy();
-	g_print(".done\n");
-	guint render = GPOINTER_TO_INT(
-	gconf_client_get_int(rss_gconf, 
-			GCONF_KEY_HTML_RENDER, 
-			NULL));
-	//really find a better way to deal with this//
-	if (2 == render)
-		system("killall -SIGTERM evolution");
+	gecko_shutdown();
 }
 
 guint

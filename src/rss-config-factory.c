@@ -33,6 +33,9 @@ typedef struct {
         GladeXML *xml;
         GConfClient *gconf;
         GtkWidget   *combobox;
+        GtkWidget   *check1;
+        GtkWidget   *check2;
+        GtkWidget   *check3;
 } UIData;
 
 static void feeds_dialog_edit(GtkDialog *d, gpointer data);
@@ -1603,6 +1606,22 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
         gtk_widget_show(combo);
         gtk_box_pack_start(GTK_BOX(ui->combobox), combo, FALSE, FALSE, 0);
+
+	ui->check1 = glade_xml_get_widget(ui->xml, "enable_java");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check1),
+        	gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL));
+	g_signal_connect(ui->check1, 
+		"clicked", 
+		G_CALLBACK(start_check_cb), 
+		GCONF_KEY_HTML_JAVA);
+
+	ui->check2 = glade_xml_get_widget(ui->xml, "enable_js");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check2),
+        	gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL));
+	g_signal_connect(ui->check2, 
+		"clicked", 
+		G_CALLBACK(start_check_cb), 
+		GCONF_KEY_HTML_JS);
 
         ui->gconf = gconf_client_get_default ();
 	hbox = gtk_vbox_new (FALSE, 0);

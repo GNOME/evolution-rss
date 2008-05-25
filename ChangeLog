@@ -1,3 +1,16 @@
+Sun 25 May 2008 04:59:20 PM EEST <lucilanga@gnome.org>
+
+	* correctly startup/shutdown gecko
+	* add enable java and javascript to render
+	options
+	* disable plugin install popup for gecko
+	* setup evolution/evolution-rss agent string
+	when browsing with gecko
+
+Sat 24 May 2008 09:34:55 PM EEST <lucilanga@gnome.org>
+
+	* implement network timeout
+
 Wed 14 May 2008 09:06:43 PM EEST <lucilanga@gnome.org>
 
 	* Implement tooltips for longer feed names

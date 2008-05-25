@@ -30,7 +30,7 @@
 /* Define if we have gecko 1.8.1 */
 #undef HAVE_GECKO_1_8_1
 
-/* Define if we have gecko 1.9 */
+/* at least gecko 1.9 */
 #undef HAVE_GECKO_1_9
 
 /* Define if gecko is a debug build */
@@ -50,9 +50,6 @@
 
 /* Define if your <locale.h> file defines LC_MESSAGES. */
 #undef HAVE_LC_MESSAGES
-
-/* libxul flavour of xulrunner */
-#undef HAVE_LIBXUL
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
