@@ -1955,6 +1955,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
        	camel_data_wrapper_construct_from_stream(dw, fstream);
        	camel_medium_set_content_object((CamelMedium *)part, dw);
 	em_format_format_text((EMFormat *)t->format, (CamelStream *)t->stream, (CamelDataWrapper *)part);
+//	gtk_html_select_all(t->format->message);
 	camel_object_unref(dw);
 	camel_object_unref(part);
 	camel_object_unref(fstream);
@@ -2918,6 +2919,13 @@ op_status(CamelOperation *op, const char *what, int pc, void *data)
         set_send_status(info, what, pc);
 }
 
+static void
+dialog_response(GtkDialog *gd, int button, struct _send_data *data)
+{
+	g_print("ABORTING...\n");
+	abort_all_soup();
+}
+
 void
 #ifdef EVOLUTION_2_12
 org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t);
@@ -2952,6 +2960,9 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 #ifdef EVOLUTION_2_12
 	struct _send_info *info;
 	struct _send_data *data = (struct _send_data *)t->data;
+
+
+	g_signal_connect(data->gd, "response", dialog_response, NULL);
 
         info = g_malloc0 (sizeof (*info));
 //        info->type = type;

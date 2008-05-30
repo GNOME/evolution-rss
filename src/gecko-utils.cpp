@@ -20,12 +20,21 @@
  *
  */
 
+#include "mozilla-config.h"
+#include "config.h"
+
 #include <stdlib.h>
 
 #include <nsStringAPI.h>
 
+#ifdef HAVE_GECKO_1_9
 #include <gtkmozembed.h>
 #include <gtkmozembed_internal.h>
+#else
+#include <gtkembedmoz/gtkmozembed.h>
+#include <gtkembedmoz/gtkmozembed_internal.h>
+#endif
+//#include <gtkmozembed.h>
 #include <nsCOMPtr.h>
 #include <nsIPrefService.h>
 #include <nsIServiceManager.h>
