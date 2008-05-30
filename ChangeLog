@@ -2,6 +2,8 @@ Fri 30 May 2008 12:43:24 PM EEST <lucilanga@gnome.org>
 
 	* make Cancel All button work (fix #535689)
 	* fix for bug #535670
+	* modify feeds articles to a more correct
+	content type x-evolution/evolution-rss/feed
 
 Sun 25 May 2008 04:59:20 PM EEST <lucilanga@gnome.org>
 

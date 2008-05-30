@@ -3259,7 +3259,7 @@ create_mail(create_feed *CF)
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);
 	rtext = camel_data_wrapper_new ();
-        type = camel_content_type_new ("text", "evolution-rss-feed");
+        type = camel_content_type_new ("x-evolution", "evolution-rss-feed");
         camel_content_type_set_param (type, "format", "flowed");
         camel_data_wrapper_set_mime_type_field (rtext, type);
         camel_content_type_unref (type);
