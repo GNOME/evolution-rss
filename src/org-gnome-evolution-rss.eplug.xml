@@ -38,6 +38,14 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
 
 	<hook class="org.gnome.evolution.mail.format:1.0">
       <group id="EMFormatHTMLDisplay">
+        <item flags="inline_disposition" mime_type="x-evolution/evolution-rss-feed"
+          format="org_gnome_cooly_format_rss"/>
+      </group>
+      <group id="EMFormat">
+        <item flags="inline_disposition" mime_type="x-evolution/evolution-rss-feed"
+          format="org_gnome_cooly_format_rss"/>
+      </group>
+      <group id="EMFormatHTMLDisplay">
         <item flags="inline_disposition" mime_type="text/evolution-rss-feed"
           format="org_gnome_cooly_format_rss"/>
       </group>

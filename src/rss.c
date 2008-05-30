@@ -1562,7 +1562,6 @@ rss_mozilla_init(void)
        	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
 	g_unsetenv("MOZILLA_FIVE_HOME");
 
-	gecko_init();
 
 	gchar *profile_dir = g_build_filename (g_get_home_dir (),
                                               ".evolution",
@@ -1571,6 +1570,7 @@ rss_mozilla_init(void)
 
         gtk_moz_embed_set_profile_path (profile_dir, "mozembed-rss");
         g_free (profile_dir);
+	gecko_init();
 }
 #endif
 
@@ -2899,7 +2899,7 @@ set_send_status(struct _send_info *info, const char *desc, int pc)
 
 /* for camel operation status */
 static void
-op_status(CamelOperation *op, const char *what, int pc, void *data)
+my_op_status(CamelOperation *op, const char *what, int pc, void *data)
 {
 	g_print("OP STATUS\n");
 	g_print("CANCEL!!!!\n");
@@ -2969,7 +2969,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
                         
         info->uri = g_strdup("feed"); //g_stddup
 
-        info->cancel = camel_operation_new (op_status, info);
+        info->cancel = camel_operation_new (my_op_status, info);
         info->state = SEND_ACTIVE;
 //        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
                         
@@ -3091,9 +3091,9 @@ bail:	if (!rf->pending && !rf->feed_queue)
 void
 rss_finalize(void)
 {
-	d(g_print("RSS: cleaning all remaining sessions .."));
+	g_print("RSS: cleaning all remaining sessions ..");
 	abort_all_soup();
-	d(g_print(".done\n"));
+	g_print(".done\n");
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
 	gecko_shutdown();
