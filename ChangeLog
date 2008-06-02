@@ -1,3 +1,8 @@
+2008-06-02  Lucian Langa  <lucilanga@gnome.org>
+
+	* implement prefectching of image and persistent
+	storage
+	
 Fri 30 May 2008 12:43:24 PM EEST <lucilanga@gnome.org>
 
 	* make Cancel All button work (fix #535689)

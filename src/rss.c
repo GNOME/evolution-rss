@@ -69,6 +69,10 @@ int rss_verbose_debug = 0;
 #include <fcntl.h> 
 #include <stdlib.h>
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
@@ -227,6 +231,7 @@ struct _MailComponentPrivate {
 static void
 dialog_key_destroy (GtkWidget *widget, gpointer data);
 guint fallback_engine(void);
+gchar *fetch_image(gchar *url);
 
 /*======================================================================*/
 
@@ -1799,6 +1804,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	CamelMimePart *message = CAMEL_IS_MIME_MESSAGE(t->part) ? 
 			t->part : 
 			(CamelMimePart *)t->format->message;
+
+///	camel_folder_append_message (new_folder, message, info, NULL, ex);
+
 	const char *website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");
 	if (!website)
 		goto fmerror;
@@ -1914,33 +1922,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		buffer2 = g_malloc(utf8len);
 		UTF8ToHtml(buffer2, &utf8len, buffer->data, &inlen);
 		g_byte_array_free (buffer, 1);
-		xmlDoc *src = (xmlDoc *)parse_html_sux(buffer2, strlen(buffer2));
-		if (src)
-		{
-			xmlNode *doc = (xmlNode *)src;
+		char *buff = decode_html_entities(buffer2);
 
-			while (doc = html_find(doc, "img"))
-        		{
-                		xmlChar *url = xmlGetProp(doc, "src");
-				if (url)
-				{
-					gchar *str = strplchr((gchar *)url);
-					xmlFree(url);
-					xmlSetProp(doc, "src", str);
-					g_free(str);
-				}
-			}
-			xmlDocDumpMemory(src, &buff, &size);
-		}
-		else goto out;	
-		char *tmp = decode_html_entities(buff);
-		g_free(buff);
-		buff = tmp;
-
-//#endif
-#ifdef RSS_DEBUG
-		g_print("%s\n", buff);
-#endif
 		camel_stream_printf (fstream, 
 		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
 		camel_stream_printf(fstream, 
@@ -1959,6 +1942,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	camel_object_unref(dw);
 	camel_object_unref(part);
 	camel_object_unref(fstream);
+	g_free(buff);
 
 out:	if (addr)
 		g_free(addr);
@@ -2240,7 +2224,7 @@ out:	rf->pending = FALSE;
 void
 update_sr_message(void)
 {
-	if (flabel)
+	if (flabel && farticle)
 	{
 		gchar *fmsg = g_strdup_printf(_("Getting message %d of %d"), farticle, ftotal);
 		gtk_label_set_text (GTK_LABEL (flabel), fmsg);
@@ -2424,8 +2408,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 
 	if (!deleted)
 	{
-		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-			get_feed_age(user_data, lookup_key(user_data));
+//		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+//			get_feed_age(user_data, lookup_key(user_data));
 	}
 //tout:	
 
@@ -2534,10 +2518,10 @@ rss_component_peek_base_directory(MailComponent *component)
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
 #if (EVOLUTION_VERSION >= 22300)		// include devel too
 	return g_strdup_printf("%s/rss",
-            mail_component_peek_base_directory (component));
+		mail_component_peek_base_directory (component));
 #else
 	return g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (component));
+            	mail_component_peek_base_directory (component));
 #endif
 }
 
@@ -3327,7 +3311,7 @@ html_find (xmlNode *node,
             char *match)
 {
 #ifdef RDF_DEBUG
-g_print("parser error 3_1!!!\n");
+g_print("parser entry 3_1!!!\n");
 #endif
 	while (node) {
 #ifdef RDF_DEBUG
@@ -3860,6 +3844,62 @@ finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_da
 	free_cf(user_data);
 }
 
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_image (SoupMessage *msg, gchar *user_data)
+#else
+finish_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data)
+#endif
+{
+	FILE *f;
+	f = fopen(user_data, "wb+");
+	if (f)
+	{
+#if LIBSOUP_VERSION < 2003000
+		fwrite(msg->response.body, msg->response.length, 1, f);
+#else
+		fwrite(msg->response_body->data, msg->response_body->length, 1, f);
+#endif
+		fclose(f);
+	}
+	g_free(user_data);
+}
+
+gchar *
+fetch_image(gchar *url)
+{
+        GError *err = NULL;
+	gchar *tmpdir = NULL;
+	gchar *name = NULL;
+	gchar *feed_dir = g_build_path("/", rss_component_peek_base_directory(mail_component_peek()), "static", NULL);
+	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
+	    g_mkdir_with_parents (feed_dir, 0755);
+	gchar *template = g_build_path("/", feed_dir, "evo-rss-XXXXXX", NULL);
+	g_free(feed_dir);
+#ifdef HAVE_MKDTEMP
+        tmpdir = mkdtemp (template);
+#else
+        tmpdir = mktemp (template);
+        if (tmpdir) {
+                if (g_mkdir (tmpdir, S_IRWXU) == -1)
+                        tmpdir = NULL;
+        }
+#endif
+        if ( tmpdir == NULL)
+            return NULL;
+	name = g_build_filename(tmpdir, g_path_get_basename(url), NULL);
+	g_free(template);
+
+	net_get_unblocking(url,
+                       	        textcb,
+                               	NULL,
+                               	(gpointer)finish_image,
+                               	name,
+                               	&err);
+	if (err) return NULL;
+	return name;
+}
+
 //migrates old feed data files from crc naming
 //to md5 naming while preserving content
 //
@@ -3967,6 +4007,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 	gchar *feed = NULL;
 	gboolean freeb = 0; //if b needs to be freed or not
 	gchar *encl, *encl_file;
+	xmlChar *buff = NULL;
+	int size = 0;
 
 	migrate_crc_md5(chn_name, url);
 
@@ -3980,13 +4022,10 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 	g_free(feed_dir);
 	
 	FILE *fr = fopen(feed_name, "r");
-	FILE *fw = fopen(feed_name, "a+");
-
-	ftotal+=item->len;
+	int fw = g_open (feed_name, O_WRONLY | O_CREAT| O_APPEND | O_BINARY, 0666);
 
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++)
 	{
-		farticle++;
 		update_sr_message();
 		if (rf->cancel) goto out;
 
@@ -4074,30 +4113,26 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			}
 		}
 
-		encl = layer_find_innerelement(el->children, "enclosure", "url",			// RSS 2.0 Enclosure
+		encl = layer_find_innerelement(el->children, "enclosure", "url",	// RSS 2.0 Enclosure
 			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
 		//we have to free this some how
-                char *link = g_strdup(layer_find (el->children, "link", NULL));			//RSS,
+                char *link = g_strdup(layer_find (el->children, "link", NULL));		//RSS,
 		if (!link) 
 			link = layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
 		char *id = layer_find (el->children, "id",				//ATOM
 				layer_find (el->children, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
 		d(g_print("link:%s\n", link));
-//		d(g_print("body:%s\n", b));
 		d(g_print("author:%s\n", q));
 		d(g_print("sender:%s\n", sender));
 		d(g_print("title:%s\n", p));
 		d(g_print("date:%s\n", d));
 		d(g_print("date:%s\n", d2));
-		p =  decode_html_entities (p);
-		gchar *tmp = decode_html_entities(b);
-		g_free(b);
-		b = tmp;
 			
 		gchar rfeed[513];
 		memset(rfeed, 0, 512);
 		int occ = 0;
+
 		while (gtk_events_pending())
                   gtk_main_iteration ();
 
@@ -4119,6 +4154,35 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 
 		if (!occ)
 		{
+			ftotal++;
+			p =  decode_html_entities (p);
+			gchar *tmp = decode_html_entities(b);
+			g_free(b);
+			b = tmp;
+
+			xmlDoc *src = (xmlDoc *)parse_html_sux(b, strlen(b));
+			if (src)
+			{
+				xmlNode *doc = (xmlNode *)src;
+
+				while (doc = html_find(doc, "img"))
+        			{
+                			xmlChar *url = xmlGetProp(doc, "src");
+					gchar *name;
+					if (name = fetch_image(url))
+					{
+						xmlFree(url);
+						xmlSetProp(doc, "src", name);
+					}
+				}
+				xmlDocDumpMemory(src, &buff, &size);
+			}
+			g_free(b);
+			b=buff;
+
+			while (gtk_events_pending())
+                  	gtk_main_iteration ();
+
 			create_feed *CF = g_new0(create_feed, 1);	
 			/* pack all data */
 			CF->full_path 	= g_strdup(chn_name);
@@ -4131,8 +4195,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			CF->website 	= g_strdup(link);
 			CF->feedid 	= g_strdup(buf);
 			CF->encl 	= g_strdup(encl);
-			CF->feed_fname  = g_strdup(feed_name);		//feed file name
-			CF->feed_uri	= g_strdup(feed);		//feed file url (to be checked/written to feed file)
+			CF->feed_fname  = g_strdup(feed_name);	//feed file name
+			CF->feed_uri	= g_strdup(feed);	//feed file url (to be checked/written to feed file)
 				
 			if (encl)
 			{
@@ -4147,15 +4211,22 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			}
 			else
 			{
-				if (fw) fputs(feed, fw);
+				if (fw)
+				{
+					//fputs(feed, fw);
+					write(fw,feed, strlen(feed));
+					fsync(fw);
+				}
    	    	    			create_mail(CF);
 				free_cf(CF);
 			}
+			farticle++;
+		g_free(p);
 		}
 		d(g_print("put success()\n"));
 tout:		if (q) g_free(q);
 		g_free(b);
-		g_free(p);
+//		g_free(p);
 		if (feed) g_free(feed);
 		if (encl) g_free(encl);
 		g_free(link);
@@ -4163,7 +4234,7 @@ tout:		if (q) g_free(q);
 out:	g_free(sender);
 
 	if (fr) fclose(fr);
-	if (fw) fclose(fw);
+	if (fw) close(fw);
 	
 	g_free(feed_name);
 	return buf;
@@ -4230,8 +4301,11 @@ out:           	camel_message_info_free(info);
 	}
 //       	camel_folder_freeze(folder);
 	if (min_date)
+	{
+		g_print("delete uid %d\n", imax);
 		camel_folder_delete_message (folder, uids->pdata[imax]);
-  //    	camel_folder_sync (folder, TRUE, NULL);
+	}
+	 //    	camel_folder_sync (folder, TRUE, NULL);
 //      	camel_folder_expunge (folder, NULL);
   //     	camel_folder_thaw(folder);
 	while (gtk_events_pending())
