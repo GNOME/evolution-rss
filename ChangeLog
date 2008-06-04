@@ -2,6 +2,12 @@
 
 	* correctly parse utf 8 content
 	* Fix for bug #531751
+	* added X-evolution-rss-feed-id for feed
+	aricles's UUID
+	* implemented usage of evolution's proxy
+	config options: for now support only evo's
+	manual proxy config option, no auth for the
+	time being
 
 2008-06-02  Lucian Langa  <lucilanga@gnome.org>
 

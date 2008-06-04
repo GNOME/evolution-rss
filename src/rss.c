@@ -3246,6 +3246,7 @@ create_mail(create_feed *CF)
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Received", buf);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);
+	camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-feed-ID", g_strstrip(CF->feed_uri));
 	rtext = camel_data_wrapper_new ();
         type = camel_content_type_new ("x-evolution", "evolution-rss-feed");
         camel_content_type_set_param (type, "format", "flowed");
@@ -4247,7 +4248,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			CF->feedid 	= g_strdup(buf);
 			CF->encl 	= g_strdup(encl);
 			CF->feed_fname  = g_strdup(feed_name);	//feed file name
-			CF->feed_uri	= g_strdup(feed);	//feed file url (to be checked/written to feed file)
+			CF->feed_uri	= g_strdup(feed);	//feed file url
 				
 			if (encl)
 			{

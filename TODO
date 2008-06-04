@@ -27,9 +27,7 @@
 	* search in the content of page for feed
 	* obey ttl entity
 	* check rename feed when evo 2.24 x86_64 
-	* make feed message forwardable/replayable
-	* add debug points for showing steps of current operation (group operations)
 	* when adding a feed as opml file offer to import (file detection)
-	* possibly make network timeout customizable
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
-	* add x-evolution/mesage uid
+	* possibly make network timeout customizable
+	* test new proxy autehntification

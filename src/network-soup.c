@@ -170,8 +170,9 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 void
 proxify_session(SoupSession *session)
 {
-	gboolean use_proxy =
-       	gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL);
+#if (EVOLUTION_VERSION < 22300)		// include devel too
+    gboolean use_proxy =
+   	gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL);
     gint port_proxy =
         gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
     gchar *host_proxy =
@@ -182,6 +183,24 @@ proxify_session(SoupSession *session)
         gconf_client_get_string(rss_gconf, GCONF_KEY_USER_PROXY, NULL);
     gchar *pass_proxy =
         gconf_client_get_string(rss_gconf, GCONF_KEY_PASS_PROXY, NULL);
+#else
+    gboolean use_proxy =
+   	gconf_client_get_bool(rss_gconf, GCONF_E_USE_PROXY_KEY, NULL);
+    guint proxy_type =
+   	gconf_client_get_int(rss_gconf, GCONF_E_PROXY_TYPE_KEY, NULL);
+    if (proxy_type != 2)	//emulate the same behaviour
+	use_proxy = 0;
+    gint port_proxy =
+        gconf_client_get_int(rss_gconf, GCONF_E_HTTP_PORT_KEY, NULL);
+    gchar *host_proxy =
+        gconf_client_get_string(rss_gconf, GCONF_E_HTTP_HOST_KEY, NULL);
+    gboolean auth_proxy =
+        gconf_client_get_bool(rss_gconf, GCONF_E_USE_AUTH_KEY, NULL);
+    gchar *user_proxy =
+        gconf_client_get_string(rss_gconf, GCONF_E_AUTH_USER_KEY, NULL);
+    gchar *pass_proxy =
+        gconf_client_get_string(rss_gconf, GCONF_E_AUTH_PWD_KEY, NULL);
+#endif
 
     if (use_proxy && host_proxy && port_proxy > 0)
     {

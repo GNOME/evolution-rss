@@ -1830,6 +1830,14 @@ rss_config_control_new (void)
 	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
 #endif
 
+#if (EVOLUTION_VERSION < 22300)		// include devel too
+	/*first make the tab visible */
+	g_object_set(glade_xml_get_widget(sf->gui, "label_HTML"),
+					"visible", TRUE, 
+					NULL);
+	g_object_set(glade_xml_get_widget(sf->gui, "vbox_HTML"),
+					"visible", TRUE, 
+					NULL);
 	/* Network tab */
 	sf->use_proxy = glade_xml_get_widget(sf->gui, "use_proxy");
 	sf->host_proxy = glade_xml_get_widget(sf->gui, "host_proxy");
@@ -1851,6 +1859,7 @@ rss_config_control_new (void)
 		gtk_spin_button_set_value((GtkSpinButton *)sf->port_proxy, (gdouble)port);
 	g_signal_connect(sf->port_proxy, "changed", G_CALLBACK(port_proxy_cb), NULL);
 	g_signal_connect(sf->port_proxy, "value_changed", G_CALLBACK(port_proxy_cb), NULL);
+#endif
 
 	g_signal_connect(sf->details, "clicked", G_CALLBACK(details_cb), sf->gui);
 
