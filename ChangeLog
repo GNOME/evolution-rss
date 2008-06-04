@@ -1,3 +1,7 @@
+2008-06-04  Lucian Langa  <lucilanga@gnome.org>
+
+	* correctly parse utf 8 content
+
 2008-06-02  Lucian Langa  <lucilanga@gnome.org>
 
 	* implement prefectching of image and persistent

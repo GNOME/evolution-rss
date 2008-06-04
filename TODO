@@ -32,3 +32,4 @@
 	* when adding a feed as opml file offer to import (file detection)
 	* possibly make network timeout customizable
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
+	* add Complete. message after fetchin number of arcticles downloaded

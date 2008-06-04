@@ -1371,6 +1371,10 @@ parse_html_sux (const char *buf, int len)
         ctxt->vctxt.error = my_xml_parser_error_handler;
         ctxt->vctxt.warning = my_xml_parser_error_handler;
 
+	htmlCtxtUseOptions(ctxt, HTML_PARSE_NONET
+				| HTML_PARSE_COMPACT
+				| HTML_PARSE_NOBLANKS);
+
         htmlParseDocument (ctxt);
         doc = ctxt->myDoc;
 
@@ -1922,7 +1926,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		buffer2 = g_malloc(utf8len);
 		UTF8ToHtml(buffer2, &utf8len, buffer->data, &inlen);
 		g_byte_array_free (buffer, 1);
-		char *buff = decode_html_entities(buffer2);
+	//	char *buff = decode_html_entities(buffer2);
+		buff=g_strdup(buffer2);
 
 		camel_stream_printf (fstream, 
 		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
@@ -3969,6 +3974,20 @@ migrate_crc_md5(const char *name, gchar *url)
 }
 
 gchar *
+decode_utf8_entities(gchar *str)
+{
+	guint inlen, utf8len;
+	gchar *buffer;
+	g_return_if_fail (str != NULL);
+
+	inlen = strlen(str);
+	utf8len = 10*inlen+1;
+	buffer = g_malloc(utf8len);
+	UTF8ToHtml(buffer, &utf8len, str, &inlen);
+	return buffer;
+}
+
+gchar *
 decode_html_entities(gchar *str)
 {
 	gchar *newstr;
@@ -3992,6 +4011,35 @@ decode_html_entities(gchar *str)
 	xmlFree(tmp);
 	xmlFreeParserCtxt(ctxt);
 	return newstr;
+}
+
+gchar *
+encode_html_entities(gchar *str)
+{
+        gchar *newstr;
+        g_return_if_fail (str != NULL);
+
+/*        xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
+        xmlCtxtUseOptions(ctxt,   XML_PARSE_RECOVER
+                                | XML_PARSE_NOENT
+                                | XML_PARSE_NOERROR
+                                | XML_PARSE_NONET);*/
+
+        xmlChar *tmp =  (gchar *)xmlEncodeEntitiesReentrant(NULL, str);
+
+/*        xmlChar *tmp =  (gchar *)xmlStringDecodeEntities(ctxt,
+                                             BAD_CAST str,
+                                             XML_SUBSTITUTE_REF
+                                             & XML_SUBSTITUTE_PEREF,
+                                             0,
+                                             0,
+                                             0);
+
+        newstr = g_strdup(tmp);
+        xmlFree(tmp);
+        xmlFreeParserCtxt(ctxt);
+        return newstr;*/
+	return tmp;
 }
 
 gchar *
@@ -4096,7 +4144,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 					NULL)));
 
 		if (!b)
-                	b = g_strdup(layer_find (el->children, "description",
+	               	b = g_strdup(layer_find (el->children, "description",
 				layer_find (el->children, "content",
 				layer_find (el->children, "summary", "No information"))));
 
@@ -4156,11 +4204,10 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 		{
 			ftotal++;
 			p =  decode_html_entities (p);
-			gchar *tmp = decode_html_entities(b);
-			g_free(b);
-			b = tmp;
-
-			xmlDoc *src = (xmlDoc *)parse_html_sux(b, strlen(b));
+			gchar *tmp = decode_utf8_entities(b);
+			g_print("tmp:%s\n\n\n", tmp);
+			
+			xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
 			if (src)
 			{
 				xmlNode *doc = (xmlNode *)src;
@@ -4177,8 +4224,13 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 				}
 				xmlDocDumpMemory(src, &buff, &size);
 			}
+//			tmp = decode_html_entities(buff);
+//			tmp = xmlEncodeSpecialChars(NULL, buff);
 			g_free(b);
-			b=buff;
+			b = buff;
+//			g_free(b);
+//			b=buff;
+			g_print("bbb:%s\n\n\n", b);
 
 			while (gtk_events_pending())
                   	gtk_main_iteration ();
