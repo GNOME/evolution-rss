@@ -1799,6 +1799,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         GString *content;
 	xmlChar *buff = NULL;
 	int size = 0;
+	CamelContentType *type;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -1809,7 +1810,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			(CamelMimePart *)t->format->message;
 
 ///	camel_folder_append_message (new_folder, message, info, NULL, ex);
-
+	type = camel_mime_part_get_content_type(message);
 	const char *website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");
 	if (!website)
 		goto fmerror;
@@ -1916,8 +1917,15 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 //		//then again this does not work in evo > 2.12 perhaps is gtkhtml related 
 //		buff = buffer->data;
 //#else
-///		gchar *tmp = decode_utf8_entities(buffer->data);
-		buff=g_strdup(buffer->data);
+		gchar *tmp;
+	 	if (camel_content_type_is(type, "text", "evolution-rss-feed"))	//old evolution-rss content type
+		{
+			tmp = decode_utf8_entities(buffer->data);
+		}
+		else
+			tmp = g_strdup(buffer->data);
+
+		buff=tmp;
 		g_byte_array_free (buffer, 1);
 	//	char *buff = decode_html_entities(buffer2);
 ///		buff=tmp;
@@ -2272,7 +2280,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #else
 		if(rf->label && rf->info)
 		{
-                        gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
+                        gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete."));
                 	if (rf->info->cancel_button)
                         	gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 
@@ -2313,7 +2321,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
         	{
 			farticle=0;
 			ftotal=0;
-                	gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled"));
+                	gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled."));
                 if (rf->info->cancel_button)
                         gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 
