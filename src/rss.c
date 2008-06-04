@@ -190,6 +190,7 @@ static char *layer_find (xmlNodePtr node, char *match, char *fail);
 static char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fail);
 static gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char *fail);
 xmlNodePtr layer_find_pos (xmlNodePtr node, char *match, char *submatch);
+gchar *decode_utf8_entities(gchar *str);
 gchar *strplchr(gchar *source);
 static char *gen_md5(gchar *buffer);
 CamelMimePart *file_to_message(const char *name);
@@ -1798,8 +1799,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         GString *content;
 	xmlChar *buff = NULL;
 	int size = 0;
-	unsigned char *buffer2 = NULL;
-   	int inlen, utf8len;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -1878,11 +1877,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                 	goto out;
         	}
 
-		inlen = content->len;
-		utf8len = 5*inlen+1;
-		buffer2 = g_malloc(utf8len);
-		UTF8ToHtml(buffer2, &utf8len, content->str, &inlen);
-		xmlDoc *src = (xmlDoc *)parse_html(addr, buffer2, strlen(buffer2));
+		gchar *tmp = decode_utf8_entities(content->str);
+		xmlDoc *src = (xmlDoc *)parse_html(addr, tmp, strlen(tmp));
 
 		if (src)
 		{
@@ -1901,8 +1897,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		 "<tr><td bgcolor=\"#ffffff\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", website, subject);
      		camel_stream_printf(fstream, "</head></html><tr><td bgcolor=\"#ffffff\">%s</td>", buff);
     		camel_stream_printf(fstream, "</tr></table></td></tr></table>");
-		if (buff)
-			g_free(buff);
+
 		g_free(subject);
 		g_string_free(content, 1);
 	}
@@ -1921,13 +1916,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 //		//then again this does not work in evo > 2.12 perhaps is gtkhtml related 
 //		buff = buffer->data;
 //#else
-		inlen = buffer->len;
-		utf8len = 5*inlen+1;
-		buffer2 = g_malloc(utf8len);
-		UTF8ToHtml(buffer2, &utf8len, buffer->data, &inlen);
+///		gchar *tmp = decode_utf8_entities(buffer->data);
+		buff=g_strdup(buffer->data);
 		g_byte_array_free (buffer, 1);
 	//	char *buff = decode_html_entities(buffer2);
-		buff=g_strdup(buffer2);
+///		buff=tmp;
 
 		camel_stream_printf (fstream, 
 		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
@@ -1951,8 +1944,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 out:	if (addr)
 		g_free(addr);
-	if (buffer2)
-		g_free(buffer2);
 	return;
 fmerror:
 	camel_stream_printf (t->stream, 
@@ -3981,8 +3972,8 @@ decode_utf8_entities(gchar *str)
 	g_return_if_fail (str != NULL);
 
 	inlen = strlen(str);
-	utf8len = 10*inlen+1;
-	buffer = g_malloc(utf8len);
+	utf8len = 5*inlen+1;
+	buffer = g_malloc0(utf8len);
 	UTF8ToHtml(buffer, &utf8len, str, &inlen);
 	return buffer;
 }
@@ -4205,7 +4196,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			ftotal++;
 			p =  decode_html_entities (p);
 			gchar *tmp = decode_utf8_entities(b);
-			g_print("tmp:%s\n\n\n", tmp);
+			g_free(b);
 			
 			xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
 			if (src)
@@ -4223,14 +4214,14 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 					}
 				}
 				xmlDocDumpMemory(src, &buff, &size);
+				xmlFree(src);
 			}
+			g_free(tmp);
 //			tmp = decode_html_entities(buff);
 //			tmp = xmlEncodeSpecialChars(NULL, buff);
-			g_free(b);
-			b = buff;
+//			b = tmp;
 //			g_free(b);
-//			b=buff;
-			g_print("bbb:%s\n\n\n", b);
+			b=buff;
 
 			while (gtk_events_pending())
                   	gtk_main_iteration ();
@@ -4278,7 +4269,6 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 		d(g_print("put success()\n"));
 tout:		if (q) g_free(q);
 		g_free(b);
-//		g_free(p);
 		if (feed) g_free(feed);
 		if (encl) g_free(encl);
 		g_free(link);
