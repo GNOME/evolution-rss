@@ -27,6 +27,5 @@
 	* obey ttl entity
 	* check rename feed when evo 2.24 x86_64 
 	* when adding a feed as opml file offer to import (file detection)
-	* fix move->rename
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
 	* test new proxy autehntification

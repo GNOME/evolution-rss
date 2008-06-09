@@ -297,6 +297,23 @@ decode_token (const char **in)
         }
 }
 
+gchar *extract_main_folder(gchar *folder)
+{
+	gchar *main_folder = lookup_main_folder();
+        gchar *base = g_strdup_printf("%s/", main_folder);
+        gchar **nnew;
+	gchar *tmp;
+	if (nnew = g_strsplit(folder, base, 0))
+	{
+		g_free(base);
+		tmp = g_strdup(nnew[1]);
+		g_strfreev(nnew);
+		return tmp;
+	}
+	else
+		return NULL;
+}
+
 /* hrm, is there a library for this shit? */
 static struct {
         char *name;

@@ -1,3 +1,8 @@
+2008-06-09  Lucian Langa  <lucilanga@gnome.org>
+
+	* fix move folder to imply rename
+	* support multiple levels of rename
+
 2008-06-07  Lucian Langa  <lucilanga@gnome.org>
 
 	* make network timeout customisable
