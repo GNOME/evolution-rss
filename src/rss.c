@@ -2669,8 +2669,6 @@ update_feed_folder(gchar *old_name, gchar *new_name)
 {
 	gchar *oname = extract_main_folder(old_name);
 	gchar *nname = extract_main_folder(new_name);
-	g_print("oname:%s\n", oname);
-	g_print("nname:%s\n", nname);
 	FILE *f;
 	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
