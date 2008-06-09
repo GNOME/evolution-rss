@@ -66,9 +66,23 @@
       <type>int</type>
       <default>0</default>
       <locale name="C">
-        <short>Hostname of the proxy server</short>
+        <short>Html render</short>
         <long>
-    	    Hostname of the proxy server.
+    	    Type HTML Render used to display html pages.
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/evolution/evolution-rss/network_timeout</key>
+      <applyto>/apps/evolution/evolution-rss/network_timeout</applyto>
+      <owner>evolution-rss</owner>
+      <type>float</type>
+      <default>300</default>
+      <locale name="C">
+        <short>Network timeout</short>
+        <long>
+    	    Interval in seconds before a conection is dropped.
         </long>
       </locale>
     </schema>

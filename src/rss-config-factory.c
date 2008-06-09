@@ -35,6 +35,7 @@ typedef struct {
         GtkWidget   *combobox;
         GtkWidget   *check1;
         GtkWidget   *check2;
+        GtkWidget   *nettimeout;
         GtkWidget   *check3;
 } UIData;
 
@@ -1523,6 +1524,14 @@ export_cb (GtkWidget *widget, gpointer data)
         return;
 }
 
+
+static void
+network_timeout_cb (GtkWidget *widget, gpointer data)
+{
+    gconf_client_set_float (rss_gconf, GCONF_KEY_NETWORK_TIMEOUT,
+                gtk_spin_button_get_value((GtkSpinButton*)widget), NULL);
+}
+
 static void
 destroy_ui_data (gpointer data)
 {
@@ -1622,6 +1631,13 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
 		GCONF_KEY_HTML_JS);
+
+	ui->nettimeout = glade_xml_get_widget(ui->xml, "nettimeout");
+  	gdouble adj = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
+  	if (adj)
+		gtk_spin_button_set_value((GtkSpinButton *)ui->nettimeout, adj);
+	g_signal_connect(ui->nettimeout, "changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);
+	g_signal_connect(ui->nettimeout, "value-changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);
 
         ui->gconf = gconf_client_get_default ();
 	hbox = gtk_vbox_new (FALSE, 0);

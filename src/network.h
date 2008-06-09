@@ -27,6 +27,7 @@
 #define GCONF_KEY_AUTH_PROXY "/apps/evolution/evolution-rss/auth_proxy"
 #define GCONF_KEY_USER_PROXY "/apps/evolution/evolution-rss/user_proxy"
 #define GCONF_KEY_PASS_PROXY "/apps/evolution/evolution-rss/pass_proxy"
+#define GCONF_KEY_NETWORK_TIMEOUT "/apps/evolution/evolution-rss/network_timeout"
 
 #define GCONF_E_SHELL_NETWORK_CONFIG_PATH "/apps/evolution/shell/network_config/"
 #define GCONF_E_HTTP_HOST_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "http_host"

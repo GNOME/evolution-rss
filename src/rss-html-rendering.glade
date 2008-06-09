@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.4 on Wed Jun  4 19:43:17 2008 -->
+<!--Generated with glade3 3.4.4 on Sat Jun  7 14:43:27 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="window1">
     <child>
@@ -97,14 +97,24 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkSpinButton" id="spinbutton1">
+                      <widget class="GtkSpinButton" id="nettimeout">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="adjustment">0 0 100 1 10 10</property>
+                        <property name="adjustment">60 60 3600 1 10 10</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
                         <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label4">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">seconds</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </widget>

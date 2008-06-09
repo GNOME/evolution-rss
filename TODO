@@ -16,7 +16,6 @@
 	* implement USM (universal subscription mechanism)
 	* fix authentication for proxy dialog
 	* make auth dialog not intrusive (peek other software)
-	* fix move->rename
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* crash (mail_append_message) if folder contains .lock file ? or ibex crashes
 	* implement notify back of imported feed perhaps libnotify
@@ -28,6 +27,6 @@
 	* obey ttl entity
 	* check rename feed when evo 2.24 x86_64 
 	* when adding a feed as opml file offer to import (file detection)
+	* fix move->rename
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
-	* possibly make network timeout customizable
 	* test new proxy autehntification

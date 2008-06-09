@@ -631,9 +631,10 @@ network_timeout(void)
 	if (nettime_id)
 		g_source_remove(nettime_id);
 
-	nettime_id = g_timeout_add (NETWORK_TIMEOUT,
-                           (GtkFunction) timeout_soup,
-                           0);
+	nettime_id = g_timeout_add (
+				gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL)*1000,
+				(GtkFunction) timeout_soup,
+                           	0);
 }
 
 void
@@ -2774,6 +2775,8 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
         /* hook in rename event to catch feeds folder rename */
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	camel_object_hook_event(store, "folder_renamed",
+                                (CamelObjectEventHookFunc)store_folder_renamed, NULL);
+	camel_object_hook_event(store, "folder_changed",
                                 (CamelObjectEventHookFunc)store_folder_renamed, NULL);
 	camel_object_hook_event((void *)mail_component_peek_session(NULL),
 				 "online", rss_online, NULL);

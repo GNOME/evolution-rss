@@ -1,3 +1,7 @@
+2008-06-07  Lucian Langa  <lucilanga@gnome.org>
+
+	* make network timeout customisable
+
 2008-06-04  Lucian Langa  <lucilanga@gnome.org>
 
 	* correctly parse utf 8 content
