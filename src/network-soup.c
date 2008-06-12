@@ -401,6 +401,7 @@ gboolean
 net_get_unblocking(const char *url, NetStatusCallback cb, 
 				gpointer data, gpointer cb2,
 				gpointer cbdata2,
+				guint track,
 				GError **err)
 {
 	SoupMessage *msg;
@@ -437,9 +438,14 @@ net_get_unblocking(const char *url, NetStatusCallback cb,
 				soup_status_get_phrase(2));			//invalid url
 		return -1;
 	}
-	g_hash_table_insert(rf->session, soup_sess, msg);
-	g_hash_table_insert(rf->abort_session, soup_sess, msg);
-	g_hash_table_insert(rf->key_session, data, soup_sess);
+	if (track)
+	{
+		//we want to be able to abort this session by calling
+		//abort_all_soup
+		g_hash_table_insert(rf->session, soup_sess, msg);
+		g_hash_table_insert(rf->abort_session, soup_sess, msg);
+		g_hash_table_insert(rf->key_session, data, soup_sess);
+	}
 
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);

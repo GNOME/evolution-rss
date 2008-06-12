@@ -2484,6 +2484,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 				key,
 				(gpointer)finish_feed,
 				g_strdup(key),	// we need to dupe key here
+				1,
 				&err);			// because we might lose it if
 							// feed gets deleted
 		if (err)
@@ -3860,6 +3861,7 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data)
 #endif
 {
 	FILE *f;
+	g_print("file user_data:%s\n", user_data);
 	f = fopen(user_data, "wb+");
 	if (f)
 	{
@@ -3897,12 +3899,25 @@ fetch_image(gchar *url)
             return NULL;
 	name = g_build_filename(tmpdir, g_path_get_basename(url), NULL);
 	g_free(template);
+	/* test for *loading* images*/
+	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+	                                    "rss-24.png",
+                                            NULL);
+/*	gchar *buf = g_malloc0(1024);
+	FILE *rf = fopen(iconfile, "rb");
+	fread(buf, 1, 1024, rf);
+        fclose(rf);
+
+	FILE *rw = fopen(name, "wb+");
+	fwrite(buf, 1, 1024, rw);
+	fclose(rw);*/
 
 	net_get_unblocking(url,
                        	        textcb,
                                	NULL,
                                	(gpointer)finish_image,
                                	name,
+				0,
                                	&err);
 	if (err) return NULL;
 	return name;
@@ -4262,6 +4277,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
                                 	NULL,
                                 	(gpointer)finish_enclosure,
                                 	CF,
+					0,
                                 	&err);
 			}
 			else
@@ -4270,7 +4286,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 				{
 					//fputs(feed, fw);
 					write(fw,feed, strlen(feed));
-					fsync(fw);
+//					fsync(fw);
 				}
    	    	    			create_mail(CF);
 				free_cf(CF);

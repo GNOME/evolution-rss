@@ -1,3 +1,9 @@
+2008-06-12  Lucian Langa  <lucilanga@gnome.org>
+
+	* prevent fetching enclosure & images 
+	to be canceled by abort_soup_all =>
+	articles with missing images/enclosures
+
 2008-06-09  Lucian Langa  <lucilanga@gnome.org>
 
 	* fix move folder to imply rename

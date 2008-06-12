@@ -25,7 +25,6 @@
 	* force soup to follow redirects (304) test on fedora weekly news
 	* search in the content of page for feed
 	* obey ttl entity
-	* check rename feed when evo 2.24 x86_64 
 	* when adding a feed as opml file offer to import (file detection)
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
 	* test new proxy autehntification
