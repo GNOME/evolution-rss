@@ -29,3 +29,4 @@
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
 	* test new proxy autehntification
 	* cache large feeds
+	* hook feed properties in folder properties
