@@ -3900,9 +3900,9 @@ fetch_image(gchar *url)
 	name = g_build_filename(tmpdir, g_path_get_basename(url), NULL);
 	g_free(template);
 	/* test for *loading* images*/
-	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+/*	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
 	                                    "rss-24.png",
-                                            NULL);
+                                            NULL);*/
 /*	gchar *buf = g_malloc0(1024);
 	FILE *rf = fopen(iconfile, "rb");
 	fread(buf, 1, 1024, rf);
@@ -4088,7 +4088,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 	g_free(feed_dir);
 	
 	FILE *fr = fopen(feed_name, "r");
-	int fw = g_open (feed_name, O_WRONLY | O_CREAT| O_APPEND | O_BINARY, 0666);
+	FILE *fw = fopen(feed_name, "a+");
+	//int fw = g_open (feed_name, O_WRONLY | O_CREAT| O_APPEND | O_BINARY, 0666);
 
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++)
 	{
@@ -4284,8 +4285,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			{
 				if (fw)
 				{
-					//fputs(feed, fw);
-					write(fw,feed, strlen(feed));
+					fputs(feed, fw);
+					//write(fw,feed, strlen(feed));
 //					fsync(fw);
 				}
    	    	    			create_mail(CF);
@@ -4304,7 +4305,7 @@ tout:		if (q) g_free(q);
 out:	g_free(sender);
 
 	if (fr) fclose(fr);
-	if (fw) close(fw);
+	if (fw) fclose(fw);
 	
 	g_free(feed_name);
 	return buf;
