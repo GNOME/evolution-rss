@@ -263,69 +263,42 @@ del_messages_cb (GtkWidget *widget, add_feed *data)
 add_feed *
 create_dialog_add(gchar *text, gchar *feed_text)
 {
-  GtkWidget *dialog1;
-  GtkWidget *dialog_vbox1;
-  GtkWidget *vbox1;
-  GtkWidget *hbox1;
-  GtkWidget *label1;
-  GtkWidget *label2;
-  GtkWidget *entry1;
-  GtkWidget *checkbutton1;
-  GtkWidget *checkbutton2;
-  GtkWidget *checkbutton3, *checkbutton4;
-  GtkWidget *dialog_action_area1;
-  GtkWidget *cancelbutton1;
-  GtkWidget *okbutton1;
-  add_feed *feed = g_new0(add_feed, 1);
-  gboolean fhtml = FALSE;
-  gboolean enabled = TRUE;
-  gboolean del_unread = FALSE;
-  guint del_feed = 0;
-  guint del_days = 10;
-  guint del_messages = 10;
-  GtkAccelGroup *accel_group = gtk_accel_group_new ();
-  gchar *flabel = NULL;
+        char *gladefile;
+  	add_feed *feed = g_new0(add_feed, 1);
+	GladeXML  *gui;
+	gchar *flabel;
+  	gboolean fhtml = FALSE;
+  	gboolean enabled = TRUE;
+  	gboolean del_unread = FALSE;
+  	guint del_feed = 0;
+  	guint del_days = 10;
+  	guint del_messages = 10;
 
-  dialog1 = gtk_dialog_new ();
-  gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
+        gladefile = g_build_filename (EVOLUTION_GLADEDIR,
+                                      "rss-ui.glade",
+                                      NULL);
+        gui = glade_xml_new (gladefile, NULL, NULL);
+        g_free (gladefile);
 
-  if (text != NULL)
-        gtk_window_set_title (GTK_WINDOW (dialog1), _("Edit Feed"));
-  else
-        gtk_window_set_title (GTK_WINDOW (dialog1), _("Add Feed"));
-  gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog1), TRUE);
-  gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
-  gtk_window_set_modal (GTK_WINDOW (dialog1), FALSE);
+        GtkWidget *dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "feed_dialog");
+  	gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
+ 	if (text != NULL)
+        	gtk_window_set_title (GTK_WINDOW (dialog1), _("Edit Feed"));
+  	else
+        	gtk_window_set_title (GTK_WINDOW (dialog1), _("Add Feed"));
+  	gtk_window_set_modal (GTK_WINDOW (dialog1), FALSE);
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
-  gtk_widget_show (dialog_vbox1);
-
-  vbox1 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox1);
-  gtk_box_pack_start (GTK_BOX (dialog_vbox1), vbox1, TRUE, TRUE, 0);
-
-  hbox1 = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox1);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox1), 9);
-
-  label2 = gtk_label_new (_("Feed URL: "));
-  gtk_widget_show (label2);
-  gtk_box_pack_start (GTK_BOX (hbox1), label2, FALSE, FALSE, 0);
-
-  entry1 = gtk_entry_new ();
-  gtk_widget_show (entry1);
-  gtk_box_pack_start (GTK_BOX (hbox1), entry1, TRUE, TRUE, 0);
-  gtk_entry_set_invisible_char (GTK_ENTRY (entry1), 8226);
-  //editing
-  if (text != NULL)
-  {
-        gtk_entry_set_text(GTK_ENTRY(entry1), text);
-        fhtml = GPOINTER_TO_INT(
-                g_hash_table_lookup(rf->hrh,
-                                lookup_key(feed_text)));
-        enabled = GPOINTER_TO_INT(
-                g_hash_table_lookup(rf->hre,
+	
+        GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (gui, "url_entry");
+  	//editing
+  	if (text != NULL)
+  	{
+  	      gtk_entry_set_text(GTK_ENTRY(entry1), text);
+  	      fhtml = GPOINTER_TO_INT(
+  	              g_hash_table_lookup(rf->hrh,
+       	                         lookup_key(feed_text)));
+       	 enabled = GPOINTER_TO_INT(
+       	         g_hash_table_lookup(rf->hre,
                                 lookup_key(feed_text)));
         del_feed = GPOINTER_TO_INT(
                 g_hash_table_lookup(rf->hrdel_feed,
@@ -339,109 +312,43 @@ create_dialog_add(gchar *text, gchar *feed_text)
         feed->del_messages = GPOINTER_TO_INT(
                 g_hash_table_lookup(rf->hrdel_messages,
                                 lookup_key(feed_text)));
-  }
+  	}
+  	gboolean validate = 1;
 
-  gboolean validate = 1;
-
-
-  GtkWidget *entry2;
-  if (text != NULL)
-  {
-        GtkWidget *hboxt = gtk_hbox_new (FALSE, 0);
-        gtk_widget_show (hboxt);
-        gtk_box_pack_start (GTK_BOX (vbox1), hboxt, FALSE, FALSE, 0);
-        gtk_container_set_border_width (GTK_CONTAINER (hboxt), 9);
-
-        flabel = g_strdup_printf("%s: <b>%s</b>", _("Folder"),
+        GtkWidget *entry2 = (GtkWidget *)glade_xml_get_widget (gui, "entry2");
+	if (text != NULL)
+  	{
+        	flabel = g_strdup_printf("%s: <b>%s</b>", _("Folder"),
                         lookup_feed_folder(feed_text));
-        GtkWidget *labelt = gtk_label_new (flabel);
-        gtk_label_set_use_markup(GTK_LABEL(labelt), 1);
-        gtk_widget_show (labelt);
-        gtk_box_pack_start (GTK_BOX (hboxt), labelt, FALSE, FALSE, 0);
-  }
-  else
-  {
-        entry2 = gtk_label_new (NULL);
-        gtk_widget_show (entry2);
-        gtk_box_pack_start (GTK_BOX (vbox1), entry2, TRUE, TRUE, 0);
-        gtk_entry_set_invisible_char (GTK_ENTRY (entry2), 8226);
-  }
+		gtk_label_set_text(GTK_LABEL(entry2), flabel);
+        	gtk_label_set_use_markup(GTK_LABEL(entry2), 1);
+  	}
+  	else
+		gtk_label_set_text(GTK_LABEL(entry2), flabel);
 
-  label1 = gtk_label_new (_("<b>Articles Settings</b>"));
-  gtk_widget_show (label1);
-  gtk_box_pack_start (GTK_BOX (vbox1), label1, FALSE, FALSE, 0);
-  gtk_label_set_use_markup (GTK_LABEL (label1), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+	GtkWidget *checkbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "html_check");
+  	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1-fhtml);
 
-  checkbutton1 = gtk_check_button_new_with_mnemonic (
-                _("Show article's summary"));
-  gtk_widget_show (checkbutton1);
-  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, TRUE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1-fhtml);
+	GtkWidget *checkbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "enabled_check");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton2), enabled);
 
-  checkbutton2 = gtk_check_button_new_with_mnemonic (
-                _("Feed Enabled"));
-  gtk_widget_show (checkbutton2);
-  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton2, FALSE, TRUE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton2), enabled);
+	GtkWidget *checkbutton3 = (GtkWidget *)glade_xml_get_widget (gui, "validate_check");
+	if (text)
+        	gtk_widget_set_sensitive(checkbutton3, FALSE);
+  	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton3), validate);
 
-  checkbutton3 = gtk_check_button_new_with_mnemonic (
-                _("Validate feed"));
-  if (text)
-        gtk_widget_set_sensitive(checkbutton3, FALSE);
+	GtkWidget *spinbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb1");
+	GtkWidget *spinbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb2");
+  	if (feed->del_messages)
+        	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1), feed->del_messages);
+	g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
 
-  gtk_widget_show (checkbutton3);
-  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton3, FALSE, TRUE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton3), validate);
+	GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb1");
+	GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb2");
+	GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb3");
 
-
-GtkWidget *hbox2, *label3;
-GtkWidget *radiobutton1, *radiobutton2, *radiobutton3;
-GtkWidget *spinbutton1, *spinbutton2;
-GtkObject *spinbutton1_adj, *spinbutton2_adj;
-GSList *radiobutton1_group = NULL;
-
- //editing
-// if (text != NULL)
-// {
-  label1 = gtk_label_new (_("<b>Articles Storage</b>"));
-  gtk_widget_show (label1);
-  gtk_box_pack_start (GTK_BOX (vbox1), label1, FALSE, FALSE, 0);
-  gtk_label_set_use_markup (GTK_LABEL (label1), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
-  radiobutton1 = gtk_radio_button_new_with_mnemonic (NULL, _("Don't delete articles"));
-  gtk_widget_show (radiobutton1);
-  gtk_box_pack_start (GTK_BOX (vbox1), radiobutton1, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton1), radiobutton1_group);
-  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
-  hbox1 = gtk_hbox_new (FALSE, 10);
-  gtk_widget_show (hbox1);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 0);
-  radiobutton2 = gtk_radio_button_new_with_mnemonic (NULL, _("Delete all but the last"));
-  gtk_widget_show (radiobutton2);
-  gtk_box_pack_start (GTK_BOX (hbox1), radiobutton2, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton1_group);
-  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
-  spinbutton1_adj = gtk_adjustment_new (10, 1, 1000, 1, 10, 10);
-  spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
-  gtk_widget_show (spinbutton1);
-  if (feed->del_messages)
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1), feed->del_messages);
-  g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
-  gtk_box_pack_start (GTK_BOX (hbox1), spinbutton1, FALSE, TRUE, 0);
-  label2 = gtk_label_new (_("messages"));
-  gtk_widget_show (label2);
-  gtk_box_pack_start (GTK_BOX (hbox1), label2, FALSE, FALSE, 0);
-  hbox2 = gtk_hbox_new (FALSE, 10);
-  gtk_widget_show (hbox2);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox2, FALSE, FALSE, 0);
-  radiobutton3 = gtk_radio_button_new_with_mnemonic (NULL, _("Delete articles older than"));
-  gtk_widget_show (radiobutton3);
-  gtk_box_pack_start (GTK_BOX (hbox2), radiobutton3, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton3), radiobutton1_group);
-  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
-  switch (del_feed)
-  {
+  	switch (del_feed)
+  	{
         case 1:         //all but the last
                 gtk_toggle_button_set_active(
                         GTK_TOGGLE_BUTTON(radiobutton2), 1);
@@ -453,93 +360,64 @@ GSList *radiobutton1_group = NULL;
         default:
                 gtk_toggle_button_set_active(
                         GTK_TOGGLE_BUTTON(radiobutton1), 1);
-  }
-  spinbutton2_adj = gtk_adjustment_new (10, 1, 365, 1, 10, 10);
-  spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
-  if (feed->del_days)
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton2), feed->del_days);
-  gtk_widget_show (spinbutton2);
-  g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_days_cb), feed);
-  gtk_box_pack_start (GTK_BOX (hbox2), spinbutton2, FALSE, FALSE, 0);
-  label3 = gtk_label_new (_("day(s)"));
-  gtk_widget_show (label3);
-  gtk_box_pack_start (GTK_BOX (hbox2), label3, FALSE, FALSE, 0);
-  checkbutton4 = gtk_check_button_new_with_mnemonic (_("Always delete unread articles"));
-  gtk_widget_show (checkbutton4);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
-  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton4, FALSE, FALSE, 0);
+  	}
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
-  gtk_widget_show (dialog_action_area1);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
+  	if (feed->del_days)
+        	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton2), feed->del_days);
+	g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_days_cb), feed);
 
-  cancelbutton1 = gtk_button_new_from_stock ("gtk-cancel");
-  gtk_widget_show (cancelbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancelbutton1, GTK_RESPONSE_CANCEL);
-  GTK_WIDGET_SET_FLAGS (cancelbutton1, GTK_CAN_DEFAULT);
+	GtkWidget *checkbutton4 = (GtkWidget *)glade_xml_get_widget (gui, "storage_unread");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
 
-  okbutton1 = gtk_button_new_from_stock ("gtk-ok");
-  gtk_widget_show (okbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
-
-  gtk_widget_add_accelerator (okbutton1, "activate", accel_group,
-                              GDK_Return, (GdkModifierType) 0,
-                              GTK_ACCEL_VISIBLE);
-  gtk_widget_add_accelerator (okbutton1, "activate", accel_group,
-                              GDK_KP_Enter, (GdkModifierType) 0,
-                              GTK_ACCEL_VISIBLE);
-  gtk_window_add_accel_group (GTK_WINDOW (dialog1), accel_group);
-
-  gint result = gtk_dialog_run(GTK_DIALOG(dialog1));
-  switch (result)
-  {
-    case GTK_RESPONSE_OK:
-        feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
-        fhtml = gtk_toggle_button_get_active (
-                GTK_TOGGLE_BUTTON (checkbutton1));
-        fhtml ^= 1;
-        feed->fetch_html = fhtml;
-        enabled = gtk_toggle_button_get_active(
-                GTK_TOGGLE_BUTTON(checkbutton2));
-        feed->enabled = enabled;
-        validate = gtk_toggle_button_get_active(
-                GTK_TOGGLE_BUTTON(checkbutton3));
-        feed->validate = validate;
-        guint i=0;
-        while (i<3) {
-                if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
-                        break;
-                i++;
-                if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton2)))
-                        break;
-                i++;
-                if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
-                        break;
-        }
-        feed->del_feed=i;
-        feed->del_unread = gtk_toggle_button_get_active(
-                GTK_TOGGLE_BUTTON(checkbutton4));
-	gtk_spin_button_update((GtkSpinButton *)spinbutton1);
-        feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
-	gtk_spin_button_update((GtkSpinButton *)spinbutton2);
-        feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
-        feed->add = 1;
-        // there's no reason to feetch feed if url isn't changed
-        if (text && !strncmp(text, feed->feed_url, strlen(text)))
-                feed->changed = 0;
-        else
-                feed->changed = 1;
-        break;
-    default:
-        feed->add = 0;
-        gtk_widget_destroy (dialog1);
-        break;
-  }
+  	gint result = gtk_dialog_run(GTK_DIALOG(dialog1));
+  	switch (result)
+  	{
+    	case GTK_RESPONSE_OK:
+        	feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
+        	fhtml = gtk_toggle_button_get_active (
+        	        GTK_TOGGLE_BUTTON (checkbutton1));
+        	fhtml ^= 1;
+        	feed->fetch_html = fhtml;
+        	enabled = gtk_toggle_button_get_active(
+                	GTK_TOGGLE_BUTTON(checkbutton2));
+        	feed->enabled = enabled;
+        	validate = gtk_toggle_button_get_active(
+                	GTK_TOGGLE_BUTTON(checkbutton3));
+        	feed->validate = validate;
+        	guint i=0;
+        	while (i<3) {
+                	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
+                        	break;
+                	i++;
+                	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton2)))
+                        	break;
+                	i++;
+                	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
+                        	break;
+        	}
+        	feed->del_feed=i;
+        	feed->del_unread = gtk_toggle_button_get_active(
+                	GTK_TOGGLE_BUTTON(checkbutton4));
+		gtk_spin_button_update((GtkSpinButton *)spinbutton1);
+        	feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
+		gtk_spin_button_update((GtkSpinButton *)spinbutton2);
+        	feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
+        	feed->add = 1;
+        	// there's no reason to feetch feed if url isn't changed
+        	if (text && !strncmp(text, feed->feed_url, strlen(text)))
+                	feed->changed = 0;
+        	else
+                	feed->changed = 1;
+        	break;
+    	default:
+        	feed->add = 0;
+        	gtk_widget_destroy (dialog1);
+        	break;
+  	}
         feed->dialog = dialog1;
-  if (flabel)
-        g_free(flabel);
-  return feed;
+  	if (flabel)
+        	g_free(flabel);
+  	return feed;
 }
 
 void
