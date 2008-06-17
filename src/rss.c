@@ -2780,8 +2780,6 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	camel_object_hook_event(store, "folder_renamed",
                                 (CamelObjectEventHookFunc)store_folder_renamed, NULL);
-	camel_object_hook_event(store, "folder_changed",
-                                (CamelObjectEventHookFunc)store_folder_renamed, NULL);
 	camel_object_hook_event((void *)mail_component_peek_session(NULL),
 				 "online", rss_online, NULL);
 }

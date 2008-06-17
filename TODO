@@ -31,3 +31,5 @@
 	* cache large feeds
 	* hook feed properties in folder properties
 	* rename does not properly work
+	* clist hint should be the folder name not the feed name
+	* check default network timeout
