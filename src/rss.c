@@ -2413,8 +2413,8 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 
 	if (!deleted)
 	{
-//		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-//			get_feed_age(user_data, lookup_key(user_data));
+		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+			get_feed_age(user_data, lookup_key(user_data));
 	}
 //tout:	
 
@@ -4324,6 +4324,7 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 	CamelMessageInfo *info;
 	GPtrArray *uids;
 	guint i, j = 0, imax = 0;
+	guint q = 0;
 	guint32 flags;
 	time_t date, min_date = 0;
 	uids = camel_folder_get_uids (folder);
@@ -4339,11 +4340,11 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 				goto out;
        			if (flags & CAMEL_MESSAGE_SEEN)
 			{
-				
-				if (!j++)
+				if (!j)
 				{
 					min_date = date;
 					imax = i;
+					j++;
 				}
 				if (date < min_date)
 				{
@@ -4355,10 +4356,11 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 			{
 				if (unread)
 				{
-					if (!j++)
+					if (!q)
 					{
                                        		min_date = date;
 						imax = i;
+						q++;
 					}
                                		if (date < min_date)
                                		{
@@ -4368,17 +4370,17 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 				}
 			}
                	}
-out:           	camel_message_info_free(info);
+		d(g_print("uid:%d j:%d/%d, imax:%d\n", i, j, q, imax));
+out:          	camel_message_info_free(info);
 	}
-//       	camel_folder_freeze(folder);
+       	camel_folder_freeze(folder);
 	if (min_date)
 	{
-		g_print("delete uid %d\n", imax);
 		camel_folder_delete_message (folder, uids->pdata[imax]);
 	}
 	 //    	camel_folder_sync (folder, TRUE, NULL);
 //      	camel_folder_expunge (folder, NULL);
-  //     	camel_folder_thaw(folder);
+       	camel_folder_thaw(folder);
 	while (gtk_events_pending())
                   gtk_main_iteration ();
        	camel_folder_free_uids (folder, uids);

@@ -273,6 +273,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
   	guint del_feed = 0;
   	guint del_days = 10;
   	guint del_messages = 10;
+	GtkAccelGroup *accel_group = gtk_accel_group_new ();
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                                       "rss-ui.glade",
@@ -281,6 +282,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
         g_free (gladefile);
 
         GtkWidget *dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "feed_dialog");
+	gtk_widget_show(dialog1);
   	gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
  	if (text != NULL)
         	gtk_window_set_title (GTK_WINDOW (dialog1), _("Edit Feed"));
@@ -368,6 +370,23 @@ create_dialog_add(gchar *text, gchar *feed_text)
 
 	GtkWidget *checkbutton4 = (GtkWidget *)glade_xml_get_widget (gui, "storage_unread");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
+
+	GtkWidget *ok = (GtkWidget *)glade_xml_get_widget (gui, "ok_button");
+	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
+	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
+
+	GtkWidget *cancel = (GtkWidget *)glade_xml_get_widget (gui, "cancel_button");
+	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancel, GTK_RESPONSE_CANCEL);
+	GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
+
+	gtk_widget_add_accelerator (ok, "activate", accel_group,
+                              GDK_Return, (GdkModifierType) 0,
+                              GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator (ok, "activate", accel_group,
+                              GDK_KP_Enter, (GdkModifierType) 0,
+                              GTK_ACCEL_VISIBLE);
+	gtk_window_add_accel_group (GTK_WINDOW (dialog1), accel_group);
+
 
   	gint result = gtk_dialog_run(GTK_DIALOG(dialog1));
   	switch (result)
