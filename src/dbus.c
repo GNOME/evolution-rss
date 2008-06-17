@@ -93,9 +93,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
     		dbus_error_init (&error);
     		if (dbus_message_get_args 
        			(message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID)) {
-#ifdef RSS_DEBUG
-      			g_print("New Feed received: %s\n", s);
-#endif
+      			d(g_print("New Feed received: %s\n", s));
 			feed->feed_url = g_strdup(s);
 			feed->add=1;
 			feed->enabled=feed->validate=1;

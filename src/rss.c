@@ -2712,6 +2712,9 @@ check_feed_folder(gchar *folder_name)
 	gchar *main_folder = lookup_main_folder();
 	gchar *real_folder = lookup_feed_folder(folder_name);
 	gchar *real_name = g_strdup_printf("%s/%s", main_folder, real_folder);
+	d(g_print("main_folder:%s\n", main_folder));
+	d(g_print("real_folder:%s\n", real_folder));
+	d(g_print("real_name:%s\n", real_name));
         mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
         if (mail_folder == NULL)
         {
@@ -4289,7 +4292,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 					//write(fw,feed, strlen(feed));
 //					fsync(fw);
 				}
-   	    	    			create_mail(CF);
+   	    	    		create_mail(CF);
 				free_cf(CF);
 			}
 			farticle++;
@@ -4338,6 +4341,8 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 			flags = camel_message_info_flags(info);
 			if (flags & CAMEL_MESSAGE_FLAGGED)
 				goto out;
+			if (flags & CAMEL_MESSAGE_DELETED)
+				goto out;
        			if (flags & CAMEL_MESSAGE_SEEN)
 			{
 				if (!j)
@@ -4378,8 +4383,6 @@ out:          	camel_message_info_free(info);
 	{
 		camel_folder_delete_message (folder, uids->pdata[imax]);
 	}
-	 //    	camel_folder_sync (folder, TRUE, NULL);
-//      	camel_folder_expunge (folder, NULL);
        	camel_folder_thaw(folder);
 	while (gtk_events_pending())
                   gtk_main_iteration ();
@@ -4441,20 +4444,23 @@ get_feed_age(gpointer key, gpointer value)
                         	camel_folder_free_message_info(folder, info);
                 	}
 		}
+        	camel_folder_free_uids (folder, uids);
         	camel_folder_sync (folder, TRUE, NULL);
         	camel_folder_thaw(folder);
-        	camel_folder_free_uids (folder, uids);
+      		camel_folder_expunge (folder, NULL);
 	}
 	if (del_feed == 1)
 	{
 		guint del_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, value));
 		guint total = camel_folder_get_message_count(folder);
 		i=1;
-		while (del_messages < camel_folder_get_message_count(folder) && i <= total)
+		while (del_messages < camel_folder_get_message_count(folder) - camel_folder_get_deleted_message_count(folder) && i <= total)
 		{
 			delete_oldest_article(folder, del_unread);
 			i++;
 		}
+	     	camel_folder_sync (folder, TRUE, NULL);
+      		camel_folder_expunge (folder, NULL);
 	}
 
 

@@ -627,8 +627,7 @@ void
 delete_feed_folder_alloc(gchar *old_name)
 {
         FILE *f;
-        gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-            mail_component_peek_base_directory (mail_component_peek ()));
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
@@ -692,8 +691,7 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
                                                         g_hash_table_lookup(rf->hrname,
                                                         name));
                                 gchar *buf = gen_md5(url);
-                                gchar *feed_dir = g_strdup_printf("%s/mail/rss",
-                                        mail_component_peek_base_directory (mail_component_peek ()));
+				gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
                                 gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
                                 g_free(feed_dir);
                                 g_free(buf);

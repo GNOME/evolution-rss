@@ -30,3 +30,4 @@
 	* test new proxy autehntification
 	* cache large feeds
 	* hook feed properties in folder properties
+	* rename does not properly work
