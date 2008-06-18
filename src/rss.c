@@ -2580,6 +2580,8 @@ get_feed_folders(void)
 			g_hash_table_insert(rf->feed_folders,
 						g_strdup(g_strstrip(tmp1)),
 						g_strdup(g_strstrip(tmp2)));
+			g_print("tmp1:%s\n", tmp1);
+			g_print("tmp2:%s\n", tmp2);
 		}
 		fclose(f);
 	}
@@ -2727,20 +2729,27 @@ check_feed_folder(gchar *folder_name)
 }
 
 static void
+store_folder_deleted(CamelObject *o, void *event_data, void *data)
+{
+	CamelFolderInfo *info = event_data;
+	printf("Folder deleted '%s'\n", info->name);
+}
+
+static void
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
 {
 	CamelRenameInfo *info = event_data;
 
-	printf("Folder renamed to '%s' from '%s'\n", info->new->full_name, info->old_base);
 
 	gchar *main_folder = lookup_main_folder();
-
-	g_print("main_folder:%s\n", main_folder);
-
-	if (!g_ascii_strncasecmp(main_folder, info->old_base, strlen(info->old_base)))
-		update_main_folder(info->new->full_name);
-	else
-		update_feed_folder(info->old_base, info->new->full_name);
+	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder)))
+	{
+		printf("Folder renamed to '%s' from '%s'\n", info->new->full_name, info->old_base);
+		if (!g_ascii_strncasecmp(main_folder, info->old_base, strlen(info->old_base)))
+			update_main_folder(info->new->full_name);
+		else
+			update_feed_folder(info->old_base, info->new->full_name);
+	}
 }
 
 static void
@@ -2780,6 +2789,8 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	camel_object_hook_event(store, "folder_renamed",
                                 (CamelObjectEventHookFunc)store_folder_renamed, NULL);
+	camel_object_hook_event(store, "folder_deleted",
+                                (CamelObjectEventHookFunc)store_folder_deleted, NULL);
 	camel_object_hook_event((void *)mail_component_peek_session(NULL),
 				 "online", rss_online, NULL);
 }

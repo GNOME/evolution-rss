@@ -291,28 +291,31 @@ create_dialog_add(gchar *text, gchar *feed_text)
   	gtk_window_set_modal (GTK_WINDOW (dialog1), FALSE);
 
 	
+        GtkWidget *adv_options = (GtkWidget *)glade_xml_get_widget (gui, "adv_options");
+
         GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (gui, "url_entry");
   	//editing
   	if (text != NULL)
   	{
-  	      gtk_entry_set_text(GTK_ENTRY(entry1), text);
-  	      fhtml = GPOINTER_TO_INT(
-  	              g_hash_table_lookup(rf->hrh,
+		gtk_expander_set_expanded(GTK_EXPANDER(adv_options), TRUE);	
+  		gtk_entry_set_text(GTK_ENTRY(entry1), text);
+		fhtml = GPOINTER_TO_INT(
+  	              	g_hash_table_lookup(rf->hrh,
        	                         lookup_key(feed_text)));
-       	 enabled = GPOINTER_TO_INT(
-       	         g_hash_table_lookup(rf->hre,
+       	 	enabled = GPOINTER_TO_INT(
+       	         	g_hash_table_lookup(rf->hre,
                                 lookup_key(feed_text)));
-        del_feed = GPOINTER_TO_INT(
-                g_hash_table_lookup(rf->hrdel_feed,
+        	del_feed = GPOINTER_TO_INT(
+                	g_hash_table_lookup(rf->hrdel_feed,
                                 lookup_key(feed_text)));
-        del_unread = GPOINTER_TO_INT(
-                g_hash_table_lookup(rf->hrdel_unread,
+        	del_unread = GPOINTER_TO_INT(
+                	g_hash_table_lookup(rf->hrdel_unread,
                                 lookup_key(feed_text)));
-        feed->del_days = GPOINTER_TO_INT(
-                g_hash_table_lookup(rf->hrdel_days,
+        	feed->del_days = GPOINTER_TO_INT(
+                	g_hash_table_lookup(rf->hrdel_days,
                                 lookup_key(feed_text)));
-        feed->del_messages = GPOINTER_TO_INT(
-                g_hash_table_lookup(rf->hrdel_messages,
+        	feed->del_messages = GPOINTER_TO_INT(
+                	g_hash_table_lookup(rf->hrdel_messages,
                                 lookup_key(feed_text)));
   	}
   	gboolean validate = 1;
@@ -1542,6 +1545,65 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	g_object_set_data_full (G_OBJECT (hbox), "ui-data", ui, destroy_ui_data);
 
         return hbox;
+}
+
+GtkWidget *
+folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
+{
+        EMConfigTargetFolder *target=  (EMConfigTargetFolder *)data->config->target;
+        CamelFolder *cml_folder = target->folder;
+        CamelService *service;
+        CamelProvider *provider;
+        GtkWidget *lbl_size, *lbl_size_val;
+        GtkListStore *model;
+        GtkVBox *vbx;
+        GtkHBox *hbx_size;
+        char *folder_name, *folder_size;
+        int mode;
+
+/*      service = CAMEL_SERVICE (camel_folder_get_parent_store (cml_folder));
+        if (!service)
+                return NULL;
+
+        provider = camel_service_get_provider (service);
+        if (!provider)
+                return NULL;
+
+        if (g_ascii_strcasecmp (provider->protocol, "exchange"))
+                return NULL;
+
+        account = exchange_operations_get_exchange_account ();
+        exchange_account_is_offline (account, &mode);
+        if (mode == OFFLINE_MODE)
+                return NULL;*/
+
+        folder_name = (char*) camel_folder_get_name (cml_folder);
+        if (!folder_name)
+                folder_name = g_strdup ("name");
+
+//        model = exchange_account_folder_size_get_model (account);
+  //      if (model)
+//                folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
+    //    else
+                folder_size = g_strdup (_("0 KB"));
+
+        hbx_size = (GtkHBox*) gtk_hbox_new (TRUE, 1);
+        vbx = (GtkVBox *)gtk_notebook_get_nth_page (GTK_NOTEBOOK (data->parent), 0);
+
+        lbl_size = gtk_label_new_with_mnemonic (_("Size:"));
+        lbl_size_val = gtk_label_new_with_mnemonic (_(folder_size));
+        gtk_widget_show (lbl_size);
+        gtk_widget_show (lbl_size_val);
+        gtk_misc_set_alignment (GTK_MISC (lbl_size), 0.0, 0.5);
+        gtk_misc_set_alignment (GTK_MISC (lbl_size_val), 0.0, 0.5);
+       gtk_box_pack_start (GTK_BOX (hbx_size), lbl_size, FALSE, TRUE, 12);
+        gtk_box_pack_start (GTK_BOX (hbx_size), lbl_size_val, FALSE, TRUE, 10);
+        gtk_widget_show_all (GTK_WIDGET (hbx_size));
+
+        gtk_box_pack_start (GTK_BOX (vbx), GTK_WIDGET (hbx_size), FALSE, FALSE, 0);
+        g_free (folder_size);
+
+        return GTK_WIDGET (hbx_size);
 }
 
 /*=============*
