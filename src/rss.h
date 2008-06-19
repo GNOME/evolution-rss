@@ -40,6 +40,7 @@ typedef struct _RDF {
         gchar		*feedid;  	//md5 string id of feed
 	GtkWidget	*progress;
 	guint		total;		//total articles
+	guint		ttl;		//feed specified refresh interval
         /* Soup stuff */
         SoupMessage *message;
 } RDF;

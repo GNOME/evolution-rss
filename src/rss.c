@@ -2580,8 +2580,6 @@ get_feed_folders(void)
 			g_hash_table_insert(rf->feed_folders,
 						g_strdup(g_strstrip(tmp1)),
 						g_strdup(g_strstrip(tmp2)));
-			g_print("tmp1:%s\n", tmp1);
-			g_print("tmp2:%s\n", tmp2);
 		}
 		fclose(f);
 	}
@@ -3717,6 +3715,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 			DEFAULT_NO_CHANNEL, 
 			strlen(DEFAULT_NO_CHANNEL))) 
 	{
+		
 		t = layer_find(channel->children, 
 				"title", 
 				DEFAULT_NO_CHANNEL);
@@ -3726,6 +3725,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 		t = tmp;
 		t = generate_safe_chn_name(t);
 	}
+	r->ttl = layer_find(channel->children, "ttl", NULL);
 
 	//items might not have a date
 	// so try to grab channel/feed date
