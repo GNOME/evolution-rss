@@ -743,12 +743,7 @@ feed_to_xml(gchar *key)
 		g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false");
 
         src = xmlNewTextChild (root, NULL, "ttl", NULL);
-	guint opt = 0;
-	if (g_hash_table_lookup(rf->hrttl, lookup_key(key)))
-		opt = 1;
-	if (!g_hash_table_lookup(rf->hre, lookup_key(key)))
-		opt = 2;
-        ctmp = g_strdup_printf("%d", opt);
+	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrupdate, lookup_key(key)));
         xmlSetProp (src, "option", ctmp);
 	g_free(ctmp);
 	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrttl, lookup_key(key)));
@@ -1031,6 +1026,7 @@ feed_new_from_xml(char *xml)
 	guint del_messages=0;
 	guint del_unread=0;
 	guint ttl=0;
+	guint update=0;
 	gchar *ctmp = NULL;
 
         if (!(doc = xmlParseDoc ((char *)xml)))
@@ -1066,6 +1062,8 @@ feed_new_from_xml(char *xml)
 			xml_set_bool (node, "unread", &del_unread);
 		}
 		if (!strcmp (node->name, "ttl")) {
+			xml_set_prop (node, "option", &ctmp);
+			update = atoi(ctmp);
 			xml_set_prop (node, "value", &ctmp);
 			ttl = atoi(ctmp);
 			if (ctmp) g_free(ctmp);
@@ -1095,6 +1093,9 @@ feed_new_from_xml(char *xml)
 	g_hash_table_insert(rf->hrdel_unread, 
 				g_strdup(uid), 
 				GINT_TO_POINTER(del_unread));
+	g_hash_table_insert(rf->hrupdate, 
+				g_strdup(uid), 
+				GINT_TO_POINTER(update));
 	g_hash_table_insert(rf->hrttl, 
 				g_strdup(uid), 
 				GINT_TO_POINTER(ttl));
@@ -1213,6 +1214,7 @@ read_feeds(rssfeed *rf)
 	rf->hrdel_days = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_messages = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_unread = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrupdate = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrttl = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
@@ -1978,6 +1980,11 @@ fmerror:
 	return;
 }
 
+void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
+{
+	g_print("refrish %s\n", t->uri);
+}
+
 //make it work only for 2.24
 /*void org_gnome_cooly_folder_icon(void *ep, EMEventTargetFolderIcon *t)
 {
@@ -2061,6 +2068,7 @@ setup_feed(add_feed *feed)
 {
 	CamelException ex;
 	guint ret = 0;
+	guint ttl;
         RDF *r = NULL;
         GString *post;
         GError *err = NULL;
@@ -2138,6 +2146,11 @@ setup_feed(add_feed *feed)
 						 g_str_equal,
 						 g_free,
 						 NULL);
+	if (rf->hrupdate == NULL)	
+	    	rf->hrupdate = g_hash_table_new_full(g_str_hash,
+						 g_str_equal,
+						 g_free,
+						 NULL);
 
 	rf->pending = TRUE;
 
@@ -2149,7 +2162,7 @@ setup_feed(add_feed *feed)
         if (err)
 	{
 		d(g_print("setup_feed() -> err:%s\n", err->message));
-		rss_error(NULL, feed->feed_name ? feed->feed_name: "Unamed feed", _("Error while fetching feed."), err->message);
+		rss_error(NULL, feed->feed_name ? feed->feed_name: _("Unamed feed"), _("Error while fetching feed."), err->message);
 		goto out;
         }
         xmlDocPtr doc = NULL;
@@ -2208,9 +2221,16 @@ add:
 		g_hash_table_insert(rf->hrdel_unread,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->del_unread));
+		if (feed->update == 2)
+			ttl = feed->ttl;
+		else
+			ttl = r->ttl;
 		g_hash_table_insert(rf->hrttl,
 			g_strdup(crc_feed),
-			GINT_TO_POINTER(r->ttl));
+			GINT_TO_POINTER(ttl));
+		g_hash_table_insert(rf->hrupdate,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(feed->update));
 
 		gchar *ver = NULL;
 		if (r->type && r->version)
@@ -2261,8 +2281,7 @@ update_sr_message(void)
 void
 update_ttl(gpointer key, guint value)
 {
-	if (!g_hash_table_lookup(rf->hrttl, key)
-	 && g_hash_table_lookup(rf->hre, key))
+	if (2 != GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, key)))
 		g_hash_table_replace(rf->hrttl, g_strdup(key), value);
 }
 

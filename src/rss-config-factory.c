@@ -247,6 +247,13 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 }
 
 static void
+ttl_cb (GtkWidget *widget, add_feed *data)
+{
+        guint adj = gtk_spin_button_get_value((GtkSpinButton*)widget);
+        data->ttl = adj;
+}
+
+static void
 del_days_cb (GtkWidget *widget, add_feed *data)
 {
         guint adj = gtk_spin_button_get_value((GtkSpinButton*)widget);
@@ -317,6 +324,12 @@ create_dialog_add(gchar *text, gchar *feed_text)
         	feed->del_messages = GPOINTER_TO_INT(
                 	g_hash_table_lookup(rf->hrdel_messages,
                                 lookup_key(feed_text)));
+        	feed->update = GPOINTER_TO_INT(
+                	g_hash_table_lookup(rf->hrupdate,
+                                lookup_key(feed_text)));
+        	feed->ttl = GPOINTER_TO_INT(
+                	g_hash_table_lookup(rf->hrttl,
+                                lookup_key(feed_text)));
   	}
   	gboolean validate = 1;
 
@@ -351,6 +364,10 @@ create_dialog_add(gchar *text, gchar *feed_text)
 	GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb1");
 	GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb2");
 	GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb3");
+	GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_global");
+	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
+	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
+	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
 
   	switch (del_feed)
   	{
@@ -373,6 +390,21 @@ create_dialog_add(gchar *text, gchar *feed_text)
 
 	GtkWidget *checkbutton4 = (GtkWidget *)glade_xml_get_widget (gui, "storage_unread");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
+
+       	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ttl_value), feed->ttl);
+	g_signal_connect(ttl_value, "changed", G_CALLBACK(ttl_cb), feed);
+	switch (feed->update)
+	{
+	case 2:
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton5), 1);
+		break;
+	case 3:
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton6), 1);
+		break;
+	defaut:
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton4), 1);
+		break;
+	}
 
 	GtkWidget *ok = (GtkWidget *)glade_xml_get_widget (gui, "ok_button");
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
@@ -424,6 +456,19 @@ create_dialog_add(gchar *text, gchar *feed_text)
         	feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
 		gtk_spin_button_update((GtkSpinButton *)spinbutton2);
         	feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
+        	i=1;
+        	while (i<3) {
+                	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton4)))
+                        	break;
+                	i++;
+                	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton5)))
+                        	break;
+                	i++;
+                	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton6)))
+                        	break;
+        	}
+        	feed->update=i;
+        	feed->ttl = gtk_spin_button_get_value((GtkSpinButton *)ttl_value);
         	feed->add = 1;
         	// there's no reason to feetch feed if url isn't changed
         	if (text && !strncmp(text, feed->feed_url, strlen(text)))
@@ -584,6 +629,7 @@ save_feed_hash(gpointer name)
 	saved_feed->hrdel_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, lookup_key(name)));
 	saved_feed->hrdel_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(name)));
 	saved_feed->hrdel_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, lookup_key(name)));
+	saved_feed->hrupdate = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(name)));
 	saved_feed->hrttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(name)));
 	return saved_feed;
 }
@@ -605,6 +651,7 @@ restore_feed_hash(gpointer name, hrfeed *s)
 	g_hash_table_insert(rf->hrdel_days, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_days));
 	g_hash_table_insert(rf->hrdel_messages, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_messages));
 	g_hash_table_insert(rf->hrdel_unread, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_unread));
+	g_hash_table_insert(rf->hrupdate, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrupdate));
 	g_hash_table_insert(rf->hrttl, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrttl));
 	g_free(s);
 }
@@ -623,6 +670,7 @@ remove_feed_hash(gpointer name)
 	g_hash_table_remove(rf->hrdel_days, lookup_key(name));
 	g_hash_table_remove(rf->hrdel_messages, lookup_key(name));
 	g_hash_table_remove(rf->hrdel_unread, lookup_key(name));
+	g_hash_table_remove(rf->hrupdate, lookup_key(name));
 	g_hash_table_remove(rf->hrttl, lookup_key(name));
         g_hash_table_remove(rf->hrname_r, lookup_key(name));
         g_hash_table_remove(rf->hrname, name);
@@ -853,8 +901,6 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                 		gtk_main_iteration ();
                         if (!feed->add)
                                 goto out;
-			g_print("name:%s\n", name);
-			g_print("feed_url:%s\n", feed->feed_url);
                         text = feed->feed_url;
                         feed->feed_url = sanitize_url(feed->feed_url);
                         g_free(text);
@@ -909,6 +955,15 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                         g_hash_table_replace(rf->hrdel_messages,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->del_messages));
+                                        g_hash_table_replace(rf->hrupdate,
+                                                        g_strdup(key),
+                                                        GINT_TO_POINTER(feed->update));
+				g_print("feed->update:%d\n", feed->update);
+        g_print("feed->ttl:%d\n", feed->ttl);
+				if (feed->update == 2)
+                                        g_hash_table_replace(rf->hrttl,
+                                                        g_strdup(key),
+                                                        GINT_TO_POINTER(feed->ttl));
                                         g_hash_table_replace(rf->hrdel_unread,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->del_unread));
@@ -1563,26 +1618,17 @@ folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
         GtkHBox *hbx_size;
         char *folder_name, *folder_size;
         int mode;
+	GladeXML  *gui;
 
-/*      service = CAMEL_SERVICE (camel_folder_get_parent_store (cml_folder));
-        if (!service)
-                return NULL;
+        char *gladefile;
+        gladefile = g_build_filename (EVOLUTION_GLADEDIR,
+                                      "rss-ui.glade",
+                                      NULL);
+        gui = glade_xml_new (gladefile, NULL, NULL);
+        g_free (gladefile);
 
-        provider = camel_service_get_provider (service);
-        if (!provider)
-                return NULL;
-
-        if (g_ascii_strcasecmp (provider->protocol, "exchange"))
-                return NULL;
-
-        account = exchange_operations_get_exchange_account ();
-        exchange_account_is_offline (account, &mode);
-        if (mode == OFFLINE_MODE)
-                return NULL;*/
-
-        folder_name = (char*) camel_folder_get_name (cml_folder);
-        if (!folder_name)
-                folder_name = g_strdup ("name");
+        GtkWidget *dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "vbox6");
+//	gtk_widget_show(dialog1);
 
 //        model = exchange_account_folder_size_get_model (account);
   //      if (model)
@@ -1590,7 +1636,7 @@ folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
     //    else
                 folder_size = g_strdup (_("0 KB"));
 
-        hbx_size = (GtkHBox*) gtk_hbox_new (TRUE, 1);
+        hbx_size = (GtkHBox*) gtk_window_new (GTK_WINDOW_POPUP);
         vbx = (GtkVBox *)gtk_notebook_get_nth_page (GTK_NOTEBOOK (data->parent), 0);
 
         lbl_size = gtk_label_new_with_mnemonic (_("Size:"));
@@ -1599,11 +1645,11 @@ folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
         gtk_widget_show (lbl_size_val);
         gtk_misc_set_alignment (GTK_MISC (lbl_size), 0.0, 0.5);
         gtk_misc_set_alignment (GTK_MISC (lbl_size_val), 0.0, 0.5);
-       gtk_box_pack_start (GTK_BOX (hbx_size), lbl_size, FALSE, TRUE, 12);
-        gtk_box_pack_start (GTK_BOX (hbx_size), lbl_size_val, FALSE, TRUE, 10);
-        gtk_widget_show_all (GTK_WIDGET (hbx_size));
+       gtk_box_pack_start (GTK_BOX (dialog1), lbl_size, FALSE, TRUE, 12);
+        gtk_box_pack_start (GTK_BOX (dialog1), lbl_size_val, FALSE, TRUE, 10);
+        gtk_widget_show_all (GTK_WIDGET (dialog1));
 
-        gtk_box_pack_start (GTK_BOX (vbx), GTK_WIDGET (hbx_size), FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (vbx), GTK_WIDGET (dialog1), FALSE, FALSE, 0);
         g_free (folder_size);
 
         return GTK_WIDGET (hbx_size);
