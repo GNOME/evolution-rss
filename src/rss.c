@@ -742,17 +742,20 @@ feed_to_xml(gchar *key)
         xmlSetProp (src, "unread", 
 		g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false");
 
+        src = xmlNewTextChild (root, NULL, "ttl", NULL);
+	guint opt = 0;
+	if (g_hash_table_lookup(rf->hrttl, lookup_key(key)))
+		opt = 1;
+	if (!g_hash_table_lookup(rf->hre, lookup_key(key)))
+		opt = 2;
+        ctmp = g_strdup_printf("%d", opt);
+        xmlSetProp (src, "option", ctmp);
+	g_free(ctmp);
+	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrttl, lookup_key(key)));
+        xmlSetProp (src, "value", ctmp);
+	g_free(ctmp);
 
-/*        if (account->id->address)
-                xmlNewTextChild (id, NULL, "addr-spec", account->id->address);
-        if (account->id->reply_to)
-                xmlNewTextChild (id, NULL, "reply-to", account->id->reply_to);
-        if (account->id->organization)
-                xmlNewTextChild (id, NULL, "organization", account->id->organization);
-
-        node = xmlNewChild (id, NULL, "signature",NULL);
-        xmlSetProp (node, "uid", key);
-
+/*
         src = xmlNewChild (root, NULL, "source", NULL);
         xmlSetProp (src, "save-passwd", account->source->save_passwd ? "true" : "false");
         xmlSetProp (src, "keep-on-server", account->source->keep_on_server ? "true" : "false");
@@ -1027,6 +1030,7 @@ feed_new_from_xml(char *xml)
 	guint del_days=0;
 	guint del_messages=0;
 	guint del_unread=0;
+	guint ttl=0;
 	gchar *ctmp = NULL;
 
         if (!(doc = xmlParseDoc ((char *)xml)))
@@ -1060,8 +1064,13 @@ feed_new_from_xml(char *xml)
 			xml_set_prop (node, "messages", &ctmp);
 			del_messages = atoi(ctmp);
 			xml_set_bool (node, "unread", &del_unread);
+		}
+		if (!strcmp (node->name, "ttl")) {
+			xml_set_prop (node, "value", &ctmp);
+			ttl = atoi(ctmp);
 			if (ctmp) g_free(ctmp);
 		}
+			
 	}
 
 	g_hash_table_insert(rf->hrname, name, uid);
@@ -1086,6 +1095,9 @@ feed_new_from_xml(char *xml)
 	g_hash_table_insert(rf->hrdel_unread, 
 				g_strdup(uid), 
 				GINT_TO_POINTER(del_unread));
+	g_hash_table_insert(rf->hrttl, 
+				g_strdup(uid), 
+				GINT_TO_POINTER(ttl));
 }
 
 char *
@@ -1201,6 +1213,7 @@ read_feeds(rssfeed *rf)
 	rf->hrdel_days = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_messages = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_unread = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrttl = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
 		migrate_old_config(feed_file);
@@ -2120,6 +2133,11 @@ setup_feed(add_feed *feed)
 						 g_str_equal,
 						 g_free,
 						 NULL);
+	if (rf->hrttl == NULL)	
+	    	rf->hrttl = g_hash_table_new_full(g_str_hash,
+						 g_str_equal,
+						 g_free,
+						 NULL);
 
 	rf->pending = TRUE;
 
@@ -2190,6 +2208,9 @@ add:
 		g_hash_table_insert(rf->hrdel_unread,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->del_unread));
+		g_hash_table_insert(rf->hrttl,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(r->ttl));
 
 		gchar *ver = NULL;
 		if (r->type && r->version)
@@ -2235,6 +2256,14 @@ update_sr_message(void)
 		gtk_label_set_text (GTK_LABEL (flabel), fmsg);
 		g_free(fmsg);
 	}
+}
+
+void
+update_ttl(gpointer key, guint value)
+{
+	if (!g_hash_table_lookup(rf->hrttl, key)
+	 && g_hash_table_lookup(rf->hre, key))
+		g_hash_table_replace(rf->hrttl, g_strdup(key), value);
 }
 
 void
@@ -2398,6 +2427,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 				save_gconf_feed();
 			}
 			g_free(chn_name);
+			update_ttl(lookup_key(user_data), r->ttl);
 		}
 		if (r->cache)
 			xmlFreeDoc(r->cache);
@@ -3725,7 +3755,11 @@ tree_walk (xmlNodePtr root, RDF *r)
 		t = tmp;
 		t = generate_safe_chn_name(t);
 	}
-	r->ttl = layer_find(channel->children, "ttl", NULL);
+	gchar *tmp = layer_find(channel->children, "ttl", NULL);
+	if (tmp)
+		r->ttl = atoi(tmp);
+	else
+		r->ttl = 0;
 
 	//items might not have a date
 	// so try to grab channel/feed date

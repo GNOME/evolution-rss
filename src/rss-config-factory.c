@@ -584,6 +584,7 @@ save_feed_hash(gpointer name)
 	saved_feed->hrdel_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, lookup_key(name)));
 	saved_feed->hrdel_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(name)));
 	saved_feed->hrdel_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, lookup_key(name)));
+	saved_feed->hrttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(name)));
 	return saved_feed;
 }
 
@@ -604,6 +605,7 @@ restore_feed_hash(gpointer name, hrfeed *s)
 	g_hash_table_insert(rf->hrdel_days, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_days));
 	g_hash_table_insert(rf->hrdel_messages, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_messages));
 	g_hash_table_insert(rf->hrdel_unread, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_unread));
+	g_hash_table_insert(rf->hrttl, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrttl));
 	g_free(s);
 }
 
@@ -621,6 +623,7 @@ remove_feed_hash(gpointer name)
 	g_hash_table_remove(rf->hrdel_days, lookup_key(name));
 	g_hash_table_remove(rf->hrdel_messages, lookup_key(name));
 	g_hash_table_remove(rf->hrdel_unread, lookup_key(name));
+	g_hash_table_remove(rf->hrttl, lookup_key(name));
         g_hash_table_remove(rf->hrname_r, lookup_key(name));
         g_hash_table_remove(rf->hrname, name);
 	rf->pending = FALSE;
