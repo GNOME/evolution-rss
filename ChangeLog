@@ -1,3 +1,7 @@
+2008-06-21  Lucian Langa  <lucilanga@gnome.org>
+
+	* fix feed url sanitize function
+
 2008-06-18  Lucian Langa  <lucilanga@gnome.org>
 
 	* fix rename folders

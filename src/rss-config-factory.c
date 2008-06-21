@@ -943,7 +943,16 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                         g_hash_table_replace(rf->hrh,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->fetch_html));
-                                        g_hash_table_replace(rf->hre,
+					if (feed->update == 2)
+                                        	g_hash_table_replace(rf->hrttl,
+                                                        g_strdup(key),
+                                                        GINT_TO_POINTER(feed->ttl));
+					if (feed->update == 3)
+                                        	g_hash_table_replace(rf->hre,
+                                                        g_strdup(key),
+                                                        0);
+					else
+                                        	g_hash_table_replace(rf->hre,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->enabled));
                                         g_hash_table_replace(rf->hrdel_feed,
@@ -955,15 +964,9 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                         g_hash_table_replace(rf->hrdel_messages,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->del_messages));
-                                        g_hash_table_replace(rf->hrupdate,
+                                       	g_hash_table_replace(rf->hrupdate,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->update));
-				g_print("feed->update:%d\n", feed->update);
-        g_print("feed->ttl:%d\n", feed->ttl);
-				if (feed->update == 2)
-                                        g_hash_table_replace(rf->hrttl,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->ttl));
                                         g_hash_table_replace(rf->hrdel_unread,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->del_unread));

@@ -117,11 +117,9 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 							lookup_chn_name_by_url(feed->feed_url));
 					taskbar_push_message(msg);
 					g_free(msg);
-#if RSS_DEBUG
-					g_print("chn_name:%s\n", lookup_chn_name_by_url(feed->feed_url));
-#endif
 				}	
-				store_redraw(GTK_TREE_VIEW(rf->treeview));
+				if (rf->treeview)
+					store_redraw(GTK_TREE_VIEW(rf->treeview));
         			save_gconf_feed();
         			camel_operation_end(NULL);
 			}

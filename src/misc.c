@@ -50,9 +50,8 @@ strextr(gchar *text, gchar *substr)
  	g_return_val_if_fail( text != NULL, NULL);
 	char *tmp = g_strdup(text);
 	GString *str = g_string_new(NULL);
-        const unsigned char *s = (const unsigned char *)tmp;
 	g_string_append(str, tmp);
-	str = g_string_erase(str, strstr(str, substr), strlen(substr));
+	str = g_string_erase(str, strlen(tmp) - strlen(strstr(tmp, substr)), strlen(substr));
 	gchar *string = str->str;	
 	g_string_free(str, 0);
 	g_free(tmp);
@@ -64,6 +63,8 @@ strextr(gchar *text, gchar *substr)
 gchar *
 sanitize_url(gchar *text)
 {
+	if (strstr(text, "feed//"))
+		text = strextr(text, "feed//");
 	if (strstr(text, "feed://"))
 		text = strextr(text, "feed://");
  	if (!strstr (text, "http://") 

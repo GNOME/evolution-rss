@@ -139,6 +139,7 @@ guint nettime_id = 0;
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
+#define DEFAULT_TTL 1800
 
 /* ms between status updates to the gui */
 #define STATUS_TIMEOUT (250)
@@ -2221,6 +2222,7 @@ add:
 		g_hash_table_insert(rf->hrdel_unread,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->del_unread));
+		r->ttl = r->ttl ? r->ttl : DEFAULT_TTL;
 		if (feed->update == 2)
 			ttl = feed->ttl;
 		else
@@ -2518,6 +2520,10 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	RDF *r;
 //	rf->cfeed = key;
 
+	//exclude feeds that have special update interval or 
+	//no update at all
+	if (g_hash_table_lookup(rf->hrupdate, lookup_key(key)) >= 2)
+		return;
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
@@ -2799,6 +2805,45 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 	}
 }
 
+gboolean
+custom_update_articles(gboolean disabler)
+{
+	if (!rf->pending && !rf->feed_queue && rf->online)
+	{
+		g_print("Fetch (custom) RSS articles...\n");
+		rf->pending = TRUE;
+		check_folders();
+		rf->err = NULL;
+		taskbar_op_message();
+		network_timeout();
+//		fetch_feed, statuscb);	
+		rf->pending = FALSE;
+	}
+	return disabler;
+}
+
+void
+custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
+{ 
+	if (g_hash_table_lookup(rf->hrupdate, lookup_key(key)) == 2
+	 && g_hash_table_lookup(rf->hre, lookup_key(key)))
+	{
+		guint ttl = g_hash_table_lookup(rf->hrttl, lookup_key(key));
+		g_print("name %s update %d at %d\n", key, g_hash_table_lookup(rf->hrupdate, lookup_key(key)), ttl);
+		g_timeout_add (ttl * 1000,
+                           (GtkFunction) custom_update_articles,
+                           0);
+	}
+	
+}
+
+static void
+custom_feed_timeout(void)
+{
+	g_hash_table_foreach(rf->hrname, custom_fetch_feed, statuscb);
+
+}
+
 static void
 store_folder_update(CamelObject *o, void *event_data, void *data)
 {
@@ -2831,6 +2876,7 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
                            (gpointer)1);
 		
 	}
+	custom_feed_timeout();
         
         /* hook in rename event to catch feeds folder rename */
 	CamelStore *store = mail_component_peek_local_store(NULL);
@@ -3926,7 +3972,6 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data)
 #endif
 {
 	FILE *f;
-	g_print("file user_data:%s\n", user_data);
 	f = fopen(user_data, "wb+");
 	if (f)
 	{
