@@ -279,8 +279,11 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			gpointer newkey = g_strdup(key);
                 	g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
                 	g_signal_connect(ed, "destroy", G_CALLBACK(dialog_key_destroy), newkey);
-//        		e_activity_handler_operation_set_error (activity_handler, activity_id, ed);
-        		guint id = e_activity_handler_make_error (activity_handler, mail_component_peek(), msg, ed);
+#if (EVOLUTION_VERSION >= 22300)
+        		guint id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), E_LOG_ERROR, ed);
+#else
+        		guint id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), msg, ed);
+#endif
 			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
 		}
 /*		taskbar_op_finish(key);*/
@@ -340,7 +343,8 @@ taskbar_op_new(gchar *message)
 #if (EVOLUTION_VERSION >= 22200)
 		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						progress_icon, message, TRUE,
-						abort_all_soup, key);
+						(void (*) (gpointer))abort_all_soup,
+						 key);
 #else
 		e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);
@@ -1575,7 +1579,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 // there is no point in reload for the rest
 #if defined(HAVE_XULRUNNER) || defined(HAVE_GECKO_1_9)
 if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
-	gtk_moz_embed_reload(rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
+	gtk_moz_embed_reload((GtkMozEmbed *)rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
 			}
 	}
@@ -2284,7 +2288,7 @@ void
 update_ttl(gpointer key, guint value)
 {
 	if (2 != GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, key)))
-		g_hash_table_replace(rf->hrttl, g_strdup(key), value);
+		g_hash_table_replace(rf->hrttl, g_strdup(key), GINT_TO_POINTER(value));
 }
 
 void
@@ -2521,7 +2525,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 
 	//exclude feeds that have special update interval or 
 	//no update at all
-	if (g_hash_table_lookup(rf->hrupdate, lookup_key(key)) >= 2)
+	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) >= 2)
 		return;
 
 	// check if we're enabled and no cancelation signal pending
@@ -2864,11 +2868,10 @@ custom_update_articles(CDATA *cdata)
 void
 custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 { 
-	if (g_hash_table_lookup(rf->hrupdate, lookup_key(key)) == 2
+	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) == 2
 	 && g_hash_table_lookup(rf->hre, lookup_key(key)))
 	{
-		guint ttl = g_hash_table_lookup(rf->hrttl, lookup_key(key));
-		g_print("name %s update %d at %d\n", key, g_hash_table_lookup(rf->hrupdate, lookup_key(key)), ttl);
+		guint ttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key)));
 		CDATA *cdata = g_new0(CDATA, 1);
 		cdata->key = key;
 		cdata->value = value;
@@ -3102,7 +3105,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	struct _send_data *data = (struct _send_data *)t->data;
 
 
-	g_signal_connect(data->gd, "response", dialog_response, NULL);
+	g_signal_connect(data->gd, "response", G_CALLBACK(dialog_response), NULL);
 
         info = g_malloc0 (sizeof (*info));
 //        info->type = type;
