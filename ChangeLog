@@ -1,3 +1,7 @@
+2008-06-22  Lucian Langa  <lucilanga@gnome.org>
+
+	* custom feeds update
+
 2008-06-21  Lucian Langa  <lucilanga@gnome.org>
 
 	* fix feed url sanitize function

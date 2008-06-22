@@ -2518,7 +2518,6 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	GString *post;
 	GtkWidget *ed;
 	RDF *r;
-//	rf->cfeed = key;
 
 	//exclude feeds that have special update interval or 
 	//no update at all
@@ -2805,21 +2804,61 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 	}
 }
 
+typedef struct custom_fetch_data {
+	gboolean disabler;
+	gpointer key;
+	gpointer value;
+	gpointer user_data;
+} CDATA;
+
 gboolean
-custom_update_articles(gboolean disabler)
+custom_update_articles(CDATA *cdata)
 {
-	if (!rf->pending && !rf->feed_queue && rf->online)
+	GError *err = NULL;
+        GString *content;
+        GString *post;
+        GtkWidget *ed;
+        RDF *r;
+	//if (!rf->pending && !rf->feed_queue && rf->online)
+	if (rf->online)
 	{
 		g_print("Fetch (custom) RSS articles...\n");
 		rf->pending = TRUE;
 		check_folders();
 		rf->err = NULL;
-		taskbar_op_message();
+		//taskbar_op_message();
 		network_timeout();
-//		fetch_feed, statuscb);	
-		rf->pending = FALSE;
+        	// check if we're enabled and no cancelation signal pending
+        	// and no imports pending
+        	if (g_hash_table_lookup(rf->hre, lookup_key(cdata->key)) && !rf->cancel && !rf->import)
+        	{
+                	d(g_print("\nFetching: %s..%s\n",
+                 		g_hash_table_lookup(rf->hr, lookup_key(cdata->key)), cdata->key));
+                	rf->feed_queue++;
+
+                	net_get_unblocking(
+                                       g_hash_table_lookup(rf->hr, lookup_key(cdata->key)),
+                                       cdata->user_data,
+                                       cdata->key,
+                                       (gpointer)finish_feed,
+                                       g_strdup(cdata->key),  // we need to dupe key here
+                                       1,
+                                       &err);                  // because we might lose it if
+			if (err)
+			{
+				rf->feed_queue--;
+                     		gchar *msg = g_strdup_printf("\n%s\n%s", 
+				 	cdata->key, err->message);
+                        	rss_error(cdata->key, NULL, _("Error fetching feed."), msg);
+                     		g_free(msg);
+			}
+                                                               // feed gets deleted
+		} 
+ 		else if (rf->cancel && !rf->feed_queue)
+                	rf->cancel = 0;         //all feeds where either procesed or skipped
 	}
-	return disabler;
+	rf->pending = FALSE;
+	return TRUE;
 }
 
 void
@@ -2830,9 +2869,13 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	{
 		guint ttl = g_hash_table_lookup(rf->hrttl, lookup_key(key));
 		g_print("name %s update %d at %d\n", key, g_hash_table_lookup(rf->hrupdate, lookup_key(key)), ttl);
-		g_timeout_add (ttl * 1000,
+		CDATA *cdata = g_new0(CDATA, 1);
+		cdata->key = key;
+		cdata->value = value;
+		cdata->user_data = user_data;
+		g_timeout_add (ttl * 60 * 1000,
                            (GtkFunction) custom_update_articles,
-                           0);
+                           cdata);
 	}
 	
 }
