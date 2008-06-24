@@ -1855,7 +1855,8 @@ rss_config_control_new (void)
 	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
 #endif
 
-#if (EVOLUTION_VERSION < 22300)		// include devel too
+g_print("EVO VER:%d\n", EVOLUTION_VERSION);
+#if (EVOLUTION_VERSION < 22200)		// include devel too
 	/*first make the tab visible */
 	g_object_set(glade_xml_get_widget(sf->gui, "label_HTML"),
 					"visible", TRUE, 

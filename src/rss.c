@@ -136,6 +136,7 @@ guint farticle;
 GtkWidget *flabel;
 //#define RSS_DEBUG 1
 guint nettime_id = 0;
+guint force_update = 0;
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -2525,15 +2526,16 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 
 	//exclude feeds that have special update interval or 
 	//no update at all
-	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) >= 2)
+	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) >= 2
+	&& !force_update)
 		return;
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
 	if (g_hash_table_lookup(rf->hre, lookup_key(key)) && !rf->cancel && !rf->import)
 	{
-		d(g_print("\nFetching: %s..%s\n", 
-			g_hash_table_lookup(rf->hr, lookup_key(key)), key));
+		g_print("\nFetching: %s..%s\n", 
+			g_hash_table_lookup(rf->hr, lookup_key(key)), key);
 		rf->feed_queue++;
 
 		net_get_unblocking(
@@ -2827,7 +2829,6 @@ custom_update_articles(CDATA *cdata)
 	if (rf->online)
 	{
 		g_print("Fetch (custom) RSS articles...\n");
-		rf->pending = TRUE;
 		check_folders();
 		rf->err = NULL;
 		//taskbar_op_message();
@@ -2861,7 +2862,6 @@ custom_update_articles(CDATA *cdata)
  		else if (rf->cancel && !rf->feed_queue)
                 	rf->cancel = 0;         //all feeds where either procesed or skipped
 	}
-	rf->pending = FALSE;
 	return TRUE;
 }
 
@@ -3020,12 +3020,14 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 check_folders();
 
                 rf->err = NULL;
+		force_update = 1;
 		taskbar_op_message();
 		network_timeout();
                 g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
                 // reset cancelation signal
                 if (rf->cancel)
                         rf->cancel = 0;
+		force_update = 0;
                 rf->pending = FALSE;
         }
 #endif
@@ -3217,12 +3219,14 @@ bail:	if (!rf->pending && !rf->feed_queue)
 		check_folders();
 	
 		rf->err = NULL;
+		force_update = 1;
 		taskbar_op_message();
 		network_timeout();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		// reset cancelation signal
 		if (rf->cancel)
 			rf->cancel = 0;
+		force_update = 0;
 		rf->pending = FALSE;
 	}
 	
