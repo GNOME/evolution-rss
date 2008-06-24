@@ -944,9 +944,12 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->fetch_html));
 					if (feed->update == 2)
+					{
                                         	g_hash_table_replace(rf->hrttl,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->ttl));
+						custom_feed_timeout();
+					}
 					if (feed->update == 3)
                                         	g_hash_table_replace(rf->hre,
                                                         g_strdup(key),

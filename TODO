@@ -30,3 +30,4 @@
 	* cache large feeds
 	* hook feed properties in folder properties
 	* clist hint should be the folder name not the feed name
+	* strip html tags from title

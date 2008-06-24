@@ -137,6 +137,7 @@ GtkWidget *flabel;
 //#define RSS_DEBUG 1
 guint nettime_id = 0;
 guint force_update = 0;
+GHashTable *custom_timeout;
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -378,7 +379,8 @@ taskbar_op_finish(gpointer key)
 	if (rf->activity)
 	{
 		guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
-		e_activity_handler_operation_finished(activity_handler, activity_key);
+		if (activity_key)
+			e_activity_handler_operation_finished(activity_handler, activity_key);
 		g_hash_table_remove(rf->activity, key);
 	}
 }
@@ -695,7 +697,6 @@ readrss_dialog_cb (GtkWidget *widget, gpointer data)
 static void
 receive_cancel(GtkButton *button, struct _send_info *info)
 {
-	g_print("canceling\n");
         if (info->state == SEND_ACTIVE) {
                 if (info->status_label)
 			gtk_label_set_markup (GTK_LABEL (info->status_label),
@@ -755,25 +756,6 @@ feed_to_xml(gchar *key)
 	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrttl, lookup_key(key)));
         xmlSetProp (src, "value", ctmp);
 	g_free(ctmp);
-
-/*
-        src = xmlNewChild (root, NULL, "source", NULL);
-        xmlSetProp (src, "save-passwd", account->source->save_passwd ? "true" : "false");
-        xmlSetProp (src, "keep-on-server", account->source->keep_on_server ? "true" : "false");
-        xmlSetProp (src, "auto-check", account->source->auto_check ? "true" : "false");
-        sprintf (buf, "%d", account->source->auto_check_time);
-        xmlSetProp (src, "auto-check-timeout", buf);
-        if (account->source->url)
-                xmlNewTextChild (src, NULL, "url", account->source->url);
-
-        xport = xmlNewChild (root, NULL, "transport", NULL);
-        xmlSetProp (xport, "save-passwd", account->transport->save_passwd ? "true" : "false");
-        if (account->transport->url)
-                xmlNewTextChild (xport, NULL, "url", account->transport->url);
-
-        xmlNewTextChild (root, NULL, "drafts-folder", account->drafts_folder_uri);
-        xmlNewTextChild (root, NULL, "sent-folder", account->sent_folder_uri);*/
-
 	
 	xmlDocDumpMemory (doc, &xmlbuf, &n);
         xmlFreeDoc (doc);
@@ -2235,6 +2217,7 @@ add:
 		g_hash_table_insert(rf->hrttl,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(ttl));
+		custom_feed_timeout();
 		g_hash_table_insert(rf->hrupdate,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->update));
@@ -2534,8 +2517,8 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	// and no imports pending
 	if (g_hash_table_lookup(rf->hre, lookup_key(key)) && !rf->cancel && !rf->import)
 	{
-		g_print("\nFetching: %s..%s\n", 
-			g_hash_table_lookup(rf->hr, lookup_key(key)), key);
+		d(g_print("\nFetching: %s..%s\n", 
+			g_hash_table_lookup(rf->hr, lookup_key(key)), key));
 		rf->feed_queue++;
 
 		net_get_unblocking(
@@ -2868,17 +2851,29 @@ custom_update_articles(CDATA *cdata)
 void
 custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 { 
+	guint time_id = 0;
+	if (!custom_timeout)
+		custom_timeout = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+
 	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) == 2
 	 && g_hash_table_lookup(rf->hre, lookup_key(key)))
 	{
+	g_print("key:%s\n", key);
 		guint ttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key)));
 		CDATA *cdata = g_new0(CDATA, 1);
 		cdata->key = key;
 		cdata->value = value;
 		cdata->user_data = user_data;
-		g_timeout_add (ttl * 60 * 1000,
+		time_id = GPOINTER_TO_INT(g_hash_table_lookup(custom_timeout,
+							lookup_key(key)));
+		if (time_id)
+			g_source_remove(time_id);
+		time_id = g_timeout_add (ttl * 60 * 1000,
                            (GtkFunction) custom_update_articles,
                            cdata);
+		g_hash_table_replace(custom_timeout, 
+				g_strdup(lookup_key(key)), 
+				GINT_TO_POINTER(time_id));
 	}
 	
 }
@@ -2887,7 +2882,7 @@ static void
 custom_feed_timeout(void)
 {
 	g_hash_table_foreach(rf->hrname, custom_fetch_feed, statuscb);
-
+	g_hash_table_foreach(custom_timeout, print_hash, NULL);
 }
 
 static void
@@ -4485,6 +4480,7 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 	GPtrArray *uids;
 	guint i, j = 0, imax = 0;
 	guint q = 0;
+	guint w = 0;
 	guint32 flags;
 	time_t date, min_date = 0;
 	uids = camel_folder_get_uids (folder);
@@ -4495,6 +4491,8 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 			if (rf->current_uid && !strcmp(rf->current_uid, uids->pdata[i]))
 				goto out;
 			date = camel_message_info_date_sent(info);
+			if (!date)
+				goto out;
 			flags = camel_message_info_flags(info);
 			if (flags & CAMEL_MESSAGE_FLAGGED)
 				goto out;
@@ -4532,7 +4530,7 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 				}
 			}
                	}
-		d(g_print("uid:%d j:%d/%d, imax:%d\n", i, j, q, imax));
+		d(g_print("uid:%d j:%d/%d, date:%d, imax:%d\n", i, j, q, min_date, imax));
 out:          	camel_message_info_free(info);
 	}
        	camel_folder_freeze(folder);
@@ -4619,8 +4617,6 @@ get_feed_age(gpointer key, gpointer value)
 	     	camel_folder_sync (folder, TRUE, NULL);
       		camel_folder_expunge (folder, NULL);
 	}
-
-
 	total = camel_folder_get_message_count (folder);
 	camel_object_unref (folder);
 	g_print("=> total:%d\n", total);

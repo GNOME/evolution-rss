@@ -283,7 +283,7 @@ void taskbar_pop_message(void);
 void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
 void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
 gchar *rss_component_peek_base_directory(MailComponent *component);
-
+static void custom_feed_timeout(void);
 
 
 typedef struct FEED_FOLDERS {
