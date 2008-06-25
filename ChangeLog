@@ -1,3 +1,7 @@
+2008-06-25  Lucian Langa  <lucilanga@gnome.org>
+
+	* fix build against firefox
+
 2008-06-22  Lucian Langa  <lucilanga@gnome.org>
 
 	* misc cleanups
