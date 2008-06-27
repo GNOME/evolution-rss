@@ -357,6 +357,10 @@ kits="gtkHTML"
 if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
         kits=$kits", WebKit"
 fi
+# rename libxul to xulrunner to prevent confusion on debian
+if test "x$gecko_cv_gecko" == "xlibxul"; then
+	gecko_cv_gecko="xulrunner"
+fi
 if test "x$have_gecko" != "xno" -a "$enable_gecko" = "yes"; then
 kits="$kits, $gecko_cv_gecko (gecko engine version $gecko_cv_gecko_version)"
 fi

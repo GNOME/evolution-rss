@@ -1,3 +1,8 @@
+2008-06-27  Lucian Langa  <lucilanga@gnome.org>
+
+	* rename displayed libxul (xulrunner 1.9) to
+	prevent confusion with older xulrunner 1.8
+
 2008-06-25  Lucian Langa  <lucilanga@gnome.org>
 
 	* fix build against firefox
