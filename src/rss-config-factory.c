@@ -1028,6 +1028,13 @@ import_opml(gchar *file, add_feed *feed)
                 0);
         gtk_widget_show_all(import_dialog);
         g_free(msg);
+        xmlNode *wlk = src;
+	while (wlk->next)
+	{
+		g_print("juj:%s\n", layer_find_innerelement(wlk, "Group", "name", NULL));
+	printf ("%p, %s\n", wlk, wlk->name);	
+		wlk = wlk->next;
+	}
         while (src = html_find(src, "outline"))
         {
                 feed->feed_url = xmlGetProp((xmlNode *)src, "xmlUrl");

@@ -189,10 +189,6 @@ void check_folders(void);
 //u_int32_t 
 gchar *
 update_channel(const char *chn_name, char *url, char *main_date, GArray *item, GtkWidget *progress);
-static char *layer_find (xmlNodePtr node, char *match, char *fail);
-static char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fail);
-static gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char *fail);
-xmlNodePtr layer_find_pos (xmlNodePtr node, char *match, char *submatch);
 gchar *decode_utf8_entities(gchar *str);
 gchar *strplchr(gchar *source);
 static char *gen_md5(gchar *buffer);

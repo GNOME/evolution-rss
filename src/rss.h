@@ -284,6 +284,11 @@ void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
 void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
 gchar *rss_component_peek_base_directory(MailComponent *component);
 static void custom_feed_timeout(void);
+static char *layer_find (xmlNodePtr node, char *match, char *fail);
+static char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fail);
+static gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char *fail);
+xmlNodePtr layer_find_pos (xmlNodePtr node, char *match, char *submatch);
+static char *layer_find_tag (xmlNodePtr node, char *match, char *fail);
 
 
 typedef struct FEED_FOLDERS {
