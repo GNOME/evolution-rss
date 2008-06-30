@@ -64,7 +64,7 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 liborg_gnome_evolution_rss_la_SOURCES = rss.c gecko-utils.cpp
-liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
+liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(WebKitGtk_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
 
 evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(DBUS_LIBS)

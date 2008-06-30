@@ -1,5 +1,6 @@
 2008-06-30  Lucian Langa  <lucilanga@gnome.org>
 
+	* fix cflags for WebKitGtk (older webkit)
 	* older webkit fallback 
 
 2008-06-27  Lucian Langa  <lucilanga@gnome.org>

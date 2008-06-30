@@ -237,8 +237,10 @@ AC_MSG_RESULT([$enable_webkit])
 if test "$enable_webkit" = "yes"; then
 PKG_CHECK_MODULES([WEBKIT], webkit-1.0, [have_webkit=yes], [have_webkit=no])
 if test "x$have_webkit" == "xno"; then
-	PKG_CHECK_MODULES([older WEBKIT], WebKitGtk, [have_webkit=yes], [have_webkit=no])
+	PKG_CHECK_MODULES([WebKitGtk], WebKitGtk, [have_webkit=yes], [have_webkit=no])
 	AC_DEFINE_UNQUOTED(WEBKIT_UNSTD, 1, [unstandard webkit installation])
+	AC_SUBST([WebKitGtk_CFLAGS])
+	AC_SUBST([WebKitGtk_LIBS])
 fi
 AC_SUBST([WEBKIT_CFLAGS])
 AC_SUBST([WEBKIT_LIBS])
@@ -249,7 +251,7 @@ if test "x$have_webkit" != "xno"; then
 	AC_DEFINE_UNQUOTED(HAVE_WEBKIT,1, [webkit render engine present])
 	AC_SUBST(HAVE_RENDERKIT)
 	AC_SUBST(HAVE_WEBKIT)
-	RENDER_CFLAGS="$RENDER_CFLAGS $WEBKIT_CFLAGS" 
+	RENDER_CFLAGS="$RENDER_CFLAGS $WEBKIT_CFLAGS $WebKitGtk_CFLAGS" 
 	if test "x$RENDER" != "xgecko"; then
 		AC_ARG_WITH([primary-render],
         		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
