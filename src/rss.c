@@ -1619,14 +1619,10 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 #ifdef HAVE_WEBKIT
 	if (engine == 1)
 	{
-//		if (!g_thread_supported ()) {
-  //              	g_thread_init (NULL);
-    //    	}
-//		webkit_gtk_init();
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
-		//gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
-		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
+		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
+		//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
+		//gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 	}
 #endif
 

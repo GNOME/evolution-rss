@@ -1,5 +1,6 @@
 2008-06-30  Lucian Langa  <lucilanga@gnome.org>
 
+	* keep webkit scrollbar
 	* fix cflags for WebKitGtk (older webkit)
 	* older webkit fallback 
 
