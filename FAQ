@@ -8,8 +8,10 @@ as many other application crash when they embed firefox with gtkmozembed.
 There are 2 fixes for that:
 
  - either run evolution with LD_LIBRARY_PATH=/path/to/firefox/lib evolution
- - either appd into ld.so.conf /path/to/firefox and run ldconfig afterwards
- - or you can choose to render articles using Webkit
+ - either app into ld.so.conf /path/to/firefox and run ldconfig afterwards
+ - install and compile evolution-rss against xulrunner-1.9"
+
+ or you can choose to render articles using Webkit
 
 How can enable webkit in evolution-rss?
 =======================================
@@ -32,3 +34,4 @@ Adding feed when poor conection can be really slow. Imagine you have a 350+ opml
 each feeds needs to be feched before setup, this will take enourmous amount of time, so
 you can just skip this step by unchecking Validate feed option. Feeds will be read,
 afterwards one by one.
+

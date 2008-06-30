@@ -82,25 +82,6 @@ server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
 
 install-data-local:
 	rm -f $(PLUGIN_INSTALL_DIR)/*gnome-cooly*
-	@echo ""
-	@echo ""
-	@echo ""
-	@echo "========================================================================================="
-	@echo " Note: Users of Ubuntu and probably Debian too."
-	@echo " Evolution crashes when using gtkmozembed(firefox) as a render"
-	@echo " This is a well known bug (https://bugs.launchpad.net/ubuntu/+source/firefox/+bug/26436/)"
-	@echo " as many other application crash when they embed firefox with gtkmozembed."
-	@echo ""
-	@echo "There are 3 fixes for that:"
-	@echo ""
-	@echo "- either run evolution with: LD_LIBRARY_PATH=$(GECKO_HOME) evolution"
-	@echo "- either app into ld.so.conf $(GECKO_HOME) and run ldconfig afterwards"
-	@echo " (echo "$(GECKO_HOME)" >> /etc/ld.so.conf && /sbin/ldconfig)"
-	@echo "- install and compile evolution-rss against xulrunner-1.9"
-	@echo "========================================================================================="
-	@echo ""
-	@echo ""
-	@echo ""
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA)
 
 uninstall-local:
