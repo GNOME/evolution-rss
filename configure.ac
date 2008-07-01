@@ -201,7 +201,10 @@ AC_SUBST([GECKO_LIBS])
 		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_LIBDIR
 		GECKO_HOME=$GECKO_LIBDIR
 		AC_SUBST([GECKO_RPATH])
-	
+			if text "x$GECKO" == "xfirefox"; then
+			AC_DEFINE_UNQUOTED(HAVE_BUGGY_GECKO, 1, [workarund for a bug in shutdown gecko])
+			AC_SUBST(HAVE_BUGGY_GECKO)
+			fi
 			if test "x$GECKO" == "xxulrunner"; then
 			AC_DEFINE_UNQUOTED(HAVE_XULRUNNER, 1, [gecko flavour is xulrunner])
 			AC_SUBST(HAVE_XULRUNNER)

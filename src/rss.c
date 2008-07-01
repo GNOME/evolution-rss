@@ -3234,7 +3234,19 @@ rss_finalize(void)
 	g_print(".done\n");
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
+
+	guint render = GPOINTER_TO_INT(
+		gconf_client_get_int(rss_gconf, 
+			GCONF_KEY_HTML_RENDER, 
+			NULL));
+	//really find a better way to deal with this//
+	//I do not know how to shutdown gecko (gtk_moz_embed_pop_startup)
+	//crash in nsCOMPtr_base::assign_with_AddRef
+	if (2 == render)
+		system("killall -SIGTERM evolution")
+#else
 	gecko_shutdown();
+#endif
 }
 
 guint

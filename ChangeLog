@@ -1,5 +1,6 @@
 2008-07-01  Lucian Langa  <lucilanga@gnome.org>
 	
+	* fix old gecko shutdown issue
 	* fix building with firefox-devel
 
 2008-06-30  Lucian Langa  <lucilanga@gnome.org>
