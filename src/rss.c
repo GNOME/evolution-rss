@@ -3244,7 +3244,7 @@ rss_finalize(void)
 	//crash in nsCOMPtr_base::assign_with_AddRef
 #ifdef HAVE_BUGGY_GECKO
 	if (2 == render)
-		system("killall -SIGTERM evolution")
+		system("killall -SIGTERM evolution");
 #else
 	gecko_shutdown();
 #endif
