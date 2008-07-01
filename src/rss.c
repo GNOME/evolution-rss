@@ -595,7 +595,11 @@ GtkWidget *dialog1;
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
+#if LIBSOUP_VERSION < 2003000
+	SoupUri *uri =  soup_message_get_uri((SoupMessage *)value);
+#else
 	SoupURI *uri =  soup_message_get_uri((SoupMessage *)value);
+#endif
 	d(g_print("cancel url:%s%s?%s\n", uri->host, uri->path, uri->query?uri->query:""));
 
 	if (SOUP_IS_SESSION(key))
