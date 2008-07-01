@@ -32,3 +32,4 @@
 	* clist hint should be the folder name not the feed name
 	* strip html tags from title
 	* implement foaf and other possible blogrolls type file
+	* if necessary implement config code for evo 2.12

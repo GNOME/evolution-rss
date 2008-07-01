@@ -1,6 +1,10 @@
+2008-07-01  Lucian Langa  <lucilanga@gnome.org>
+	
+	* fix building with firefox-devel
+
 2008-06-30  Lucian Langa  <lucilanga@gnome.org>
 
-	* keep webkit scrollbar
+	* do not hide webkit scrollbar
 	* fix cflags for WebKitGtk (older webkit)
 	* older webkit fallback 
 
@@ -54,8 +58,7 @@
 
 2008-06-04  Lucian Langa  <lucilanga@gnome.org>
 
-	* correctly parse utf 8 content
-	* Fix for bug #531751
+	* Fix for bug #531751 correctly parse utf 8 content
 	* added X-evolution-rss-feed-id for feed
 	aricles's UUID
 	* implemented usage of evolution's proxy
@@ -199,7 +202,7 @@ Thu 20 Mar 2008 07:19:47 PM EET <lucilanga@gnome.org>
 
 Tue 18 Mar 2008 10:33:48 AM EET <lucilanga@gnome.org>
 
-	* src/rss-config-factory.c: create_dalog_add()
+	* src/rss-config-factory.c: create_dialog_add()
 	fix del messages, days spin buttons update
 	* src/rss.c: get_feed_age(): fix currently
 	read article to be deleted

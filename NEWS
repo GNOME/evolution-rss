@@ -1,3 +1,24 @@
+Evolution-RSS 0.1.0 2008-06-30
+------------------------------
+
+Bug fixes:
+	#530343: update to newer webkit API
+	#41: (evo-rss bug) prevent items flagged as important to be deleted
+	#34: (evo-rss bug) fix currently read article to be deleted
+	#40: (evo-rss bug) fix no feeds enabled/configured
+	#530343: xulrunner 1.9 support
+	#477053: (debian bugzilla) merge patch from Pedro Fragoso
+	#529334: fix send and receive dialog crash
+	#531657: Modify taskbar_operation meaning to have only one operation for whole feeds fetching
+	#530628: shorten the feed names with ellipsize to avoid the scrolling
+	#535670:
+	#535689: make cancel all button work
+	#531751: correctly parse utf 8 content
+	#531657: fix slow deletion of expired articles
+	#529334: corectly parse xml element and xml text nodes, ATOM parse summary in case content is missing
+
+Evolution-RSS
+-------------
 
  Setup Feeds has changed!
  Now you can setup feeds using evolution preferences.
