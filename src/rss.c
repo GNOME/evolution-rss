@@ -2850,7 +2850,7 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) == 2
 	 && g_hash_table_lookup(rf->hre, lookup_key(key)))
 	{
-	g_print("key:%s\n", key);
+		d(g_print("custom key:%s\n", key));
 		guint ttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key)));
 		CDATA *cdata = g_new0(CDATA, 1);
 		cdata->key = key;
@@ -2874,7 +2874,6 @@ static void
 custom_feed_timeout(void)
 {
 	g_hash_table_foreach(rf->hrname, custom_fetch_feed, statuscb);
-	g_hash_table_foreach(custom_timeout, print_hash, NULL);
 }
 
 static void
@@ -3266,7 +3265,6 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 		rss_gconf = gconf_client_get_default();
 		upgrade = 1;
-		printf("RSS Plugin enabled (evolution-rss %s)\n", VERSION);
 		char *d;
         	d = getenv("RSS_VERBOSE_DEBUG");
         	if (d)
@@ -3275,6 +3273,9 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 		//initiate main rss structure
 		if (!rf)
 		{
+			printf("RSS Plugin enabled (evolution %s, evolution-rss %s)\n",
+				EVOLUTION_VERSION_STRING,
+				VERSION);
 			rf = malloc(sizeof(rssfeed));
 			memset(rf, 0, sizeof(rssfeed));
 			rf->setup = read_feeds(rf);
@@ -4611,7 +4612,7 @@ get_feed_age(gpointer key, gpointer value)
 	}
 	total = camel_folder_get_message_count (folder);
 	camel_object_unref (folder);
-	g_print("=> total:%d\n", total);
+	d(g_print("delete => remaining total:%d\n", total));
 fail:	g_free(real_name);
 	inhibit_read = 0;
 }
