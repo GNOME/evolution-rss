@@ -66,6 +66,42 @@ gecko_prefs_set_int (const gchar *key, gint value)
 	return NS_SUCCEEDED(gPrefBranch->SetIntPref (key, value));
 }
 
+static nsresult
+gecko_utils_init_chrome (void)
+{
+/* FIXME: can we just omit this on new-toolkit ? */
+#if defined(MOZ_NSIXULCHROMEREGISTRY_SELECTSKIN) || defined(HAVE_CHROME_NSICHROMEREGISTRYSEA_H)
+        nsresult rv;
+        nsEmbedString uiLang;
+
+#ifdef HAVE_CHROME_NSICHROMEREGISTRYSEA_H
+        nsCOMPtr<nsIChromeRegistrySea> chromeRegistry = do_GetService (NS_CHROMEREGISTRY_CONTRACTID);
+#else
+        nsCOMPtr<nsIXULChromeRegistry> chromeRegistry = do_GetService (NS_CHROMEREGISTRY_CONTRACTID);
+#endif
+        NS_ENSURE_TRUE (chromeRegistry, NS_ERROR_FAILURE);
+
+	// Set skin to 'classic' so we get native scrollbars.
+	rv = chromeRegistry->SelectSkin (nsEmbedCString("classic/1.0"), PR_FALSE);
+        NS_ENSURE_SUCCESS (rv, NS_ERROR_FAILURE);
+
+	// set locale
+        rv = chromeRegistry->SetRuntimeProvider(PR_TRUE);
+        NS_ENSURE_SUCCESS (rv, NS_ERROR_FAILURE);
+
+	rv = getUILang(uiLang);
+        NS_ENSURE_SUCCESS (rv, NS_ERROR_FAILURE);
+
+        nsEmbedCString cUILang;
+        NS_UTF16ToCString (uiLang, NS_CSTRING_ENCODING_UTF8, cUILang);
+
+        return chromeRegistry->SelectLocale (cUILang, PR_FALSE);
+#else
+        return NS_OK;
+#endif
+}
+
+
 extern "C" gboolean
 gecko_init (void)
 {
@@ -87,6 +123,11 @@ gecko_init (void)
 
 	rv = CallQueryInterface (prefService, &gPrefBranch);
 	NS_ENSURE_SUCCESS (rv, FALSE);
+	
+#ifndef HAVE_GECKO_1_8
+	g_print("init\n");
+        gecko_utils_init_chrome ();
+#endif
 
 	return TRUE;
 }
