@@ -15,6 +15,9 @@
 /* Define to 1 if you have the `bind_textdomain_codeset' function. */
 #undef HAVE_BIND_TEXTDOMAIN_CODESET
 
+/* workarund for a bug in shutdown gecko */
+#undef HAVE_BUGGY_GECKO
+
 /* Define to 1 if you have the `dcgettext' function. */
 #undef HAVE_DCGETTEXT
 

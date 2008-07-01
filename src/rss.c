@@ -3242,6 +3242,7 @@ rss_finalize(void)
 	//really find a better way to deal with this//
 	//I do not know how to shutdown gecko (gtk_moz_embed_pop_startup)
 	//crash in nsCOMPtr_base::assign_with_AddRef
+#ifdef HAVE_BUGGY_GECKO
 	if (2 == render)
 		system("killall -SIGTERM evolution")
 #else
