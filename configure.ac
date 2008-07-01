@@ -183,6 +183,7 @@ if test "x$have_gecko" != "xno"; then
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags --define-variable=includetype=unstable libxul-embedding)"
 	elif test $GECKO = firefox; then
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags firefox-xpcom)"
+    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
 	elif test $GECKO = libxul; then
     		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
 	else
