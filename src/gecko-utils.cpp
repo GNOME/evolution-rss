@@ -79,7 +79,7 @@ gecko_init (void)
 	gtk_moz_embed_set_comp_path (GECKO_HOME);
 #endif
 
-//	gtk_moz_embed_push_startup ();
+	gtk_moz_embed_push_startup ();
 
 	nsresult rv;
 	nsCOMPtr<nsIPrefService> prefService (do_GetService (NS_PREFSERVICE_CONTRACTID, &rv));
