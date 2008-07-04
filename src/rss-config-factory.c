@@ -290,7 +290,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
 
         GtkWidget *dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "feed_dialog");
 	gtk_widget_show(dialog1);
-  	gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
+  	gtk_window_set_keep_above(GTK_WINDOW(dialog1), FALSE);
  	if (text != NULL)
         	gtk_window_set_title (GTK_WINDOW (dialog1), _("Edit Feed"));
   	else
@@ -994,13 +994,36 @@ import_dialog_response(GtkWidget *selector, guint response, gpointer user_data)
                 rf->cancel = 1;
 }
 
+gboolean
+import_one_feed(gchar *url, gchar *title)
+{
+        add_feed *feed = g_new0(add_feed, 1);
+        feed->changed=0;
+        feed->add=1;
+	feed->feed_url = g_strdup(url);
+	feed->feed_name = decode_html_entities(title);
+	/* we'll get rid of this as soon as we fetch unblocking */
+        if (g_hash_table_find(rf->hr,
+                                     check_if_match,
+                                     feed->feed_url))
+        {
+               rss_error(NULL, feed->feed_name, _("Error adding feed."),
+                                _("Feed already exists!"));
+               return FALSE;
+        }
+        guint res = setup_feed(feed);
+        d(g_print("feed imported:%d\n", res));
+        g_free(feed->feed_url);
+        g_free(feed->feed_name);
+	g_free(feed);
+	return res;
+}
+
 void
 import_opml(gchar *file, add_feed *feed)
 {
+	gchar *url;
         xmlChar *buff = NULL;
-        //some defaults
-        feed->changed=0;
-        feed->add=1;
         guint total = 0;
         guint current = 0;
         gchar *what = NULL;
@@ -1028,31 +1051,50 @@ import_opml(gchar *file, add_feed *feed)
                 0);
         gtk_widget_show_all(import_dialog);
         g_free(msg);
-        xmlNode *wlk = src;
-	while (wlk->next)
+	if (src=src->children)
 	{
-		g_print("juj:%s\n", layer_find_innerelement(wlk, "Group", "name", NULL));
-	printf ("%p, %s\n", wlk, wlk->name);	
-		wlk = wlk->next;
-	}
-        while (src = html_find(src, "outline"))
-        {
-                feed->feed_url = xmlGetProp((xmlNode *)src, "xmlUrl");
-                if (feed->feed_url)
-                {
-                        total++;
-                        xmlFree(feed->feed_url);
-                }
-        }
+		g_print("found %s\n", src->name);
+		if (!g_ascii_strcasecmp(src->name, "rdf")) {
+			while (src) {
+				g_print("my cont:%s\n", src->content);
+				src=src->children;
+				src = src->next;
+				g_print("found %s\n", src->name);
+				g_print("my cont:%s\n", src->content);
+				src=src->children;
+				src = src->next;
+				xmlNode *my = src;
+				while (src = html_find(src, "member")) {
+					my = layer_find_pos(src, "member", "Agent");
+					g_print("my:%s\n", layer_find(my, "name", NULL));
+					my =  html_find(my, "Document");
+					g_print("my:%s\n", xmlGetProp(my, "about"));
+				}
+			}
+		}
+		else if (!g_ascii_strcasecmp(src->name, "opml")) {
+			
+        		while (src = html_find(src, "outline")) {
+                		url = xmlGetProp((xmlNode *)src, "xmlUrl");
+                		if (url) {
+                        		total++;
+                        		xmlFree(url);
+                		}
+        		}
+			g_print("total:%d\n", total);
+		}
+	}	
         src = doc;
+	//force out for now
+	goto out;
         //we'll be safer this way
         rf->import = 1;
         while (gtk_events_pending ())
                 gtk_main_iteration ();
         while (src = html_find(src, "outline"))
         {
-                feed->feed_url = xmlGetProp((xmlNode *)src, "xmlUrl");
-                if (feed->feed_url && strlen(feed->feed_url))
+                url = xmlGetProp((xmlNode *)src, "xmlUrl");
+                if (url && strlen(url))
                 {
                         if (rf->cancel)
                         {
@@ -1061,30 +1103,16 @@ import_opml(gchar *file, add_feed *feed)
                                 goto out;
                         }
                         gchar *name = xmlGetProp((xmlNode *)src, "title");
-                        gchar *safe_name = decode_html_entities(name);
-                        xmlFree(name);
-                        name = safe_name;
-
                         gtk_label_set_text(GTK_LABEL(import_label), name);
 #if GTK_2_6
                         gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
                         gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
-                        feed->feed_name = name;
-                        /* we'll get rid of this as soon as we fetch unblocking */
-                        if (g_hash_table_find(rf->hr,
-                                        check_if_match,
-                                        feed->feed_url))
-                        {
-                           rss_error(NULL, feed->feed_name, _("Error adding feed."),
-                                           _("Feed already exists!"));
-                           continue;
-                        }
-                        guint res = setup_feed(feed);
+			import_one_feed(url, name);
+                        xmlFree(name);
 
                         while (gtk_events_pending ())
                                 gtk_main_iteration ();
-                        d(g_print("feed imported:%d\n", res));
                         current++;
                         float fr = ((current*100)/total);
                         gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
@@ -1097,7 +1125,6 @@ import_opml(gchar *file, add_feed *feed)
                         gtk_list_store_clear(GTK_LIST_STORE(model));
                         g_hash_table_foreach(rf->hrname, construct_list, model);
                         save_gconf_feed();
-                        g_free(feed->feed_url);
                         if (src)
                                 xmlFree(src);
                 }
@@ -1110,8 +1137,6 @@ import_opml(gchar *file, add_feed *feed)
 out:    rf->import = 0;
         xmlFree(doc);
         gtk_widget_destroy(import_dialog);
-//how the hell should I free this ?
-////      g_free(feed);
 }
 
 static void

@@ -34,6 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@HAVE_XPCOM_GLUE_FALSE@am__append_1 = -DGECKO_HOME=\""$(GECKO_HOME)"\"
 @HAVE_DBUS_TRUE@bin_PROGRAMS = evolution-import-rss$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -316,26 +317,18 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-INCLUDES = \
-	-I$(EVOLUTION_SOURCE)					\
-	-I$(top_srcdir)						\
-	$(RENDER_CFLAGS)					\
-	$(DBUS_CFLAGS)						\
-	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
-	-DLOCALEDIR="\"$(LOCALEDIR)\""				\
-	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\"\
-	-DEVOLUTION_VERSION=$(evolution_exec_int)		\
-	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"            	\
-	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
-	-DGTK_VERSION="$(GTK_VERSION)"	          	  	\
-	-DLIBSOUP_VERSION="$(SOUP_VERSION)"	            	\
-	-DGECKO_HOME=\""$(GECKO_HOME)"\"			\
-	-DRENDER=\""$(RENDER)"\"				\
-	-DRENDER_N=$(RENDER_N)					\
-	-DHAVE_DBUS=$(DBD)					\
-	-DDBUS_API_SUBJECT_TO_CHANGE				\
-	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
-
+INCLUDES = -I$(EVOLUTION_SOURCE) -I$(top_srcdir) $(RENDER_CFLAGS) \
+	$(DBUS_CFLAGS) -DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\"" \
+	-DLOCALEDIR="\"$(LOCALEDIR)\"" \
+	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\" \
+	-DEVOLUTION_VERSION=$(evolution_exec_int) \
+	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\" \
+	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\" \
+	-DGTK_VERSION="$(GTK_VERSION)" \
+	-DLIBSOUP_VERSION="$(SOUP_VERSION)" -DRENDER=\""$(RENDER)"\" \
+	-DRENDER_N=$(RENDER_N) -DHAVE_DBUS=$(DBD) \
+	-DDBUS_API_SUBJECT_TO_CHANGE $(EVOLUTION_RSS_EPLUGIN_CFLAGS) \
+	$(am__append_1)
 RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
       		<menu target=\"select\" id=\"org.gnome.evolution.mail.browser\">\n	\

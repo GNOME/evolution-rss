@@ -1,3 +1,10 @@
+2008-07-04  Lucian Langa  <lucilanga@gnome.org>
+
+	* support for importing FOAF type files
+	* migrate to xulrunner standalone Glue
+	Thanks to Pedro Fragoso for providing
+	necessary patches
+
 2008-07-01  Lucian Langa  <lucilanga@gnome.org>
 	
 	* fix old gecko shutdown issue

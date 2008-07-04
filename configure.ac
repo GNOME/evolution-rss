@@ -214,6 +214,21 @@ AC_SUBST([GECKO_LIBS])
 			AC_SUBST(HAVE_GECKO_1_9)
 			fi
 		#fi
+		_SAVE_CPPFLAGS="$CPPFLAGS"
+               	CPPFLAGS="$CPPFLAGS $GECKO_CFLAGS"
+               	AC_MSG_CHECKING([[whether we have a xpcom glue]])
+               	AC_COMPILE_IFELSE(
+                       [AC_LANG_SOURCE(
+                               [[
+                                 #ifndef XPCOM_GLUE
+                                 #error "no xpcom glue found"
+                                 #endif]]
+                       )],
+                       [gecko_cv_have_xpcom_glue=yes],
+                       [gecko_cv_have_xpcom_glue=no])
+               	AC_MSG_RESULT([$gecko_cv_have_xpcom_glue])
+               	CPPFLAGS="$_SAVE_CPPFLAGS"
+               	AM_CONDITIONAL([HAVE_XPCOM_GLUE], [test "$gecko_cv_have_xpcom_glue" = "yes"])
 		AC_ARG_WITH([primary-render],
         		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
         			[RENDER=$with_primary_render], [RENDER=gtkhtml])

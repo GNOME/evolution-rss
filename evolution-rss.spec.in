@@ -28,8 +28,7 @@ This is an evolution plugin which enables evolution to read rss feeds.
 %setup -q -n evolution-rss-%{version}
 
 %build
-autoreconf -i -f
-%configure --disable-webkit --disable-gecko
+%configure
 make %{?_smp_mflags}
 
 %install
@@ -71,8 +70,8 @@ fi
 %{_bindir}/evolution-import-rss
 %{_sysconfdir}/gconf/schemas/%{name}.schemas
 %{_datadir}/evolution/*/errors/org-gnome-evolution-rss.error
-%{_datadir}/evolution/*/glade/rss-ui.glade
-%{_datadir}/evolution/*/images/rss.png
+%{_datadir}/evolution/*/glade/*.glade
+%{_datadir}/evolution/*/images/*.png
 %{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.eplug
 %{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.xml
 %{_libdir}/evolution/*/plugins/liborg-gnome-evolution-rss.so
@@ -86,6 +85,9 @@ fi
 %doc TODO
 
 %changelog
+* Wed Jul  2 2008 Lucian Langa <lucilanga@gnome.org> - 0.1.0-1
+- update to 0.1.0 release
+
 * Sat Mar  1 2008 Lucian Langa <lucilanga@gnome.org> - 0.0.8-1
 - Misc cleanup
 

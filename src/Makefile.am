@@ -12,12 +12,16 @@ INCLUDES =							\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
 	-DGTK_VERSION="$(GTK_VERSION)"	          	  	\
 	-DLIBSOUP_VERSION="$(SOUP_VERSION)"	            	\
-	-DGECKO_HOME=\""$(GECKO_HOME)"\"			\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
 	-DHAVE_DBUS=$(DBD)					\
 	-DDBUS_API_SUBJECT_TO_CHANGE				\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
+
+ 
+if ! HAVE_XPCOM_GLUE
+INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
+endif
 
 RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\

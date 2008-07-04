@@ -1574,17 +1574,12 @@ void
 rss_mozilla_init(void)
 {
 	GError *err = NULL;
-       	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
-	g_unsetenv("MOZILLA_FIVE_HOME");
+/*#ifdef GECKO_HOME
+	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
+#endif
+	g_unsetenv("MOZILLA_FIVE_HOME");*/
 
 
-	gchar *profile_dir = g_build_filename (g_get_home_dir (),
-                                              ".evolution",
-                                              "mail",
-                                              "rss", NULL);
-
-        gtk_moz_embed_set_profile_path (profile_dir, "mozembed-rss");
-        g_free (profile_dir);
 	gecko_init();
 }
 #endif
@@ -3670,16 +3665,19 @@ xmlNodePtr
 layer_find_pos (xmlNodePtr node,
             char *match, char *submatch)
 {
+	xmlNodePtr subnode;
         while (node!=NULL) {
 #ifdef RDF_DEBUG
                 xmlDebugDumpNode (stdout, node, 32);
                 printf("%s.\n", node->name);
 #endif
                 if (strcasecmp (node->name, match)==0 && node->children) {
-			xmlNodePtr subnode = node->children;
+			subnode = node->children;
 			while (subnode!=NULL) {
                 		if (strcasecmp (subnode->name, submatch)==0 && subnode->children)
-                        		return subnode->children->next;
+				{
+                        			return subnode->children->next;
+				}
 				subnode = subnode->next;
 			}
                 }
