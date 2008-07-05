@@ -65,6 +65,8 @@ sanitize_url(gchar *text)
 {
 	if (strstr(text, "feed//"))
 		text = strextr(text, "feed//");
+	if (strstr(text, "feed:"))
+		text = strextr(text, "feed:");
 	if (strstr(text, "feed://"))
 		text = strextr(text, "feed://");
  	if (!strstr (text, "http://") 

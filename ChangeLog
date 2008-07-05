@@ -1,3 +1,10 @@
+2008-07-05  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/misc: sanitize_url() parse aditional
+	url (beging with feed:)
+	* src/network-soup.c: 
+	net_post_blocking() - fix handling url
+
 2008-07-04  Lucian Langa  <lucilanga@gnome.org>
 
 	* support for importing FOAF type files

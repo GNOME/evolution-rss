@@ -488,7 +488,7 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
 
 	if (!rf->b_session)
 		rf->b_session = soup_sess = 
-			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
+			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);		
 	else
 		soup_sess = rf->b_session;
 
@@ -499,14 +499,14 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
             G_CALLBACK (reauthenticate), soup_sess);
 #endif
 
-	suri = soup_uri_new(url);
-	if (!suri)
+	req = soup_message_new(SOUP_METHOD_GET, url);
+	if (!req)
 	{
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
 				soup_status_get_phrase(2));			//invalid url
 		goto out;
 	}
-	req = soup_message_new_from_uri(SOUP_METHOD_GET, suri);
+	d(g_print("request ok :%d\n", req->status_code));
 	g_signal_connect(G_OBJECT(req), "got-chunk",
 			G_CALLBACK(got_chunk_blocking_cb), &info);
 	for (; headers; headers = headers->next) {
