@@ -1104,7 +1104,7 @@ import_opml(gchar *file, add_feed *feed)
                         }
                         gchar *name = xmlGetProp((xmlNode *)src, "title");
                         gtk_label_set_text(GTK_LABEL(import_label), name);
-#if GTK_2_6
+#if GTK_VERSION >= 2006000
                         gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
                         gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
@@ -1772,7 +1772,9 @@ rss_config_control_new (void)
 	gtk_tree_view_column_set_sort_column_id (column, 2);
 	gtk_tree_view_set_search_column (GTK_TREE_VIEW (treeview),
                                                    2);
+#if GTK_VERSION >= 2012000
 	gtk_tree_view_set_tooltip_column (treeview, 1);
+#endif
 
 	if (rf->hr != NULL)
         	g_hash_table_foreach(rf->hrname, construct_list, store);

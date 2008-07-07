@@ -1339,6 +1339,7 @@ xml_parse_sux (const char *buf, int len)
 				| XML_PARSE_NOENT
 				| XML_PARSE_NOCDATA);
 
+
         xmlParseDocument (ctxt);
 
         doc = ctxt->myDoc;
@@ -2402,6 +2403,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
         r->shown = TRUE;
         xmlSubstituteEntitiesDefaultValue = 1;
         r->cache = xml_parse_sux (response->str, response->len);
+//        r->cache = xmlParseDoc (response->str);
 
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;
@@ -2979,7 +2981,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 		G_CALLBACK(readrss_dialog_cb),
 		NULL);
         GtkWidget *label2 = gtk_label_new(NULL);
-#if GTK_VERSION > 2006000
+#if GTK_VERSION >= 2006000
 	gtk_label_set_ellipsize (GTK_LABEL (label2), PANGO_ELLIPSIZE_START);
 #endif
 #if GTK_VERSION > 2008011
@@ -3124,7 +3126,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 
         char *pretty_url = g_strdup ("RSS");
         label = gtk_label_new (NULL);
-#if GTK_VERSION > 2006000
+#if GTK_VERSION >= 2006000
         gtk_label_set_ellipsize (
                 GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 #endif
@@ -4350,6 +4352,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
                 char *link = g_strdup(layer_find (el->children, "link", NULL));		//RSS,
 		if (!link) 
 			link = layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
+
 		char *id = layer_find (el->children, "id",				//ATOM
 				layer_find (el->children, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
