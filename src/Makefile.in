@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@HAVE_XPCOM_GLUE_FALSE@am__append_1 = -DGECKO_HOME=\""$(GECKO_HOME)"\"
+@HAVE_GECKO_TRUE@am__append_1 = gecko-utils.cpp
 @HAVE_DBUS_TRUE@bin_PROGRAMS = evolution-import-rss$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -59,7 +59,10 @@ am__installdirs = "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(bindir)" \
 pluginLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(plugin_LTLIBRARIES)
 liborg_gnome_evolution_rss_la_LIBADD =
-am_liborg_gnome_evolution_rss_la_OBJECTS = rss.lo gecko-utils.lo
+am__liborg_gnome_evolution_rss_la_SOURCES_DIST = rss.c gecko-utils.cpp
+@HAVE_GECKO_TRUE@am__objects_1 = gecko-utils.lo
+am__objects_2 = rss.lo $(am__objects_1)
+am_liborg_gnome_evolution_rss_la_OBJECTS = $(am__objects_2)
 liborg_gnome_evolution_rss_la_OBJECTS =  \
 	$(am_liborg_gnome_evolution_rss_la_OBJECTS)
 liborg_gnome_evolution_rss_la_LINK = $(LIBTOOL) --tag=CXX \
@@ -95,9 +98,7 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(liborg_gnome_evolution_rss_la_SOURCES) \
-	$(evolution_import_rss_SOURCES)
-DIST_SOURCES = $(liborg_gnome_evolution_rss_la_SOURCES) \
+DIST_SOURCES = $(am__liborg_gnome_evolution_rss_la_SOURCES_DIST) \
 	$(evolution_import_rss_SOURCES)
 errorDATA_INSTALL = $(INSTALL_DATA)
 gladeDATA_INSTALL = $(INSTALL_DATA)
@@ -173,8 +174,8 @@ GPP = @GPP@
 GREP = @GREP@
 GTK_VERSION = @GTK_VERSION@
 HAVE_BUGGY_GECKO = @HAVE_BUGGY_GECKO@
+HAVE_GECKO = @HAVE_GECKO@
 HAVE_GECKO_1_9 = @HAVE_GECKO_1_9@
-HAVE_GTKMOZEMEBED = @HAVE_GTKMOZEMEBED@
 HAVE_RENDERKIT = @HAVE_RENDERKIT@
 HAVE_WEBKIT = @HAVE_WEBKIT@
 HAVE_XULRUNNER = @HAVE_XULRUNNER@
@@ -317,18 +318,29 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-INCLUDES = -I$(EVOLUTION_SOURCE) -I$(top_srcdir) $(RENDER_CFLAGS) \
-	$(DBUS_CFLAGS) -DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\"" \
-	-DLOCALEDIR="\"$(LOCALEDIR)\"" \
-	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\" \
-	-DEVOLUTION_VERSION=$(evolution_exec_int) \
-	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\" \
-	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\" \
-	-DGTK_VERSION="$(GTK_VERSION)" \
-	-DLIBSOUP_VERSION="$(SOUP_VERSION)" -DRENDER=\""$(RENDER)"\" \
-	-DRENDER_N=$(RENDER_N) -DHAVE_DBUS=$(DBD) \
-	-DDBUS_API_SUBJECT_TO_CHANGE $(EVOLUTION_RSS_EPLUGIN_CFLAGS) \
-	$(am__append_1)
+INCLUDES = \
+	-I$(EVOLUTION_SOURCE)					\
+	-I$(top_srcdir)						\
+	$(RENDER_CFLAGS)					\
+	$(DBUS_CFLAGS)						\
+	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
+	-DLOCALEDIR="\"$(LOCALEDIR)\""				\
+	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\"\
+	-DEVOLUTION_VERSION=$(evolution_exec_int)		\
+	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"            	\
+	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
+	-DGTK_VERSION="$(GTK_VERSION)"	          	  	\
+	-DLIBSOUP_VERSION="$(SOUP_VERSION)"	            	\
+	-DRENDER=\""$(RENDER)"\"				\
+	-DRENDER_N=$(RENDER_N)					\
+	-DHAVE_DBUS=$(DBD)					\
+	-DDBUS_API_SUBJECT_TO_CHANGE				\
+	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
+
+
+#if ! HAVE_XPCOM_GLUE
+#INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
+#endif
 RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
       		<menu target=\"select\" id=\"org.gnome.evolution.mail.browser\">\n	\
@@ -345,7 +357,8 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 	org-gnome-evolution-rss.xml
 
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
-liborg_gnome_evolution_rss_la_SOURCES = rss.c gecko-utils.cpp
+SOURCES = rss.c $(am__append_1)
+liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
 evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
@@ -374,10 +387,10 @@ EXTRA_DIST = \
 	network-soup.c				\
 	misc.c					\
 	dbus.c					\
-	rss-config-factory.c			\
-	rss-config-factory.h			\
 	gecko-utils.cpp				\
 	gecko-utils.h				\
+	rss-config-factory.c			\
+	rss-config-factory.h			\
 	evolution-import-rss.c			\
 	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\

@@ -181,55 +181,49 @@ if test "x$have_gecko" != "xno"; then
 	if test $GECKO = libxul-embedding; then
 		PKG_CHECK_MODULES([GECKO],[libxul-embedding $gecko_cv_extra_pkg_dependencies  >= $gecko_min_version])
 		#GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags --define-variable=includetype=unstable libxul-embedding)"
-		#GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags --define-variable=includetype=unstable libxul-embedding)"
 	elif test $GECKO = firefox; then
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags firefox-xpcom)"
     		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
+		AC_DEFINE_UNQUOTED(HAVE_BUGGY_GECKO, 1, [workarund for a bug in shutdown gecko])
+		AC_SUBST(HAVE_BUGGY_GECKO)
 	elif test $GECKO = libxul; then
     		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
 	else
     		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
 	fi
-AC_SUBST([GECKO_CFLAGS])
-AC_SUBST([GECKO_LIBS])
-		#if test "x$have_gecko" != "xno"; then
-		AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
-		AC_DEFINE_UNQUOTED(HAVE_GTKMOZEMBED,1, [gtkmozembed render engine present])
-		AC_SUBST(HAVE_RENDERKIT)
-		AC_SUBST(HAVE_GTKMOZEMEBED)
+	AC_SUBST([GECKO_CFLAGS])
+	AC_SUBST([GECKO_LIBS])
+	AC_DEFINE_UNQUOTED(HAVE_RENDERKIT,1, [either webkit or gtkmozemebed render engines are present])
+	AC_DEFINE_UNQUOTED(HAVE_GECKO,1, [gecko render engine present])
+	AC_SUBST(HAVE_RENDERKIT)
+	AC_SUBST(HAVE_GECKO)
 #		RENDER_CFLAGS="$GECKO_CFLAGS -I$GECKO_INCLUDE_ROOT" 
 		RENDER_CFLAGS=$GECKO_CFLAGS 
 		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_LIBDIR
 		GECKO_HOME=$GECKO_LIBDIR
 		AC_SUBST([GECKO_RPATH])
-			if test "x$GECKO" == "xfirefox"; then
-			AC_DEFINE_UNQUOTED(HAVE_BUGGY_GECKO, 1, [workarund for a bug in shutdown gecko])
-			AC_SUBST(HAVE_BUGGY_GECKO)
-			fi
-			if test "x$GECKO" == "xxulrunner"; then
-			AC_DEFINE_UNQUOTED(HAVE_XULRUNNER, 1, [gecko flavour is xulrunner])
-			AC_SUBST(HAVE_XULRUNNER)
-			fi
-			if test "x$GECKO" == "xlibxul" -o "x$GECKO" == "xlibxul-embedding"; then
-			AC_DEFINE_UNQUOTED(HAVE_GECKO_1_9, 1, [at least gecko 1.9])
-			AC_SUBST(HAVE_GECKO_1_9)
-			fi
-		#fi
+	if test "x$GECKO" == "xxulrunner"; then
+		AC_DEFINE_UNQUOTED(HAVE_XULRUNNER, 1, [gecko flavour is xulrunner])
+		AC_SUBST(HAVE_XULRUNNER)
+	fi
+	if test "x$GECKO" == "xlibxul" -o "x$GECKO" == "xlibxul-embedding"; then
+		AC_DEFINE_UNQUOTED(HAVE_GECKO_1_9, 1, [at least gecko 1.9])
+		AC_SUBST(HAVE_GECKO_1_9)
+	fi
 #		_SAVE_CPPFLAGS="$CPPFLAGS"
 #               	CPPFLAGS="$CPPFLAGS $GECKO_CFLAGS"
-               	AC_MSG_CHECKING([[whether we have a xpcom glue]])
-               	AC_COMPILE_IFELSE(
-                       [AC_LANG_SOURCE(
-                               [[
+        AC_MSG_CHECKING([[whether we have a xpcom glue]])
+        AC_COMPILE_IFELSE(
+                 [AC_LANG_SOURCE(
+                       [[
                                  #ifndef XPCOM_GLUE
                                  #error "no xpcom glue found"
                                  #endif]]
                        )],
                        [gecko_cv_have_xpcom_glue=yes],
                        [gecko_cv_have_xpcom_glue=no])
-               	AC_MSG_RESULT([$gecko_cv_have_xpcom_glue])
+        AC_MSG_RESULT([$gecko_cv_have_xpcom_glue])
 #               	CPPFLAGS="$_SAVE_CPPFLAGS"
-               	AM_CONDITIONAL([HAVE_XPCOM_GLUE], [test "$gecko_cv_have_xpcom_glue" = "yes"])
 		AC_ARG_WITH([primary-render],
         		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
         			[RENDER=$with_primary_render], [RENDER=gtkhtml])
@@ -243,6 +237,8 @@ AC_SUBST([GECKO_LIBS])
 		fi
 	fi
 fi
+AM_CONDITIONAL([HAVE_GECKO], [test "x$have_gecko" = "xyes"])
+AM_CONDITIONAL([HAVE_XPCOM_GLUE], [test "$gecko_cv_have_xpcom_glue" = "yes"])
 
 # *******************************
 # webkit renderer

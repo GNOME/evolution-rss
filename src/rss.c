@@ -88,7 +88,7 @@ int rss_verbose_debug = 0;
 #include <libxml/HTMLparser.h>
 
 #ifdef HAVE_RENDERKIT
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
 #ifdef HAVE_GECKO_1_9
 #include <gtkmozembed.h>
 #else
@@ -1497,7 +1497,7 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 static void
 stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-#ifdef	HAVE_GTKMOZEMBED
+#ifdef	HAVE_GECKO
 	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 #endif
 #if HAVE_WEBKIT
@@ -1511,7 +1511,7 @@ reload_cb (GtkWidget *button, gpointer data)
 	switch (engine)
 	{
 		case 2:
-#ifdef	HAVE_GTKMOZEMBED
+#ifdef	HAVE_GECKO
 	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
        	gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), data);
 #endif
@@ -1570,7 +1570,7 @@ if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
 	}
 }
 
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
 void
 rss_mozilla_init(void)
 {
@@ -1585,6 +1585,7 @@ rss_mozilla_init(void)
 }
 #endif
 
+#ifdef HAVE_GECKO
 void
 render_set_preferences(void)
 {
@@ -1599,6 +1600,7 @@ render_set_preferences(void)
 	gecko_prefs_set_string("general.useragent.extra.firefox", agstr); 
 	g_free(agstr);
 }
+#endif
 
 #ifdef HAVE_RENDERKIT
 static gboolean
@@ -1627,7 +1629,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	}
 #endif
 
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
 	if (engine == 2)
 	{
 		if (!g_thread_supported ()) {
@@ -1657,7 +1659,7 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 	}
 #endif
 
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
 	if (engine == 2)
 	{
 		d(g_print("Render engine Gecko\n"));
@@ -1771,7 +1773,7 @@ pfree(EMFormatHTMLPObject *o)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
 	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
 	if (engine == 2)
 	{
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
@@ -3236,6 +3238,7 @@ rss_finalize(void)
 		gconf_client_get_int(rss_gconf, 
 			GCONF_KEY_HTML_RENDER, 
 			NULL));
+#ifdef HAVE_GECKO
 	//really find a better way to deal with this//
 	//I do not know how to shutdown gecko (gtk_moz_embed_pop_startup)
 	//crash in nsCOMPtr_base::assign_with_AddRef
@@ -3245,6 +3248,7 @@ rss_finalize(void)
 #else
 	gecko_shutdown();
 #endif
+#endif
 }
 
 guint
@@ -3252,11 +3256,11 @@ fallback_engine(void)
 {
 #ifdef HAVE_RENDERKIT
         guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
-#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
+#if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
         engine=0;
 #endif
 if (engine == 2) {
-#if !defined(HAVE_GTKMOZEMBED)
+#if !defined(HAVE_GECKO)
         engine=1;
 #endif
 }
@@ -3324,7 +3328,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
   				gconf_client_set_int(rss_gconf, 
 						GCONF_KEY_HTML_RENDER, render, NULL);
 			}
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
 			if (2 == render)
 				rss_mozilla_init();
 #endif

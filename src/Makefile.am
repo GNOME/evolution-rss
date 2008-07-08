@@ -19,9 +19,9 @@ INCLUDES =							\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
  
-if ! HAVE_XPCOM_GLUE
-INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
-endif
+#if ! HAVE_XPCOM_GLUE
+#INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
+#endif
 
 RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
@@ -67,7 +67,13 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 	org-gnome-evolution-rss.xml
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
-liborg_gnome_evolution_rss_la_SOURCES = rss.c gecko-utils.cpp
+
+SOURCES = rss.c
+if HAVE_GECKO
+SOURCES+= gecko-utils.cpp
+endif
+
+liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
 
 evolution_import_rss_SOURCES = evolution-import-rss.c
@@ -125,15 +131,16 @@ EXTRA_DIST = 					\
 	network-soup.c				\
 	misc.c					\
 	dbus.c					\
-	rss-config-factory.c			\
-	rss-config-factory.h			\
 	gecko-utils.cpp				\
 	gecko-utils.h				\
+	rss-config-factory.c			\
+	rss-config-factory.h			\
 	evolution-import-rss.c			\
 	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\
 	org-gnome-evolution-rss.error.xml	\
 	org-gnome-evolution-rss.xml
+
 
 if HAVE_DBUS
 bin_PROGRAMS = \

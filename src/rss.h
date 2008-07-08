@@ -272,7 +272,7 @@ static xmlNode *html_find (xmlNode *node, char *match);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
 gchar *decode_html_entities(gchar *str);
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif
 gpointer lookup_key(gpointer key);

@@ -24,6 +24,9 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* gecko render engine present */
+#undef HAVE_GECKO
+
 /* Define if we have gecko 1.7 */
 #undef HAVE_GECKO_1_7
 
@@ -44,9 +47,6 @@
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
-
-/* gtkmozembed render engine present */
-#undef HAVE_GTKMOZEMBED
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H

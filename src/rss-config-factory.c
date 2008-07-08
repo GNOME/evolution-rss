@@ -63,7 +63,7 @@ set_sensitive (GtkCellLayout   *cell_layout,
 #endif
 
   if (indices[0] == 2)
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
         sensitive = 1;
 #else
         sensitive = 0;
@@ -96,7 +96,7 @@ render_engine_changed (GtkComboBox *dropdown, GCallback *user_data)
                 return;
         if (!id) id = 10;
         gconf_client_set_int(rss_gconf, GCONF_KEY_HTML_RENDER, id, NULL);
-#ifdef HAVE_GTKMOZEMBED
+#ifdef HAVE_GECKO
         if (id == 2)
                 rss_mozilla_init();
 #endif
@@ -1586,7 +1586,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
                         break;
 #endif
                 case 2:
-#ifndef HAVE_GTKMOZEMBED
+#ifndef HAVE_GECKO
                         gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
                         break;
 #endif
@@ -1601,7 +1601,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
                                         set_sensitive,
                                         NULL, NULL);
 
-#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
+#if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
         GtkWidget *label_webkit = glade_xml_get_widget(ui->xml, "label_webkits");
         gtk_label_set_text(GTK_LABEL(label_webkit), _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
         gtk_widget_show(label_webkit);
@@ -1867,7 +1867,7 @@ rss_config_control_new (void)
 			break;
 #endif
 		case 2:
-#ifndef HAVE_GTKMOZEMBED
+#ifndef HAVE_GECKO
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
 			break;
 #endif
@@ -1882,7 +1882,7 @@ rss_config_control_new (void)
 					set_sensitive,
 					NULL, NULL);
 
-#if !defined(HAVE_GTKMOZEMBED) && !defined (HAVE_WEBKIT)
+#if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
 	GtkWidget *label_webkit = glade_xml_get_widget(sf->gui, "label_webkits");
 	gtk_label_set_text(GTK_LABEL(label_webkit), _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
 	gtk_widget_show(label_webkit);

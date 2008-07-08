@@ -1,3 +1,11 @@
+2008-07-08  Lucian Langa  <lucilanga@gnome.org>
+
+	* configure.ac: rename HAVE_GTKMOZEMBED
+	to HAVE_GECKO reflect more generally
+	it's purpose
+	* configure.ac: fix --disable-gecko 
+	option
+
 2008-07-05  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: enable
