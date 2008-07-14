@@ -31,7 +31,6 @@
 	* hook feed properties in folder properties
 	* clist hint should be the folder name not the feed name
 	* strip html tags from title
-	* implement foaf and other possible blogrolls type file
 	* if necessary implement config code for evo 2.12
 	* notify in status bar, no of feeds
 	* fix recursivity on layer_find_pos

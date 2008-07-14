@@ -26,6 +26,10 @@
 
 #include "rss.h"
 
+static guint feed_enabled = 0;
+static guint feed_validate = 0;
+static guint feed_html = 0;
+
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
 
@@ -1000,6 +1004,9 @@ import_one_feed(gchar *url, gchar *title)
         add_feed *feed = g_new0(add_feed, 1);
         feed->changed=0;
         feed->add=1;
+        feed->fetch_html = feed_html;
+        feed->validate = feed_validate;
+	feed->enabled = feed_enabled;
 	feed->feed_url = g_strdup(url);
 	feed->feed_name = decode_html_entities(title);
 	/* we'll get rid of this as soon as we fetch unblocking */
@@ -1019,13 +1026,41 @@ import_one_feed(gchar *url, gchar *title)
 	return res;
 }
 
-void
-import_opml(gchar *file, add_feed *feed)
+/*
+ * type 0/1 - opml/foaf
+ */
+
+xmlNode*
+iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type)
 {
-	gchar *url;
+	*url = NULL;
+	*title = NULL;
+
+	if (type == 0) {
+        	src = html_find(src, "outline");
+        	*url = xmlGetProp(src, "xmlUrl");
+		*title = xmlGetProp(src, "title");
+	} else if (type == 1) {
+		xmlNode *my;
+		src = html_find(src, "member");
+		my = layer_find_pos(src, "member", "Agent");
+		*title = xmlCharStrdup(layer_find(my, "name", NULL));
+		my =  html_find(my, "channel");
+		*url =  xmlGetProp(my, "about");
+	}
+	return src;
+	
+}
+
+void
+import_opml(gchar *file)
+{
+	gchar *url = NULL;
+	xmlChar *name = NULL;
         xmlChar *buff = NULL;
         guint total = 0;
         guint current = 0;
+	guint type = 0; //file type
         gchar *what = NULL;
         GtkWidget *import_dialog;
         GtkWidget *import_label;
@@ -1033,6 +1068,7 @@ import_opml(gchar *file, add_feed *feed)
 
         xmlNode *src = (xmlNode *)xmlParseFile (file);
         xmlNode *doc = src;
+	xmlNode *my = src;
         gchar *msg = g_strdup(_("Importing feeds..."));
         import_dialog = e_error_new((GtkWindow *)rf->preferences, "shell:importing", msg, NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
@@ -1053,63 +1089,75 @@ import_opml(gchar *file, add_feed *feed)
         g_free(msg);
 	if (src=src->children)
 	{
-		g_print("found %s\n", src->name);
+		d(g_print("found %s\n", src->name));
 		if (!g_ascii_strcasecmp(src->name, "rdf")) {
 			while (src) {
 				g_print("my cont:%s\n", src->content);
 				src=src->children;
 				src = src->next;
 				g_print("found %s\n", src->name);
-				g_print("my cont:%s\n", src->content);
-				src=src->children;
+				src = src->children;
+				d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
 				src = src->next;
-				xmlNode *my = src;
-				while (src = html_find(src, "member")) {
-					my = layer_find_pos(src, "member", "Agent");
-					g_print("my:%s\n", layer_find(my, "name", NULL));
-					my =  html_find(my, "Document");
-					g_print("my:%s\n", xmlGetProp(my, "about"));
+				while (src = iterate_import_file(src, &url, &name, 1)) {
+                			if (url) {
+                        			total++;
+                        			xmlFree(url);
+                			}
+					if (name) xmlFree(name);
 				}
+			g_print("total:%d\n", total);
+			type = 1;
 			}
 		}
 		else if (!g_ascii_strcasecmp(src->name, "opml")) {
 			
-        		while (src = html_find(src, "outline")) {
-                		url = xmlGetProp((xmlNode *)src, "xmlUrl");
-                		if (url) {
+			while (src = iterate_import_file(src, &url, &name, 0)) {
+                		if (url && strlen(url)) {
                         		total++;
                         		xmlFree(url);
                 		}
+				if (name) xmlFree(name);
         		}
+			type = 0;
 			g_print("total:%d\n", total);
 		}
 	}	
         src = doc;
-	//force out for now
-	goto out;
+//	//force out for now
+//	goto out;
         //we'll be safer this way
         rf->import = 1;
+	name = NULL;
         while (gtk_events_pending ())
                 gtk_main_iteration ();
-        while (src = html_find(src, "outline"))
-        {
-                url = xmlGetProp((xmlNode *)src, "xmlUrl");
-                if (url && strlen(url))
-                {
+	if (type == 1) {
+		src=src->children;
+		g_print("my cont:%s\n", src->content);
+		src=src->children;
+		src = src->next;
+		g_print("found %s\n", src->name);
+		src = src->children;
+		d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
+		src = src->next;
+	}
+	while (src = iterate_import_file(src, &url, &name, type)) {
+                if (url && strlen(url)) {
+		g_print("url:%s\n", url);
                         if (rf->cancel)
                         {
                                 if (src) xmlFree(src);
                                 rf->cancel = 0;
                                 goto out;
                         }
-                        gchar *name = xmlGetProp((xmlNode *)src, "title");
                         gtk_label_set_text(GTK_LABEL(import_label), name);
 #if GTK_VERSION >= 2006000
                         gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
                         gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
 			import_one_feed(url, name);
-                        xmlFree(name);
+			if (name) xmlFree(name);
+			if (url) xmlFree(url);
 
                         while (gtk_events_pending ())
                                 gtk_main_iteration ();
@@ -1147,7 +1195,7 @@ select_file_response(GtkWidget *selector, guint response, gpointer user_data)
                 if (name)
                 {
                         gtk_widget_hide(selector);
-                        import_opml(name, user_data);
+                        import_opml(name);
                         g_free(name);
                 }
         }
@@ -1156,27 +1204,26 @@ select_file_response(GtkWidget *selector, guint response, gpointer user_data)
 }
 
 static void
-import_toggle_cb_html (GtkWidget *widget, add_feed *data)
+import_toggle_cb_html (GtkWidget *widget, gpointer data)
 {
-        data->fetch_html  = 1-gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+        feed_html  = 1-gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 }
 
 static void
-import_toggle_cb_valid (GtkWidget *widget, add_feed *data)
+import_toggle_cb_valid (GtkWidget *widget, gpointer data)
 {
-        data->validate  = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+        feed_validate  = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 }
 
 static void
-import_toggle_cb_ena (GtkWidget *widget, add_feed *data)
+import_toggle_cb_ena (GtkWidget *widget, gpointer data)
 {
-        data->enabled  = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+        feed_enabled  = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 }
 
 static void
 decorate_import_fs (gpointer data)
 {
-        add_feed *feed = g_new0(add_feed, 1);
         gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (data), TRUE);
         gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
         gtk_file_chooser_set_local_only (data, FALSE);
@@ -1234,22 +1281,22 @@ decorate_import_fs (gpointer data)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton3), 1);
 
         gtk_file_chooser_set_extra_widget(data, vbox1);
-        feed->fetch_html = 0;
-        feed->validate = feed->enabled = 1;
+        feed_html = 0;
+        feed_validate = feed_enabled = 1;
 
         g_signal_connect(checkbutton1,
                         "toggled",
                         G_CALLBACK(import_toggle_cb_html),
-                        feed);
+                        NULL);
         g_signal_connect(checkbutton2,
                         "toggled",
                         G_CALLBACK(import_toggle_cb_ena),
-                        feed);
+                        NULL);
         g_signal_connect(checkbutton3,
                         "toggled",
                         G_CALLBACK(import_toggle_cb_valid),
-                        feed);
-        g_signal_connect(data, "response", G_CALLBACK(select_file_response), feed);
+                        NULL);
+        g_signal_connect(data, "response", G_CALLBACK(select_file_response), NULL);
         g_signal_connect(data, "destroy", G_CALLBACK(gtk_widget_destroy), data);
 }
 

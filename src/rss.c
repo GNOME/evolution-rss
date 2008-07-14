@@ -138,6 +138,7 @@ GtkWidget *flabel;
 guint nettime_id = 0;
 guint force_update = 0;
 GHashTable *custom_timeout;
+GtkStatusIcon *status_icon = NULL;
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -2856,22 +2857,52 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	{
 		d(g_print("custom key:%s\n", key));
 		guint ttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key)));
-		CDATA *cdata = g_new0(CDATA, 1);
-		cdata->key = key;
-		cdata->value = value;
-		cdata->user_data = user_data;
-		time_id = GPOINTER_TO_INT(g_hash_table_lookup(custom_timeout,
+		if (ttl) {
+			CDATA *cdata = g_new0(CDATA, 1);
+			cdata->key = key;
+			cdata->value = value;
+			cdata->user_data = user_data;
+			time_id = GPOINTER_TO_INT(g_hash_table_lookup(custom_timeout,
 							lookup_key(key)));
-		if (time_id)
-			g_source_remove(time_id);
-		time_id = g_timeout_add (ttl * 60 * 1000,
+			if (time_id)
+				g_source_remove(time_id);
+			time_id = g_timeout_add (4*60*1000, //ttl * 60 * 1000,
                            (GtkFunction) custom_update_articles,
                            cdata);
-		g_hash_table_replace(custom_timeout, 
+			g_hash_table_replace(custom_timeout, 
 				g_strdup(lookup_key(key)), 
 				GINT_TO_POINTER(time_id));
+		}
 	}
 	
+}
+
+static void
+icon_activated (GtkStatusIcon *icon, gpointer pnotify)
+{
+        gtk_status_icon_set_visible (status_icon, FALSE);
+        g_object_unref (status_icon);
+
+        status_icon = NULL;
+}
+
+gboolean
+flicker_stop(gpointer user_data)
+{
+        gtk_status_icon_set_blinking (status_icon, FALSE);
+	return FALSE;
+}
+
+static void
+flicker_status_icon(void)
+{
+	gchar *total = g_strdup_printf("Feeds: %d articles", farticle);
+	gtk_status_icon_set_tooltip (status_icon, total);
+        gtk_status_icon_set_visible (status_icon, TRUE);
+        gtk_status_icon_set_blinking (status_icon, TRUE);
+	g_signal_connect (G_OBJECT (status_icon), "activate", G_CALLBACK (icon_activated), NULL);
+	g_timeout_add(30*1000, flicker_stop, NULL);
+        g_free(total);
 }
 
 static void
@@ -2913,6 +2944,15 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 		
 	}
 	custom_feed_timeout();
+        
+
+	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+	                                    "rss-24.png",
+                                            NULL);
+
+	status_icon = gtk_status_icon_new ();
+        gtk_status_icon_set_from_file (status_icon, iconfile);
+        gtk_status_icon_set_visible (status_icon, FALSE);
         
         /* hook in rename event to catch feeds folder rename */
 	CamelStore *store = mail_component_peek_local_store(NULL);
@@ -4464,6 +4504,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 				free_cf(CF);
 			}
 			farticle++;
+			flicker_status_icon();
 		g_free(p);
 		}
 		d(g_print("put success()\n"));

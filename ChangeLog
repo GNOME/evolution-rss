@@ -1,3 +1,9 @@
+2008-07-14  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c: suppport
+	for foaf importing
+	* src/rss.c: add status icon
+
 2008-07-08  Lucian Langa  <lucilanga@gnome.org>
 
 	* configure.ac: rename HAVE_GTKMOZEMBED

@@ -20,7 +20,7 @@ INCLUDES =							\
 
  
 #if ! HAVE_XPCOM_GLUE
-#INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
+INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
 #endif
 
 RSS_MENU = \
