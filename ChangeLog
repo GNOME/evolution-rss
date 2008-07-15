@@ -1,5 +1,7 @@
 2008-07-14  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/configure.in: force pickup of
+	nspr includes
 	* src/rss-config-factory.c: suppport
 	for foaf importing
 	* src/rss.c: add status icon

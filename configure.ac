@@ -180,7 +180,8 @@ esac
 if test "x$have_gecko" != "xno"; then
 	if test $GECKO = libxul-embedding; then
 		PKG_CHECK_MODULES([GECKO],[libxul-embedding $gecko_cv_extra_pkg_dependencies  >= $gecko_min_version])
-		#GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags --define-variable=includetype=unstable libxul-embedding)"
+		dnl https://bugzilla.mozilla.org/show_bug.cgi?id=442009
+		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags nspr)"
 	elif test $GECKO = firefox; then
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags firefox-xpcom)"
     		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
