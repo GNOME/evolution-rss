@@ -2878,6 +2878,21 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 }
 
 static void
+create_status_icon(void)
+{
+	if (!status_icon) {
+		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+	                                    "rss-24.png",
+                                            NULL);
+
+		status_icon = gtk_status_icon_new ();
+        	gtk_status_icon_set_from_file (status_icon, iconfile);
+		g_free(iconfile);
+	}
+        gtk_status_icon_set_visible (status_icon, FALSE);
+}
+        
+static void
 icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 {
         gtk_status_icon_set_visible (status_icon, FALSE);
@@ -2896,6 +2911,7 @@ flicker_stop(gpointer user_data)
 static void
 flicker_status_icon(void)
 {
+	create_status_icon();
 	gchar *total = g_strdup_printf("Feeds: %d articles", farticle);
 	gtk_status_icon_set_tooltip (status_icon, total);
         gtk_status_icon_set_visible (status_icon, TRUE);
@@ -2944,16 +2960,7 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 		
 	}
 	custom_feed_timeout();
-        
 
-	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss-24.png",
-                                            NULL);
-
-	status_icon = gtk_status_icon_new ();
-        gtk_status_icon_set_from_file (status_icon, iconfile);
-        gtk_status_icon_set_visible (status_icon, FALSE);
-        
         /* hook in rename event to catch feeds folder rename */
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	camel_object_hook_event(store, "folder_renamed",
