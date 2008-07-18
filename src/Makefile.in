@@ -34,7 +34,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@HAVE_GECKO_TRUE@am__append_1 = gecko-utils.cpp
+@HAVE_XPCOM_GLUE_FALSE@am__append_1 = -DGECKO_HOME=\""$(GECKO_HOME)"\"
+@HAVE_GECKO_TRUE@am__append_2 = gecko-utils.cpp
 @HAVE_DBUS_TRUE@bin_PROGRAMS = evolution-import-rss$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -318,8 +319,6 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-
-#if ! HAVE_XPCOM_GLUE
 INCLUDES = -I$(EVOLUTION_SOURCE) -I$(top_srcdir) $(RENDER_CFLAGS) \
 	$(DBUS_CFLAGS) -DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\"" \
 	-DLOCALEDIR="\"$(LOCALEDIR)\"" \
@@ -331,8 +330,7 @@ INCLUDES = -I$(EVOLUTION_SOURCE) -I$(top_srcdir) $(RENDER_CFLAGS) \
 	-DLIBSOUP_VERSION="$(SOUP_VERSION)" -DRENDER=\""$(RENDER)"\" \
 	-DRENDER_N=$(RENDER_N) -DHAVE_DBUS=$(DBD) \
 	-DDBUS_API_SUBJECT_TO_CHANGE $(EVOLUTION_RSS_EPLUGIN_CFLAGS) \
-	-DGECKO_HOME=\""$(GECKO_HOME)"\"
-#endif
+	$(am__append_1)
 RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
       		<menu target=\"select\" id=\"org.gnome.evolution.mail.browser\">\n	\
@@ -349,9 +347,10 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 	org-gnome-evolution-rss.xml
 
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
-SOURCES = rss.c $(am__append_1)
+SOURCES = rss.c $(am__append_2)
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
+liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) 
+#$(GECKO_RPATH)
 evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
 schemadir = $(GCONF_SCHEMA_FILE_DIR)

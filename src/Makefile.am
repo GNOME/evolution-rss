@@ -19,9 +19,9 @@ INCLUDES =							\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
  
-#if ! HAVE_XPCOM_GLUE
+if ! HAVE_XPCOM_GLUE
 INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
-#endif
+endif
 
 RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
@@ -74,7 +74,8 @@ SOURCES+= gecko-utils.cpp
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(GECKO_RPATH)
+liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) 
+#$(GECKO_RPATH)
 
 evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(DBUS_LIBS)

@@ -2878,6 +2878,15 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 }
 
 static void
+icon_activated (GtkStatusIcon *icon, gpointer pnotify)
+{
+        gtk_status_icon_set_visible (status_icon, FALSE);
+        g_object_unref (status_icon);
+
+        status_icon = NULL;
+}
+
+static void
 create_status_icon(void)
 {
 	if (!status_icon) {
@@ -2888,19 +2897,11 @@ create_status_icon(void)
 		status_icon = gtk_status_icon_new ();
         	gtk_status_icon_set_from_file (status_icon, iconfile);
 		g_free(iconfile);
+		g_signal_connect (G_OBJECT (status_icon), "activate", G_CALLBACK (icon_activated), NULL);
 	}
-        gtk_status_icon_set_visible (status_icon, FALSE);
+   //     gtk_status_icon_set_visible (status_icon, FALSE);
 }
         
-static void
-icon_activated (GtkStatusIcon *icon, gpointer pnotify)
-{
-        gtk_status_icon_set_visible (status_icon, FALSE);
-        g_object_unref (status_icon);
-
-        status_icon = NULL;
-}
-
 gboolean
 flicker_stop(gpointer user_data)
 {
@@ -2909,14 +2910,14 @@ flicker_stop(gpointer user_data)
 }
 
 static void
-flicker_status_icon(void)
+flicker_status_icon(gchar *channel)
 {
 	create_status_icon();
-	gchar *total = g_strdup_printf("Feeds: %d articles", farticle);
+	gchar *total = g_strdup_printf("Feeds: %d articles in %s", farticle, channel);
 	gtk_status_icon_set_tooltip (status_icon, total);
         gtk_status_icon_set_visible (status_icon, TRUE);
-        gtk_status_icon_set_blinking (status_icon, TRUE);
-	g_signal_connect (G_OBJECT (status_icon), "activate", G_CALLBACK (icon_activated), NULL);
+	if (!gtk_status_icon_get_blinking(status_icon))
+        	gtk_status_icon_set_blinking (status_icon, TRUE);
 	g_timeout_add(30*1000, flicker_stop, NULL);
         g_free(total);
 }
@@ -3289,13 +3290,15 @@ rss_finalize(void)
 	//really find a better way to deal with this//
 	//I do not know how to shutdown gecko (gtk_moz_embed_pop_startup)
 	//crash in nsCOMPtr_base::assign_with_AddRef
-#ifdef HAVE_BUGGY_GECKO
+/*#ifdef HAVE_BUGGY_GECKO
 	if (2 == render)
 		system("killall -SIGTERM evolution");
 #else
 	gecko_shutdown();
+#endif*/
 #endif
-#endif
+	gecko_shutdown();
+	g_print("endd.\n");
 }
 
 guint
@@ -4511,7 +4514,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 				free_cf(CF);
 			}
 			farticle++;
-			flicker_status_icon();
+			flicker_status_icon(chn_name);
 		g_free(p);
 		}
 		d(g_print("put success()\n"));
