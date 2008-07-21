@@ -34,3 +34,4 @@
 	* if necessary implement config code for evo 2.12
 	* notify in status bar, no of feeds
 	* fix recursivity on layer_find_pos
+	* fix annoying cursor jump when browsing through evo-rss folders
