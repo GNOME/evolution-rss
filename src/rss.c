@@ -2915,24 +2915,27 @@ void
 flaten_status(gpointer msg, gpointer user_data)
 {
 	if (strlen(msg))
-		flat_status_msg = g_strconcat(msg, "\n", NULL);
+		if (flat_status_msg)
+			flat_status_msg = g_strconcat(flat_status_msg, msg, NULL);
+		else
+			flat_status_msg = g_strconcat(msg, NULL);
 }
 
 static void
 flicker_status_icon(gchar *channel, gchar *title)
 {
-	gchar *total = g_strdup_printf("%s: <b>%s</b>", channel, title);
+	gchar *total = g_strdup_printf("%s: %s\n\n", channel, title);
 	create_status_icon();
-	g_queue_push_tail(status_msg, total);	
+	g_queue_push_tail(status_msg, total);
 	//g_free(total);
-	if (g_queue_get_length(status_msg) == 5)
+	if (g_queue_get_length(status_msg) == 6)
 		g_queue_pop_head(status_msg);
 	g_queue_foreach(status_msg, flaten_status, flat_status_msg);
 	gtk_status_icon_set_tooltip (status_icon, flat_status_msg);
         gtk_status_icon_set_visible (status_icon, TRUE);
 	if (!gtk_status_icon_get_blinking(status_icon))
         	gtk_status_icon_set_blinking (status_icon, TRUE);
-	g_timeout_add(30*1000, flicker_stop, NULL);
+	g_timeout_add(15 * 1000, flicker_stop, NULL);
         g_free(flat_status_msg);
 	flat_status_msg = NULL;
 }
