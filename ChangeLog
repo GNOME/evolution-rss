@@ -1,3 +1,7 @@
+2008-07-22  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: implement status icon message
+
 2008-07-14  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/configure.in: force pickup of

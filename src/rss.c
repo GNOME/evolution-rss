@@ -139,6 +139,8 @@ guint nettime_id = 0;
 guint force_update = 0;
 GHashTable *custom_timeout;
 GtkStatusIcon *status_icon = NULL;
+GQueue *status_msg;
+gchar *flat_status_msg;
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -2909,17 +2911,30 @@ flicker_stop(gpointer user_data)
 	return FALSE;
 }
 
-static void
-flicker_status_icon(gchar *channel)
+void
+flaten_status(gpointer msg, gpointer user_data)
 {
+	if (strlen(msg))
+		flat_status_msg = g_strconcat(msg, "\n", NULL);
+}
+
+static void
+flicker_status_icon(gchar *channel, gchar *title)
+{
+	gchar *total = g_strdup_printf("%s: <b>%s</b>", channel, title);
 	create_status_icon();
-	gchar *total = g_strdup_printf("Feeds: %d articles in %s", farticle, channel);
-	gtk_status_icon_set_tooltip (status_icon, total);
+	g_queue_push_tail(status_msg, total);	
+	//g_free(total);
+	if (g_queue_get_length(status_msg) == 5)
+		g_queue_pop_head(status_msg);
+	g_queue_foreach(status_msg, flaten_status, flat_status_msg);
+	gtk_status_icon_set_tooltip (status_icon, flat_status_msg);
         gtk_status_icon_set_visible (status_icon, TRUE);
 	if (!gtk_status_icon_get_blinking(status_icon))
         	gtk_status_icon_set_blinking (status_icon, TRUE);
 	g_timeout_add(30*1000, flicker_stop, NULL);
-        g_free(total);
+        g_free(flat_status_msg);
+	flat_status_msg = NULL;
 }
 
 static void
@@ -3354,6 +3369,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->feed_queue = 0;
 			rf->main_folder = get_main_folder();
 			rf->soup_auth_retry = 1;
+			status_msg = g_queue_new();
 			get_feed_folders();
 #if HAVE_DBUS
 			d(g_print("init_dbus()\n"));
@@ -4512,7 +4528,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 				free_cf(CF);
 			}
 			farticle++;
-			flicker_status_icon(chn_name);
+			flicker_status_icon(chn_name, p);
 		g_free(p);
 		}
 		d(g_print("put success()\n"));
