@@ -182,8 +182,6 @@ if test "x$have_gecko" != "xno"; then
 		PKG_CHECK_MODULES([GECKO],[libxul-embedding $gecko_cv_extra_pkg_dependencies  >= $gecko_min_version])
 		dnl https://bugzilla.mozilla.org/show_bug.cgi?id=442009
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags nspr)"
-		AC_DEFINE_UNQUOTED(HAVE_BUGGY_GECKO, 1, [workarund for a bug in shutdown gecko])
-		AC_SUBST(HAVE_BUGGY_GECKO)
 	elif test $GECKO = firefox; then
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags firefox-xpcom)"
     		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])

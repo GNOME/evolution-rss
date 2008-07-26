@@ -1635,11 +1635,6 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 #ifdef HAVE_GECKO
 	if (engine == 2)
 	{
-		if (!g_thread_supported ()) {
-                	g_thread_init (NULL);
-			gdk_threads_init();
-        	}
-
 		rf->mozembed = gtk_moz_embed_new();
 		render_set_preferences();
 

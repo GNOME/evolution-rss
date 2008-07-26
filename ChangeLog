@@ -1,3 +1,8 @@
+2008-07-26  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/gecko-utils.cpp - shutdown buggy
+	gecko without sigterm
+
 2008-07-22  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: implement status icon message
