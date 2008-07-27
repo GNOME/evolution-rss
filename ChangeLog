@@ -1,3 +1,8 @@
+2008-07-27  Lucian Langa  <lucilanga@gnome.org>
+	
+	* src/configure.ac bump version
+	to devel
+
 2008-07-26  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/gecko-utils.cpp - shutdown buggy

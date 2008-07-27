@@ -1966,21 +1966,26 @@ void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 	g_print("refrish %s\n", t->uri);
 }
 
-//make it work only for 2.24
-/*void org_gnome_cooly_folder_icon(void *ep, EMEventTargetFolderIcon *t)
+#if (EVOLUTION_VERSION >= 22305)
+void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
+
+	if (g_ascii_strncasecmp(t->folder_name, "RSS", 3))
+		return;
+
 	if (!initialised)
 	{
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss-22.png",
+	                                    "rss.png",
 						NULL);
 		folder_icon = e_icon_factory_get_icon (iconfile, E_ICON_SIZE_MENU);
 		g_free(iconfile);
 		initialised = TRUE;
 	}
 	g_object_set (t->renderer, "pixbuf", folder_icon, "visible", 1, NULL);
-}*/
+}
+#endif
 
 #ifdef EVOLUTION_2_12
 void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t);

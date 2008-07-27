@@ -35,3 +35,4 @@
 	* notify in status bar, no of feeds
 	* fix recursivity on layer_find_pos
 	* fix annoying cursor jump when browsing through evo-rss folders
+	* try harder to get feeds images (check by size 0)
