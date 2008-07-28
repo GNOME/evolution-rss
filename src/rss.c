@@ -181,6 +181,7 @@ struct _org_gnome_rss_controls_pobject {
 };*/
 
 static GdkPixbuf *folder_icon;
+GHashTable *icons = NULL;
 extern int xmlSubstituteEntitiesDefaultValue;
 
 rssfeed *rf = NULL;
@@ -1966,15 +1967,39 @@ void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 	g_print("refrish %s\n", t->uri);
 }
 
-#if (EVOLUTION_VERSION >= 22305)
+#if (EVOLUTION_VERSION >= 22306)
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
-
+	GdkImage *icon;
 	if (g_ascii_strncasecmp(t->folder_name, "RSS", 3))
 		return;
+	if (!g_ascii_strcasecmp(t->folder_name, "RSS"))
+		goto normal;
+	gchar *rss_folder = extract_main_folder(t->folder_name);
+	if (!rss_folder)
+		return;
+	if (!icons)
+		icons = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+	gchar *key = g_hash_table_lookup(rf->hrname,
+				lookup_feed_folder(rss_folder));
+	if (!key)
+		goto normal;
+	if (!(icon = g_hash_table_lookup(icons, key))) {
+		gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+        	gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+        	if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
+			icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
+			g_hash_table_insert(icons, g_strdup(key), icon);
+			g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+			return;
+		}
+	} else {
+		g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+		return;
+	}
 
-	if (!initialised)
+normal:	if (!initialised)
 	{
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
 	                                    "rss.png",

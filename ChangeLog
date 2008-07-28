@@ -1,5 +1,8 @@
 2008-07-27  Lucian Langa  <lucilanga@gnome.org>
 	
+	* src/rss.c,
+	src/org-gnome-evolution-rss.eplug.xml:
+	add suport for folder custom icons
 	* src/configure.ac bump version
 	to devel
 
