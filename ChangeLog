@@ -1,3 +1,10 @@
+2008-07-29  Lucian Langa  <lucilanga@gnome.org>
+
+	* pixmaps/Makefile.am:
+	* pixmaps/rss-16.png:
+	Install correct icon for folders
+	thanks Michael
+
 2008-07-27  Lucian Langa  <lucilanga@gnome.org>
 	
 	* src/rss.c,

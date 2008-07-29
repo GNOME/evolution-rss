@@ -2002,7 +2002,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 normal:	if (!initialised)
 	{
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss.png",
+	                                    "rss-16.png",
 						NULL);
 		folder_icon = e_icon_factory_get_icon (iconfile, E_ICON_SIZE_MENU);
 		g_free(iconfile);
