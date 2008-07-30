@@ -32,7 +32,6 @@
 	* clist hint should be the folder name not the feed name
 	* strip html tags from title
 	* if necessary implement config code for evo 2.12
-	* notify in status bar, no of feeds
 	* fix recursivity on layer_find_pos
 	* fix annoying cursor jump when browsing through evo-rss folders
 	* try harder to get feeds images (check by size 0)

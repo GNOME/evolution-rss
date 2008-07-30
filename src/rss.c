@@ -82,6 +82,7 @@ int rss_verbose_debug = 0;
 #include <glade/glade.h>
 #include <shell/evolution-config-control.h>
 #include <shell/e-component-view.h>///
+#include <shell/es-event.h>
 
 #include <libxml/parserInternals.h>
 #include <libxml/xmlmemory.h>
@@ -180,6 +181,7 @@ struct _org_gnome_rss_controls_pobject {
         guint changed_id;
 };*/
 
+GtkWidget *evo_window;
 static GdkPixbuf *folder_icon;
 GHashTable *icons = NULL;
 extern int xmlSubstituteEntitiesDefaultValue;
@@ -2904,13 +2906,48 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	
 }
 
+void gtkut_window_popup(GtkWidget *window)
+{
+        gint x, y, sx, sy, new_x, new_y;
+
+        g_return_if_fail(window != NULL);
+        g_return_if_fail(window->window != NULL);
+
+        sx = gdk_screen_width();
+        sy = gdk_screen_height();
+
+        gdk_window_get_origin(window->window, &x, &y);
+        new_x = x % sx; if (new_x < 0) new_x = 0;
+        new_y = y % sy; if (new_y < 0) new_y = 0;
+        if (new_x != x || new_y != y)
+                gdk_window_move(window->window, new_x, new_y);
+
+        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(window), FALSE);
+        gtk_window_present(GTK_WINDOW(window));
+#ifdef G_OS_WIN32
+        /* ensure that the window is displayed at the top */
+        gdk_window_show(window->window);
+#endif
+}
+
 static void
 icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 {
-        gtk_status_icon_set_visible (status_icon, FALSE);
-        g_object_unref (status_icon);
+        GList *p, *pnext;
+        for (p = evo_window; p != NULL; p = pnext) {
+                pnext = p->next;
 
-        status_icon = NULL;
+                if (gtk_window_is_active(GTK_WINDOW(p->data)))
+		{
+                        gtk_window_iconify(GTK_WINDOW(p->data));
+			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(p->data), TRUE);
+		}
+		else
+		{
+			gtkut_window_popup(GTK_WINDOW(p->data));
+			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(p->data), FALSE);
+		}
+        }
 }
 
 static void
@@ -2981,6 +3018,64 @@ static void
 rss_online(CamelObject *o, void *event_data, void *data)
 {
 	rf->online =  camel_session_is_online (o);
+}
+
+struct __EShellPrivate {
+        /* IID for registering the object on OAF.  */
+        char *iid;
+
+        GList *windows;
+
+        /* EUriSchemaRegistry *uri_schema_registry; FIXME */
+//        EComponentRegistry *component_registry;
+
+        /* Names for the types of the folders that have maybe crashed.  */
+        /* FIXME TODO */
+        GList *crash_type_names; /* char * */
+
+        /* Line status and controllers  */
+//        EShellLineStatus line_status;
+        int line_status_pending;
+//        EShellLineStatus line_status_working;
+  //      EvolutionListener *line_status_listener;
+
+        /* Settings Dialog */
+        union {
+                GtkWidget *widget;
+                gpointer pointer;
+        } settings_dialog;
+
+        /* If we're quitting and things are still busy, a timeout handler */
+        guint quit_timeout;
+
+        /* Whether the shell is succesfully initialized.  This is needed during
+ *            the start-up sequence, to avoid CORBA calls to do make wrong things
+ *                       to happen while the shell is initializing.  */
+        unsigned int is_initialized : 1;
+
+        /* Wether the shell is working in "interactive" mode or not.
+ *            (Currently, it's interactive IIF there is at least one active
+ *                       view.)  */
+        unsigned int is_interactive : 1;
+
+        /* Whether quit has been requested, and the shell is now waiting for
+ *            permissions from all the components to quit.  */
+        unsigned int preparing_to_quit : 1;
+};
+typedef struct __EShellPrivate EShellPrivate;
+
+struct _EShell {
+        BonoboObject parent;
+
+        EShellPrivate *priv;
+};
+typedef struct _EShell EShell;
+
+void get_shell(void *ep, ESEventTargetShell *t)
+{
+	EShell *shell = t->shell;
+	EShellPrivate *priv = (EShellPrivate *)shell->priv;
+	evo_window = priv->windows;
 }
 
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
@@ -3329,17 +3424,17 @@ rss_finalize(void)
 		gconf_client_get_int(rss_gconf, 
 			GCONF_KEY_HTML_RENDER, 
 			NULL));
-#ifdef HAVE_GECKO
+/*#ifdef HAVE_GECKO
 	//really find a better way to deal with this//
 	//I do not know how to shutdown gecko (gtk_moz_embed_pop_startup)
 	//crash in nsCOMPtr_base::assign_with_AddRef
 #ifdef HAVE_BUGGY_GECKO
 	if (2 == render)
 		system("killall -SIGTERM evolution");
-#else
+#else*/
 	gecko_shutdown();
-#endif
-#endif
+/*#endif
+#endif*/
 }
 
 guint

@@ -1,3 +1,7 @@
+2008-07-30  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: status icon factory
+
 2008-07-29  Lucian Langa  <lucilanga@gnome.org>
 
 	* pixmaps/Makefile.am:
