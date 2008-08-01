@@ -2939,11 +2939,13 @@ icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 
                 if (gtk_window_is_active(GTK_WINDOW(p->data)))
 		{
+			g_print("window active\n");
                         gtk_window_iconify(GTK_WINDOW(p->data));
 			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(p->data), TRUE);
 		}
 		else
 		{
+                        gtk_window_iconify(GTK_WINDOW(p->data));
 			gtkut_window_popup(GTK_WINDOW(p->data));
 			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(p->data), FALSE);
 		}
