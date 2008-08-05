@@ -1,3 +1,7 @@
+2008-08-05  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: update_feed_image()
+
 2008-07-30  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: status icon factory

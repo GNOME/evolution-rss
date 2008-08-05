@@ -208,6 +208,13 @@ static void del_messages_cb (GtkWidget *widget, add_feed *data);
 void get_feed_age(gpointer key, gpointer value);
 gboolean cancel_soup_sess(gpointer key, gpointer value, gpointer user_data);
 void abort_all_soup(void);
+gchar *encode_html_entities(gchar *str);
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_image (SoupMessage *msg, gchar *user_data);
+#else
+finish_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data);
+#endif
 
 struct _MailComponentPrivate {
         GMutex *lock;
@@ -2692,6 +2699,34 @@ lookup_chn_name_by_url(gchar *url)
 }
 
 void
+update_feed_image(gchar *image, gchar *key)
+{
+        GError *err = NULL;
+        g_return_if_fail (image != NULL);
+        g_print("image:%s\n", image);
+        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+        if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
+            g_mkdir_with_parents (feed_dir, 0755);
+        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+        g_free(feed_dir);
+        if (!g_file_test(feed_file, G_FILE_TEST_EXISTS))
+        {
+                net_get_unblocking(image,
+                                textcb,
+                                NULL,
+                                (gpointer)finish_image,
+                                feed_file,
+                                0,
+                                &err);
+                g_print("=>img file:%s\n", feed_file);
+                if (err) {
+                	g_free(feed_file);
+			return NULL;
+		}
+        }
+}
+
+void
 update_main_folder(gchar *new_name)
 {
 	FILE *f;
@@ -3951,6 +3986,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	GArray *item = g_array_new (TRUE, TRUE, sizeof (xmlNodePtr));
 	char *t;
 	char *charset;
+	gchar *img_src = NULL;
 
 	/* check in-memory encoding first, fallback to transport encoding, which may or may not be correct */
 	if (r->cache->charset == XML_CHAR_ENCODING_UTF8
@@ -4050,6 +4086,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 		fprintf(stderr, "No channel definition.\n");
 		return NULL;
 	}
+	if (image != NULL)
+		img_src = layer_find(image->children, "url", NULL);
 
 	t = g_strdup(get_real_channel_name(r->uri, NULL));
 	//feed might be added with no validation
@@ -4074,6 +4112,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 		r->ttl = atoi(tmp);
 	else
 		r->ttl = 0;
+
+	update_feed_image(img_src, gen_md5(r->uri));
 
 	//items might not have a date
 	// so try to grab channel/feed date
