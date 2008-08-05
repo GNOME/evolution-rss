@@ -46,7 +46,6 @@
 #include <nsServiceManagerUtils.h>
 #include <nspr.h>
 
-
 static nsIPrefBranch* gPrefBranch;
 
 extern "C" gboolean

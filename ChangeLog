@@ -1,5 +1,9 @@
 2008-08-05  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: fetch_image - use
+	camel_data_cache for writing images
+	* src/rss.c: finish_image() - sanitize
+	msg->response_body (case of 404)
 	* src/rss.c: update_feed_image()
 
 2008-07-30  Lucian Langa  <lucilanga@gnome.org>

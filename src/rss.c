@@ -83,6 +83,7 @@ int rss_verbose_debug = 0;
 #include <shell/evolution-config-control.h>
 #include <shell/e-component-view.h>///
 #include <shell/es-event.h>
+#include <camel/camel-data-cache.h>///
 
 #include <libxml/parserInternals.h>
 #include <libxml/xmlmemory.h>
@@ -151,6 +152,9 @@ gchar *flat_status_msg;
 #define STATUS_TIMEOUT (250)
 
 #define NETWORK_TIMEOUT (180000)
+#define HTTP_CACHE_PATH "http"
+
+static CamelDataCache *http_cache;
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -211,9 +215,9 @@ void abort_all_soup(void);
 gchar *encode_html_entities(gchar *str);
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_image (SoupMessage *msg, gchar *user_data);
+finish_image (SoupMessage *msg, CamelStream *user_data);
 #else
-finish_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data);
+finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
 #endif
 
 struct _MailComponentPrivate {
@@ -4224,7 +4228,7 @@ finish_enclosure (SoupMessage *msg, create_feed *user_data)
 finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data)
 #endif
 {
-	gchar *tmpdir = NULL;
+	char *tmpdir = NULL;
 	gchar *name = NULL;
 	FILE *f;
 	tmpdir = e_mkdtemp("evo-rss-XXXXXX");
@@ -4255,23 +4259,41 @@ finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_da
 
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_image (SoupMessage *msg, gchar *user_data)
+finish_image (SoupMessage *msg, CamelStream *user_data)
 #else
-finish_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data)
+finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
-	FILE *f;
-	f = fopen(user_data, "wb+");
-	if (f)
-	{
+	if (msg->response_body->data) {
 #if LIBSOUP_VERSION < 2003000
-		fwrite(msg->response.body, msg->response.length, 1, f);
+		camel_stream_write(user_data, msg->response.body, msg->response.length);
 #else
-		fwrite(msg->response_body->data, msg->response_body->length, 1, f);
+		camel_stream_write(user_data, msg->response_body->data, msg->response_body->length);
 #endif
-		fclose(f);
+		camel_stream_close(user_data);
+		camel_object_unref(user_data);
 	}
-	g_free(user_data);
+}
+
+#define CAMEL_DATA_CACHE_BITS (6)
+#define CAMEL_DATA_CACHE_MASK ((1<<CAMEL_DATA_CACHE_BITS)-1)
+
+static char *
+data_cache_path(CamelDataCache *cdc, int create, const char *path, const char *key)
+{
+        char *dir, *real;
+	char *tmp = NULL;
+        guint32 hash;
+
+        hash = g_str_hash(key);
+        hash = (hash>>5)&CAMEL_DATA_CACHE_MASK;
+        dir = alloca(strlen(cdc->path) + strlen(path) + 8);
+        sprintf(dir, "%s/%s/%02x", cdc->path, path, hash);
+        tmp = camel_file_util_safe_filename(key);
+        real = g_strdup_printf("%s/%s", dir, tmp);
+        g_free(tmp);
+
+        return real;
 }
 
 gchar *
@@ -4280,24 +4302,15 @@ fetch_image(gchar *url)
         GError *err = NULL;
 	gchar *tmpdir = NULL;
 	gchar *name = NULL;
+	if (!url)
+		return NULL;
 	gchar *feed_dir = g_build_path("/", rss_component_peek_base_directory(mail_component_peek()), "static", NULL);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
-	gchar *template = g_build_path("/", feed_dir, "evo-rss-XXXXXX", NULL);
+	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
 	g_free(feed_dir);
-#ifdef HAVE_MKDTEMP
-        tmpdir = mkdtemp (template);
-#else
-        tmpdir = mktemp (template);
-        if (tmpdir) {
-                if (g_mkdir (tmpdir, S_IRWXU) == -1)
-                        tmpdir = NULL;
-        }
-#endif
-        if ( tmpdir == NULL)
-            return NULL;
-	name = g_build_filename(tmpdir, g_path_get_basename(url), NULL);
-	g_free(template);
+	CamelStream *stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, url, NULL);
+
 	/* test for *loading* images*/
 /*	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
 	                                    "rss-24.png",
@@ -4315,11 +4328,11 @@ fetch_image(gchar *url)
                        	        textcb,
                                	NULL,
                                	(gpointer)finish_image,
-                               	name,
+                               	stream,
 				0,
                                	&err);
 	if (err) return NULL;
-	return name;
+	return data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, url);
 }
 
 //migrates old feed data files from crc naming
@@ -4633,12 +4646,12 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 
 				while (doc = html_find(doc, "img"))
         			{
+					gchar *name = NULL;
                 			xmlChar *url = xmlGetProp(doc, "src");
-					gchar *name;
-					if (name = fetch_image(url))
-					{
+					if (url) {
+						if (name = fetch_image(url))
+							xmlSetProp(doc, "src", name);
 						xmlFree(url);
-						xmlSetProp(doc, "src", name);
 					}
 				}
 				xmlDocDumpMemory(src, &buff, &size);
