@@ -116,6 +116,48 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/evolution/evolution-rss/status_icon</key>
+      <applyto>/apps/evolution/evolution-rss/status_icon</applyto>
+      <owner>evolution-rss</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Enable Status Icon</short>
+        <long>
+    	    Enable status icon in notification area
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/evolution/evolution-rss/blink_icon</key>
+      <applyto>/apps/evolution/evolution-rss/blink_icon</applyto>
+      <owner>evolution-rss</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Blink Status Icon</short>
+        <long>
+    	    Blink status icon when new article received
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/evolution/evolution-rss/feed_icon</key>
+      <applyto>/apps/evolution/evolution-rss/feed_icon</applyto>
+      <owner>evolution-rss</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Enable Feed Icon</short>
+        <long>
+    	    Display feed icon on feed folder
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/evolution/evolution-rss/pass_proxy</key>
       <applyto>/apps/evolution/evolution-rss/pass_proxy</applyto>
       <owner>evolution-rss</owner>

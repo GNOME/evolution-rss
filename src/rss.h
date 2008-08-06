@@ -140,6 +140,9 @@ typedef struct _rssfeed {
 #define GCONF_KEY_HTML_RENDER "/apps/evolution/evolution-rss/html_render"
 #define GCONF_KEY_HTML_JS "/apps/evolution/evolution-rss/html_js"
 #define GCONF_KEY_HTML_JAVA "/apps/evolution/evolution-rss/html_java"
+#define GCONF_KEY_STATUS_ICON "/apps/evolution/evolution-rss/status_icon"
+#define GCONF_KEY_BLINK_ICON "/apps/evolution/evolution-rss/blink_icon"
+#define GCONF_KEY_FEED_ICON "/apps/evolution/evolution-rss/feed_icon"
 
 enum {
 	RSS_FEED,

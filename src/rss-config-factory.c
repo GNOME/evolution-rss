@@ -41,6 +41,8 @@ typedef struct {
         GtkWidget   *check2;
         GtkWidget   *nettimeout;
         GtkWidget   *check3;
+        GtkWidget   *check4;
+        GtkWidget   *check5;
 } UIData;
 
 static void feeds_dialog_edit(GtkDialog *d, gpointer data);
@@ -1602,7 +1604,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                         "rss-html-rendering.glade",
                         NULL);
-        ui->xml = glade_xml_new (gladefile, "html-rendering", NULL);
+        ui->xml = glade_xml_new (gladefile, "settingsbox", NULL);
         g_free (gladefile);
 
 
@@ -1679,6 +1681,31 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		gtk_spin_button_set_value((GtkSpinButton *)ui->nettimeout, adj);
 	g_signal_connect(ui->nettimeout, "changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);
 	g_signal_connect(ui->nettimeout, "value-changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);
+
+	//feed notification
+	
+	ui->check3 = glade_xml_get_widget(ui->xml, "status_icon");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check3),
+        	gconf_client_get_bool(rss_gconf, GCONF_KEY_STATUS_ICON, NULL));
+	g_signal_connect(ui->check3, 
+		"clicked", 
+		G_CALLBACK(start_check_cb), 
+		GCONF_KEY_STATUS_ICON);
+	ui->check4 = glade_xml_get_widget(ui->xml, "blink_icon");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check4),
+        	gconf_client_get_bool(rss_gconf, GCONF_KEY_BLINK_ICON, NULL));
+	g_signal_connect(ui->check4, 
+		"clicked", 
+		G_CALLBACK(start_check_cb), 
+		GCONF_KEY_BLINK_ICON);
+	ui->check5 = glade_xml_get_widget(ui->xml, "feed_icon");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check5),
+        	gconf_client_get_bool(rss_gconf, GCONF_KEY_FEED_ICON, NULL));
+	g_signal_connect(ui->check5, 
+		"clicked", 
+		G_CALLBACK(start_check_cb), 
+		GCONF_KEY_FEED_ICON);
+	
 
         ui->gconf = gconf_client_get_default ();
 	hbox = gtk_vbox_new (FALSE, 0);

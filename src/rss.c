@@ -207,6 +207,7 @@ finish_image (SoupMessage *msg, CamelStream *user_data);
 #else
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
 #endif
+gchar *get_main_folder(void);
 
 struct _MailComponentPrivate {
         GMutex *lock;
@@ -1973,13 +1974,14 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
 	GdkPixbuf *icon;
-	if (g_ascii_strncasecmp(t->folder_name, "RSS", 3))
-		return;
-	if (!g_ascii_strcasecmp(t->folder_name, "RSS"))
+	gchar *main_folder = get_main_folder();
+	if (g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
+		goto out;
+	if (!g_ascii_strcasecmp(t->folder_name, main_folder))
 		goto normal;
 	gchar *rss_folder = extract_main_folder(t->folder_name);
 	if (!rss_folder)
-		return;
+		goto out;
 	if (!icons)
 		icons = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 	gchar *key = g_hash_table_lookup(rf->hrname,
@@ -1987,17 +1989,19 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	if (!key)
 		goto normal;
 	if (!(icon = g_hash_table_lookup(icons, key))) {
-		gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-        	gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
-        	if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
-			icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
-			g_hash_table_insert(icons, g_strdup(key), icon);
-			g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
-			return;
+  		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
+			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+        		gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+        		if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
+				icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
+				g_hash_table_insert(icons, g_strdup(key), icon);
+				g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+				goto out;
+			}
 		}
 	} else {
 		g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
-		return;
+		goto out;
 	}
 
 normal:	if (!initialised)
@@ -2010,6 +2014,8 @@ normal:	if (!initialised)
 		initialised = TRUE;
 	}
 	g_object_set (t->renderer, "pixbuf", folder_icon, "visible", 1, NULL);
+out:	g_free(main_folder);
+	return;
 }
 #endif
 
@@ -3023,8 +3029,10 @@ flicker_status_icon(const char *channel, gchar *title)
 		g_queue_pop_head(status_msg);
 	g_queue_foreach(status_msg, flaten_status, flat_status_msg);
 	gtk_status_icon_set_tooltip (status_icon, flat_status_msg);
-        gtk_status_icon_set_visible (status_icon, TRUE);
-	if (!gtk_status_icon_get_blinking(status_icon))
+  	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL))
+		gtk_status_icon_set_visible (status_icon, TRUE);
+  	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
+	 && !gtk_status_icon_get_blinking(status_icon))
         	gtk_status_icon_set_blinking (status_icon, TRUE);
 	g_timeout_add(15 * 1000, flicker_stop, NULL);
         g_free(flat_status_msg);
