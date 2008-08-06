@@ -1,3 +1,8 @@
+2008-08-06  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-html-preview.glade - add
+	feeds icon options
+
 2008-08-05  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: fetch_image - use
