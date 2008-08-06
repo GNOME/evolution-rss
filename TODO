@@ -36,3 +36,4 @@
 	* fix annoying cursor jump when browsing through evo-rss folders
 	* try harder to get feeds images (check by size 0)
 	* provide predefined groups of feeds (OSS & co)
+	* evolution import rss add no. of retries

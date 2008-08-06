@@ -63,12 +63,12 @@ strextr(gchar *text, gchar *substr)
 gchar *
 sanitize_url(gchar *text)
 {
+	if (strstr(text, "feed://"))
+		text = strextr(text, "feed://");
 	if (strstr(text, "feed//"))
 		text = strextr(text, "feed//");
 	if (strstr(text, "feed:"))
 		text = strextr(text, "feed:");
-	if (strstr(text, "feed://"))
-		text = strextr(text, "feed://");
  	if (!strstr (text, "http://") 
 	&& !strstr (text, "https://"))
  		return g_strconcat("http://", text, NULL);

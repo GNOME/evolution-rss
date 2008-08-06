@@ -83,7 +83,8 @@ int rss_verbose_debug = 0;
 #include <shell/evolution-config-control.h>
 #include <shell/e-component-view.h>///
 #include <shell/es-event.h>
-#include <camel/camel-data-cache.h>///
+#include <camel/camel-data-cache.h>
+#include <camel/camel-file-utils.h>
 
 #include <libxml/parserInternals.h>
 #include <libxml/xmlmemory.h>
@@ -171,19 +172,6 @@ struct _org_gnome_rss_controls_pobject {
 	gchar *mem;
 	guint shandler;		//mycall handler_id
 };
-
-/*struct _GtkHTMLEmbedded {
-        HTMLObject object;
-
-        gchar *name;
-        gchar *value;
-        HTMLForm *form;
-        GtkWidget *widget, *parent;
-        gint width, height;
-
-        gint abs_x, abs_y;
-        guint changed_id;
-};*/
 
 GtkWidget *evo_window;
 static GdkPixbuf *folder_icon;
@@ -1984,7 +1972,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
-	GdkImage *icon;
+	GdkPixbuf *icon;
 	if (g_ascii_strncasecmp(t->folder_name, "RSS", 3))
 		return;
 	if (!g_ascii_strcasecmp(t->folder_name, "RSS"))
@@ -2706,8 +2694,9 @@ void
 update_feed_image(gchar *image, gchar *key)
 {
         GError *err = NULL;
+	if (!image)
+		return;
         g_return_if_fail (image != NULL);
-        g_print("image:%s\n", image);
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
@@ -2722,10 +2711,9 @@ update_feed_image(gchar *image, gchar *key)
                                 feed_file,
                                 0,
                                 &err);
-                g_print("=>img file:%s\n", feed_file);
                 if (err) {
                 	g_free(feed_file);
-			return NULL;
+			return;
 		}
         }
 }
@@ -2973,7 +2961,7 @@ static void
 icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 {
         GList *p, *pnext;
-        for (p = evo_window; p != NULL; p = pnext) {
+        for (p = (gpointer)evo_window; p != NULL; p = pnext) {
                 pnext = p->next;
 
                 if (gtk_window_is_active(GTK_WINDOW(p->data)))
@@ -2985,7 +2973,7 @@ icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 		else
 		{
                         gtk_window_iconify(GTK_WINDOW(p->data));
-			gtkut_window_popup(GTK_WINDOW(p->data));
+			gtkut_window_popup(GTK_WIDGET(p->data));
 			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(p->data), FALSE);
 		}
         }
@@ -3025,7 +3013,7 @@ flaten_status(gpointer msg, gpointer user_data)
 }
 
 static void
-flicker_status_icon(gchar *channel, gchar *title)
+flicker_status_icon(const char *channel, gchar *title)
 {
 	gchar *total = g_strdup_printf("%s: %s\n\n", channel, title);
 	create_status_icon();
@@ -3116,7 +3104,7 @@ void get_shell(void *ep, ESEventTargetShell *t)
 {
 	EShell *shell = t->shell;
 	EShellPrivate *priv = (EShellPrivate *)shell->priv;
-	evo_window = priv->windows;
+	evo_window = (GtkWidget *)priv->windows;
 }
 
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
@@ -4290,6 +4278,12 @@ data_cache_path(CamelDataCache *cdc, int create, const char *path, const char *k
         dir = alloca(strlen(cdc->path) + strlen(path) + 8);
         sprintf(dir, "%s/%s/%02x", cdc->path, path, hash);
         tmp = camel_file_util_safe_filename(key);
+	if (!tmp)
+		return NULL;
+	g_print("key:%s\n", key);
+	g_print("dir:%s\n", dir);
+	g_print("strlen(tmp):%d\n", strlen(tmp));
+	g_print("tmp:%s\n", tmp);
         real = g_strdup_printf("%s/%s", dir, tmp);
         g_free(tmp);
 
@@ -4302,6 +4296,7 @@ fetch_image(gchar *url)
         GError *err = NULL;
 	gchar *tmpdir = NULL;
 	gchar *name = NULL;
+	CamelStream *stream;
 	if (!url)
 		return NULL;
 	gchar *feed_dir = g_build_path("/", rss_component_peek_base_directory(mail_component_peek()), "static", NULL);
@@ -4309,7 +4304,13 @@ fetch_image(gchar *url)
 	    g_mkdir_with_parents (feed_dir, 0755);
 	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
 	g_free(feed_dir);
-	CamelStream *stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, url, NULL);
+	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, url, NULL);
+	if (!stream) {
+		g_print("image cache MISS\n");
+		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, url, NULL);
+	} else 
+		g_print("image cache HIT\n");
+	g_print("fetch url:%s\n", url);
 
 	/* test for *loading* images*/
 /*	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
@@ -4332,6 +4333,7 @@ fetch_image(gchar *url)
 				0,
                                	&err);
 	if (err) return NULL;
+	g_print("fetch url:%s\n", url);
 	return data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, url);
 }
 

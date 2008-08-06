@@ -93,7 +93,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
     		dbus_error_init (&error);
     		if (dbus_message_get_args 
        			(message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID)) {
-      			d(g_print("New Feed received: %s\n", s));
+      			g_print("New Feed received: %s\n", s);
 			feed->feed_url = g_strdup(s);
 			feed->add=1;
 			feed->enabled=feed->validate=1;
@@ -103,6 +103,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                 		gchar *text = feed->feed_url;
                 		feed->feed_url = sanitize_url(feed->feed_url);
                 		g_free(text);
+      				g_print("feed URL: %s\n", feed->feed_url);
                 		if (g_hash_table_find(rf->hr,
                                         check_if_match,
                         	        feed->feed_url))

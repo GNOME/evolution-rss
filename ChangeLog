@@ -1,5 +1,9 @@
 2008-08-06  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: fetch_image() - fetch image
+	from cache if found.
+	* src/misc.c: sanitize_url() - fix
+	order of scaned protocols
 	* src/rss-html-preview.glade - add
 	feeds icon options
 

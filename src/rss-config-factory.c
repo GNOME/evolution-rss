@@ -1683,7 +1683,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         ui->gconf = gconf_client_get_default ();
 	hbox = gtk_vbox_new (FALSE, 0);
 
-        gtk_box_pack_start (GTK_BOX (hbox), glade_xml_get_widget (ui->xml, "html-rendering"), FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), glade_xml_get_widget (ui->xml, "settingsbox"), FALSE, FALSE, 0);
 
 	g_object_set_data_full (G_OBJECT (hbox), "ui-data", ui, destroy_ui_data);
 
