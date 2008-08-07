@@ -1,5 +1,7 @@
 2008-08-06  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/evolution-rss.schemas.in - set
+	some defaults for icons
 	* src/rss.c: fetch_image() - fetch image
 	from cache if found.
 	* src/misc.c: sanitize_url() - fix
