@@ -1547,7 +1547,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	g_print("BOX w:%d,h:%d\n", req.width, req.height);
   //      width = ((GtkWidget *) efh->html)->allocation.height - 16;
 	
-	guint k = rf->headers_mode ? 198 : 103;
+	guint k = rf->headers_mode ? 254 : 103;
 	if (GTK_IS_WIDGET(widget))
 	{
         	width = widget->allocation.width - 16 - 2;// - 16;
@@ -3672,7 +3672,7 @@ create_mail(create_feed *CF)
 
 	camel_folder_append_message(mail_folder, new, info, NULL, ex);
 	camel_folder_sync(mail_folder, FALSE, NULL);
-        camel_folder_thaw(mail_folder);
+	camel_folder_thaw(mail_folder);
         camel_operation_end(NULL);
 	camel_object_unref(rtext);
 	camel_object_unref(new);

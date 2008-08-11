@@ -1,3 +1,7 @@
+2008-08-09  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: mycall() refit webkit area
+
 2008-08-06  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/evolution-rss.schemas.in - set
