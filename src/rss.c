@@ -338,12 +338,16 @@ taskbar_op_new(gchar *message, gpointer key)
 taskbar_op_new(gchar *message)
 #endif
 {
-	static GdkPixbuf *progress_icon = NULL;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	progress_icon = e_icon_factory_get_icon ("mail-unread", E_ICON_SIZE_MENU);
-//	progress_icon = NULL;
 	char *mcp = g_strdup_printf("%p", mail_component_peek());
 	guint activity_id = 
+#if (EVOLUTION_VERSION >= 22306)
+		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
+						message, TRUE,
+						(void (*) (gpointer))abort_all_soup,
+						 key);
+#else 
+	static GdkPixbuf *progress_icon = e_icon_factory_get_icon ("mail-unread", E_ICON_SIZE_MENU);
 #if (EVOLUTION_VERSION >= 22200)
 		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						progress_icon, message, TRUE,
@@ -352,6 +356,7 @@ taskbar_op_new(gchar *message)
 #else
 		e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);
+#endif
 #endif
 
 	g_free(mcp);
@@ -1979,7 +1984,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 		goto out;
 	if (!g_ascii_strcasecmp(t->folder_name, main_folder))
 		goto normal;
-	gchar *rss_folder = extract_main_folder(t->folder_name);
+	gchar *rss_folder = extract_main_folder((gchar *)t->folder_name);
 	if (!rss_folder)
 		goto out;
 	if (!icons)
@@ -2990,7 +2995,7 @@ create_status_icon(void)
 {
 	if (!status_icon) {
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss-24.png",
+	                                    "rss-icon-unread.png",
                                             NULL);
 
 		status_icon = gtk_status_icon_new ();
@@ -3338,8 +3343,8 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	                                    "rss-24.png",
                                             NULL);
 
-	GtkWidget *recv_icon = e_icon_factory_get_image (
-                        iconfile, E_ICON_SIZE_LARGE_TOOLBAR);
+	GtkWidget *recv_icon = gtk_image_new_from_file(
+                        iconfile);
 	g_free(iconfile);
 
 
@@ -4288,10 +4293,6 @@ data_cache_path(CamelDataCache *cdc, int create, const char *path, const char *k
         tmp = camel_file_util_safe_filename(key);
 	if (!tmp)
 		return NULL;
-	g_print("key:%s\n", key);
-	g_print("dir:%s\n", dir);
-	g_print("strlen(tmp):%d\n", strlen(tmp));
-	g_print("tmp:%s\n", tmp);
         real = g_strdup_printf("%s/%s", dir, tmp);
         g_free(tmp);
 
@@ -4318,7 +4319,6 @@ fetch_image(gchar *url)
 		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, url, NULL);
 	} else 
 		g_print("image cache HIT\n");
-	g_print("fetch url:%s\n", url);
 
 	/* test for *loading* images*/
 /*	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
@@ -4341,7 +4341,6 @@ fetch_image(gchar *url)
 				0,
                                	&err);
 	if (err) return NULL;
-	g_print("fetch url:%s\n", url);
 	return data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, url);
 }
 

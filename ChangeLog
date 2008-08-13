@@ -1,3 +1,14 @@
+2008-08-13  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: org_gnome_cooly_rss()
+	fix for #546892
+
+	(e_icon_factory_get_image):
+	Kill this function.  Use gtk_image_new_from_icon_name().
+	(e_icon_factory_get_icon_list):
+	Kill this function.  Use
+	gtk_window_set_icon_name().
+
 2008-08-09  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: mycall() refit webkit area
