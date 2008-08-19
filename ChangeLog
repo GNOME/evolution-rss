@@ -1,3 +1,8 @@
+2008-08-19  Lucian Langa  <lucilanga@gnome.org>
+
+	* pixmaps/rss-icon-*.png: Add tango
+	icons from Michael Monreal
+
 2008-08-13  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: org_gnome_cooly_rss()
