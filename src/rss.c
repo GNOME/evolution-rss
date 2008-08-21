@@ -423,6 +423,8 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 		fraction = (float)progress->current / progress->total;
 		while (gtk_events_pending ())
                         gtk_main_iteration ();
+		if (rf->cancel_all)
+			break;
 #ifndef EVOLUTION_2_12
 		if (rf->progress_dialog  && 0 <= fraction && 1 >= fraction)
 		{
@@ -2327,6 +2329,10 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	if (!key)
 		deleted = 1;
 
+	MailComponent *mc = mail_component_peek ();
+        if (mc->priv->quit_state != -1)
+		rf->cancel_all=1;
+
 	d(g_print("taskbar_op_finish() queue:%d\n", rf->feed_queue));
 
 	if (rf->feed_queue)
@@ -2543,6 +2549,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	GtkWidget *ed;
 	RDF *r;
 
+
 	//exclude feeds that have special update interval or 
 	//no update at all
 	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) >= 2
@@ -2583,7 +2590,12 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 gboolean
 update_articles(gboolean disabler)
 {
-	if (!rf->pending && !rf->feed_queue && rf->online)
+	MailComponent *mc = mail_component_peek ();
+	g_print("stAte:%d\n", mc->priv->quit_state);
+        if (mc->priv->quit_state != -1)
+		rf->cancel=1;
+
+	if (!rf->pending && !rf->feed_queue && !rf->cancel_all && rf->online)
 	{
 		g_print("Reading RSS articles...\n");
 		rf->pending = TRUE;
