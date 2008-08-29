@@ -1982,7 +1982,8 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	static gboolean initialised = FALSE;
 	GdkPixbuf *icon;
 	gchar *main_folder = get_main_folder();
-	if (g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
+	if (t->folder_name == NULL 
+	  || g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
 		goto out;
 	if (!g_ascii_strcasecmp(t->folder_name, main_folder))
 		goto normal;

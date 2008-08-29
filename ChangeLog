@@ -1,3 +1,8 @@
+2008-08-29  Lucian Langa  <lucilanga@gnome.org>
+
+	* fix for #547697: do not display RSS
+	icon for loading... accounts
+
 2008-08-21  Lucian Langa  <lucilanga@gnome.org>
 
 	* fix for #548829: Allow canceling
