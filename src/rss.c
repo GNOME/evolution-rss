@@ -1938,6 +1938,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	//	char *buff = decode_html_entities(buffer2);
 ///		buff=tmp;
 
+//		camel_stream_printf (fstream,
+  //                           "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+    //                         t->format->frame_colour & 0xffffff, t->format->content_colour & 0xffffff, t->format->text_colour & 0xffffff);
 		camel_stream_printf (fstream, 
 		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 		camel_stream_printf(fstream, 
@@ -3550,7 +3553,6 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->soup_auth_retry = 1;
 			status_msg = g_queue_new();
 			get_feed_folders();
-			filter_uids = g_ptr_array_new();
 #if HAVE_DBUS
 			d(g_print("init_dbus()\n"));
 			/*D-BUS init*/
@@ -3691,11 +3693,15 @@ create_mail(create_feed *CF)
         else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
+		g_print("weakify this!!!\n");
+		g_print("append:%s\n", appended_uid);
 	if (appended_uid != NULL)
 	{
+		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
-		g_ptr_array_remove(filter_uids, appended_uid);
+		g_print("removed:%s\n", appended_uid);
+	//	g_ptr_array_free(filter_uids, FALSE);
 	}
 	camel_folder_sync(mail_folder, FALSE, NULL);
 	camel_folder_thaw(mail_folder);
@@ -3704,7 +3710,6 @@ create_mail(create_feed *CF)
 	camel_object_unref(new);
 	camel_message_info_free(info);
 	camel_object_unref(mail_folder);
-//	g_array_free(uids, FALSE);
 	g_free(buf);
 }
 
