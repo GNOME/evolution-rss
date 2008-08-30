@@ -3687,8 +3687,11 @@ create_mail(create_feed *CF)
 	}
         else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
-
-	camel_folder_append_message(mail_folder, new, info, NULL, ex);
+	const char *appended_uid;
+	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
+	GPtrArray *uids = g_ptr_array_new();
+	g_ptr_array_add(uids, appended_uid);
+	mail_filter_on_demand (mail_folder, uids);
 	camel_folder_sync(mail_folder, FALSE, NULL);
 	camel_folder_thaw(mail_folder);
         camel_operation_end(NULL);
@@ -3696,6 +3699,7 @@ create_mail(create_feed *CF)
 	camel_object_unref(new);
 	camel_message_info_free(info);
 	camel_object_unref(mail_folder);
+	g_array_free(uids);
 	g_free(buf);
 }
 
