@@ -144,6 +144,7 @@ GHashTable *custom_timeout;
 GtkStatusIcon *status_icon = NULL;
 GQueue *status_msg;
 gchar *flat_status_msg;
+GPtrArray *filter_uids;
 
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -1902,8 +1903,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		camel_stream_printf(fstream,
 		 "<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
    		camel_stream_printf(fstream,
-		 "<tr><td bgcolor=\"#ffffff\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", website, subject);
-     		camel_stream_printf(fstream, "</head></html><tr><td bgcolor=\"#ffffff\">%s</td>", buff);
+		 "<tr><td bgcolor=\"#ff00ff\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", website, subject);
+     		camel_stream_printf(fstream, "</head></html><tr><td bgcolor=\"#00ffff\">%s</td>", buff);
     		camel_stream_printf(fstream, "</tr></table></td></tr></table>");
 
 		g_free(subject);
@@ -1938,12 +1939,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 ///		buff=tmp;
 
 		camel_stream_printf (fstream, 
-		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
+		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 		camel_stream_printf(fstream, 
 		"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
      		camel_stream_printf(fstream,
-		 "<tr><td bgcolor=\"#ffffff\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", website, subject);
-     		camel_stream_printf (fstream, "<td bgcolor=\"#ffffff\">%s</td>", buff);
+		 "<tr><td bgcolor=\"#B8B8B8\"><center><b><font size=+1><a href=%s>%s</a></font></b></center></td></tr>", website, subject);
+     		camel_stream_printf (fstream, "<td>%s</td>", buff);
     		camel_stream_printf (fstream, "</tr></table></td></tr></table>");
 	}
 
@@ -3549,6 +3550,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->soup_auth_retry = 1;
 			status_msg = g_queue_new();
 			get_feed_folders();
+			filter_uids = g_ptr_array_new();
 #if HAVE_DBUS
 			d(g_print("init_dbus()\n"));
 			/*D-BUS init*/
@@ -3601,6 +3603,7 @@ create_mail(create_feed *CF)
 	CamelDataWrapper *rtext;
 	CamelContentType *type;
 	CamelStream *stream;
+	const char *appended_uid = NULL;
 	gchar *author = CF->q ? CF->q : CF->sender;
 
 	mail_folder = check_feed_folder(CF->full_path);
@@ -3687,11 +3690,13 @@ create_mail(create_feed *CF)
 	}
         else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
-	const char *appended_uid;
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
-	GPtrArray *uids = g_ptr_array_new();
-	g_ptr_array_add(uids, appended_uid);
-	mail_filter_on_demand (mail_folder, uids);
+	if (appended_uid != NULL)
+	{
+		g_ptr_array_add(filter_uids, appended_uid);
+		mail_filter_on_demand (mail_folder, filter_uids);
+		g_ptr_array_remove(filter_uids, appended_uid);
+	}
 	camel_folder_sync(mail_folder, FALSE, NULL);
 	camel_folder_thaw(mail_folder);
         camel_operation_end(NULL);
@@ -3699,7 +3704,7 @@ create_mail(create_feed *CF)
 	camel_object_unref(new);
 	camel_message_info_free(info);
 	camel_object_unref(mail_folder);
-	g_array_free(uids);
+//	g_array_free(uids, FALSE);
 	g_free(buf);
 }
 

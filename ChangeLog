@@ -1,5 +1,8 @@
 2008-08-30  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: org_gnome_cooly_format_rss
+	fix for #549935: Summary unreadable with
+	dark theme
 	* src/rss.c: create_mail() fix for
 	#548868 allow mail filters to work for
 	rss articles too
