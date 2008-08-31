@@ -1938,9 +1938,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	//	char *buff = decode_html_entities(buffer2);
 ///		buff=tmp;
 
-//		camel_stream_printf (fstream,
-  //                           "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-    //                         t->format->frame_colour & 0xffffff, t->format->content_colour & 0xffffff, t->format->text_colour & 0xffffff);
+		camel_stream_printf (fstream,
+                             "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+                             emfh->frame_colour & 0xffffff, emfh->content_colour & 0xffffff, emfh->text_colour & 0xffffff);
 		camel_stream_printf (fstream, 
 		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 		camel_stream_printf(fstream, 
@@ -1948,7 +1948,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
      		camel_stream_printf(fstream,
 		 "<tr><td bgcolor=\"#B8B8B8\"><center><b><font size=+1><a href=%s>%s</a></font></b></center></td></tr>", website, subject);
      		camel_stream_printf (fstream, "<td>%s</td>", buff);
-    		camel_stream_printf (fstream, "</tr></table></td></tr></table>");
+    		camel_stream_printf (fstream, "</tr></table></td></tr></table></div>");
 	}
 
 	//this is required for proper charset rendering when html
