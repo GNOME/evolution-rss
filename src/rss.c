@@ -1946,7 +1946,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		camel_stream_printf(fstream, 
 		"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
      		camel_stream_printf(fstream,
-		 "<tr><td bgcolor=\"#B8B8B8\"><center><b><font size=+1><a href=%s>%s</a></font></b></center></td></tr>", website, subject);
+		 "<tr><td bgcolor=\"#EDECEB\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", website, subject);
      		camel_stream_printf (fstream, "<td>%s</td>", buff);
     		camel_stream_printf (fstream, "</tr></table></td></tr></table></div>");
 	}
