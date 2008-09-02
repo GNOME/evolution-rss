@@ -804,10 +804,8 @@ remove_feed_dialog(gchar *msg)
   GtkWidget *cancelbutton1;
   GtkWidget *okbutton1;
 
-  dialog1 = gtk_dialog_new ();
+  dialog1 = e_error_new(NULL, "org-gnome-evolution-rss:ask-delete-feed", msg, NULL);
   gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
-  gtk_window_set_title (GTK_WINDOW (dialog1), _("Delete Feed?"));
-  gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
 
   dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
   gtk_widget_show (dialog_vbox1);
@@ -816,12 +814,6 @@ remove_feed_dialog(gchar *msg)
   gtk_widget_show (vbox1);
   gtk_box_pack_start (GTK_BOX (dialog_vbox1), vbox1, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vbox1), 10);
-
-  label1 = gtk_label_new (msg);
-  gtk_widget_show (label1);
-  gtk_box_pack_start (GTK_BOX (vbox1), label1, TRUE, TRUE, 0);
-  gtk_label_set_use_markup (GTK_LABEL (label1), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_CENTER);
 
   checkbutton1 = gtk_check_button_new_with_mnemonic (_("Remove folder contents"));
   gtk_widget_show (checkbutton1);
@@ -837,16 +829,6 @@ remove_feed_dialog(gchar *msg)
   gtk_widget_show (dialog_action_area1);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
 
-  okbutton1 = gtk_button_new_from_stock ("gtk-delete");
-  gtk_widget_show (okbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
-
-  cancelbutton1 = gtk_button_new_with_label (_("Do not delete"));
-  gtk_widget_show (cancelbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancelbutton1, GTK_RESPONSE_CANCEL);
-  GTK_WIDGET_SET_FLAGS (cancelbutton1, GTK_CAN_DEFAULT);
-  GTK_WIDGET_SET_FLAGS (cancelbutton1, GTK_HAS_FOCUS);
   return dialog1;
 }
 
@@ -863,12 +845,10 @@ feeds_dialog_delete(GtkDialog *d, gpointer data)
         {
                 rf->import = 1;
                 gtk_tree_model_get (model, &iter, 1, &name, -1);
-                gchar *msg = g_strdup_printf(_("Are you sure you want\n to remove <b>%s</b>?"), name);
-                GtkWidget *rfd = remove_feed_dialog(msg);
+                GtkWidget *rfd = remove_feed_dialog(name);
                 gtk_widget_show(rfd);
                 g_signal_connect(rfd, "response", G_CALLBACK(delete_response), data);
                 g_signal_connect(rfd, "destroy", G_CALLBACK(destroy_delete), rfd);
-                g_free(msg);
                 g_free(name);
         }
 }

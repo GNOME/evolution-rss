@@ -3296,7 +3296,6 @@ my_op_status(CamelOperation *op, const char *what, int pc, void *data)
 
         struct _send_info *info = data;
 
-        printf("Operation '%s', percent %d\n");
         switch (pc) {
         case CAMEL_OPERATION_START:
                 pc = 0;
@@ -3572,7 +3571,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 				rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
 			if (!rf->error_hash)	//keeping trask of taskbar errors
 				rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-			atexit(rss_finalize);
+//			atexit(rss_finalize);
 			guint render = GPOINTER_TO_INT(
 				gconf_client_get_int(rss_gconf, 
 						GCONF_KEY_HTML_RENDER, 
@@ -3600,6 +3599,14 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 	}
 
 	return 0;
+}
+
+void e_plugin_lib_disable(EPluginLib *ep);
+
+void
+e_plugin_lib_disable(EPluginLib *ep)
+{
+	g_print("DIE!\n");
 }
 
 void
@@ -3704,13 +3711,11 @@ create_mail(create_feed *CF)
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
 		g_print("weakify this!!!\n");
-		g_print("append:%s\n", appended_uid);
 	if (appended_uid != NULL)
 	{
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
-		g_print("removed:%s\n", appended_uid);
 	//	g_ptr_array_free(filter_uids, FALSE);
 	}
 	camel_folder_sync(mail_folder, FALSE, NULL);

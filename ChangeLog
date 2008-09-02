@@ -3,6 +3,9 @@
 	* src/rss.c: org_gnome_cooly_format_rss
 	fix for #550313: fix gtkhtml view with
 	dark theme
+	* src/rss-config-factory.c
+	  src/org-gnome-evolution-rss.eplug.xml
+	  fix for #550413: deleting subscriptions
 
 2008-08-30  Lucian Langa  <lucilanga@gnome.org>
 

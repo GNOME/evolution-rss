@@ -23,4 +23,13 @@
     <_secondary>{1}</_secondary>
     <button stock="gtk-ok" response="GTK_RESPONSE_OK"/>
   </error>
+
+  <error type="question" id="ask-delete-feed" default="GTK_RESPONSE_CANCEL">
+    <title>Delete "{0}"?</title>
+    <primary>Really delete feed '{0}' ?</primary>
+    <secondary>{1}</secondary>
+    <button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
+    <button stock="gtk-delete" response="GTK_RESPONSE_OK"/>
+  </error>
+
 </error-list>
