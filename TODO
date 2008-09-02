@@ -34,6 +34,7 @@
 	* if necessary implement config code for evo 2.12
 	* fix recursivity on layer_find_pos
 	* fix annoying cursor jump when browsing through evo-rss folders
-	* try harder to get feeds images (check by size 0)
+	* try harder to get feeds images (check by size 0) provide a expiration mechanism
 	* provide predefined groups of feeds (OSS & co)
 	* evolution import rss add no. of retries
+	* fix images when replying

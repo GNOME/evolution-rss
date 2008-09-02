@@ -1,3 +1,9 @@
+2008-09-02  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: org_gnome_cooly_format_rss
+	fix for #550313: fix gtkhtml view with
+	dark theme
+
 2008-08-30  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: org_gnome_cooly_format_rss

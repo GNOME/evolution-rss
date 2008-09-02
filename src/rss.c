@@ -1898,14 +1898,19 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		else
 			goto out;
 
+		camel_stream_printf (fstream,
+                             "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+                             emfh->frame_colour & 0xffffff, emfh->content_colour & 0xffffff, emfh->text_colour & 0xffffff);
 		camel_stream_printf(fstream,
-		 "<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
+		 "<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 		camel_stream_printf(fstream,
 		 "<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
    		camel_stream_printf(fstream,
-		 "<tr><td bgcolor=\"#ff00ff\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", website, subject);
-     		camel_stream_printf(fstream, "</head></html><tr><td bgcolor=\"#00ffff\">%s</td>", buff);
-    		camel_stream_printf(fstream, "</tr></table></td></tr></table>");
+		 "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
+			emfh->content_colour & 0xEDECEB,
+			website, subject);
+     		camel_stream_printf(fstream, "</head></html><tr><td>%s</td>", buff);
+    		camel_stream_printf(fstream, "</tr></table></td></tr></table></div>");
 
 		g_free(subject);
 		g_string_free(content, 1);
@@ -1946,7 +1951,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		camel_stream_printf(fstream, 
 		"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
      		camel_stream_printf(fstream,
-		 "<tr><td bgcolor=\"#EDECEB\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", website, subject);
+		 "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
+				emfh->content_colour & 0xEDECEB,
+				website, subject);
      		camel_stream_printf (fstream, "<td>%s</td>", buff);
     		camel_stream_printf (fstream, "</tr></table></td></tr></table></div>");
 	}
@@ -1965,13 +1972,16 @@ out:	if (addr)
 		g_free(addr);
 	return;
 fmerror:
+	camel_stream_printf (fstream,
+               "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+               emfh->frame_colour & 0xffffff, emfh->content_colour & 0xffffff, emfh->text_colour & 0xffffff);
 	camel_stream_printf (t->stream, 
-	"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
+	"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 	camel_stream_printf(t->stream, 
 	"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
      	camel_stream_printf (t->stream,
-	"<td bgcolor=\"#ffffff\">Cannot format email. Formatting error!</td>");
-    	camel_stream_printf (t->stream, "</tr></table></td></tr></table>");
+	"<td>Cannot format email. Formatting error!</td>");
+    	camel_stream_printf (t->stream, "</tr></table></td></tr></table></div>");
 	return;
 }
 
