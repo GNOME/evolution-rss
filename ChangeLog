@@ -1,3 +1,8 @@
+2008-09-06  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: org_gnome_cooly_format_rss
+	fix printf to correct stream
+
 2008-09-02  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: org_gnome_cooly_format_rss

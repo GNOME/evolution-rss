@@ -1972,7 +1972,7 @@ out:	if (addr)
 		g_free(addr);
 	return;
 fmerror:
-	camel_stream_printf (fstream,
+	camel_stream_printf (t->stream,
                "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
                emfh->frame_colour & 0xffffff, emfh->content_colour & 0xffffff, emfh->text_colour & 0xffffff);
 	camel_stream_printf (t->stream, 
