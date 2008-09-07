@@ -1824,7 +1824,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	guint32 content_colour = emfh->content_colour ? emfh->content_colour: 0xffffff;
 	guint32 text_colour = emfh->text_colour ? emfh->text_colour: 0xffffff;
 
-///	camel_folder_append_message (new_folder, message, info, NULL, ex);
 	type = camel_mime_part_get_content_type(message);
 	const char *website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");
 	if (!website)
@@ -4245,6 +4244,9 @@ feed_is_new(gchar *file_name, gchar *needle)
 	memset(rfeed, 0, 512);
 	FILE *fr = fopen(file_name, "r");
 	int occ = 0;
+	//in case URI part contains this
+	gchar *tmpneedle = strextr(needle, ":80");
+
 	if (fr)
 	{
 	    while (fgets(rfeed, 511, fr) != NULL)

@@ -1,5 +1,10 @@
 2008-09-07  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: feed_is_new() 
+	fix for #550744 - prevent duplicate
+	feeds
+	* src/misc.c: get_server_from_uri()
+	sanitize input
 	* src/rss.c: org_gnome_cooly_format_rss
 	santize exit from corrupt article format
 	(fix for #551193)

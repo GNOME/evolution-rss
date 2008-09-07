@@ -114,15 +114,27 @@ get_url_basename(gchar *url)
  	else
  		return url;
 }
- 
+
+gchar *
+get_server_port(gchar *url)
+{
+	if (strstr(url, ":") == NULL)
+		return NULL;
+
+ 	gchar **str = g_strsplit(url, ":", 2);
+	return str[2];
+}
+
 gchar *
 get_server_from_uri(gchar *uri)
 {
  	g_return_val_if_fail( uri != NULL, NULL);
  
+	if (strstr(uri, "://") == NULL)
+		return NULL;
  	gchar **str = g_strsplit(uri, "://", 2);
-         gchar **str2 = g_strsplit(str[1], "/", 2);
-         gchar *server = g_strdup_printf("%s://%s", str[0], str2[0]);
+        gchar **str2 = g_strsplit(str[1], "/", 2);
+        gchar *server = g_strdup_printf("%s://%s", str[0], str2[0]);
  	g_strfreev(str);
  	g_strfreev(str2);
  	return server;
