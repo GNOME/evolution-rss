@@ -1817,6 +1817,13 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			t->part : 
 			(CamelMimePart *)t->format->message;
 
+	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
+	/* force loading of images even if mail images disabled */
+	emfh->load_http_now = TRUE;
+	guint32 frame_colour = emfh->frame_colour ? emfh->frame_colour: 0xffffff;
+	guint32 content_colour = emfh->content_colour ? emfh->content_colour: 0xffffff;
+	guint32 text_colour = emfh->text_colour ? emfh->text_colour: 0xffffff;
+
 ///	camel_folder_append_message (new_folder, message, info, NULL, ex);
 	type = camel_mime_part_get_content_type(message);
 	const char *website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");
@@ -1850,9 +1857,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	pobj->object.free = free_rss_controls;
         camel_stream_printf (t->stream, "<object classid=%s></object>\n", classid);
 
-	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
-	/* force loading of images even if mail images disabled */
-	emfh->load_http_now = TRUE;
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format))
 	{
@@ -1900,14 +1904,14 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 		camel_stream_printf (fstream,
                              "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-                             emfh->frame_colour & 0xffffff, emfh->content_colour & 0xffffff, emfh->text_colour & 0xffffff);
+                             frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 		camel_stream_printf(fstream,
 		 "<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 		camel_stream_printf(fstream,
 		 "<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
    		camel_stream_printf(fstream,
 		 "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
-			emfh->content_colour & 0xEDECEB,
+			content_colour & 0xEDECEB,
 			website, subject);
      		camel_stream_printf(fstream, "</head></html><tr><td>%s</td>", buff);
     		camel_stream_printf(fstream, "</tr></table></td></tr></table></div>");
@@ -1945,14 +1949,14 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 		camel_stream_printf (fstream,
                              "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-                             emfh->frame_colour & 0xffffff, emfh->content_colour & 0xffffff, emfh->text_colour & 0xffffff);
+                             frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 		camel_stream_printf (fstream, 
 		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 		camel_stream_printf(fstream, 
 		"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
      		camel_stream_printf(fstream,
 		 "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
-				emfh->content_colour & 0xEDECEB,
+				content_colour & 0xEDECEB,
 				website, subject);
      		camel_stream_printf (fstream, "<td>%s</td>", buff);
     		camel_stream_printf (fstream, "</tr></table></td></tr></table></div>");
@@ -1974,14 +1978,15 @@ out:	if (addr)
 fmerror:
 	camel_stream_printf (t->stream,
                "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-               emfh->frame_colour & 0xffffff, emfh->content_colour & 0xffffff, emfh->text_colour & 0xffffff);
+               frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 	camel_stream_printf (t->stream, 
 	"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 	camel_stream_printf(t->stream, 
-	"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
+	"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
      	camel_stream_printf (t->stream,
-	"<td>Cannot format email. Formatting error!</td>");
-    	camel_stream_printf (t->stream, "</tr></table></td></tr></table></div>");
+	"<tr><td><h3>Formatting error!</h3></td></tr>"
+	"<tr><td>Feed article corrupted! Cannot format article.</td></tr>");
+    	camel_stream_printf (t->stream, "</table></td></tr></table></div>");
 	return;
 }
 

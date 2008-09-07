@@ -1,3 +1,9 @@
+2008-09-07  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: org_gnome_cooly_format_rss
+	santize exit from corrupt article format
+	(fix for #551193)
+
 2008-09-06  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: org_gnome_cooly_format_rss
