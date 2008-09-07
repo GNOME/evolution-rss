@@ -4244,14 +4244,19 @@ feed_is_new(gchar *file_name, gchar *needle)
 	memset(rfeed, 0, 512);
 	FILE *fr = fopen(file_name, "r");
 	int occ = 0;
+	gchar *server = NULL;
+	server = get_server_from_uri(needle);
+	if (server == NULL)
+		server = get_url_basename(needle);
+	gchar *port = get_server_port(server);
 	//in case URI part contains this
-	gchar *tmpneedle = strextr(needle, ":80");
+	gchar *tmpneedle = strextr(needle, port);
 
 	if (fr)
 	{
 	    while (fgets(rfeed, 511, fr) != NULL)
 	    {
-		if (rfeed && strstr(rfeed, needle))
+		if (rfeed && strstr(rfeed, tmpneedle))
 		{
 			occ=1;
 			break;
@@ -4267,7 +4272,8 @@ feed_is_new(gchar *file_name, gchar *needle)
 			fputs(needle, fw);
 			fclose(fw);
 		}
-	}	
+	}
+	g_free(tmpneedle);
 	return occ;
 }
 
@@ -4674,6 +4680,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 		while (gtk_events_pending())
                   gtk_main_iteration ();
 
+		if (!feed_is_new(feed_name, feed)) {
+/*
 		if (fr)
 		{
 		    while (fgets(rfeed, 511, fr) != NULL)
@@ -4691,7 +4699,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
                   gtk_main_iteration ();
 
 		if (!occ)
-		{
+		{*/
 			ftotal++;
 			p =  decode_html_entities (p);
 			gchar *tmp = decode_utf8_entities(b);
@@ -4754,12 +4762,12 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			}
 			else
 			{
-				if (fw)
-				{
-					fputs(feed, fw);
+				//if (fw)
+				//{
+				//	fputs(feed, fw);
 					//write(fw,feed, strlen(feed));
 //					fsync(fw);
-				}
+				//}
    	    	    		create_mail(CF);
 				free_cf(CF);
 			}

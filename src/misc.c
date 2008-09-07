@@ -48,6 +48,11 @@ gchar *
 strextr(gchar *text, gchar *substr)
 {
  	g_return_val_if_fail( text != NULL, NULL);
+ 	if (substr == NULL)
+		return g_strdup(text);
+	//first check if string contains the substring
+	if (!strstr(text, substr))
+		return g_strdup(text);
 	char *tmp = g_strdup(text);
 	GString *str = g_string_new(NULL);
 	g_string_append(str, tmp);

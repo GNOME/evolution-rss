@@ -1,5 +1,7 @@
 2008-09-07  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: include feed_is_new for
+	article checking too
 	* src/rss.c: feed_is_new() 
 	fix for #550744 - prevent duplicate
 	feeds
