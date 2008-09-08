@@ -121,13 +121,20 @@ get_url_basename(gchar *url)
 }
 
 gchar *
-get_server_port(gchar *url)
+get_port_from_uri(gchar *uri)
 {
-	if (strstr(url, ":") == NULL)
+ 	g_return_val_if_fail( uri != NULL, NULL);
+ 
+	if (strstr(uri, "://") == NULL)
 		return NULL;
-
- 	gchar **str = g_strsplit(url, ":", 2);
-	return str[2];
+ 	gchar **str = g_strsplit(uri, "://", 2);
+        gchar **str2 = g_strsplit(str[1], "/", 2);
+        gchar **str3 = g_strsplit(str2[0], ":", 2);
+        gchar *port = g_strdup(str3[1]);
+ 	g_strfreev(str);
+ 	g_strfreev(str2);
+ 	g_strfreev(str3);
+ 	return port;
 }
 
 gchar *

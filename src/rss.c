@@ -4244,13 +4244,15 @@ feed_is_new(gchar *file_name, gchar *needle)
 	memset(rfeed, 0, 512);
 	FILE *fr = fopen(file_name, "r");
 	int occ = 0;
-	gchar *server = NULL;
-	server = get_server_from_uri(needle);
-	if (server == NULL)
-		server = get_url_basename(needle);
-	gchar *port = get_server_port(server);
-	//in case URI part contains this
-	gchar *tmpneedle = strextr(needle, port);
+	gchar *tmpneedle = NULL;
+	gchar *port =  get_port_from_uri(needle);
+	if (port && atoi(port) == 80) {
+		gchar *tp = g_strconcat(":", port, NULL);
+		g_free(port);
+		tmpneedle = strextr(needle, tp);
+		g_free(tp);
+	} else
+		tmpneedle = g_strdup(needle);
 
 	if (fr)
 	{
