@@ -1,3 +1,10 @@
+2008-09-18  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: move feed status to separate
+	function write_feed_status_line()
+	* src/rss.c: fix attachment (enclosure)
+	name 
+
 2008-09-07  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: include feed_is_new for

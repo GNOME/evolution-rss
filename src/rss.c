@@ -4189,9 +4189,10 @@ tree_walk (xmlNodePtr root, RDF *r)
 }
 
 CamelMimePart *
-file_to_message(const char *name)
+file_to_message(const char *filename)
 {
-	g_return_if_fail (g_file_test(name, G_FILE_TEST_IS_REGULAR));
+	g_return_val_if_fail (filename != NULL, NULL);
+	g_return_val_if_fail (g_file_test(filename, G_FILE_TEST_IS_REGULAR), NULL);
 	const char *type;
         CamelStreamFs *file;
         CamelMimePart *msg = camel_mime_part_new();
@@ -4199,7 +4200,7 @@ file_to_message(const char *name)
 	CamelDataWrapper *content = camel_data_wrapper_new();
 	
         //file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDONLY, 0);
-        file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDWR|O_CREAT, 0666);
+        file = (CamelStreamFs *)camel_stream_fs_new_with_name(filename, O_RDWR|O_CREAT, 0666);
 
 	if (!file)
 		return NULL;
@@ -4209,11 +4210,17 @@ file_to_message(const char *name)
 	camel_medium_set_content_object((CamelMedium *)msg, content);
         camel_object_unref(content);
 	
+	gchar *tname = g_path_get_basename(filename);
+	camel_mime_part_set_filename(msg, tname);
+	g_print("file:%s\n", filename);
+	g_print("type:%s\n", e_util_guess_mime_type(filename));
+	g_print("type:%s\n", e_util_guess_mime_type("/home/cooly/shot1.gif"));
+	g_free(tname);
+
 	type = em_utils_snoop_type(msg);
 	if (type)
 		camel_data_wrapper_set_mime_type((CamelDataWrapper *)msg, type);
 
-	camel_mime_part_set_filename(msg, name);
         return msg;
 }
 
@@ -4233,6 +4240,18 @@ free_cf(create_feed *CF)
 	g_free(CF->feed_fname);
 	g_free(CF->feed_uri);
 	g_free(CF);
+}
+
+void
+write_feed_status_line(gchar *file, gchar *needle)
+{
+	FILE *fw = fopen(file, "a+");
+	if (fw)
+	{
+		fputs(g_strstrip(needle), fw);
+		fputs("\n", fw);
+		fclose(fw);
+	}
 }
 
 //check if feed already exists in feed file
@@ -4265,15 +4284,6 @@ feed_is_new(gchar *file_name, gchar *needle)
 		}
 	    }
 	    fclose(fr);
-	}
-	if (!occ)
-	{
-		FILE *fw = fopen(file_name, "a+");
-		if (fw)
-		{
-			fputs(needle, fw);
-			fclose(fw);
-		}
 	}
 	g_free(tmpneedle);
 	return occ;
@@ -4311,7 +4321,10 @@ finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_da
 	
 	g_free(tmpdir);
 	if (!feed_is_new(user_data->feed_fname, user_data->feed_uri))
+	{
 		create_mail(user_data);
+		write_feed_status_line(user_data->feed_fname, user_data->feed_uri);
+	}
 	free_cf(user_data);
 }
 
@@ -4660,7 +4673,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 
 		encl = layer_find_innerelement(el->children, "enclosure", "url",	// RSS 2.0 Enclosure
 			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
-		//we have to free this some how
+		//we have to free this somehow
                 char *link = g_strdup(layer_find (el->children, "link", NULL));		//RSS,
 		if (!link) 
 			link = layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
@@ -4764,13 +4777,8 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			}
 			else
 			{
-				//if (fw)
-				//{
-				//	fputs(feed, fw);
-					//write(fw,feed, strlen(feed));
-//					fsync(fw);
-				//}
    	    	    		create_mail(CF);
+				write_feed_status_line(feed_name, feed);
 				free_cf(CF);
 			}
 			farticle++;
