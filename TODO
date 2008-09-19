@@ -1,6 +1,5 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
-	* add syndicate icon for News&Blogs folder
 	* probably move to soup_unblocking when rendering of an article
 	* when browsing a different feed/mail folder cancel all sessions
 	* also create groups when importing
@@ -8,7 +7,6 @@
 	* check webkit area sizing when using zoom in/out
 	* failback to old handler when formatting error
 	* when deleting a folder offer to delete feed also
-	* test cancelation signal check rf->cancel fetch feed might reset it always 0 and crashing when finish_feed
 	* jump to folder when adding through d-bus
 	* move evolution detection to m4 to ease up integration in other plugins
 	* check memory consumption when S&R
@@ -17,7 +15,6 @@
 	* fix authentication for proxy dialog
 	* make auth dialog not intrusive (peek other software)
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
-	* crash (mail_append_message) if folder contains .lock file ? or ibex crashes
 	* implement notify back of imported feed perhaps libnotify
 	* prefetch html content for all webkits (perhaps temp file)
 	* offline storage for article's home page

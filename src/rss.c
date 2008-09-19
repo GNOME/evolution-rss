@@ -4210,16 +4210,13 @@ file_to_message(const char *filename)
 	camel_medium_set_content_object((CamelMedium *)msg, content);
         camel_object_unref(content);
 	
-	gchar *tname = g_path_get_basename(filename);
-	camel_mime_part_set_filename(msg, tname);
-	g_print("file:%s\n", filename);
-	g_print("type:%s\n", e_util_guess_mime_type(filename));
-	g_print("type:%s\n", e_util_guess_mime_type("/home/cooly/shot1.gif"));
-	g_free(tname);
-
 	type = em_utils_snoop_type(msg);
 	if (type)
 		camel_data_wrapper_set_mime_type((CamelDataWrapper *)msg, type);
+
+	gchar *tname = g_path_get_basename(filename);
+	camel_mime_part_set_filename(msg, tname);
+	g_free(tname);
 
         return msg;
 }
