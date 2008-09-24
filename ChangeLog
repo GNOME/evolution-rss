@@ -1,5 +1,8 @@
 2008-09-24  Lucian Langa  <lucilanga@gnome.org>
 
+	* configure.ac: add AC_PROG_CPP to
+	prevent circular dependency of
+	AC_LANG_COMPILER
 	* src/rss-config-factory.c: change
 	to PANGO_ELLIPSIZE_END when displaying
 	feeds list
