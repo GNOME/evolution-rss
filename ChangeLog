@@ -1,3 +1,9 @@
+2008-09-24  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c: change
+	to PANGO_ELLIPSIZE_END when displaying
+	feeds list
+
 2008-09-18  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: move feed status to separate

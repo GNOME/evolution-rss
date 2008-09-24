@@ -1798,7 +1798,7 @@ rss_config_control_new (void)
                                column);
 	cell = gtk_cell_renderer_text_new ();
 	g_object_set (cell,
-                "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
+                "ellipsize", PANGO_ELLIPSIZE_END,
                 NULL);
 	g_object_set (cell,
                 "is-expanded", TRUE,
