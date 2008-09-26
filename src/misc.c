@@ -68,7 +68,7 @@ strextr(gchar *text, gchar *substr)
 gchar *
 sanitize_url(gchar *text)
 {
-	gchar *out;
+	gchar *out, *tmptext;
 	if (strstr(text, "feed://"))
 		tmptext = strextr(text, "feed://");
 	if (strstr(text, "feed//"))
