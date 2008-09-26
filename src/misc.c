@@ -68,17 +68,21 @@ strextr(gchar *text, gchar *substr)
 gchar *
 sanitize_url(gchar *text)
 {
+	gchar *out;
 	if (strstr(text, "feed://"))
-		text = strextr(text, "feed://");
+		tmptext = strextr(text, "feed://");
 	if (strstr(text, "feed//"))
-		text = strextr(text, "feed//");
+		tmptext = strextr(text, "feed//");
 	if (strstr(text, "feed:"))
-		text = strextr(text, "feed:");
- 	if (!strstr (text, "http://") 
-	&& !strstr (text, "https://"))
- 		return g_strconcat("http://", text, NULL);
+		tmptext = strextr(text, "feed:");
+ 	if (!strstr (tmptext, "http://") 
+	&& !strstr (tmptext, "https://"))
+		out = g_strconcat("http://", tmptext, NULL);
  	else
- 		return g_strdup(text);
+		out = g_strdup(tmptext);
+
+	g_free(tmptext);
+ 	return out;
 }
 
 //evolution folder must not contain certain chars

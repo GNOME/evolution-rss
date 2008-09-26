@@ -1,5 +1,7 @@
 2008-09-26  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/misc.c: sanitize_url() correctly 
+	free created string
 	* src/rss-config-factory.c: allow
 	typeahead through feed list
 
