@@ -1826,6 +1826,7 @@ rss_config_control_new (void)
 	gtk_tree_view_column_set_sort_column_id (column, 2);
 	gtk_tree_view_set_search_column (GTK_TREE_VIEW (treeview),
                                                    2);
+	gtk_tree_view_set_search_column(treeview, 1);
 #if GTK_VERSION >= 2012000
 	gtk_tree_view_set_tooltip_column (treeview, 1);
 #endif
