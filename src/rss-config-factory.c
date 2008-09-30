@@ -428,7 +428,6 @@ create_dialog_add(gchar *text, gchar *feed_text)
                               GTK_ACCEL_VISIBLE);
 	gtk_window_add_accel_group (GTK_WINDOW (dialog1), accel_group);
 
-
   	gint result = gtk_dialog_run(GTK_DIALOG(dialog1));
   	switch (result)
   	{
@@ -1737,7 +1736,7 @@ folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
         gtk_widget_show (lbl_size_val);
         gtk_misc_set_alignment (GTK_MISC (lbl_size), 0.0, 0.5);
         gtk_misc_set_alignment (GTK_MISC (lbl_size_val), 0.0, 0.5);
-       gtk_box_pack_start (GTK_BOX (dialog1), lbl_size, FALSE, TRUE, 12);
+        gtk_box_pack_start (GTK_BOX (dialog1), lbl_size, FALSE, TRUE, 12);
         gtk_box_pack_start (GTK_BOX (dialog1), lbl_size_val, FALSE, TRUE, 10);
         gtk_widget_show_all (GTK_WIDGET (dialog1));
 
