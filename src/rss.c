@@ -1866,13 +1866,23 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         		char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
 				org_gnome_rss_controls_counter_id);
 			org_gnome_rss_controls_counter_id++;
-			pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), classid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_controls2);
+			pobj = (struct _org_gnome_rss_controls_pobject *) 
+					em_format_html_add_pobject ((EMFormatHTML *) t->format, 
+										sizeof(*pobj), 
+										classid, 
+										message, 
+										(EMFormatHTMLPObjectFunc)org_gnome_rss_controls2);
 			pobj->website = g_strstrip(g_strdup((gchar *)website));
 			pobj->is_html = GPOINTER_TO_INT(is_html);
 			pobj->format = (EMFormatHTML *)t->format;
 			pobj->object.free = pfree;
+			camel_stream_printf (t->stream,
+				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+			camel_stream_printf(t->stream,
+		 		"<table border=0 width=\"100%%\" cellpadding=1 cellspacing=1><tr><td>");
         		camel_stream_printf (t->stream, 
-				"<table><tr><td width=100%% valign=top><object classid=%s></object></td></tr></table>\n", classid);
+				"<object classid=%s></object></td></tr></table></div>\n", classid);
 			goto out;
 		}
 #endif
@@ -1902,18 +1912,15 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			goto out;
 
 		camel_stream_printf (fstream,
-                             "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-                             frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+			frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 		camel_stream_printf(fstream,
-		 "<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
-		camel_stream_printf(fstream,
-		 "<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
+			"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
    		camel_stream_printf(fstream,
-		 "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
+			"<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
 			content_colour & 0xEDECEB,
 			website, subject);
-     		camel_stream_printf(fstream, "</head></html><tr><td>%s</td>", buff);
-    		camel_stream_printf(fstream, "</tr></table></td></tr></table></div>");
+     		camel_stream_printf(fstream, "<tr><td>%s</td></tr></table></div>", buff);
 
 		g_free(subject);
 		g_string_free(content, 1);
@@ -1947,18 +1954,15 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 ///		buff=tmp;
 
 		camel_stream_printf (fstream,
-                             "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-                             frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
-		camel_stream_printf (fstream, 
-		"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
+			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+			frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 		camel_stream_printf(fstream, 
-		"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
+			"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
      		camel_stream_printf(fstream,
-		 "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
-				content_colour & 0xEDECEB,
-				website, subject);
-     		camel_stream_printf (fstream, "<td>%s</td>", buff);
-    		camel_stream_printf (fstream, "</tr></table></td></tr></table></div>");
+			"<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
+			content_colour & 0xEDECEB,
+			website, subject);
+     		camel_stream_printf (fstream, "<tr><td>%s</td></tr></table></div>", buff);
 	}
 
 	//this is required for proper charset rendering when html
@@ -1978,14 +1982,12 @@ fmerror:
 	camel_stream_printf (t->stream,
                "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
                frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
-	camel_stream_printf (t->stream, 
-	"<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td>");
 	camel_stream_printf(t->stream, 
 	"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
      	camel_stream_printf (t->stream,
 	"<tr><td><h3>Formatting error!</h3></td></tr>"
 	"<tr><td>Feed article corrupted! Cannot format article.</td></tr>");
-    	camel_stream_printf (t->stream, "</table></td></tr></table></div>");
+    	camel_stream_printf (t->stream, "</table></div>");
 	return;
 }
 

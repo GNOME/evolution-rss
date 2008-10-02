@@ -1,5 +1,7 @@
 2008-10-02  Lucian Langa  <lucilanga@gnome.org>
 	
+	* src/rss.c: org_gnome_cooly_format_rss
+	fix borders
 	* src/configure: change to AC_PROG_CXX
 	to avoid AC_LANG_COMPILER
 
