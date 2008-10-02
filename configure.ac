@@ -14,7 +14,7 @@ AC_PROG_INTLTOOL([0.21])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_PROG_CPP
+AC_PROG_CXX
 AC_REQUIRE_CPP
 AC_PATH_PROG(GPP, g++, no)
 if test "x$GPP" = "xno"; then

@@ -1,4 +1,9 @@
-2008-09-39  Lucian Langa  <lucilanga@gnome.org>
+2008-10-02  Lucian Langa  <lucilanga@gnome.org>
+	
+	* src/configure: change to AC_PROG_CXX
+	to avoid AC_LANG_COMPILER
+
+2008-09-29  Lucian Langa  <lucilanga@gnome.org>
 	
 	* src/misc.c: sanitize_url() correctly 
 	free old string
