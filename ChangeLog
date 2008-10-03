@@ -1,3 +1,11 @@
+2008-10-03  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-icon-factory.{c,h}: 
+	rss_build_stock_images new function
+	* src/rss.c: (org_gnome_rss_controls)
+	new buttons text, do not request
+	width size for buttons (#552437)
+
 2008-10-02  Lucian Langa  <lucilanga@gnome.org>
 	
 	* src/rss.c: org_gnome_cooly_format_rss

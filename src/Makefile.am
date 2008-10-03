@@ -136,6 +136,8 @@ EXTRA_DIST = 					\
 	gecko-utils.h				\
 	rss-config-factory.c			\
 	rss-config-factory.h			\
+	rss-icon-factory.c			\
+	rss-icon-factory.h			\
 	evolution-import-rss.c			\
 	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\

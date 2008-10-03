@@ -132,6 +132,7 @@ int rss_verbose_debug = 0;
 #include "dbus.c"
 #endif
 #include "rss-config-factory.c"
+#include "rss-icon-factory.c"
 
 int pop = 0;
 guint ftotal;
@@ -1703,7 +1704,6 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 }
 #endif
 
-
 static gboolean
 org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
@@ -1718,16 +1718,18 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
 	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
-	gtk_widget_set_size_request (GTK_WIDGET(hbox2), -1, 31);
+//	gtk_widget_set_size_request (GTK_WIDGET(hbox2), -1, 31);
 
 	GtkWidget *button = gtk_button_new_with_label(
-				rf->cur_format ? _("HTML") : _("Summary"));
+				rf->cur_format ? _("Show Summary") : _("Show Full Text"));
+
 	gtk_button_set_image (
                 GTK_BUTTON (button),
-                gtk_image_new_from_stock (
-                        GTK_STOCK_HOME, GTK_ICON_SIZE_BUTTON));
+		gtk_image_new_from_stock (
+                        rf->cur_format ? RSS_TEXT_GENERIC : RSS_TEXT_HTML,
+			GTK_ICON_SIZE_BUTTON));
+
 	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
-	gtk_widget_set_size_request(button, 100, 10);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
         gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
@@ -3339,6 +3341,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	GtkWidget *readrss_label;
 	GtkWidget *readrss_progress;
 	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
+	GtkWidget *recv_icon;
 
 	rf->t = t;
 
@@ -3371,14 +3374,8 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
         g_hash_table_insert (data->active, info->uri, info);
 //        list = g_list_prepend (list, info);
 
-	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss-24.png",
-                                            NULL);
-
-	GtkWidget *recv_icon = gtk_image_new_from_file(
-                        iconfile);
-	g_free(iconfile);
-
+	recv_icon = gtk_image_new_from_stock (
+                        "rss-main", GTK_ICON_SIZE_LARGE_TOOLBAR);
 
 	guint row = t->row;
 	row+=2;
@@ -3568,6 +3565,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			rf->soup_auth_retry = 1;
 			status_msg = g_queue_new();
 			get_feed_folders();
+			rss_build_stock_images();
 #if HAVE_DBUS
 			d(g_print("init_dbus()\n"));
 			/*D-BUS init*/
@@ -4388,19 +4386,6 @@ fetch_image(gchar *url)
 		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, url, NULL);
 	} else 
 		g_print("image cache HIT\n");
-
-	/* test for *loading* images*/
-/*	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss-24.png",
-                                            NULL);*/
-/*	gchar *buf = g_malloc0(1024);
-	FILE *rf = fopen(iconfile, "rb");
-	fread(buf, 1, 1024, rf);
-        fclose(rf);
-
-	FILE *rw = fopen(name, "wb+");
-	fwrite(buf, 1, 1024, rw);
-	fclose(rw);*/
 
 	net_get_unblocking(url,
                        	        textcb,
