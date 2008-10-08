@@ -1,3 +1,8 @@
+2008-10-08  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: finish_feed(): correctly
+	add non-validated feed
+
 2008-10-03  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-icon-factory.{c,h}: 

@@ -1718,7 +1718,6 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
 	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
-//	gtk_widget_set_size_request (GTK_WIDGET(hbox2), -1, 31);
 
 	GtkWidget *button = gtk_button_new_with_label(
 				rf->cur_format ? _("Show Summary") : _("Show Full Text"));
@@ -2499,9 +2498,9 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 				g_hash_table_insert(rf->hrname_r, g_strdup(md5), 
 								g_strdup(chn_name));
 				save_gconf_feed();
+				update_ttl(md5, r->ttl);
+				user_data = chn_name;
 			}
-			g_free(chn_name);
-			update_ttl(lookup_key(user_data), r->ttl);
 		}
 		if (r->cache)
 			xmlFreeDoc(r->cache);
@@ -3613,6 +3612,12 @@ e_plugin_lib_disable(EPluginLib *ep)
 	g_print("DIE!\n");
 }
 
+static void
+free_filter_uids (gpointer user_data, GObject *ex_msg)
+{
+	g_print("weak unref called on filter_uids\n");
+}
+
 void
 create_mail(create_feed *CF)
 {
@@ -3626,7 +3631,7 @@ create_mail(create_feed *CF)
 	CamelDataWrapper *rtext;
 	CamelContentType *type;
 	CamelStream *stream;
-	const char *appended_uid = NULL;
+	char *appended_uid = NULL;
 	gchar *author = CF->q ? CF->q : CF->sender;
 
 	mail_folder = check_feed_folder(CF->full_path);
@@ -3713,14 +3718,16 @@ create_mail(create_feed *CF)
 	}
         else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
+
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
-		g_print("weakify this!!!\n");
+
 	if (appended_uid != NULL)
 	{
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
-	//	g_ptr_array_free(filter_uids, FALSE);
+/*FIXME do not how to free this
+		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
 	}
 	camel_folder_sync(mail_folder, FALSE, NULL);
 	camel_folder_thaw(mail_folder);
