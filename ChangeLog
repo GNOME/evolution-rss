@@ -1,5 +1,7 @@
 2008-10-08  Lucian Langa  <lucilanga@gnome.org>
 
+	* pixmaps: rss-text-html, rss-text-x-generic
+	add new summary icons
 	* src/rss.c: finish_feed(): correctly
 	add non-validated feed
 
