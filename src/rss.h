@@ -20,11 +20,21 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 #endif
+#include "network.h"
 
 #ifndef __RSS_H_
 #define __RSS_H_
 
 #define PLUGIN_INSTALL_DIR @PLUGIN_INSTALL_DIR@
+#define DEFAULT_FEEDS_FOLDER "News&Blogs"
+#define DEFAULT_NO_CHANNEL "Untitled channel"
+#define DEFAULT_TTL 1800
+
+/* ms between status updates to the gui */
+#define STATUS_TIMEOUT (250)
+
+#define NETWORK_TIMEOUT (180000)
+#define HTTP_CACHE_PATH "http"
 
 GConfClient *rss_gconf;
 GSList *rss_list = NULL;
@@ -256,10 +266,11 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar *encl;
 } create_feed;
 
+guint           upgrade = 0;                // set to 2 when initailization successfull
 guint count = 0;
 gchar *buffer = NULL;
-
-guint           upgrade = 0;                // set to 2 when initailization successfull
+guint ftotal;
+guint farticle;
 
 u_int32_t gen_crc(const char *msg);
 gboolean create_user_pass_dialog(gchar *url);
@@ -274,7 +285,25 @@ gboolean update_articles(gboolean disabler);
 static xmlNode *html_find (xmlNode *node, char *match);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
+gchar *decode_utf8_entities(gchar *str);
 gchar *decode_html_entities(gchar *str);
+gchar *get_real_channel_name(gchar *uri, gchar *failed);
+gchar *fetch_image(gchar *url);
+void create_mail(create_feed *CF);
+void migrate_crc_md5(const char *name, gchar *url);
+void write_feed_status_line(gchar *file, gchar *needle);
+void free_cf(create_feed *CF);
+gchar *generate_safe_chn_name(gchar *chn_name);
+void update_sr_message(void);
+void update_feed_image(gchar *image, gchar *key);
+static void flicker_status_icon(const char *channel, gchar *title);
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_enclosure (SoupMessage *msg, create_feed *user_data);
+#else
+finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data);
+#endif
+static void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif
@@ -287,11 +316,6 @@ void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
 void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
 gchar *rss_component_peek_base_directory(MailComponent *component);
 static void custom_feed_timeout(void);
-static char *layer_find (xmlNodePtr node, char *match, char *fail);
-static char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fail);
-static gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char *fail);
-xmlNodePtr layer_find_pos (xmlNodePtr node, char *match, char *submatch);
-static char *layer_find_tag (xmlNodePtr node, char *match, char *fail);
 
 
 typedef struct FEED_FOLDERS {
