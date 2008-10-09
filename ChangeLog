@@ -1,3 +1,8 @@
+2008-10-09  Lucian Langa  <lucilanga@gnome.org>
+
+	* m4/evolution.m4, configure.ac: add
+	evolution detection macros
+
 2008-10-08  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c, src/parser.h move parsing

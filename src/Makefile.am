@@ -134,6 +134,8 @@ EXTRA_DIST = 					\
 	dbus.c					\
 	gecko-utils.cpp				\
 	gecko-utils.h				\
+	parser.c				\
+	parser.h				\
 	rss-config-factory.c			\
 	rss-config-factory.h			\
 	rss-icon-factory.c			\

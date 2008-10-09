@@ -8,8 +8,6 @@
 	* failback to old handler when formatting error
 	* when deleting a folder offer to delete feed also
 	* jump to folder when adding through d-bus
-	* move evolution detection to m4 to ease up integration in other plugins
-	* check memory consumption when S&R
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
 	* fix authentication for proxy dialog

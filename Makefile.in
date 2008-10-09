@@ -39,8 +39,9 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	config.guess config.sub depcomp install-sh ltmain.sh missing \
 	mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/gecko.m4 \
-	$(top_srcdir)/m4/intltool.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/evolution.m4 \
+	$(top_srcdir)/m4/gecko.m4 $(top_srcdir)/m4/intltool.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -100,6 +101,7 @@ DBUS_CFLAGS = @DBUS_CFLAGS@
 DBUS_LIBS = @DBUS_LIBS@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -194,6 +196,7 @@ MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
 MSGFMT_OPTS = @MSGFMT_OPTS@
 MSGMERGE = @MSGMERGE@
+NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -220,6 +223,7 @@ SOUP_VERSION = @SOUP_VERSION@
 STRIP = @STRIP@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+WARN_CFLAGS = @WARN_CFLAGS@
 WEBKIT_CFLAGS = @WEBKIT_CFLAGS@
 WEBKIT_LIBS = @WEBKIT_LIBS@
 WEBKIT_UNSTD = @WEBKIT_UNSTD@
@@ -279,6 +283,7 @@ sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = pixmaps po src

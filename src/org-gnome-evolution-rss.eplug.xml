@@ -6,7 +6,7 @@
     location="+PLUGIN_INSTALL_DIR+/liborg-gnome-evolution-rss.so"
     domain="+GETTEXT_PACKAGE+"
     localedir="+LOCALEDIR+"
-    version="0.0.8"
+    version="+VERSION+"
     name="Evolution RSS" short_name="evolution-rss">
     <_description xml:space="preserve">Evolution RSS Reader Plugin.
 
