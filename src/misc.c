@@ -53,6 +53,7 @@ strextr(gchar *text, gchar *substr)
 	//first check if string contains the substring
 	if (!strstr(text, substr))
 		return g_strdup(text);
+
 	char *tmp = g_strdup(text);
 	GString *str = g_string_new(NULL);
 	g_string_append(str, tmp);
@@ -72,9 +73,9 @@ sanitize_url(gchar *text)
 	gchar *tmptext = g_strdup(text);
 	if (strstr(text, "feed://"))
 		tmptext = strextr(text, "feed://");
-	if (strstr(text, "feed//"))
+	else if (strstr(text, "feed//"))
 		tmptext = strextr(text, "feed//");
-	if (strstr(text, "feed:"))
+	else if (strstr(text, "feed:"))
 		tmptext = strextr(text, "feed:");
 
  	if (!strstr (tmptext, "http://") 

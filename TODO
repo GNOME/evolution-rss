@@ -18,7 +18,6 @@
 	* offline storage for article's home page
 	* implement web controls for diferent redering <Webkits> or <Gecko>
 	* force soup to follow redirects (304) test on fedora weekly news
-	* search in the content of page for feed
 	* when adding a feed as opml file offer to import (file detection)
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
 	* test new proxy authentification
