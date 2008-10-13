@@ -1221,8 +1221,8 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 	rf->cur_format = rf->cur_format^1;
 	rf->chg_format = 1;
 	em_format_redraw((EMFormat *)pobject);
-	while (gtk_events_pending ())
-             gtk_main_iteration ();
+//	while (gtk_events_pending ())
+  //           gtk_main_iteration ();
 	
 }
 
@@ -1273,7 +1273,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	g_print("BOX w:%d,h:%d\n", req.width, req.height);
   //      width = ((GtkWidget *) efh->html)->allocation.height - 16;
 	
-	guint k = rf->headers_mode ? 254 : 103;
+	guint k = rf->headers_mode ? 240 : 106;
 	if (GTK_IS_WIDGET(widget))
 	{
         	width = widget->allocation.width - 16 - 2;// - 16;
@@ -1827,6 +1827,24 @@ generate_safe_chn_name(gchar *chn_name)
 	return chn_name;
 }
 
+gchar *
+search_rss(gchar *buffer, guint len)
+{
+	gchar *app;
+	xmlNode *doc = parse_html_sux (buffer, len);
+	while (doc) {
+		doc = html_find(doc, "link");
+		app = xmlGetProp(doc, "type");
+		if (!g_ascii_strcasecmp(app, "application/atom+xml")
+		|| !g_ascii_strcasecmp(app, "application/xml")
+		|| !g_ascii_strcasecmp(app, "application/rss+xml")) {
+			return xmlGetProp(doc, "href");
+		}
+		xmlFree(app);
+	}
+	return NULL;
+}
+
 gboolean
 setup_feed(add_feed *feed)
 {
@@ -1921,7 +1939,7 @@ setup_feed(add_feed *feed)
 	if (!feed->validate)
 		goto add;
 		
-	d(g_print("feed->feed_url:%s\n", feed->feed_url));
+top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
         content = net_post_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err)
 	{
@@ -1939,8 +1957,7 @@ setup_feed(add_feed *feed)
 	if ((doc != NULL && root != NULL)
 		&& (strcasestr(root->name, "rss")
 		|| strcasestr(root->name, "rdf")
-		|| strcasestr(root->name, "feed")))
-	{
+		|| strcasestr(root->name, "feed"))) {
         	r->cache = doc;
 		r->uri = feed->feed_url;
 		r->progress = feed->progress;
@@ -2023,12 +2040,18 @@ add:
 
 		rf->setup = 1;
 		ret = 1;
+		goto out;
 	}
-	else
-	{
-		rss_error(NULL, NULL, _("Error while fetching feed."), _("Invalid Feed"));
-		ret = 0;
+	//search for a feed entry
+	gchar *rssurl = search_rss(content->str, content->len);
+	if (rssurl) {
+		feed->feed_url = rssurl;
+		goto top;
 	}
+
+ 	rss_error(NULL, NULL, _("Error while fetching feed."), _("Invalid Feed"));
+	ret = 0;
+
 out:	rf->pending = FALSE;
 	return ret;
 }
@@ -3398,7 +3421,7 @@ create_mail(create_feed *CF)
 	}
 	time = camel_mime_message_get_date (new, NULL) ;
 	gchar *time_str = asctime(gmtime(&time));
-	char *buf = g_strdup_printf("from %s by localhost via evolution-rss-%s with libsoup-%d; %s\r\n", CF->website, VERSION, LIBSOUP_VERSION, time_str);
+	char *buf = g_strdup_printf("from %s by localhost via evolution-rss-%s with libsoup-%d; %s\r\n", "RSS", VERSION, LIBSOUP_VERSION, time_str);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Received", buf);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);

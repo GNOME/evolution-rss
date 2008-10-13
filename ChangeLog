@@ -1,3 +1,10 @@
+2008-10-12  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c: search
+	page for xml feed
+	* src/rss.c: shorten usless info in received
+	field 
+
 2008-10-09  Lucian Langa  <lucilanga@gnome.org>
 
 	* m4/evolution.m4, configure.ac: add
