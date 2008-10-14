@@ -1828,10 +1828,10 @@ generate_safe_chn_name(gchar *chn_name)
 }
 
 gchar *
-search_rss(gchar *buffer, guint len)
+search_rss(char *buffer, int len)
 {
 	gchar *app;
-	xmlNode *doc = parse_html_sux (buffer, len);
+	xmlNode *doc = (xmlNode *)parse_html_sux (buffer, len);
 	while (doc) {
 		doc = html_find(doc, "link");
 		app = xmlGetProp(doc, "type");

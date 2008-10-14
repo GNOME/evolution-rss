@@ -103,7 +103,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                 		gchar *text = feed->feed_url;
                 		feed->feed_url = sanitize_url(feed->feed_url);
                 		g_free(text);
-      				g_print("feed URL: %s\n", feed->feed_url);
+      				d(g_print("sanitized feed URL: %s\n", feed->feed_url));
                 		if (g_hash_table_find(rf->hr,
                                         check_if_match,
                         	        feed->feed_url))
@@ -137,11 +137,11 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
     		return DBUS_HANDLER_RESULT_HANDLED;
   	}
 	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "ping")) {
-		g_print("!!!PING!!!\n");
 		gchar *data = g_strdup("PONG");
 		DBusMessage *reply;
-		fprintf(stderr, "Ping received from %s\n",
-		dbus_message_get_sender(message));
+		fprintf(stderr, "!!Ping!! received from %s\n",
+				dbus_message_get_sender(message));
+		fprintf(stderr, "Sending !!Pong!! back\n");
 		reply = dbus_message_new_signal (DBUS_PATH, DBUS_REPLY_INTERFACE, "pong");
 //		dbus_message_set_reply_serial(reply,
 //			dbus_message_get_serial(message));

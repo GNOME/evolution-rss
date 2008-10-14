@@ -155,7 +155,7 @@ xml_parse_sux (const char *buf, int len)
 }
 
 xmlDoc *
-parse_html_sux (const char *buf, int len)
+parse_html_sux (const char *buf, guint len)
 {
         xmlDoc *doc;
 #if LIBXML_VERSION > 20600
