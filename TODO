@@ -32,3 +32,17 @@
 	* evolution import rss add no. of retries
 	* fix images when replying
 	* provide expire option for images
+	* crash when no connection 
+#11 0x00007f258ec191d0 in gtk_widget_set_parent ()
+   from /usr/lib64/libgtk-x11-2.0.so.0
+#12 0x00007f258ea6096a in ?? () from /usr/lib64/libgtk-x11-2.0.so.0
+#13 0x00007f25958569ee in e_task_widget_update_image (task_widget=0x3281e80, 
+    stock=<value optimized out>, text=0x34dcfb0 "Error fetching feed.")
+    at e-task-widget.c:229
+#14 0x00007f2595833509 in e_activity_handler_make_error (
+    activity_handler=0x226be20, component_id=<value optimized out>, 
+    error_type=<value optimized out>, error=0x2bd6160)
+    at e-activity-handler.c:576
+#15 0x00007f257c9dec29 in rss_error (key=<value optimized out>, 
+    name=<value optimized out>, error=<value optimized out>, 
+    emsg=<value optimized out>) at rss.c:273

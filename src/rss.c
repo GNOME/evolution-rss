@@ -1441,8 +1441,8 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 
 	gtk_button_set_image (
                 GTK_BUTTON (button),
-		gtk_image_new_from_stock (
-                        rf->cur_format ? RSS_TEXT_GENERIC : RSS_TEXT_HTML,
+		gtk_image_new_from_icon_name (
+                        rf->cur_format ? "text-x-generic" : "text-html",
 			GTK_ICON_SIZE_BUTTON));
 
 	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);

@@ -1,3 +1,8 @@
+2008-10-22  Lucian Langa <lucilanga@gnome.org>
+
+	* src/rss.c: (org_gnome_rss_controls)
+	allow themed icon on summary/full text button
+
 2008-10-14  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c, src/parser.c: misc cleanups
