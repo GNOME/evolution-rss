@@ -965,7 +965,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 				free_cf(CF);
 			}
 			farticle++;
-			flicker_status_icon(chn_name, p);
+			update_status_icon(chn_name, p);
 		g_free(p);
 		}
 		d(g_print("put success()\n"));

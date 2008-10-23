@@ -1,5 +1,7 @@
 2008-10-22  Lucian Langa <lucilanga@gnome.org>
 
+	* src/evolution-import-rss.c: lower number of
+	attempts to fire up evolution
 	* src/rss.c: (org_gnome_rss_controls)
 	allow themed icon on summary/full text button
 

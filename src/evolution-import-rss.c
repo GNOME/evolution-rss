@@ -51,6 +51,7 @@ send_dbus_ping (void)
 	DBusPendingCall *pending;
 	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, "ping")))
 		return;
+	printf("ping evolution...\n");
 	int ret = dbus_connection_send (bus, message, NULL);
 	if (ret == FALSE)
     	{
@@ -171,7 +172,7 @@ main (int argc, char *argv[])
                 send_dbus_ping ();
 	g_timeout_add (EVOLUTION_PING_TIMEOUT, no_evo_cb, NULL);
 	g_main_loop_run(loop);
-	while (!evo_running && i < 3)
+	while (!evo_running && i < 2)
 	{
 		system("evolution&");
 		g_print("fireing evolution...\n");

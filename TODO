@@ -3,7 +3,7 @@
 	* probably move to soup_unblocking when rendering of an article
 	* when browsing a different feed/mail folder cancel all sessions
 	* also create groups when importing
-	* create some sort of progress popup when render with an external engine (webkit/gecko)
+	* create progress popup when render with an external engine (webkit/gecko)
 	* check webkit area sizing when using zoom in/out
 	* failback to old handler when formatting error
 	* when deleting a folder offer to delete feed also
@@ -11,13 +11,12 @@
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
 	* fix authentication for proxy dialog
-	* make auth dialog not intrusive (peek other software)
+	* make auth dialog not intrusive (peek others)
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* implement notify back of imported feed perhaps libnotify
 	* prefetch html content for all webkits (perhaps temp file)
 	* offline storage for article's home page
 	* implement web controls for diferent redering <Webkits> or <Gecko>
-	* force soup to follow redirects (304) test on fedora weekly news
 	* when adding a feed as opml file offer to import (file detection)
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
 	* test new proxy authentification

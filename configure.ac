@@ -300,7 +300,7 @@ if test "x$have_dbus" == "xyes"; then
 	have_dbus_build="yes"
 	import_feeds="evolution-import-rss"
 else
-	have_dbus_build="evolution-import-rss module will be not built"
+	have_dbus_build="evolution-import-rss module will not be built"
 	import_feeds="no"
 fi
 

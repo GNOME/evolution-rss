@@ -296,7 +296,7 @@ void free_cf(create_feed *CF);
 gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
 void update_feed_image(gchar *image, gchar *key);
-static void flicker_status_icon(const char *channel, gchar *title);
+static void update_status_icon(const char *channel, gchar *title);
 static void
 #if LIBSOUP_VERSION < 2003000
 finish_enclosure (SoupMessage *msg, create_feed *user_data);
