@@ -1,3 +1,16 @@
+Evolution-RSS 0.1.2
+------------------------------
+
+Bug fixes:
+	#552437: Misleading text on "HTML"/"Summary"-button
+	#551193: "empty" posts cause a crash
+	#550744: prevent duplicate feeds
+	#550413: deleting subscriptions
+	#549935: Summary unreadable with dark theme
+	#548868: allow mail filters to work for rss articles too
+	#546892: Prefer themed icon names over e-icon-factory
+
+
 Evolution-RSS 0.1.0 2008-06-30
 ------------------------------
 

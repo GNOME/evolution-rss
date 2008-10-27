@@ -75,7 +75,7 @@ int rss_verbose_debug = 0;
 
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
-
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <bonobo/bonobo-shlib-factory.h>
 
 #include <glade/glade-xml.h>

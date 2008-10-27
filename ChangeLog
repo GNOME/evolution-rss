@@ -1,3 +1,7 @@
+2008-10-27  Lucian Langa <lucilanga@gnome.org>
+
+	* src/rss.c: add missing includes
+
 2008-10-22  Lucian Langa <lucilanga@gnome.org>
 
 	* src/evolution-import-rss.c: lower number of
