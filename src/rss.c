@@ -1324,9 +1324,10 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 				gtk_widget_set_size_request((GtkWidget *)data, width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
-#if defined(HAVE_XULRUNNER) || defined(HAVE_GECKO_1_9)
-//if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
-//	gtk_moz_embed_reload((GtkMozEmbed *)rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
+#if defined(HAVE_XULRUNNER)
+// || defined(HAVE_GECKO_1_9)
+if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
+	gtk_moz_embed_reload((GtkMozEmbed *)rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
 			}
 	}
