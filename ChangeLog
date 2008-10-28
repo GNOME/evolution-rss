@@ -1,5 +1,7 @@
 2008-10-28  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: controls add back and forward
+	buttons when browsing
 	* src/rss.c: correctly process browser
 	stop request
 

@@ -1227,11 +1227,37 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 }
 
 static void
+back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
+{
+	guint engine = fallback_engine();
+#ifdef	HAVE_GECKO
+	if (engine == 2)
+		gtk_moz_embed_go_back(GTK_MOZ_EMBED(rf->mozembed));
+#endif
+#if HAVE_WEBKIT
+	if (engine == 1)
+		webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
+#endif
+}
+
+static void
+forward_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
+{
+	guint engine = fallback_engine();
+#ifdef	HAVE_GECKO
+	if (engine == 2)
+		gtk_moz_embed_go_forward(GTK_MOZ_EMBED(rf->mozembed));
+#endif
+#if HAVE_WEBKIT
+	if (engine == 1)
+		webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
+#endif
+}
+
+static void
 stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-	g_print("stop signal\n");
 	guint engine = fallback_engine();
-	g_print("engine:%d\n", engine);
 #ifdef	HAVE_GECKO
 	if (engine == 2)
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
@@ -1284,7 +1310,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
         	width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
 		d(g_print("resize webkit :width:%d, height: %d\n", width, height));
-//			rf->headers_mode ? 194 : 100;
 //	EMFormat *myf = (EMFormat *)efh;
 //	GtkRequisition req;
 //	gtk_widget_size_request(data, &req);
@@ -1300,8 +1325,8 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
 #if defined(HAVE_XULRUNNER) || defined(HAVE_GECKO_1_9)
-if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
-	gtk_moz_embed_reload((GtkMozEmbed *)rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
+//if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
+//	gtk_moz_embed_reload((GtkMozEmbed *)rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
 #endif
 			}
 	}
@@ -1456,16 +1481,30 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
 	if (rf->cur_format)
 	{
-        	GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+        	GtkWidget *button4 = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
+		g_signal_connect (button4, "clicked", G_CALLBACK(back_cb), efh);
+//		gtk_widget_set_size_request(button4, 100, 10);
+		gtk_button_set_relief(GTK_BUTTON(button4), GTK_RELIEF_HALF);
+		gtk_widget_set_sensitive (button4, rf->online);
+        	gtk_widget_show (button4);
+		gtk_box_pack_start (GTK_BOX (hbox2), button4, TRUE, TRUE, 0);
+        	GtkWidget *button5 = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+		g_signal_connect (button5, "clicked", G_CALLBACK(forward_cb), efh);
+//		gtk_widget_set_size_request(button5, 100, 10);
+		gtk_button_set_relief(GTK_BUTTON(button5), GTK_RELIEF_HALF);
+		gtk_widget_set_sensitive (button5, rf->online);
+        	gtk_widget_show (button5);
+		gtk_box_pack_start (GTK_BOX (hbox2), button5, TRUE, TRUE, 0);
+        	GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
 		g_signal_connect (button2, "clicked", G_CALLBACK(stop_cb), efh);
-		gtk_widget_set_size_request(button2, 100, 10);
+//		gtk_widget_set_size_request(button2, 100, 10);
 		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button2, rf->online);
         	gtk_widget_show (button2);
 		gtk_box_pack_start (GTK_BOX (hbox2), button2, TRUE, TRUE, 0);
         	GtkWidget *button3 = gtk_button_new_from_stock (GTK_STOCK_REFRESH);
 		g_signal_connect (button3, "clicked", G_CALLBACK(reload_cb), po->website);
-		gtk_widget_set_size_request(button3, 100, -1);
+//		gtk_widget_set_size_request(button3, 100, -1);
 		gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button3, rf->online);
         	gtk_widget_show (button3);
