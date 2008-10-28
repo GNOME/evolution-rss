@@ -1229,11 +1229,16 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 static void
 stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
+	g_print("stop signal\n");
+	guint engine = fallback_engine();
+	g_print("engine:%d\n", engine);
 #ifdef	HAVE_GECKO
-	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
+	if (engine == 2)
+		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 #endif
 #if HAVE_WEBKIT
-	webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
+	if (engine == 1)
+		webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
 #endif
 }
 

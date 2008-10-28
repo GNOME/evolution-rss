@@ -1,8 +1,13 @@
-2008-10-27  Lucian Langa <lucilanga@gnome.org>
+2008-10-28  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: correctly process browser
+	stop request
+
+2008-10-27  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: add missing includes
 
-2008-10-22  Lucian Langa <lucilanga@gnome.org>
+2008-10-22  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/evolution-import-rss.c: lower number of
 	attempts to fire up evolution
