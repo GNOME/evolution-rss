@@ -157,7 +157,9 @@ gecko_shutdown (void)
 #ifdef XPCOM_GLUE
 	XPCOMGlueShutdown();
 	NS_ShutdownXPCOM (nsnull);
-//	PR_ProcessExit (0);
+#ifdef (EVOLUTION_VERSION < 22300)
+	PR_ProcessExit (0);
+#endif
 #else
 	gtk_moz_embed_pop_startup ();
 #endif
