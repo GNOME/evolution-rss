@@ -3361,7 +3361,8 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 				rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
 			if (!rf->error_hash)	//keeping trask of taskbar errors
 				rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-//			atexit(rss_finalize);
+			//there is no shutdown for e-plugin yet.
+			atexit(rss_finalize);
 			guint render = GPOINTER_TO_INT(
 				gconf_client_get_int(rss_gconf, 
 						GCONF_KEY_HTML_RENDER, 
