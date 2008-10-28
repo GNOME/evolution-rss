@@ -2312,6 +2312,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	{
 		gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), user_data);
 		gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
+		gtk_label_set_justify(GTK_LABEL (rf->sr_feed), GTK_JUSTIFY_LEFT);
 		g_free(furl);
 	}
 	if(rf->label && rf->feed_queue == 0 && rf->info)
