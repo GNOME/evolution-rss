@@ -157,7 +157,7 @@ gecko_shutdown (void)
 #ifdef XPCOM_GLUE
 	XPCOMGlueShutdown();
 	NS_ShutdownXPCOM (nsnull);
-#ifdef (EVOLUTION_VERSION < 22300)
+#if (EVOLUTION_VERSION < 22300)
 	PR_ProcessExit (0);
 #endif
 #else
