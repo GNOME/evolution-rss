@@ -1,5 +1,6 @@
 2008-10-28  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: (taskbar_op_new) kill warning
 	* src/rss.c: controls add back and forward
 	buttons when browsing
 	* src/rss.c: correctly process browser
