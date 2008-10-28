@@ -3683,7 +3683,7 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
 #if LIBSOUP_VERSION < 2003000
-	if (msg->response.data) {
+	if (msg->response.body) {
 		camel_stream_write(user_data, msg->response.body, msg->response.length);
 #else
 	if (msg->response_body->data) {
