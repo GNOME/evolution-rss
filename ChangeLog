@@ -1,5 +1,7 @@
 2008-10-28  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: (finish_image) fix error
+	when using libsoup <= 2.2
 	* src/gecko-utils.c: (gecko_shutdown) keep 
 	ProcessExit around for evo < 2.23
 	* src/rss.c: (taskbar_op_new) kill warning
