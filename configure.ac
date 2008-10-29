@@ -1,4 +1,4 @@
-AC_INIT([evolution-rss], [0.1.1], http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss)
+AC_INIT([evolution-rss], [0.1.2], http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss)
 AC_CONFIG_SRCDIR(src)
 
 AM_INIT_AUTOMAKE

@@ -1,3 +1,7 @@
+2008-10-29  Lucian Langa  <lucilanga@gnome.org>
+
+	* configure.ac bump version
+
 2008-10-28  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (finish_image) fix error

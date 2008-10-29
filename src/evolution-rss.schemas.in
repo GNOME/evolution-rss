@@ -120,7 +120,7 @@
       <applyto>/apps/evolution/evolution-rss/status_icon</applyto>
       <owner>evolution-rss</owner>
       <type>bool</type>
-      <default>true</default>
+      <default>false</default>
       <locale name="C">
         <short>Enable Status Icon</short>
         <long>
@@ -134,7 +134,7 @@
       <applyto>/apps/evolution/evolution-rss/blink_icon</applyto>
       <owner>evolution-rss</owner>
       <type>bool</type>
-      <default>true</default>
+      <default>false</default>
       <locale name="C">
         <short>Blink Status Icon</short>
         <long>
