@@ -128,6 +128,7 @@ int rss_verbose_debug = 0;
 #include "rss.h"
 #include "parser.h"
 #include "network-soup.c"
+#include "fetch.c"
 #include "misc.c"
 #if HAVE_DBUS
 #include "dbus.c"
@@ -1650,7 +1651,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			goto out;
 		}
 #endif
-		content = net_post_blocking(addr, NULL, NULL, textcb, NULL, &err);
+		content = fetch_blocking(addr, NULL, NULL, textcb, NULL, &err);
 		if (err)
         	{
 			//we do not need to setup a pop error menu since we're in 
@@ -1986,7 +1987,7 @@ setup_feed(add_feed *feed)
 		goto add;
 		
 top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
-        content = net_post_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
+        content = fetch_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err)
 	{
 		d(g_print("setup_feed() -> err:%s\n", err->message));

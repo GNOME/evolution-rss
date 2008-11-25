@@ -45,3 +45,5 @@
 #15 0x00007f257c9dec29 in rss_error (key=<value optimized out>, 
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
+	* getting message 1 of 0
+	* allow CTRL+F to search feed article content

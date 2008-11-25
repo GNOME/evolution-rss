@@ -78,13 +78,15 @@ sanitize_url(gchar *text)
 	else if (strstr(text, "feed:"))
 		tmptext = strextr(text, "feed:");
 
- 	if (!strstr (tmptext, "http://") 
+	gchar *scheme = g_uri_parse_scheme(tmptext);
+ 	if (!scheme && !strstr (tmptext, "http://") 
 	&& !strstr (tmptext, "https://"))
 		out = g_strconcat("http://", tmptext, NULL);
  	else
 		out = g_strdup(tmptext);
 
 	g_free(tmptext);
+	g_free(scheme);
  	return out;
 }
 

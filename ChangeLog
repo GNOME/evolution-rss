@@ -1,3 +1,11 @@
+2008-11-25  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: fetch_blocking() new function
+	allow to retrieve network, file streams
+	* configure.ac: bump to devel version
+	* src/misc.c: sanitize_url() add file://
+	schmeme
+
 2008-10-29  Lucian Langa  <lucilanga@gnome.org>
 
 	* configure.ac bump version
