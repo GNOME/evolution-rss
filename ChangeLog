@@ -1,3 +1,10 @@
+2008-11-30  Lucian Langa  <lucilanga@gnome.org>
+
+	* configure.ac, m4/evolution.m4 - prefer
+	$PKG_CONFIG variable instead 
+	* src/rss.c: org_gnome_cooly_format_rss()
+	improve text visibility with dark themes
+
 2008-11-25  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: fetch_blocking() new function

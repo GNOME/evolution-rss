@@ -1725,9 +1725,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
      		camel_stream_printf(fstream,
 			"<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
-			content_colour & 0xEDECEB,
+			content_colour & 0xEDECEB & 0xffffff,
 			website, subject);
-     		camel_stream_printf (fstream, "<tr><td>%s</td></tr></table></div>", buff);
+     		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr></table></div>", text_colour & 0xffffff, buff);
 	}
 
 	//this is required for proper charset rendering when html
@@ -1990,7 +1990,7 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
         content = fetch_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err)
 	{
-		d(g_print("setup_feed() -> err:%s\n", err->message));
+		g_print("setup_feed() -> err:%s\n", err->message);
 		rss_error(NULL, feed->feed_name ? feed->feed_name: _("Unamed feed"), _("Error while fetching feed."), err->message);
 		goto out;
         }

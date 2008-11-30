@@ -213,7 +213,7 @@ AC_SUBST(RENDER)
 AC_SUBST(RENDER_N)
 
 # check for ellipsize
-GTK_VERSION=`pkg-config --modversion gtk+-2.0` 
+GTK_VERSION=`$PKG_CONFIG --modversion gtk+-2.0` 
 GTK_VERSION=`echo $GTK_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(GTK_VERSION)
 
@@ -226,7 +226,7 @@ AM_GCONF_SOURCE_2
 dnl ********************
 dnl extract soup version
 dnl ********************
-SOUP_VERSION=`pkg-config --modversion libsoup$SOUP` 
+SOUP_VERSION=`$PKG_CONFIG --modversion libsoup$SOUP` 
 SOUP_VERSION=`echo $SOUP_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(SOUP_VERSION)
 

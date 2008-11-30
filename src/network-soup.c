@@ -19,6 +19,7 @@
  */
 
 #include <string.h>
+#include <libsoup/soup-gnome.h>
 
 #include "network.h"
 #include "rss.h"
@@ -561,3 +562,9 @@ out:
 	return response;
 }
 
+void
+rss_soup_init(void)
+{
+  //      SoupCookieJar *soup_jar;
+//        soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.newcookies.sqlite", TRUE);
+}
