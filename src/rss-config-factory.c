@@ -279,7 +279,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
         char *gladefile;
   	add_feed *feed = g_new0(add_feed, 1);
 	GladeXML  *gui;
-	gchar *flabel;
+	gchar *flabel = NULL;
   	gboolean fhtml = FALSE;
   	gboolean enabled = TRUE;
   	gboolean del_unread = FALSE;

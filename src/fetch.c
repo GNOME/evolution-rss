@@ -54,3 +54,26 @@ error:
                                 g_strerror(errno));
 	return result;
 }
+
+gboolean
+fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data, 
+				gpointer cb2, gpointer cbdata2,
+				guint track,
+				GError **err)
+{
+	gchar *scheme = NULL;
+	scheme = g_uri_parse_scheme(url);
+
+	if (!g_ascii_strcasecmp(scheme, "file")) {
+		
+	} else {
+		return net_get_unblocking(url,
+                                cb,
+                                NULL,
+                                cb2,
+                                cbdata2,
+                                0,
+                                &err);
+	}
+}
+
