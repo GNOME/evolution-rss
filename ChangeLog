@@ -1,3 +1,8 @@
+2008-12-15  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: decode_entities: new function
+	for correctly parse title as rfc2047
+
 2008-12-02  Lucian Langa  <lucilanga@gnome.org>
 	
 	* src/rss-config-factory.c: sanitize

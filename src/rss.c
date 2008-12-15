@@ -226,6 +226,8 @@ static void
 dialog_key_destroy (GtkWidget *widget, gpointer data);
 guint fallback_engine(void);
 
+gchar *
+decode_entities(gchar *source);
 /*======================================================================*/
 
 gpointer
@@ -1598,6 +1600,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	feedid  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "RSS-ID");
 	gchar *subject = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "Subject"), NULL);
+	g_print("subject:%s\n", subject);
+	gchar *f = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
+				 "From"), NULL);
+	g_print("from:%s\n", f);
+	gchar *ff = camel_header_encode_string("Dag Wieërs");
+	g_print("from:%s\n", ff);
 	
 	
 	gpointer is_html = NULL;
@@ -2947,6 +2955,9 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 {
+	gchar *ent = decode_entities("mew&euml;m&amp;e&uml;w\0");
+	g_print("deco%s\n", ent);
+	g_print("enco%s\n", camel_header_encode_string(ent));
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL))
 	{
 		//as I don't know how to set this I'll setup a 10 secs timeout
@@ -3438,8 +3449,12 @@ create_mail(create_feed *CF)
 
 	addr = camel_internet_address_new(); 
 	d(g_print("date:%s\n", CF->date));
-   	camel_address_decode(CAMEL_ADDRESS(addr), author);
+//	g_print("author;%s\n", decode_html("Dag Wie&euml;a"));
+	gchar *safe_author = camel_header_encode_string(author);
+	g_print("sauthor;%s\n", safe_author);
+   	camel_address_decode(CAMEL_ADDRESS(addr), safe_author);
 	camel_mime_message_set_from(new, addr);
+	camel_object_unref(safe_author);
 	camel_object_unref(addr);
 
 	int offset = 0;
@@ -3832,6 +3847,60 @@ decode_utf8_entities(gchar *str)
 	UTF8ToHtml(buffer, &utf8len, str, &inlen);
 	return buffer;
 }
+
+gchar *
+decode_entities(gchar *source)
+{
+ 	GString *str = g_string_new(NULL);
+ 	GString *res = g_string_new(NULL);
+ 	GString *tmp = g_string_new(NULL);
+ 	gchar *string, *result;
+        const unsigned char *s;
+        guint len;
+	gpointer in, out;
+	int state, pos;
+
+	g_string_append(res, source);
+reent:	s = (const unsigned char *)res->str;
+        len = strlen(res->str);
+	state = 0;
+	pos = 1;
+	g_string_truncate(str, 0);
+	tmp = g_string_new(NULL);
+	while (*s != 0 || len) {
+		if (state) {
+			if (*s==';') {
+				state = 2; //entity found
+				out = pos;
+				break;
+			} else {
+				g_string_append_c(str, *s);
+			}
+		}
+		if (*s=='&') {
+			in = pos-1;
+			state = 1;
+                }
+		*s++;
+		pos++;
+		len--;
+	}
+	if (state == 2) {
+		g_string_erase(res, in, out-in);
+		htmlEntityDesc *my = htmlEntityLookup((xmlChar *)str->str);
+		g_string_printf(tmp, "\\u%04x", my->value);
+		g_string_insert(res, in, tmp->str);
+		g_string_free(tmp, FALSE);
+		gchar *result = res->str;
+		g_string_free(res, FALSE);
+		res = g_string_new(NULL);
+		g_string_append(res, result);
+		goto reent;
+	}
+	result = res->str;
+	g_string_free(res, FALSE);
+	return result;
+}	
 
 gchar *
 decode_html_entities(gchar *str)

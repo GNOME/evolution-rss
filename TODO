@@ -22,7 +22,6 @@
 	* test new proxy authentification
 	* cache large feeds
 	* hook feed properties in folder properties
-	* strip html tags from title
 	* if necessary implement config code for evo 2.12
 	* fix recursivity on layer_find_pos
 	* fix annoying cursor jump when browsing through evo-rss folders
@@ -46,3 +45,4 @@
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
         * implement right-click in browse
+	* strip html tags from title - correctly process international text (rfc2047)

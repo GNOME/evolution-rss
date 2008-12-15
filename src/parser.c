@@ -738,6 +738,9 @@ gchar *
 update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, GtkWidget *progress)
 {
         guint i;
+	//name must be set according to rfc2047
+	//gchar *safe_channel = camel_header_encode_string(
+	g_print("chn_name:%s\n", chn_name);
 	gchar *sender = g_strdup_printf("%s <%s>", chn_name, chn_name);
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	char *d2 = NULL;
