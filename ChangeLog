@@ -4,6 +4,9 @@
 	for correctly parse title as rfc2047
 	* src/parser.c: correctly decode (rfc2047)
 	from: and subject: field
+	* src/rss.c: create_mail: sanitize free data
+	* src/rss.c: update_feed_image: correctly
+	update feed img files
 
 2008-12-02  Lucian Langa  <lucilanga@gnome.org>
 	

@@ -1600,13 +1600,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	feedid  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "RSS-ID");
 	gchar *subject = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "Subject"), NULL);
-	g_print("subject:%s\n", subject);
 	gchar *f = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "From"), NULL);
-	g_print("from:%s\n", f);
 	gchar *ff = camel_header_encode_string("Dag Wieërs");
-	g_print("from:%s\n", ff);
-	
 	
 	gpointer is_html = NULL;
 	if (feedid)
@@ -2160,7 +2156,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		g_free(tmsg);
 	}
 
-
 	if (rf->feed_queue == 0)
 	{
 		d(g_print("taskbar_op_finish()\n"));
@@ -2545,11 +2540,13 @@ update_feed_image(gchar *image, gchar *key)
         g_free(feed_dir);
         if (!g_file_test(feed_file, G_FILE_TEST_EXISTS))
         {
+		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
+			O_RDWR|O_CREAT, 0666);
                 net_get_unblocking(image,
                                 textcb,
                                 NULL,
                                 (gpointer)finish_image,
-                                feed_file,
+                                feed_fs,
                                 0,
                                 &err);
                 if (err) {
@@ -2955,10 +2952,6 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 {
-	g_print("mew&euml;m&gt;e&uml;w\n");
-	gchar *ent = decode_entities("mew&euml;m&gt;e&uml;w\0");
-	g_print("deco%s\n", ent);
-	g_print("enco%s\n", camel_header_encode_string(ent));
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL))
 	{
 		//as I don't know how to set this I'll setup a 10 secs timeout
@@ -3459,7 +3452,7 @@ create_mail(create_feed *CF)
 	g_free(tmp);
    	camel_address_decode(CAMEL_ADDRESS(addr), safe_author);
 	camel_mime_message_set_from(new, addr);
-	camel_object_unref(safe_author);
+	g_free(safe_author);
 	camel_object_unref(addr);
 
 	int offset = 0;
@@ -3531,14 +3524,14 @@ create_mail(create_feed *CF)
 
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
 
-	if (appended_uid != NULL)
-	{
-		filter_uids = g_ptr_array_sized_new(1);
-		g_ptr_array_add(filter_uids, appended_uid);
-		mail_filter_on_demand (mail_folder, filter_uids);
+//	if (appended_uid != NULL)
+//	{
+//		filter_uids = g_ptr_array_sized_new(1);
+//		g_ptr_array_add(filter_uids, appended_uid);
+//		mail_filter_on_demand (mail_folder, filter_uids);
 /*FIXME do not how to free this
-		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
-	}
+//		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
+//	}
 	camel_folder_sync(mail_folder, FALSE, NULL);
 	camel_folder_thaw(mail_folder);
         camel_operation_end(NULL);
@@ -3704,15 +3697,17 @@ finish_image (SoupMessage *msg, CamelStream *user_data)
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
+	if (user_data) {
 #if LIBSOUP_VERSION < 2003000
-	if (msg->response.body) {
-		camel_stream_write(user_data, msg->response.body, msg->response.length);
+		if (msg->response.body) {
+			camel_stream_write(user_data, msg->response.body, msg->response.length);
 #else
-	if (msg->response_body->data) {
-		camel_stream_write(user_data, msg->response_body->data, msg->response_body->length);
+		if (msg->response_body->data) {
+			camel_stream_write(user_data, msg->response_body->data, msg->response_body->length);
 #endif
-		camel_stream_close(user_data);
-		camel_object_unref(user_data);
+			camel_stream_close(user_data);
+			camel_object_unref(user_data);
+		}
 	}
 }
 
@@ -3745,7 +3740,7 @@ fetch_image(gchar *url)
         GError *err = NULL;
 	gchar *tmpdir = NULL;
 	gchar *name = NULL;
-	CamelStream *stream;
+	CamelStream *stream = NULL;
 	if (!url)
 		return NULL;
 	gchar *feed_dir = g_build_path("/", rss_component_peek_base_directory(mail_component_peek()), "static", NULL);
@@ -3759,6 +3754,7 @@ fetch_image(gchar *url)
 		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, url, NULL);
 	} else 
 		g_print("image cache HIT\n");
+
 
 	net_get_unblocking(url,
                        	        textcb,
