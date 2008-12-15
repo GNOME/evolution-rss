@@ -2,6 +2,8 @@
 
 	* src/rss.c: decode_entities: new function
 	for correctly parse title as rfc2047
+	* src/parser.c: correctly decode (rfc2047)
+	from: and subject: field
 
 2008-12-02  Lucian Langa  <lucilanga@gnome.org>
 	

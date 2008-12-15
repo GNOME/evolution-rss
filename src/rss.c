@@ -2955,7 +2955,8 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 {
-	gchar *ent = decode_entities("mew&euml;m&amp;e&uml;w\0");
+	g_print("mew&euml;m&gt;e&uml;w\n");
+	gchar *ent = decode_entities("mew&euml;m&gt;e&uml;w\0");
 	g_print("deco%s\n", ent);
 	g_print("enco%s\n", camel_header_encode_string(ent));
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL))
@@ -3365,6 +3366,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			status_msg = g_queue_new();
 			get_feed_folders();
 			rss_build_stock_images();
+			rss_soup_init();
 #if HAVE_DBUS
 			d(g_print("init_dbus()\n"));
 			/*D-BUS init*/
@@ -3443,15 +3445,18 @@ create_mail(create_feed *CF)
 	info = camel_message_info_new(NULL);
 	camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN, 1);
 
-	gchar *tmp = markup_decode(CF->subj);
-	camel_mime_message_set_subject(new, tmp);
+	gchar *tmp = decode_entities(CF->subj);
+	gchar *tmp2 = markup_decode(tmp);
+	gchar *safe_subj = camel_header_encode_string(tmp2);
+	camel_mime_message_set_subject(new, safe_subj);
 	g_free(tmp);
+	g_free(tmp2);
 
 	addr = camel_internet_address_new(); 
 	d(g_print("date:%s\n", CF->date));
-//	g_print("author;%s\n", decode_html("Dag Wie&euml;a"));
-	gchar *safe_author = camel_header_encode_string(author);
-	g_print("sauthor;%s\n", safe_author);
+	tmp = decode_entities(author);
+	gchar *safe_author = camel_header_encode_string(tmp);
+	g_free(tmp);
    	camel_address_decode(CAMEL_ADDRESS(addr), safe_author);
 	camel_mime_message_set_from(new, addr);
 	camel_object_unref(safe_author);
@@ -3853,7 +3858,6 @@ decode_entities(gchar *source)
 {
  	GString *str = g_string_new(NULL);
  	GString *res = g_string_new(NULL);
- 	GString *tmp = g_string_new(NULL);
  	gchar *string, *result;
         const unsigned char *s;
         guint len;
@@ -3866,7 +3870,6 @@ reent:	s = (const unsigned char *)res->str;
 	state = 0;
 	pos = 1;
 	g_string_truncate(str, 0);
-	tmp = g_string_new(NULL);
 	while (*s != 0 || len) {
 		if (state) {
 			if (*s==';') {
@@ -3886,16 +3889,16 @@ reent:	s = (const unsigned char *)res->str;
 		len--;
 	}
 	if (state == 2) {
-		g_string_erase(res, in, out-in);
 		htmlEntityDesc *my = htmlEntityLookup((xmlChar *)str->str);
-		g_string_printf(tmp, "\\u%04x", my->value);
-		g_string_insert(res, in, tmp->str);
-		g_string_free(tmp, FALSE);
-		gchar *result = res->str;
-		g_string_free(res, FALSE);
-		res = g_string_new(NULL);
-		g_string_append(res, result);
-		goto reent;
+		if (my) {
+			g_string_erase(res, in, out-in);
+			g_string_insert_unichar(res, in, my->value);
+			gchar *result = res->str;
+			g_string_free(res, FALSE);
+			res = g_string_new(NULL);
+			g_string_append(res, result);
+			goto reent;
+		}
 	}
 	result = res->str;
 	g_string_free(res, FALSE);

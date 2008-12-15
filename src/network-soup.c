@@ -19,7 +19,7 @@
  */
 
 #include <string.h>
-#include <libsoup/soup-gnome.h>
+//#include <libsoup/soup-gnome.h>
 
 #include "network.h"
 #include "rss.h"
