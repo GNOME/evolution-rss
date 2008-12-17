@@ -44,5 +44,4 @@
 #15 0x00007f257c9dec29 in rss_error (key=<value optimized out>, 
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
-        * implement right-click in browse
-	* strip html tags from title - correctly process international text (rfc2047)
+        * implement right-click in browser
