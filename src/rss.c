@@ -435,6 +435,10 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 		}
 #endif
         }
+	//update individual progress if previous percetage has not changed
+	if (rf->progress_bar && rf->feed_queue)
+		gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 
+			((gfloat)((100-(rf->feed_queue*100/g_hash_table_size(rf->hrname))))/100));
         break;
     case NET_STATUS_DONE:
         //progress_window_set_cancel_cb(pw, NULL, NULL);

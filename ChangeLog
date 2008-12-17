@@ -1,3 +1,8 @@
+2008-12-17  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: statuscb correctly update
+	progress bar
+
 2008-12-15  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: decode_entities: new function
