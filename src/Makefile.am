@@ -132,6 +132,9 @@ EXTRA_DIST = 					\
 	network-soup.c				\
 	misc.c					\
 	dbus.c					\
+	fetch.c					\
+	file-gio.c				\
+	file-gio.h				\
 	gecko-utils.cpp				\
 	gecko-utils.h				\
 	parser.c				\
