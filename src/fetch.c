@@ -19,6 +19,8 @@
  */
 
 #include "network.h"
+#include "rss.h"
+#include "file-gio.h"
 
 GString*
 fetch_blocking(const char *url, GSList *headers, GString *post,
@@ -65,8 +67,16 @@ fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data,
 	scheme = g_uri_parse_scheme(url);
 
 	if (!g_ascii_strcasecmp(scheme, "file")) {
-		
+		g_free(scheme);
+		return file_get_unblocking(url,
+				NULL, // add status here //
+				NULL,
+				gio_finish_feed,
+				cbdata2,
+				0,
+				&err);	
 	} else {
+		g_free(scheme);
 		return net_get_unblocking(url,
                                 cb,
                                 NULL,

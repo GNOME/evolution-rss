@@ -1,5 +1,8 @@
 2008-12-17  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/file-gio.{c,h}: gio file support
+	* src/fetch.c: fetch_unblocking: add
+	support for file operations
 	* src/rss.c: statuscb correctly update
 	progress bar
 

@@ -73,6 +73,7 @@ int rss_verbose_debug = 0;
 #define O_BINARY 0
 #endif
 
+#include <glib.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -128,6 +129,7 @@ int rss_verbose_debug = 0;
 #include "rss.h"
 #include "parser.h"
 #include "network-soup.c"
+#include "file-gio.c"
 #include "fetch.c"
 #include "misc.c"
 #if HAVE_DBUS
@@ -2129,12 +2131,59 @@ update_ttl(gpointer key, guint value)
 		g_hash_table_replace(rf->hrttl, g_strdup(key), GINT_TO_POINTER(value));
 }
 
+struct _rfMessage {
+	guint 	 status_code;
+	gchar 	*body;
+	goffset	 length;
+};
+
+typedef struct _rfMessage rfMessage;
+
 void
 #if LIBSOUP_VERSION < 2003000
 finish_feed (SoupMessage *msg, gpointer user_data)
 #else
 finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
+{
+	rfMessage *rfmsg = g_new0(rfMessage, 1);
+	rfmsg->status_code = msg->status_code;
+#if LIBSOUP_VERSION < 2003000
+	rfmsg->body = msg->response.body;
+	rfmsg->length = msg->response.length;
+#else
+	rfmsg->body = msg->response_body->data;
+	rfmsg->length = msg->response_body->length; 
+#endif
+	generic_finish_feed(rfmsg, user_data);
+	g_free(rfmsg);
+}
+
+void
+gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data)
+{
+	gsize file_size;
+        char *file_contents;
+        gboolean result;
+
+	rfMessage *rfmsg = g_new0(rfMessage, 1);
+
+	result = g_file_load_contents_finish (G_FILE (object),
+                                              res,
+                                              &file_contents, &file_size,
+                                              NULL, NULL);
+	rfmsg->status_code = SOUP_STATUS_OK;
+	rfmsg->body = file_contents;
+	rfmsg->length = file_size;
+	generic_finish_feed(rfmsg, user_data);
+	if (result) {
+                g_free (file_contents);
+        }
+	g_free(rfmsg);
+}
+
+void
+generic_finish_feed(rfMessage *msg, gpointer user_data)
 {
 	GError *err = NULL;
 	gchar *chn_name = NULL;
@@ -2204,9 +2253,9 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
         	g_set_error(&err, NET_ERROR, NET_ERROR_GENERIC,
                 	soup_status_get_phrase(msg->status_code));
-                gchar *msg = g_strdup_printf("\n%s\n%s", user_data, err->message);
-                rss_error(user_data, NULL, _("Error fetching feed."), msg);
-                g_free(msg);
+                gchar *tmsg = g_strdup_printf("\n%s\n%s", user_data, err->message);
+                rss_error(user_data, NULL, _("Error fetching feed."), tmsg);
+                g_free(tmsg);
         	goto out;
     	}
 
@@ -2240,22 +2289,15 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		goto out;
 	}
 	
-#if LIBSOUP_VERSION < 2003000
-	if (!msg->response.length)
-#else
-	if (!msg->response_body->length)
-#endif
+	if (!msg->length)
 		goto out;
 
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;
 
 
-#if LIBSOUP_VERSION < 2003000
-	GString *response = g_string_new_len(msg->response.body, msg->response.length);
-#else
-	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
-#endif
+	GString *response = g_string_new_len(msg->body, msg->length);
+
 //#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
 //#endif
@@ -2381,7 +2423,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 			g_hash_table_lookup(rf->hr, lookup_key(key)), key));
 		rf->feed_queue++;
 
-		net_get_unblocking(
+		fetch_unblocking(
 				g_hash_table_lookup(rf->hr, lookup_key(key)),
 				user_data,
 				key,
