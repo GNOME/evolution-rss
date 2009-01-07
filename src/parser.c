@@ -738,7 +738,7 @@ gchar *
 update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, GtkWidget *progress)
 {
         guint i;
-	gchar *sender = g_strdup_printf("%s <%s>", chn_name, chn_name);
+	gchar *sender;
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	char *d2 = NULL;
 	xmlNodePtr el;
@@ -749,6 +749,11 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 	gchar *encl, *encl_file;
 	xmlChar *buff = NULL;
 	int size = 0;
+
+	gchar *safes = encode_rfc2047(chn_name);
+
+	sender = g_strdup_printf("%s <%s>", safes, chn_name);
+	g_free(safes);
 
 	migrate_crc_md5(chn_name, url);
 
@@ -788,10 +793,11 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 		if (q1)
 		{
         		q1 = g_strdelimit(q1, "><", ' ');
+			gchar *qsafe = encode_rfc2047(q1);
 			if (q3)
 			{
         			q3 = g_strdelimit(q3, "><", ' ');
-               			q = g_strdup_printf("%s <%s>", q1, q3);
+               			q = g_strdup_printf("%s <%s>", qsafe, q3);
 				g_free(q1);
 				if (q2) g_free(q2);
 				g_free(q3);
@@ -802,10 +808,11 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
         				q2 = g_strdelimit(q2, "><", ' ');
 				else 
 					q2 = g_strdup(q1);
-               			q = g_strdup_printf("%s <%s>", q1, q2);
+               			q = g_strdup_printf("%s <%s>", qsafe, q2);
 				g_free(q1);
 				g_free(q2);
 			}
+			g_free(qsafe);
 		}
 		else	//then RSS or RDF
 		{
@@ -823,8 +830,10 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 				//evo will go crazy when it'll encounter ":" character
         			//it probably enforces strict rfc2047 compliance
         			q = g_strdelimit(q, "><:", ' ');
-        			gchar *tmp = g_strdup_printf("\"%s\" <\"%s\">", q, q);
+				gchar *qsafe = encode_rfc2047(q);
+        			gchar *tmp = g_strdup_printf("\"%s\" <\"%s\">", qsafe, q);
 				g_free(q);
+				g_free(qsafe);
 				q = tmp;
 				if (q2) g_free(q2);
 				if (q3) g_free(q3);
@@ -879,25 +888,6 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
                   gtk_main_iteration ();
 
 		if (!feed_is_new(feed_name, feed)) {
-/*
-		if (fr)
-		{
-		    while (fgets(rfeed, 511, fr) != NULL)
-		    {
-			if (rfeed && strstr(rfeed, feed))
-			{
-				occ=1;
-				break;
-			}
-		    }
-		    (void)fseek(fr, 0L, SEEK_SET);
-		}
-
-		while (gtk_events_pending())
-                  gtk_main_iteration ();
-
-		if (!occ)
-		{*/
 			ftotal++;
 			p =  decode_html_entities (p);
 			gchar *tmp = decode_utf8_entities(b);

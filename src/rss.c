@@ -3493,12 +3493,8 @@ create_mail(create_feed *CF)
 
 	addr = camel_internet_address_new(); 
 	d(g_print("date:%s\n", CF->date));
-	tmp = decode_entities(author);
-	gchar *safe_author = camel_header_encode_string(tmp);
-	g_free(tmp);
-   	camel_address_decode(CAMEL_ADDRESS(addr), safe_author);
+   	camel_address_decode(CAMEL_ADDRESS(addr), author);
 	camel_mime_message_set_from(new, addr);
-	g_free(safe_author);
 	camel_object_unref(addr);
 
 	int offset = 0;
@@ -4001,6 +3997,16 @@ encode_html_entities(gchar *str)
         return newstr;*/
 	return tmp;
 }
+
+gchar *
+encode_rfc2047(gchar *str)
+{
+	gchar *tmp = decode_entities(str);
+        gchar *rfctmp = camel_header_encode_string(tmp);
+        g_free(tmp);
+	return rfctmp;
+}
+
 
 gchar *
 display_doc (RDF *r)

@@ -317,6 +317,7 @@ void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
 gchar *rss_component_peek_base_directory(MailComponent *component);
 static void custom_feed_timeout(void);
 void gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data);
+gchar *encode_rfc2047(gchar *str);
 
 
 typedef struct FEED_FOLDERS {

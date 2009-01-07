@@ -1,3 +1,9 @@
+2009-01-07  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c encode_rfc2047() - new function
+	* src/parser.c - correctly encode sender
+	(rfc2047)
+
 2008-12-17  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/file-gio.{c,h}: gio file support
