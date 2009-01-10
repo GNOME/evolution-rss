@@ -399,9 +399,9 @@ conn_mainloop_quit (void *data)
 
 
 gboolean
-net_get_unblocking(const char *url, NetStatusCallback cb, 
-				gpointer data, gpointer cb2,
-				gpointer cbdata2,
+net_get_unblocking(const char *url, 
+				NetStatusCallback cb, gpointer data, 
+				gpointer cb2, gpointer cbdata2,
 				guint track,
 				GError **err)
 {

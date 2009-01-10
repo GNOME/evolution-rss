@@ -431,7 +431,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, fraction);
 		if (rf->sr_feed)
 		{
-			gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"),data);
+			gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), data);
 			gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 			g_free(furl);
 		}
@@ -2175,6 +2175,7 @@ gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data)
 	rfmsg->status_code = SOUP_STATUS_OK;
 	rfmsg->body = file_contents;
 	rfmsg->length = file_size;
+	g_print("user data:%s\n", user_data);
 	generic_finish_feed(rfmsg, user_data);
 	if (result) {
                 g_free (file_contents);

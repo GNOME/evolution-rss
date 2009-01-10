@@ -79,7 +79,7 @@ fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data,
 		g_free(scheme);
 		return net_get_unblocking(url,
                                 cb,
-                                NULL,
+                                data,
                                 cb2,
                                 cbdata2,
                                 0,

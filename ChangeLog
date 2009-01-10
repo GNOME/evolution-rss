@@ -1,3 +1,8 @@
+2009-01-10  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/fetch.c - fetch_unblocking() 
+	correctly call net_get_unblocking()
+
 2009-01-07  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c encode_rfc2047() - new function
