@@ -82,7 +82,7 @@ fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data,
                                 data,
                                 cb2,
                                 cbdata2,
-                                0,
+                                track,
                                 &err);
 	}
 }

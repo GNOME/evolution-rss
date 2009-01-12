@@ -1581,6 +1581,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	xmlChar *buff = NULL;
 	int size = 0;
 	CamelContentType *type;
+	gchar *feedid = NULL;
+	gchar *comments = NULL;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -1602,8 +1604,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	if (!website)
 		goto fmerror;
 	gchar *addr = (gchar *)camel_header_location_decode(website);
-	gchar *feedid = NULL;
 	feedid  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "RSS-ID");
+	comments  = g_strstrip((gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-comments"));
 	gchar *subject = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "Subject"), NULL);
 	gchar *f = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
@@ -1737,8 +1739,20 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			"<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
 			content_colour & 0xEDECEB & 0xffffff,
 			website, subject);
-     		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr></table></div>", text_colour & 0xffffff, buff);
-		camel_stream_printf (fstream, "mew<br>");
+     		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr>", text_colour & 0xffffff, buff);
+		camel_stream_printf (fstream, "</table></div>");
+		if (comments) {
+			camel_stream_printf (fstream,
+				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+			camel_stream_printf(fstream, 
+				"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
+			camel_stream_printf (fstream, "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>Comments</font></b></td></tr>", 
+				content_colour & 0xEDECEB & 0xffffff,
+				comments);
+			camel_stream_printf (fstream, "</table></div>");
+			fetch_comments(comments);
+		}
 	}
 
 	//this is required for proper charset rendering when html
@@ -2446,6 +2460,60 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	}
 	else if (rf->cancel && !rf->feed_queue)
 		rf->cancel = 0;		//all feeds where either procesed or skipped
+}
+
+void
+#if LIBSOUP_VERSION < 2003000
+finish_comments (SoupMessage *msg, gpointer user_data)
+#else
+finish_comments (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
+#endif
+{
+	g_print("comment finish.\n");
+/*		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
+		taskbar_op_set_progress("main", tmsg, rf->feed_queue ? ((gfloat)((100-(rf->feed_queue*100/g_hash_table_size(rf->hrname))))/100): 1);
+		g_free(tmsg);*/
+
+//	if (!msg->length)
+	//	goto out;
+
+//	if (msg->status_code == SOUP_STATUS_CANCELLED)
+//		goto out;
+
+	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
+
+//#ifdef RSS_DEBUG
+//	g_print("feed %s\n", user_data);
+//#endif
+
+	g_print("response:%s\n", response->str);
+	while (gtk_events_pending ())
+            gtk_main_iteration ();
+}
+
+
+fetch_comments(gchar *url)
+{
+	GError *err = NULL;
+	g_print("\nFetching comments from: %s\n", 
+		url);
+
+	fetch_unblocking(
+				url,
+				NULL,
+				NULL,
+				(gpointer)finish_comments,
+				NULL,	// we need to dupe key here
+				1,
+				&err);			// because we might lose it if
+							// feed gets deleted
+		if (err)
+		{
+                     	gchar *msg = g_strdup_printf("\n%s\n%s", 
+				 	url, err->message);
+                        rss_error(url, NULL, _("Error fetching feed."), msg);
+                     	g_free(msg);
+		}
 }
 
 gboolean

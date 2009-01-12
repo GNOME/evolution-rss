@@ -1,6 +1,9 @@
 2009-01-12  Lucian Langa  <lucilanga@gnome.org>
 
-	* src/parser.c- layer_find_tag_prop
+	* src/rss.c -  fetch_comments() support
+	for fetching/updating comments while
+	browsing article
+	* src/parser.c - layer_find_tag_prop
 	new function for parsing media tag properties
 
 2009-01-10  Lucian Langa  <lucilanga@gnome.org>
