@@ -2469,10 +2469,7 @@ finish_comments (SoupMessage *msg, gpointer user_data)
 finish_comments (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
-	g_print("comment finish.\n");
-/*		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
-		taskbar_op_set_progress("main", tmsg, rf->feed_queue ? ((gfloat)((100-(rf->feed_queue*100/g_hash_table_size(rf->hrname))))/100): 1);
-		g_free(tmsg);*/
+	taskbar_op_set_progress("comments", "www", 0.01);
 
 //	if (!msg->length)
 	//	goto out;
