@@ -914,18 +914,18 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 
 		//<enclosure url=>
 		//handle multiple enclosures
-//		encl = layer_find_innerelement(el->children, "enclosure", "url",	// RSS 2.0 Enclosure
-//			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
-		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
-							NULL); 		// ATOM Enclosure
-//		g_print("encl:%s\n", encl);
-//		if (!strcmp(encl, "99"))
-			encl = NULL;
+		encl = layer_find_innerelement(el->children, "enclosure", "url",	// RSS 2.0 Enclosure
+			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
+//		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
+//							NULL); 		// ATOM Enclosure
 		//we have to free this somehow
 		//<link></link>
                 char *link = g_strdup(layer_find (el->children, "link", NULL));		//RSS,
 		if (!link) 								// <link href=>
-			link = layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
+			link = layer_find_innerelement(el->children, "link", "href", 
+							g_strdup(_("No Information")));	//ATOM
+
+                char *comments = g_strdup(layer_find (el->children, "comments", NULL));	//RSS,
 
 		char *id = layer_find (el->children, "id",				//ATOM
 				layer_find (el->children, "guid", NULL));		//RSS 2.0
@@ -990,6 +990,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			CF->website 	= g_strdup(link);
 			CF->feedid 	= g_strdup(buf);
 			CF->encl 	= g_strdup(encl);
+			CF->comments 	= g_strdup(comments);
 			CF->feed_fname  = g_strdup(feed_name);	//feed file name
 			CF->feed_uri	= g_strdup(feed);	//feed file url
 				

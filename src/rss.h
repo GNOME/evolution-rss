@@ -264,6 +264,7 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar	*feed_fname;	// feed name file
 	gchar	*feed_uri;
 	gchar *encl;
+	gchar *comments;
 } create_feed;
 
 guint           upgrade = 0;                // set to 2 when initailization successfull

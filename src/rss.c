@@ -3533,6 +3533,8 @@ create_mail(create_feed *CF)
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-feed-ID", g_strstrip(CF->feed_uri));
+	if (CF->comments)
+		camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-comments", CF->comments);
 	rtext = camel_data_wrapper_new ();
         type = camel_content_type_new ("x-evolution", "evolution-rss-feed");
         camel_content_type_set_param (type, "format", "flowed");
