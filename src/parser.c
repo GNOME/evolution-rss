@@ -417,7 +417,6 @@ syndication_rss(void)
 	g_print("syndication\n");
 }
 
-
 gchar *standard_rss_modules[3][3] = {
 	{"content", "content", (gchar *)content_rss},
 	{"dublin core", "dc", (gchar *)dublin_core_rss},
@@ -477,6 +476,56 @@ layer_find_tag (xmlNodePtr node,
         }
 	xmlBufferFree(buf);
         return fail;
+}
+
+gchar*
+media_rss(xmlNode *node, gchar *search, gchar *fail)
+{
+	gchar *content;
+	g_print("media_rss()\n");
+
+	content = xmlGetProp(node, search);
+	if (content)
+		return content;
+	else
+		return fail;
+}
+
+gchar *property_rss_modules[1][3] = {
+	{"media", "media", (gchar *)media_rss}};
+
+static char *
+layer_find_tag_prop (xmlNodePtr node,
+            char *match,
+            char *search,
+            char *fail)
+{
+	gchar *content;
+	guint len = 0;
+	int i;
+	char* (*func)();
+
+        while (node!=NULL) {
+#ifdef RDF_DEBUG
+                xmlDebugDumpNode (stdout, node, 32);
+                printf("%s.\n", node->name);
+#endif
+		if (node->ns && node->ns->prefix)
+		{
+			for (i=0; i < 1; i++)
+			{
+				if (!strcasecmp (node->ns->prefix, property_rss_modules[i][1]))
+				{
+					func = (gpointer)property_rss_modules[i][2];
+					if (strcasecmp (node->ns->prefix, match)==0)
+					{
+						g_print("URL:%s\n", func(node, search, fail));
+					}
+				}
+			}
+		}
+                node = node->next;
+	}
 }
 
 static gchar *
@@ -863,11 +912,19 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 			}
 		}
 
-		encl = layer_find_innerelement(el->children, "enclosure", "url",	// RSS 2.0 Enclosure
-			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
+		//<enclosure url=>
+		//handle multiple enclosures
+//		encl = layer_find_innerelement(el->children, "enclosure", "url",	// RSS 2.0 Enclosure
+//			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
+		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
+							NULL); 		// ATOM Enclosure
+//		g_print("encl:%s\n", encl);
+//		if (!strcmp(encl, "99"))
+			encl = NULL;
 		//we have to free this somehow
+		//<link></link>
                 char *link = g_strdup(layer_find (el->children, "link", NULL));		//RSS,
-		if (!link) 
+		if (!link) 								// <link href=>
 			link = layer_find_innerelement(el->children, "link", "href", g_strdup(_("No Information")));	//ATOM
 
 		char *id = layer_find (el->children, "id",				//ATOM

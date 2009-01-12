@@ -45,3 +45,5 @@
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
         * implement right-click in browser
+	* category posted under
+	* coments updatable

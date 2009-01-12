@@ -1738,6 +1738,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			content_colour & 0xEDECEB & 0xffffff,
 			website, subject);
      		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr></table></div>", text_colour & 0xffffff, buff);
+		camel_stream_printf (fstream, "mew<br>");
 	}
 
 	//this is required for proper charset rendering when html
