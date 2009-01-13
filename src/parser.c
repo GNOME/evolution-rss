@@ -417,11 +417,50 @@ syndication_rss(void)
 	g_print("syndication\n");
 }
 
-gchar *standard_rss_modules[3][3] = {
+void
+wfw_rss(xmlNode *node, gchar *fail)
+{
+	gchar *content;
+
+	content = xmlNodeGetContent(node);
+	if (content)
+		return content;
+	else
+		return fail;
+}
+
+gchar *standard_rss_modules[4][3] = {
 	{"content", "content", (gchar *)content_rss},
 	{"dublin core", "dc", (gchar *)dublin_core_rss},
-	{"syndication", "sy", (gchar *)syndication_rss}};
+	{"syndication", "sy", (gchar *)syndication_rss},
+	{"well formed web", "wfw", (gchar *)wfw_rss}};
 
+//<nsmatch:match>content</nsmatch:match>
+static char*
+layer_find_ns_tag(xmlNodePtr node,
+		char *nsmatch,
+		char *match,
+		char *fail)
+{
+	int i;
+	char* (*func)();
+
+        while (node!=NULL) {
+		if (node->ns && node->ns->prefix) {
+			for (i=0; i < 4; i++) {
+				if (!strcasecmp (node->ns->prefix, standard_rss_modules[i][1])) {
+					func = (gpointer)standard_rss_modules[i][2];
+					if (strcasecmp (node->ns->prefix, nsmatch) == 0
+					&&  strcasecmp (node->name, match) == 0 ) {
+						return func(node, fail);
+					}
+				}
+			}
+		}
+                node = node->next;
+	}
+	return fail;
+}
 
 static char *
 layer_find_tag (xmlNodePtr node,
@@ -439,15 +478,11 @@ layer_find_tag (xmlNodePtr node,
                 xmlDebugDumpNode (stdout, node, 32);
                 printf("%s.\n", node->name);
 #endif
-		if (node->ns && node->ns->prefix)
-		{
-			for (i=0; i < 3; i++)
-			{
-				if (!strcasecmp (node->ns->prefix, standard_rss_modules[i][1]))
-				{
+		if (node->ns && node->ns->prefix) {
+			for (i=0; i < 4; i++) {
+				if (!strcasecmp (node->ns->prefix, standard_rss_modules[i][1])) {
 					func = (gpointer)standard_rss_modules[i][2];
-					if (strcasecmp (node->ns->prefix, match)==0)
-					{
+					if (strcasecmp (node->ns->prefix, match)==0) {
 						xmlBufferFree(buf);
 						return func(node, fail);
 					}
@@ -455,8 +490,7 @@ layer_find_tag (xmlNodePtr node,
 			}
 		}
                 if (strcasecmp (node->name, match)==0) {
-                        if (node->children != NULL)
-			{
+                        if (node->children != NULL) {
 				if (node->children->type == 1
 					|| node->children->next != NULL) {
 #ifdef RDF_DEBUG
@@ -926,6 +960,7 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 							g_strdup(_("No Information")));	//ATOM
 
                 char *comments = g_strdup(layer_find (el->children, "comments", NULL));	//RSS,
+		comments = layer_find_ns_tag(el->children, "wfw", "commentRss", NULL); //add slash:comments
 
 		char *id = layer_find (el->children, "id",				//ATOM
 				layer_find (el->children, "guid", NULL));		//RSS 2.0
