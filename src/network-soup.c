@@ -406,17 +406,20 @@ net_get_unblocking(const char *url,
 				GError **err)
 {
 	SoupMessage *msg;
-	CallbackInfo *info;
+	CallbackInfo *info = NULL;
 	SoupSession *soup_sess = 
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
 	proxify_session(soup_sess);
-	info = g_new0(CallbackInfo, 1);
-	info->user_cb = cb;
-	info->user_data = data;
-	info->current = 0;
-	info->total = 0;
+	if (cb && data) {
+		info = g_new0(CallbackInfo, 1);
+		info->user_cb = cb;
+		info->user_data = data;
+		info->current = 0;
+		info->total = 0;
+	}
+
 	if (!rf->session)
 		rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
 	if (!rf->abort_session)
@@ -459,7 +462,8 @@ net_get_unblocking(const char *url,
 #endif
 	g_free(agstr);
 
-	g_signal_connect(G_OBJECT(msg), "got_chunk",
+	if (info)
+		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
 
 	soup_session_queue_message (soup_sess, msg,

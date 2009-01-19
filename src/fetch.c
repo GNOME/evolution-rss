@@ -29,12 +29,13 @@ fetch_blocking(const char *url, GSList *headers, GString *post,
 
 	gchar *scheme = NULL;
 	GString *result = NULL;
+	FILE *f = NULL;
 	
 	scheme = g_uri_parse_scheme(url);
 	d(g_print("scheme:%s\n", scheme));
 	if (!g_ascii_strcasecmp(scheme, "file")) {
 		gchar *fname = g_filename_from_uri(url, NULL, NULL);
-		FILE *f = g_fopen(fname, "rb");
+		f = g_fopen(fname, "rb");
 		g_free(fname);
 		g_free(scheme);
 	 	if (f == NULL)
@@ -74,7 +75,7 @@ fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data,
 				gio_finish_feed,
 				cbdata2,
 				0,
-				&err);	
+				err);	
 	} else {
 		g_free(scheme);
 		return net_get_unblocking(url,
@@ -83,7 +84,7 @@ fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data,
                                 cb2,
                                 cbdata2,
                                 track,
-                                &err);
+                                err);
 	}
 }
 

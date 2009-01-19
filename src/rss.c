@@ -175,9 +175,11 @@ extern int xmlSubstituteEntitiesDefaultValue;
 
 rssfeed *rf = NULL;
 gboolean inhibit_read = FALSE;	//prevent mail selection when deleting folder
+gchar *commstream = NULL; 	//global comments stream
 
 gboolean setup_feed(add_feed *feed);
 gchar *display_doc (RDF *r);
+gchar *display_comments (RDF *r);
 void check_folders(void);
 gchar *strplchr(gchar *source);
 static char *gen_md5(gchar *buffer);
@@ -230,6 +232,17 @@ guint fallback_engine(void);
 
 gchar *
 decode_entities(gchar *source);
+
+struct _rfMessage {
+	guint 	 status_code;
+	gchar 	*body;
+	goffset	 length;
+};
+
+typedef struct _rfMessage rfMessage;
+
+void generic_finish_feed(rfMessage *msg, gpointer user_data);
+
 /*======================================================================*/
 
 gpointer
@@ -1572,6 +1585,9 @@ pfree(EMFormatHTMLPObject *o)
 	g_free(po->website);
 }
 
+EMFormat *fom;
+CamelStream *som;
+
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t);
 
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
@@ -1605,7 +1621,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		goto fmerror;
 	gchar *addr = (gchar *)camel_header_location_decode(website);
 	feedid  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "RSS-ID");
-	comments  = g_strstrip((gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-comments"));
+	comments  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-comments");
 	gchar *subject = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "Subject"), NULL);
 	gchar *f = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
@@ -1614,7 +1630,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	
 	gpointer is_html = NULL;
 	if (feedid)
-		is_html =  g_hash_table_lookup(rf->hrh, g_strstrip(feedid)); 
+		is_html =  g_hash_table_lookup(rf->hrh, g_strstrip(feedid));
+	if (comments)
+		comments = g_strstrip(comments);
 	
 	if (!rf->chg_format)
 		rf->cur_format = GPOINTER_TO_INT(is_html);
@@ -1741,6 +1759,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			website, subject);
      		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr>", text_colour & 0xffffff, buff);
 		camel_stream_printf (fstream, "</table></div>");
+//		g_print("comments:%s|\n", comments);
 		if (comments) {
 			camel_stream_printf (fstream,
 				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
@@ -1751,13 +1770,20 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				content_colour & 0xEDECEB & 0xffffff,
 				comments);
 			camel_stream_printf (fstream, "</table></div>");
-			fetch_comments(comments);
+			if (commstream) {
+//				camel_stream_printf (fstream, "%s", commstream);
+	print_comments(comments, commstream);
+				commstream = NULL;
+			}
+			else {
+				fetch_comments(comments, t->format);
+			}
 		}
 	}
 
 	//this is required for proper charset rendering when html
-       	camel_data_wrapper_construct_from_stream(dw, fstream);
-       	camel_medium_set_content_object((CamelMedium *)part, dw);
+      	camel_data_wrapper_construct_from_stream(dw, fstream);
+      	camel_medium_set_content_object((CamelMedium *)part, dw);
 	em_format_format_text((EMFormat *)t->format, (CamelStream *)t->stream, (CamelDataWrapper *)part);
 //	gtk_html_select_all(t->format->message);
 	camel_object_unref(dw);
@@ -2146,13 +2172,6 @@ update_ttl(gpointer key, guint value)
 		g_hash_table_replace(rf->hrttl, g_strdup(key), GINT_TO_POINTER(value));
 }
 
-struct _rfMessage {
-	guint 	 status_code;
-	gchar 	*body;
-	goffset	 length;
-};
-
-typedef struct _rfMessage rfMessage;
 
 void
 #if LIBSOUP_VERSION < 2003000
@@ -2167,7 +2186,7 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	rfmsg->body = msg->response.body;
 	rfmsg->length = msg->response.length;
 #else
-	rfmsg->body = msg->response_body->data;
+	rfmsg->body = (gchar *)(msg->response_body->data);
 	rfmsg->length = msg->response_body->length; 
 #endif
 	generic_finish_feed(rfmsg, user_data);
@@ -2469,6 +2488,7 @@ finish_comments (SoupMessage *msg, gpointer user_data)
 finish_comments (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
+	guint reload=0;
 	taskbar_op_set_progress("comments", "www", 0.01);
 
 //	if (!msg->length)
@@ -2482,14 +2502,44 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 //#ifdef RSS_DEBUG
 //	g_print("feed %s\n", user_data);
 //#endif
+	if (!commstream)
+		reload = 1;
 
 	g_print("response:%s\n", response->str);
+	commstream = response->str; 
+	if (reload)
+		em_format_redraw((EMFormat *)user_data);
+	
 	while (gtk_events_pending ())
             gtk_main_iteration ();
 }
 
+print_comments(gchar *url, gchar *stream)
+{
+        RDF *r = NULL;
+        r = g_new0 (RDF, 1);
+        r->shown = TRUE;
+	xmlDocPtr doc = NULL;
+        xmlNodePtr root = NULL;
+        xmlSubstituteEntitiesDefaultValue = 0;
+        doc = xml_parse_sux (stream, strlen(stream));
+//        d(g_print("content:\n%s\n", content->str));
+        root = xmlDocGetRootElement(doc);
 
-fetch_comments(gchar *url)
+        if ((doc != NULL && root != NULL)
+                && (strcasestr(root->name, "rss")
+                || strcasestr(root->name, "rdf")
+                || strcasestr(root->name, "feed"))) {
+                r->cache = doc;
+                r->uri = url;
+
+                display_comments (r);
+	}
+}
+
+
+void
+fetch_comments(gchar *url, CamelStream *stream)
 {
 	GError *err = NULL;
 	g_print("\nFetching comments from: %s\n", 
@@ -2500,7 +2550,7 @@ fetch_comments(gchar *url)
 				NULL,
 				NULL,
 				(gpointer)finish_comments,
-				NULL,	// we need to dupe key here
+				stream,	// we need to dupe key here
 				1,
 				&err);			// because we might lose it if
 							// feed gets deleted
@@ -3698,6 +3748,26 @@ file_to_message(const char *filename)
 }
 
 void
+print_cf(create_feed *CF)
+{
+	g_print("Sender: %s ", CF->sender);
+	g_print("Subject: %s \n", CF->subj);
+	g_print("Date: %s\n", CF->date);
+	g_print("Feedid: %s\n", CF->feedid);
+	g_print("==========================\n");
+	g_print("Name: %s ", CF->feed_fname);
+	g_print("URI: %s\n", CF->feed_uri);
+	g_print("Path: %s\n", CF->full_path);
+	g_print("Website: %s\n", CF->website);
+	g_print("==========================\n");
+	g_print("%s\n", CF->body);
+	g_print("==========================\n");
+	g_print("q: %s\n", CF->q);
+	g_print("encl: %s\n", CF->encl);
+	g_print("dcdate: %s\n", CF->dcdate);
+}
+
+void
 free_cf(create_feed *CF)
 {
 	g_free(CF->full_path);
@@ -3968,7 +4038,7 @@ decode_entities(gchar *source)
  	gchar *string, *result;
         const unsigned char *s;
         guint len;
-	gpointer in, out;
+	int in, out;
 	int state, pos;
 
 	g_string_append(res, source);
@@ -3996,7 +4066,7 @@ reent:	s = (const unsigned char *)res->str;
 		len--;
 	}
 	if (state == 2) {
-		htmlEntityDesc *my = htmlEntityLookup((xmlChar *)str->str);
+		htmlEntityDesc *my = (htmlEntityDesc *)htmlEntityLookup((xmlChar *)str->str);
 		if (my) {
 			g_string_erase(res, in, out-in);
 			g_string_insert_unichar(res, in, my->value);
@@ -4076,12 +4146,30 @@ encode_rfc2047(gchar *str)
 	return rfctmp;
 }
 
+gchar *
+display_comments (RDF *r)
+{
+	xmlNodePtr root = xmlDocGetRootElement (r->cache);
+	tree_walk (root, r);
+	r->feedid = update_comments(r);
+	if (r->maindate)
+		g_free(r->maindate);
+	g_array_free(r->item, TRUE);
+	g_free(r->feedid);
+}
 
 gchar *
 display_doc (RDF *r)
 {
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
-	return tree_walk (root, r);
+	tree_walk (root, r);
+	g_print("chn_name:%s\n", r->title);
+	r->feedid = update_channel(r);
+	if (r->maindate)
+		g_free(r->maindate);
+	g_array_free(r->item, TRUE);
+	g_free(r->feedid);
+	return r->title;
 }
 
 static void

@@ -19,7 +19,7 @@
 #ifndef __PARSER_H__
 #define __PARSER_H__
 
-gchar *update_channel(const char *chn_name, char *url, char *main_date, GArray *item, GtkWidget *progress);
+gchar *update_channel(RDF *r);
 
 static char *layer_find (xmlNodePtr node, char *match, char *fail);
 static char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fail);

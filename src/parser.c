@@ -417,7 +417,7 @@ syndication_rss(void)
 	g_print("syndication\n");
 }
 
-void
+gchar *
 wfw_rss(xmlNode *node, gchar *fail)
 {
 	gchar *content;
@@ -800,38 +800,197 @@ tree_walk (xmlNodePtr root, RDF *r)
 	gchar *md2 = g_strdup(layer_find(channel->children, "date", 
 		layer_find(channel->children, "pubDate", 
 		layer_find(channel->children, "updated", NULL))));
-
+	r->maindate = md2;
 	r->total = item->len;
+	r->item = item;
+	r->title = t;
+}
 
-	r->feedid = update_channel(
-			//atempt to find real_channel name using url
-			t,
-			r->uri,
-			md2, 
-			item,
-			r->progress);
-	if (md2)
-		g_free(md2);
-	g_array_free(item, TRUE);
-	g_free(r->feedid);
-	return t;
+create_feed *
+parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
+{
+	char *q = NULL;
+	char *b = NULL;
+	char *d2 = NULL;
+	gchar *feed = NULL;
+	gchar *encl;
+	xmlChar *buff = NULL;
+	guint size = 0;
+
+	char *p = g_strdup(layer_find (top, "title", "Untitled article"));
+	//firstly try to parse as an ATOM author
+	//process person construct
+	char *q1 = g_strdup(layer_find_innerhtml (top, "author", "name", NULL));
+	char *q2 = g_strdup(layer_find_innerhtml (top, "author", "uri", NULL));
+	char *q3 = g_strdup(layer_find_innerhtml (top, "author", "email", NULL));
+	if (q1) {
+		q1 = g_strdelimit(q1, "><", ' ');
+		gchar *qsafe = encode_rfc2047(q1);
+		if (q3)	{
+			q3 = g_strdelimit(q3, "><", ' ');
+			q = g_strdup_printf("%s <%s>", qsafe, q3);
+				g_free(q1);
+				if (q2) g_free(q2);
+				g_free(q3);
+			} else {
+				if (q2)
+        				q2 = g_strdelimit(q2, "><", ' ');
+				else 
+					q2 = g_strdup(q1);
+               			q = g_strdup_printf("%s <%s>", qsafe, q2);
+				g_free(q1);
+				g_free(q2);
+			}
+			g_free(qsafe);
+		} else {			//then RSS or RDF
+			xmlNodePtr source;
+			source = layer_find_pos(top, "source", "author");
+			//try the source construct
+			//source = layer_find_pos(el->children, "source", "contributor");
+			if (source != NULL)
+				q = g_strdup(layer_find(source, "name", NULL));
+			else
+               			q = g_strdup(layer_find (top, "author", 
+				layer_find (top, "creator", NULL)));
+			if (q) {
+				//evo will go crazy when it'll encounter ":" character
+        			//it probably enforces strict rfc2047 compliance
+        			q = g_strdelimit(q, "><:", ' ');
+				gchar *qsafe = encode_rfc2047(q);
+        			gchar *tmp = g_strdup_printf("\"%s\" <\"%s\">", qsafe, q);
+				g_free(q);
+				g_free(qsafe);
+				q = tmp;
+				if (q2) g_free(q2);
+				if (q3) g_free(q3);
+			}
+		}
+		//FIXME this might need xmlFree when namespacing
+		b = layer_find_tag (top, "description",
+				layer_find_tag (top, "content", 
+					layer_find_tag (top, "summary", 
+					NULL)));
+
+		if (!b)
+	               	b = g_strdup(layer_find (top, "description",
+				layer_find (top, "content",
+				layer_find (top, "summary", "No information"))));
+
+                char *d = layer_find (top, "pubDate", NULL);
+		//date in dc module format
+		if (!d) {
+                	d2 = layer_find (top, "date", NULL);					//RSS2
+			if (!d2) {
+				d2 = layer_find(top, "updated", NULL); 			//ATOM
+				if (!d2) //take channel date if exists
+					d2 = g_strdup(main_date);
+			}
+		}
+
+		//<enclosure url=>
+		//handle multiple enclosures
+		encl = layer_find_innerelement(top, "enclosure", "url",	// RSS 2.0 Enclosure
+			layer_find_innerelement(top, "link", "enclosure", NULL)); 		// ATOM Enclosure
+//		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
+//							NULL); 		// ATOM Enclosure
+		//we have to free this somehow
+		//<link></link>
+                char *link = g_strdup(layer_find (top, "link", NULL));		//RSS,
+		if (!link) 								// <link href=>
+			link = layer_find_innerelement(top, "link", "href", 
+							g_strdup(_("No Information")));	//ATOM
+
+                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
+		comments = layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments
+		char *id = layer_find (top, "id",				//ATOM
+				layer_find (top, "guid", NULL));		//RSS 2.0
+		feed = g_strdup_printf("%s\n", id ? id : link);
+		d(g_print("link:%s\n", link));
+		d(g_print("author:%s\n", q));
+		d(g_print("title:%s\n", p));
+		d(g_print("date:%s\n", d));
+		d(g_print("date:%s\n", d2));
+
+		//not very nice but prevents unnecessary long body processing
+		if (!feed_is_new(feed_name, feed)) {
+                        ftotal++;
+                        p =  decode_html_entities (p);
+                        gchar *tmp = decode_utf8_entities(b);
+                        g_free(b);
+
+                        xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
+                        if (src)
+                        {
+                                xmlNode *doc = (xmlNode *)src;
+
+                                while (doc = html_find(doc, "img"))
+                                {
+                                        gchar *name = NULL;
+                                        xmlChar *url = xmlGetProp(doc, "src");
+                                        if (url) {
+                                                if (name = fetch_image(url))
+                                                        xmlSetProp(doc, "src", name);
+                                                xmlFree(url);
+                                        }
+                                }
+                                xmlDocDumpMemory(src, &buff, &size);
+                                xmlFree(src);
+                        }
+                        g_free(tmp);
+                        b=buff;
+		}
+
+		create_feed *CF = g_new0(create_feed, 1);	
+		/* pack all data */
+		CF->q 		= g_strdup(q);
+		CF->subj 	= g_strdup(p);
+		CF->body 	= g_strdup(b);
+		CF->date 	= g_strdup(d);
+		CF->dcdate 	= g_strdup(d2);
+		CF->website 	= g_strdup(link);
+		CF->encl 	= g_strdup(encl);
+		CF->comments 	= g_strdup(comments);
+		CF->feed_fname  = g_strdup(feed_name);	//feed file name
+		CF->feed_uri	= g_strdup(feed);	//feed file url
+		g_free(p);
+		if (q) g_free(q);
+		g_free(b);
+		if (feed) g_free(feed);
+		if (encl) g_free(encl);
+		g_free(link);
+		return CF;
+
 }
 
 gchar *
-update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, GtkWidget *progress)
+update_comments(RDF *r)
+{
+        guint i;
+	create_feed *CF;
+	xmlNodePtr el;
+	for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
+		CF = parse_channel_line(el->children, NULL, NULL);
+		print_cf(CF);
+	}
+}
+
+gchar *
+update_channel(RDF *r)
 {
         guint i;
 	gchar *sender;
-	CamelStore *store = mail_component_peek_local_store(NULL);
 	char *d2 = NULL;
 	xmlNodePtr el;
 	char *q = NULL;
 	char *b = NULL;
-	gchar *feed = NULL;
-	gboolean freeb = 0; //if b needs to be freed or not
-	gchar *encl, *encl_file;
-	xmlChar *buff = NULL;
-	int size = 0;
+	gchar *encl;
+	gchar *subj;
+	create_feed *CF;
+	gchar *chn_name = r->title;
+	gchar *url = r->uri;
+	gchar *main_date = r->maindate;
+	GArray *item = r->item;
+	GtkWidget *progress = r->progress;
 
 	gchar *safes = encode_rfc2047(chn_name);
 
@@ -853,210 +1012,48 @@ update_channel(const char *chn_name, gchar *url, char *main_date, GArray *item, 
 	FILE *fw = fopen(feed_name, "a+");
 	//int fw = g_open (feed_name, O_WRONLY | O_CREAT| O_APPEND | O_BINARY, 0666);
 
-	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++)
-	{
+	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++) {
 		update_sr_message();
 		if (rf->cancel) goto out;
 
-		if (progress)
-		{
+		if (progress) {
 			gdouble fraction = (gdouble)i/item->len;
                 	gtk_progress_bar_set_fraction((GtkProgressBar *)progress, fraction);
 			gchar *msg = g_strdup_printf("%2.0f%% done", fraction*100);
                 	gtk_progress_bar_set_text((GtkProgressBar *)progress, msg);
 			g_free(msg);
 		}
-		
-                char *p = layer_find (el->children, "title", "Untitled article");
-		//firstly try to parse as an ATOM author
-		//process person construct
-               	char *q1 = g_strdup(layer_find_innerhtml (el->children, "author", "name", NULL));
-		char *q2 = g_strdup(layer_find_innerhtml (el->children, "author", "uri", NULL));
-		char *q3 = g_strdup(layer_find_innerhtml (el->children, "author", "email", NULL));
-		if (q1)
-		{
-        		q1 = g_strdelimit(q1, "><", ' ');
-			gchar *qsafe = encode_rfc2047(q1);
-			if (q3)
-			{
-        			q3 = g_strdelimit(q3, "><", ' ');
-               			q = g_strdup_printf("%s <%s>", qsafe, q3);
-				g_free(q1);
-				if (q2) g_free(q2);
-				g_free(q3);
-			}
-			else
-			{
-				if (q2)
-        				q2 = g_strdelimit(q2, "><", ' ');
-				else 
-					q2 = g_strdup(q1);
-               			q = g_strdup_printf("%s <%s>", qsafe, q2);
-				g_free(q1);
-				g_free(q2);
-			}
-			g_free(qsafe);
-		}
-		else	//then RSS or RDF
-		{
-			xmlNodePtr source;
-			source = layer_find_pos(el->children, "source", "author");
-			//try the source construct
-			//source = layer_find_pos(el->children, "source", "contributor");
-			if (source != NULL)
-				q = g_strdup(layer_find(source, "name", NULL));
-			else
-               			q = g_strdup(layer_find (el->children, "author", 
-				layer_find (el->children, "creator", NULL)));
-			if (q)
-			{
-				//evo will go crazy when it'll encounter ":" character
-        			//it probably enforces strict rfc2047 compliance
-        			q = g_strdelimit(q, "><:", ' ');
-				gchar *qsafe = encode_rfc2047(q);
-        			gchar *tmp = g_strdup_printf("\"%s\" <\"%s\">", qsafe, q);
-				g_free(q);
-				g_free(qsafe);
-				q = tmp;
-				if (q2) g_free(q2);
-				if (q3) g_free(q3);
-			}
-		}
-		//FIXME this might need xmlFree when namespacing
-		b = layer_find_tag (el->children, "description",
-				layer_find_tag (el->children, "content", 
-					layer_find_tag (el->children, "summary", 
-					NULL)));
 
-		if (!b)
-	               	b = g_strdup(layer_find (el->children, "description",
-				layer_find (el->children, "content",
-				layer_find (el->children, "summary", "No information"))));
-
-                char *d = layer_find (el->children, "pubDate", NULL);
-		//date in dc module format
-		if (!d)
-		{
-                	d2 = layer_find (el->children, "date", NULL);					//RSS2
-			if (!d2)
-			{
-				d2 = layer_find(el->children, "updated", NULL); 			//ATOM
-				if (!d2) //take channel date if exists
-					d2 = main_date;
-			}
-		}
-
-		//<enclosure url=>
-		//handle multiple enclosures
-		encl = layer_find_innerelement(el->children, "enclosure", "url",	// RSS 2.0 Enclosure
-			layer_find_innerelement(el->children, "link", "enclosure", NULL)); 		// ATOM Enclosure
-//		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
-//							NULL); 		// ATOM Enclosure
-		//we have to free this somehow
-		//<link></link>
-                char *link = g_strdup(layer_find (el->children, "link", NULL));		//RSS,
-		if (!link) 								// <link href=>
-			link = layer_find_innerelement(el->children, "link", "href", 
-							g_strdup(_("No Information")));	//ATOM
-
-                char *comments = g_strdup(layer_find (el->children, "comments", NULL));	//RSS,
-		comments = layer_find_ns_tag(el->children, "wfw", "commentRss", NULL); //add slash:comments
-
-		char *id = layer_find (el->children, "id",				//ATOM
-				layer_find (el->children, "guid", NULL));		//RSS 2.0
-		feed = g_strdup_printf("%s\n", id ? id : link);
-		d(g_print("link:%s\n", link));
-		d(g_print("author:%s\n", q));
-		d(g_print("sender:%s\n", sender));
-		d(g_print("title:%s\n", p));
-		d(g_print("date:%s\n", d));
-		d(g_print("date:%s\n", d2));
-			
-		gchar rfeed[513];
-		memset(rfeed, 0, 512);
-		int occ = 0;
+		CF = parse_channel_line(el->children, feed_name, main_date);
+		CF->feedid 	= g_strdup(buf);
+		CF->sender 	= g_strdup(sender);
+		CF->full_path 	= g_strdup(chn_name);
+		subj = CF->subj;
 
 		while (gtk_events_pending())
                   gtk_main_iteration ();
 
-		if (!feed_is_new(feed_name, feed)) {
+		if (!feed_is_new(feed_name, CF->feed_uri)) {
 			ftotal++;
-			p =  decode_html_entities (p);
-			gchar *tmp = decode_utf8_entities(b);
-			g_free(b);
-			
-			xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
-			if (src)
-			{
-				xmlNode *doc = (xmlNode *)src;
-
-				while (doc = html_find(doc, "img"))
-        			{
-					gchar *name = NULL;
-                			xmlChar *url = xmlGetProp(doc, "src");
-					if (url) {
-						if (name = fetch_image(url))
-							xmlSetProp(doc, "src", name);
-						xmlFree(url);
-					}
-				}
-				xmlDocDumpMemory(src, &buff, &size);
-				xmlFree(src);
-			}
-			g_free(tmp);
-//			tmp = decode_html_entities(buff);
-//			tmp = xmlEncodeSpecialChars(NULL, buff);
-//			b = tmp;
-//			g_free(b);
-			b=buff;
-
-			while (gtk_events_pending())
-                  	gtk_main_iteration ();
-
-			create_feed *CF = g_new0(create_feed, 1);	
-			/* pack all data */
-			CF->full_path 	= g_strdup(chn_name);
-			CF->q 		= g_strdup(q);
-			CF->sender 	= g_strdup(sender);
-			CF->subj 	= g_strdup(p);
-			CF->body 	= g_strdup(b);
-			CF->date 	= g_strdup(d);
-			CF->dcdate 	= g_strdup(d2);
-			CF->website 	= g_strdup(link);
-			CF->feedid 	= g_strdup(buf);
-			CF->encl 	= g_strdup(encl);
-			CF->comments 	= g_strdup(comments);
-			CF->feed_fname  = g_strdup(feed_name);	//feed file name
-			CF->feed_uri	= g_strdup(feed);	//feed file url
-				
-			if (encl)
-			{
+			if (CF->encl) {
 				GError *err = NULL;
 				net_get_unblocking(
-                        	        encl,
+                        	        CF->encl,
                         	        textcb,
                                 	NULL,
                                 	(gpointer)finish_enclosure,
                                 	CF,
 					0,
                                 	&err);
-			}
-			else
-			{
+			} else {
    	    	    		create_mail(CF);
-				write_feed_status_line(feed_name, feed);
+				write_feed_status_line(CF->feed_fname, CF->feed_uri);
 				free_cf(CF);
 			}
 			farticle++;
-			update_status_icon(chn_name, p);
-		g_free(p);
+			d(g_print("put success()\n"));
+			update_status_icon(chn_name, subj);
 		}
-		d(g_print("put success()\n"));
-tout:		if (q) g_free(q);
-		g_free(b);
-		if (feed) g_free(feed);
-		if (encl) g_free(encl);
-		g_free(link);
         }
 out:	g_free(sender);
 
