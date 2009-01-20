@@ -1,3 +1,11 @@
+2008-01-20  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c - display comments feeds
+	* src/parser.c - parse_channel_line new
+	xml parsing function
+	* src/parser.c - tree_walk - support xml
+	genering tree walking
+
 2009-01-12  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c -  fetch_comments() support

@@ -242,6 +242,7 @@ struct _rfMessage {
 typedef struct _rfMessage rfMessage;
 
 void generic_finish_feed(rfMessage *msg, gpointer user_data);
+gchar *print_comments(gchar *url, gchar *stream);
 
 /*======================================================================*/
 
@@ -1769,15 +1770,14 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			camel_stream_printf (fstream, "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>Comments</font></b></td></tr>", 
 				content_colour & 0xEDECEB & 0xffffff,
 				comments);
-			camel_stream_printf (fstream, "</table></div>");
 			if (commstream) {
-//				camel_stream_printf (fstream, "%s", commstream);
-	print_comments(comments, commstream);
+				camel_stream_printf(fstream, "%s", (gchar *)print_comments(comments, commstream));
 				commstream = NULL;
 			}
 			else {
 				fetch_comments(comments, t->format);
 			}
+			camel_stream_printf (fstream, "</table></div>");
 		}
 	}
 
@@ -2514,6 +2514,7 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
             gtk_main_iteration ();
 }
 
+gchar *
 print_comments(gchar *url, gchar *stream)
 {
         RDF *r = NULL;
@@ -2533,7 +2534,7 @@ print_comments(gchar *url, gchar *stream)
                 r->cache = doc;
                 r->uri = url;
 
-                display_comments (r);
+                return display_comments (r);
 	}
 }
 
@@ -4151,11 +4152,12 @@ display_comments (RDF *r)
 {
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
 	tree_walk (root, r);
-	r->feedid = update_comments(r);
+	gchar *comments = update_comments(r);
 	if (r->maindate)
 		g_free(r->maindate);
 	g_array_free(r->item, TRUE);
-	g_free(r->feedid);
+	//g_free(r->feedid);
+	return comments;
 }
 
 gchar *
@@ -4163,7 +4165,6 @@ display_doc (RDF *r)
 {
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
 	tree_walk (root, r);
-	g_print("chn_name:%s\n", r->title);
 	r->feedid = update_channel(r);
 	if (r->maindate)
 		g_free(r->maindate);
