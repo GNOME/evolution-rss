@@ -763,7 +763,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	while (rewalk);
 	
 	if (channel == NULL) {
-		fprintf(stderr, "No channel definition.\n");
+		fprintf(stderr, "ERROR:No channel definition.\n");
 		return NULL;
 	}
 	if (image != NULL)
@@ -804,6 +804,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	r->total = item->len;
 	r->item = item;
 	r->title = t;
+	return r->title;
 }
 
 create_feed *
@@ -960,29 +961,6 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		g_free(link);
 		return CF;
 
-}
-
-gchar *
-update_comments(RDF *r)
-{
-        guint i;
-	create_feed *CF;
-	xmlNodePtr el;
-	GString *comments = g_string_new(NULL);
-	for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
-		CF = parse_channel_line(el->children, NULL, NULL);
-	print_cf(CF);
-		g_string_append_printf(comments, "<tr><td><table cellpading=0 cellspacing=0 border=1 width=100%>");
-		g_string_append_printf(comments,
-                        "<tr><td><table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
-		g_string_append_printf(comments, "<tr><td>%s</td><td align=right>%s</td></tr>", CF->subj, CF->date);
-		g_string_append_printf(comments, "<tr><td colspan=2>%s</td></tr>", CF->body);
-		g_string_append_printf(comments, "</table></td></tr>");
-		g_string_append_printf(comments, "</table></td></tr>");
-	}
-	gchar *scomments=comments->str;
-	g_string_free(comments, FALSE);
-	return scomments;
 }
 
 gchar *

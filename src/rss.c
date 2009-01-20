@@ -176,6 +176,9 @@ extern int xmlSubstituteEntitiesDefaultValue;
 rssfeed *rf = NULL;
 gboolean inhibit_read = FALSE;	//prevent mail selection when deleting folder
 gchar *commstream = NULL; 	//global comments stream
+guint32 frame_colour;
+guint32 content_colour;
+guint32 text_colour;
 
 gboolean setup_feed(add_feed *feed);
 gchar *display_doc (RDF *r);
@@ -1612,9 +1615,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
 	/* force loading of images even if mail images disabled */
 	emfh->load_http_now = TRUE;
-	guint32 frame_colour = emfh->frame_colour ? emfh->frame_colour: 0xffffff;
-	guint32 content_colour = emfh->content_colour ? emfh->content_colour: 0xffffff;
-	guint32 text_colour = emfh->text_colour ? emfh->text_colour: 0xffffff;
+	frame_colour = emfh->frame_colour ? emfh->frame_colour: 0xffffff;
+	content_colour = emfh->content_colour ? emfh->content_colour: 0xffffff;
+	text_colour = emfh->text_colour ? emfh->text_colour: 0xffffff;
 
 	type = camel_mime_part_get_content_type(message);
 	const char *website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");
@@ -4148,29 +4151,61 @@ encode_rfc2047(gchar *str)
 }
 
 gchar *
+update_comments(RDF *r)
+{
+        guint i;
+        create_feed *CF;
+        xmlNodePtr el;
+        GString *comments = g_string_new(NULL);
+        for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
+                CF = parse_channel_line(el->children, NULL, NULL);
+        print_cf(CF);
+//			g_string_append_printf (comments,
+//				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+//				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+                g_string_append_printf(comments, "<tr><td><table cellpading=0 cellspacing=0 border=1 width=100%>");
+                g_string_append_printf(comments,
+                        "<tr><td><table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
+		g_string_append_printf (comments, "<tr><td bgcolor=\"%06x\"><table width=100%%><tr><td><b><font size=+1><a href=%s>%s</font></b></td><td align=right>%s</td></tr></table></td></tr>", 
+				content_colour & 0xEDECEB & 0xffffff,
+				CF->website, CF->subj, CF->date);
+                g_string_append_printf(comments, "<tr><td colspan=2>%s</td></tr>", CF->body);
+                g_string_append_printf(comments, "</table></td></tr>");
+                g_string_append_printf(comments, "</table></td></tr>");
+        }
+        gchar *scomments=comments->str;
+        g_string_free(comments, FALSE);
+        return scomments;
+}
+
+gchar *
 display_comments (RDF *r)
 {
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
-	tree_walk (root, r);
-	gchar *comments = update_comments(r);
-	if (r->maindate)
-		g_free(r->maindate);
-	g_array_free(r->item, TRUE);
-	//g_free(r->feedid);
-	return comments;
+	if (tree_walk (root, r)) {
+		gchar *comments = update_comments(r);
+		if (r->maindate)
+			g_free(r->maindate);
+		g_array_free(r->item, TRUE);
+		return comments;
+	}
+	return NULL;
 }
+
 
 gchar *
 display_doc (RDF *r)
 {
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
-	tree_walk (root, r);
-	r->feedid = update_channel(r);
-	if (r->maindate)
-		g_free(r->maindate);
-	g_array_free(r->item, TRUE);
-	g_free(r->feedid);
-	return r->title;
+	if (tree_walk (root, r)) {
+		r->feedid = update_channel(r);
+		if (r->maindate)
+			g_free(r->maindate);
+		g_array_free(r->item, TRUE);
+		g_free(r->feedid);
+		return r->title;
+	}
+	return NULL;
 }
 
 static void

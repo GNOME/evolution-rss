@@ -1,5 +1,7 @@
 2008-01-20  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/parser.c - tree_walk  - correctly
+	exit on feed error
 	* src/rss.c - display comments feeds
 	* src/parser.c - parse_channel_line new
 	xml parsing function
