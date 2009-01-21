@@ -1762,16 +1762,16 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			content_colour & 0xEDECEB & 0xffffff,
 			website, subject);
      		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr>", text_colour & 0xffffff, buff);
-		camel_stream_printf (fstream, "</table></div>");
+//		camel_stream_printf (fstream, "</table></div>");
 //		g_print("comments:%s|\n", comments);
 		if (comments) {
-			camel_stream_printf (fstream,
-				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
-			camel_stream_printf(fstream, 
-				"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
-			camel_stream_printf (fstream, "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>Comments</font></b></td></tr>", 
-				content_colour & 0xEDECEB & 0xffffff,
+//			camel_stream_printf (fstream,
+//				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+//				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+//			camel_stream_printf(fstream, 
+//				"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
+			//camel_stream_printf (fstream, "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>Comments</font></b></td></tr>", 
+			camel_stream_printf (fstream, "<tr><td><b><font size=+1><a href=%s>Comments:</font></b></td></tr>", 
 				comments);
 			if (commstream) {
 				camel_stream_printf(fstream, "%s", (gchar *)print_comments(comments, commstream));
@@ -4166,7 +4166,7 @@ update_comments(RDF *r)
                 g_string_append_printf(comments, "<tr><td><table cellpading=0 cellspacing=0 border=1 width=100%>");
                 g_string_append_printf(comments,
                         "<tr><td><table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
-		g_string_append_printf (comments, "<tr><td bgcolor=\"%06x\"><table width=100%%><tr><td><b><font size=+1><a href=%s>%s</font></b></td><td align=right>%s</td></tr></table></td></tr>", 
+		g_string_append_printf (comments, "<tr><td bgcolor=\"%06x\"><table width=100%%><tr><td><b><a href=%s>%s</b></td><td align=right>%s</td></tr></table></td></tr>", 
 				content_colour & 0xEDECEB & 0xffffff,
 				CF->website, CF->subj, CF->date);
                 g_string_append_printf(comments, "<tr><td colspan=2>%s</td></tr>", CF->body);
