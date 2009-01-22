@@ -1,3 +1,10 @@
+2008-01-22  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-ui.glade - use theme-able icon
+	for edit
+	* src/fetch.c: fetch_blocking() fix "file"
+	processing
+
 2008-01-20  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c - tree_walk  - correctly

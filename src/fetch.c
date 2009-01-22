@@ -32,10 +32,9 @@ fetch_blocking(const char *url, GSList *headers, GString *post,
 	FILE *f = NULL;
 	
 	scheme = g_uri_parse_scheme(url);
-	d(g_print("scheme:%s\n", scheme));
-	if (!g_ascii_strcasecmp(scheme, "file")) {
+	if (scheme && !g_ascii_strcasecmp(scheme, "file")) {
 		gchar *fname = g_filename_from_uri(url, NULL, NULL);
-		f = g_fopen(fname, "rb");
+		f = fopen(fname, "rb");
 		g_free(fname);
 		g_free(scheme);
 	 	if (f == NULL)

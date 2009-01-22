@@ -1489,7 +1489,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_widget_show (hbox2);
 
 	GtkWidget *label3 = gtk_label_new ("");
-	gchar *mem = g_strdup_printf(" <b>%s:</b>", _("Feed view"));
+	gchar *mem = g_strdup_printf(" <b>%s :</b>", _("Feed view"));
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
 	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
@@ -2212,7 +2212,6 @@ gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data)
 	rfmsg->status_code = SOUP_STATUS_OK;
 	rfmsg->body = file_contents;
 	rfmsg->length = file_size;
-	g_print("user data:%s\n", user_data);
 	generic_finish_feed(rfmsg, user_data);
 	if (result) {
                 g_free (file_contents);
