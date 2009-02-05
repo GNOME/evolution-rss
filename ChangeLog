@@ -1,3 +1,11 @@
+2008-02-05  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/parser.c: (parse_channel_line)
+	do not decode, parse, or fix images
+	if feed = comment
+	* src/parser.c: (layer_find_tag)
+	accept node->children->type == 3 (text)
+
 2008-01-22  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-ui.glade - use theme-able icon

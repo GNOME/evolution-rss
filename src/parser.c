@@ -491,10 +491,11 @@ layer_find_tag (xmlNodePtr node,
 		}
                 if (strcasecmp (node->name, match)==0) {
                         if (node->children != NULL) {
-				if (node->children->type == 1
+				if (node->children->type == 1			//XML_NODE_ELEMENT
+					|| node->children->type == 3		//XML_NODE_TEXT
 					|| node->children->next != NULL) {
 #ifdef RDF_DEBUG
-				g_print("NODE DUMP:%s\n", xmlNodeGetContent(node->children->next));
+				g_print("NODE DUMP:%s|\n", xmlNodeGetContent(node->children->next));
 #endif
 				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
@@ -919,26 +920,30 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
                         gchar *tmp = decode_utf8_entities(b);
                         g_free(b);
 
-                        xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
-                        if (src)
-                        {
-                                xmlNode *doc = (xmlNode *)src;
+			if (feed_name) {
+                        	xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
+                        	if (src)
+                        	{
+                                	xmlNode *doc = (xmlNode *)src;
 
-                                while (doc = html_find(doc, "img"))
-                                {
-                                        gchar *name = NULL;
-                                        xmlChar *url = xmlGetProp(doc, "src");
-                                        if (url) {
-                                                if (name = fetch_image(url))
-                                                        xmlSetProp(doc, "src", name);
-                                                xmlFree(url);
-                                        }
-                                }
-                                xmlDocDumpMemory(src, &buff, &size);
-                                xmlFree(src);
-                        }
-                        g_free(tmp);
-                        b=buff;
+                                	while (doc = html_find(doc, "img"))
+                                	{
+                                        	gchar *name = NULL;
+                                        	xmlChar *url = xmlGetProp(doc, "src");
+                                        	if (url) {
+                                                	if (name = fetch_image(url))
+                                                        	xmlSetProp(doc, "src", name);
+                                                	xmlFree(url);
+                                        	}
+                                	}
+                                	xmlDocDumpMemory(src, &buff, &size);
+                                	xmlFree(src);
+                        	}
+                        	g_free(tmp);
+                        	b=buff;
+			}
+			else
+				b = tmp;
 		}
 
 		create_feed *CF = g_new0(create_feed, 1);	

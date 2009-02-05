@@ -4158,14 +4158,14 @@ update_comments(RDF *r)
         GString *comments = g_string_new(NULL);
         for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
                 CF = parse_channel_line(el->children, NULL, NULL);
-        print_cf(CF);
+        ///print_cf(CF);
 //			g_string_append_printf (comments,
 //				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 //				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
                 g_string_append_printf(comments, "<tr><td><table cellpading=0 cellspacing=0 border=1 width=100%>");
                 g_string_append_printf(comments,
-                        "<tr><td><table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
-		g_string_append_printf (comments, "<tr><td bgcolor=\"%06x\"><table width=100%%><tr><td><b><a href=%s>%s</b></td><td align=right>%s</td></tr></table></td></tr>", 
+                        "<tr><td><table border=0 width=\"100%%\" cellspacing=2 cellpadding=0>");
+		g_string_append_printf (comments, "<tr><td bgcolor=\"%06x\"><table width=100%% cellspacing=2 cellspadding=0><tr><td><b><a href=%s>%s</b></td><td align=right>%s</td></tr></table></td></tr>", 
 				content_colour & 0xEDECEB & 0xffffff,
 				CF->website, CF->subj, CF->date);
                 g_string_append_printf(comments, "<tr><td colspan=2>%s</td></tr>", CF->body);
