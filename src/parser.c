@@ -492,14 +492,16 @@ layer_find_tag (xmlNodePtr node,
                 if (strcasecmp (node->name, match)==0) {
                         if (node->children != NULL) {
 				if (node->children->type == 1			//XML_NODE_ELEMENT
-					|| node->children->type == 3		//XML_NODE_TEXT
+	/*			|| node->children->type == 3	*/		//XML_NODE_TEXT
 					|| node->children->next != NULL) {
 #ifdef RDF_DEBUG
 				g_print("NODE DUMP:%s|\n", xmlNodeGetContent(node->children->next));
+				
 #endif
 				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
 				xmlBufferFree(buf);
+/*	content = xmlNodeGetContent(node->children);*/
 				return content;
                         	} else {
 					xmlBufferFree(buf);
