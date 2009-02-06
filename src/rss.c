@@ -4194,6 +4194,7 @@ display_doc (RDF *r)
 {
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
 	if (tree_walk (root, r)) {
+		update_feed_image(r->image, gen_md5(r->uri));
 		r->feedid = update_channel(r);
 		if (r->maindate)
 			g_free(r->maindate);

@@ -51,6 +51,7 @@ typedef struct _RDF {
 	gchar		*title;		//title of the feed
 	gchar		*maindate;	//channel date
 	GArray		*item;		//feed content
+	gchar		*image;		//feed image
 	GtkWidget	*progress;
 	guint		total;		//total articles
 	guint		ttl;		//feed specified refresh interval

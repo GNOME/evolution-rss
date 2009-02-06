@@ -663,7 +663,6 @@ tree_walk (xmlNodePtr root, RDF *r)
 	GArray *item = g_array_new (TRUE, TRUE, sizeof (xmlNodePtr));
 	char *t;
 	char *charset;
-	gchar *img_src = NULL;
 
 	/* check in-memory encoding first, fallback to transport encoding, which may or may not be correct */
 	if (r->cache->charset == XML_CHAR_ENCODING_UTF8
@@ -764,7 +763,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 		return NULL;
 	}
 	if (image != NULL)
-		img_src = layer_find(image->children, "url", NULL);
+		r->image = layer_find(image->children, "url", NULL);
 
 	t = g_strdup(get_real_channel_name(r->uri, NULL));
 	//feed might be added with no validation
@@ -789,8 +788,6 @@ tree_walk (xmlNodePtr root, RDF *r)
 		r->ttl = atoi(tmp);
 	else
 		r->ttl = 0;
-
-	update_feed_image(img_src, gen_md5(r->uri));
 
 	//items might not have a date
 	// so try to grab channel/feed date
