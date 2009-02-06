@@ -175,6 +175,7 @@ extern int xmlSubstituteEntitiesDefaultValue;
 
 rssfeed *rf = NULL;
 gboolean inhibit_read = FALSE;	//prevent mail selection when deleting folder
+gboolean delete_op = FALSE;	//delete in progress
 gchar *commstream = NULL; 	//global comments stream
 guint32 frame_colour;
 guint32 content_colour;
@@ -1875,7 +1876,7 @@ void org_gnome_cooly_article_show(void *ep, void *t);
 #ifdef EVOLUTION_2_12
 void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t)
 {
-	if (rf && !inhibit_read)
+	if (rf && (!inhibit_read || !delete_op))
 		rf->current_uid = g_strdup(t->uid);
 }
 #else
@@ -2507,7 +2508,6 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	if (!commstream)
 		reload = 1;
 
-	g_print("response:%s\n", response->str);
 	commstream = response->str; 
 	if (reload)
 		em_format_redraw((EMFormat *)user_data);
@@ -4158,14 +4158,14 @@ update_comments(RDF *r)
         GString *comments = g_string_new(NULL);
         for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
                 CF = parse_channel_line(el->children, NULL, NULL);
-        ///print_cf(CF);
+        //print_cf(CF);
                 g_string_append_printf(comments, "<tr><td><table cellpading=0 cellspacing=0 border=1 width=100%>");
                 g_string_append_printf(comments,
-                        "<tr><td><table border=0 width=\"100%%\" cellspacing=2 cellpadding=0>");
+                        "<tr><td><table width=\"100%%\" cellspacing=0 cellpadding=0>");
 		g_string_append_printf (comments, "<tr><td bgcolor=\"%06x\"><table width=100%% cellspacing=2 cellspadding=0><tr><td><b><a href=%s>%s</b></td><td align=right>%s</td></tr></table></td></tr>", 
 				content_colour & 0xEDECEB & 0xffffff,
 				CF->website, CF->subj, CF->date);
-                g_string_append_printf(comments, "<tr><td><table><tr><td colspan=2>%s</td></tr></table></td></tr>", CF->body);
+                g_string_append_printf(comments, "<tr><td><table cellpadding=3 cellspacing=3><tr><td colspan=2>%s</td></tr></table></td></tr>", CF->body);
                 g_string_append_printf(comments, "</table></td></tr>");
                 g_string_append_printf(comments, "</table></td></tr>");
         }

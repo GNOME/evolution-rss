@@ -1,7 +1,15 @@
+2008-02-06  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (org_gnome_cooly_article_show)
+	allow update of current_uid if delete in
+	progress
+	* src/parser.c: (layer_find_tag)
+	revert to parsing elements of node type
+
 2008-02-05  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c: (parse_channel_line)
-	do not decode, parse, or fix images
+	do not decode, parse, or cache/fix images
 	if feed = comment
 	* src/parser.c: (layer_find_tag)
 	accept node->children->type == 3 (text)

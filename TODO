@@ -47,3 +47,4 @@
         * implement right-click in browser
 	* category posted under
 	* coments updatable
+	* current_uid might be updated when were in delete mode

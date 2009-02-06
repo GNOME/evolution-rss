@@ -351,6 +351,9 @@ g_print("parser error 3_4 -> return NULL!!!\n");
         return NULL;
 }
 
+/* returns node disregarding type
+ */
+
 static char *
 layer_find (xmlNodePtr node, 
 	    char *match, 
@@ -385,8 +388,6 @@ layer_find (xmlNodePtr node,
 gchar *
 content_rss(xmlNode *node, gchar *fail)
 {
-	//guint len=0;
-	//xmlBufferPtr buf = xmlBufferCreate();
 	gchar *content;
 
 	content = xmlNodeGetContent(node);
@@ -394,15 +395,6 @@ content_rss(xmlNode *node, gchar *fail)
 		return content;
 	else
 		return fail;
-/*	len = xmlNodeDump(buf, node->doc, node->children->next, 0, 0);
-	if (len)
-	{
-		content = g_strdup_printf("%s", xmlBufferContent(buf));
-		xmlBufferFree(buf);
-		return content;
-	}
-	else
-		return fail;*/
 }
 
 void
@@ -462,6 +454,7 @@ layer_find_ns_tag(xmlNodePtr node,
 	return fail;
 }
 
+/* find matching tag (with html entities) */
 static char *
 layer_find_tag (xmlNodePtr node,
             char *match,
@@ -492,16 +485,17 @@ layer_find_tag (xmlNodePtr node,
                 if (strcasecmp (node->name, match)==0) {
                         if (node->children != NULL) {
 				if (node->children->type == 1			//XML_NODE_ELEMENT
-	/*			|| node->children->type == 3	*/		//XML_NODE_TEXT
+	/*			|| node->children->type == 3		*/	//XML_NODE_TEXT
 					|| node->children->next != NULL) {
 #ifdef RDF_DEBUG
 				g_print("NODE DUMP:%s|\n", xmlNodeGetContent(node->children->next));
 				
 #endif
-				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
+/*this looses html entities
+ *				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
-				xmlBufferFree(buf);
-/*	content = xmlNodeGetContent(node->children);*/
+				xmlBufferFree(buf);*/
+				content = xmlNodeGetContent(node->children);
 				return content;
                         	} else {
 					xmlBufferFree(buf);
@@ -874,8 +868,9 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 				layer_find_tag (top, "content", 
 					layer_find_tag (top, "summary", 
 					NULL)));
-
-		if (!b)
+		if (b) 
+			b = g_strstrip(b);
+		else
 	               	b = g_strdup(layer_find (top, "description",
 				layer_find (top, "content",
 				layer_find (top, "summary", "No information"))));
