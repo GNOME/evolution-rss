@@ -1,293 +1,223 @@
 # Swedish translation for evolution-rss.
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007, 2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the evolution-rss package.
-# Daniel Nylander <po@danielnylander.se>, 2007.
+# Daniel Nylander <po@danielnylander.se>, 2007, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-19 22:38+0200\n"
-"PO-Revision-Date: 2007-10-19 22:53+0100\n"
+"POT-Creation-Date: 2009-02-11 02:50+0100\n"
+"PO-Revision-Date: 2009-02-11 03:23+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ../src/rss.c:234
-#: ../src/rss.c:1305
-#: ../src/rss.c:1470
-#, c-format
-msgid "%2.0f%% done"
-msgstr "%2.0f%% färdigt"
-
-#: ../src/rss.c:313
-msgid "Enter User/Pass for Feed"
-msgstr "Ange användare/lösenord för kanal"
-
-#: ../src/rss.c:332
-#: ../src/rss-ui.glade.h:29
-msgid "Username:"
-msgstr "Användarnamn:"
-
-#: ../src/rss.c:339
-msgid "Password:"
-msgstr "Lösenord:"
-
-#: ../src/rss.c:366
-msgid "Remember password"
-msgstr "Kom ihåg lösenordet"
-
-#: ../src/rss.c:433
-msgid "Add Feeds"
-msgstr "Lägg till kanaler"
-
-#: ../src/rss.c:450
-msgid "Feed URL: "
-msgstr "Kanalens url: "
-
-#: ../src/rss.c:481
-msgid "Folder"
-msgstr "Mapp"
-
-#: ../src/rss.c:497
-#: ../src/rss.c:1627
-msgid "Show the article summary instead of web page"
-msgstr "Visa artikelsammandrag istället för webbsida"
-
-#: ../src/rss.c:503
-#: ../src/rss.c:1633
-msgid "Feed Enabled"
-msgstr "Kanal aktiverad"
-
-#: ../src/rss.c:509
-#: ../src/rss.c:1639
-msgid "Validate feed"
-msgstr "Validera kanal"
-
-#. e_clipped_label_set_text (
-#. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:644
-msgid "Canceling..."
-msgstr "Avbryter..."
-
-#: ../src/rss.c:762
-#: ../src/rss.c:833
-#: ../src/rss.c:1456
+#: ../src/dbus.c:111
+#: ../src/rss-config-factory.c:544
+#: ../src/rss-config-factory.c:905
+#: ../src/rss-config-factory.c:998
 msgid "Error adding feed."
 msgstr "Fel när kanal lades till."
 
-#: ../src/rss.c:763
-#: ../src/rss.c:834
-#: ../src/rss.c:1457
+#: ../src/dbus.c:112
+#: ../src/rss-config-factory.c:545
+#: ../src/rss-config-factory.c:906
+#: ../src/rss-config-factory.c:999
 msgid "Feed already exists!"
 msgstr "Kanalen finns redan!"
 
-#: ../src/rss.c:900
-msgid "Delete Feed?"
-msgstr "Ta bort kanal?"
-
-#: ../src/rss.c:917
-#: ../src/rss-ui.glade.h:23
-msgid "Remove folder contents"
-msgstr "Ta bort mappinnehåll"
-
-#: ../src/rss.c:936
-msgid "Do not delete"
-msgstr "Ta inte bort"
-
-#: ../src/rss.c:1079
+#: ../src/dbus.c:117
 #, c-format
-msgid ""
-"Are you sure you want\n"
-" to remove <b>%s</b>?"
+msgid "New feed imported: %s"
+msgstr "Ny kanal importerad: %s"
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Auto check for new articles."
+msgstr "Leta automatiskt efter nya artiklar."
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Blink Status Icon"
+msgstr "Blinka statusikonen"
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink status icon when new article received"
+msgstr "Blinka med statusikonen när ny artikel tas emot"
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Check New articles"
+msgstr "Leta efter nya artiklar"
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Check for new articles everytime Evolution is started."
+msgstr "Letar efter nya artiklar varje gång som Evolution startas."
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Checks articles on startup"
+msgstr "Letar efter nya artiklar vid uppstart"
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Contains list of the currently setup feeds."
+msgstr "Innehåller lista över aktuella konfigurerade kanaler."
+
+#: ../src/evolution-rss.schemas.in.h:8
+msgid "Display article's summary"
+msgstr "Visa artikelsammandrag"
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Display feed icon on feed folder"
+msgstr "Visa kanalikon på kanalmapp"
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Enable Feed Icon"
+msgstr "Aktivera kanalikon"
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Enable Status Icon"
+msgstr "Aktivera statusikon"
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable status icon in notification area"
+msgstr "Aktivera statusikon i notifieringsytan"
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid "Evolution will show artile's summary instead of article's webpage. Sumarry can also be html."
+msgstr "Evolution kommer att visa artikelsammandrag istället för artikelns webbplats. Sammandrag kan också vara HTML."
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid "Feeds list"
+msgstr "Kanallista"
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Frekvens för att leta efter nya artiklar (i minuter)."
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Hostname of the proxy server"
+msgstr "Värdnamn för proxyservern"
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Hostname of the proxy server."
+msgstr "Värdnamn för proxyservern."
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Html render"
+msgstr "Html-renderare"
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid "If the proxy server requires authentication. This is the password field."
+msgstr "Om proxyservern kräver autentisering. Detta är lösenordsfältet."
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid "Interval in seconds before a conection is dropped."
+msgstr "Intervall i sekunder innan en anslutning avslutas."
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Java Enabled"
+msgstr "Java aktiverad"
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "JavaScript Enabled"
+msgstr "JavaScript aktiverad"
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "Network proxy requires authentication."
+msgstr "Nätverksproxyserver kräver autentisering."
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "Network timeout"
+msgstr "Nätverkstidsgräns överstegs"
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "New articles timeout"
+msgstr "Tidsgräns för nya artiklar överstegs"
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "Password for proxy server"
+msgstr "Lösenord för proxyserver"
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Proxy requires authentication"
+msgstr "Proxyserver kräver autentisering"
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Proxy server port"
+msgstr "Port för proxyserver"
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Proxy server user"
+msgstr "Användare för proxyserver"
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Remove Rename Folder"
 msgstr ""
-"Är du säker på att du vill\n"
-" ta bort <b>%s</b>?"
 
-#: ../src/rss.c:1105
-#: ../src/rss.c:1182
-msgid "Disable"
-msgstr "Inaktivera"
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "The port number for proxy server."
+msgstr "Portnumret för proxyservern."
 
-#: ../src/rss.c:1105
-#: ../src/rss.c:1182
-msgid "Enable"
-msgstr "Aktivera"
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "The username to use for proxy server authentication."
+msgstr "Användarnamnet att använda för autentisering mot proxyserver."
 
-#: ../src/rss.c:1323
-msgid "Exporting feeds..."
-msgstr "Exporterar kanaler..."
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "Type HTML Render used to display html pages."
+msgstr "Ange HTML-renderare att använda för att visa html-sidor."
 
-#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:1326
-#: ../src/rss.c:1402
-#: ../src/rss.c:3399
-#: ../src/rss.c:3542
-msgid "Please wait"
-msgstr "Var god vänta"
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Use a proxy server to fetch articles"
+msgstr "Använd en proxyserver för att hämta artiklar"
 
-#: ../src/rss.c:1351
-msgid ""
-"A file by that name already exists.\n"
-"Overwrite it?"
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Use proxy server"
+msgstr "Använd proxyserver"
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "When deleting a folder also remove rename feed alocation."
 msgstr ""
-"En fil med det namnet finns redan.\n"
-"Skriv över den?"
-
-#: ../src/rss.c:1353
-msgid "Overwrite file?"
-msgstr "Skriv över fil?"
-
-#: ../src/rss.c:1375
-msgid "Error exporting feeds!"
-msgstr "Fel vid export av kanaler!"
-
-#: ../src/rss.c:1399
-msgid "Importing feeds..."
-msgstr "Importerar kanaler..."
-
-#: ../src/rss.c:1558
-#: ../src/rss-ui.glade.h:25
-msgid "Select import file"
-msgstr "Välj fil att importera"
-
-#: ../src/rss.c:1595
-#: ../src/rss.c:1714
-msgid "All Files"
-msgstr "Alla filer"
-
-#: ../src/rss.c:1601
-#: ../src/rss.c:1720
-msgid "OPML Files"
-msgstr "OPML-filer"
-
-#: ../src/rss.c:1607
-#: ../src/rss.c:1726
-msgid "XML Files"
-msgstr "XML-filer"
-
-#: ../src/rss.c:1674
-#: ../src/rss-ui.glade.h:24
-msgid "Select file to export"
-msgstr "Välj fil att exportera"
-
-#: ../src/rss.c:1766
-msgid ""
-"No RSS feeds configured!\n"
-"Unable to export."
-msgstr ""
-"Inga RSS-kanaler konfigurerade!\n"
-"Kan inte exportera."
-
-#: ../src/rss.c:2457
-msgid "Feed view"
-msgstr "Kanalvy"
-
-#: ../src/rss.c:2463
-#: ../src/rss-ui.glade.h:15
-msgid "HTML"
-msgstr "HTML"
-
-#: ../src/rss.c:2463
-msgid "Summary"
-msgstr "Sammandrag"
-
-#: ../src/rss.c:2783
-#: ../src/rss.c:2857
-msgid "Error while fetching feed."
-msgstr "Fel vid hämtning av kanal."
-
-#: ../src/rss.c:2857
-msgid "Invalid Feed"
-msgstr "Ogiltig kanal"
-
-#: ../src/rss.c:2897
-#: ../src/rss.c:3042
-msgid "Error Fetching Feed"
-msgstr "Fel vid hämtning av kanal"
-
-#: ../src/rss.c:2911
-msgid "Canceled"
-msgstr "Avbruten"
-
-#: ../src/rss.c:2986
-msgid "Complete"
-msgstr "Färdig"
-
-#: ../src/rss.c:3373
-msgid "No RSS feeds configured!"
-msgstr "Inga RSS-kanaler har konfigurerats!"
-
-#: ../src/rss.c:3381
-msgid "No RSS feeds enabled!"
-msgstr "Inga RSS-kanaler har aktiverats!"
-
-#: ../src/rss.c:3382
-msgid "Go to Edit->Preferences->News & Blogs to enable feeds."
-msgstr "Gå till Redigera->Inställningar->Nyheter och bloggar för att aktivera kanaler."
-
-#: ../src/rss.c:3388
-#: ../src/rss.c:3538
-msgid "Reading RSS feeds..."
-msgstr "Läser RSS-kanaler..."
-
-#: ../src/rss.c:3407
-#: ../src/rss.c:3550
-#, c-format
-msgid "0% done"
-msgstr "0% färdigt"
-
-#: ../src/rss.c:3498
-msgid "Waiting..."
-msgstr "Väntar..."
-
-#. RSS 2.0 Enclosure
-#. ATOM Enclosure
-#. we have to free this some how
-#. RSS,
-#: ../src/rss.c:4487
-msgid "No Information"
-msgstr "Ingen information"
-
-#: ../src/rss.c:4822
-msgid "GtkHTML"
-msgstr "GtkHTML"
-
-#: ../src/rss.c:4823
-msgid "WebKit"
-msgstr "WebKit"
-
-#: ../src/rss.c:4824
-msgid "Mozilla"
-msgstr "Mozilla"
-
-#: ../src/rss.c:4879
-msgid "Enabled"
-msgstr "Aktiverad"
-
-#: ../src/rss.c:4889
-msgid "Feed Name"
-msgstr "Kanalnamn"
-
-#: ../src/rss.c:4898
-msgid "Type"
-msgstr "Typ"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
-msgid "Evolution RSS Reader Plugin."
-msgstr "Evolution-insticksmodul för RSS-läsare."
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built upon the somewhat existing RSS support in evolution-1.4 branch. The motivation behind this was to have RSS in same place as mails, at this moment I do not see the point having a separate RSS reader since a RSS Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"RSS-läsare för Evolution.\n"
+"\n"
+"Denna insticksmodul lägger till stöd för RSS-kanaler för Evolution. RSS-stödet byggdes ovanpå ett delvid stöd som fanns i grenen evolution-1.4. Motiveringen bakom detta var att ha RSS på samma plats som e-post. Jag kan inte kan se någon mening i att ha en separat RSS-läsare eftersom en RSS-artikel är mycket lik ett e-postmeddelande.\n"
+"\n"
+"Evolution RSS kan visa artiklar i sammandragsvy eller HTML-vy. \n"
+"\n"
+"HTML kan visas med följande motorer: gtkHTML, Apples Webkit eller Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
 msgid "Reading RSS Feeds..."
 msgstr "Läser RSS-kanaler..."
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "Uppdaterar kanaler..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "{0}"
 msgstr "{0}"
 
-#: ../src/org-gnome-evolution-rss.error.xml.h:3
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
 msgid "{1}"
 msgstr "{1}"
 
@@ -307,118 +237,527 @@ msgstr "Uppdatera RSS-kanaler"
 msgid "_Read RSS"
 msgstr "_Läs RSS"
 
-#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
-msgid "Evolution RSS Reader"
-msgstr "RSS-läsare för Evolution"
+#: ../src/rss.c:408
+#: ../src/rss.c:2245
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Hämtar kanaler (%d aktiverad)"
 
-#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
-msgid "News & Blogs"
-msgstr "Nyheter och bloggar"
+#: ../src/rss.c:442
+#: ../src/rss-config-factory.c:1148
+#: ../src/rss-config-factory.c:1389
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% färdigt"
 
-#: ../src/rss-ui.glade.h:1
+#: ../src/rss.c:452
+#: ../src/rss.c:2401
+msgid "Feed"
+msgstr "Kanal"
+
+#: ../src/rss.c:518
+msgid "Enter User/Pass for Feed"
+msgstr "Ange användare/lösenord för kanal"
+
+#: ../src/rss.c:537
+#: ../src/rss-ui.glade.h:44
+msgid "Username:"
+msgstr "Användarnamn:"
+
+#: ../src/rss.c:544
+msgid "Password:"
+msgstr "Lösenord:"
+
+#: ../src/rss.c:572
+msgid "Remember password"
+msgstr "Kom ihåg lösenordet"
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:733
+msgid "Canceling..."
+msgstr "Avbryter..."
+
+#: ../src/rss.c:932
+#: ../src/rss-config-factory.c:786
+msgid "Disable"
+msgstr "Inaktivera"
+
+#: ../src/rss.c:932
+#: ../src/rss-config-factory.c:786
+msgid "Enable"
+msgstr "Aktivera"
+
+#: ../src/rss.c:1493
+msgid "Feed view"
+msgstr "Kanalvy"
+
+#: ../src/rss.c:1499
+msgid "Show Summary"
+msgstr "Visa sammandrag"
+
+#: ../src/rss.c:1499
+msgid "Show Full Text"
+msgstr "Visa fullständig text"
+
+#: ../src/rss.c:2049
+msgid "Unamed feed"
+msgstr "Namnlös kanal"
+
+#: ../src/rss.c:2049
+#: ../src/rss.c:2154
+msgid "Error while fetching feed."
+msgstr "Fel vid hämtning av kanal."
+
+#: ../src/rss.c:2154
+msgid "Invalid Feed"
+msgstr "Ogiltig kanal"
+
+#: ../src/rss.c:2166
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "Hämtar meddelande %d av %d"
+
+#: ../src/rss.c:2266
+msgid "Complete."
+msgstr "Färdig."
+
+#: ../src/rss.c:2295
+#: ../src/rss.c:2478
+#: ../src/rss.c:2564
+#: ../src/rss.c:2897
+msgid "Error fetching feed."
+msgstr "Fel vid hämtning av kanal."
+
+#: ../src/rss.c:2307
+msgid "Canceled."
+msgstr "Avbruten."
+
+#: ../src/rss.c:2410
+msgid "Complete"
+msgstr "Färdig"
+
+#: ../src/rss.c:3194
+#: ../src/rss.c:3313
+msgid "No RSS feeds configured!"
+msgstr "Inga RSS-kanaler har konfigurerats!"
+
+#: ../src/rss.c:3200
+#: ../src/rss.c:3402
+msgid "Reading RSS feeds..."
+msgstr "Läser RSS-kanaler..."
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:3214
+#: ../src/rss.c:3406
+#: ../src/rss-config-factory.c:1057
+#: ../src/rss-config-factory.c:1411
+msgid "Please wait"
+msgstr "Var god vänta"
+
+#: ../src/rss.c:3222
+#: ../src/rss.c:3414
+#: ../src/rss-config-factory.c:528
+#: ../src/rss-config-factory.c:880
+#, c-format
+msgid "0% done"
+msgstr "0% färdigt"
+
+#: ../src/rss.c:3361
+msgid "Waiting..."
+msgstr "Väntar..."
+
+#: ../src/rss-config-factory.c:88
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:89
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:90
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:301
+msgid "Edit Feed"
+msgstr "Redigera kanal"
+
+#: ../src/rss-config-factory.c:303
+msgid "Add Feed"
+msgstr "Lägg till kanal"
+
+#: ../src/rss-config-factory.c:345
+msgid "Folder"
+msgstr "Mapp"
+
+#: ../src/rss-config-factory.c:817
+#: ../src/rss-ui.glade.h:34
+msgid "Remove folder contents"
+msgstr "Ta bort mappinnehåll"
+
+#: ../src/rss-config-factory.c:1053
+msgid "Importing feeds..."
+msgstr "Importerar kanaler..."
+
+#: ../src/rss-config-factory.c:1214
+#: ../src/rss-config-factory.c:1497
+msgid "All Files"
+msgstr "Alla filer"
+
+#: ../src/rss-config-factory.c:1220
+#: ../src/rss-config-factory.c:1503
+msgid "OPML Files"
+msgstr "OPML-filer"
+
+#: ../src/rss-config-factory.c:1226
+#: ../src/rss-config-factory.c:1509
+msgid "XML Files"
+msgstr "XML-filer"
+
+#: ../src/rss-config-factory.c:1246
+msgid "Show article's summary"
+msgstr "Visa artikelsammandrag"
+
+#: ../src/rss-config-factory.c:1252
+msgid "Feed Enabled"
+msgstr "Kanal aktiverad"
+
+#: ../src/rss-config-factory.c:1258
+msgid "Validate feed"
+msgstr "Validera kanal"
+
+#: ../src/rss-config-factory.c:1293
+#: ../src/rss-ui.glade.h:36
+msgid "Select import file"
+msgstr "Välj fil att importera"
+
+#: ../src/rss-config-factory.c:1329
+#: ../src/rss-ui.glade.h:35
+msgid "Select file to export"
+msgstr "Välj fil att exportera"
+
+#: ../src/rss-config-factory.c:1407
+msgid "Exporting feeds..."
+msgstr "Exporterar kanaler..."
+
+#: ../src/rss-config-factory.c:1436
+msgid ""
+"A file by that name already exists.\n"
+"Overwrite it?"
+msgstr ""
+"En fil med det namnet finns redan.\n"
+"Skriv över den?"
+
+#: ../src/rss-config-factory.c:1438
+msgid "Overwrite file?"
+msgstr "Skriv över fil?"
+
+#: ../src/rss-config-factory.c:1460
+msgid "Error exporting feeds!"
+msgstr "Fel vid export av kanaler!"
+
+#: ../src/rss-config-factory.c:1537
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"Inga RSS-kanaler konfigurerade!\n"
+"Kan inte exportera."
+
+#: ../src/rss-config-factory.c:1634
+#: ../src/rss-config-factory.c:1941
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Observera: För att kunna använda Mozilla (Firefox) eller Apple Webkit \n"
+"som renderare så behöver du ha utvecklingspaketen för firefox eller webkit \n"
+"installerade och evolution-rss bör kompileras om för att se dessa paket."
+
+#. gtk_widget_show(dialog1);
+#. model = exchange_account_folder_size_get_model (account);
+#. if (model)
+#. folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
+#. else
+#: ../src/rss-config-factory.c:1728
+msgid "0 KB"
+msgstr "0 KB"
+
+#: ../src/rss-config-factory.c:1733
+msgid "Size:"
+msgstr "Storlek:"
+
+#: ../src/rss-config-factory.c:1789
+#: ../src/rss-ui.glade.h:21
+msgid "Enabled"
+msgstr "Aktiverad"
+
+#: ../src/rss-config-factory.c:1805
+msgid "Feed Name"
+msgstr "Kanalnamn"
+
+#: ../src/rss-config-factory.c:1815
+msgid "Type"
+msgstr "Typ"
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr "<b>Artikelnotifiering</b>"
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr "<b>Motor: </b>"
+
+#: ../src/rss-html-rendering.glade.h:3
+#: ../src/rss-ui.glade.h:3
 msgid "<b>HTML Rendering</b>"
 msgstr "<b>HTML-rendering</b>"
 
-#: ../src/rss-ui.glade.h:2
-msgid "<span weight=\"bold\">Settings</span>"
-msgstr "<span weight=\"bold\">Inställningar</span>"
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Tidsgräns för nätverk:</b>"
 
-#: ../src/rss-ui.glade.h:3
-msgid "Add"
-msgstr "Lägg till"
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Blink icon in notification area"
+msgstr "Blinka ikon i notifieringsyta"
 
-#: ../src/rss-ui.glade.h:4
-msgid "By default show article summary instead of webpage"
-msgstr "Visa artikelsammandrag som standard istället för webbsida"
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Block pop-up windows"
+msgstr "Blockera popupfönster"
 
-#: ../src/rss-ui.glade.h:5
-msgid "Certificates Table"
-msgstr "Certifikattabell"
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Enable Java"
+msgstr "Aktivera Java"
 
-#: ../src/rss-ui.glade.h:6
-msgid "Check for new articles at startup"
-msgstr "Kontrollera nya artiklar vid uppstart"
-
-#: ../src/rss-ui.glade.h:7
-msgid "Check for new articles every"
-msgstr "Kontrollera nya artiklar var"
-
-#: ../src/rss-ui.glade.h:8
-msgid "Delete feed?"
-msgstr "Ta bort kanal?"
-
-#: ../src/rss-ui.glade.h:9
-msgid "Details"
-msgstr "Detaljer"
-
-#: ../src/rss-ui.glade.h:10
-msgid "Edit"
-msgstr "Redigera"
-
-#: ../src/rss-ui.glade.h:11
+#: ../src/rss-html-rendering.glade.h:8
+#: ../src/rss-ui.glade.h:19
 msgid "Enable JavaScript"
 msgstr "Aktivera JavaScript"
 
+#: ../src/rss-html-rendering.glade.h:9
+msgid "Show feed icon"
+msgstr "Visa kanalikon"
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Show icon in notification area"
+msgstr "Visa ikon i notifieringsyta"
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "seconds"
+msgstr "sekunder"
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr "<b>Avancerade alternativ</b>"
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed URL:</b>"
+msgstr "<b>Kanalens url:</b>"
+
+#: ../src/rss-ui.glade.h:4
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr "<span weight=\"bold\">Inställningar</span>"
+
+#: ../src/rss-ui.glade.h:5
+msgid "Add"
+msgstr "Lägg till"
+
+#: ../src/rss-ui.glade.h:6
+msgid "Always delete unread articles"
+msgstr "Ta alltid bort olästa artiklar"
+
+#: ../src/rss-ui.glade.h:7
+msgid "By default show article summary instead of webpage"
+msgstr "Visa artikelsammandrag som standard istället för webbsida"
+
+#: ../src/rss-ui.glade.h:8
+msgid "Certificates Table"
+msgstr "Certifikattabell"
+
+#: ../src/rss-ui.glade.h:9
+msgid "Check for new articles at startup"
+msgstr "Kontrollera nya artiklar vid uppstart"
+
+#: ../src/rss-ui.glade.h:10
+msgid "Check for new articles every"
+msgstr "Kontrollera nya artiklar var"
+
+#: ../src/rss-ui.glade.h:11
+msgid "Delete all but the last"
+msgstr "Ta bort alla utan sista"
+
 #: ../src/rss-ui.glade.h:12
+msgid "Delete articles older than"
+msgstr "Ta bort artiklar äldre än"
+
+#: ../src/rss-ui.glade.h:13
+msgid "Delete feed?"
+msgstr "Ta bort kanal?"
+
+#: ../src/rss-ui.glade.h:14
+msgid "Details"
+msgstr "Detaljer"
+
+#: ../src/rss-ui.glade.h:15
+msgid "Display only feed summary"
+msgstr "Visa endast kanalsammandrag"
+
+#: ../src/rss-ui.glade.h:16
+msgid "Do no update feed"
+msgstr "Uppdatera inte kanal"
+
+#: ../src/rss-ui.glade.h:17
+msgid "Do not delete feeds"
+msgstr "Ta inte bort kanaler"
+
+#: ../src/rss-ui.glade.h:18
+msgid "Edit"
+msgstr "Redigera"
+
+#: ../src/rss-ui.glade.h:20
+msgid "Enable Plugins"
+msgstr "Aktivera insticksmoduler"
+
+#: ../src/rss-ui.glade.h:22
 msgid "Engine: "
 msgstr "Motor: "
 
-#: ../src/rss-ui.glade.h:13
+#: ../src/rss-ui.glade.h:23
 msgid "Export"
 msgstr "Exportera"
 
-#: ../src/rss-ui.glade.h:14
+#: ../src/rss-ui.glade.h:24
 msgid "Feeds"
 msgstr "Kanaler"
 
-#: ../src/rss-ui.glade.h:16
+#: ../src/rss-ui.glade.h:25
+msgid "General"
+msgstr "Allmänt"
+
+#: ../src/rss-ui.glade.h:26
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:27
 msgid "HTTP Proxy Details"
 msgstr "Detaljer för HTTP-proxyserver"
 
-#: ../src/rss-ui.glade.h:17
+#: ../src/rss-ui.glade.h:28
 msgid "HTTP proxy:"
 msgstr "HTTP-proxyserver:"
 
-#: ../src/rss-ui.glade.h:18
+#: ../src/rss-ui.glade.h:29
 msgid "Import"
 msgstr "Importera"
 
-#: ../src/rss-ui.glade.h:19
+#: ../src/rss-ui.glade.h:30
 msgid "Network"
 msgstr "Nätverk"
 
-#: ../src/rss-ui.glade.h:20
+#: ../src/rss-ui.glade.h:31
 msgid "No proxy for:"
 msgstr "Ingen proxyserver för:"
 
-#: ../src/rss-ui.glade.h:21
+#: ../src/rss-ui.glade.h:32
 msgid "Password: "
 msgstr "Lösenord: "
 
-#: ../src/rss-ui.glade.h:22
+#: ../src/rss-ui.glade.h:33
 msgid "Port:"
 msgstr "Port:"
 
-#: ../src/rss-ui.glade.h:26
+#: ../src/rss-ui.glade.h:37
 msgid "Setup"
 msgstr "Konfigurera"
 
-#: ../src/rss-ui.glade.h:27
+#: ../src/rss-ui.glade.h:38
+msgid "Storage"
+msgstr "Lagring"
+
+#: ../src/rss-ui.glade.h:39
+msgid "Update"
+msgstr "Uppdatera"
+
+#: ../src/rss-ui.glade.h:40
+msgid "Update in"
+msgstr "Uppdatera om"
+
+#: ../src/rss-ui.glade.h:41
 msgid "Use Proxy"
 msgstr "Använd proxyserver"
 
-#: ../src/rss-ui.glade.h:28
+#: ../src/rss-ui.glade.h:42
 msgid "Use authentication"
 msgstr "Använd autentisering"
 
-#: ../src/rss-ui.glade.h:30
-msgid "checkbutton8"
-msgstr "checkbutton8"
+#: ../src/rss-ui.glade.h:43
+msgid "Use global update interval"
+msgstr "Använd global uppdateringsintervall"
 
-#: ../src/rss-ui.glade.h:31
+#: ../src/rss-ui.glade.h:45
+msgid "Validate"
+msgstr "Validera"
+
+#: ../src/rss-ui.glade.h:46
+msgid "day(s)"
+msgstr "dygn"
+
+#: ../src/rss-ui.glade.h:47
+msgid "label"
+msgstr "etikett"
+
+#: ../src/rss-ui.glade.h:48
+msgid "message(s)"
+msgstr "meddelande(n)"
+
+#: ../src/rss-ui.glade.h:49
+msgid "minute(s)"
+msgstr "minut(er)"
+
+#: ../src/rss-ui.glade.h:50
 msgid "minutes"
 msgstr "minuter"
 
+#: ../src/parser.c:897
+msgid "No Information"
+msgstr "Ingen information"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr "Kanalstyrning för Evolution"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr "RSS-läsare för Evolution"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr "Hantera dina RDF, RSS, ATOM-kanaler här"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "Nyheter och bloggar"
+
+#~ msgid "Delete Feed?"
+#~ msgstr "Ta bort kanal?"
+#~ msgid ""
+#~ "Are you sure you want\n"
+#~ " to remove <b>%s</b>?"
+#~ msgstr ""
+#~ "Är du säker på att du vill\n"
+#~ " ta bort <b>%s</b>?"
+#~ msgid "No RSS feeds enabled!"
+#~ msgstr "Inga RSS-kanaler har aktiverats!"
+#~ msgid "Go to Edit->Preferences->News & Blogs to enable feeds."
+#~ msgstr ""
+#~ "Gå till Redigera->Inställningar->Nyheter och bloggar för att aktivera "
+#~ "kanaler."
+#~ msgid "Evolution RSS Reader Plugin."
+#~ msgstr "Evolution-insticksmodul för RSS-läsare."
+#~ msgid "checkbutton8"
+#~ msgstr "checkbutton8"
 #~ msgid "URI"
 #~ msgstr "URI"
 #~ msgid "Response: [%s]\n"
