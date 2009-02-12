@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 21:19+0300\n"
+"POT-Creation-Date: 2009-02-12 19:59+0200\n"
 "PO-Revision-Date: 2007-10-22 21:56+0000\n"
 "Last-Translator: Lucian Langa <cooly@gnome.eu.org>\n"
 "Language-Team: Romanian <RO@li.org>\n"
@@ -16,337 +16,189 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../src/dbus.c:111 ../src/rss-config-factory.c:545
+#: ../src/rss-config-factory.c:907 ../src/rss-config-factory.c:1000
+msgid "Error adding feed."
+msgstr ""
+
+#: ../src/dbus.c:112 ../src/rss-config-factory.c:546
+#: ../src/rss-config-factory.c:908 ../src/rss-config-factory.c:1001
+msgid "Feed already exists!"
+msgstr ""
+
+#: ../src/dbus.c:117
+#, c-format
+msgid "New feed imported: %s"
+msgstr ""
+
 #: ../src/evolution-rss.schemas.in.h:1
 msgid "Auto check for new articles."
 msgstr "Verifica automat articolele noi."
 
 #: ../src/evolution-rss.schemas.in.h:2
+msgid "Blink Status Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink status icon when new article received"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:4
 msgid "Check New articles"
 msgstr "Verifica articolele noi"
 
-#: ../src/evolution-rss.schemas.in.h:3
+#: ../src/evolution-rss.schemas.in.h:5
 msgid "Check for new articles everytime Evolution is started."
 msgstr "Verifica articolele noi de fiecare data cand Evolution este pornit."
 
-#: ../src/evolution-rss.schemas.in.h:4
+#: ../src/evolution-rss.schemas.in.h:6
 msgid "Checks articles on startup"
 msgstr "Verifica articolele la pornire"
 
-#: ../src/evolution-rss.schemas.in.h:5
+#: ../src/evolution-rss.schemas.in.h:7
 msgid "Contains list of the currently setup feeds."
 msgstr "Contine lista de canale configurate."
 
-#: ../src/evolution-rss.schemas.in.h:6
+#: ../src/evolution-rss.schemas.in.h:8
 msgid "Display article's summary"
 msgstr "Afiseaza rezumatul articolului"
 
-#: ../src/evolution-rss.schemas.in.h:7
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Display feed icon on feed folder"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Enable Feed Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Enable Status Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable status icon in notification area"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:13
 msgid ""
 "Evolution will show artile's summary instead of article's webpage. Sumarry "
 "can also be html."
 msgstr ""
-"Afisare articolul sub forma de rezumat in loc de pagina HTML. Rezumatele "
-"pot contine HTML."
+"Afisare articolul sub forma de rezumat in loc de pagina HTML. Rezumatele pot "
+"contine HTML."
 
-#: ../src/evolution-rss.schemas.in.h:8
+#: ../src/evolution-rss.schemas.in.h:14
 msgid "Feeds list"
 msgstr "Lista de canale"
 
-#: ../src/evolution-rss.schemas.in.h:9
+#: ../src/evolution-rss.schemas.in.h:15
 msgid "Frequency to check for new articles (in minutes)."
 msgstr "Intervalul la care se verifica articolele noi (in minute)."
 
-#: ../src/evolution-rss.schemas.in.h:10
+#: ../src/evolution-rss.schemas.in.h:16
 msgid "Hostname of the proxy server"
 msgstr "Adresa internet a proxy serverului"
 
-#: ../src/evolution-rss.schemas.in.h:11
+#: ../src/evolution-rss.schemas.in.h:17
 msgid "Hostname of the proxy server."
 msgstr "Adresa internet a proxy serverului."
 
-#: ../src/evolution-rss.schemas.in.h:12
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Html render"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:19
 msgid ""
 "If the proxy server requires authentication. This is the password field."
 msgstr ""
 
-#: ../src/evolution-rss.schemas.in.h:13
-msgid "Network proxy requires authentication."
-msgstr ""
-
-#: ../src/evolution-rss.schemas.in.h:14
-msgid "New articles timeout"
-msgstr ""
-
-#: ../src/evolution-rss.schemas.in.h:15
-msgid "Password for proxy server"
-msgstr ""
-
-#: ../src/evolution-rss.schemas.in.h:16
-msgid "Proxy requires authentication"
-msgstr ""
-
-#: ../src/evolution-rss.schemas.in.h:17
-msgid "Proxy server port"
-msgstr ""
-
-#: ../src/evolution-rss.schemas.in.h:18
-msgid "Proxy server user"
-msgstr ""
-
-#: ../src/evolution-rss.schemas.in.h:19
-msgid "Remove Rename Folder"
-msgstr ""
-
 #: ../src/evolution-rss.schemas.in.h:20
-msgid "The port number for proxy server."
+msgid "Interval in seconds before a conection is dropped."
 msgstr ""
 
 #: ../src/evolution-rss.schemas.in.h:21
-msgid "The username to use for proxy server authentication."
-msgstr ""
+#, fuzzy
+msgid "Java Enabled"
+msgstr "Activare"
 
 #: ../src/evolution-rss.schemas.in.h:22
-msgid "Use a proxy server to fetch articles"
+msgid "JavaScript Enabled"
 msgstr ""
 
 #: ../src/evolution-rss.schemas.in.h:23
-msgid "Use proxy server"
+msgid "Network proxy requires authentication."
 msgstr ""
 
 #: ../src/evolution-rss.schemas.in.h:24
+msgid "Network timeout"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "New articles timeout"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "Password for proxy server"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Proxy requires authentication"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Proxy server port"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Proxy server user"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Remove Rename Folder"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "The port number for proxy server."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "The username to use for proxy server authentication."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "Type HTML Render used to display html pages."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Use a proxy server to fetch articles"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Use proxy server"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:36
 msgid "When deleting a folder also remove rename feed alocation."
 msgstr ""
 
-#: ../src/rss.c:234 ../src/rss.c:1305 ../src/rss.c:1470
-#, c-format
-msgid "%2.0f%% done"
-msgstr ""
-
-#: ../src/rss.c:313
-msgid "Enter User/Pass for Feed"
-msgstr ""
-
-#: ../src/rss.c:332
-msgid "Username:"
-msgstr "Utilizator:"
-
-#: ../src/rss.c:339
-msgid "Password:"
-msgstr "Parola:"
-
-#: ../src/rss.c:366
-msgid "Remember password"
-msgstr ""
-
-#: ../src/rss.c:433
-msgid "Add Feeds"
-msgstr "Adaugare canale"
-
-#: ../src/rss.c:450
-msgid "Feed URL: "
-msgstr ""
-
-#: ../src/rss.c:481
-msgid "Folder"
-msgstr ""
-
-#: ../src/rss.c:497 ../src/rss.c:1627
-msgid "Show the article summary instead of web page"
-msgstr ""
-
-#: ../src/rss.c:503 ../src/rss.c:1633
-msgid "Feed Enabled"
-msgstr ""
-
-#: ../src/rss.c:509 ../src/rss.c:1639
-msgid "Validate feed"
-msgstr ""
-
-#. e_clipped_label_set_text (
-#. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:644
-msgid "Canceling..."
-msgstr ""
-
-#: ../src/rss.c:762 ../src/rss.c:833 ../src/rss.c:1456
-msgid "Error adding feed."
-msgstr ""
-
-#: ../src/rss.c:763 ../src/rss.c:834 ../src/rss.c:1457
-msgid "Feed already exists!"
-msgstr ""
-
-#: ../src/rss.c:900
-msgid "Delete Feed?"
-msgstr ""
-
-#: ../src/rss.c:917
-msgid "Remove folder contents"
-msgstr "Sterge continutul directorului"
-
-#: ../src/rss.c:936
-msgid "Do not delete"
-msgstr ""
-
-#: ../src/rss.c:1079
-#, c-format
-msgid ""
-"Are you sure you want\n"
-" to remove <b>%s</b>?"
-msgstr ""
-
-#: ../src/rss.c:1105 ../src/rss.c:1182
-msgid "Disable"
-msgstr "Deactivare"
-
-#: ../src/rss.c:1105 ../src/rss.c:1182
-msgid "Enable"
-msgstr "Activare"
-
-#: ../src/rss.c:1323
-msgid "Exporting feeds..."
-msgstr ""
-
-#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:1326 ../src/rss.c:1402 ../src/rss.c:3399 ../src/rss.c:3542
-msgid "Please wait"
-msgstr "Va rog asteptati"
-
-#: ../src/rss.c:1351
-msgid ""
-"A file by that name already exists.\n"
-"Overwrite it?"
-msgstr ""
-
-#: ../src/rss.c:1353
-msgid "Overwrite file?"
-msgstr "Suprascrie fisier?"
-
-#: ../src/rss.c:1375
-msgid "Error exporting feeds!"
-msgstr "Eroare la exportarea canalor!"
-
-#: ../src/rss.c:1399
-msgid "Importing feeds..."
-msgstr "Import canale..."
-
-#: ../src/rss.c:1558
-msgid "Select import file"
-msgstr ""
-
-#: ../src/rss.c:1595 ../src/rss.c:1714
-msgid "All Files"
-msgstr "Toate fisierele"
-
-#: ../src/rss.c:1601 ../src/rss.c:1720
-msgid "OPML Files"
-msgstr "Fisiere OPML"
-
-#: ../src/rss.c:1607 ../src/rss.c:1726
-msgid "XML Files"
-msgstr "Fisiere XML"
-
-#: ../src/rss.c:1674
-msgid "Select file to export"
-msgstr ""
-
-#: ../src/rss.c:1766
-msgid ""
-"No RSS feeds configured!\n"
-"Unable to export."
-msgstr ""
-
-#: ../src/rss.c:2457
-msgid "Feed view"
-msgstr ""
-
-#: ../src/rss.c:2463
-msgid "HTML"
-msgstr "HTML"
-
-#: ../src/rss.c:2463
-msgid "Summary"
-msgstr "Rezumat"
-
-#: ../src/rss.c:2783 ../src/rss.c:2857
-msgid "Error while fetching feed."
-msgstr ""
-
-#: ../src/rss.c:2857
-msgid "Invalid Feed"
-msgstr "Canal invalid"
-
-#: ../src/rss.c:2897 ../src/rss.c:3042
-msgid "Error Fetching Feed"
-msgstr ""
-
-#: ../src/rss.c:2911
-msgid "Canceled"
-msgstr ""
-
-#: ../src/rss.c:2986
-msgid "Complete"
-msgstr ""
-
-#: ../src/rss.c:3373
-msgid "No RSS feeds configured!"
-msgstr ""
-
-#: ../src/rss.c:3381
-msgid "No RSS feeds enabled!"
-msgstr ""
-
-#: ../src/rss.c:3382
-msgid "Go to Edit->Preferences->News & Blogs to enable feeds."
-msgstr ""
-
-#: ../src/rss.c:3388 ../src/rss.c:3538
-msgid "Reading RSS feeds..."
-msgstr ""
-
-#: ../src/rss.c:3407 ../src/rss.c:3550
-#, c-format
-msgid "0% done"
-msgstr ""
-
-#: ../src/rss.c:3498
-msgid "Waiting..."
-msgstr ""
-
-#. RSS 2.0 Enclosure
-#. ATOM Enclosure
-#. we have to free this some how
-#. RSS,
-#: ../src/rss.c:4487
-msgid "No Information"
-msgstr ""
-
-#: ../src/rss.c:4822
-msgid "GtkHTML"
-msgstr ""
-
-#: ../src/rss.c:4823
-msgid "WebKit"
-msgstr ""
-
-#: ../src/rss.c:4824
-msgid "Mozilla"
-msgstr ""
-
-#: ../src/rss.c:4879
-msgid "Enabled"
-msgstr ""
-
-#: ../src/rss.c:4889
-msgid "Feed Name"
-msgstr ""
-
-#: ../src/rss.c:4898
-msgid "Type"
-msgstr ""
-
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
-msgid "Evolution RSS Reader Plugin."
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
 msgstr ""
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
@@ -354,10 +206,15 @@ msgid "Reading RSS Feeds..."
 msgstr ""
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:2
+#, fuzzy
+msgid "Updating Feeds..."
+msgstr "Import canale..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "{0}"
 msgstr ""
 
-#: ../src/org-gnome-evolution-rss.error.xml.h:3
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
 msgid "{1}"
 msgstr ""
 
@@ -375,4 +232,488 @@ msgstr ""
 
 #: ../src/org-gnome-evolution-rss.xml.h:4
 msgid "_Read RSS"
+msgstr ""
+
+#: ../src/rss.c:408 ../src/rss.c:2245
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr ""
+
+#: ../src/rss.c:442 ../src/rss-config-factory.c:1150
+#: ../src/rss-config-factory.c:1391
+#, c-format
+msgid "%2.0f%% done"
+msgstr ""
+
+#: ../src/rss.c:452 ../src/rss.c:2401
+#, fuzzy
+msgid "Feed"
+msgstr "Adaugare canale"
+
+#: ../src/rss.c:518
+msgid "Enter User/Pass for Feed"
+msgstr ""
+
+#: ../src/rss.c:537 ../src/rss-ui.glade.h:44
+msgid "Username:"
+msgstr "Utilizator:"
+
+#: ../src/rss.c:544
+msgid "Password:"
+msgstr "Parola:"
+
+#: ../src/rss.c:572
+msgid "Remember password"
+msgstr ""
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:733
+msgid "Canceling..."
+msgstr ""
+
+#: ../src/rss.c:932 ../src/rss-config-factory.c:787
+msgid "Disable"
+msgstr "Deactivare"
+
+#: ../src/rss.c:932 ../src/rss-config-factory.c:787
+msgid "Enable"
+msgstr "Activare"
+
+#: ../src/rss.c:1493
+msgid "Feed view"
+msgstr ""
+
+#: ../src/rss.c:1499
+#, fuzzy
+msgid "Show Summary"
+msgstr "Rezumat"
+
+#: ../src/rss.c:1499
+msgid "Show Full Text"
+msgstr ""
+
+#: ../src/rss.c:2049
+#, fuzzy
+msgid "Unamed feed"
+msgstr "Canal invalid"
+
+#: ../src/rss.c:2049 ../src/rss.c:2154
+msgid "Error while fetching feed."
+msgstr ""
+
+#: ../src/rss.c:2154
+msgid "Invalid Feed"
+msgstr "Canal invalid"
+
+#: ../src/rss.c:2166
+#, c-format
+msgid "Getting message %d of %d"
+msgstr ""
+
+#: ../src/rss.c:2266
+msgid "Complete."
+msgstr ""
+
+#: ../src/rss.c:2295 ../src/rss.c:2478 ../src/rss.c:2564 ../src/rss.c:2897
+#, fuzzy
+msgid "Error fetching feed."
+msgstr "Eroare la exportarea canalor!"
+
+#: ../src/rss.c:2307
+msgid "Canceled."
+msgstr ""
+
+#: ../src/rss.c:2410
+msgid "Complete"
+msgstr ""
+
+#: ../src/rss.c:3194 ../src/rss.c:3314
+msgid "No RSS feeds configured!"
+msgstr ""
+
+#: ../src/rss.c:3200 ../src/rss.c:3403
+msgid "Reading RSS feeds..."
+msgstr ""
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:3214 ../src/rss.c:3407 ../src/rss-config-factory.c:1059
+#: ../src/rss-config-factory.c:1413
+msgid "Please wait"
+msgstr "Va rog asteptati"
+
+#: ../src/rss.c:3223 ../src/rss.c:3416 ../src/rss-config-factory.c:529
+#: ../src/rss-config-factory.c:882
+#, no-c-format
+msgid "0% done"
+msgstr ""
+
+#: ../src/rss.c:3362
+msgid "Waiting..."
+msgstr ""
+
+#: ../src/rss-config-factory.c:88
+msgid "GtkHTML"
+msgstr ""
+
+#: ../src/rss-config-factory.c:89
+msgid "WebKit"
+msgstr ""
+
+#: ../src/rss-config-factory.c:90
+msgid "Mozilla"
+msgstr ""
+
+#: ../src/rss-config-factory.c:301
+#, fuzzy
+msgid "Edit Feed"
+msgstr "Adaugare canale"
+
+#: ../src/rss-config-factory.c:303
+#, fuzzy
+msgid "Add Feed"
+msgstr "Adaugare canale"
+
+#: ../src/rss-config-factory.c:345
+msgid "Folder"
+msgstr ""
+
+#: ../src/rss-config-factory.c:818 ../src/rss-ui.glade.h:34
+msgid "Remove folder contents"
+msgstr "Sterge continutul directorului"
+
+#: ../src/rss-config-factory.c:1055
+msgid "Importing feeds..."
+msgstr "Import canale..."
+
+#: ../src/rss-config-factory.c:1216 ../src/rss-config-factory.c:1499
+msgid "All Files"
+msgstr "Toate fisierele"
+
+#: ../src/rss-config-factory.c:1222 ../src/rss-config-factory.c:1505
+msgid "OPML Files"
+msgstr "Fisiere OPML"
+
+#: ../src/rss-config-factory.c:1228 ../src/rss-config-factory.c:1511
+msgid "XML Files"
+msgstr "Fisiere XML"
+
+#: ../src/rss-config-factory.c:1248
+#, fuzzy
+msgid "Show article's summary"
+msgstr "Afiseaza rezumatul articolului"
+
+#: ../src/rss-config-factory.c:1254
+msgid "Feed Enabled"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1260
+msgid "Validate feed"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1295 ../src/rss-ui.glade.h:36
+msgid "Select import file"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1331 ../src/rss-ui.glade.h:35
+msgid "Select file to export"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1409
+msgid "Exporting feeds..."
+msgstr ""
+
+#: ../src/rss-config-factory.c:1438
+msgid ""
+"A file by that name already exists.\n"
+"Overwrite it?"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1440
+msgid "Overwrite file?"
+msgstr "Suprascrie fisier?"
+
+#: ../src/rss-config-factory.c:1462
+msgid "Error exporting feeds!"
+msgstr "Eroare la exportarea canalor!"
+
+#: ../src/rss-config-factory.c:1539
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+
+#: ../src/rss-config-factory.c:1636 ../src/rss-config-factory.c:1943
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+
+#. gtk_widget_show(dialog1);
+#. model = exchange_account_folder_size_get_model (account);
+#. if (model)
+#. folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
+#. else
+#: ../src/rss-config-factory.c:1730
+msgid "0 KB"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1735
+msgid "Size:"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1791 ../src/rss-ui.glade.h:21
+msgid "Enabled"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1807
+msgid "Feed Name"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1817
+msgid "Type"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:3
+msgid "<b>HTML Rendering</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Blink icon in notification area"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Block pop-up windows"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:7
+#, fuzzy
+msgid "Enable Java"
+msgstr "Activare"
+
+#: ../src/rss-html-rendering.glade.h:8 ../src/rss-ui.glade.h:19
+msgid "Enable JavaScript"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:9
+msgid "Show feed icon"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Show icon in notification area"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "seconds"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed URL:</b>"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:4
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:5
+msgid "Add"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:6
+msgid "Always delete unread articles"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:7
+msgid "By default show article summary instead of webpage"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:8
+msgid "Certificates Table"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:9
+#, fuzzy
+msgid "Check for new articles at startup"
+msgstr "Verifica articolele la pornire"
+
+#: ../src/rss-ui.glade.h:10
+#, fuzzy
+msgid "Check for new articles every"
+msgstr "Verifica automat articolele noi."
+
+#: ../src/rss-ui.glade.h:11
+msgid "Delete all but the last"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:12
+msgid "Delete articles older than"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:13
+msgid "Delete feed?"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:14
+msgid "Details"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:15
+#, fuzzy
+msgid "Display only feed summary"
+msgstr "Afiseaza rezumatul articolului"
+
+#: ../src/rss-ui.glade.h:16
+msgid "Do no update feed"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:17
+msgid "Do not delete feeds"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:18
+msgid "Edit"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:20
+#, fuzzy
+msgid "Enable Plugins"
+msgstr "Activare"
+
+#: ../src/rss-ui.glade.h:22
+msgid "Engine: "
+msgstr ""
+
+#: ../src/rss-ui.glade.h:23
+msgid "Export"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:24
+#, fuzzy
+msgid "Feeds"
+msgstr "Adaugare canale"
+
+#: ../src/rss-ui.glade.h:25
+msgid "General"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:26
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:27
+msgid "HTTP Proxy Details"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:28
+msgid "HTTP proxy:"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:29
+msgid "Import"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:30
+msgid "Network"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:31
+msgid "No proxy for:"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:32
+#, fuzzy
+msgid "Password: "
+msgstr "Parola:"
+
+#: ../src/rss-ui.glade.h:33
+msgid "Port:"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:37
+msgid "Setup"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:38
+msgid "Storage"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:39
+msgid "Update"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:40
+msgid "Update in"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:41
+msgid "Use Proxy"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:42
+msgid "Use authentication"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:43
+msgid "Use global update interval"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:45
+msgid "Validate"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:46
+msgid "day(s)"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:47
+msgid "label"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:48
+msgid "message(s)"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:49
+msgid "minute(s)"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:50
+msgid "minutes"
+msgstr ""
+
+#: ../src/parser.c:897
+msgid "No Information"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
 msgstr ""

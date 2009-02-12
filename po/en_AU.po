@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-19 20:45+0300\n"
+"POT-Creation-Date: 2009-02-12 19:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,249 +16,686 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/rss.c:118
+#: ../src/dbus.c:111 ../src/rss-config-factory.c:545
+#: ../src/rss-config-factory.c:907 ../src/rss-config-factory.c:1000
+msgid "Error adding feed."
+msgstr ""
+
+#: ../src/dbus.c:112 ../src/rss-config-factory.c:546
+#: ../src/rss-config-factory.c:908 ../src/rss-config-factory.c:1001
+msgid "Feed already exists!"
+msgstr ""
+
+#: ../src/dbus.c:117
+#, c-format
+msgid "New feed imported: %s"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Auto check for new articles."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Blink Status Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink status icon when new article received"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Check New articles"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Check for new articles everytime Evolution is started."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Checks articles on startup"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Contains list of the currently setup feeds."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:8
+msgid "Display article's summary"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Display feed icon on feed folder"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Enable Feed Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Enable Status Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable status icon in notification area"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid ""
+"Evolution will show artile's summary instead of article's webpage. Sumarry "
+"can also be html."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid "Feeds list"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Frequency to check for new articles (in minutes)."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Hostname of the proxy server"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Hostname of the proxy server."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Html render"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid ""
+"If the proxy server requires authentication. This is the password field."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid "Interval in seconds before a conection is dropped."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Java Enabled"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "JavaScript Enabled"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "Network proxy requires authentication."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "Network timeout"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "New articles timeout"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "Password for proxy server"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Proxy requires authentication"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Proxy server port"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Proxy server user"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Remove Rename Folder"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "The port number for proxy server."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "The username to use for proxy server authentication."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "Type HTML Render used to display html pages."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Use a proxy server to fetch articles"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Use proxy server"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "When deleting a folder also remove rename feed alocation."
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "{0}"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "{1}"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Setup RSS"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "Setup RSS feeds"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Update RSS feeds"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "_Read RSS"
+msgstr ""
+
+#: ../src/rss.c:408 ../src/rss.c:2245
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr ""
+
+#: ../src/rss.c:442 ../src/rss-config-factory.c:1150
+#: ../src/rss-config-factory.c:1391
 #, c-format
 msgid "%2.0f%% done"
 msgstr ""
 
-#: ../src/rss.c:158
-msgid "Add Feeds"
+#: ../src/rss.c:452 ../src/rss.c:2401
+msgid "Feed"
 msgstr ""
 
-#: ../src/rss.c:175
-msgid "Feed URL: "
+#: ../src/rss.c:518
+msgid "Enter User/Pass for Feed"
 msgstr ""
 
-#: ../src/rss.c:186
-msgid "Show the article summary instead of loading the web page"
+#: ../src/rss.c:537 ../src/rss-ui.glade.h:44
+msgid "Username:"
 msgstr ""
 
-#: ../src/rss.c:356
-msgid "Setup Feeds"
+#: ../src/rss.c:544
+msgid "Password:"
 msgstr ""
 
-#: ../src/rss.c:384
-msgid "Enabled"
+#: ../src/rss.c:572
+msgid "Remember password"
 msgstr ""
 
-#: ../src/rss.c:394
-msgid "Feed Name"
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:733
+msgid "Canceling..."
 msgstr ""
 
-#: ../src/rss.c:402
-msgid "URI"
-msgstr ""
-
-#: ../src/rss.c:411
-msgid "Type"
-msgstr ""
-
-#: ../src/rss.c:455
+#: ../src/rss.c:932 ../src/rss-config-factory.c:787
 msgid "Disable"
 msgstr ""
 
-#: ../src/rss.c:542 ../src/rss.c:544 ../src/rss.c:642 ../src/rss.c:644
-msgid "News&Blogs"
+#: ../src/rss.c:932 ../src/rss-config-factory.c:787
+msgid "Enable"
 msgstr ""
 
-#: ../src/rss.c:628
+#: ../src/rss.c:1493
+msgid "Feed view"
+msgstr ""
+
+#: ../src/rss.c:1499
+msgid "Show Summary"
+msgstr ""
+
+#: ../src/rss.c:1499
+msgid "Show Full Text"
+msgstr ""
+
+#: ../src/rss.c:2049
+msgid "Unamed feed"
+msgstr ""
+
+#: ../src/rss.c:2049 ../src/rss.c:2154
+msgid "Error while fetching feed."
+msgstr ""
+
+#: ../src/rss.c:2154
+msgid "Invalid Feed"
+msgstr ""
+
+#: ../src/rss.c:2166
+#, c-format
+msgid "Getting message %d of %d"
+msgstr ""
+
+#: ../src/rss.c:2266
+msgid "Complete."
+msgstr ""
+
+#: ../src/rss.c:2295 ../src/rss.c:2478 ../src/rss.c:2564 ../src/rss.c:2897
+msgid "Error fetching feed."
+msgstr ""
+
+#: ../src/rss.c:2307
+msgid "Canceled."
+msgstr ""
+
+#: ../src/rss.c:2410
+msgid "Complete"
+msgstr ""
+
+#: ../src/rss.c:3194 ../src/rss.c:3314
+msgid "No RSS feeds configured!"
+msgstr ""
+
+#: ../src/rss.c:3200 ../src/rss.c:3403
 msgid "Reading RSS feeds..."
 msgstr ""
 
-#: ../src/rss.c:630
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:3214 ../src/rss.c:3407 ../src/rss-config-factory.c:1059
+#: ../src/rss-config-factory.c:1413
 msgid "Please wait"
 msgstr ""
 
-#: ../src/rss.c:636
-#, c-format
+#: ../src/rss.c:3223 ../src/rss.c:3416 ../src/rss-config-factory.c:529
+#: ../src/rss-config-factory.c:882
+#, no-c-format
 msgid "0% done"
 msgstr ""
 
-#. static void
-#. rdf_free (RDF *r)
-#. {
-#. /* Stop the download
-#. if (r->message) {
-#. soup_message_cancel (r->message);
-#. }
-#.
-#. g_free (r->uri);
-#. g_free (r->html);
-#.
-#. if (r->cache) {
-#. xmlFreeDoc (r->cache);
-#. }
-#.
-#. g_free (r);
-#. }
-#.
-#. static void
-#. e_summary_rdf_set_online (ESummary *summary,
-#. GNOME_Evolution_OfflineProgressListener progress,
-#. gboolean online,
-#. void *data)
-#. {
-#. ESummaryRDF *rdf;
-#. GList *p;
-#.
-#. rdf = summary->rdf;
-#. if (rdf->online == online) {
-#. return;
-#. }
-#.
-#. if (online == TRUE) {
-#. e_summary_rdf_update (summary);
-#.
-#. if (summary->preferences->rdf_refresh_time != 0)
-#. rdf->timeout = gtk_timeout_add (summary->preferences->rdf_refresh_time * 1000,
-#. (GtkFunction) e_summary_rdf_update,
-#. summary);
-#. } else {
-#. for (p = rdf->rdfs; p; p = p->next) {
-#. RDF *r;
-#.
-#. r = p->data;
-#. if (r->message) {
-#. soup_message_cancel (r->message);
-#. r->message = NULL;
-#. }
-#. }
-#.
-#. gtk_timeout_remove (rdf->timeout);
-#. rdf->timeout = 0;
-#. }
-#.
-#. rdf->online = online;
-#. }
-#.
-#. void
-#. e_summary_rdf_init (ESummary *summary)
-#. {
-#. ESummaryPrefs *prefs;
-#. ESummaryRDF *rdf;
-#. ESummaryConnection *connection;
-#. GSList *p;
-#. int timeout;
-#.
-#. g_return_if_fail (summary != NULL);
-#. g_return_if_fail (IS_E_SUMMARY (summary));
-#.
-#. prefs = summary->preferences;
-#. g_assert (prefs != NULL);
-#.
-#. rdf = g_new0 (ESummaryRDF, 1);
-#. summary->rdf = rdf;
-#.
-#. connection = g_new (ESummaryConnection, 1);
-#. connection->count = e_summary_rdf_count;
-#. connection->add = e_summary_rdf_add;
-#. connection->set_online = e_summary_rdf_set_online;
-#. connection->closure = NULL;
-#. connection->callback = NULL;
-#. connection->callback_closure = NULL;
-#.
-#. rdf->connection = connection;
-#. rdf->online = TRUE;
-#. e_summary_add_online_connection (summary, connection);
-#.
-#. e_summary_add_protocol_listener (summary, "rdf", e_summary_rdf_protocol, rdf);
-#.
-#. for (p = prefs->rdf_urls; p; p = p->next) {
-#. e_summary_rdf_add_uri (summary, p->data);
-#. }
-#. timeout = prefs->rdf_refresh_time;
-#.
-#. e_summary_rdf_update (summary);
-#.
-#. if (rdf->timeout == 0)
-#. rdf->timeout = 0;
+#: ../src/rss.c:3362
+msgid "Waiting..."
+msgstr ""
+
+#: ../src/rss-config-factory.c:88
+msgid "GtkHTML"
+msgstr ""
+
+#: ../src/rss-config-factory.c:89
+msgid "WebKit"
+msgstr ""
+
+#: ../src/rss-config-factory.c:90
+msgid "Mozilla"
+msgstr ""
+
+#: ../src/rss-config-factory.c:301
+msgid "Edit Feed"
+msgstr ""
+
+#: ../src/rss-config-factory.c:303
+msgid "Add Feed"
+msgstr ""
+
+#: ../src/rss-config-factory.c:345
+msgid "Folder"
+msgstr ""
+
+#: ../src/rss-config-factory.c:818 ../src/rss-ui.glade.h:34
+msgid "Remove folder contents"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1055
+msgid "Importing feeds..."
+msgstr ""
+
+#: ../src/rss-config-factory.c:1216 ../src/rss-config-factory.c:1499
+msgid "All Files"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1222 ../src/rss-config-factory.c:1505
+msgid "OPML Files"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1228 ../src/rss-config-factory.c:1511
+msgid "XML Files"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1248
+msgid "Show article's summary"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1254
+msgid "Feed Enabled"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1260
+msgid "Validate feed"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1295 ../src/rss-ui.glade.h:36
+msgid "Select import file"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1331 ../src/rss-ui.glade.h:35
+msgid "Select file to export"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1409
+msgid "Exporting feeds..."
+msgstr ""
+
+#: ../src/rss-config-factory.c:1438
+msgid ""
+"A file by that name already exists.\n"
+"Overwrite it?"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1440
+msgid "Overwrite file?"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1462
+msgid "Error exporting feeds!"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1539
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+
+#: ../src/rss-config-factory.c:1636 ../src/rss-config-factory.c:1943
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+
+#. gtk_widget_show(dialog1);
+#. model = exchange_account_folder_size_get_model (account);
+#. if (model)
+#. folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
 #. else
-#. rdf->timeout = gtk_timeout_add (timeout * 1000,
-#. (GtkFunction) e_summary_rdf_update, summary);
-#.
-#. return;
-#. }
-#.
-#. void
-#. e_summary_rdf_reconfigure (ESummary *summary)
-#. {
-#. ESummaryRDF *rdf;
-#. GList *old, *p;
-#. GSList *sp;
-#.
-#. g_return_if_fail (summary != NULL);
-#. g_return_if_fail (IS_E_SUMMARY (summary));
-#.
-#. rdf = summary->rdf;
-#.
-#. /* Stop timeout
-#. if (rdf->timeout != 0) {
-#. gtk_timeout_remove (rdf->timeout);
-#. rdf->timeout = 0;
-#. }
-#.
-#. old = rdf->rdfs;
-#. rdf->rdfs = NULL;
-#. for (p = old; p; p = p->next) {
-#. RDF *r;
-#.
-#. r = p->data;
-#. rdf_free (r);
-#. }
-#. g_list_free (old);
-#.
-#. for (sp = summary->preferences->rdf_urls; sp; sp = sp->next) {
-#. e_summary_rdf_add_uri (summary, sp->data);
-#. }
-#.
-#. if (summary->preferences->rdf_refresh_time != 0)
-#. rdf->timeout = gtk_timeout_add (summary->preferences->rdf_refresh_time * 1000,
-#. (GtkFunction) e_summary_rdf_update, summary);
-#.
-#. e_summary_rdf_update (summary);
-#. }
-#.
-#. void
-#. e_summary_rdf_free (ESummary *summary)
-#. {
-#. ESummaryRDF *rdf;
-#. GList *p;
-#.
-#. g_return_if_fail (summary != NULL);
-#. g_return_if_fail (IS_E_SUMMARY (summary));
-#.
-#. rdf = summary->rdf;
-#.
-#. if (rdf->timeout != 0)
-#. gtk_timeout_remove (rdf->timeout);
-#.
-#. for (p = rdf->rdfs; p; p = p->next) {
-#. RDF *r = p->data;
-#.
-#. rdf_free (r);
-#. }
-#. g_list_free (rdf->rdfs);
-#. g_free (rdf->html);
-#.
-#. e_summary_remove_online_connection (summary, rdf->connection);
-#. g_free (rdf->connection);
-#.
-#. g_free (rdf);
-#. summary->rdf = NULL;
-#. }
-#.
-#: ../src/org-gnome-cooly-rss.eplug.xml.h:1
-msgid "Evolutin RSS Reader Plugin."
+#: ../src/rss-config-factory.c:1730
+msgid "0 KB"
 msgstr ""
 
-#: ../src/org-gnome-cooly-rss.error.xml.h:1
-msgid "Reading RSS Feeds..."
+#: ../src/rss-config-factory.c:1735
+msgid "Size:"
 msgstr ""
 
-#: ../src/org-gnome-cooly-rss.error.xml.h:2
-msgid "{0}"
+#: ../src/rss-config-factory.c:1791 ../src/rss-ui.glade.h:21
+msgid "Enabled"
 msgstr ""
 
-#: ../src/org-gnome-cooly-rss.error.xml.h:3
-msgid "{1}"
+#: ../src/rss-config-factory.c:1807
+msgid "Feed Name"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1817
+msgid "Type"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:3
+msgid "<b>HTML Rendering</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Blink icon in notification area"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Block pop-up windows"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Enable Java"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:8 ../src/rss-ui.glade.h:19
+msgid "Enable JavaScript"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:9
+msgid "Show feed icon"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Show icon in notification area"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "seconds"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed URL:</b>"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:4
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:5
+msgid "Add"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:6
+msgid "Always delete unread articles"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:7
+msgid "By default show article summary instead of webpage"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:8
+msgid "Certificates Table"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:9
+msgid "Check for new articles at startup"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:10
+msgid "Check for new articles every"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:11
+msgid "Delete all but the last"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:12
+msgid "Delete articles older than"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:13
+msgid "Delete feed?"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:14
+msgid "Details"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:15
+msgid "Display only feed summary"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:16
+msgid "Do no update feed"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:17
+msgid "Do not delete feeds"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:18
+msgid "Edit"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:20
+msgid "Enable Plugins"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:22
+msgid "Engine: "
+msgstr ""
+
+#: ../src/rss-ui.glade.h:23
+msgid "Export"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:24
+msgid "Feeds"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:25
+msgid "General"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:26
+msgid "HTML"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:27
+msgid "HTTP Proxy Details"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:28
+msgid "HTTP proxy:"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:29
+msgid "Import"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:30
+msgid "Network"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:31
+msgid "No proxy for:"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:32
+msgid "Password: "
+msgstr ""
+
+#: ../src/rss-ui.glade.h:33
+msgid "Port:"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:37
+msgid "Setup"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:38
+msgid "Storage"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:39
+msgid "Update"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:40
+msgid "Update in"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:41
+msgid "Use Proxy"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:42
+msgid "Use authentication"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:43
+msgid "Use global update interval"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:45
+msgid "Validate"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:46
+msgid "day(s)"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:47
+msgid "label"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:48
+msgid "message(s)"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:49
+msgid "minute(s)"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:50
+msgid "minutes"
+msgstr ""
+
+#: ../src/parser.c:897
+msgid "No Information"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
 msgstr ""
