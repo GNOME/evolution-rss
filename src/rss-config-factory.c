@@ -525,6 +525,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 	GtkWidget *progress = gtk_progress_bar_new();
         gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
         gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
+	/* xgettext:no-c-format */
         gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
 	feed->progress=progress;
         gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);
@@ -877,6 +878,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 	GtkWidget *progress = gtk_progress_bar_new();
         gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
         gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
+	/* xgettext:no-c-format */
         gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
 	feed->progress=progress;
         		gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);

@@ -1,3 +1,12 @@
+2008-02-12  Lucian Langa  <lucilanga@gnome.org>
+
+	* configure.ac: - add es to ALL_LINGUAS
+
+	** Fix for bug #571481
+
+	* src/rss.c, src/rss-config-factory.c: make translation string i
+	no-c-format
+
 2008-02-06  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (org_gnome_cooly_article_show)

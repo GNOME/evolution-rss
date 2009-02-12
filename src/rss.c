@@ -3219,6 +3219,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_label, FALSE, FALSE, 0);
                 gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_progress, FALSE, FALSE, 0);
                 gtk_progress_bar_set_fraction((GtkProgressBar *)readrss_progress, 0);
+		/* xgettext:no-c-format */
                 gtk_progress_bar_set_text((GtkProgressBar *)readrss_progress, _("0% done"));
                 gtk_widget_show_all(readrss_dialog);
                 rf->progress_dialog = readrss_dialog;
@@ -3411,6 +3412,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
     		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_label, FALSE, FALSE, 0);
     		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_progress, FALSE, FALSE, 0);
     		gtk_progress_bar_set_fraction((GtkProgressBar *)readrss_progress, 0);
+		/* xgettext:no-c-format */
     		gtk_progress_bar_set_text((GtkProgressBar *)readrss_progress, _("0% done"));
     		gtk_widget_show_all(readrss_dialog);
 		rf->progress_dialog = readrss_dialog;

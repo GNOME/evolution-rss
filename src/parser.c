@@ -492,7 +492,7 @@ layer_find_tag (xmlNodePtr node,
 				
 #endif
 /*this looses html entities
- *				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
+ 				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
 				xmlBufferFree(buf);*/
 				content = xmlNodeGetContent(node->children);
