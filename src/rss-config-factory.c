@@ -521,7 +521,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
         add_feed *feed = create_dialog_add(NULL, NULL);
 	if (feed->dialog)
                 gtk_widget_destroy(feed->dialog);
-        GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", NULL);
+        GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", "", NULL);
 	GtkWidget *progress = gtk_progress_bar_new();
         gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
         gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
@@ -874,7 +874,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                         add_feed *feed = create_dialog_add(name, feed_name);
                     	if (feed->dialog)
                                 gtk_widget_destroy(feed->dialog);
-        		GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", NULL);
+        		GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", "", NULL);
 	GtkWidget *progress = gtk_progress_bar_new();
         gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
         gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);

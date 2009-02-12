@@ -1,13 +1,16 @@
-2008-02-12  Lucian Langa  <lucilanga@gnome.org>
+2009-02-12  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c: (feeds_dialog_add, feeds_dialog_edit)
+	sanitizee_error_run
 
 	* configure.ac: - add es to ALL_LINGUAS
 
 	** Fix for bug #571481
 
-	* src/rss.c, src/rss-config-factory.c: make translation string i
+	* src/rss.c, src/rss-config-factory.c: make translation string
 	no-c-format
 
-2008-02-06  Lucian Langa  <lucilanga@gnome.org>
+2009-02-06  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (org_gnome_cooly_article_show)
 	allow update of current_uid if delete in
@@ -15,7 +18,7 @@
 	* src/parser.c: (layer_find_tag)
 	revert to parsing elements of node type
 
-2008-02-05  Lucian Langa  <lucilanga@gnome.org>
+2009-02-05  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c: (parse_channel_line)
 	do not decode, parse, or cache/fix images
@@ -23,14 +26,14 @@
 	* src/parser.c: (layer_find_tag)
 	accept node->children->type == 3 (text)
 
-2008-01-22  Lucian Langa  <lucilanga@gnome.org>
+2009-01-22  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-ui.glade - use theme-able icon
 	for edit
 	* src/fetch.c: fetch_blocking() fix "file"
 	processing
 
-2008-01-20  Lucian Langa  <lucilanga@gnome.org>
+2009-01-20  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c - tree_walk  - correctly
 	exit on feed error => Broken feeds crashing
