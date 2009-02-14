@@ -1,3 +1,7 @@
+2009-02-15  Petr Kovar  <pknbe@volny.cz>
+
+	* configure.ac: Add cs to ALL_LINGUAS.
+
 2009-02-12  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-config-factory.c: (feeds_dialog_add, feeds_dialog_edit)

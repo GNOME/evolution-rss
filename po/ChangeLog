@@ -1,3 +1,7 @@
+2009-02-15  Petr Kovar  <pknbe@volny.cz>
+
+	* cs.po: Added Czech translation by Jiri Eischmann.
+
 2009-02-12  Lucian Langa  <lucilanga@gnome.org>
 
 	** Fix for bug #571481 - bug in translation string
