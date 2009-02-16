@@ -323,6 +323,7 @@ gchar *rss_component_peek_base_directory(MailComponent *component);
 static void custom_feed_timeout(void);
 void gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data);
 gchar *encode_rfc2047(gchar *str);
+CamelFolder *check_feed_folder(gchar *folder_name);
 
 
 typedef struct FEED_FOLDERS {

@@ -974,6 +974,7 @@ update_channel(RDF *r)
 	gchar *encl;
 	gchar *subj;
 	create_feed *CF;
+	CamelFolder *mail_folder;
 	gchar *chn_name = r->title;
 	gchar *url = r->uri;
 	gchar *main_date = r->maindate;
@@ -999,6 +1000,9 @@ update_channel(RDF *r)
 	FILE *fr = fopen(feed_name, "r");
 	FILE *fw = fopen(feed_name, "a+");
 	//int fw = g_open (feed_name, O_WRONLY | O_CREAT| O_APPEND | O_BINARY, 0666);
+	
+	mail_folder = check_feed_folder(chn_name);
+	camel_object_unref(mail_folder);
 
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++) {
 		update_sr_message();
@@ -1041,7 +1045,8 @@ update_channel(RDF *r)
 			farticle++;
 			d(g_print("put success()\n"));
 			update_status_icon(chn_name, subj);
-		}
+		} else
+			free_cf(CF);
         }
 out:	g_free(sender);
 

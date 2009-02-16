@@ -1,3 +1,13 @@
+2009-02-16  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/parser.c: (update_channel) - free CF descriptor to prevent 
+	leaking if no new articles found
+
+	** Fix for bug #571956
+
+	* src/parser.c: (update_channel) ensure folder is created even if we
+	do not have feeds articles
+
 2009-02-15  Petr Kovar  <pknbe@volny.cz>
 
 	* configure.ac: Add cs to ALL_LINGUAS.

@@ -1485,12 +1485,12 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
-	gtk_widget_show (vbox);
+//	gtk_widget_show (vbox);
 	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
-	gtk_widget_show (hbox2);
+//	gtk_widget_show (hbox2);
 
 	GtkWidget *label3 = gtk_label_new ("");
-	gchar *mem = g_strdup_printf(" <b>%s :</b>", _("Feed view"));
+	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
 	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
@@ -1504,10 +1504,10 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
                         rf->cur_format ? "text-x-generic" : "text-html",
 			GTK_ICON_SIZE_BUTTON));
 
-	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
-        gtk_widget_show (button);
+	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
+        gtk_widget_show (button);
 	if (rf->cur_format)
 	{
         	GtkWidget *button4 = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
@@ -1538,8 +1538,10 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 		gtk_widget_set_sensitive (button3, rf->online);
         	gtk_widget_show (button3);
 		gtk_box_pack_start (GTK_BOX (hbox2), button3, TRUE, TRUE, 0);
+//	gtk_widget_show (hbox2);
 	}
 	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+	gtk_widget_show_all (vbox);
 
       	int width = vbox->allocation.width;
        	int height = vbox->allocation.height;
