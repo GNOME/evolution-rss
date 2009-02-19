@@ -269,6 +269,7 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar	*feed_uri;
 	gchar *encl;
 	gchar *comments;
+	GList *category;	// list of categories article is posted under
 } create_feed;
 
 guint           upgrade = 0;                // set to 2 when initailization successfull

@@ -353,7 +353,6 @@ g_print("parser error 3_4 -> return NULL!!!\n");
 
 /* returns node disregarding type
  */
-
 static char *
 layer_find (xmlNodePtr node, 
 	    char *match, 
@@ -374,6 +373,38 @@ layer_find (xmlNodePtr node,
 		node = node->next;
 	}
 	return fail;
+}
+
+/* returns all matched nodes disregarding type
+ */
+
+static char *
+layer_find_all (xmlNodePtr node, 
+	    char *match, 
+	    char *fail)
+{
+	GList *category = NULL;
+	while (node!=NULL) {
+#ifdef RDF_DEBUG
+		xmlDebugDumpNode (stdout, node, 32);
+		printf("%s.\n", node->name);
+#endif
+		if (strcasecmp (node->name, match)==0) {
+			while (strcasecmp (node->name, match)==0) {
+				if (node->children != NULL && node->children->content != NULL) {
+					category = g_list_append(category, g_strdup(node->children->content));
+				}
+				node = node->next;
+			}
+		}
+		node = node->next;
+	}
+	if (category)
+		return category;
+	else {
+		g_list_free(category);
+		return fail;
+	}
 }
 
 //
@@ -898,6 +929,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 
                 char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
 		comments = layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments
+		GList *category = layer_find_all(top, "category", NULL);
 		char *id = layer_find (top, "id",				//ATOM
 				layer_find (top, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
@@ -952,6 +984,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		CF->comments 	= g_strdup(comments);
 		CF->feed_fname  = g_strdup(feed_name);	//feed file name
 		CF->feed_uri	= g_strdup(feed);	//feed file url
+		CF->category	= category;		//list of category feed is posted under
 		g_free(p);
 		if (q) g_free(q);
 		g_free(b);

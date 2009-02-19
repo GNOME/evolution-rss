@@ -3657,6 +3657,18 @@ create_mail(create_feed *CF)
 	camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-feed-ID", g_strstrip(CF->feed_uri));
 	if (CF->comments)
 		camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-comments", CF->comments);
+	if (CF->category) {
+		GString *cats = g_string_new(NULL);
+		GList *p;
+		for (p = (GList *)CF->category; p != NULL; p=p->next) {
+			if (p->next)
+				g_string_append_printf(cats, "%s, ", p->data); 
+			else
+				g_string_append_printf(cats, "%s", p->data); 
+		}
+		camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-category", cats->str);
+		g_string_free(cats, FALSE);
+	}
 	rtext = camel_data_wrapper_new ();
         type = camel_content_type_new ("x-evolution", "evolution-rss-feed");
         camel_content_type_set_param (type, "format", "flowed");
@@ -3789,6 +3801,8 @@ free_cf(create_feed *CF)
 	g_free(CF->encl);
 	g_free(CF->feed_fname);
 	g_free(CF->feed_uri);
+	if (CF->category)
+		g_list_free(CF->category);
 	g_free(CF);
 }
 
