@@ -1,3 +1,8 @@
+2009-02-20  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/parser.c: (generic_finish_feed) stop parsing if feed error and
+	treat the error
+
 2009-02-19  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c: (update_channel) parse category of feeds

@@ -21,6 +21,9 @@
 
 /************ RDF Parser *******************/
 
+guint rsserror = FALSE;
+gchar *rssstrerror = NULL;
+
 void
 html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 {
@@ -95,6 +98,14 @@ html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 }
 
 static void
+my_xml_perror_handler (void *ctx, const char *msg, ...)
+{
+	rsserror = TRUE;
+//	rssstrerror
+        g_print("!!ERROR:%s!!", msg);
+}
+
+static void
 my_xml_parser_error_handler (void *ctx, const char *msg, ...)
 {
         ;
@@ -106,6 +117,8 @@ xml_parse_sux (const char *buf, int len)
         static xmlSAXHandler *sax;
         xmlParserCtxtPtr ctxt;
         xmlDoc *doc;
+	rsserror = FALSE;
+	rssstrerror = NULL;
 
         g_return_val_if_fail (buf != NULL, NULL);
 
@@ -118,7 +131,7 @@ xml_parse_sux (const char *buf, int len)
   //              memcpy (sax, &xmlDefaultSAXHandler, sizeof (xmlSAXHandler));
 //#endif
                 sax->warning = my_xml_parser_error_handler;
-                sax->error = my_xml_parser_error_handler;
+                sax->error = my_xml_perror_handler;
         }
 
         if (len == -1)
@@ -458,11 +471,12 @@ wfw_rss(xmlNode *node, gchar *fail)
 		return fail;
 }
 
-gchar *standard_rss_modules[4][3] = {
+gchar *standard_rss_modules[5][3] = {
 	{"content", "content", (gchar *)content_rss},
 	{"dublin core", "dc", (gchar *)dublin_core_rss},
 	{"syndication", "sy", (gchar *)syndication_rss},
-	{"well formed web", "wfw", (gchar *)wfw_rss}};
+	{"well formed web", "wfw", (gchar *)wfw_rss},
+	{"slashdot entities", "slash", (gchar *)dublin_core_rss}};
 
 //<nsmatch:match>content</nsmatch:match>
 static char*
@@ -476,7 +490,7 @@ layer_find_ns_tag(xmlNodePtr node,
 
         while (node!=NULL) {
 		if (node->ns && node->ns->prefix) {
-			for (i=0; i < 4; i++) {
+			for (i=0; i < 5; i++) {
 				if (!strcasecmp (node->ns->prefix, standard_rss_modules[i][1])) {
 					func = (gpointer)standard_rss_modules[i][2];
 					if (strcasecmp (node->ns->prefix, nsmatch) == 0
@@ -952,6 +966,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		d(g_print("title:%s\n", p));
 		d(g_print("date:%s\n", d));
 		d(g_print("date:%s\n", d2));
+		d(g_print("body:%s\n", b));
 
 		//not very nice but prevents unnecessary long body processing
 		if (!feed_is_new(feed_name, feed)) {

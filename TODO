@@ -50,3 +50,7 @@
 	* slow delete operation on large folders
 	* check operation cancel button
 	* add icon to feed setup panel
+	* add handling parser error to setup_feed (check HIG for error msg)
+	* handle slash categories
+	* add feed logo in title
+	* use ico if feed does not provide an icon

@@ -1763,7 +1763,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		camel_stream_printf(fstream, 
 			"<table border=0 width=\"100%%\" cellspacing=2 cellpadding=1>");
      		camel_stream_printf(fstream,
-			"<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
+			"<tr><td valign=top bgcolor=\"%06x\"><img src=/usr/share/evolution/2.24/images/rss-16.png>"
+			"<b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
 			content_colour & 0xEDECEB & 0xffffff,
 			website, subject);
 		if (category)
@@ -1771,15 +1772,10 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				"<tr><td bgcolor=\"%06x\"><b><font size=-1>Posted under: %s</font></b></td></tr>", 
 				content_colour & 0xEDECEB & 0xffffff,
 				category);
-//     		camel_stream_printf (fstream, "<tr><td><table width=\"100%%\" cellpading=2 cellspaing=2><tr><td><font colour=#%06x>%s</font></td></tr></table></td></tr>", text_colour & 0xffffff, buff);
-     		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr>", text_colour & 0xffffff, buff);
+     		camel_stream_printf (fstream, "<tr><td><table width=\"100%%\" cellpading=2 cellspaing=2>"
+					"<tr><td><font colour=#%06x>%s</font></td></tr></table></td></tr>",
+					 text_colour & 0xffffff, buff);
 		if (comments) {
-//			camel_stream_printf (fstream,
-//				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-//				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
-//			camel_stream_printf(fstream, 
-//				"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
-			//camel_stream_printf (fstream, "<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>Comments</font></b></td></tr>", 
 			camel_stream_printf (fstream, "<tr><td><b><font size=+1><a href=%s>Comments</font></b></td></tr>", 
 				comments);
 			if (commstream) {
@@ -1797,7 +1793,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
       	camel_data_wrapper_construct_from_stream(dw, fstream);
       	camel_medium_set_content_object((CamelMedium *)part, dw);
 	em_format_format_text((EMFormat *)t->format, (CamelStream *)t->stream, (CamelDataWrapper *)part);
-//	gtk_html_select_all(t->format->message);
 	camel_object_unref(dw);
 	camel_object_unref(part);
 	camel_object_unref(fstream);
@@ -2355,7 +2350,13 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
         r->shown = TRUE;
         xmlSubstituteEntitiesDefaultValue = 1;
         r->cache = xml_parse_sux (response->str, response->len);
-//        r->cache = xmlParseDoc (response->str);
+	if (rsserror) {
+		xmlError *err = xmlGetLastError();
+                gchar *tmsg = g_strdup_printf("\n%s\nInvalid feed: %s", user_data, err->message);
+                rss_error(user_data, NULL, _("Error while parsing feed."), tmsg);
+                g_free(tmsg);
+		goto out;
+	}
 
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;

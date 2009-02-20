@@ -57,6 +57,8 @@ typedef struct _RDF {
 	guint		ttl;		//feed specified refresh interval
         /* Soup stuff */
         SoupMessage *message;
+	guint		error;		//invalid feed
+	char		*strerror;	//error msg
 } RDF;
 
 //we keep these values of a feed to be deleted in order
