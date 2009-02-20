@@ -1507,7 +1507,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
 	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
-        gtk_widget_show (button);
+        gtk_widget_show_all (button);
 	if (rf->cur_format)
 	{
         	GtkWidget *button4 = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
@@ -1606,6 +1606,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	CamelContentType *type;
 	gchar *feedid = NULL;
 	gchar *comments = NULL;
+	gchar *category = NULL;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -1629,6 +1630,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *addr = (gchar *)camel_header_location_decode(website);
 	feedid  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "RSS-ID");
 	comments  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-comments");
+	category  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-category");
 	gchar *subject = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "Subject"), NULL);
 	gchar *f = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
@@ -1759,14 +1761,18 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 			frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 		camel_stream_printf(fstream, 
-			"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
+			"<table border=0 width=\"100%%\" cellspacing=2 cellpadding=1>");
      		camel_stream_printf(fstream,
 			"<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
 			content_colour & 0xEDECEB & 0xffffff,
 			website, subject);
+		if (category)
+			camel_stream_printf(fstream,
+				"<tr><td bgcolor=\"%06x\"><b><font size=-1>Posted under: %s</font></b></td></tr>", 
+				content_colour & 0xEDECEB & 0xffffff,
+				category);
+//     		camel_stream_printf (fstream, "<tr><td><table width=\"100%%\" cellpading=2 cellspaing=2><tr><td><font colour=#%06x>%s</font></td></tr></table></td></tr>", text_colour & 0xffffff, buff);
      		camel_stream_printf (fstream, "<tr><td><font colour=#%06x>%s</font></td></tr>", text_colour & 0xffffff, buff);
-//		camel_stream_printf (fstream, "</table></div>");
-//		g_print("comments:%s|\n", comments);
 		if (comments) {
 //			camel_stream_printf (fstream,
 //				"<br><div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
@@ -1784,7 +1790,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				fetch_comments(comments, t->format);
 			}
 			camel_stream_printf (fstream, "</table></div>");
-		}
+		}	
 	}
 
 	//this is required for proper charset rendering when html

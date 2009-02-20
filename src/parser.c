@@ -429,9 +429,15 @@ content_rss(xmlNode *node, gchar *fail)
 }
 
 void
-dublin_core_rss(void)
+dublin_core_rss(xmlNode *node, gchar *fail)
 {
-	g_print("dublin core\n");
+	gchar *content;
+
+	content = xmlNodeGetContent(node);
+	if (content)
+		return content;
+	else
+		return fail;
 }
 
 void
@@ -842,6 +848,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 	gchar *encl;
 	xmlChar *buff = NULL;
 	guint size = 0;
+	GList *category = NULL;
 
 	char *p = g_strdup(layer_find (top, "title", "Untitled article"));
 	//firstly try to parse as an ATOM author
@@ -927,9 +934,16 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 			link = layer_find_innerelement(top, "link", "href", 
 							g_strdup(_("No Information")));	//ATOM
 
-                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
-		comments = layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments
-		GList *category = layer_find_all(top, "category", NULL);
+//                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
+		char *comments = NULL;
+//		if (!comments)
+			comments = layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments
+		gchar *tcat = layer_find_ns_tag(top, "dc", "subject", NULL);
+		if (tcat)
+			category = g_list_append(category, g_strdup(tcat));
+		else
+			category = layer_find_all(top, "category", NULL);
+
 		char *id = layer_find (top, "id",				//ATOM
 				layer_find (top, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
