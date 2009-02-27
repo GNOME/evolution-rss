@@ -3711,14 +3711,14 @@ create_mail(create_feed *CF)
 
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
 
-//	if (appended_uid != NULL)
-//	{
-//		filter_uids = g_ptr_array_sized_new(1);
-//		g_ptr_array_add(filter_uids, appended_uid);
-//		mail_filter_on_demand (mail_folder, filter_uids);
+	if (appended_uid != NULL)
+	{
+		filter_uids = g_ptr_array_sized_new(1);
+		g_ptr_array_add(filter_uids, appended_uid);
+		mail_filter_on_demand (mail_folder, filter_uids);
 /*FIXME do not how to free this
-//		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
-//	}
+		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
+	}
 	camel_folder_sync(mail_folder, FALSE, NULL);
 	camel_folder_thaw(mail_folder);
         camel_operation_end(NULL);
