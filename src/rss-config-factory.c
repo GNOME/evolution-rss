@@ -121,7 +121,7 @@ enable_toggle_cb(GtkCellRendererToggle *cell,
 
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, 0, &fixed, -1);
-  gtk_tree_model_get (model, &iter, 1, &name, -1);
+  gtk_tree_model_get (model, &iter, 3, &name, -1);
   fixed ^= 1;
   g_hash_table_replace(rf->hre,
         g_strdup(lookup_key(name)),
@@ -245,11 +245,14 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
         GtkTreeIter    iter;
 
         gtk_list_store_append (store, &iter);
+	gchar *name = g_path_get_basename(lookup_feed_folder(key));
         gtk_list_store_set (store, &iter,
                 0, g_hash_table_lookup(rf->hre, lookup_key(key)),
-                1, key,
+                1, name,
                 2, g_hash_table_lookup(rf->hrt, lookup_key(key)),
+		3, key,
                 -1);
+	g_free(name);
 }
 
 static void
@@ -728,7 +731,7 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
                 selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(user_data));
                 if (gtk_tree_selection_get_selected(selection, &model, &iter))
                 {
-                        gtk_tree_model_get (model, &iter, 1, &name, -1);
+                        gtk_tree_model_get (model, &iter, 3, &name, -1);
                         if (gconf_client_get_bool(rss_gconf, GCONF_KEY_REMOVE_FOLDER, NULL))
                         {
                                 //delete folder
@@ -778,7 +781,7 @@ feeds_dialog_disable(GtkDialog *d, gpointer data)
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(rf->treeview));
         if (gtk_tree_selection_get_selected(selection, &model, &iter))
         {
-                gtk_tree_model_get (model, &iter, 1, &name, -1);
+                gtk_tree_model_get (model, &iter, 3, &name, -1);
                 gpointer key = lookup_key(name);
                 g_free(name);
                 g_hash_table_replace(rf->hre, g_strdup(key),
@@ -844,7 +847,7 @@ feeds_dialog_delete(GtkDialog *d, gpointer data)
                 && !rf->import)
         {
                 rf->import = 1;
-                gtk_tree_model_get (model, &iter, 1, &name, -1);
+                gtk_tree_model_get (model, &iter, 3, &name, -1);
                 GtkWidget *rfd = remove_feed_dialog(name);
                 gtk_widget_show(rfd);
                 g_signal_connect(rfd, "response", G_CALLBACK(delete_response), data);
@@ -867,7 +870,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
         if (gtk_tree_selection_get_selected(selection, &model, &iter))
         {
-                gtk_tree_model_get (model, &iter, 1, &feed_name, -1);
+                gtk_tree_model_get (model, &iter, 3, &feed_name, -1);
                 name = g_hash_table_lookup(rf->hr, lookup_key(feed_name));
                 if (name)
                 {
@@ -894,7 +897,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                         url = name;
                         if (feed->feed_url)
                         {
-                                gtk_tree_model_get (model, &iter, 1, &name, -1);
+                                gtk_tree_model_get (model, &iter, 3, &name, -1);
                                 gpointer key = lookup_key(name);
                                 if (strcmp(url, feed->feed_url))
                                 {
@@ -1781,8 +1784,8 @@ rss_config_control_new (void)
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
 
-	store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING,
-                                G_TYPE_STRING);
+	store = gtk_list_store_new (4, G_TYPE_BOOLEAN, G_TYPE_STRING,
+                                G_TYPE_STRING, G_TYPE_STRING);
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (treeview), (GtkTreeModel *)store);
 
@@ -1829,7 +1832,7 @@ rss_config_control_new (void)
                                                    2);
 	gtk_tree_view_set_search_column(treeview, 1);
 #if GTK_VERSION >= 2012000
-	gtk_tree_view_set_tooltip_column (treeview, 1);
+	gtk_tree_view_set_tooltip_column (treeview, 3);
 #endif
 
 	if (rf->hr != NULL)

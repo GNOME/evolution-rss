@@ -1,3 +1,8 @@
+2009-03-02  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c: (rss_config_control_new) - show renamed
+	name of the folder in feeds list
+
 2009-02-27  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (create_mail) reenable rss article filtering (we are

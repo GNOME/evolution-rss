@@ -56,3 +56,5 @@
 	* use ico if feed does not provide an icon
 	* hook update in the properties  of folder
 	* search favicon in the subdomain->domain
+	* use combo popup for moving and placement of feed folders
+	* trigger resync after folder rename
