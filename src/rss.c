@@ -1619,9 +1619,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
 	/* force loading of images even if mail images disabled */
 	emfh->load_http_now = TRUE;
-	frame_colour = emfh->frame_colour ? emfh->frame_colour: 0xffffff;
-	content_colour = emfh->content_colour ? emfh->content_colour: 0xffffff;
-	text_colour = emfh->text_colour ? emfh->text_colour: 0xffffff;
+	frame_colour = emfh->frame_colour;// ? emfh->frame_colour: 0xffffff;
+	content_colour = emfh->content_colour;// ? emfh->content_colour: 0xffffff;
+	text_colour = emfh->text_colour;// ? emfh->text_colour: 0xffffff;
 
 	type = camel_mime_part_get_content_type(message);
 	const char *website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");

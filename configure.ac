@@ -250,7 +250,7 @@ AC_PATH_PROG(GETTEXT, gettext, no)
 if test "x$GETTEXT" = "xno"; then
 	AC_MSG_ERROR(Package gettext not installed)
 fi
-ALL_LINGUAS="cs en_AU es ro sv"
+ALL_LINGUAS="cs en_AU es ro ru sv"
 
 GETTEXT_PACKAGE=evolution-rss
 AC_SUBST(GETTEXT_PACKAGE)

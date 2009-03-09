@@ -1,3 +1,8 @@
+2009-03-09  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-ui.glade: add translators comments
+	* configure.ac: Add ru to ALL_LINGUAS.
+
 2009-03-08  Lucian Langa  <lucilanga@gnome.org>
 
 	** Fix for bug #574541
