@@ -1,3 +1,15 @@
+2009-03-08  Lucian Langa  <lucilanga@gnome.org>
+
+	** Fix for bug #574541
+
+	* src/evolution-rss.schemas.in: correct ambigous description for
+	remove_folder entry
+
+	** Fix for bug #573914
+
+	* src/rss.c: (org_gnome_cooly_format_rss) - use <div> for displaying
+	articles in order to correctly display article on dark themes
+
 2009-03-02  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-config-factory.c: (rss_config_control_new) - show renamed

@@ -888,7 +888,7 @@ get_selected_mail(void)
 	
 }*/
 
-static void
+/*static void
 enable_html_cb(GtkCellRendererToggle *cell,
                gchar *path_str,
                gpointer data)
@@ -932,7 +932,7 @@ tree_cb (GtkWidget *widget, gpointer data)
 			g_hash_table_lookup(rf->hre, lookup_key(name)) ? _("Disable") : _("Enable"));
 		g_free(name);
         }
-}
+}*/
 
 static void
 start_check_cb (GtkWidget *widget, gpointer data)
@@ -1758,25 +1758,31 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 ///		buff=tmp;
 
 		camel_stream_printf (fstream,
-			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-			frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
-		camel_stream_printf(fstream, 
-			"<table border=0 width=\"100%%\" cellspacing=2 cellpadding=1>");
-     		camel_stream_printf(fstream,
-			"<tr><td valign=top bgcolor=\"%06x\"><img src=/usr/share/evolution/2.24/images/rss-16.png>"
-			"<b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
-			content_colour & 0xEDECEB & 0xffffff,
-			website, subject);
-		if (category)
-			camel_stream_printf(fstream,
-				"<tr><td bgcolor=\"%06x\"><b><font size=-1>Posted under: %s</font></b></td></tr>", 
-				content_colour & 0xEDECEB & 0xffffff,
-				category);
-     		camel_stream_printf (fstream, "<tr><td><table width=\"100%%\" cellpading=2 cellspaing=2>"
-					"<tr><td><font colour=#%06x>%s</font></td></tr></table></td></tr>",
-					 text_colour & 0xffffff, buff);
+                        "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
+                        frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
+                camel_stream_printf (fstream,
+                        "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        "<img src=/usr/share/evolution/2.24/images/rss-16.png>"
+                        "<b><font size=+1><a href=%s>%s</a></font></b></div>",
+                        frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                        website, subject);
+                if (category)
+                        camel_stream_printf(fstream,
+                                "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                                "<b><font size=-1>Posted under: %s</font></b></div>",
+                                frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                                category);
+                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
+                                "<font colour=#%06x>%s</font></div>",
+                        	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
+                                text_colour & 0xffffff, buff);
+		g_print("frame col:%x content %x text:%x\n", frame_colour, content_colour, text_colour);
+
 		if (comments) {
-			camel_stream_printf (fstream, "<tr><td><b><font size=+1><a href=%s>Comments</font></b></td></tr>", 
+			camel_stream_printf (fstream, 
+                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; color: #%06x;\">"
+				"<b><font size=+1><a href=%s>Comments</font></b>", 
+                        	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
 				comments);
 			if (commstream) {
 				camel_stream_printf(fstream, "%s", (gchar *)print_comments(comments, commstream));
@@ -1787,6 +1793,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			}
 			camel_stream_printf (fstream, "</table></div>");
 		}	
+                camel_stream_printf (fstream, "</div>");
 	}
 
 	//this is required for proper charset rendering when html
