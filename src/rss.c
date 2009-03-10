@@ -1821,11 +1821,11 @@ fmerror:
                "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
                frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 	camel_stream_printf(t->stream, 
-	"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
+        "<div style=\"border: solid 0px; padding: 2px;\">\n");
      	camel_stream_printf (t->stream,
-	"<tr><td><h3>Formatting error!</h3></td></tr>"
-	"<tr><td>Feed article corrupted! Cannot format article.</td></tr>");
-    	camel_stream_printf (t->stream, "</table></div>");
+	"<h3>Formatting error!</h3>"
+	"Feed article corrupted! Cannot format article.");
+    	camel_stream_printf (t->stream, "</div></div>");
 	return;
 }
 
