@@ -1697,10 +1697,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			//we do not need to setup a pop error menu since we're in 
 			//formatting process. But instead display mail body an error
 			//such proxy error or transport error
-			camel_stream_printf (t->stream, "<table border=1 width=\"100%%\" cellpadding=0 cellspacing=0><tr><td bgcolor=#ffffff>");
-			camel_stream_printf(t->stream, "<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4><tr>");
-     			camel_stream_printf (t->stream, "<td bgcolor=\"#ffffff\">%s</td>", err->message);
-    			camel_stream_printf (t->stream, "</tr></table></td></tr></table>");
+			camel_stream_printf (t->stream,
+				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+     			camel_stream_printf (t->stream, "%s", err->message);
+    			camel_stream_printf (t->stream, "</div>");
                 	goto out;
         	}
 
