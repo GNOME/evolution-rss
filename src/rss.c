@@ -1619,6 +1619,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
 	/* force loading of images even if mail images disabled */
 	emfh->load_http_now = TRUE;
+	/* assuming 0xffffff will ruin dark themes */
 	frame_colour = emfh->frame_colour;// ? emfh->frame_colour: 0xffffff;
 	content_colour = emfh->content_colour;// ? emfh->content_colour: 0xffffff;
 	text_colour = emfh->text_colour;// ? emfh->text_colour: 0xffffff;
@@ -1718,13 +1719,21 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		camel_stream_printf (fstream,
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 			frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
-		camel_stream_printf(fstream,
-			"<table border=0 width=\"100%%\" cellspacing=4 cellpadding=4>");
-   		camel_stream_printf(fstream,
-			"<tr><td bgcolor=\"%06x\"><b><font size=+1><a href=%s>%s</a></font></b></td></tr>", 
-			content_colour & 0xEDECEB,
-			website, subject);
-     		camel_stream_printf(fstream, "<tr><td>%s</td></tr></table></div>", buff);
+                camel_stream_printf (fstream,
+                        "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        "<b><font size=+1><a href=%s>%s</a></font></b></div>",
+			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                        website, subject);
+                if (category)
+                        camel_stream_printf(fstream,
+                                "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                                "<b><font size=-1>Posted under: %s</font></b></div>",
+                                content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                                category);
+                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                                "%s</div>",
+                        	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
+                                buff);
 
 		g_free(subject);
 		g_string_free(content, 1);
@@ -1761,22 +1770,21 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
                         frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
                 camel_stream_printf (fstream,
-                        "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                         "<img src=/usr/share/evolution/2.24/images/rss-16.png>"
                         "<b><font size=+1><a href=%s>%s</a></font></b></div>",
-                        frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
                         website, subject);
                 if (category)
                         camel_stream_printf(fstream,
-                                "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                                "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                                 "<b><font size=-1>Posted under: %s</font></b></div>",
-                                frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                                content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
                                 category);
-                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
-                                "<font colour=#%06x>%s</font></div>",
+                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                                "%s</div>",
                         	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
-                                text_colour & 0xffffff, buff);
-		g_print("frame col:%x content %x text:%x\n", frame_colour, content_colour, text_colour);
+                                buff);
 
 		if (comments) {
 			camel_stream_printf (fstream, 
@@ -1791,7 +1799,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			else {
 				fetch_comments(comments, t->format);
 			}
-			camel_stream_printf (fstream, "</table></div>");
+			camel_stream_printf (fstream, "</div>");
 		}	
                 camel_stream_printf (fstream, "</div>");
 	}
