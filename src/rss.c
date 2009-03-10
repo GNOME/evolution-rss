@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2008 Lucian Langa <cooly@gnome.eu.org> 
+ *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org> 
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1700,6 +1700,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			camel_stream_printf (t->stream,
 				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+			camel_stream_printf(t->stream, 
+        			"<div style=\"border: solid 0px; padding: 4px;\">\n");
+     			camel_stream_printf (t->stream, "<h3>Error!</h3>");
      			camel_stream_printf (t->stream, "%s", err->message);
     			camel_stream_printf (t->stream, "</div>");
                 	goto out;
@@ -1822,7 +1825,7 @@ fmerror:
                "<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
                frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
 	camel_stream_printf(t->stream, 
-        "<div style=\"border: solid 0px; padding: 2px;\">\n");
+        "<div style=\"border: solid 0px; padding: 4px;\">\n");
      	camel_stream_printf (t->stream,
 	"<h3>Formatting error!</h3>"
 	"Feed article corrupted! Cannot format article.");
