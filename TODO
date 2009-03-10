@@ -60,3 +60,4 @@
 	* trigger resync after folder rename
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
+	* see whether we need to allow higher ttl update interval

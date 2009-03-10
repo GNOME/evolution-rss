@@ -1,3 +1,8 @@
+2009-03-10  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c: (create_dialog_add) - increase up limit
+	for update interval (10000) min
+
 2009-03-09  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-ui.glade: add translators comments

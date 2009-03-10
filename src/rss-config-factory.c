@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2008 Lucian Langa <cooly@gnome.eu.org> 
+ *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org> 
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ static guint feed_html = 0;
 
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
+#define MAX_TTL		10000
 
 typedef struct {
         GladeXML *xml;
@@ -377,6 +378,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
 	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
 	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
 	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
+	gtk_spin_button_set_range(ttl_value, 0, MAX_TTL);
 
   	switch (del_feed)
   	{
