@@ -1,0 +1,751 @@
+# Italian translation of evolution-rss
+# Copyright (C) 2009 Free Software Foundation, Inc.
+# This file is distributed under the same license as the evolution-rss package.
+# Rita Bandiera <rbandiera@email.it>, 2009
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: EVOLUTION-RSS\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evolution-rss&component=general\n"
+"POT-Creation-Date: 2009-03-10 10:20+0000\n"
+"PO-Revision-Date: 2009-03-12 18:41+0100\n"
+"Last-Translator: RITA BANDIERA <rbandiera@email.it>\n"
+"Language-Team: ITALIAN <tp@linux.lists.it>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../src/dbus.c:111 ../src/rss-config-factory.c:550
+#: ../src/rss-config-factory.c:912 ../src/rss-config-factory.c:1005
+msgid "Error adding feed."
+msgstr "Errore nell'aggiunta del notiziario."
+
+#: ../src/dbus.c:112 ../src/rss-config-factory.c:551
+#: ../src/rss-config-factory.c:913 ../src/rss-config-factory.c:1006
+msgid "Feed already exists!"
+msgstr "Il notiziario esiste già."
+
+#: ../src/dbus.c:117
+#, c-format
+msgid "New feed imported: %s"
+msgstr "Nuovo notiziario importato: %s"
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Auto check for new articles."
+msgstr "Verifica automatica della presenza di nuovi articoli."
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Blink Status Icon"
+msgstr "Fa lampeggiare l'icona dello stato"
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink status icon when new article received"
+msgstr "Fa lampeggiare l'icona dello stato quando si riceve un nuovo articolo"
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Check New articles"
+msgstr "Verifica la presenza di nuovi articoli"
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Check for new articles everytime Evolution is started."
+msgstr ""
+"Verifica la presenza di nuovi articoli ogni volta che viene avviato "
+"Evolution."
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Checks articles on startup"
+msgstr "Verifica gli articoli all'avvio"
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Contains list of the currently setup feeds."
+msgstr "Contiene una lista dei notiziari attualmente impostati."
+
+#: ../src/evolution-rss.schemas.in.h:8
+#, fuzzy
+#| msgid "When deleting a folder also remove rename feed alocation."
+msgid "Deleting feed entry will also remove feed folder."
+msgstr ""
+"Quando si elimina una cartella rimuovi/rinomina anche l'assegnazione del "
+"notiziario."
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Display article's summary"
+msgstr "Visualizza il sommario dell'articolo"
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Display feed icon on feed folder"
+msgstr "Visualizza l'icona del notiziario sulla cartella del notiziario"
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Enable Feed Icon"
+msgstr "Abilita l'icona del notiziario"
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable Status Icon"
+msgstr "Abilita l'icona dello stato"
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid "Enable status icon in notification area"
+msgstr "Abilita l'icona dello stato nell'area di notifica"
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid ""
+"Evolution will show artile's summary instead of article's webpage. Sumarry "
+"can also be html."
+msgstr ""
+"Evolution mostrerà il sommario dell'articolo invece della pagina web "
+"dell'articolo. Il sommario può essere in formato HTML."
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Feeds list"
+msgstr "Elenco dei notiziari"
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Frequenza di verifica di nuovi articoli (in minuti)."
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Hostname of the proxy server"
+msgstr "Nome dell'host del server proxy"
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Hostname of the proxy server."
+msgstr "Nome dell'host del server proxy."
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid "Html render"
+msgstr "Visualizzatore HTML"
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid ""
+"If the proxy server requires authentication. This is the password field."
+msgstr ""
+"Se il server proxy richiede l'autenticazione. Questo è il campo della "
+"password."
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Interval in seconds before a conection is dropped."
+msgstr "Intervallo in secondi prima che la connessione si fermi."
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "Java Enabled"
+msgstr "Java abilitato"
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "JavaScript Enabled"
+msgstr "JavaScript abilitato"
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "Network proxy requires authentication."
+msgstr "Il proxy di rete richiede l'autenticazione."
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "Network timeout"
+msgstr "Tempo massimo per la rete"
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "New articles timeout"
+msgstr "Tempo massimo per nuovi articoli"
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Password for proxy server"
+msgstr "Password per il server proxy"
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Proxy requires authentication"
+msgstr "Il proxy richiede l'autenticazione"
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Proxy server port"
+msgstr "Porta del server proxy"
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Proxy server user"
+msgstr "Utente del server proxy"
+
+#: ../src/evolution-rss.schemas.in.h:31
+#, fuzzy
+#| msgid "Remove Rename Folder"
+msgid "Remove feed folder"
+msgstr "Rimuovi/Rinomina la cartella"
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "The port number for proxy server."
+msgstr "Il numero della porta per il server proxy."
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "The username to use for proxy server authentication."
+msgstr "Il nome utente da usare per l'autenticazione del server proxy."
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Type HTML Render used to display html pages."
+msgstr "Digita il visualizzatore HTML usato per visualizzare le pagine HTML."
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Use a proxy server to fetch articles"
+msgstr "Usa un server proxy per scaricare gli articoli"
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "Use proxy server"
+msgstr "Usa il server proxy"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Plugin di lettura RSS per Evolution.\n"
+"\n"
+"Questo plugin aggiunge il supporto ai notiziari RSS al client di posta "
+"Evolution. Il supporto RSS è basato sul supporto presente nella versione 1.4 "
+"di Evolution. La motivazione che sta dietro a questa scelta era quella di "
+"avere i notiziari RSS nello stesso posto delle email, poichè non c'era la "
+"necessità di avere un lettore di RSS separato dato che un articolo RSS può "
+"essere considerato come un messaggio di posta.\n"
+"\n"
+"Evolution RSS può visualizzare gli articoli usando la vista per sommario o "
+"HTML.\n"
+"\n"
+"L'HTML può essere visualizzato usando i seguenti motori: gtkHTML, Webkit "
+"della Apple oppure Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "Lettura dei notiziari RSS..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "Aggiornarnamento dei notiziari..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "{0}"
+msgstr "{0}"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "{1}"
+msgstr "{1}"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Setup RSS"
+msgstr "Imposta RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "Setup RSS feeds"
+msgstr "Imposta i notiziari RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Update RSS feeds"
+msgstr "Aggiorna i notiziari RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "_Read RSS"
+msgstr "L_eggi RSS"
+
+#: ../src/rss.c:408 ../src/rss.c:2267
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Scarica i notiziari (%d abilitato)"
+
+#: ../src/rss.c:442 ../src/rss-config-factory.c:1155
+#: ../src/rss-config-factory.c:1396
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% fatto"
+
+#: ../src/rss.c:452 ../src/rss.c:2429
+msgid "Feed"
+msgstr "Notiziario"
+
+#: ../src/rss.c:518
+msgid "Enter User/Pass for Feed"
+msgstr "Inserisci utente e password per notiziario"
+
+#: ../src/rss.c:537 ../src/rss-ui.glade.h:44
+msgid "Username:"
+msgstr "Nome utente:"
+
+#: ../src/rss.c:544
+msgid "Password:"
+msgstr "Password:"
+
+#: ../src/rss.c:572
+msgid "Remember password"
+msgstr "Ricorda password"
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:733
+msgid "Canceling..."
+msgstr "Annullamento..."
+
+#: ../src/rss.c:1493
+msgid "Feed view"
+msgstr "Vista notiziario"
+
+#: ../src/rss.c:1499
+msgid "Show Summary"
+msgstr "Mostra sommario"
+
+#: ../src/rss.c:1499
+msgid "Show Full Text"
+msgstr "Mostra testo intero"
+
+#: ../src/rss.c:2071
+msgid "Unamed feed"
+msgstr "Notiziario senza nome"
+
+#: ../src/rss.c:2071 ../src/rss.c:2176
+msgid "Error while fetching feed."
+msgstr "Errore durante lo scaricamento del notiziario."
+
+#: ../src/rss.c:2176
+msgid "Invalid Feed"
+msgstr "Notiziario non valido"
+
+#: ../src/rss.c:2188
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "Ricezione mesaggio %d di %d"
+
+#: ../src/rss.c:2288
+msgid "Complete."
+msgstr "Completo."
+
+#: ../src/rss.c:2317 ../src/rss.c:2506 ../src/rss.c:2592 ../src/rss.c:2925
+msgid "Error fetching feed."
+msgstr "Errore nello scaricamento del notiziario."
+
+#: ../src/rss.c:2329
+msgid "Canceled."
+msgstr "Annullato."
+
+#: ../src/rss.c:2375
+msgid "Error while parsing feed."
+msgstr "Errore nell'analisi del notiziario."
+
+#: ../src/rss.c:2438
+msgid "Complete"
+msgstr "Completo"
+
+#: ../src/rss.c:3222 ../src/rss.c:3342
+msgid "No RSS feeds configured!"
+msgstr "Nessun notiziario RSS configurato."
+
+#: ../src/rss.c:3228 ../src/rss.c:3431
+msgid "Reading RSS feeds..."
+msgstr "Lettura dei notiziari RSS..."
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:3242 ../src/rss.c:3435 ../src/rss-config-factory.c:1064
+#: ../src/rss-config-factory.c:1418
+msgid "Please wait"
+msgstr "Attendere"
+
+#: ../src/rss.c:3251 ../src/rss.c:3444 ../src/rss-config-factory.c:534
+#: ../src/rss-config-factory.c:887
+#, no-c-format
+msgid "0% done"
+msgstr "0% fatto"
+
+#: ../src/rss.c:3390
+msgid "Waiting..."
+msgstr "Attendere..."
+
+#: ../src/rss-config-factory.c:89
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:90
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:91
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:305
+msgid "Edit Feed"
+msgstr "Modifica notiziario"
+
+#: ../src/rss-config-factory.c:307
+msgid "Add Feed"
+msgstr "Aggiungi notiziario"
+
+#: ../src/rss-config-factory.c:349
+msgid "Folder"
+msgstr "Cartella"
+
+#: ../src/rss-config-factory.c:792
+msgid "Disable"
+msgstr "Disabilita"
+
+#: ../src/rss-config-factory.c:792
+msgid "Enable"
+msgstr "Abilita"
+
+#: ../src/rss-config-factory.c:823 ../src/rss-ui.glade.h:34
+msgid "Remove folder contents"
+msgstr "Rimuovi il contenuto della cartella"
+
+#: ../src/rss-config-factory.c:1060
+msgid "Importing feeds..."
+msgstr "Importazione dei notiziari..."
+
+#: ../src/rss-config-factory.c:1221 ../src/rss-config-factory.c:1504
+msgid "All Files"
+msgstr "Tutti i file"
+
+#: ../src/rss-config-factory.c:1227 ../src/rss-config-factory.c:1510
+msgid "OPML Files"
+msgstr "File OPML"
+
+#: ../src/rss-config-factory.c:1233 ../src/rss-config-factory.c:1516
+msgid "XML Files"
+msgstr "File XML"
+
+#: ../src/rss-config-factory.c:1253
+msgid "Show article's summary"
+msgstr "Mostra somario dell' articolo"
+
+#: ../src/rss-config-factory.c:1259
+msgid "Feed Enabled"
+msgstr "Notiziario abilitato"
+
+#: ../src/rss-config-factory.c:1265
+msgid "Validate feed"
+msgstr "Valida il notiziario"
+
+#: ../src/rss-config-factory.c:1300 ../src/rss-ui.glade.h:36
+msgid "Select import file"
+msgstr "Seleziona il file da importare"
+
+#: ../src/rss-config-factory.c:1336 ../src/rss-ui.glade.h:35
+msgid "Select file to export"
+msgstr "Seleziona il file da esportare"
+
+#: ../src/rss-config-factory.c:1414
+msgid "Exporting feeds..."
+msgstr "Esportazione dei notiziari..."
+
+#: ../src/rss-config-factory.c:1443
+msgid ""
+"A file by that name already exists.\n"
+"Overwrite it?"
+msgstr ""
+"Un file con quel nome esiste già.\n"
+"Sovrascrivere?"
+
+#: ../src/rss-config-factory.c:1445
+msgid "Overwrite file?"
+msgstr "Sovrascrivere il file?"
+
+#: ../src/rss-config-factory.c:1467
+msgid "Error exporting feeds!"
+msgstr "Errore nell'esportazione dei notiziari."
+
+#: ../src/rss-config-factory.c:1544
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"Nessun notiziario RSS configurato.\n"
+"Impossibile esportare."
+
+#: ../src/rss-config-factory.c:1641 ../src/rss-config-factory.c:1948
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Nota: per abilitare all'uso di Mozilla (Firefox) o Apple Webkit \n"
+"come visualizzatori è necessario che il pacchetto firefox o webkit devel \n"
+"sia installato ed evolution-rss dovrebbe essere ricompilato per vedere "
+"questi pacchetti."
+
+#. gtk_widget_show(dialog1);
+#. model = exchange_account_folder_size_get_model (account);
+#. if (model)
+#. folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
+#. else
+#: ../src/rss-config-factory.c:1735
+msgid "0 KB"
+msgstr "0 kB"
+
+#: ../src/rss-config-factory.c:1740
+msgid "Size:"
+msgstr "Dimensione:"
+
+#: ../src/rss-config-factory.c:1796 ../src/rss-ui.glade.h:21
+msgid "Enabled"
+msgstr "Abilitato"
+
+#: ../src/rss-config-factory.c:1812
+msgid "Feed Name"
+msgstr "Nome del notiziario"
+
+#: ../src/rss-config-factory.c:1822
+msgid "Type"
+msgstr "Tipo"
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr "<b>Notifica articolo</b>"
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr "<b>Motore: </b>"
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:3
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>Viualizzazione HTML</b>"
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Tempo massimo della rete:</b>"
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Blink icon in notification area"
+msgstr "Fa lampeggiare l'icona nell'area di notifica"
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Block pop-up windows"
+msgstr "Blocca le finestre di pop-up"
+
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Enable Java"
+msgstr "Abilita Java"
+
+#: ../src/rss-html-rendering.glade.h:8 ../src/rss-ui.glade.h:19
+msgid "Enable JavaScript"
+msgstr "Abilita JavaScript"
+
+#: ../src/rss-html-rendering.glade.h:9
+msgid "Show feed icon"
+msgstr "Mostra l'icona del notiziario"
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Show icon in notification area"
+msgstr "Mostra l'icona nell'area di notifica"
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "seconds"
+msgstr "secondi"
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr "<b>Opzioni avanzate</b>"
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed URL:</b>"
+msgstr "<b>URL del notiziario:</b>"
+
+#: ../src/rss-ui.glade.h:4
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr "<span weight=\"bold\">Impostazioni</span>"
+
+#: ../src/rss-ui.glade.h:5
+msgid "Add"
+msgstr "Aggiungi"
+
+#: ../src/rss-ui.glade.h:6
+msgid "Always delete unread articles"
+msgstr "Elimina sempre gli articoli non letti"
+
+#: ../src/rss-ui.glade.h:7
+msgid "By default show article summary instead of webpage"
+msgstr ""
+"Per impostazione predefinita mostra il sommario dell'articolo invece della "
+"pagina web"
+
+#: ../src/rss-ui.glade.h:8
+msgid "Certificates Table"
+msgstr "Tabella dei certificati"
+
+#: ../src/rss-ui.glade.h:9
+msgid "Check for new articles at startup"
+msgstr "Verifica la presenza di nuovi articoli all'avvio"
+
+#: ../src/rss-ui.glade.h:10
+msgid "Check for new articles every"
+msgstr "Verifica la presenza nuovi articoli ogni"
+
+#: ../src/rss-ui.glade.h:11
+msgid "Delete all but the last"
+msgstr "Elimina tutti tranne l'ultimo"
+
+#: ../src/rss-ui.glade.h:12
+msgid "Delete articles older than"
+msgstr "Elimina gli articoli più vecchi di"
+
+#: ../src/rss-ui.glade.h:13
+msgid "Delete feed?"
+msgstr "Elimina il notiziario?"
+
+#: ../src/rss-ui.glade.h:14
+msgid "Details"
+msgstr "Dettagli"
+
+#: ../src/rss-ui.glade.h:15
+msgid "Display only feed summary"
+msgstr "Visualizza solo il sommario del notiziario"
+
+#: ../src/rss-ui.glade.h:16
+msgid "Do no update feed"
+msgstr "Non aggiornare il notiziario"
+
+#: ../src/rss-ui.glade.h:17
+msgid "Do not delete feeds"
+msgstr "Non eliminare i notiziari"
+
+#: ../src/rss-ui.glade.h:18
+msgid "Edit"
+msgstr "Modifica"
+
+#: ../src/rss-ui.glade.h:20
+msgid "Enable Plugins"
+msgstr "Abilita i plugin"
+
+#: ../src/rss-ui.glade.h:22
+msgid "Engine: "
+msgstr "Motore: "
+
+#: ../src/rss-ui.glade.h:23
+msgid "Export"
+msgstr "Esporta"
+
+#: ../src/rss-ui.glade.h:24
+msgid "Feeds"
+msgstr "Notiziari"
+
+#: ../src/rss-ui.glade.h:25
+msgid "General"
+msgstr "Generale"
+
+#: ../src/rss-ui.glade.h:26
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:27
+msgid "HTTP Proxy Details"
+msgstr "Dettagli del proxy HTTP"
+
+#: ../src/rss-ui.glade.h:28
+msgid "HTTP proxy:"
+msgstr "Proxy HTTP:"
+
+#: ../src/rss-ui.glade.h:29
+msgid "Import"
+msgstr "Importa"
+
+#: ../src/rss-ui.glade.h:30
+msgid "Network"
+msgstr "Rete"
+
+#: ../src/rss-ui.glade.h:31
+msgid "No proxy for:"
+msgstr "Nessun proxy per:"
+
+#: ../src/rss-ui.glade.h:32
+msgid "Password: "
+msgstr "Password: "
+
+#: ../src/rss-ui.glade.h:33
+msgid "Port:"
+msgstr "Porta:"
+
+#: ../src/rss-ui.glade.h:37
+msgid "Setup"
+msgstr "Impostazione"
+
+#: ../src/rss-ui.glade.h:38
+msgid "Storage"
+msgstr "Archiviazione"
+
+#: ../src/rss-ui.glade.h:39
+msgid "Update"
+msgstr "Aggiornamento"
+
+#: ../src/rss-ui.glade.h:40
+msgid "Update in"
+msgstr "Aggiornamento in"
+
+#: ../src/rss-ui.glade.h:41
+msgid "Use Proxy"
+msgstr "Usa il proxy"
+
+#: ../src/rss-ui.glade.h:42
+msgid "Use authentication"
+msgstr "Usa l'autenticazione"
+
+#: ../src/rss-ui.glade.h:43
+msgid "Use global update interval"
+msgstr "Usa l'intervallo di aggionamento globale"
+
+#: ../src/rss-ui.glade.h:45
+msgid "Validate"
+msgstr "Valida"
+
+#. for translators: this label is part of the "Delete articles older than X days" message.
+#: ../src/rss-ui.glade.h:47
+#, fuzzy
+#| msgid "day(s)"
+msgid "days"
+msgstr "giorni"
+
+#: ../src/rss-ui.glade.h:48
+msgid "label"
+msgstr "etichetta"
+
+#. To translators: this label is part of the following message: "Delete all but the last X messages.
+#: ../src/rss-ui.glade.h:50
+#, fuzzy
+#| msgid "message(s)"
+msgid "messages"
+msgstr "messaggi"
+
+#. to translators: label part of the "Update in X minutes" message.
+#: ../src/rss-ui.glade.h:52
+msgid "minutes"
+msgstr "minuti"
+
+#: ../src/parser.c:949
+msgid "No Information"
+msgstr "Nessuna informazione"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr "Controllo dei notiziari di Evolution"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr "Lettore RSS di Evolution"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr "Gestisci i notiziari RDF, RSS, ATOM qui"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "Notizie e blog"
