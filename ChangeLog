@@ -1,3 +1,7 @@
+2009-03-12  Milo Casagrande  <milo@ubuntu.com>
+
+	* configure.ac: Added it to ALL_LINGUAS.
+
 2009-03-10  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-config-factory.c: (create_dialog_add) - increase up limit
