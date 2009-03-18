@@ -1785,7 +1785,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                                 "<b><font size=-1>Posted under: %s</font></b></div>",
                                 content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
                                 category);
-                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
                                 "%s</div>",
                         	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
                                 buff);

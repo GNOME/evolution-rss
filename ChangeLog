@@ -1,3 +1,7 @@
+2009-03-18  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (org_gnome_cooly_format_rss) increase padding for rss articles
+
 2009-03-12  Milo Casagrande  <milo@ubuntu.com>
 
 	* configure.ac: Added it to ALL_LINGUAS.
