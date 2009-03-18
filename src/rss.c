@@ -1792,7 +1792,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 		if (comments) {
 			camel_stream_printf (fstream, 
-                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; color: #%06x;\">"
+                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
 				"<b><font size=+1><a href=%s>Comments</font></b>", 
                         	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
 				comments);
@@ -4203,15 +4203,20 @@ update_comments(RDF *r)
         for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
                 CF = parse_channel_line(el->children, NULL, NULL);
         //print_cf(CF);
-                g_string_append_printf(comments, "<tr><td><table cellpading=0 cellspacing=0 border=1 width=100%>");
-                g_string_append_printf(comments,
-                        "<tr><td><table width=\"100%%\" cellspacing=0 cellpadding=0>");
-		g_string_append_printf (comments, "<tr><td bgcolor=\"%06x\"><table width=100%% cellspacing=2 cellspadding=0><tr><td><b><a href=%s>%s</b></td><td align=right>%s</td></tr></table></td></tr>", 
-				content_colour & 0xEDECEB & 0xffffff,
+		g_string_append_printf (comments,
+                        "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 0px; color: #%06x;\">",
+                        frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
+                g_string_append_printf (comments,
+                        "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        "<a href=%s><b>%s</b></a> on %s</div>",
+			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
 				CF->website, CF->subj, CF->date);
-                g_string_append_printf(comments, "<tr><td><table cellpadding=3 cellspacing=3><tr><td colspan=2>%s</td></tr></table></td></tr>", CF->body);
-                g_string_append_printf(comments, "</table></td></tr>");
-                g_string_append_printf(comments, "</table></td></tr>");
+                g_string_append_printf (comments, 
+				"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
+                                "%s</div>",
+                        	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
+                                CF->body);
+                g_string_append_printf(comments, "</div>&nbsp;");
         }
         gchar *scomments=comments->str;
         g_string_free(comments, FALSE);
