@@ -1,0 +1,728 @@
+# translation of evolution-rss.HEAD.po to marathi
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sandeep Shedmake <sandeep.shedmake@gmail.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss.HEAD\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
+"POT-Creation-Date: 2009-03-19 12:18+0000\n"
+"PO-Revision-Date: 2009-03-20 15:12+0530\n"
+"Last-Translator: Sandeep Shedmake <sandeep.shedmake@gmail.com>\n"
+"Language-Team: marathi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: ../src/dbus.c:111 ../src/rss-config-factory.c:550
+#: ../src/rss-config-factory.c:912 ../src/rss-config-factory.c:1005
+msgid "Error adding feed."
+msgstr "फीड समावेष करतेवेळी त्रुटी."
+
+#: ../src/dbus.c:112 ../src/rss-config-factory.c:551
+#: ../src/rss-config-factory.c:913 ../src/rss-config-factory.c:1006
+msgid "Feed already exists!"
+msgstr "फीड आधिपासूनच अस्तित्वात आहे!"
+
+#: ../src/dbus.c:117
+#, c-format
+msgid "New feed imported: %s"
+msgstr "नवीन फीड आयात केले: %s"
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Auto check for new articles."
+msgstr "नवीन लेख करीता स्वयं तपासा."
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Blink Status Icon"
+msgstr "लुकलुक स्थिती चिन्ह"
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink status icon when new article received"
+msgstr "नवीन लेख प्राप्त झाल्यास लुकलुक स्थिती चिन्ह"
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Check New articles"
+msgstr "नवीन लेख तपासा"
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Check for new articles everytime Evolution is started."
+msgstr "प्रत्येकवेळी Evolution सुरू केल्यावर नवीन लेख करीता तपासा."
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Checks articles on startup"
+msgstr "स्टार्टअपवेळी लेख तपासा"
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Contains list of the currently setup feeds."
+msgstr "वर्तमानक्षणी मांडणी फीड यादी समाविष्टत आहे."
+
+#: ../src/evolution-rss.schemas.in.h:8
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "फीड नोंदणी नष्ट केल्यास फीड फोल्डर देखिल काढूण टाकले जाईल."
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Display article's summary"
+msgstr "लेखचे सारांश दाखवा"
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Display feed icon on feed folder"
+msgstr "फीड फोल्डर वर फीड चिन्ह दाखवा"
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Enable Feed Icon"
+msgstr "फीड चिन्ह कार्यान्वीत करा"
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable Status Icon"
+msgstr "स्थिती चिन्ह कार्यान्वीत करा"
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid "Enable status icon in notification area"
+msgstr "सूचना कक्ष अंतर्गत स्थिती चिन्ह कार्यान्वीत करा"
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid ""
+"Evolution will show artile's summary instead of article's webpage. Sumarry "
+"can also be html."
+msgstr "Evolution लेख वेबपान ऐवजी लेख सारांश दाखवेल. सारांश html देखिल असू शकतो."
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Feeds list"
+msgstr "फीडस् यादी"
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "नवीन लेख करीता तपासण्याजोगी फ्रिक्वेन्सी (मिनीटात)."
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Hostname of the proxy server"
+msgstr "प्रॉक्सी सर्वचे यजमाननाव"
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Hostname of the proxy server."
+msgstr "प्रॉक्सी सर्वचे यजमाननाव."
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid "Html render"
+msgstr "Html प्रदर्शन"
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid "If the proxy server requires authentication. This is the password field."
+msgstr "प्रॉक्सी सर्वरला ओळख पटवण्याची आवश्यकता असल्यास. हे परवलीचा शब्द क्षेत्र वापरा."
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Interval in seconds before a conection is dropped."
+msgstr "जुळवणी तोडण्यापूर्वी सेकंद अंतर्गत अवधी."
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "Java Enabled"
+msgstr "Java कार्यान्वीत"
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "JavaScript Enabled"
+msgstr "JavaScript कार्यान्वीत"
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "Network proxy requires authentication."
+msgstr "जाळं प्रॉक्सीला ओळख पटवणे आवश्यक."
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "Network timeout"
+msgstr "जाळं वेळसमाप्ती"
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "New articles timeout"
+msgstr "नवीन लेख वेळसमाप्ती"
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Password for proxy server"
+msgstr "प्रॉक्सी सर्वर करीता परवलीचा शब्द"
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Proxy requires authentication"
+msgstr "प्रॉक्सी करीता ओळख पटवणे आवश्यक"
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Proxy server port"
+msgstr "प्रॉक्सी सर्वर पोर्ट"
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Proxy server user"
+msgstr "प्रॉक्सी सर्वर वापरकर्ता"
+
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "Remove feed folder"
+msgstr "फीड फोल्डर काढूण टाका"
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "The port number for proxy server."
+msgstr "प्रॉक्सी सर्वर करीता पोर्ट क्रमांक."
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "The username to use for proxy server authentication."
+msgstr "प्रॉक्सी सर्वर ओळख पटवणे करीता वापरण्याजोगी वापरकर्तानाव."
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Type HTML Render used to display html pages."
+msgstr "html पाने प्रदर्शित करण्याकरीता वापरण्याजोगी HTML Render प्रकार."
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Use a proxy server to fetch articles"
+msgstr "लेख प्राप्य करीता प्रॉक्सी सर्वर वापरा"
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "Use proxy server"
+msgstr "प्रॉक्सी सर्वर वापरा"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Evolution RSS Reader प्लगइन.\n"
+"\n"
+"हे प्लगइन evolution मेल करीता RSS फीडस् समर्थन पुरवितो. RSS समर्थन "
+"evolution-1.4 शाखा आधारीत वर्तमान RSS समर्थन नुरूप बनवले गेले होते. याचे मागचे"
+"उद्देश असे की RSS मेल नुरूप ठिकाणीच स्थित करणे होते, परंतु याक्षणी"
+" वेगळे RSS रिडरची काहिच आवश्यकता नाही कारण RSS "
+"लेख ईमेल संदेश नुरूपच आहे.\n"
+"\n"
+"सारांश अवलोकन किंवा HTML अवलोकन वापरून Evolution RSS लेख दाखवू शकतो. \n"
+"\n"
+"HTML खालिल इंजिन द्वारे प्रदर्शित केले जाईल: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>आवृत्ती: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "RSS फीडस् वाचत आहे..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "फीडस् अद्ययावत करत आहे..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "{0}"
+msgstr "{0}"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "{1}"
+msgstr "{1}"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Setup RSS"
+msgstr "RSS ची मांडणी करा"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "Setup RSS feeds"
+msgstr "RSS फीडस् ची मांडणी करा"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Update RSS feeds"
+msgstr "RSS फीडस् अद्ययावत करा"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "_Read RSS"
+msgstr "RSS वाचा (_R)"
+
+#: ../src/rss.c:408 ../src/rss.c:2267
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "फीड प्राप्त करत आहे (%d कार्यान्वीत)"
+
+#: ../src/rss.c:442 ../src/rss-config-factory.c:1155
+#: ../src/rss-config-factory.c:1396
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% पूर्ण केले"
+
+#: ../src/rss.c:452 ../src/rss.c:2429
+msgid "Feed"
+msgstr "फीड"
+
+#: ../src/rss.c:518
+msgid "Enter User/Pass for Feed"
+msgstr "फीड करीता वापरकर्ता/पास प्रविष्ट करा"
+
+#: ../src/rss.c:537 ../src/rss-ui.glade.h:44
+msgid "Username:"
+msgstr "वापरकर्तानाव:"
+
+#: ../src/rss.c:544
+msgid "Password:"
+msgstr "परवलीचा शब्द:"
+
+#: ../src/rss.c:572
+msgid "Remember password"
+msgstr "परवलीचा शब्द लक्षात ठेवा"
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:733
+msgid "Canceling..."
+msgstr "रद्द करीत आहे..."
+
+#: ../src/rss.c:1493
+msgid "Feed view"
+msgstr "फीड अवलोकन"
+
+#: ../src/rss.c:1499
+msgid "Show Summary"
+msgstr "सारांश दाखवा"
+
+#: ../src/rss.c:1499
+msgid "Show Full Text"
+msgstr "पूर्ण पाठ्य दाखवा"
+
+#: ../src/rss.c:2071
+msgid "Unamed feed"
+msgstr "निनावी फीड"
+
+#: ../src/rss.c:2071 ../src/rss.c:2176
+msgid "Error while fetching feed."
+msgstr "फीड प्राप्यवेळी त्रुटी आढळली."
+
+#: ../src/rss.c:2176
+msgid "Invalid Feed"
+msgstr "अवैध फीड"
+
+#: ../src/rss.c:2188
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "%d चा %d संदेश प्राप्त करत आहे"
+
+#: ../src/rss.c:2288
+msgid "Complete."
+msgstr "संपन्न."
+
+#: ../src/rss.c:2317 ../src/rss.c:2506 ../src/rss.c:2592 ../src/rss.c:2925
+msgid "Error fetching feed."
+msgstr "फीड प्राप्यवेळी त्रुटी आढळली."
+
+#: ../src/rss.c:2329
+msgid "Canceled."
+msgstr "रद्द केले."
+
+#: ../src/rss.c:2375
+msgid "Error while parsing feed."
+msgstr "फीड वाचतेवेळी त्रुटी आढळली."
+
+#: ../src/rss.c:2438
+msgid "Complete"
+msgstr "पूर्ण"
+
+#: ../src/rss.c:3222 ../src/rss.c:3342
+msgid "No RSS feeds configured!"
+msgstr "RSS फीडस् संयोजीत केले नाही!"
+
+#: ../src/rss.c:3228 ../src/rss.c:3431
+msgid "Reading RSS feeds..."
+msgstr "RSS फीडस् वाचत आहे..."
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:3242 ../src/rss.c:3435 ../src/rss-config-factory.c:1064
+#: ../src/rss-config-factory.c:1418
+msgid "Please wait"
+msgstr "कृपया वाट पहा"
+
+#: ../src/rss.c:3251 ../src/rss.c:3444 ../src/rss-config-factory.c:534
+#: ../src/rss-config-factory.c:887
+#, no-c-format
+msgid "0% done"
+msgstr "0% पूर्ण"
+
+#: ../src/rss.c:3390
+msgid "Waiting..."
+msgstr "प्रतिक्षेत..."
+
+#: ../src/rss-config-factory.c:89
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:90
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:91
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:305
+msgid "Edit Feed"
+msgstr "फीड संपादीत करा"
+
+#: ../src/rss-config-factory.c:307
+msgid "Add Feed"
+msgstr "फीड समावेष करा"
+
+#: ../src/rss-config-factory.c:349
+msgid "Folder"
+msgstr "फोल्डर"
+
+#: ../src/rss-config-factory.c:792
+msgid "Disable"
+msgstr "अकार्यान्वीत करा"
+
+#: ../src/rss-config-factory.c:792
+msgid "Enable"
+msgstr "कार्यान्वीत करा"
+
+#: ../src/rss-config-factory.c:823 ../src/rss-ui.glade.h:34
+msgid "Remove folder contents"
+msgstr "फोल्डर मधिल अंतर्भूत माहिती काढूण टाका"
+
+#: ../src/rss-config-factory.c:1060
+msgid "Importing feeds..."
+msgstr "फीडस् आयात करा..."
+
+#: ../src/rss-config-factory.c:1221 ../src/rss-config-factory.c:1504
+msgid "All Files"
+msgstr "सर्व फाइल"
+
+#: ../src/rss-config-factory.c:1227 ../src/rss-config-factory.c:1510
+msgid "OPML Files"
+msgstr "OPML फाइलस्"
+
+#: ../src/rss-config-factory.c:1233 ../src/rss-config-factory.c:1516
+msgid "XML Files"
+msgstr "XML फाइलस्"
+
+#: ../src/rss-config-factory.c:1253
+msgid "Show article's summary"
+msgstr "लेखचे सारांश दाखवा"
+
+#: ../src/rss-config-factory.c:1259
+msgid "Feed Enabled"
+msgstr "फीड कार्यान्वीत केले"
+
+#: ../src/rss-config-factory.c:1265
+msgid "Validate feed"
+msgstr "फीड तपासा"
+
+#: ../src/rss-config-factory.c:1300 ../src/rss-ui.glade.h:36
+msgid "Select import file"
+msgstr "आयात करा फाइल निवडा"
+
+#: ../src/rss-config-factory.c:1336 ../src/rss-ui.glade.h:35
+msgid "Select file to export"
+msgstr "स्वरूप बदलण्याजोगी फाइलचे स्वरूप बदला"
+
+#: ../src/rss-config-factory.c:1414
+msgid "Exporting feeds..."
+msgstr "फीडचे स्वरूप बदलवत आहे..."
+
+#: ../src/rss-config-factory.c:1443
+msgid ""
+"A file by that name already exists.\n"
+"Overwrite it?"
+msgstr ""
+"त्या नावाची फाइल आधिपासूनच अस्तित्वात आहे.\n"
+"खोडून पुन्हा लिहा?"
+
+#: ../src/rss-config-factory.c:1445
+msgid "Overwrite file?"
+msgstr "फाइल खोडून पुन्हा लिहाचे?"
+
+#: ../src/rss-config-factory.c:1467
+msgid "Error exporting feeds!"
+msgstr "फीडचे स्वरूप बदलवतेवेळी त्रुटी!"
+
+#: ../src/rss-config-factory.c:1544
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"RSS फीडस् संयोजीत नाही!\n"
+"स्वरूप बदल अशक्य."
+
+#: ../src/rss-config-factory.c:1641 ../src/rss-config-factory.c:1948
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"टिप: Mozilla (Firefox) किंवा Apple Webkit यांस\n"
+"प्रदर्शक नुरूप वापरायचे अलल्यास तुमच्या प्रणलीवर firefox किंवा webkit devel संकुल \n"
+"प्रतिष्ठापीत असणे आवश्यक आहे व संकुल पहाण्याकरीता evolution-rss रि-कंपाईलड् असायला हवे."
+
+#. gtk_widget_show(dialog1);
+#. model = exchange_account_folder_size_get_model (account);
+#. if (model)
+#. folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
+#. else
+#: ../src/rss-config-factory.c:1735
+msgid "0 KB"
+msgstr "0 KB"
+
+#: ../src/rss-config-factory.c:1740
+msgid "Size:"
+msgstr "आकार:"
+
+#: ../src/rss-config-factory.c:1796 ../src/rss-ui.glade.h:21
+msgid "Enabled"
+msgstr "कार्यान्वीत"
+
+#: ../src/rss-config-factory.c:1812
+msgid "Feed Name"
+msgstr "फीड नाव"
+
+#: ../src/rss-config-factory.c:1822
+msgid "Type"
+msgstr "प्रकार"
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr "<b>लेख सूचना</b>"
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr "<b>इंजीन: </b>"
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:3
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML प्रदर्शन</b>"
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr "<b>जाळं वेळसमाप्ती:</b>"
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Blink icon in notification area"
+msgstr "सूचना कक्ष अंतर्गत लुकलुक करणारे चिन्ह"
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Block pop-up windows"
+msgstr "पॉप-अप खिडकी ब्लॉक करा"
+
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Enable Java"
+msgstr "Java कार्यान्वित करा"
+
+#: ../src/rss-html-rendering.glade.h:8 ../src/rss-ui.glade.h:19
+msgid "Enable JavaScript"
+msgstr "JavaScript कार्यान्वित करा"
+
+#: ../src/rss-html-rendering.glade.h:9
+msgid "Show feed icon"
+msgstr "फीड चिन्ह दाखवा"
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Show icon in notification area"
+msgstr "सूचना क्षेत्र अंतर्गत चिन्ह दाखवा"
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "seconds"
+msgstr "सेकंद"
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr "<b>प्रगत पर्याय</b>"
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed URL:</b>"
+msgstr "<b>फीड URL:</b>"
+
+#: ../src/rss-ui.glade.h:4
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr "<span weight=\"bold\">संयोजना</span>"
+
+#: ../src/rss-ui.glade.h:5
+msgid "Add"
+msgstr "समावेष करा"
+
+#: ../src/rss-ui.glade.h:6
+msgid "Always delete unread articles"
+msgstr "नेहमी वाचन अशक्य करण्याजोगी लेख नष्ट करा"
+
+#: ../src/rss-ui.glade.h:7
+msgid "By default show article summary instead of webpage"
+msgstr "वेबपान ऐवजी लेखचे सारांश मुलभूतरित्या दाखवा"
+
+#: ../src/rss-ui.glade.h:8
+msgid "Certificates Table"
+msgstr "प्रमाणपत्रे तक्ता"
+
+#: ../src/rss-ui.glade.h:9
+msgid "Check for new articles at startup"
+msgstr "स्टार्टअपवेळी नवीन लेख करीता तपासणी करा"
+
+#: ../src/rss-ui.glade.h:10
+msgid "Check for new articles every"
+msgstr "नवीन लेख प्रत्येकवेळी तपासा"
+
+#: ../src/rss-ui.glade.h:11
+msgid "Delete all but the last"
+msgstr "शेवटचे सोडून सर्व नष्ट करा"
+
+#: ../src/rss-ui.glade.h:12
+msgid "Delete articles older than"
+msgstr "यापेक्षा जुणे लेख नष्ट करा"
+
+#: ../src/rss-ui.glade.h:13
+msgid "Delete feed?"
+msgstr "फीड नष्ट करायचे?"
+
+#: ../src/rss-ui.glade.h:14
+msgid "Details"
+msgstr "तपशील"
+
+#: ../src/rss-ui.glade.h:15
+msgid "Display only feed summary"
+msgstr "फक्त फीड सारांश दाखवा"
+
+#: ../src/rss-ui.glade.h:16
+msgid "Do no update feed"
+msgstr "अद्ययावत फीड करू नका"
+
+#: ../src/rss-ui.glade.h:17
+msgid "Do not delete feeds"
+msgstr "फीडस् नष्ट करू नका"
+
+#: ../src/rss-ui.glade.h:18
+msgid "Edit"
+msgstr "संपादीत करा"
+
+#: ../src/rss-ui.glade.h:20
+msgid "Enable Plugins"
+msgstr "प्लगइन कार्यान्वीत करा"
+
+#: ../src/rss-ui.glade.h:22
+msgid "Engine: "
+msgstr "इंजीन: "
+
+#: ../src/rss-ui.glade.h:23
+msgid "Export"
+msgstr "स्वरूप बदला"
+
+#: ../src/rss-ui.glade.h:24
+msgid "Feeds"
+msgstr "फीडस्"
+
+#: ../src/rss-ui.glade.h:25
+msgid "General"
+msgstr "सर्वसाधारण"
+
+#: ../src/rss-ui.glade.h:26
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:27
+msgid "HTTP Proxy Details"
+msgstr "HTTP प्रॉक्झी तपशील"
+
+#: ../src/rss-ui.glade.h:28
+msgid "HTTP proxy:"
+msgstr "HTTP प्रॉक्सी:"
+
+#: ../src/rss-ui.glade.h:29
+msgid "Import"
+msgstr "आयात करा"
+
+#: ../src/rss-ui.glade.h:30
+msgid "Network"
+msgstr "जाळं"
+
+#: ../src/rss-ui.glade.h:31
+msgid "No proxy for:"
+msgstr "करीता प्रॉक्सी नाही:"
+
+#: ../src/rss-ui.glade.h:32
+msgid "Password: "
+msgstr "परवलीचा शब्द: "
+
+#: ../src/rss-ui.glade.h:33
+msgid "Port:"
+msgstr "पोर्ट:"
+
+#: ../src/rss-ui.glade.h:37
+msgid "Setup"
+msgstr "सेटअप"
+
+#: ../src/rss-ui.glade.h:38
+msgid "Storage"
+msgstr "संचयन"
+
+#: ../src/rss-ui.glade.h:39
+msgid "Update"
+msgstr "अद्ययावत करा"
+
+#: ../src/rss-ui.glade.h:40
+msgid "Update in"
+msgstr "अद्ययावत करा"
+
+#: ../src/rss-ui.glade.h:41
+msgid "Use Proxy"
+msgstr "प्रॉक्सी वापरा"
+
+#: ../src/rss-ui.glade.h:42
+msgid "Use authentication"
+msgstr "ओळख पटवा वापरा"
+
+#: ../src/rss-ui.glade.h:43
+msgid "Use global update interval"
+msgstr "जागतिक अद्ययावत अवधी वापरा"
+
+#: ../src/rss-ui.glade.h:45
+msgid "Validate"
+msgstr "वैध करा"
+
+#. for translators: this label is part of the "Delete articles older than X days" message.
+#: ../src/rss-ui.glade.h:47
+msgid "days"
+msgstr "दिवस"
+
+#: ../src/rss-ui.glade.h:48
+msgid "label"
+msgstr "लेबल"
+
+#. To translators: this label is part of the following message: "Delete all but the last X messages.
+#: ../src/rss-ui.glade.h:50
+msgid "messages"
+msgstr "संदेश"
+
+#. to translators: label part of the "Update in X minutes" message.
+#: ../src/rss-ui.glade.h:52
+msgid "minutes"
+msgstr "मिनिटे"
+
+#: ../src/parser.c:949
+msgid "No Information"
+msgstr "माहिती नाही"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr "Evolution फीडस् नियंत्रण"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr "Evolution RSS रिडर"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr "आपले RDF,RSS,ATOM फीडस् येथे व्यवस्थापीत करा"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "बातम्या व ब्लॉगस्"
+
