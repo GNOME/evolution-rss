@@ -1,3 +1,7 @@
+2009-03-19  Sandeep Shedmake  <sshedmak@redhat.com>
+
+	* configure.ac: Added 'mr' to ALL_LINGUAS.
+
 2009-03-18  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (org_gnome_cooly_format_rss) increase padding for rss articles
