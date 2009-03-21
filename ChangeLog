@@ -1,3 +1,13 @@
+2009-03-21  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (org_gnome_cooly_format_rss) add icon to feed articles
+
+2009-03-20  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (org_gnome_cooly_folder_icon) - fix display of feed icons
+	* src/parser.c: (tree_walk) if feed doesn't provide icon fetch favicon
+	instead
+
 2009-03-19  Sandeep Shedmake  <sshedmak@redhat.com>
 
 	* configure.ac: Added 'mr' to ALL_LINGUAS.

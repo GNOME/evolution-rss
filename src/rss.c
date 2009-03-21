@@ -1770,15 +1770,19 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	//	char *buff = decode_html_entities(buffer2);
 ///		buff=tmp;
 
+
+		gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+                gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, feedid);
+
 		camel_stream_printf (fstream,
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
                         frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
                 camel_stream_printf (fstream,
                         "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-                        "<img src=/usr/share/evolution/2.24/images/rss-16.png>"
+                        "<img height=16 src=%s>"
                         "<b><font size=+1><a href=%s>%s</a></font></b></div>",
 			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-                        website, subject);
+                        feed_file, website, subject);
                 if (category)
                         camel_stream_printf(fstream,
                                 "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
@@ -1854,8 +1858,9 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 		goto out;
 	if (!icons)
 		icons = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+	gchar *ofolder = g_hash_table_lookup(rf->feed_folders, rss_folder);
 	gchar *key = g_hash_table_lookup(rf->hrname,
-				lookup_feed_folder(rss_folder));
+				ofolder ? ofolder : rss_folder);
 	if (!key)
 		goto normal;
 	if (!(icon = g_hash_table_lookup(icons, key))) {
@@ -2732,8 +2737,7 @@ update_feed_image(gchar *image, gchar *key)
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
         g_free(feed_dir);
-        if (!g_file_test(feed_file, G_FILE_TEST_EXISTS))
-        {
+        if (!g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
 			O_RDWR|O_CREAT, 0666);
                 net_get_unblocking(image,
@@ -2744,6 +2748,7 @@ update_feed_image(gchar *image, gchar *key)
                                 0,
                                 &err);
                 if (err) {
+			g_print("ERR:%s\n", err->message);
                 	g_free(feed_file);
 			return;
 		}

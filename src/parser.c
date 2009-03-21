@@ -813,8 +813,16 @@ tree_walk (xmlNodePtr root, RDF *r)
 		fprintf(stderr, "ERROR:No channel definition.\n");
 		return NULL;
 	}
+	gchar *server = get_server_from_uri(r->uri);
+	gchar *fav = g_strconcat(server, "/favicon.ico", NULL);
+	g_free(server);
+
 	if (image != NULL)
-		r->image = layer_find(image->children, "url", NULL);
+		r->image = layer_find(image->children, "url", fav);
+	else 
+		r->image = fav;
+
+//	g_free(fav);
 
 	t = g_strdup(get_real_channel_name(r->uri, NULL));
 	//feed might be added with no validation
