@@ -397,6 +397,77 @@ conn_mainloop_quit (void *data)
   g_main_loop_quit (data);
 }
 
+guint
+net_get_status(const char *url, GError **err)
+{
+#if LIBSOUP_VERSION < 2003000
+	SoupUri *suri = NULL;
+#else
+	SoupURI *suri = NULL;
+#endif
+	SoupMessage *req = NULL;
+	guint response = NULL;
+	SoupSession *soup_sess = NULL;
+	GSList *headers;
+
+	if (!rf->b_session)
+		rf->b_session = soup_sess = 
+			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);		
+	else
+		soup_sess = rf->b_session;
+
+	req = soup_message_new(SOUP_METHOD_GET, url);
+	if (!req)
+	{
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+				soup_status_get_phrase(2));			//invalid url
+		goto out;
+	}
+	for (; headers; headers = headers->next) {
+		char *header = headers->data;
+		/* soup wants the key and value separate, so we have to munge this
+		 * a bit. */
+		char *colonpos = strchr(header, ':');
+		*colonpos = 0;
+#if LIBSOUP_VERSION < 2003000
+		soup_message_add_header(req->request_headers, header, colonpos+1);
+#else
+		soup_message_headers_append(req->request_headers, header, colonpos+1);
+#endif
+		*colonpos = ':';
+	}
+	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
+			EVOLUTION_VERSION_STRING, VERSION);
+#if LIBSOUP_VERSION < 2003000
+	soup_message_add_header (req->request_headers, "User-Agent",
+                                agstr);
+#else
+	soup_message_headers_append (req->request_headers, "User-Agent",
+                                agstr);
+#endif
+	g_free(agstr);
+
+	rf->b_session = soup_sess;
+	rf->b_msg_session = req;
+	soup_session_send_message(soup_sess, req);
+
+	if (req->status_code != SOUP_STATUS_OK) {
+		//might not be a good ideea
+		soup_session_abort(soup_sess);
+		g_object_unref(soup_sess);
+		rf->b_session = NULL;
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+				soup_status_get_phrase(req->status_code));
+		goto out;
+	}
+
+out:
+	if (suri) soup_uri_free(suri);
+	response = req->status_code;
+	if (req) g_object_unref(G_OBJECT(req));
+	
+	return response;
+}
 
 gboolean
 net_get_unblocking(const char *url, 

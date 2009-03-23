@@ -1,3 +1,8 @@
+2009-03-23  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/parser.c, src/rss.c: implement several methods of fetching
+	feeds icon (feed icon + favicon)
+
 2009-03-21  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (org_gnome_cooly_format_rss) add icon to feed articles

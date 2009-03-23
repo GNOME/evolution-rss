@@ -1636,7 +1636,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				 "Subject"), NULL);
 	gchar *f = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "From"), NULL);
-	gchar *ff = camel_header_encode_string("Dag Wieërs");
 	
 	gpointer is_html = NULL;
 	if (feedid)
@@ -2725,19 +2724,91 @@ lookup_chn_name_by_url(gchar *url)
 	return chn_name;
 }
 
+
+void
+#if LIBSOUP_VERSION < 2003000
+finish_update_feed_image (SoupMessage *msg, gpointer user_data)
+#else
+finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
+#endif
+{
+	xmlChar *icon = NULL;
+	gchar *icon_url = NULL;
+        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, user_data);
+        g_free(feed_dir);
+	gchar *url = g_hash_table_lookup(rf->hr, user_data);
+	gchar *server = get_server_from_uri(url);
+	rfMessage *rfmsg = g_new0(rfMessage, 1);
+	rfmsg->status_code = msg->status_code;
+#if LIBSOUP_VERSION < 2003000
+	rfmsg->body = msg->response.body;
+	rfmsg->length = msg->response.length;
+#else
+	rfmsg->body = (gchar *)(msg->response_body->data);
+	rfmsg->length = msg->response_body->length; 
+#endif
+	xmlNode *app;
+	xmlNode *doc = (xmlNode *)parse_html_sux (rfmsg->body, rfmsg->length);
+	while (doc) {
+		doc = html_find(doc, "link");
+                if (app = xmlGetProp(doc, "rel")) {
+			if (!g_ascii_strcasecmp(app, "shorcut icon")
+			|| !g_ascii_strcasecmp(app, "icon")) {
+				icon = xmlGetProp(doc, "href");
+				exit;
+			}
+	
+		}
+		xmlFree(app);
+	}
+	g_free(rfmsg);
+	if (icon) {
+		gchar *icon_url = g_strconcat(server, "/", icon, NULL);
+		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
+			O_RDWR|O_CREAT, 0666);
+		fetch_unblocking(
+			icon_url,
+			textcb,
+			NULL,
+			(gpointer)finish_image,
+			feed_fs,	// we need to dupe key here
+			0,
+//			&err);			// because we might lose it if
+			NULL);
+	} else {
+                //              r->image = NULL;
+		gchar *icon_url = g_strconcat(server, "/favicon.ico", NULL);
+                if (404 != net_get_status(icon_url, NULL)) {
+			CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
+				O_RDWR|O_CREAT, 0666);
+			fetch_unblocking(
+				icon_url,
+				textcb,
+				NULL,
+				(gpointer)finish_image,
+				feed_fs,	// we need to dupe key here
+				0,
+//				&err);			// because we might lose it if
+				NULL);
+		}
+	}
+}
+
 void
 update_feed_image(gchar *image, gchar *key)
 {
         GError *err = NULL;
-	if (!image)
-		return;
-        g_return_if_fail (image != NULL);
+//	if (!image)
+//		return;
+  //      g_return_if_fail (image != NULL);
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
         g_free(feed_dir);
         if (!g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
+	if (image) {
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
 			O_RDWR|O_CREAT, 0666);
                 net_get_unblocking(image,
@@ -2752,7 +2823,21 @@ update_feed_image(gchar *image, gchar *key)
                 	g_free(feed_file);
 			return;
 		}
+	} else {
+
+		
+	gchar *url = g_hash_table_lookup(rf->hr, key);
+	gchar *server = get_server_from_uri(url);
+	fetch_unblocking(
+			server,
+			textcb,
+			NULL,
+			(gpointer)finish_update_feed_image,
+			key,	// we need to dupe key here
+			0,
+			&err);			// because we might lose it if
         }
+	}
 }
 
 void
@@ -3931,6 +4016,13 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
 	if (user_data) {
+	g_print("finish_image(): status:%d\n", msg->status_code);
+	if (404 == msg->status_code) {
+		camel_stream_close(user_data);
+		unlink(user_data);
+		camel_object_unref(user_data);
+		return;
+	}
 #if LIBSOUP_VERSION < 2003000
 		if (msg->response.body) {
 			camel_stream_write(user_data, msg->response.body, msg->response.length);

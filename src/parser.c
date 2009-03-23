@@ -813,14 +813,16 @@ tree_walk (xmlNodePtr root, RDF *r)
 		fprintf(stderr, "ERROR:No channel definition.\n");
 		return NULL;
 	}
-	gchar *server = get_server_from_uri(r->uri);
-	gchar *fav = g_strconcat(server, "/favicon.ico", NULL);
-	g_free(server);
+//	gchar *server = get_server_from_uri(r->uri);
+//	gchar *fav = g_strconcat(server, "/favicon.ico", NULL);
+//	g_free(server);
 
 	if (image != NULL)
-		r->image = layer_find(image->children, "url", fav);
-	else 
-		r->image = fav;
+		r->image = layer_find(image->children, "url", NULL);
+
+//	g_print("status image:%d\n", net_get_status(r->image, NULL));
+//	if (404 == net_get_status(r->image, NULL))
+//		r->image = NULL;
 
 //	g_free(fav);
 
