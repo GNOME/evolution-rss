@@ -424,6 +424,6 @@ is_rfc822(char *in)
 
 notrfc:	return 0;
 }
- 
+
 #endif
 

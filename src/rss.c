@@ -203,6 +203,12 @@ finish_image (SoupMessage *msg, CamelStream *user_data);
 #else
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
 #endif
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_create_image (SoupMessage *msg, CamelStream *user_data);
+#else
+finish_create_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
+#endif
 gchar *get_main_folder(void);
 
 struct _MailComponentPrivate {
@@ -1776,12 +1782,20 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		camel_stream_printf (fstream,
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
                         frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
-                camel_stream_printf (fstream,
-                        "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-                        "<img height=16 src=%s>"
-                        "<b><font size=+1><a href=%s>%s</a></font></b></div>",
-			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-                        feed_file, website, subject);
+        	if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
+                	camel_stream_printf (fstream,
+                        	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        	"<img height=16 src=%s>"
+                        	"<b><font size=+1><a href=%s>%s</a></font></b></div>",
+				content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                        	feed_file, website, subject);
+		} else {
+                	camel_stream_printf (fstream,
+                        	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        	"<b><font size=+1><a href=%s>%s</a></font></b></div>",
+				content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                        	website, subject);
+		}
                 if (category)
                         camel_stream_printf(fstream,
                                 "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
@@ -1845,7 +1859,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
-	GdkPixbuf *icon;
+	GdkPixbuf *icon, *pixbuf;
 	gchar *main_folder = get_main_folder();
 	if (t->folder_name == NULL 
 	  || g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
@@ -1867,10 +1881,16 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         		gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
         		if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
-				icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
-				g_hash_table_insert(icons, g_strdup(key), icon);
-				g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
-				goto out;
+					// unfortunately e_icon_factory_get_icon return broken image in case of error
+					// we use gdk_pixbuf_new_from_file to test the validity of the image file
+					pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
+					if (pixbuf) {
+						icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
+						g_hash_table_insert(icons, g_strdup(key), icon);
+						g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+						g_object_unref(pixbuf);
+						goto out;
+					}
 			}
 		}
 	} else {
@@ -2765,34 +2785,30 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	g_free(rfmsg);
 	if (icon) {
 		gchar *icon_url = g_strconcat(server, "/", icon, NULL);
-		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
-			O_RDWR|O_CREAT, 0666);
 		fetch_unblocking(
 			icon_url,
 			textcb,
 			NULL,
-			(gpointer)finish_image,
-			feed_fs,	// we need to dupe key here
+			(gpointer)finish_create_image,
+			g_strdup(feed_file),	// we need to dupe key here
 			0,
 //			&err);			// because we might lose it if
 			NULL);
 	} else {
                 //              r->image = NULL;
 		gchar *icon_url = g_strconcat(server, "/favicon.ico", NULL);
-                if (404 != net_get_status(icon_url, NULL)) {
-			CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
-				O_RDWR|O_CREAT, 0666);
-			fetch_unblocking(
+		fetch_unblocking(
 				icon_url,
 				textcb,
 				NULL,
-				(gpointer)finish_image,
-				feed_fs,	// we need to dupe key here
+				(gpointer)finish_create_image,
+				g_strdup(feed_file),	// we need to dupe key here
 				0,
 //				&err);			// because we might lose it if
 				NULL);
-		}
 	}
+	g_free(feed_file);
+	g_free(server);
 }
 
 void
@@ -2808,7 +2824,7 @@ update_feed_image(gchar *image, gchar *key)
         gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
         g_free(feed_dir);
         if (!g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
-	if (image) {
+	if (image) {		//we need to validate image here with load_pixbuf
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
 			O_RDWR|O_CREAT, 0666);
                 net_get_unblocking(image,
@@ -2824,11 +2840,9 @@ update_feed_image(gchar *image, gchar *key)
 			return;
 		}
 	} else {
-
-		
-	gchar *url = g_hash_table_lookup(rf->hr, key);
-	gchar *server = get_server_from_uri(url);
-	fetch_unblocking(
+		gchar *url = g_hash_table_lookup(rf->hr, key);
+		gchar *server = get_server_from_uri(url);
+		fetch_unblocking(
 			server,
 			textcb,
 			NULL,
@@ -4015,14 +4029,6 @@ finish_image (SoupMessage *msg, CamelStream *user_data)
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
-	if (user_data) {
-	g_print("finish_image(): status:%d\n", msg->status_code);
-	if (404 == msg->status_code) {
-		camel_stream_close(user_data);
-		unlink(user_data);
-		camel_object_unref(user_data);
-		return;
-	}
 #if LIBSOUP_VERSION < 2003000
 		if (msg->response.body) {
 			camel_stream_write(user_data, msg->response.body, msg->response.length);
@@ -4033,6 +4039,20 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 			camel_stream_close(user_data);
 			camel_object_unref(user_data);
 		}
+}
+
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_create_image (SoupMessage *msg, CamelStream *user_data)
+#else
+finish_create_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
+#endif
+{
+	g_print("finish_image(): status:%d, user_data;%s\n", msg->status_code);
+	if (404 != msg->status_code) {
+		CamelStream *feed_fs = camel_stream_fs_new_with_name(user_data,
+			O_RDWR|O_CREAT, 0666);
+		finish_image(soup_sess, msg, feed_fs);
 	}
 }
 

@@ -1,5 +1,7 @@
 2009-03-23  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/rss.c: (org_gnome_cooly_folder_icon) validate icon file before
+	loading
 	* src/parser.c, src/rss.c: implement several methods of fetching
 	feeds icon (feed icon + favicon)
 
