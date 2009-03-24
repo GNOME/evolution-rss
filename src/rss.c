@@ -2758,6 +2758,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
         gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, user_data);
         g_free(feed_dir);
 	gchar *url = g_hash_table_lookup(rf->hr, user_data);
+	gchar *urldir = g_path_get_dirname(url);
 	gchar *server = get_server_from_uri(url);
 	rfMessage *rfmsg = g_new0(rfMessage, 1);
 	rfmsg->status_code = msg->status_code;
@@ -2784,7 +2785,11 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	}
 	g_free(rfmsg);
 	if (icon) {
-		gchar *icon_url = g_strconcat(server, "/", icon, NULL);
+		if (strstr(icon, "://") == NULL)
+			icon_url = g_strconcat(server, "/", icon, NULL);
+		else
+			icon_url = icon;
+
 		fetch_unblocking(
 			icon_url,
 			textcb,
@@ -2796,7 +2801,18 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 			NULL);
 	} else {
                 //              r->image = NULL;
-		gchar *icon_url = g_strconcat(server, "/favicon.ico", NULL);
+		icon_url = g_strconcat(urldir, "/favicon.ico", NULL);
+		fetch_unblocking(
+				icon_url,
+				textcb,
+				NULL,
+				(gpointer)finish_create_image,
+				g_strdup(feed_file),	// we need to dupe key here
+				0,
+//				&err);			// because we might lose it if
+				NULL);
+		g_free(icon_url);
+		icon_url = g_strconcat(server, "/favicon.ico", NULL);
 		fetch_unblocking(
 				icon_url,
 				textcb,
@@ -2808,7 +2824,9 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 				NULL);
 	}
 	g_free(feed_file);
+	g_free(icon_url);
 	g_free(server);
+	g_free(urldir);
 }
 
 void
@@ -4054,6 +4072,7 @@ finish_create_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user
 			O_RDWR|O_CREAT, 0666);
 		finish_image(soup_sess, msg, feed_fs);
 	}
+	g_free(user_data);
 }
 
 #define CAMEL_DATA_CACHE_BITS (6)
