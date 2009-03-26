@@ -1,3 +1,7 @@
+2009-03-26  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (fetch_image) - handle relative paths
+
 2009-03-24  Lucian Langa  <lucilanga@gnome.org>
 
 	* configure.ac: Added 'te' to ALL_LINGUAS.

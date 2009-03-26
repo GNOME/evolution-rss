@@ -61,3 +61,5 @@
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
 	* see whether we need to allow higher ttl update interval
+	* fetch_image() handle 404
+	* count comments

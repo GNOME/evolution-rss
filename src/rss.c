@@ -1613,6 +1613,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *feedid = NULL;
 	gchar *comments = NULL;
 	gchar *category = NULL;
+	GdkPixbuf *pixbuf = NULL;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -1782,21 +1783,23 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		camel_stream_printf (fstream,
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
                         frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
-        	if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
-                	camel_stream_printf (fstream,
+        	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
+			if (pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL)) {
+                		camel_stream_printf (fstream,
                         	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                         	"<img height=16 src=%s>"
                         	"<b><font size=+1><a href=%s>%s</a></font></b></div>",
 				content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
                         	feed_file, website, subject);
-		} else {
-                	camel_stream_printf (fstream,
-                        	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-                        	"<b><font size=+1><a href=%s>%s</a></font></b></div>",
-				content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-                        	website, subject);
-		}
-                if (category)
+				g_object_unref(pixbuf);
+				goto render_body;
+			}
+      		camel_stream_printf (fstream,
+                       	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                       	"<b><font size=+1><a href=%s>%s</a></font></b></div>",
+			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                       	website, subject);
+render_body:    if (category)
                         camel_stream_printf(fstream,
                                 "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                                 "<b><font size=-1>Posted under: %s</font></b></div>",
@@ -4098,29 +4101,41 @@ data_cache_path(CamelDataCache *cdc, int create, const char *path, const char *k
         return real;
 }
 
+// constructs url from @base in case url is relative
 gchar *
-fetch_image(gchar *url)
+fetch_image(gchar *url, gchar *link)
 {
         GError *err = NULL;
 	gchar *tmpdir = NULL;
 	gchar *name = NULL;
 	CamelStream *stream = NULL;
+	gchar *tmpurl = NULL;
 	if (!url)
 		return NULL;
+	if (strstr(url, "://") == NULL) {
+		if (*url == '/') {
+		tmpurl = g_strconcat(get_server_from_uri(link), "/", url, NULL);
+		g_print("fetch_image() tmpurl:%s\n", tmpurl);
+		}
+		if (*url == '.')
+			tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
+	} else {
+		tmpurl = g_strdup(url);
+	}
 	gchar *feed_dir = g_build_path("/", rss_component_peek_base_directory(mail_component_peek()), "static", NULL);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
 	g_free(feed_dir);
-	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, url, NULL);
+	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
 	if (!stream) {
 		g_print("image cache MISS\n");
-		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, url, NULL);
+		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
 	} else 
 		g_print("image cache HIT\n");
 
 
-	net_get_unblocking(url,
+	net_get_unblocking(tmpurl,
                        	        textcb,
                                	NULL,
                                	(gpointer)finish_image,
@@ -4128,7 +4143,9 @@ fetch_image(gchar *url)
 				0,
                                	&err);
 	if (err) return NULL;
-	return data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, url);
+	gchar *result = data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, tmpurl);
+	g_free(tmpurl);
+	return result;
 }
 
 //migrates old feed data files from crc naming

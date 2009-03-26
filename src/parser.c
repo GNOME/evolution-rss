@@ -996,8 +996,10 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
                                         	gchar *name = NULL;
                                         	xmlChar *url = xmlGetProp(doc, "src");
                                         	if (url) {
-                                                	if (name = fetch_image(url))
+                                                	if (name = fetch_image(url, link)) {
                                                         	xmlSetProp(doc, "src", name);
+								g_free(name);
+							}
                                                 	xmlFree(url);
                                         	}
                                 	}

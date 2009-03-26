@@ -296,7 +296,7 @@ gchar *lookup_feed_folder(gchar *folder);
 gchar *decode_utf8_entities(gchar *str);
 gchar *decode_html_entities(gchar *str);
 gchar *get_real_channel_name(gchar *uri, gchar *failed);
-gchar *fetch_image(gchar *url);
+gchar *fetch_image(gchar *url, gchar *link);
 void create_mail(create_feed *CF);
 void migrate_crc_md5(const char *name, gchar *url);
 void write_feed_status_line(gchar *file, gchar *needle);
