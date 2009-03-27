@@ -52,10 +52,7 @@
 	* add icon to feed setup panel
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* handle slash categories
-	* add feed logo in title
-	* use favico if feed does not provide an icon
 	* hook update in the properties  of folder
-	* search favicon in the subdomain->domain
 	* use combo popup for moving and placement of feed folders
 	* trigger resync after folder rename
 	* check webbuttons for webkit

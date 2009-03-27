@@ -205,11 +205,12 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
 #endif
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_create_image (SoupMessage *msg, CamelStream *user_data);
+finish_create_image (SoupMessage *msg, gchar *user_data);
 #else
-finish_create_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
+finish_create_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data);
 #endif
 gchar *get_main_folder(void);
+void fetch_comments(gchar *url, CamelStream *stream);
 
 struct _MailComponentPrivate {
         GMutex *lock;
@@ -1794,11 +1795,16 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				g_object_unref(pixbuf);
 				goto render_body;
 			}
+		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+                                            "rss-16.png",
+                                                NULL);
       		camel_stream_printf (fstream,
                        	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        "<img height=16 src=%s>"
                        	"<b><font size=+1><a href=%s>%s</a></font></b></div>",
 			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-                       	website, subject);
+                       	iconfile, website, subject);
+		g_free(iconfile);
 render_body:    if (category)
                         camel_stream_printf(fstream,
                                 "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
@@ -1821,7 +1827,7 @@ render_body:    if (category)
 				commstream = NULL;
 			}
 			else {
-				fetch_comments(comments, t->format);
+				fetch_comments(comments, (CamelStream *)t->format);
 			}
 			camel_stream_printf (fstream, "</div>");
 		}	
@@ -2772,7 +2778,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	rfmsg->body = (gchar *)(msg->response_body->data);
 	rfmsg->length = msg->response_body->length; 
 #endif
-	xmlNode *app;
+	xmlChar *app;
 	xmlNode *doc = (xmlNode *)parse_html_sux (rfmsg->body, rfmsg->length);
 	while (doc) {
 		doc = html_find(doc, "link");
@@ -4064,9 +4070,9 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_create_image (SoupMessage *msg, CamelStream *user_data)
+finish_create_image (SoupMessage *msg, gchar *user_data)
 #else
-finish_create_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
+finish_create_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data)
 #endif
 {
 	g_print("finish_image(): status:%d, user_data;%s\n", msg->status_code);

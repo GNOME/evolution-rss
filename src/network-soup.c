@@ -406,7 +406,7 @@ net_get_status(const char *url, GError **err)
 	SoupURI *suri = NULL;
 #endif
 	SoupMessage *req = NULL;
-	guint response = NULL;
+	guint response = 0;
 	SoupSession *soup_sess = NULL;
 	GSList *headers;
 
@@ -640,6 +640,6 @@ out:
 void
 rss_soup_init(void)
 {
-  //      SoupCookieJar *soup_jar;
-//        soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.newcookies.sqlite", TRUE);
+ //       SoupCookieJar *soup_jar;
+//      soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.newcookies.sqlite", TRUE);
 }

@@ -1,3 +1,7 @@
+2009-03-27  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c,src/parser.c: - misc code cleanups
+
 2009-03-26  Philip Withnall  <philip@tecnocode.co.uk>
 
 	* configure.ac: Added en_GB to ALL_LINGUAS.

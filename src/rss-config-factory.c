@@ -378,7 +378,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
 	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
 	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
 	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
-	gtk_spin_button_set_range(ttl_value, 0, MAX_TTL);
+	gtk_spin_button_set_range((GtkSpinButton *)ttl_value, 0, (guint)MAX_TTL);
 
   	switch (del_feed)
   	{

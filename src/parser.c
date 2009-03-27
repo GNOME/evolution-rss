@@ -391,7 +391,7 @@ layer_find (xmlNodePtr node,
 /* returns all matched nodes disregarding type
  */
 
-static char *
+GList *
 layer_find_all (xmlNodePtr node, 
 	    char *match, 
 	    char *fail)
@@ -416,7 +416,7 @@ layer_find_all (xmlNodePtr node,
 		return category;
 	else {
 		g_list_free(category);
-		return fail;
+		return (GList *)fail;
 	}
 }
 
@@ -441,7 +441,7 @@ content_rss(xmlNode *node, gchar *fail)
 		return fail;
 }
 
-void
+gchar *
 dublin_core_rss(xmlNode *node, gchar *fail)
 {
 	gchar *content;
