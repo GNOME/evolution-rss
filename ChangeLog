@@ -1,3 +1,10 @@
+2009-03-28  Claude Paroz  <claude@2xlibre.net>
+
+	* po/Makefile.in.in: Deleted. This file should not be in VCS.
+	* po/LINGUAS:
+	* configure.ac: Convert to LINGUAS convention.
+	See http://live.gnome.org/GnomeGoals/PoLinguas
+
 2009-03-27  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c,src/parser.c: - misc code cleanups

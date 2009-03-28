@@ -10,7 +10,7 @@ AM_MAINTAINER_MODE
 dnl make sure we keep ACLOCAL_FLAGS around for maintainer builds to work
 AC_SUBST(ACLOCAL_AMFLAGS, "\${ACLOCAL_FLAGS}")
 
-AC_PROG_INTLTOOL([0.21])
+IT_PROG_INTLTOOL([0.35.0])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
@@ -250,7 +250,6 @@ AC_PATH_PROG(GETTEXT, gettext, no)
 if test "x$GETTEXT" = "xno"; then
 	AC_MSG_ERROR(Package gettext not installed)
 fi
-ALL_LINGUAS="cs en_AU en_GB es it mr ro ru sv te"
 
 GETTEXT_PACKAGE=evolution-rss
 AC_SUBST(GETTEXT_PACKAGE)
