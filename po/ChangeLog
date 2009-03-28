@@ -1,3 +1,8 @@
+2009-03-28  Claude Paroz  <claude@2xlibre.net>
+
+	* LINGUAS:
+	* fr.po: Added French translation.
+
 2009-03-26  Philip Withnall  <philip@tecnocode.co.uk>
 
 	* en_GB.po: Added British English translation by Jen Ockwell
