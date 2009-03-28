@@ -1,3 +1,7 @@
+2009-03-28  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (create_user_pass_dialog) - reshape user/password dialog
+
 2009-03-28  Claude Paroz  <claude@2xlibre.net>
 
 	* po/Makefile.in.in: Deleted. This file should not be in VCS.
@@ -6,6 +10,10 @@
 	See http://live.gnome.org/GnomeGoals/PoLinguas
 
 2009-03-27  Lucian Langa  <lucilanga@gnome.org>
+
+	Fix for bug #576966:
+
+	* src/network-soup.c: (authenticate) - correctly send user/pass
 
 	* src/rss.c,src/parser.c: - misc code cleanups
 

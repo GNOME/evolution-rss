@@ -327,6 +327,7 @@ authenticate (SoupSession *session,
 {
 	gchar *user = g_hash_table_lookup(rf->hruser, data);
 	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
+	
 	if (user && pass)
 	{
 #if LIBSOUP_VERSION < 2003000
@@ -355,6 +356,8 @@ authenticate (SoupSession *session,
 		*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
 		*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
 #else
+	user = g_hash_table_lookup(rf->hruser, data);
+	pass = g_hash_table_lookup(rf->hrpass, data);
 	if (!retrying)
 		soup_auth_authenticate (auth, user, pass);
 #endif

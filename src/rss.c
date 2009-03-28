@@ -512,114 +512,185 @@ GtkWidget *dialog1;
   GtkWidget *okbutton1;
   GtkWidget *checkbutton1;
   GtkWidget *vbox1;
+  GtkWidget *container;
+  GtkWidget *container2;
   guint resp;
 
-  if (!rf->hruser)
-        rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
-  if (!rf->hrpass)
-        rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+ GtkWidget *widget;
+        GtkWidget *action_area;
+        GtkWidget *content_area;
+  //      gint type = msg->flags & E_PASSWORDS_REMEMBER_MASK;
+    //    guint noreply = msg->noreply;
+        gboolean visible;
+        AtkObject *a11y;
 
-  GtkAccelGroup *accel_group = gtk_accel_group_new ();
+//        msg->noreply = 1;
 
-  dialog1 = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (dialog1), _("Enter User/Pass for Feed"));
-  gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
-  gtk_window_set_modal (GTK_WINDOW (dialog1), FALSE);
+	if (!rf->hruser)
+		rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+	if (!rf->hrpass)
+		rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
-  gtk_widget_show (dialog_vbox1);
+        widget = gtk_dialog_new_with_buttons (
+                _("Enter User/Pass for feed"), NULL, 0,
+                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                GTK_STOCK_OK, GTK_RESPONSE_OK,
+                NULL);
+        gtk_dialog_set_has_separator (GTK_DIALOG (widget), FALSE);
+        gtk_dialog_set_default_response (
+                GTK_DIALOG (widget), GTK_RESPONSE_OK);
+        gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
+//        gtk_window_set_transient_for (GTK_WINDOW (widget), msg->parent);
+        gtk_window_set_position (GTK_WINDOW (widget), GTK_WIN_POS_CENTER_ON_PARENT);
+        gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
+        GtkWidget *password_dialog = GTK_DIALOG (widget);
 
-  vbox1 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox1);
-  gtk_box_pack_start (GTK_BOX (dialog_vbox1), vbox1, FALSE, TRUE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox1), 3);
+        action_area = gtk_dialog_get_action_area (password_dialog);
+        content_area = gtk_dialog_get_content_area (password_dialog);
 
-  table1 = gtk_table_new (2, 2, FALSE);
-  gtk_widget_show (table1);
-  gtk_box_pack_start (GTK_BOX (vbox1), table1, TRUE, TRUE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (table1), 10);
-  gtk_table_set_row_spacings (GTK_TABLE (table1), 5);
-  gtk_table_set_col_spacings (GTK_TABLE (table1), 5);
+        /* Override GtkDialog defaults */
+        gtk_box_set_spacing (GTK_BOX (action_area), 12);
+        gtk_container_set_border_width (GTK_CONTAINER (action_area), 0);
+        gtk_box_set_spacing (GTK_BOX (content_area), 12);
+        gtk_container_set_border_width (GTK_CONTAINER (content_area), 0);
 
-  label1 = gtk_label_new (_("Username:"));
-  gtk_widget_show (label1);
-  gtk_table_attach (GTK_TABLE (table1), label1, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
+        /* Table */
+        container = gtk_table_new (2, 3, FALSE);
+        gtk_table_set_col_spacings (GTK_TABLE (container), 12);
+        gtk_table_set_row_spacings (GTK_TABLE (container), 6);
+        gtk_table_set_row_spacing (GTK_TABLE (container), 0, 12);
+        gtk_table_set_row_spacing (GTK_TABLE (container), 1, 0);
+        gtk_widget_show (container);
 
-  label2 = gtk_label_new (_("Password:"));
-  gtk_widget_show (label2);
-  gtk_table_attach (GTK_TABLE (table1), label2, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label2), 0, 0.5);
+        gtk_box_pack_start (
+                GTK_BOX (content_area), container, FALSE, TRUE, 0);
 
-  username = gtk_entry_new ();
-  gtk_widget_show (username);
-  gtk_table_attach (GTK_TABLE (table1), username, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_entry_set_invisible_char (GTK_ENTRY (username), 8226);
-    gchar *user = g_hash_table_lookup(rf->hruser,  url);
+        /* Password Image */
+        widget = gtk_image_new_from_icon_name (
+                "dialog-password", GTK_ICON_SIZE_DIALOG);
+        gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.0);
+        gtk_widget_show (widget);
+
+        gtk_table_attach (
+                GTK_TABLE (container), widget,
+                0, 1, 0, 3, GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+
+        widget = gtk_label_new (NULL);
+        gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
+
+	char *markup;
+	markup = g_markup_printf_escaped ("Enter your username and password for:\n '%s'", url);
+	gtk_label_set_markup (GTK_LABEL (widget), markup);
+	g_free (markup);
+        gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+        gtk_widget_show (widget);
+
+        gtk_table_attach (
+                GTK_TABLE (container), widget,
+                1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+
+        container2 = gtk_table_new (2, 2, FALSE);
+	gtk_widget_show (container2);
+        gtk_table_attach (
+                GTK_TABLE (container), container2,
+                1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+
+        widget = gtk_label_new (NULL);
+        gtk_label_set_markup (GTK_LABEL (widget), _("Username: "));
+        gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+        gtk_widget_show (widget);
+        gtk_table_attach (
+                GTK_TABLE (container2), widget,
+                0, 1, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+
+        username = gtk_entry_new ();
+        a11y = gtk_widget_get_accessible (username);
+        gtk_entry_set_visibility (GTK_ENTRY (username), TRUE);
+        gtk_entry_set_activates_default (GTK_ENTRY (username), TRUE);
+        gtk_widget_grab_focus (username);
+        gtk_widget_show (username);
+        gtk_table_attach (
+                GTK_TABLE (container2), username,
+                1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gchar *user = g_hash_table_lookup(rf->hruser,  url);
 	d(g_print("user:%s\n", user));
-    if (user)
-        gtk_entry_set_text (GTK_ENTRY (username), user);
-  password = gtk_entry_new ();
-  gtk_widget_show (password);
-  gtk_table_attach (GTK_TABLE (table1), password, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
-  gchar *pass = g_hash_table_lookup(rf->hrpass,  url);
-    if (pass)
-        gtk_entry_set_text (GTK_ENTRY (password), pass);
-  gtk_entry_set_invisible_char (GTK_ENTRY (password), 8226);
+	if (user)
+		gtk_entry_set_text (GTK_ENTRY (username), user);
 
-  checkbutton1 = gtk_check_button_new_with_mnemonic (_("Remember password"));
-  gtk_widget_show (checkbutton1);
-  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, FALSE, 0);
+        widget = gtk_label_new (NULL);
+        gtk_label_set_markup (GTK_LABEL (widget), _("Password: "));
+        gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+        gtk_widget_show (widget);
+        gtk_table_attach (
+                GTK_TABLE (container2), widget,
+                0, 1, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+
+        password = gtk_entry_new ();
+        a11y = gtk_widget_get_accessible (password);
+        gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
+        gtk_entry_set_activates_default (GTK_ENTRY (password), TRUE);
+        gtk_widget_grab_focus (password);
+        gtk_widget_show (password);
+        gtk_table_attach (
+                GTK_TABLE (container2), password,
+                1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gchar *pass = g_hash_table_lookup(rf->hrpass,  url);
+	if (pass)
+		gtk_entry_set_text (GTK_ENTRY (password), pass);
+
+        /* Caps Lock Label */
+        widget = gtk_label_new (NULL);
+//        update_capslock_state (NULL, NULL, widget);
+        gtk_widget_show (widget);
+
+        gtk_table_attach (
+                GTK_TABLE (container), widget,
+                1, 2, 2, 3, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+
+//        g_signal_connect (
+  //              password_dialog, "key-release-event",
+    //            G_CALLBACK (update_capslock_state), widget);
+      //  g_signal_connect (
+        //        password_dialog, "focus-in-event",
+          //      G_CALLBACK (update_capslock_state), widget);
 
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
-  gtk_widget_show (dialog_action_area1);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
+	checkbutton1  = gtk_check_button_new_with_mnemonic (
+                                _("_Remember this password"));
 
-  cancelbutton1 = gtk_button_new_from_stock ("gtk-cancel");
-  gtk_widget_show (cancelbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancelbutton1, GTK_RESPONSE_CANCEL);
-  GTK_WIDGET_SET_FLAGS (cancelbutton1, GTK_CAN_DEFAULT);
+//                gtk_toggle_button_set_active (
+  //                      GTK_TOGGLE_BUTTON (widget), *msg->remember);
+    //            if (msg->flags & E_PASSWORDS_DISABLE_REMEMBER)
+       //                 gtk_widget_set_sensitive (widget, FALSE);
+	gtk_widget_show (checkbutton1);
+      //          msg->check = widget;
 
-  okbutton1 = gtk_button_new_from_stock ("gtk-ok");
-  gtk_widget_show (okbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
-  gtk_widget_add_accelerator (okbutton1, "activate", accel_group,
-                              GDK_Return, (GdkModifierType) 0,
-                              GTK_ACCEL_VISIBLE);
-  gtk_window_add_accel_group (GTK_WINDOW (dialog1), accel_group);
-  gint result = gtk_dialog_run(GTK_DIALOG(dialog1));
-  switch (result)
-  {
-    case GTK_RESPONSE_OK:
-        if (user)
-            g_hash_table_remove(rf->hruser, url);
-        g_hash_table_insert(rf->hruser, url, 
+	gtk_table_attach (
+                        GTK_TABLE (container), checkbutton1,
+                        1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
+
+	gint result = gtk_dialog_run(GTK_DIALOG(password_dialog));
+	switch (result)
+	{
+	case GTK_RESPONSE_OK:
+        	if (user)
+        	    g_hash_table_remove(rf->hruser, url);
+        	g_hash_table_insert(rf->hruser, url, 
 		g_strdup(gtk_entry_get_text (GTK_ENTRY (username))));
-        if (pass)
-            g_hash_table_remove(rf->hrpass, url);
-        g_hash_table_insert(rf->hrpass, url, 
+        	if (pass)
+            		g_hash_table_remove(rf->hrpass, url);
+        	g_hash_table_insert(rf->hrpass, url, 
 		g_strdup(gtk_entry_get_text (GTK_ENTRY (password))));
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton1)))
-		save_up(url);
-	else
-		del_up(url);
+		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton1)))
+			save_up(url);
+		else
+			del_up(url);
 	
-        gtk_widget_destroy (dialog1);
-	resp = 0;
-        break;
+        	gtk_widget_destroy (password_dialog);
+		resp = 0;
+        	break;
     default:
-        gtk_widget_destroy (dialog1);
+        gtk_widget_destroy (password_dialog);
 	resp = 1;
         break;
   }
