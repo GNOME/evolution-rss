@@ -579,7 +579,7 @@ GtkWidget *dialog1;
         gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
 
 	char *markup;
-	markup = g_markup_printf_escaped ("Enter your username and password for:\n '%s'", url);
+	markup = g_markup_printf_escaped (_("Enter your username and password for:\n '%s'"), url);
 	gtk_label_set_markup (GTK_LABEL (widget), markup);
 	g_free (markup);
         gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
@@ -613,7 +613,6 @@ GtkWidget *dialog1;
                 GTK_TABLE (container2), username,
                 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 	gchar *user = g_hash_table_lookup(rf->hruser,  url);
-	d(g_print("user:%s\n", user));
 	if (user)
 		gtk_entry_set_text (GTK_ENTRY (username), user);
 
@@ -676,11 +675,11 @@ GtkWidget *dialog1;
         	if (user)
         	    g_hash_table_remove(rf->hruser, url);
         	g_hash_table_insert(rf->hruser, url, 
-		g_strdup(gtk_entry_get_text (GTK_ENTRY (username))));
+			g_strdup(gtk_entry_get_text (GTK_ENTRY (username))));
         	if (pass)
             		g_hash_table_remove(rf->hrpass, url);
         	g_hash_table_insert(rf->hrpass, url, 
-		g_strdup(gtk_entry_get_text (GTK_ENTRY (password))));
+			g_strdup(gtk_entry_get_text (GTK_ENTRY (password))));
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton1)))
 			save_up(url);
 		else
