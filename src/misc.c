@@ -71,15 +71,20 @@ sanitize_url(gchar *text)
 {
 	gchar *out;
 	gchar *tmptext = g_strdup(text);
-	if (strstr(text, "feed://"))
+	if (strcasestr(text, "feed://"))
 		tmptext = strextr(text, "feed://");
-	else if (strstr(text, "feed//"))
+	else if (strcasestr(text, "feed//"))
 		tmptext = strextr(text, "feed//");
-	else if (strstr(text, "feed:"))
+	else if (strcasestr(text, "feed:"))
 		tmptext = strextr(text, "feed:");
+	if (!strcasestr(tmptext, "http://") && !strcasestr(tmptext, "https://")) {
+		gchar *safetext = g_strconcat("http://", tmptext, NULL);
+		g_free(tmptext);
+		tmptext=safetext;
+	}
 
 	gchar *scheme = g_uri_parse_scheme(tmptext);
-	g_print("parsed scheme:%s\n", scheme);
+	d(g_print("parsed scheme:%s\n", scheme));
  	if (!scheme && !strstr (tmptext, "http://") 
 	&& !strstr (tmptext, "https://")) {
 		//out = g_strconcat("http://", tmptext, NULL);

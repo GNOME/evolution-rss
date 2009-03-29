@@ -1,3 +1,8 @@
+2009-03-29  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/misc.c: (sanitize_url) - extra sanitize input string (imported
+	feed might not have http like construct.Ingore case on comparison.
+
 2009-03-28  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (create_user_pass_dialog) - reshape user/password dialog
