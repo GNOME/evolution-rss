@@ -1,0 +1,724 @@
+# translation of evolution-rss.HEAD.po to Kannada
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Shankar Prasad <svenkate@redhat.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss.HEAD\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
+"POT-Creation-Date: 2009-03-18 09:52+0000\n"
+"PO-Revision-Date: 2009-03-30 15:50+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: Kannada <en@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#: ../src/dbus.c:111 ../src/rss-config-factory.c:550
+#: ../src/rss-config-factory.c:912 ../src/rss-config-factory.c:1005
+msgid "Error adding feed."
+msgstr "ಫೀಡನ್ನು ಸೇರಿಸುವಲ್ಲಿ ದೋಷ."
+
+#: ../src/dbus.c:112 ../src/rss-config-factory.c:551
+#: ../src/rss-config-factory.c:913 ../src/rss-config-factory.c:1006
+msgid "Feed already exists!"
+msgstr "ಫೀಡ್ ಈಗಾಗಲೆ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ!"
+
+#: ../src/dbus.c:117
+#, c-format
+msgid "New feed imported: %s"
+msgstr "ಹೊಸ ಫೀಡನ್ನು ಆಮದು ಮಾಡಲಾಗಿದೆ: %s"
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Auto check for new articles."
+msgstr "ಹೊಸ ಲೇಖನಗಳಿಗಾಗಿ ಸ್ವಯಂಪತ್ತೆ ಮಾಡು."
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Blink Status Icon"
+msgstr "ಸ್ಥಿತಿ ಚಿಹ್ನೆಯನ್ನು ಮಿನುಗಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink status icon when new article received"
+msgstr "ಹೊಸ ಲೇಖನವನ್ನು ಪಡೆದುಕೊಂಡಾಗ ಸ್ಥಿತಿ ಚಿಹ್ನೆಯನ್ನು ಮಿನುಗಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Check New articles"
+msgstr "ಹೊಸ ಲೇಖನಗಳಿಗಾಗಿ ಪರಿಶೀಲಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Check for new articles everytime Evolution is started."
+msgstr "ಪ್ರತಿ ಬಾರಿಯೂ Evolution ಆರಂಭಗೊಂಡಾಗ ಹೊಸ ಲೇಖನಗಳಿಗಾಗಿ ಹುಡುಕು."
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Checks articles on startup"
+msgstr "ಆರಂಭದಲ್ಲಿ ಲೇಖನಗಳಿಗಾಗಿ ಹುಡುಕು"
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Contains list of the currently setup feeds."
+msgstr "ಪ್ರಸಕ್ತ ಸಿದ್ಧಗೊಳಿಸಲಾದ ಫೀಡ್‌ಗಳ ಪಟ್ಟಿ ಇದೆ."
+
+#: ../src/evolution-rss.schemas.in.h:8
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "ಫೀಡ್ ನಮೂದನ್ನು ಅಳಿಸುವುದರಿಂದ ಫೀಡ್‌ ಸಹ ತೆಗೆದು ಹಾಕಲ್ಪಡುತ್ತದೆ."
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Display article's summary"
+msgstr "ಲೇಖನದ ಸಾರಾಂಶವನ್ನು ತೋರಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Display feed icon on feed folder"
+msgstr "ಫೀಡ್‌ ಕಡತಕೋಶದಲ್ಲಿ ಫೀಡ್ ಚಿಹ್ನೆಯನ್ನು ತೋರಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Enable Feed Icon"
+msgstr "ಫೀಡ್‌ ಚಿಹ್ನೆಯನ್ನು ಶಕ್ತಗೊಳಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable Status Icon"
+msgstr "ಸ್ಥಿತಿ ಚಿಹ್ನೆಯನ್ನು ಶಕ್ತಗೊಳಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid "Enable status icon in notification area"
+msgstr "ಸೂಚನಾ ಸ್ಥಳದಲ್ಲಿ ಸ್ಥಿತಿ ಚಿಹ್ನೆಯನ್ನು ಶಕ್ತಗೊಳಿಸು"
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid ""
+"Evolution will show artile's summary instead of article's webpage. Sumarry "
+"can also be html."
+msgstr "ಲೇಖನದ ಜಾಲಪುಟದ ಬದಲಿಗೆ ಲೇಖನದ ಸಾರಾಂಶವನ್ನು Evolution ತೋರಿಸುತ್ತದೆ. ಸಾರಾಂಶವು ಒಂದು html ಆಗಿರಬಹುದು."
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Feeds list"
+msgstr "ಫೀಡ್‌ಗಳ ಪಟ್ಟಿ"
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "ಎಷ್ಟು ಅವಧಿಗೊಮ್ಮೆ ಹೊಸ ಲೇಖನಗಳಿಗಾಗಿ ಪರಿಶೀಲಿಸಬೇಕು (ನಿಮಿಷಗಳಲ್ಲಿ)."
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Hostname of the proxy server"
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕದ ಅತಿಥೇಯದ ಹೆಸರು"
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Hostname of the proxy server."
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕದ ಅತಿಥೇಯದ ಹೆಸರು."
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid "Html render"
+msgstr "Html ರೆಂಡರ್"
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid "If the proxy server requires authentication. This is the password field."
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕಕ್ಕೆ ದೃಢೀಕರಣದ ಅಗತ್ಯವಿದ್ದರೆ. ಇದು ಗುಪ್ತಪದದ ಕ್ಷೇತ್ರ."
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Interval in seconds before a conection is dropped."
+msgstr "ಸಂಪರ್ಕವು ತಪ್ಪಿ ಹೋಗುವ ಮೊದಲಿನ ಕಾಲಾವಧಿ, ಸೆಕೆಂಡುಗಳಲ್ಲಿ."
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "Java Enabled"
+msgstr "Java ಶಕ್ತಗೊಂಡ"
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "JavaScript Enabled"
+msgstr "JavaScript ಶಕ್ತಗೊಂಡ"
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "Network proxy requires authentication."
+msgstr "ಜಾಲಬಂಧ ಪ್ರಾಕ್ಸಿಗೆ ದೃಢೀಕರಣದ ಅಗತ್ಯವಿರುತ್ತದೆ."
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "Network timeout"
+msgstr "ಜಾಲಬಂಧ ಕಾಲಾವಧಿ ಮೀರಿಕೆ"
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "New articles timeout"
+msgstr "ಹೊಸ ಲೇಖನಗಳ ಕಾಲಾವಧಿ ಮೀರಿಕೆ"
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Password for proxy server"
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕಕ್ಕಾಗಿನ ಗುಪ್ತಪದ"
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Proxy requires authentication"
+msgstr "ಪ್ರಾಕ್ಸಿಗಾಗಿ ಗುಪ್ತಪದದ ಅಗತ್ಯವಿದೆ"
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Proxy server port"
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕ ಸಂಪರ್ಕಸ್ಥಾನ"
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Proxy server user"
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕ ಬಳಕೆದಾರ"
+
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "Remove feed folder"
+msgstr "ಫೀಡ್‌ ಕಡತಕೋಶವನ್ನು ತೆಗೆದುಹಾಕು"
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "The port number for proxy server."
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕಕ್ಕಾಗಿನ ಸಂಪರ್ಕಸ್ಥಾನದ ಸಂಖ್ಯೆ."
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "The username to use for proxy server authentication."
+msgstr "ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕದ ದೃಢೀಕರಣಕ್ಕಾಗಿ ಬಳಸಲು ಬಳಕೆದಾರ ಹೆಸರು."
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Type HTML Render used to display html pages."
+msgstr "html ಪುಟಗಳನ್ನು ತೋರಿಸಲು ಬಳಸಲಾಗುವ ಟೈಪ್ HTML ರೆಂಡರ್."
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Use a proxy server to fetch articles"
+msgstr "ಲೇಖನಗಳನ್ನು ಪಡೆದುಕೊಳ್ಳಲು ಒಂದು ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕವನ್ನು ಬಳಸಿ"
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "Use proxy server"
+msgstr "ಒಂದು ಪ್ರಾಕ್ಸಿ ಪರಿಚಾರಕವನ್ನು ಬಳಸಿ"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Evolution RSS ರೀಡರ್ ಪ್ಲಗ್‌ಇನ್.\n"
+"\n"
+"ಈ ಪ್ಲಗ್‌ಇನ್ evolution ಮೈಲ್‌ಗೆ RSS ಫೀಡ್‌ಗಳ ಬೆಂಬಲವನ್ನು ಸೇರಿಸುತ್ತದೆ. RSS ಬೆಂಬಲವನ್ನು ಸರಿಸುಮಾರು evolution-1.4 ಕವಲಿನಲ್ಲಿ ಈಗಿರುವ RSS ಬೆಂಬಲದಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ. ಮೈಲ್‌ಗಳ ಜೊತೆಯಲ್ಲಿಯೆ RSS ಅನ್ನು ಇರಿಸುವುದೆ ಇದರ ಹಿಂದಿನ ಉದ್ದೇಶವಾಗಿದೆ, ಒಂದು RSS ಲೇಖನವು ಒಂದು ಇಮೈಲ್ ಸಂದೇಶದಂತೆಯೆ ಇರುವುದರಿಂದ ಈ ಸಮಯದಲ್ಲಿ ಒಂದು ಪ್ರತ್ಯೇಕವಾದ RSS ಓದುಗನನ್ನು ಹೊಂದುವುದರಲ್ಲಿ ಯಾವುದೆ ಅರ್ಥವಿರುವುದಿಲ್ಲ.\n"
+"\n"
+"Evolution RSS ನಲ್ಲಿ ಲೇಖನಗಳನ್ನು ಸಾರಾಂಶದ ನೋಟ ಅಥವ HTML ನೋಟದಲ್ಲಿ ನೋಡಬಹುದಾಗಿದೆ. \n"
+"\n"
+"ಈ ಕೆಳಗಿನ ಎಂಜಿನ್‌ಗಳನ್ನು ಬಳಸಿಕೊಂಡು HTML ಅನ್ನು ನೋಡಬಹುದಾಗಿದೆ: gtkHTML, Apple ನ Webkit "
+"ಅಥವ Firefox/Gecko.\n"
+"\n"
+"<b>ಆವೃತ್ತಿ: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "RSS ಫೀಡ್‌ಗಳನ್ನು ಓದಲಾಗುತ್ತಿದೆ..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "ಫೀಡ್‌ಗಳನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "{0}"
+msgstr "{0}"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "{1}"
+msgstr "{1}"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Setup RSS"
+msgstr "RSS ಅನ್ನು ಸಿದ್ಧಗೊಳಿಸು"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "Setup RSS feeds"
+msgstr "RSS ಫೀಡ್‌ಗಳನ್ನು ಸಿದ್ಧಗೊಳಿಸು"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Update RSS feeds"
+msgstr "RSS ಫೀಡ್‌ಗಳನ್ನು ಅಪ್‌ಡೇಟ್‌ ಮಾಡು"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "_Read RSS"
+msgstr "_RSS ಅನ್ನು ಓದು"
+
+#: ../src/rss.c:408 ../src/rss.c:2267
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "ಫೀಡ್‌ಗಳನ್ನು ಪಡೆದುಕೊಳ್ಳಲಾಗುತ್ತಿದೆ (%d ಶಕ್ತಗೊಂಡಿದೆ)"
+
+#: ../src/rss.c:442 ../src/rss-config-factory.c:1155
+#: ../src/rss-config-factory.c:1396
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% ಆಗಿದೆ"
+
+#: ../src/rss.c:452 ../src/rss.c:2429
+msgid "Feed"
+msgstr "ಫೀಡ್"
+
+#: ../src/rss.c:518
+msgid "Enter User/Pass for Feed"
+msgstr "ಫೀಡ್‌ಗಾಗಿನ ಬಳಕೆದಾರ/ಗುಪ್ತಪದವನ್ನು ನಮೂದಿಸಿ"
+
+#: ../src/rss.c:537 ../src/rss-ui.glade.h:44
+msgid "Username:"
+msgstr "ಬಳಕೆದಾರಹೆಸರು:"
+
+#: ../src/rss.c:544
+msgid "Password:"
+msgstr "ಗುಪ್ತಪದ:"
+
+#: ../src/rss.c:572
+msgid "Remember password"
+msgstr "ಗುಪ್ತಪದವನ್ನು ನೆನಪಿಡು"
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:733
+msgid "Canceling..."
+msgstr "ರದ್ದುಗೊಳಿಸಲಾಗುತ್ತಿದೆ..."
+
+#: ../src/rss.c:1493
+msgid "Feed view"
+msgstr "ಫೀಡ್‌ ನೋಟ"
+
+#: ../src/rss.c:1499
+msgid "Show Summary"
+msgstr "ಸಾರಾಂಶವನ್ನು ತೋರಿಸು"
+
+#: ../src/rss.c:1499
+msgid "Show Full Text"
+msgstr "ಸಂಪೂರ್ಣ ಪಠ್ಯವನ್ನು ತೋರಿಸು"
+
+#: ../src/rss.c:2071
+msgid "Unamed feed"
+msgstr "ಹೆಸರಿಸದೆ ಇರುವ ಫೀಡ್"
+
+#: ../src/rss.c:2071 ../src/rss.c:2176
+msgid "Error while fetching feed."
+msgstr "ಫೀಡ್‌ ಅನ್ನು ಪಡೆಯುವಾಗ ದೋಷ."
+
+#: ../src/rss.c:2176
+msgid "Invalid Feed"
+msgstr "ಅಮಾನ್ಯವಾದ ಫೀಡ್"
+
+#: ../src/rss.c:2188
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "%d (%d ರಲ್ಲಿ) ಸಂದೇಶಗಳನ್ನು ಪಡೆದುಕೊಳ್ಳಲಾಗುತ್ತಿದೆ"
+
+#: ../src/rss.c:2288
+msgid "Complete."
+msgstr "ಪೂರ್ಣಗೊಂಡಿದೆ."
+
+#: ../src/rss.c:2317 ../src/rss.c:2506 ../src/rss.c:2592 ../src/rss.c:2925
+msgid "Error fetching feed."
+msgstr "ಫೀಡ್‌ ಅನ್ನು ಪಡೆಯುವಾಗ ದೋಷ."
+
+#: ../src/rss.c:2329
+msgid "Canceled."
+msgstr "ರದ್ದು ಮಾಡಲಾಗಿದೆ."
+
+#: ../src/rss.c:2375
+msgid "Error while parsing feed."
+msgstr "ಫೀಡ್‌ ಅನ್ನು ಪಾರ್ಸ್ ಮಾಡುವಾಗ ದೋಷ."
+
+#: ../src/rss.c:2438
+msgid "Complete"
+msgstr "ಸಂಪೂರ್ಣ"
+
+#: ../src/rss.c:3222 ../src/rss.c:3342
+msgid "No RSS feeds configured!"
+msgstr "ಯಾವುದೆ RSS ಫೀಡ್‌ಗಳನ್ನು ಸಂರಚಿಸಲಾಗಿಲ್ಲ!"
+
+#: ../src/rss.c:3228 ../src/rss.c:3431
+msgid "Reading RSS feeds..."
+msgstr "RSS ಫೀಡ್‌ಗಳನ್ನು ಓದಲಾಗುತ್ತಿದೆ..."
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:3242 ../src/rss.c:3435 ../src/rss-config-factory.c:1064
+#: ../src/rss-config-factory.c:1418
+msgid "Please wait"
+msgstr "ದಯವಿಟ್ಟು ಕಾಯಿರಿ"
+
+#: ../src/rss.c:3251 ../src/rss.c:3444 ../src/rss-config-factory.c:534
+#: ../src/rss-config-factory.c:887
+#, no-c-format
+msgid "0% done"
+msgstr "0% ಆಗಿದೆ"
+
+#: ../src/rss.c:3390
+msgid "Waiting..."
+msgstr "ಕಾಯಲಾಗುತ್ತಿದೆ..."
+
+#: ../src/rss-config-factory.c:89
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:90
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:91
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:305
+msgid "Edit Feed"
+msgstr "ಫೀಡನ್ನು ಸಂಪಾದಿಸು"
+
+#: ../src/rss-config-factory.c:307
+msgid "Add Feed"
+msgstr "ಫೀಡನ್ನು ಸೇರಿಸು"
+
+#: ../src/rss-config-factory.c:349
+msgid "Folder"
+msgstr "ಕಡತಕೋಶ"
+
+#: ../src/rss-config-factory.c:792
+msgid "Disable"
+msgstr "ಅಶಕ್ತಗೊಳಿಸು"
+
+#: ../src/rss-config-factory.c:792
+msgid "Enable"
+msgstr "ಶಕ್ತಗೊಂಡ"
+
+#: ../src/rss-config-factory.c:823 ../src/rss-ui.glade.h:34
+msgid "Remove folder contents"
+msgstr "ಕಡತಕೋಶದ ವಿಷಯಗಳನ್ನು ತೆಗೆದು ಹಾಕಿ"
+
+#: ../src/rss-config-factory.c:1060
+msgid "Importing feeds..."
+msgstr "ಫೀಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗುತ್ತಿದೆ..."
+
+#: ../src/rss-config-factory.c:1221 ../src/rss-config-factory.c:1504
+msgid "All Files"
+msgstr "ಎಲ್ಲಾ ಕಡತಗಳು"
+
+#: ../src/rss-config-factory.c:1227 ../src/rss-config-factory.c:1510
+msgid "OPML Files"
+msgstr "OPML ಕಡತಗಳು"
+
+#: ../src/rss-config-factory.c:1233 ../src/rss-config-factory.c:1516
+msgid "XML Files"
+msgstr "XML ಕಡತಗಳು"
+
+#: ../src/rss-config-factory.c:1253
+msgid "Show article's summary"
+msgstr "ಲೇಖನದ ಸಾರಾಂಶವನ್ನು ತೋರಿಸು"
+
+#: ../src/rss-config-factory.c:1259
+msgid "Feed Enabled"
+msgstr "ಶಕ್ತಗೊಂಡ ಫೀಡ್"
+
+#: ../src/rss-config-factory.c:1265
+msgid "Validate feed"
+msgstr "ಫೀಡ್‌ ಅನ್ನು ಮಾನ್ಯಗೊಳಿಸಿ"
+
+#: ../src/rss-config-factory.c:1300 ../src/rss-ui.glade.h:36
+msgid "Select import file"
+msgstr "ಆಮದು ಮಾಡಲು ಕಡತವನ್ನು ಆರಿಸಿ"
+
+#: ../src/rss-config-factory.c:1336 ../src/rss-ui.glade.h:35
+msgid "Select file to export"
+msgstr "ರಫ್ತು ಮಾಡಲು ಕಡತವನ್ನು ಆರಿಸಿ"
+
+#: ../src/rss-config-factory.c:1414
+msgid "Exporting feeds..."
+msgstr "ಫೀಡ್‌ಗಳನ್ನು ರಫ್ತು ಮಾಡಲಾಗುತ್ತಿದೆ..."
+
+#: ../src/rss-config-factory.c:1443
+msgid ""
+"A file by that name already exists.\n"
+"Overwrite it?"
+msgstr ""
+"ಆ ಹೆಸರಿನ ಒಂದು ಕಡತವು ಈಗಾಗಲೆ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ.\n"
+"ಅದರ ಮೇಲೆಯೆ ತಿದ್ದಿ ಬರೆಯಲು ಬಯಸುತ್ತೀರೆ?"
+
+#: ../src/rss-config-factory.c:1445
+msgid "Overwrite file?"
+msgstr "ಕಡತವನ್ನು ತಿದ್ದಿ ಬರೆಯಬೇಕೆ?"
+
+#: ../src/rss-config-factory.c:1467
+msgid "Error exporting feeds!"
+msgstr "ಫೀಡ್‌ಗಳನ್ನು ರಫ್ತು ಮಾಡುವಲ್ಲಿ ದೋಷ!"
+
+#: ../src/rss-config-factory.c:1544
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"ಯಾವುದೆ RSS ಫೀಡ್‌ಗಳನ್ನು ಸಂರಚಿಸಲಾಗಿಲ್ಲ!\n"
+"ರಫ್ತು ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ."
+
+#: ../src/rss-config-factory.c:1641 ../src/rss-config-factory.c:1948
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"ಸೂಚನೆ: Mozilla (Firefox) ಅಥವ Apple Webkit ಅನ್ನು ರೆಂಡರುಗಳಾಗಿ ಬಳಸಲು \n"
+"firefox ಅಥವ webkit devel ಪ್ಯಾಕೇಜ್ ನಿಮ್ಮಲ್ಲಿ ಅನುಸ್ಥಾಪಿತಗೊಂಡಿರಬೇಕು \n"
+"ಹಾಗು ಆ ಪ್ಯಾಕೇಜುಗಳನ್ನು ನೋಡುವಂತೆ evolution-rss ಅನ್ನು ಮರಳಿ ಕಂಪೈಲ್ ಮಾಡಿರಬೇಕು."
+
+#. gtk_widget_show(dialog1);
+#. model = exchange_account_folder_size_get_model (account);
+#. if (model)
+#. folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
+#. else
+#: ../src/rss-config-factory.c:1735
+msgid "0 KB"
+msgstr "0 KB"
+
+#: ../src/rss-config-factory.c:1740
+msgid "Size:"
+msgstr "ಗಾತ್ರ:"
+
+#: ../src/rss-config-factory.c:1796 ../src/rss-ui.glade.h:21
+msgid "Enabled"
+msgstr "ಸಕ್ರಿಯಗೊಂಡ"
+
+#: ../src/rss-config-factory.c:1812
+msgid "Feed Name"
+msgstr "ಫೀಡ್ ಹೆಸರು"
+
+#: ../src/rss-config-factory.c:1822
+msgid "Type"
+msgstr "ಬಗೆ"
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr "<b>ಲೇಖನದ ಮಾಹಿತಿ</b>"
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr "<b>ಎಂಜಿನ್: </b>"
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:3
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML ರೆಂಡರಿಂಗ್</b>"
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr "<b>ಜಾಲಬಂಧದ ಕಾಲಾವಧಿ ತೀರಿಕೆ:</b>"
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Blink icon in notification area"
+msgstr "ಸೂಚನಾ ಸ್ಥಳದಲ್ಲಿ ಚಿಹ್ನೆಯು ಮಿನುಗುವಂತೆ ಮಾಡು"
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Block pop-up windows"
+msgstr "ಪುಟಿಕೆ ವಿಂಡೋಗಳನ್ನು ನಿರ್ಬಂಧಿಸು"
+
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Enable Java"
+msgstr "Java ಅನ್ನು ಶಕ್ತಗೊಳಿಸು"
+
+#: ../src/rss-html-rendering.glade.h:8 ../src/rss-ui.glade.h:19
+msgid "Enable JavaScript"
+msgstr "JavaScript ಅನ್ನು ಶಕ್ತಗೊಳಿಸು"
+
+#: ../src/rss-html-rendering.glade.h:9
+msgid "Show feed icon"
+msgstr "ಫೀಡ್ ಚಿಹ್ನೆಯನ್ನು ತೋರಿಸು"
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Show icon in notification area"
+msgstr "ಸೂಚನಾ ಸ್ಥಳದಲ್ಲಿ ಚಿಹ್ನೆಯನ್ನು ತೋರಿಸು"
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "seconds"
+msgstr "ಸೆಕೆಂಡುಗಳು"
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr "<b>ಸುಧಾರಿತ ಆಯ್ಕೆಗಳು</b>"
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed URL:</b>"
+msgstr "<b>ಫೀಡ್ URL:</b>"
+
+#: ../src/rss-ui.glade.h:4
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr "<span weight=\"bold\">ಸಿದ್ಧತೆಗಳು</span>"
+
+#: ../src/rss-ui.glade.h:5
+msgid "Add"
+msgstr "ಸೇರಿಸು"
+
+#: ../src/rss-ui.glade.h:6
+msgid "Always delete unread articles"
+msgstr "ಯಾವಾಗಲೂ ಓದದೆ ಇರುವ ಲೇಖನಗಳನ್ನು ಅಳಿಸು"
+
+#: ../src/rss-ui.glade.h:7
+msgid "By default show article summary instead of webpage"
+msgstr "ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ ಜಾಲಪುಟದ ಬದಲು ಲೇಖನದ ಸಾರಾಂಶವನ್ನು ತೋರಿಸು"
+
+#: ../src/rss-ui.glade.h:8
+msgid "Certificates Table"
+msgstr "ಪ್ರಮಾಣಪತ್ರಗಳ ಟೇಬಲ್"
+
+#: ../src/rss-ui.glade.h:9
+msgid "Check for new articles at startup"
+msgstr "ಆರಂಭಿಸಿದಾಗ ಹೊಸ ಲೇಖನಗಳಿಗಾಗಿ ಪರಿಶೀಲಿಸು"
+
+#: ../src/rss-ui.glade.h:10
+msgid "Check for new articles every"
+msgstr "ಪ್ರತಿ ಈ ಸಮಯದಲ್ಲಿ ಹೊಸ ಲೇಖನಕ್ಕಾಗಿ ನೋಡು"
+
+#: ../src/rss-ui.glade.h:11
+msgid "Delete all but the last"
+msgstr "ಕೊನೆಯದೊಂದನ್ನು ಬಿಟ್ಟು ಮಿಕ್ಕುಳಿದವೆಲ್ಲವನ್ನೂ ಅಳಿಸು"
+
+#: ../src/rss-ui.glade.h:12
+msgid "Delete articles older than"
+msgstr "ಇದಕ್ಕಿಂತ ಹಳೆಯ ಲೇಖನಗಳನ್ನು ಅಳಿಸು"
+
+#: ../src/rss-ui.glade.h:13
+msgid "Delete feed?"
+msgstr "ಫೀಡನ್ನು ಅಳಿಸಬೇಕೆ?"
+
+#: ../src/rss-ui.glade.h:14
+msgid "Details"
+msgstr "ವಿವರಗಳು"
+
+#: ../src/rss-ui.glade.h:15
+msgid "Display only feed summary"
+msgstr "ಕೇವಲ ಫೀಡ್ ಸಾರಾಂಶವನ್ನು ಮಾತ್ರ ತೋರಿಸು"
+
+#: ../src/rss-ui.glade.h:16
+msgid "Do no update feed"
+msgstr "ಫೀಡನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಬೇಡ"
+
+#: ../src/rss-ui.glade.h:17
+msgid "Do not delete feeds"
+msgstr "ಫೀಡ್‌ಗಳನ್ನು ಅಳಿಸಬೇಡ"
+
+#: ../src/rss-ui.glade.h:18
+msgid "Edit"
+msgstr "ಸಂಪಾದಿಸು"
+
+#: ../src/rss-ui.glade.h:20
+msgid "Enable Plugins"
+msgstr "ಪ್ಲಗ್‌ಇನ್‌ಗಳನ್ನು ಶಕ್ತಗೊಳಿಸು"
+
+#: ../src/rss-ui.glade.h:22
+msgid "Engine: "
+msgstr "ಎಂಜಿನ್: "
+
+#: ../src/rss-ui.glade.h:23
+msgid "Export"
+msgstr "ರಫ್ತು"
+
+#: ../src/rss-ui.glade.h:24
+msgid "Feeds"
+msgstr "ಫೀಡ್‌ಗಳು"
+
+#: ../src/rss-ui.glade.h:25
+msgid "General"
+msgstr "ಸಾಮಾನ್ಯ"
+
+#: ../src/rss-ui.glade.h:26
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:27
+msgid "HTTP Proxy Details"
+msgstr "HTTP ಪ್ರಾಕ್ಸಿ ವಿವರಗಳು"
+
+#: ../src/rss-ui.glade.h:28
+msgid "HTTP proxy:"
+msgstr "HTTP ಪ್ರಾಕ್ಸಿ:"
+
+#: ../src/rss-ui.glade.h:29
+msgid "Import"
+msgstr "ಆಮದು"
+
+#: ../src/rss-ui.glade.h:30
+msgid "Network"
+msgstr "ಜಾಲಬಂಧ"
+
+#: ../src/rss-ui.glade.h:31
+msgid "No proxy for:"
+msgstr "ಇದಕ್ಕಾಗಿ ಯಾವುದೆ ಪ್ರಾಕ್ಸಿ ಇಲ್ಲ:"
+
+#: ../src/rss-ui.glade.h:32
+msgid "Password: "
+msgstr "ಗುಪ್ತಪದ: "
+
+#: ../src/rss-ui.glade.h:33
+msgid "Port:"
+msgstr "ಸಂಪರ್ಕ ಸ್ಥಾನ:"
+
+#: ../src/rss-ui.glade.h:37
+msgid "Setup"
+msgstr "ಸಿದ್ಧತೆ"
+
+#: ../src/rss-ui.glade.h:38
+msgid "Storage"
+msgstr "ಶೇಖರಣೆ"
+
+#: ../src/rss-ui.glade.h:39
+msgid "Update"
+msgstr "ಅಪ್ಡೇಟ್"
+
+#: ../src/rss-ui.glade.h:40
+msgid "Update in"
+msgstr "ಇಲ್ಲಿನ ಅಪ್‌ಡೇಟ್‌"
+
+#: ../src/rss-ui.glade.h:41
+msgid "Use Proxy"
+msgstr "ಪ್ರಾಕ್ಸಿಯನ್ನು ಬಳಸಿ"
+
+#: ../src/rss-ui.glade.h:42
+msgid "Use authentication"
+msgstr "ದೃಢೀಕರಣವನ್ನು ಬಳಸಿ"
+
+#: ../src/rss-ui.glade.h:43
+msgid "Use global update interval"
+msgstr "ಜಾಗತಿಕ ಅಪ್‌ಡೇಟ್ ಕಾಲಾವಧಿಯನ್ನು ಬಳಸಿ"
+
+#: ../src/rss-ui.glade.h:45
+msgid "Validate"
+msgstr "ಮಾನ್ಯಗೊಳಿಸಿ"
+
+#. for translators: this label is part of the "Delete articles older than X days" message.
+#: ../src/rss-ui.glade.h:47
+msgid "days"
+msgstr "ದಿನಗಳು"
+
+#: ../src/rss-ui.glade.h:48
+msgid "label"
+msgstr "ಲೇಬಲ್"
+
+#. To translators: this label is part of the following message: "Delete all but the last X messages.
+#: ../src/rss-ui.glade.h:50
+msgid "messages"
+msgstr "ಸಂದೇಶಗಳು"
+
+#. to translators: label part of the "Update in X minutes" message.
+#: ../src/rss-ui.glade.h:52
+msgid "minutes"
+msgstr "ನಿಮಿಷಗಳು"
+
+#: ../src/parser.c:949
+msgid "No Information"
+msgstr "ಯಾವುದೆ ಮಾಹಿತಿ ಇಲ್ಲ"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr "Evolution ಫೀಡ್‌ಗಳ ನಿಯಂತ್ರಣ"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr "Evolution RSS ಓದುಗ"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr "ಇಲ್ಲಿ ನಿಮ್ಮ RDF,RSS,ATOM ಫೀಡ್‌ಗಳನ್ನು ವ್ಯವಸ್ಥಾಪಿಸಿ"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "ಸುದ್ದಿಗಳು ಹಾಗು ವಾರ್ತೆಗಳು"
+
