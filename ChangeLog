@@ -1,3 +1,8 @@
+2009-03-30  Lucian Langa  <lucilanga@gnome.org>
+	
+	* src/rss-config_factory.c: (create_dialog_add) - add support for
+	feed checking setup by hours and days
+
 2009-03-29  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/misc.c: (sanitize_url) - extra sanitize input string (imported

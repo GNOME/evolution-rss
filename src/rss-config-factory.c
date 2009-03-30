@@ -257,6 +257,13 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 }
 
 static void
+ttl_multiply_cb (GtkWidget *widget, add_feed *data)
+{
+        guint active = gtk_combo_box_get_active((GtkComboBox*)widget);
+	data->ttl_multiply = active;
+}
+
+static void
 ttl_cb (GtkWidget *widget, add_feed *data)
 {
         guint adj = gtk_spin_button_get_value((GtkSpinButton*)widget);
@@ -340,6 +347,9 @@ create_dialog_add(gchar *text, gchar *feed_text)
         	feed->ttl = GPOINTER_TO_INT(
                 	g_hash_table_lookup(rf->hrttl,
                                 lookup_key(feed_text)));
+        	feed->ttl_multiply = GPOINTER_TO_INT(
+                	g_hash_table_lookup(rf->hrttl_multiply,
+                                lookup_key(feed_text)));
   	}
   	gboolean validate = 1;
 
@@ -353,6 +363,9 @@ create_dialog_add(gchar *text, gchar *feed_text)
   	}
   	else
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
+
+	GtkWidget *combobox1 = (GtkWidget *)glade_xml_get_widget (gui, "combobox1");
+	gtk_combo_box_set_active(GTK_COMBO_BOX(combobox1), 0);
 
 	GtkWidget *checkbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "html_check");
   	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1-fhtml);
@@ -404,6 +417,10 @@ create_dialog_add(gchar *text, gchar *feed_text)
 
        	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ttl_value), feed->ttl);
 	g_signal_connect(ttl_value, "changed", G_CALLBACK(ttl_cb), feed);
+
+       	gtk_combo_box_set_active(GTK_COMBO_BOX(combobox1), feed->ttl_multiply);
+	g_signal_connect(combobox1, "changed", G_CALLBACK(ttl_multiply_cb), feed);
+
 	switch (feed->update)
 	{
 	case 2:
@@ -642,6 +659,7 @@ save_feed_hash(gpointer name)
 	saved_feed->hrdel_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, lookup_key(name)));
 	saved_feed->hrupdate = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(name)));
 	saved_feed->hrttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(name)));
+	saved_feed->hrttl_multiply = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl_multiply, lookup_key(name)));
 	return saved_feed;
 }
 
@@ -664,6 +682,7 @@ restore_feed_hash(gpointer name, hrfeed *s)
 	g_hash_table_insert(rf->hrdel_unread, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_unread));
 	g_hash_table_insert(rf->hrupdate, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrupdate));
 	g_hash_table_insert(rf->hrttl, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrttl));
+	g_hash_table_insert(rf->hrttl_multiply, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrttl_multiply));
 	g_free(s);
 }
 
@@ -683,6 +702,7 @@ remove_feed_hash(gpointer name)
 	g_hash_table_remove(rf->hrdel_unread, lookup_key(name));
 	g_hash_table_remove(rf->hrupdate, lookup_key(name));
 	g_hash_table_remove(rf->hrttl, lookup_key(name));
+	g_hash_table_remove(rf->hrttl_multiply, lookup_key(name));
         g_hash_table_remove(rf->hrname_r, lookup_key(name));
         g_hash_table_remove(rf->hrname, name);
 	rf->pending = FALSE;
@@ -940,6 +960,9 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                         	g_hash_table_replace(rf->hrttl,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->ttl));
+                                        	g_hash_table_replace(rf->hrttl_multiply,
+                                                        g_strdup(key),
+                                                        GINT_TO_POINTER(feed->ttl_multiply));
 						custom_feed_timeout();
 					}
 					if (feed->update == 3)

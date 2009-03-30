@@ -77,6 +77,7 @@ typedef struct _hrfeed {
 	guint hrdel_unread;
 	guint hrupdate;
 	guint hrttl;
+	guint hrttl_multiply;
 } hrfeed;
 
 typedef struct _rssfeed {
@@ -95,7 +96,8 @@ typedef struct _rssfeed {
         GHashTable      *hrdel_days;   		//option to delete messages older then days
         GHashTable      *hrdel_messages; 	//option to keep last messages
         GHashTable      *hrdel_unread; 		//option to delete unread messages too
-        GHashTable      *hrttl;   		//feeds name hash
+        GHashTable      *hrttl;   		
+        GHashTable      *hrttl_multiply;	
         GHashTable      *hrupdate;   		//feeds update method
         GtkWidget       *feed_dialog;
         GtkWidget       *progress_dialog;
@@ -181,6 +183,7 @@ typedef struct ADD_FEED {
 	guint		del_messages;	// delete all messages but the last del_messages
 	gboolean	del_unread;	// delete unread messages too
 	guint		ttl;	// recommended update time
+	guint		ttl_multiply;	// how much we multiyply ttl value (minutes)
 	guint		update;	// feed update method global; ttl; disabled
 } add_feed;
 

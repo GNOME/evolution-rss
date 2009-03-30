@@ -102,7 +102,7 @@ my_xml_perror_handler (void *ctx, const char *msg, ...)
 {
 	rsserror = TRUE;
 //	rssstrerror
-        g_print("!!ERROR:%s!!", msg);
+        g_print("xml_parse_sux(): ERROR:%s\n", msg);
 }
 
 static void

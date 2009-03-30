@@ -861,6 +861,9 @@ feed_to_xml(gchar *key)
 	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrttl, lookup_key(key)));
         xmlSetProp (src, "value", ctmp);
 	g_free(ctmp);
+	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrttl_multiply, lookup_key(key)));
+        xmlSetProp (src, "factor", ctmp);
+	g_free(ctmp);
 	
 	xmlDocDumpMemory (doc, &xmlbuf, &n);
         xmlFreeDoc (doc);
@@ -1119,6 +1122,7 @@ feed_new_from_xml(char *xml)
 	guint del_messages=0;
 	guint del_unread=0;
 	guint ttl=0;
+	guint ttl_multiply=0;
 	guint update=0;
 	gchar *ctmp = NULL;
 
@@ -1159,6 +1163,9 @@ feed_new_from_xml(char *xml)
 			update = atoi(ctmp);
 			xml_set_prop (node, "value", &ctmp);
 			ttl = atoi(ctmp);
+			xml_set_prop (node, "factor", &ctmp);
+			if (ctmp)
+				ttl_multiply = atoi(ctmp);
 			if (ctmp) g_free(ctmp);
 		}
 			
@@ -1192,6 +1199,9 @@ feed_new_from_xml(char *xml)
 	g_hash_table_insert(rf->hrttl, 
 				g_strdup(uid), 
 				GINT_TO_POINTER(ttl));
+	g_hash_table_insert(rf->hrttl_multiply, 
+				g_strdup(uid), 
+				GINT_TO_POINTER(ttl_multiply));
 }
 
 char *
@@ -1309,6 +1319,7 @@ read_feeds(rssfeed *rf)
 	rf->hrdel_unread = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrupdate = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrttl = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrttl_multiply = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
 		migrate_old_config(feed_file);
@@ -2078,6 +2089,7 @@ setup_feed(add_feed *feed)
 	CamelException ex;
 	guint ret = 0;
 	guint ttl;
+	guint ttl_multiply = 0;
         RDF *r = NULL;
         GString *post;
         GError *err = NULL;
@@ -2152,6 +2164,11 @@ setup_feed(add_feed *feed)
 						 NULL);
 	if (rf->hrttl == NULL)	
 	    	rf->hrttl = g_hash_table_new_full(g_str_hash,
+						 g_str_equal,
+						 g_free,
+						 NULL);
+	if (rf->hrttl_multiply == NULL)	
+	    	rf->hrttl_multiply = g_hash_table_new_full(g_str_hash,
 						 g_str_equal,
 						 g_free,
 						 NULL);
@@ -2237,6 +2254,9 @@ add:
 		g_hash_table_insert(rf->hrttl,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(ttl));
+		g_hash_table_insert(rf->hrttl_multiply,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(feed->ttl_multiply));
 		custom_feed_timeout();
 		g_hash_table_insert(rf->hrupdate,
 			g_strdup(crc_feed),
@@ -3146,6 +3166,7 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	{
 		d(g_print("custom key:%s\n", key));
 		guint ttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key)));
+		guint ttl_multiply = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl_multiply, lookup_key(key)));
 		if (ttl) {
 			CDATA *cdata = g_new0(CDATA, 1);
 			cdata->key = key;
@@ -3155,7 +3176,18 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 							lookup_key(key)));
 			if (time_id)
 				g_source_remove(time_id);
-			time_id = g_timeout_add (4*60*1000, //ttl * 60 * 1000,
+			switch (ttl_multiply) {
+				case 1:
+					ttl_multiply = 60;
+					break;
+				case 2:
+					ttl_multiply = 1440;
+					break;
+				default:
+					ttl_multiply = 1;
+					break;
+			}
+			time_id = g_timeout_add (ttl * 60 * 1000 * ttl_multiply,
                            (GtkFunction) custom_update_articles,
                            cdata);
 			g_hash_table_replace(custom_timeout, 

@@ -45,7 +45,6 @@
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
         * implement right-click in browser
-	* category posted under
 	* coments updatable
 	* slow delete operation on large folders
 	* check operation cancel button
@@ -54,13 +53,11 @@
 	* handle slash categories
 	* hook update in the properties  of folder
 	* use combo popup for moving and placement of feed folders
-	* trigger resync after folder rename
+	* trigger resync after folder rename and initial folder creation
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
-	* see whether we need to allow higher ttl update interval
 	* fetch_image() handle 404				  <-
 	* count comments					   |
 	* perhaps make quoted text fancier			   |
 	* if immage cannto be server from cache try to fetch it ---|
 	* disable filters on setup_feed()
-	* allow interval of minutes configurable by days/years
