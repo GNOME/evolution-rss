@@ -177,6 +177,8 @@ rssfeed *rf = NULL;
 gboolean inhibit_read = FALSE;	//prevent mail selection when deleting folder
 gboolean delete_op = FALSE;	//delete in progress
 gchar *commstream = NULL; 	//global comments stream
+guint commcnt = 0; 	//global number of comments
+gchar *commstatus = "";
 guint32 frame_colour;
 guint32 content_colour;
 guint32 text_colour;
@@ -1899,13 +1901,18 @@ render_body:    if (category)
 
 		if (comments) {
 			camel_stream_printf (fstream, 
-                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
-				"<b><font size=+1><a href=%s>Comments</font></b>", 
-                        	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
-				comments);
+                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+				"<b><font size=+1><a href=%s>Comments</a></font></b>", 
+                        	frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+				comments, commstatus);
 			if (commstream) {
-				camel_stream_printf(fstream, "%s", (gchar *)print_comments(comments, commstream));
-				commstream = NULL;
+				gchar *result = print_comments(comments, commstream);
+				if (commcnt) {
+					camel_stream_printf (fstream, 
+                        		"<b>(%d)</b> Refresh<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
+					commcnt, frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
+					commstream = NULL;
+				}
 			}
 			else {
 				fetch_comments(comments, (CamelStream *)t->format);
@@ -4454,7 +4461,7 @@ encode_rfc2047(gchar *str)
 	return rfctmp;
 }
 
-gchar *
+static gchar *
 update_comments(RDF *r)
 {
         guint i;
@@ -4479,6 +4486,7 @@ update_comments(RDF *r)
                                 CF->body);
                 g_string_append_printf(comments, "</div>&nbsp;");
         }
+	commcnt=i;
         gchar *scomments=comments->str;
         g_string_free(comments, FALSE);
         return scomments;

@@ -61,3 +61,4 @@
 	* perhaps make quoted text fancier			   |
 	* if immage cannto be server from cache try to fetch it ---|
 	* disable filters on setup_feed()
+	* check s&r progress bar on Complete.

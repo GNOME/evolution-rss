@@ -1,3 +1,7 @@
+2009-03-31  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (org_gnome_cooly_format_rss) - count comments
+
 2009-03-30  Lucian Langa  <lucilanga@gnome.org>
 	
 	* src/rss-config_factory.c: (create_dialog_add) - add support for
