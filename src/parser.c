@@ -157,7 +157,6 @@ xml_parse_sux (const char *buf, int len)
                                 | XML_PARSE_NOENT
                                 | XML_PARSE_NOCDATA);
 
-
         xmlParseDocument (ctxt);
 
         doc = ctxt->myDoc;
@@ -538,15 +537,17 @@ layer_find_tag (xmlNodePtr node,
 				if (node->children->type == 1			//XML_NODE_ELEMENT
 	/*			|| node->children->type == 3		*/	//XML_NODE_TEXT
 					|| node->children->next != NULL) {
-#ifdef RDF_DEBUG
-				g_print("NODE DUMP:%s|\n", xmlNodeGetContent(node->children->next));
-				
-#endif
-/*this looses html entities
+				d(g_print("NODE DUMP:%s|\n", xmlNodeGetContent(node->children->next)));
+				gchar *nodetype = xmlGetProp(node, "type");
+				if (!strcasecmp(nodetype, "xhtml")) {		// test this with "html" or smth else
+				//this looses html entities
  				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
-				xmlBufferFree(buf);*/
-				content = xmlNodeGetContent(node->children);
+				xmlBufferFree(buf);
+				} else
+					content = xmlNodeGetContent(node->children);
+				if (nodetype)
+					xmlFree(nodetype);
 				return content;
                         	} else {
 					xmlBufferFree(buf);

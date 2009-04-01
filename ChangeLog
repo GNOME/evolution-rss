@@ -1,3 +1,7 @@
+2009-04-01  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/parser.c: (layer_find_tag) - handle xhtml content
+
 2009-03-31  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (org_gnome_cooly_format_rss) - count comments
