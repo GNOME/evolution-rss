@@ -171,6 +171,9 @@ struct _org_gnome_rss_controls_pobject {
 GtkWidget *evo_window;
 static GdkPixbuf *folder_icon;
 GHashTable *icons = NULL;
+gchar *pixfile;
+char *pixfilebuf;
+gsize pixfilelen;
 extern int xmlSubstituteEntitiesDefaultValue;
 
 rssfeed *rf = NULL;
@@ -1571,6 +1574,17 @@ org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobje
 #endif
 
 static gboolean
+org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
+{
+        struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
+	GtkWidget *button = gtk_button_new_with_label(_("Refresh"));
+	gtk_widget_show(button);
+	if (GTK_IS_WIDGET(eb))
+        	gtk_container_add ((GtkContainer *) eb, button);
+        return TRUE;
+}
+
+static gboolean
 org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
@@ -1908,9 +1922,15 @@ render_body:    if (category)
 			if (commstream) {
 				gchar *result = print_comments(comments, commstream);
 				if (commcnt) {
+					char *rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
+						org_gnome_rss_controls_counter_id);
+					org_gnome_rss_controls_counter_id++;
+					pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), rfrclsid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
+					//pobj->stream = fstream;
+//					pobj->object.free = free_rss_controls;
 					camel_stream_printf (fstream, 
-                        		"<b>(%d)</b> Refresh<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
-					commcnt, frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
+                        		"<b>(%d)</b> <object height=20 classid=%s></object><div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
+					commcnt, rfrclsid, frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
 					commstream = NULL;
 				}
 			}
@@ -1957,6 +1977,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
 	GdkPixbuf *icon, *pixbuf;
+
 	gchar *main_folder = get_main_folder();
 	if (t->folder_name == NULL 
 	  || g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
@@ -1995,7 +2016,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 		goto out;
 	}
 
-normal:	if (!initialised)
+normal:	if (!initialised) //move this to startup
 	{
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
 	                                    "rss-16.png",
@@ -2488,9 +2509,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	GString *response = g_string_new_len(msg->body, msg->length);
 
-//#ifdef RSS_DEBUG
 	g_print("feed %s\n", user_data);
-//#endif
 
 	while (gtk_events_pending ())
             gtk_main_iteration ();
@@ -3404,6 +3423,18 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 	}
 	custom_feed_timeout();
 
+	/* load transparency */
+	gchar *pixfile = g_build_filename (EVOLUTION_ICONDIR,
+                                            "pix.png",
+                                                NULL);
+	g_file_load_contents (g_file_parse_name(pixfile),
+                                                         NULL,
+                                                         &pixfilebuf,
+                                                         &pixfilelen,
+                                                         NULL,
+                                                         NULL);
+	g_free(pixfile);
+
         /* hook in rename event to catch feeds folder rename */
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	camel_object_hook_event(store, "folder_renamed",
@@ -4165,6 +4196,9 @@ finish_image (SoupMessage *msg, CamelStream *user_data)
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
+	// we might need to handle more error codes here
+	if (404 != msg->status_code &&
+	      7 != msg->status_code) {
 #if LIBSOUP_VERSION < 2003000
 		if (msg->response.body) {
 			camel_stream_write(user_data, msg->response.body, msg->response.length);
@@ -4175,6 +4209,11 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 			camel_stream_close(user_data);
 			camel_object_unref(user_data);
 		}
+	} else { 
+		camel_stream_write(user_data, pixfilebuf, pixfilelen);
+		camel_stream_close(user_data);
+		camel_object_unref(user_data);
+	}
 }
 
 static void

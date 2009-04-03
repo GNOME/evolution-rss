@@ -2,7 +2,8 @@
 
 pixmapdir = $(ICON_DIR)
 
-pixmap_DATA = rss.png 		\
+pixmap_DATA =   pix.png		\
+		rss.png 	\
 		rss-16.png 	\
 		rss-22.png 	\
 		rss-24.png	\

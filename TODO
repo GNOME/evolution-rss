@@ -45,7 +45,6 @@
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
         * implement right-click in browser
-	* coments updatable
 	* slow delete operation on large folders
 	* check operation cancel button
 	* add icon to feed setup panel
@@ -56,9 +55,9 @@
 	* trigger resync after folder rename and initial folder creation
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
-	* fetch_image() handle 404				  <-
-	* count comments					   |
-	* perhaps make quoted text fancier			   |
-	* if immage cannto be server from cache try to fetch it ---|
+	* count comments					   
+	* coments updatable					  
+	* perhaps make quoted text fancier			  
+	* if immage cannto be served from cache try to fetch it 
 	* disable filters on setup_feed()
 	* check s&r progress bar on Complete.

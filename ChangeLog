@@ -1,3 +1,7 @@
+2009-04-03  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c: (finish_image) - treat 404 and other error codes
+
 2009-04-01  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c: (layer_find_tag) - handle xhtml content
