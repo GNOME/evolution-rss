@@ -166,6 +166,7 @@ struct _org_gnome_rss_controls_pobject {
 	guint is_html;
 	gchar *mem;
 	guint shandler;		//mycall handler_id
+	guint counter;		//general counter for carring various numbers
 };
 
 GtkWidget *evo_window;
@@ -259,6 +260,7 @@ typedef struct _rfMessage rfMessage;
 
 void generic_finish_feed(rfMessage *msg, gpointer user_data);
 gchar *print_comments(gchar *url, gchar *stream);
+static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
 /*======================================================================*/
 
@@ -1488,7 +1490,7 @@ render_set_preferences(void)
 
 #ifdef HAVE_RENDERKIT
 static gboolean
-org_gnome_rss_controls2 (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
+org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
 	int width, height;
@@ -1577,10 +1579,20 @@ static gboolean
 org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
         struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
+	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+
+	gchar *mem = g_strdup_printf("%s(%d):",  _("Comments"), po->counter);
+	GtkWidget *label = gtk_link_button_new_with_label(po->website, mem);
+	gtk_widget_show (label);
+	g_free(mem);
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 	GtkWidget *button = gtk_button_new_with_label(_("Refresh"));
-	gtk_widget_show(button);
+	gtk_widget_show (button);
+	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, TRUE, 0);
+	gtk_widget_show(hbox);
+	g_signal_connect (button, "clicked", G_CALLBACK(refresh_cb), efh);
 	if (GTK_IS_WIDGET(eb))
-        	gtk_container_add ((GtkContainer *) eb, button);
+        	gtk_container_add ((GtkContainer *) eb, hbox);
         return TRUE;
 }
 
@@ -1589,9 +1601,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
-//	gtk_widget_show (vbox);
 	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
-//	gtk_widget_show (hbox2);
 
 	GtkWidget *label3 = gtk_label_new ("");
 	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
@@ -1780,7 +1790,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 										sizeof(*pobj), 
 										classid, 
 										message, 
-										(EMFormatHTMLPObjectFunc)org_gnome_rss_controls2);
+										(EMFormatHTMLPObjectFunc)org_gnome_rss_browser);
 			pobj->website = g_strstrip(g_strdup((gchar *)website));
 			pobj->is_html = GPOINTER_TO_INT(is_html);
 			pobj->format = (EMFormatHTML *)t->format;
@@ -1915,10 +1925,8 @@ render_body:    if (category)
 
 		if (comments) {
 			camel_stream_printf (fstream, 
-                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-				"<b><font size=+1><a href=%s>Comments</a></font></b>", 
-                        	frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-				comments, commstatus);
+                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
+                        	frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
 			if (commstream) {
 				gchar *result = print_comments(comments, commstream);
 				if (commcnt) {
@@ -1926,11 +1934,13 @@ render_body:    if (category)
 						org_gnome_rss_controls_counter_id);
 					org_gnome_rss_controls_counter_id++;
 					pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), rfrclsid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
-					//pobj->stream = fstream;
+					pobj->counter = commcnt;
+					pobj->website = comments;
 //					pobj->object.free = free_rss_controls;
 					camel_stream_printf (fstream, 
-                        		"<b>(%d)</b> <object height=20 classid=%s></object><div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
-					commcnt, rfrclsid, frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
+                        		"<object height=25 classid=%s></object>"
+					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
+					rfrclsid, frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
 					commstream = NULL;
 				}
 			}
@@ -2691,6 +2701,12 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	
 	while (gtk_events_pending ())
             gtk_main_iteration ();
+}
+
+static void
+refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
+{
+	em_format_redraw((EMFormat *)pobject);
 }
 
 gchar *

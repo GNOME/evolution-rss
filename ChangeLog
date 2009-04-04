@@ -1,3 +1,10 @@
+2009-04-04  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c (org_gnome_rss_controls), (org_gnome_cooly_format_rss):
+	add refresh rss comment
+	* src/rss.c (org_gnome_rss_browser), (org_gnome_rss_controls2): rename
+	function
+
 2009-04-03  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c: (finish_image) - treat 404 and other error codes

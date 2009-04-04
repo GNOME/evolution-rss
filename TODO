@@ -55,9 +55,7 @@
 	* trigger resync after folder rename and initial folder creation
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
-	* count comments					   
-	* coments updatable					  
 	* perhaps make quoted text fancier			  
-	* if immage cannto be served from cache try to fetch it 
+	* if immage cannto be served from cache try to fetch it ( add 3 times retry for fetching an image)
 	* disable filters on setup_feed()
 	* check s&r progress bar on Complete.
