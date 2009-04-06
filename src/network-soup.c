@@ -29,6 +29,7 @@
 
 #define SS_TIMEOUT 30
 
+gint proxy_type = 0;
 extern rssfeed *rf;
 
 typedef struct {
@@ -186,21 +187,21 @@ proxify_session(SoupSession *session)
         gconf_client_get_string(rss_gconf, GCONF_KEY_PASS_PROXY, NULL);
 #else
     gboolean use_proxy =
-   	gconf_client_get_bool(rss_gconf, GCONF_E_USE_PROXY_KEY, NULL);
+   	gconf_client_get_bool(rss_gconf, RIGHT_KEY(USE_HTTP_PROXY), NULL);
     guint proxy_type =
-   	gconf_client_get_int(rss_gconf, GCONF_E_PROXY_TYPE_KEY, NULL);
+   	gconf_client_get_int(rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
     if (proxy_type != 2)	//emulate the same behaviour
 	use_proxy = 0;
     gint port_proxy =
-        gconf_client_get_int(rss_gconf, GCONF_E_HTTP_PORT_KEY, NULL);
+        gconf_client_get_int(rss_gconf, RIGHT_KEY(HTTP_PORT), NULL);
     gchar *host_proxy =
-        gconf_client_get_string(rss_gconf, GCONF_E_HTTP_HOST_KEY, NULL);
+        gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_HOST), NULL);
     gboolean auth_proxy =
-        gconf_client_get_bool(rss_gconf, GCONF_E_USE_AUTH_KEY, NULL);
+        gconf_client_get_bool(rss_gconf, RIGHT_KEY(HTTP_USE_AUTH), NULL);
     gchar *user_proxy =
-        gconf_client_get_string(rss_gconf, GCONF_E_AUTH_USER_KEY, NULL);
+        gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_USER), NULL);
     gchar *pass_proxy =
-        gconf_client_get_string(rss_gconf, GCONF_E_AUTH_PWD_KEY, NULL);
+        gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_PWD), NULL);
 #endif
 
     if (use_proxy && host_proxy && port_proxy > 0)
@@ -643,6 +644,9 @@ out:
 void
 rss_soup_init(void)
 {
+	proxy_type = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+        if (proxy_type < PROXY_TYPE_SYSTEM || proxy_type > PROXY_TYPE_AUTO_URL)
+                proxy_type = PROXY_TYPE_SYSTEM;
  //       SoupCookieJar *soup_jar;
 //      soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.newcookies.sqlite", TRUE);
 }

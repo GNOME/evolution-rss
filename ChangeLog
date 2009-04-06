@@ -1,3 +1,8 @@
+2009-04-06  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/network-soup.c:
+	* src/network.h: use system proxy support
+
 2009-04-04  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c (org_gnome_rss_controls), (org_gnome_cooly_format_rss):
