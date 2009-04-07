@@ -10,7 +10,6 @@
 	* jump to folder when adding through d-bus
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
-	* fix authentication for proxy dialog
 	* make auth dialog not intrusive (peek others)
 	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* implement notify back of imported feed perhaps libnotify
@@ -19,7 +18,6 @@
 	* implement web controls for diferent redering <Webkits> or <Gecko>
 	* when adding a feed as opml file offer to import (file detection)
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
-	* test new proxy authentification
 	* cache large feeds
 	* hook feed properties in folder properties
 	* if necessary implement config code for evo 2.12
@@ -59,3 +57,5 @@
 	* if immage cannto be served from cache try to fetch it ( add 3 times retry for fetching an image)
 	* disable filters on setup_feed()
 	* check s&r progress bar on Complete.
+	* support https proxy
+	* support list of ignored hosts

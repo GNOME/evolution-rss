@@ -748,11 +748,16 @@ timeout_soup(void)
 void
 network_timeout(void)
 {
+
 	if (nettime_id)
 		g_source_remove(nettime_id);
+	
+	float timeout = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
+	if (!timeout)
+               timeout = NETWORK_MIN_TIMEOUT;
 
 	nettime_id = g_timeout_add (
-				gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL)*1000,
+				timeout*1000,
 				(GtkFunction) timeout_soup,
                            	0);
 }
@@ -4212,8 +4217,10 @@ finish_image (SoupMessage *msg, CamelStream *user_data)
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
+	g_print("finish_image:%d\n", msg->status_code);
 	// we might need to handle more error codes here
-	if (404 != msg->status_code &&
+	if (503 != msg->status_code && //handle this timedly fasion
+	    404 != msg->status_code &&
 	      7 != msg->status_code) {
 #if LIBSOUP_VERSION < 2003000
 		if (msg->response.body) {

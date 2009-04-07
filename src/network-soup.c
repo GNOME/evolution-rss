@@ -190,35 +190,43 @@ proxify_session(SoupSession *session)
    	gconf_client_get_bool(rss_gconf, RIGHT_KEY(USE_HTTP_PROXY), NULL);
     guint proxy_type =
    	gconf_client_get_int(rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
-    if (proxy_type != 2)	//emulate the same behaviour
-	use_proxy = 0;
     gint port_proxy =
         gconf_client_get_int(rss_gconf, RIGHT_KEY(HTTP_PORT), NULL);
     gchar *host_proxy =
         gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_HOST), NULL);
     gboolean auth_proxy =
         gconf_client_get_bool(rss_gconf, RIGHT_KEY(HTTP_USE_AUTH), NULL);
-    gchar *user_proxy =
-        gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_USER), NULL);
-    gchar *pass_proxy =
-        gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_PWD), NULL);
 #endif
 
     if (use_proxy && host_proxy && port_proxy > 0)
     {
         gchar *proxy_uri = 
             g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
+	g_free(host_proxy);
 
+
+	if (auth_proxy) {
+                char *tmp;
+
+		gchar *user_proxy =
+        		gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_USER), NULL);
+		gchar *pass_proxy =
+			gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_PWD), NULL);
+
+                tmp = proxy_uri;
+
+                proxy_uri = g_strdup_printf ("http://%s:%s@%s", user_proxy, pass_proxy, tmp + strlen ("http://"));
+
+                g_free (user_proxy);
+                g_free (pass_proxy);
+                g_free (tmp);
+       } 
+	g_print("proxy_uri:%s\n", proxy_uri);
 #if LIBSOUP_VERSION < 2003000
         SoupUri *puri = soup_uri_new (proxy_uri);
 #else
         SoupURI *puri = soup_uri_new (proxy_uri);
 #endif
-/*	if (auth_proxy)
-	{
-		puri->user = g_strdup(user_proxy);
-		puri->passwd = g_strdup(pass_proxy);
-	}*/
        	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
 #if LIBSOUP_VERSION < 2003000
         if (puri)
@@ -326,6 +334,12 @@ authenticate (SoupSession *session,
 	gpointer data)
 #endif
 {
+
+	g_print("proxy:\n");
+	g_print("proxy:%d\n", soup_auth_is_for_proxy(auth));
+	if (soup_auth_is_for_proxy(auth))
+		return;
+
 	gchar *user = g_hash_table_lookup(rf->hruser, data);
 	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
 	
@@ -502,6 +516,7 @@ net_get_unblocking(const char *url,
 	if (!rf->key_session)
 		rf->key_session = g_hash_table_new(g_direct_hash, g_direct_equal);
 
+
 	g_signal_connect (soup_sess, "authenticate",
             G_CALLBACK (authenticate), (gpointer)url);
 #if LIBSOUP_VERSION < 2003000
@@ -517,6 +532,21 @@ net_get_unblocking(const char *url,
 				soup_status_get_phrase(2));			//invalid url
 		return -1;
 	}
+/*
+soup_message_add_header_handler (msg,
+                                         "got_headers",
+//                                         soup_auth_is_for_proxy (auth) ?
+                                         "Authentication-Info",
+                                         G_CALLBACK (authenticate),
+                                         url);
+soup_message_add_header_handler (msg,
+                                         "got_headers",
+//                                         soup_auth_is_for_proxy (auth) ?
+                                         "Proxy-Authentication-Info",
+                                         G_CALLBACK (authenticate),
+                                         url);*/
+
+
 	if (track)
 	{
 		//we want to be able to abort this session by calling

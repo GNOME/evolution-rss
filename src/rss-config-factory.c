@@ -1686,6 +1686,10 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 
 	ui->nettimeout = glade_xml_get_widget(ui->xml, "nettimeout");
   	gdouble adj = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
+	if (adj < NETWORK_MIN_TIMEOUT) {
+		adj = 60;
+    		gconf_client_set_float (rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, adj, NULL);
+	}
   	if (adj)
 		gtk_spin_button_set_value((GtkSpinButton *)ui->nettimeout, adj);
 	g_signal_connect(ui->nettimeout, "changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);

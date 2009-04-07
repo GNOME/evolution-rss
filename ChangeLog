@@ -1,3 +1,10 @@
+2009-04-07  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c (e_plugin_lib_get_configure_widget): force
+	min default network_timeout if value if errorneous
+	* src/rss.c (network_timeout): add patch from Timo Hoenig
+	<thoenig@suse.de> fix if network_timeout cannot be read from gconf
+
 2009-04-06  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/network-soup.c:

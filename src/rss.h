@@ -33,6 +33,7 @@
 /* ms between status updates to the gui */
 #define STATUS_TIMEOUT (250)
 
+#define NETWORK_MIN_TIMEOUT (60)
 #define NETWORK_TIMEOUT (180000)
 #define HTTP_CACHE_PATH "http"
 
