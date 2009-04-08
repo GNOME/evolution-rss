@@ -183,6 +183,7 @@ HAVE_RENDERKIT = @HAVE_RENDERKIT@
 HAVE_WEBKIT = @HAVE_WEBKIT@
 HAVE_XULRUNNER = @HAVE_XULRUNNER@
 ICON_DIR = @ICON_DIR@
+IMAGESDIR_IN_SERVER_FILE = @IMAGESDIR_IN_SERVER_FILE@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -235,6 +236,8 @@ MSGFMT = @MSGFMT@
 MSGFMT_OPTS = @MSGFMT_OPTS@
 MSGMERGE = @MSGMERGE@
 NMEDIT = @NMEDIT@
+NO_UNDEFINED = @NO_UNDEFINED@
+NO_UNDEFINED_LIBS = @NO_UNDEFINED_LIBS@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -244,6 +247,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PLUGINDIR_IN_SERVER_FILE = @PLUGINDIR_IN_SERVER_FILE@
 PLUGIN_INSTALL_DIR = @PLUGIN_INSTALL_DIR@
 POFILES = @POFILES@
 POSUB = @POSUB@
@@ -313,6 +317,7 @@ oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
 prefix = @prefix@
 privdatadir = @privdatadir@
+privlibdir = @privlibdir@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
@@ -354,7 +359,7 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 SOURCES = rss.c $(am__append_2)
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS)  -lsoup-2.4
+liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(NO_UNDEFINED_LIBS) $(NO_UNDEFINED)
 #$(GECKO_RPATH)
 evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
@@ -851,6 +856,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-errorDATA \
 	-e "s%+GETTEXT_PACKAGE+%$(GETTEXT_PACKAGE)%" \
 	-e "s%+LOCALEDIR+%$(LOCALEDIR)%" \
 	-e "s%+VERSION+%$(VERSION)%" \
+	-e "s%+SOEXT+%$(SOEXT)%" \
 	-e "s%+URL+%http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin%" \
 	$< > $@
 

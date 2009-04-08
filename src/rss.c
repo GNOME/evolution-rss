@@ -65,7 +65,9 @@ int rss_verbose_debug = 0;
 #include <sys/types.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#ifndef _WIN32
 #include <sys/wait.h>
+#endif
 #include <fcntl.h> 
 #include <stdlib.h>
 
@@ -2126,6 +2128,18 @@ search_rss(char *buffer, int len)
 	return NULL;
 }
 
+#ifdef _WIN32
+char *strcasestr(const char *a, const char *b)
+{
+       char *a2=g_ascii_strdown(a,-1), *b2=g_ascii_strdown(b,-1), *r=strstr(a2,b2);
+       if(r)
+               r=a+(r-a2);
+       g_free(a2);
+       g_free(b2);
+       return r;
+}
+#endif
+
 gboolean
 setup_feed(add_feed *feed)
 {
@@ -3776,8 +3790,8 @@ rss_finalize(void)
 		gconf_client_get_int(rss_gconf, 
 			GCONF_KEY_HTML_RENDER, 
 			NULL));
-/*#ifdef HAVE_GECKO
-	//really find a better way to deal with this//
+#ifdef HAVE_GECKO
+	/*/really find a better way to deal with this//
 	//I do not know how to shutdown gecko (gtk_moz_embed_pop_startup)
 	//crash in nsCOMPtr_base::assign_with_AddRef
 #ifdef HAVE_BUGGY_GECKO
@@ -3785,8 +3799,7 @@ rss_finalize(void)
 		system("killall -SIGTERM evolution");
 #else*/
 	gecko_shutdown();
-/*#endif
-#endif*/
+#endif
 }
 
 guint

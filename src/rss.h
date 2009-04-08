@@ -31,7 +31,9 @@
 #define DEFAULT_TTL 1800
 
 /* ms between status updates to the gui */
+#ifndef _WIN32
 #define STATUS_TIMEOUT (250)
+#endif
 
 #define NETWORK_MIN_TIMEOUT (60)
 #define NETWORK_TIMEOUT (180000)
@@ -284,7 +286,7 @@ gchar *buffer = NULL;
 guint ftotal;
 guint farticle;
 
-u_int32_t gen_crc(const char *msg);
+uint32_t gen_crc(const char *msg);
 gboolean create_user_pass_dialog(gchar *url);
 static void start_check_cb (GtkWidget *widget, gpointer data);
 static void err_destroy (GtkWidget *widget, guint response, gpointer data);
@@ -331,7 +333,21 @@ static void custom_feed_timeout(void);
 void gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data);
 gchar *encode_rfc2047(gchar *str);
 CamelFolder *check_feed_folder(gchar *folder_name);
+gboolean setup_feed(add_feed *feed);
 
+#ifdef _WIN32
+char *strcasestr(const char *a, const char *b);
+
+const char *_e_get_gladedir (void) G_GNUC_CONST;
+const char *_e_get_imagesdir (void) G_GNUC_CONST;
+
+#undef EVOLUTION_GLADEDIR
+#define EVOLUTION_GLADEDIR _e_get_gladedir ()
+
+#undef EVOLUTION_ICONDIR
+#define EVOLUTION_ICONDIR _e_get_imagesdir ()
+
+#endif
 
 typedef struct FEED_FOLDERS {
 	gchar *oname;		//original folder name

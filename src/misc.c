@@ -19,6 +19,8 @@
 #ifndef __MISC_C_
 #define __MISC_C_
 
+#include <libedataserver/md5-utils.h>
+
 int
 getNumericConfValue(gpointer a)
 {
@@ -247,11 +249,11 @@ markup_decode (gchar *str)
         return temp;
 }
 
-u_int32_t
+uint32_t
 gen_crc(const char *msg)
 {
          register unsigned long crc, poly;
-         u_int32_t crc_tab[256];
+         uint32_t crc_tab[256];
          int i,j;
  
          poly = 0xEDB88320L;

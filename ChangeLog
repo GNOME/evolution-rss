@@ -1,3 +1,22 @@
+2009-04-08  Fridrich Strba  <fridrich.strba@bluewin.ch>
+
+	Cross-compilation from Linux to Windows support by Fridrich Strba
+	<fridrich.strba@bluewin.ch>
+
+	* Makefile.in:
+	* configure.ac:
+	* server.mk:
+	* src/GNOME_Evolution_RSS.server.in.in:
+	* src/Makefile.am:
+	* src/misc.c (gen_crc):
+	* src/org-gnome-evolution-rss.eplug.xml:
+	* src/rss-config-factory.c:
+	* src/rss-icon-factory.c:
+	* src/rss.c (strcasestr), (rss_finalize):
+	* src/rss.h:
+	 check for sys/wait.h, define SOEXT as dll, define missing function
+	 strcasestr, define new image paths
+
 2009-04-07  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-config-factory.c (e_plugin_lib_get_configure_widget): force

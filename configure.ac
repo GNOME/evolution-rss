@@ -5,6 +5,8 @@ AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_MACRO_DIR([m4])
 
+AC_CANONICAL_HOST
+
 AM_MAINTAINER_MODE
 
 dnl make sure we keep ACLOCAL_FLAGS around for maintainer builds to work
@@ -229,6 +231,8 @@ dnl ********************
 SOUP_VERSION=`$PKG_CONFIG --modversion libsoup$SOUP` 
 SOUP_VERSION=`echo $SOUP_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(SOUP_VERSION)
+LIBSOUP_LIBS=`$PKG_CONFIG --libs libsoup$SOUP`
+AC_SUBST(LIBSOUP_LIBS)
 
 dnl ***********
 dnl D-BUS stuff
@@ -273,6 +277,36 @@ AC_SUBST(privdatadir)
 
 gladedir="$privdatadir/glade"
 AC_SUBST(gladedir)
+
+privlibdir='${libdir}'/evolution/$EVOLUTION_EXEC_VERSION
+AC_SUBST(privlibdir)
+
+dnl Win32
+AC_MSG_CHECKING([for Win32])
+case "$host" in
+*-mingw*)
+    os_win32=yes
+    NO_UNDEFINED='-no-undefined'
+       NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemiscwidgets'
+    SOEXT='.dll'
+       PLUGINDIR_IN_SERVER_FILE="../../../lib/evolution/$EVOLUTION_EXEC_VERSION/plugins"
+       IMAGESDIR_IN_SERVER_FILE="../../../share/evolution/$EVOLUTION_EXEC_VERSION/images"
+    ;;
+*)  os_win32=no
+    NO_UNDEFINED=''
+       NO_UNDEFINED_LIBS=''
+    SOEXT='.so'
+       PLUGINDIR_IN_SERVER_FILE="$PLUGIN_INSTALL_DIR"
+       IMAGESDIR_IN_SERVER_FILE="$ICON_DIR"
+    ;;
+esac
+AC_MSG_RESULT([$os_win32])
+AM_CONDITIONAL(OS_WIN32, [test $os_win32 = yes])
+AC_SUBST(NO_UNDEFINED)
+AC_SUBST(NO_UNDEFINED_LIBS)
+AC_SUBST(SOEXT)
+AC_SUBST(PLUGINDIR_IN_SERVER_FILE)
+AC_SUBST(IMAGESDIR_IN_SERVER_FILE)
 
 # Generated files from automake
 AC_CONFIG_FILES([

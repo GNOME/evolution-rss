@@ -47,6 +47,7 @@ RSS_MENU = \
 	-e "s%+GETTEXT_PACKAGE+%$(GETTEXT_PACKAGE)%" \
 	-e "s%+LOCALEDIR+%$(LOCALEDIR)%" \
 	-e "s%+VERSION+%$(VERSION)%" \
+	-e "s%+SOEXT+%$(SOEXT)%" \
 	-e "s%+URL+%http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin%" \
 	$< > $@
 
@@ -74,7 +75,7 @@ SOURCES+= gecko-utils.cpp
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS)  -lsoup-2.4
+liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(NO_UNDEFINED_LIBS) $(NO_UNDEFINED)
 #$(GECKO_RPATH)
 
 evolution_import_rss_SOURCES = evolution-import-rss.c

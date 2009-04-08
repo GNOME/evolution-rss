@@ -3,7 +3,7 @@
   <e-plugin
     type="shlib"
     id="org.gnome.cooly.plugin.rss"
-    location="+PLUGIN_INSTALL_DIR+/liborg-gnome-evolution-rss.so"
+    location="+PLUGIN_INSTALL_DIR+/liborg-gnome-evolution-rss+SOEXT+"
     domain="+GETTEXT_PACKAGE+"
     localedir="+LOCALEDIR+"
     version="+VERSION+"

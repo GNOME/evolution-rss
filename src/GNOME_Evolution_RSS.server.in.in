@@ -2,7 +2,7 @@
 
 <oaf_server iid="OAFIID:GNOME_Evolution_RSS_Factory:@VERSION@"
             type="shlib"
-            location="@PLUGIN_INSTALL_DIR@/liborg-gnome-evolution-rss@SOEXT@">
+            location="@PLUGINDIR_IN_SERVER_FILE@/liborg-gnome-evolution-rss@SOEXT@">
 
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GNOME/ObjectFactory:1.0"/>
@@ -27,7 +27,7 @@
                        _value="Manage your RDF,RSS,ATOM feeds here"/>
                                                                                           
         <oaf_attribute name="evolution2:config_item:icon_name" type="string"
-                       value="@ICON_DIR@/rss.png"/>
+			value="@IMAGESDIR_IN_SERVER_FILE@/rss.png"/>
 		       
 	<oaf_attribute name="evolution2:config_item:priority" type="string" value="5"/>
 	

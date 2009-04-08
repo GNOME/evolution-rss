@@ -1,6 +1,6 @@
 %.server.in: %.server.in.in
-	sed -e 's|\@PLUGIN_INSTALL_DIR\@|$(PLUGIN_INSTALL_DIR)|'	\
-	-e 's|\@ICON_DIR\@|$(ICON_DIR)|'	\
+	sed -e 's|\@PLUGINDIR_IN_SERVER_FILE\@|$(PLUGINDIR_IN_SERVER_FILE)|'    \
+	-e 's|\@IMAGESDIR_IN_SERVER_FILE\@|$(IMAGESDIR_IN_SERVER_FILE)|'        \
 	-e 's|\@VERSION\@|$(EVOLUTION_EXEC_VERSION)|' 			\
 	-e 's|\@EXEEXT\@|$(EXEEXT)|'				\
 	-e 's|\@SOEXT\@|$(SOEXT)|' $< > $@
