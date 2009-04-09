@@ -1931,25 +1931,25 @@ render_body:    if (category)
                                 buff);
 
 		if (comments) {
+			if (commstream) {
 			camel_stream_printf (fstream, 
                         	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
                         	frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
-			if (commstream) {
 				gchar *result = print_comments(comments, commstream);
-				if (commcnt) {
-					char *rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
-						org_gnome_rss_controls_counter_id);
-					org_gnome_rss_controls_counter_id++;
-					pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), rfrclsid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
-					pobj->counter = commcnt;
-					pobj->website = comments;
-//					pobj->object.free = free_rss_controls;
-					camel_stream_printf (fstream, 
-                        		"<object height=25 classid=%s></object>"
+				char *rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
+					org_gnome_rss_controls_counter_id);
+				org_gnome_rss_controls_counter_id++;
+				pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), rfrclsid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
+				pobj->counter = commcnt;
+				pobj->website = comments;
+//				pobj->object.free = free_rss_controls;
+				camel_stream_printf(fstream, 
+                       			"<object height=25 classid=%s></object>", rfrclsid);
+				if (result && strlen(result))
+					camel_stream_printf(fstream, 
 					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
-					rfrclsid, frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
-					commstream = NULL;
-				}
+						frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
+				commstream = NULL;
 			}
 			else {
 				fetch_comments(comments, (CamelStream *)t->format);

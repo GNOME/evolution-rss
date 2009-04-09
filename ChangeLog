@@ -1,3 +1,7 @@
+2009-04-09  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c (org_gnome_cooly_format_rss): fix coments updates
+
 2009-04-08  Fridrich Strba  <fridrich.strba@bluewin.ch>
 
 	Cross-compilation from Linux to Windows support by Fridrich Strba
