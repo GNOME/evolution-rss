@@ -55,6 +55,7 @@
 	* cancel operation should cancel fetching feed components
 	* perhaps make quoted text fancier			  
 	* if immage cannto be served from cache try to fetch it ( add 3 times retry for fetching an image)
+	* perform feeds images update weekly
 	* disable filters on setup_feed()
 	* check s&r progress bar on Complete.
 	* support https proxy

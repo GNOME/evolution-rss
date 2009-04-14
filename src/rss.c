@@ -164,6 +164,7 @@ struct _org_gnome_rss_controls_pobject {
 	GtkWidget *html;
 	GtkWidget *container;
 	CamelStream *stream;
+	GtkWidget *mozembedwindow;	//window containing GtkMozEmbed
 	gchar *website;
 	guint is_html;
 	gchar *mem;
@@ -1426,14 +1427,8 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	g_print("page size:%d\n", a->page_size);
 	int width;
         GtkRequisition req;
-  //      EMFormatHTMLDisplay *efhd = (EMFormatHTMLDisplay *) efh;
-  	EMFormatHTML *efh = data;
+  	struct _org_gnome_rss_controls_pobject *po = data;
 
-//        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
-//        gtk_widget_size_request (gtk_widget_get_parent((GtkWidget *)efh->html), &req);
-//	g_print("BOX w:%d,h:%d\n", req.width, req.height);
-  //      width = ((GtkWidget *) efh->html)->allocation.height - 16;
-	
 	guint k = rf->headers_mode ? 240 : 106;
 	if (GTK_IS_WIDGET(widget))
 	{
@@ -1448,17 +1443,45 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	g_print("w2:%d,h2:%d\n", my->allocation.width, my->allocation.height);
 //	int wheight = height - (req.height - height) - 20;
 //        height = req.height - 200;// - 16 - 194;
-		if (data)
-			if(GTK_IS_WIDGET(data) && height > 0)
+//        
+		if (po->mozembedwindow && rf->mozembed)
+			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0)
 			{
-				gtk_widget_set_size_request((GtkWidget *)data, width, height);
+				GString *content=g_string_new(NULL);
+				//GString *content = fetch_blocking(po->website, NULL, NULL, textcb, NULL, NULL);
+	fetch_unblocking(
+				po->website,
+				NULL,
+				NULL,
+				(gpointer)finish_website,
+				po->website,	// we need to dupe key here
+				1,
+				NULL);
+/*				gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
+			    		"file://", "text/html");
+				gchar *str = content->str;
+				gint len = strlen(content->str);
+				while (len > 0) {
+					if (len > 4096) {
+						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+							str, 4096);
+					str+=4096;
+					}
+					else
+						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+			    				str, len);
+				len-=4096;
+				}
+				gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));*/
+				gtk_widget_set_size_request((GtkWidget *)po->mozembedwindow, width, height);
+gtk_widget_show(po->mozembedwindow);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
-#if defined(HAVE_XULRUNNER)
+/*#if defined(HAVE_XULRUNNER)
 // || defined(HAVE_GECKO_1_9)
 if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
 	gtk_moz_embed_reload((GtkMozEmbed *)rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
-#endif
+#endif*/
 			}
 	}
 }
@@ -1503,6 +1526,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	int width, height;
         GtkRequisition req;
 	GtkWidget *moz;
+	GString *content;
 
 //        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
 	guint engine = fallback_engine();
@@ -1553,13 +1577,13 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		d(g_print("Render engine Gecko\n"));
 		if (rf->online)
 		{
-			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
-        		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), po->website);
+			//gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
+ 	      		//gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), po->website);
 		}
 		else	
 		{
 			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
-        		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), "about:config");
+        		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), "about:blank");
 		}
 	}
 #endif
@@ -1567,17 +1591,18 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 
 //	gtk_container_set_resize_mode(w, GTK_RESIZE_PARENT);
 //	gtk_scrolled_window_set_policy(w, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-	gtk_widget_show_all(moz);
+//////	gtk_widget_show_all(moz);
         gtk_container_add ((GtkContainer *) eb, moz);
-        gtk_container_check_resize ((GtkContainer *) eb);
+//////        gtk_container_check_resize ((GtkContainer *) eb);
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	EMFormat *myf = (EMFormat *)efh;
 	rf->headers_mode = myf->mode;
+	po->mozembedwindow =  moz;
 	po->shandler = g_signal_connect(efh->html,
 		"size_allocate",
 		G_CALLBACK(mycall),
-		moz);
+		po);
 	return TRUE;
 }
 #endif
@@ -1704,11 +1729,11 @@ pfree(EMFormatHTMLPObject *o)
 	}
 #endif
 	g_signal_handler_disconnect(po->format->html, po->shandler);
-	if (rf->mozembed)
+/*	if (rf->mozembed)
 	{
 		gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
-	}
+	}*/
 	gtk_widget_destroy(po->container);
 	g_free(po->website);
 }
@@ -2688,6 +2713,33 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	}
 	else if (rf->cancel && !rf->feed_queue)
 		rf->cancel = 0;		//all feeds where either procesed or skipped
+}
+
+void
+#if LIBSOUP_VERSION < 2003000
+finish_website (SoupMessage *msg, gpointer user_data)
+#else
+finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
+#endif
+{
+	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
+	gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
+		    		user_data, "text/html");
+			gchar *str = response->str;
+				gint len = strlen(response->str);
+				while (len > 0) {
+					if (len > 4096) {
+						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+							str, 4096);
+					str+=4096;
+					}
+					else
+						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+			    				str, len);
+				len-=4096;
+				}
+				gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
+		gtk_widget_show(rf->mozembed);
 }
 
 void
