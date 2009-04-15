@@ -4,6 +4,11 @@
 	(finish_website):
 	* src/rss.h: prefetch website data
 
+2009-04-09  Fridrich Strba  <fridrich.strba@bluewin.ch>
+
+	* configure.ac: check for evolution-shell
+	* src/Makefile.am: u_int32_t -> uint32_t
+
 2009-04-09  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c (org_gnome_cooly_format_rss): fix coments updates

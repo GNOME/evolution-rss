@@ -36,6 +36,7 @@ typedef struct {
 	NetStatusCallback user_cb;
 	gpointer user_data;
 	int current, total;
+	gchar *chunk;
 } CallbackInfo;
 
 static void
@@ -97,10 +98,13 @@ got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 #else
 	info->current += chunk->length;
 #endif
+	info->chunk = chunk->data;
 	progress = g_new0(NetStatusProgress, 1);
 
 	progress->current = info->current;
 	progress->total = info->total;
+	progress->chunk = chunk->data;
+	progress->chunksize = chunk->length;
 	info->user_cb(NET_STATUS_PROGRESS, progress, info->user_data);
 	g_free(progress);
 }
@@ -567,9 +571,11 @@ soup_message_add_header_handler (msg,
 #endif
 	g_free(agstr);
 
-	if (info)
+	if (info) {
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
+	g_print("connected for %s\n", url);
+	}
 
 	soup_session_queue_message (soup_sess, msg,
            cb2, cbdata2);

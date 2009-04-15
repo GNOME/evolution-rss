@@ -106,6 +106,8 @@ typedef enum {
 typedef struct {
     guint32 current;
     guint32 total;
+    gchar *chunk;
+    gchar *chunksize;
 } NetStatusProgress;
 
 typedef void (*NetStatusCallback)(NetStatusType status,

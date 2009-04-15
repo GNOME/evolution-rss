@@ -144,6 +144,7 @@ EXTRA_DIST = 					\
 	rss-config-factory.h			\
 	rss-icon-factory.c			\
 	rss-icon-factory.h			\
+	strptime.c				\
 	evolution-import-rss.c			\
 	evolution-rss.schemas.in		\
 	org-gnome-evolution-rss.eplug.xml	\

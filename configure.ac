@@ -62,6 +62,7 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
    gtk+-2.0 >= $LIBGTK_REQUIRED dnl
    libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
+   evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    libglade-2.0 dnl
 ])
 

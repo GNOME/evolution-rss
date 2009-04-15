@@ -189,6 +189,7 @@ gchar *commstatus = "";
 guint32 frame_colour;
 guint32 content_colour;
 guint32 text_colour;
+gboolean browser_fetching = 0; //mycall event could be triggered many times in first step (fetching)
 
 gboolean setup_feed(add_feed *feed);
 gchar *display_doc (RDF *r);
@@ -481,6 +482,39 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
         //progress_window_set_cancel_cb(pw, NULL, NULL);
         //progress_window_set_progress(pw, -1);
         g_print("NET_STATUS_DONE\n");
+        break;
+    default:
+        g_warning("unhandled network status %d\n", status);
+    }
+}
+
+static void
+browserwrite(gchar *string, gint length)
+{
+	gchar *str = string;
+	gint len = length;
+	while (len > 0) {
+	if (len > 4096) {
+		gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+			str, 4096);
+		str+=4096;
+	}
+	else
+		gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+		str, len);
+	len-=4096;
+	}
+}
+
+static void
+browsercb(NetStatusType status, gpointer statusdata, gpointer data)
+{
+    NetStatusProgress *progress = (NetStatusProgress*)statusdata;
+    switch (status) {
+    case NET_STATUS_PROGRESS:
+//		g_print("chunk:%s\n", progress->chunk);
+		g_print("\n\n\nchunk write %d - %s - chunk write\n\n\n", progress->chunksize, progress->chunk);
+		browserwrite(progress->chunk, progress->chunksize);
         break;
     default:
         g_warning("unhandled network status %d\n", status);
@@ -1447,19 +1481,20 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0)
 			{
-				GString *content=g_string_new(NULL);
-				//GString *content = fetch_blocking(po->website, NULL, NULL, textcb, NULL, NULL);
-	fetch_unblocking(
-				po->website,
-				NULL,
-				NULL,
-				(gpointer)finish_website,
-				po->website,	// we need to dupe key here
-				1,
-				NULL);
-/*				gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
-			    		"file://", "text/html");
-				gchar *str = content->str;
+				gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
+		    		po->website, "text/html");
+				if (!browser_fetching) {
+					browser_fetching=1;
+					fetch_unblocking(
+						po->website,
+						browsercb,
+						1,
+						(gpointer)finish_website,
+						po->website,	// we need to dupe key here
+						1,
+						NULL);
+				}
+/*				gchar *str = content->str;
 				gint len = strlen(content->str);
 				while (len > 0) {
 					if (len > 4096) {
@@ -1474,7 +1509,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 				}
 				gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));*/
 				gtk_widget_set_size_request((GtkWidget *)po->mozembedwindow, width, height);
-gtk_widget_show(po->mozembedwindow);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
 /*#if defined(HAVE_XULRUNNER)
@@ -1591,9 +1625,9 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 
 //	gtk_container_set_resize_mode(w, GTK_RESIZE_PARENT);
 //	gtk_scrolled_window_set_policy(w, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-//////	gtk_widget_show_all(moz);
+	gtk_widget_show_all(moz);
         gtk_container_add ((GtkContainer *) eb, moz);
-//////        gtk_container_check_resize ((GtkContainer *) eb);
+        gtk_container_check_resize ((GtkContainer *) eb);
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	EMFormat *myf = (EMFormat *)efh;
@@ -1736,6 +1770,7 @@ pfree(EMFormatHTMLPObject *o)
 	}*/
 	gtk_widget_destroy(po->container);
 	g_free(po->website);
+	browser_fetching = 0;
 }
 
 EMFormat *fom;
@@ -1837,6 +1872,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			goto out;
 		}
 #endif
+		//replace with unblocking
 		content = fetch_blocking(addr, NULL, NULL, textcb, NULL, &err);
 		if (err)
         	{
@@ -2723,7 +2759,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
-	gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
+/*	gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
 		    		user_data, "text/html");
 			gchar *str = response->str;
 				gint len = strlen(response->str);
@@ -2737,7 +2773,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
 			    				str, len);
 				len-=4096;
-				}
+				}*/
 				gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
 		gtk_widget_show(rf->mozembed);
 }
@@ -3967,6 +4003,10 @@ free_filter_uids (gpointer user_data, GObject *ex_msg)
 	g_print("weak unref called on filter_uids\n");
 }
 
+#ifdef _WIN32
+#include "strptime.c"
+#endif
+
 void
 create_mail(create_feed *CF)
 {
@@ -4398,8 +4438,8 @@ fetch_image(gchar *url, gchar *link)
 void
 migrate_crc_md5(const char *name, gchar *url)
 {
-	u_int32_t crc = gen_crc(name);
-	u_int32_t crc2 = gen_crc(url);
+	uint32_t crc = gen_crc(name);
+	uint32_t crc2 = gen_crc(url);
 	gchar *md5 = gen_md5(url);
 
 	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
