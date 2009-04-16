@@ -313,9 +313,9 @@ void update_feed_image(gchar *image, gchar *key);
 static void update_status_icon(const char *channel, gchar *title);
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_website (SoupMessage *msg, gpointer user_data);
+finish_website (SoupMessage *msg, gint user_data);
 #else
-finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
+finish_website (SoupSession *soup_sess, SoupMessage *msg, gint user_data);
 #endif
 static void
 #if LIBSOUP_VERSION < 2003000
