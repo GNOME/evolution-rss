@@ -85,13 +85,15 @@ got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 #if LIBSOUP_VERSION < 2003000
 		clen = soup_message_get_header(msg->response_headers,
 				"Content-length");
+			return;
 #else
         	clen = soup_message_headers_get(msg->response_headers,
 				"Content-length");
 #endif
 		if (!clen)
-			return;
-		info->total = atoi(clen);
+			info->total = 0;
+		else
+			info->total = atoi(clen);
 	}
 #if LIBSOUP_VERSION < 2003000
 	info->current += msg->response.length;
