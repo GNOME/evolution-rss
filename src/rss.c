@@ -190,6 +190,7 @@ guint32 frame_colour;
 guint32 content_colour;
 guint32 text_colour;
 gboolean browser_fetching = 0; //mycall event could be triggered many times in first step (fetching)
+gint browser_fill = 0;	//how much data currently written to browser
 
 gboolean setup_feed(add_feed *feed);
 gchar *display_doc (RDF *r);
@@ -489,9 +490,10 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 }
 
 static void
-browserwrite(gchar *string, gint length)
+browser_write(gchar *string, gint length)
 {
 	gchar *str = string;
+	//gchar *str = g_strdup("gezzzzzza\n\n\n");
 	gint len = length;
 	while (len > 0) {
 	if (len > 4096) {
@@ -507,14 +509,15 @@ browserwrite(gchar *string, gint length)
 }
 
 static void
-browsercb(NetStatusType status, gpointer statusdata, gpointer data)
+browsercb(NetStatusType status, gpointer statusdata, gint data)
 {
     NetStatusProgress *progress = (NetStatusProgress*)statusdata;
     switch (status) {
     case NET_STATUS_PROGRESS:
 //		g_print("chunk:%s\n", progress->chunk);
-		g_print("\n\n\nchunk write %d - %s - chunk write\n\n\n", progress->chunksize, progress->chunk);
-		browserwrite(progress->chunk, progress->chunksize);
+		g_print("\n\n\n--------------\n %d %s \n=============\n\n\n", progress->chunksize, progress->chunk);
+		browser_write(progress->chunk, progress->chunksize);
+		browser_fill+=progress->chunksize;
         break;
     default:
         g_warning("unhandled network status %d\n", status);
@@ -1483,14 +1486,16 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 			{
 				gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
 		    		po->website, "text/html");
+		//browserwrite("test", 4);
 				if (!browser_fetching) {
+					gint fill=0;
 					browser_fetching=1;
 					fetch_unblocking(
 						po->website,
 						browsercb,
 						1,
 						(gpointer)finish_website,
-						po->website,	// we need to dupe key here
+						1,	// we need to dupe key here
 						1,
 						NULL);
 				}
@@ -2753,29 +2758,25 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 
 void
 #if LIBSOUP_VERSION < 2003000
-finish_website (SoupMessage *msg, gpointer user_data)
+finish_website (SoupMessage *msg, gint user_data)
 #else
-finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
+finish_website (SoupSession *soup_sess, SoupMessage *msg, gint user_data)
 #endif
 {
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
-/*	gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
-		    		user_data, "text/html");
-			gchar *str = response->str;
-				gint len = strlen(response->str);
-				while (len > 0) {
-					if (len > 4096) {
-						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
-							str, 4096);
-					str+=4096;
-					}
-					else
-						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
-			    				str, len);
-				len-=4096;
-				}*/
-				gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
-		gtk_widget_show(rf->mozembed);
+	g_print("browser full:%d\n", response->len);
+	g_print("browser fill:%d\n", browser_fill);
+	g_print("browser fill:%d%%\n", (browser_fill*100)/response->len);
+	gchar *str = (response->str)+user_data;
+	gint len = strlen(response->str)-browser_fill;
+	g_print("len:%d\n", len);
+	if (len>0) {
+		browser_write(str, len);
+		gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
+		g_string_free(response, 1);
+//		gtk_widget_show(rf->mozembed);
+	}
+	browser_fill = 0;
 }
 
 void
