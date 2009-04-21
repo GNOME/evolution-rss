@@ -1,0 +1,21 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">evolution-rss</name>
+  <shortdesc xml:lang="en">Plugin for Evolution Mail that enables reading of RSS/RDF/ATOM feeds</shortdesc>
+
+  <homepage rdf:resource="http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin" />
+  <download-page rdf:resource="http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin#Download" />
+  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=evolution-rss" />
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Lucian Langa</foaf:name>
+      <gnome:userid>lucilanga</gnome:userid>
+      <foaf:mbox rdf:resource="lucilanga@gnome.org" />
+    </foaf:Person>
+  </maintainer>
+</Project>
