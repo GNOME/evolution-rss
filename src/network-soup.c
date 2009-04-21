@@ -576,7 +576,7 @@ soup_message_add_header_handler (msg,
 	if (info) {
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
-	g_print("connected for %s\n", url);
+		g_print("connected for %s\n", url);
 	}
 
 	soup_session_queue_message (soup_sess, msg,

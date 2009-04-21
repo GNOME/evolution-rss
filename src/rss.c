@@ -515,9 +515,9 @@ browsercb(NetStatusType status, gpointer statusdata, gint data)
     switch (status) {
     case NET_STATUS_PROGRESS:
 //		g_print("chunk:%s\n", progress->chunk);
-		g_print("\n\n\n--------------\n %d %s \n=============\n\n\n", progress->chunksize, progress->chunk);
-		browser_write(progress->chunk, progress->chunksize);
-		browser_fill+=progress->chunksize;
+		g_print("\n\n\n--------------\n %d \n=============\n\n\n", progress->chunksize);
+//		browser_write(progress->chunk, progress->chunksize);
+//		browser_fill+=progress->chunksize;
         break;
     default:
         g_warning("unhandled network status %d\n", status);
@@ -2767,8 +2767,10 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gint user_data)
 	g_print("browser full:%d\n", response->len);
 	g_print("browser fill:%d\n", browser_fill);
 	g_print("browser fill:%d%%\n", (browser_fill*100)/response->len);
-	gchar *str = (response->str)+user_data;
-	gint len = strlen(response->str)-browser_fill;
+	gchar *str = (response->str);
+	gint len = strlen(response->str);
+	*str+=browser_fill;
+	len-=browser_fill;
 	g_print("len:%d\n", len);
 	if (len>0) {
 		browser_write(str, len);
@@ -3236,7 +3238,7 @@ static void
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
 {
 	CamelRenameInfo *info = event_data;
-
+	CamelIndex *idx;
 
 	gchar *main_folder = lookup_main_folder();
 	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder)))
@@ -3247,6 +3249,23 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 		else
 			update_feed_folder(info->old_base, info->new->full_name);
 	}
+	gchar *path = mail_component_peek_base_directory (mail_component_peek());
+
+	CamelStore *store = mail_component_peek_local_store(NULL);
+        CamelFolder *mail_folder;
+        mail_folder = camel_store_get_folder (store, info->new->full_name, 0, NULL);
+	g_print("mail_folder:%s\n", info->new->uri);
+	g_print("mail_folder:%s\n", info->old_base);
+
+	gchar *idxname = g_strconcat(path, "/local/", info->new->full_name, ".ibex", NULL);
+	gchar *oldname = g_strconcat(path, "/local/", info->old_base, ".ibex", NULL);
+	g_print("idx:%s\n", idxname);
+	idx = (CamelIndex *)camel_text_index_new(idxname, O_TRUNC|O_CREAT|O_RDWR);
+//	camel_text_index_rename(oldname, idxname);
+	//camel_index_delete(idx);
+//	camel_index_sync(idx);
+	camel_object_unref((CamelObject *)idx);
+	g_free(idxname);
 }
 
 typedef struct custom_fetch_data {
@@ -4136,6 +4155,7 @@ create_mail(create_feed *CF)
 /*FIXME do not how to free this
 		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
 	}
+	mail_refresh_folder(mail_folder, NULL, NULL);
 	camel_folder_sync(mail_folder, FALSE, NULL);
 	camel_folder_thaw(mail_folder);
         camel_operation_end(NULL);
@@ -4327,7 +4347,8 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 	// we might need to handle more error codes here
 	if (503 != msg->status_code && //handle this timedly fasion
 	    404 != msg->status_code &&
-	      7 != msg->status_code) {
+	      2 != msg->status_code && //STATUS_CANT_RESOLVE
+	      7 != msg->status_code) { //STATUS_IO_ERROR
 #if LIBSOUP_VERSION < 2003000
 		if (msg->response.body) {
 			camel_stream_write(user_data, msg->response.body, msg->response.length);
@@ -4416,7 +4437,6 @@ fetch_image(gchar *url, gchar *link)
 		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
 	} else 
 		g_print("image cache HIT\n");
-
 
 	net_get_unblocking(tmpurl,
                        	        textcb,

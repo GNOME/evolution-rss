@@ -57,6 +57,9 @@ error:
 	return result;
 }
 
+//fetch feed
+//FIXME gio callback hardcoded 
+
 gboolean
 fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data, 
 				gpointer cb2, gpointer cbdata2,

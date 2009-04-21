@@ -1,3 +1,10 @@
+2009-04-21  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c (finish_image): add more status codes
+
+	* src/rss.c (store_folder_renamed),
+	(create_mail): sync folder on folder rename
+
 2009-04-14  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c (mycall), (org_gnome_rss_browser), (pfree),
