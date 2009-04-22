@@ -1,3 +1,8 @@
+2009-04-22  Fridrich Strba  <fridrich.strba@bluewin.ch>
+
+	* src/misc.c (santize_url): change to g_filename_to_uri
+	* src/rss.c: add strptime header
+
 2009-04-21  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c (finish_image): add more status codes

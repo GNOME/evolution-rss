@@ -89,8 +89,7 @@ sanitize_url(gchar *text)
 	d(g_print("parsed scheme:%s\n", scheme));
  	if (!scheme && !strstr (tmptext, "http://") 
 	&& !strstr (tmptext, "https://")) {
-		//out = g_strconcat("http://", tmptext, NULL);
-		out = g_strconcat("file://", tmptext, NULL);
+		out = g_filename_to_uri(tmptext, NULL, NULL);
  	} else
 		out = g_strdup(tmptext);
 

@@ -128,6 +128,10 @@ int rss_verbose_debug = 0;
 #include <libsoup/soup-message-queue.h>
 #endif
 
+#ifdef _WIN32
+#include "strptime.c"
+#endif
+
 #include "rss.h"
 #include "parser.h"
 #include "network-soup.c"
