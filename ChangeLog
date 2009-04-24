@@ -1,3 +1,9 @@
+2009-04-24  Lucian Langa  <lucilanga@gnome.org>
+
+	Fix for #580116:
+
+	* src/parser.c (parse_channel_line): strip feed id
+
 2009-04-22  Fridrich Strba  <fridrich.strba@bluewin.ch>
 
 	* src/misc.c (santize_url): change to g_filename_to_uri

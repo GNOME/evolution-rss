@@ -880,6 +880,8 @@ uninstall-local:
 	$(GCONFTOOL) -u /apps/evolution/evolution-rss/user_proxy
 	$(GCONFTOOL) -u /apps/evolution/evolution-rss/port_proxy
 	$(GCONFTOOL) -u /apps/evolution/evolution-rss/display_summary
+
+-include $(top_srcdir)/git.mk
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

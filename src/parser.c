@@ -972,6 +972,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		char *id = layer_find (top, "id",				//ATOM
 				layer_find (top, "guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
+		g_strstrip(feed);
 		d(g_print("link:%s\n", link));
 		d(g_print("author:%s\n", q));
 		d(g_print("title:%s\n", p));

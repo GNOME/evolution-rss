@@ -160,3 +160,5 @@ else
 DBD=0
 endif
 
+
+-include $(top_srcdir)/git.mk
