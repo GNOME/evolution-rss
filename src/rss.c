@@ -3972,6 +3972,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			status_msg = g_queue_new();
 			get_feed_folders();
 			rss_build_stock_images();
+			proxy = proxy_init();
 			rss_soup_init();
 #if HAVE_DBUS
 			d(g_print("init_dbus()\n"));

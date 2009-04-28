@@ -1,3 +1,8 @@
+2009-04-28  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/network-soup.c: let evolution manage proxy connections
+	* src/rss.c (e_plugin_lib_enable): init proxy
+
 2009-04-24  Lucian Langa  <lucilanga@gnome.org>
 
 	Fix for #580116:

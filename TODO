@@ -58,7 +58,5 @@
 	* perform feeds images update weekly
 	* disable filters on setup_feed()
 	* check s&r progress bar on Complete.
-	* support https proxy
-	* support list of ignored hosts
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking

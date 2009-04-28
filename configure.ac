@@ -64,6 +64,7 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    libglade-2.0 dnl
+   libgtkhtml-3.14 dnl
 ])
 
 dnl default renderer and fall it it in case no other render is found

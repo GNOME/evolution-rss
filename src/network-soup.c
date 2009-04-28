@@ -20,6 +20,7 @@
 
 #include <string.h>
 //#include <libsoup/soup-gnome.h>
+#include <libedataserver/e-proxy.h>
 
 #include "network.h"
 #include "rss.h"
@@ -31,6 +32,7 @@
 
 gint proxy_type = 0;
 extern rssfeed *rf;
+EProxy *proxy;
 
 typedef struct {
 	NetStatusCallback user_cb;
@@ -174,73 +176,30 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 		g_object_unref(user_data);
 }
 
+EProxy *
+proxy_init(void)
+{
+	EProxy *proxy;
+	proxy = e_proxy_new ();
+        e_proxy_setup_proxy (proxy);
+	return proxy;
+}
+
+
 //this will insert proxy in the session
 void
-proxify_session(SoupSession *session)
+proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 {
-#if (EVOLUTION_VERSION < 22300)		// include devel too
-    gboolean use_proxy =
-   	gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL);
-    gint port_proxy =
-        gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
-    gchar *host_proxy =
-        gconf_client_get_string(rss_gconf, GCONF_KEY_HOST_PROXY, NULL);
-    gboolean auth_proxy =
-        gconf_client_get_bool(rss_gconf, GCONF_KEY_AUTH_PROXY, NULL);
-    gchar *user_proxy =
-        gconf_client_get_string(rss_gconf, GCONF_KEY_USER_PROXY, NULL);
-    gchar *pass_proxy =
-        gconf_client_get_string(rss_gconf, GCONF_KEY_PASS_PROXY, NULL);
-#else
-    gboolean use_proxy =
-   	gconf_client_get_bool(rss_gconf, RIGHT_KEY(USE_HTTP_PROXY), NULL);
-    guint proxy_type =
-   	gconf_client_get_int(rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
-    gint port_proxy =
-        gconf_client_get_int(rss_gconf, RIGHT_KEY(HTTP_PORT), NULL);
-    gchar *host_proxy =
-        gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_HOST), NULL);
-    gboolean auth_proxy =
-        gconf_client_get_bool(rss_gconf, RIGHT_KEY(HTTP_USE_AUTH), NULL);
-#endif
+	SoupURI *proxy_uri = NULL;
 
-    if (use_proxy && host_proxy && port_proxy > 0)
-    {
-        gchar *proxy_uri = 
-            g_strdup_printf("http://%s:%d/", host_proxy, port_proxy); 
-	g_free(host_proxy);
+	if (e_proxy_require_proxy_for_uri (proxy, uri)) {
+		proxy_uri = e_proxy_peek_uri_for (proxy, uri);
+		g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+	} else 
+		g_print("no PROXY-%s\n", uri);
 
+	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 
-	if (auth_proxy) {
-                char *tmp;
-
-		gchar *user_proxy =
-        		gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_USER), NULL);
-		gchar *pass_proxy =
-			gconf_client_get_string(rss_gconf, RIGHT_KEY(HTTP_AUTH_PWD), NULL);
-
-                tmp = proxy_uri;
-
-                proxy_uri = g_strdup_printf ("http://%s:%s@%s", user_proxy, pass_proxy, tmp + strlen ("http://"));
-
-                g_free (user_proxy);
-                g_free (pass_proxy);
-                g_free (tmp);
-       } 
-	g_print("proxy_uri:%s\n", proxy_uri);
-#if LIBSOUP_VERSION < 2003000
-        SoupUri *puri = soup_uri_new (proxy_uri);
-#else
-        SoupURI *puri = soup_uri_new (proxy_uri);
-#endif
-       	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, puri, NULL);
-#if LIBSOUP_VERSION < 2003000
-        if (puri)
-            g_free(puri);
-#endif
-        if (proxy_uri)
-            g_free(proxy_uri);
-    }
 }
 
 guint
@@ -506,7 +465,7 @@ net_get_unblocking(const char *url,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
-	proxify_session(soup_sess);
+	proxify_session(proxy, soup_sess, url);
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);
 		info->user_cb = cb;
@@ -651,7 +610,7 @@ net_post_blocking(const char *url, GSList *headers, GString *post,
 #endif
 	g_free(agstr);
 
-	proxify_session(soup_sess);
+	proxify_session(proxy, soup_sess, url);
 	rf->b_session = soup_sess;
 	rf->b_msg_session = req;
 	soup_session_send_message(soup_sess, req);
