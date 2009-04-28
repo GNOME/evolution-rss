@@ -15,7 +15,7 @@
     <foaf:Person>
       <foaf:name>Lucian Langa</foaf:name>
       <gnome:userid>lucilanga</gnome:userid>
-      <foaf:mbox rdf:resource="lucilanga@gnome.org" />
+      <foaf:mbox rdf:resource="mailto:lucilanga@gnome.org" />
     </foaf:Person>
   </maintainer>
 </Project>
