@@ -548,39 +548,21 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
     }
 }
 
-gboolean
-create_user_pass_dialog(gchar *url)
-{
-GtkWidget *dialog1;
-  GtkWidget *dialog_vbox1;
-  GtkWidget *table1;
-  GtkWidget *label1;
-  GtkWidget *label2;
-  GtkWidget *username;
-  GtkWidget *password;
-  GtkWidget *dialog_action_area1;
-  GtkWidget *cancelbutton1;
-  GtkWidget *okbutton1;
-  GtkWidget *checkbutton1;
-  GtkWidget *vbox1;
-  GtkWidget *container;
-  GtkWidget *container2;
-  guint resp;
 
- GtkWidget *widget;
-        GtkWidget *action_area;
-        GtkWidget *content_area;
-  //      gint type = msg->flags & E_PASSWORDS_REMEMBER_MASK;
-    //    guint noreply = msg->noreply;
+GtkDialog *
+create_user_pass_dialog(RSS_AUTH *auth)
+{
+	GtkWidget *dialog1;
+	GtkWidget *username;
+	GtkWidget *password;
+	GtkWidget *checkbutton1;
+	GtkWidget *container;
+	GtkWidget *container2;
+	GtkWidget *widget;
+	GtkWidget *action_area;
+	GtkWidget *content_area;
         gboolean visible;
         AtkObject *a11y;
-
-//        msg->noreply = 1;
-
-	if (!rf->hruser)
-		rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
-	if (!rf->hrpass)
-		rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
 
         widget = gtk_dialog_new_with_buttons (
                 _("Enter User/Pass for feed"), NULL, 0,
@@ -630,7 +612,7 @@ GtkWidget *dialog1;
         gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
 
 	char *markup;
-	markup = g_markup_printf_escaped (_("Enter your username and password for:\n '%s'"), url);
+	markup = g_markup_printf_escaped (_("Enter your username and password for:\n '%s'"), auth->url);
 	gtk_label_set_markup (GTK_LABEL (widget), markup);
 	g_free (markup);
         gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
@@ -663,9 +645,8 @@ GtkWidget *dialog1;
         gtk_table_attach (
                 GTK_TABLE (container2), username,
                 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
-	gchar *user = g_hash_table_lookup(rf->hruser,  url);
-	if (user)
-		gtk_entry_set_text (GTK_ENTRY (username), user);
+	if (auth->user)
+		gtk_entry_set_text (GTK_ENTRY (username), auth->user);
 
         widget = gtk_label_new (NULL);
         gtk_label_set_markup (GTK_LABEL (widget), _("Password: "));
@@ -684,9 +665,8 @@ GtkWidget *dialog1;
         gtk_table_attach (
                 GTK_TABLE (container2), password,
                 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
-	gchar *pass = g_hash_table_lookup(rf->hrpass,  url);
-	if (pass)
-		gtk_entry_set_text (GTK_ENTRY (password), pass);
+	if (auth->pass)
+		gtk_entry_set_text (GTK_ENTRY (password), auth->pass);
 
         /* Caps Lock Label */
         widget = gtk_label_new (NULL);
@@ -719,32 +699,63 @@ GtkWidget *dialog1;
                         GTK_TABLE (container), checkbutton1,
                         1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
 
-	gint result = gtk_dialog_run(GTK_DIALOG(password_dialog));
-	switch (result)
-	{
+	return password_dialog;
+}
+
+gboolean
+web_auth_dialog(gchar *url)
+{
+	GtkDialog *dialog;
+	guint resp;
+
+	if (!rf->hruser)
+		rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+	if (!rf->hrpass)
+		rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+
+	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
+	auth_info->user = g_hash_table_lookup(rf->hruser, url);
+	auth_info->pass = g_hash_table_lookup(rf->hruser, url);
+	dialog = create_user_pass_dialog(auth_info);
+	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
+	switch (result) {
 	case GTK_RESPONSE_OK:
-        	if (user)
+        	if (auth_info->user)
         	    g_hash_table_remove(rf->hruser, url);
         	g_hash_table_insert(rf->hruser, url, 
-			g_strdup(gtk_entry_get_text (GTK_ENTRY (username))));
-        	if (pass)
+			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->username))));
+        	if (auth_info->pass)
             		g_hash_table_remove(rf->hrpass, url);
         	g_hash_table_insert(rf->hrpass, url, 
-			g_strdup(gtk_entry_get_text (GTK_ENTRY (password))));
-		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton1)))
+			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->password))));
+		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auth_info->rememberpass)))
 			save_up(url);
 		else
 			del_up(url);
 	
-        	gtk_widget_destroy (password_dialog);
+        	gtk_widget_destroy (dialog);
 		resp = 0;
         	break;
-    default:
-        gtk_widget_destroy (password_dialog);
-	resp = 1;
-        break;
-  }
+    	default:
+        	gtk_widget_destroy (dialog);
+		resp = 1;
+        	break;
+	}
+	g_free(auth_info);
 	return resp;
+}
+
+gboolean
+proxy_auth_dialog(gchar *title, gchar *user, gchar *pass)
+{
+	GtkDialog *dialog;
+	guint resp;
+
+	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
+	auth_info->user = user;
+	auth_info->pass = pass;
+	dialog = create_user_pass_dialog(auth_info);
+	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 }
 
 gboolean

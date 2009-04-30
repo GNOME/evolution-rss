@@ -280,6 +280,15 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	GList *category;	// list of categories article is posted under
 } create_feed;
 
+typedef struct rss_auth {
+	gchar *url;
+	gchar *user;
+	gchar *pass;
+	GtkWidget *username;
+	GtkWidget *password;
+	GtkWidget *rememberpass;
+} RSS_AUTH;
+
 guint           upgrade = 0;                // set to 2 when initailization successfull
 guint count = 0;
 gchar *buffer = NULL;
@@ -287,7 +296,7 @@ guint ftotal;
 guint farticle;
 
 uint32_t gen_crc(const char *msg);
-gboolean create_user_pass_dialog(gchar *url);
+GtkDialog* create_user_pass_dialog(RSS_AUTH *auth);
 static void start_check_cb (GtkWidget *widget, gpointer data);
 static void err_destroy (GtkWidget *widget, guint response, gpointer data);
 static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);

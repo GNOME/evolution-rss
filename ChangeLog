@@ -1,3 +1,9 @@
+2009-04-30  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/network-soup.c: let evolution manage proxy authentication
+	* src/rss.c (create_user_pass_dialog), (web_auth_dialog),
+	(proxy_auth_dialog): refactory user/pass dialog
+
 2009-04-28  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/network-soup.c: let evolution manage proxy connections

@@ -300,16 +300,23 @@ authenticate (SoupSession *session,
 #endif
 {
 
-	g_print("proxy:\n");
-	g_print("proxy:%d\n", soup_auth_is_for_proxy(auth));
-	if (soup_auth_is_for_proxy(auth))
-		return;
+	if (msg->status_code == SOUP_STATUS_PROXY_UNAUTHORIZED) {
+		g_print("proxy:%d\n", soup_auth_is_for_proxy(auth));
+	SoupURI *proxy_uri;
+	g_object_get (G_OBJECT(session),
+				"proxy-uri", &proxy_uri,
+				NULL);
+	g_print("user:%s\n", proxy_uri->user);
+	g_print("pass:%s\n", proxy_uri->password);
+	//proxy_auth_dialog("Proxy Authentication", proxy_uri->user, proxy_uri->password);
+	//g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+	return;
+	}
 
 	gchar *user = g_hash_table_lookup(rf->hruser, data);
 	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
 	
-	if (user && pass)
-	{
+	if (user && pass) {
 #if LIBSOUP_VERSION < 2003000
 		*username = g_strdup(user);
 		*password = g_strdup(pass);
@@ -317,17 +324,13 @@ authenticate (SoupSession *session,
 	if (!retrying)
 		soup_auth_authenticate (auth, user, pass);
 #endif
-	}
-	else
-	{
-		if (rf->soup_auth_retry)
-		{
+	} else {
+		if (rf->soup_auth_retry) {
 		//means we're already tested once and probably
 		//won't try again
 		rf->soup_auth_retry = FALSE;
-		if (!read_up(data))
-		{
-			if (create_user_pass_dialog(data))
+		if (!read_up(data)) {
+			if (web_auth_dialog(data))
 				rf->soup_auth_retry = FALSE;
 			else
 				rf->soup_auth_retry = TRUE;
@@ -461,6 +464,7 @@ net_get_unblocking(const char *url,
 {
 	SoupMessage *msg;
 	CallbackInfo *info = NULL;
+
 	SoupSession *soup_sess = 
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
