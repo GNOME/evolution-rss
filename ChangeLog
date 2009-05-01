@@ -1,3 +1,9 @@
+2009-05-01  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss.c (browser_write), (reload_cb), (mycall),
+	(org_gnome_rss_browser), (finish_website): initial support for
+	webkit prefetching
+
 2009-04-30  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/network-soup.c: let evolution manage proxy authentication

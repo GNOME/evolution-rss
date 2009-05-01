@@ -494,11 +494,14 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 }
 
 static void
-browser_write(gchar *string, gint length)
+browser_write(gchar *string, gint length, gchar *base)
 {
 	gchar *str = string;
-	//gchar *str = g_strdup("gezzzzzza\n\n\n");
 	gint len = length;
+	guint engine = fallback_engine();
+	switch (engine) {
+	case 2:
+#ifdef HAVE_GECKO
 	while (len > 0) {
 	if (len > 4096) {
 		gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
@@ -509,6 +512,16 @@ browser_write(gchar *string, gint length)
 		gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
 		str, len);
 	len-=4096;
+	}
+#endif
+	break;
+	case 1:
+		webkit_web_view_load_string(WEBKIT_WEB_VIEW(rf->mozembed),
+                                                         string,
+                                                         "text/html",
+                                                         "utf-8",
+                                                         base);
+		break;
 	}
 }
 
@@ -1454,8 +1467,7 @@ stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 reload_cb (GtkWidget *button, gpointer data)
 {
 	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
-	switch (engine)
-	{
+	switch (engine) {
 		case 2:
 #ifdef	HAVE_GECKO
 	gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
@@ -1496,12 +1508,14 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //	int wheight = height - (req.height - height) - 20;
 //        height = req.height - 200;// - 16 - 194;
 //        
+	guint engine = fallback_engine();
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0)
 			{
-				gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
-		    		po->website, "text/html");
-		//browserwrite("test", 4);
+				if (engine == 2)
+					gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
+		    					po->website, "text/html");
+		//browser_write("test", 4);
 				if (!browser_fetching) {
 					gint fill=0;
 					browser_fetching=1;
@@ -1510,7 +1524,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 						browsercb,
 						1,
 						(gpointer)finish_website,
-						1,	// we need to dupe key here
+						g_strdup(po->website),	// we need to dupe key here
 						1,
 						NULL);
 				}
@@ -1591,18 +1605,16 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	
 
 #ifdef HAVE_WEBKIT
-	if (engine == 1)
-	{
+	if (engine == 1) {
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
-		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
-		//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-		//gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
+		//gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
+		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 	}
 #endif
 
 #ifdef HAVE_GECKO
-	if (engine == 2)
-	{
+	if (engine == 2) {
 		rf->mozembed = gtk_moz_embed_new();
 		render_set_preferences();
 
@@ -1615,27 +1627,22 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	po->container = moz;
 
 #ifdef HAVE_WEBKIT
-	if (engine == 1)
-	{
+	if (engine == 1) {
 		d(g_print("Render engine Webkit\n"));
-		if (rf->online)
-        		webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), po->website);
-		else
+		if (rf->online) {
+//        		webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), po->website);
+		} else
         		webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), "about:blank");
 	}
 #endif
 
 #ifdef HAVE_GECKO
-	if (engine == 2)
-	{
+	if (engine == 2) {
 		d(g_print("Render engine Gecko\n"));
-		if (rf->online)
-		{
+		if (rf->online) {
 			//gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
  	      		//gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), po->website);
-		}
-		else	
-		{
+		} else {
 			gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
         		gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), "about:blank");
 		}
@@ -2779,6 +2786,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gint user_data)
 #endif
 {
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
+	guint engine = fallback_engine();
 	g_print("browser full:%d\n", response->len);
 	g_print("browser fill:%d\n", browser_fill);
 	g_print("browser fill:%d%%\n", (browser_fill*100)/response->len);
@@ -2788,8 +2796,9 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gint user_data)
 	len-=browser_fill;
 	g_print("len:%d\n", len);
 	if (len>0) {
-		browser_write(str, len);
-		gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
+		browser_write(str, len, user_data);
+		if (engine == 2)
+			gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
 		g_string_free(response, 1);
 //		gtk_widget_show(rf->mozembed);
 	}
