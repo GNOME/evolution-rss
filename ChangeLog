@@ -1,3 +1,14 @@
+2009-05-03  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/gecko-utils.cpp:
+	* src/gecko-utils.h:
+	* src/rss.c (browser_write), (browsercb), (back_cb), (forward_cb),
+	(rss_popup_zoom_in), (rss_popup_zoom_out), (rss_popup_zoom_orig),
+	(rss_popup_link_copy), (rss_popup_link_open),
+	(rss_menu_items_free), (webkit_click), (gecko_click),
+	(org_gnome_rss_browser), (org_gnome_cooly_format_rss): Implement right
+	click operations
+
 2009-05-01  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss.c (browser_write), (reload_cb), (mycall),

@@ -516,10 +516,8 @@ browser_write(gchar *string, gint length, gchar *base)
 #endif
 	break;
 	case 1:
-		webkit_web_view_load_string(WEBKIT_WEB_VIEW(rf->mozembed),
+		webkit_web_view_load_html_string(WEBKIT_WEB_VIEW(rf->mozembed),
                                                          string,
-                                                         "text/html",
-                                                         "utf-8",
                                                          base);
 		break;
 	}
@@ -532,7 +530,9 @@ browsercb(NetStatusType status, gpointer statusdata, gint data)
     switch (status) {
     case NET_STATUS_PROGRESS:
 //		g_print("chunk:%s\n", progress->chunk);
-		g_print("\n\n\n--------------\n %d \n=============\n\n\n", progress->chunksize);
+		g_print("total:%d\n", progress->total);
+		g_print("curent:%d\n", progress->current);
+		g_print("--------------\n chunk: %d \n=============\n", progress->chunksize);
 //		browser_write(progress->chunk, progress->chunksize);
 //		browser_fill+=progress->chunksize;
         break;
@@ -1432,7 +1432,7 @@ back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #endif
 #if HAVE_WEBKIT
 	if (engine == 1)
-		webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
+		webkit_web_view_go_back (WEBKIT_WEB_VIEW(rf->mozembed));
 #endif
 }
 
@@ -1446,7 +1446,7 @@ forward_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #endif
 #if HAVE_WEBKIT
 	if (engine == 1)
-		webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
+		webkit_web_view_go_forward(WEBKIT_WEB_VIEW(rf->mozembed));
 #endif
 }
 
@@ -1586,6 +1586,119 @@ render_set_preferences(void)
 }
 #endif
 
+static void
+rss_popup_zoom_in(EPopup *ep, EPopupItem *pitem, void *data)
+{
+	gfloat zoom = gecko_get_zoom(rf->mozembed);
+	zoom*=1.2;
+	gecko_set_zoom(rf->mozembed, zoom);
+}
+
+static void
+rss_popup_zoom_out(EPopup *ep, EPopupItem *pitem, void *data)
+{
+	gfloat zoom = gecko_get_zoom(rf->mozembed);
+	zoom/=1.2;
+	gecko_set_zoom(rf->mozembed, zoom);
+}
+
+static void
+rss_popup_zoom_orig(EPopup *ep, EPopupItem *pitem, void *data)
+{
+	gecko_set_zoom(rf->mozembed, 1);
+}
+
+static void
+rss_popup_link_copy(EPopup *ep, EPopupItem *pitem, void *data)
+{
+	gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_PRIMARY), data, -1);
+        gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), data, -1);
+}
+
+static void
+rss_popup_link_open(EPopup *ep, EPopupItem *pitem, void *data)
+{
+	e_show_uri (NULL, data);
+}
+
+static EPopupItem rss_menu_items[] = {
+        { E_POPUP_BAR, "05.rss-browser", },
+        { E_POPUP_ITEM, "05.rss-browser.00", N_("_Copy"), NULL, NULL, "edit-copy", EM_FOLDER_VIEW_SELECT_DISPLAY|EM_FOLDER_VIEW_SELECT_SELECTION },
+	{ E_POPUP_BAR, "05.rss-browser.01", NULL, NULL, NULL, NULL },
+	{ E_POPUP_ITEM, "05.rss-browser.02", N_("Zoom _In"), rss_popup_zoom_in, NULL, "zoom-in", EM_POPUP_URI_HTTP },
+	{ E_POPUP_ITEM, "05.rss-browser.03", N_("Zoom _Out"), rss_popup_zoom_out, NULL, "zoom-out", EM_POPUP_URI_HTTP },
+	{ E_POPUP_ITEM, "05.rss-browser.04", N_("_Normal Size"), rss_popup_zoom_orig, NULL, "zoom-original", EM_POPUP_URI_HTTP },
+	{ E_POPUP_BAR, "05.rss-browser.05", NULL, NULL, NULL, NULL },
+	{ E_POPUP_ITEM, "05.rss-browser.06", N_("_Print..."), NULL, NULL, "document-print", EM_POPUP_SELECT_ONE },
+        { E_POPUP_ITEM, "05.rss-browser.07", N_("Save _As"), NULL, NULL, "document-save-as", 0},
+	{ E_POPUP_BAR, "05.rss-browser.08", NULL, NULL, NULL, NULL },
+	{ E_POPUP_ITEM, "05.rss-browser.09", N_("_Open Link in Browser"), rss_popup_link_open, NULL, NULL, EM_POPUP_URI_HTTP },
+        { E_POPUP_ITEM, "05.rss-browser.10", N_("_Copy Link Location"), rss_popup_link_copy, NULL, "edit-copy" },
+};
+
+static void
+rss_menu_items_free(EPopup *ep, GSList *items, void *data)
+{
+        g_slist_free(items);
+}
+
+static gboolean
+webkit_click (WebKitWebView *view, WebKitWebFrame *frame, WebKitNetworkRequest *request)
+{
+        const gchar *uri;
+
+        g_return_if_fail (WEBKIT_IS_WEB_VIEW (view));
+//        g_return_if_fail (WEBKIT_IS_NETWORK_REQUEST (request));
+
+        uri = webkit_network_request_get_uri (request);
+        g_print("uri:%s\n", uri);
+        return TRUE;
+}
+
+gboolean
+gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
+{
+	gint button;
+	GtkMenu *menu;
+        GSList *menus = NULL;
+        EMPopup *emp;
+	gint i=0, menu_size;
+	EMPopupTargetURI *t;
+	EPopupTarget *target;
+
+	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
+                g_warning ("Cannot determine mouse button!\n");
+                return FALSE;
+        }
+
+	gchar *link = gtk_moz_embed_get_link_message(GTK_MOZ_EMBED(rf->mozembed));
+	emp = em_popup_new("org.gnome.evolution.mail.formathtmldisplay.popup");
+//	t = em_popup_target_new_part(emp, user_data, NULL);
+//	t = em_popup_target_new_uri(emp, link);
+  //      target = (EPopupTarget *)t;
+//        target = em_popup_target_new_part(emp, info->puri.part, info->handle?info->handle->mime_type:NULL);
+//        target->target.widget = w;
+	
+	menu_size=sizeof(rss_menu_items)/sizeof(rss_menu_items[0]);
+	if (strlen(link))
+		i+=9;
+	else
+		menu_size-=2;
+
+	for (i; i<menu_size; i++)
+		menus = g_slist_prepend(menus, &rss_menu_items[i]);
+
+        e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
+        menu = e_popup_create_menu_once((EPopup *)emp, target, 0);
+
+	if (button == 2)
+		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, button, gtk_get_current_event_time());
+	/*normal click let event pass normally*/
+	if (button == 0)
+		gtk_moz_embed_load_url(rf->mozembed, link);
+	g_print("button:%d\n", button);
+}
+
 #ifdef HAVE_RENDERKIT
 static gboolean
 org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
@@ -1607,9 +1720,10 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
-		//gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
-		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
+		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
+		g_signal_connect (rf->mozembed, "navigation-requested", G_CALLBACK (webkit_click), moz);
+	//	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
+	//	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 	}
 #endif
 
@@ -1621,6 +1735,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		/* FIXME add all those profile shits */
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
 		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
+		g_signal_connect (rf->mozembed, "dom_mouse_click", G_CALLBACK(gecko_click), moz);
 	}
 #endif
 
@@ -1889,6 +2004,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			pobj->is_html = GPOINTER_TO_INT(is_html);
 			pobj->format = (EMFormatHTML *)t->format;
 			pobj->object.free = pfree;
+			pobj->part = t->part;
 			camel_stream_printf (t->stream,
 				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
@@ -2789,6 +2905,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gint user_data)
 	guint engine = fallback_engine();
 	g_print("browser full:%d\n", response->len);
 	g_print("browser fill:%d\n", browser_fill);
+	if (response->len)
 	g_print("browser fill:%d%%\n", (browser_fill*100)/response->len);
 	gchar *str = (response->str);
 	gint len = strlen(response->str);

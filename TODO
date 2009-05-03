@@ -42,7 +42,6 @@
 #15 0x00007f257c9dec29 in rss_error (key=<value optimized out>, 
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
-        * implement right-click in browser
 	* slow delete operation on large folders
 	* check operation cancel button
 	* add icon to feed setup panel
@@ -60,3 +59,4 @@
 	* check s&r progress bar on Complete.
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
+	* grey stop button on complete load

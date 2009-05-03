@@ -44,6 +44,11 @@
 #include <nsIPrefService.h>
 #include <nsIServiceManager.h>
 #include <nsServiceManagerUtils.h>
+#include <nsIDOMMouseEvent.h>
+#include <nsIDOMWindow.h>
+#include <nsIContentViewer.h>
+#include <nsIDocShell.h>
+#include <nsIMarkupDocumentViewer.h>
 #include <nspr.h>
 
 static nsIPrefBranch* gPrefBranch;
@@ -70,6 +75,74 @@ gecko_prefs_set_int (const gchar *key, gint value)
 	NS_ENSURE_TRUE (gPrefBranch, FALSE);
 
 	return NS_SUCCEEDED(gPrefBranch->SetIntPref (key, value));
+}
+
+/**
+ *  * Takes a pointer to a mouse event and returns the mouse
+ *   *  button number or -1 on error.
+ *    */
+extern "C"
+gint gecko_get_mouse_event_button(gpointer event) {
+        gint    button = 0;
+
+        g_return_val_if_fail (event, -1);
+
+        /* the following lines were found in the Galeon source */
+        nsIDOMMouseEvent *aMouseEvent = (nsIDOMMouseEvent *) event;
+        aMouseEvent->GetButton ((PRUint16 *) &button);
+
+        /* for some reason we get different numbers on PPC, this fixes
+ *          * that up... -- MattA */
+        if (button == 65536)
+        {
+                button = 1;
+        }
+        else if (button == 131072)
+        {
+                button = 2;
+        }
+
+        return button;
+}
+
+extern "C" void
+gecko_set_zoom (GtkWidget *moz, gfloat zoom)
+{	
+	nsCOMPtr<nsIWebBrowser>         mWebBrowser;
+        nsCOMPtr<nsIDOMWindow>          mDOMWindow;
+
+        gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED (moz), getter_AddRefs (mWebBrowser));
+        if (NULL == mWebBrowser) {
+                g_warning ("gecko_set_zoom(): Could not retrieve browser...");
+                return;
+        }
+        mWebBrowser->GetContentDOMWindow (getter_AddRefs (mDOMWindow));
+        if (NULL == mDOMWindow) {
+                g_warning ("gecko_set_zoom(): Could not retrieve DOM window...");
+                return;
+        }
+        mDOMWindow->SetTextZoom (zoom);
+}
+
+extern "C" gfloat
+gecko_get_zoom (GtkWidget *embed)
+{
+        nsCOMPtr<nsIWebBrowser>         mWebBrowser;
+        nsCOMPtr<nsIDOMWindow>          mDOMWindow;
+        float zoom;
+
+        gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED (embed), getter_AddRefs (mWebBrowser));
+        if (NULL == mWebBrowser) {
+                g_warning ("gecko_get_zoom(): Could not retrieve browser...");
+                return 1.0;
+        }
+        mWebBrowser->GetContentDOMWindow (getter_AddRefs (mDOMWindow));
+        if (NULL == mDOMWindow) {
+                g_warning ("gecko_get_zoom(): Could not retrieve DOM window...");
+                return 1.0;
+        }
+        mDOMWindow->GetTextZoom (&zoom);
+        return zoom;
 }
 
 extern "C" gboolean
