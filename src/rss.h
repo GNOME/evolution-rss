@@ -28,6 +28,11 @@
 #include <libsoup/soup.h>
 #include <mail/mail-component.h>
 
+#include <glade/glade.h>
+#include <mail/em-event.h>
+#include <camel/camel-folder.h>
+#include <camel/camel-operation.h>
+
 #define PLUGIN_INSTALL_DIR @PLUGIN_INSTALL_DIR@
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -41,8 +46,6 @@
 #define NETWORK_MIN_TIMEOUT (60)
 #define NETWORK_TIMEOUT (180000)
 #define HTTP_CACHE_PATH "http"
-
-GConfClient *rss_gconf;
 
 typedef struct _RDF {
         char 		*uri;
@@ -295,7 +298,7 @@ guint ftotal;
 guint farticle;
 
 GtkDialog* create_user_pass_dialog(RSS_AUTH *auth);
-static void err_destroy (GtkWidget *widget, guint response, gpointer data);
+void err_destroy (GtkWidget *widget, guint response, gpointer data);
 void save_gconf_feed(void);
 void rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg);
 void rss_select_folder(gchar *folder_name);
@@ -315,20 +318,20 @@ void free_cf(create_feed *CF);
 gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
 void update_feed_image(gchar *image, gchar *key);
-static void update_status_icon(const char *channel, gchar *title);
-static void
+void update_status_icon(const char *channel, gchar *title);
+void
 #if LIBSOUP_VERSION < 2003000
 finish_website (SoupMessage *msg, gpointer user_data);
 #else
 finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
 #endif
-static void
+void
 #if LIBSOUP_VERSION < 2003000
 finish_enclosure (SoupMessage *msg, create_feed *user_data);
 #else
 finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data);
 #endif
-static void textcb(NetStatusType status, gpointer statusdata, gpointer data);
+void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif

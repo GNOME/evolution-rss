@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007  Lucian Langa <cooly@gnome.eu.org> 
+ *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org> 
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,25 +18,32 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
+
 
 #include <string.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
+#include <gtk/gtk.h>
 
-#include <rss.h>
-#include <rss-config-factory.h>
+#include "rss.h"
+//#include <rss-config-factory.h>
+#include "misc.h"
+#include "dbus.h"
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
 #define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
 #define DBUS_REPLY_INTERFACE "org.gnome.evolution.mail.rss.out"
 
-static DBusConnection *init_dbus (void);
+#define d(x)
 
 static DBusConnection *bus = NULL;
 static gboolean enabled = FALSE;
+
+extern rssfeed *rf;
 
 /*static void
 send_dbus_message (const char *name, const char *data, guint new)
@@ -115,7 +122,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                 		if (setup_feed(feed))
 				{
 					gchar *msg = g_strdup_printf(_("New feed imported: %s"),
-							lookup_chn_name_by_url(feed->feed_url));
+							(char *)lookup_chn_name_by_url(feed->feed_url));
 					taskbar_push_message(msg);
 					g_free(msg);
 				}	
@@ -153,7 +160,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
-static DBusConnection *
+DBusConnection *
 init_dbus (void)
 {
 	static DBusConnection *bus = NULL;

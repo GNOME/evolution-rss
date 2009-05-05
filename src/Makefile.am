@@ -16,7 +16,7 @@ INCLUDES =							\
 	-DRENDER_N=$(RENDER_N)					\
 	-DHAVE_DBUS=$(DBD)					\
 	-DDBUS_API_SUBJECT_TO_CHANGE				\
-	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
+	$(EVOLUTION_RSS_EPLUGIN_CFLAGS) -Wall
 
  
 if ! HAVE_XPCOM_GLUE
@@ -69,9 +69,10 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 
-SOURCES = 	rss.c			\
-		rss-config-factory.c	\
-	  	misc.c
+SOURCES = 	dbus.c			\
+	  	misc.c			\
+		rss.c			\
+		rss-config-factory.c
 if HAVE_GECKO
 SOURCES+= gecko-utils.cpp
 endif

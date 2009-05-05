@@ -19,10 +19,16 @@
 #ifndef MISC_H
 #define MISC_H 1
 
+gchar *gen_crc(const char *msg);
 gchar *gen_md5(gchar *buffer);
 gchar *strplchr(gchar *source);
 gchar *markup_decode (gchar *str);
 gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
 gchar *get_server_from_uri(gchar *uri);
+gchar *get_port_from_uri(gchar *uri);
+gboolean is_rfc822(char *in);
+gchar *extract_main_folder(gchar *folder);
+gchar *strextr(gchar *text, gchar *substr);
+gchar *sanitize_url(gchar *text);
 
 #endif

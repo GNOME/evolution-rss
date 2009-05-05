@@ -31,6 +31,7 @@ gboolean       gecko_init         (void);
 void           gecko_shutdown     (void);
 void gecko_set_zoom (GtkWidget *moz, gfloat zoom);
 gfloat gecko_get_zoom (GtkWidget *moz);
+gint gecko_get_mouse_event_button(gpointer event);
 
 G_END_DECLS
 

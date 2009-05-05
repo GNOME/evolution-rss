@@ -26,16 +26,12 @@
 #include <stdio.h>
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <gconf/gconf-client.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <camel/camel-folder.h>
 #include <camel/camel-store.h>
-#include <camel/camel-operation.h>
 #include <camel/camel-provider.h>
 
-#include <mail/em-event.h>
 #include <mail/em-config.h>
 
 #include <shell/evolution-config-control.h>
@@ -56,6 +52,7 @@ extern guint upgrade;
 extern guint count; 
 extern gchar *buffer;
 extern GSList *rss_list;
+extern GConfClient *rss_gconf;
 
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
@@ -1035,7 +1032,7 @@ out:			gtk_widget_destroy(msg_feeds);
         }
 }
 
-static void
+void
 import_dialog_response(GtkWidget *selector, guint response, gpointer user_data)
 {
         while (gtk_events_pending ())

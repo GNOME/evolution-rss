@@ -20,7 +20,7 @@
 #define __RSS_CONFIG_FACTORY_H_
 
 void store_redraw(GtkTreeView *data);
-static void import_dialog_response(GtkWidget *selector, guint response, gpointer user_data);
+void import_dialog_response(GtkWidget *selector, guint response, gpointer user_data);
 
 #endif /*__RSS_CONFIG_FACTORY_H_*/
 

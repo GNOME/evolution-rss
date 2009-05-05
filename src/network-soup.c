@@ -32,6 +32,7 @@
 
 gint proxy_type = 0;
 extern rssfeed *rf;
+extern GConfClient *rss_gconf;
 EProxy *proxy;
 
 typedef struct {
@@ -381,6 +382,7 @@ conn_mainloop_quit (void *data)
 {
 	g_print("loop quit");
   g_main_loop_quit (data);
+	return TRUE;
 }
 
 guint

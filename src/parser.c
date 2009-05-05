@@ -39,39 +39,32 @@ html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 #else
         SoupURI *base_uri = soup_uri_new (base);
 #endif
-        while (doc = html_find((xmlNode *)doc, tag))
-        {
-                if (url = xmlGetProp(doc, prop))
-                {
-                        if (!strncmp(tag, "img", 3) && !strncmp(prop, "src", 3))
-                        {
+        while ((doc = html_find((xmlNode *)doc, tag))) {
+                if ((url = xmlGetProp(doc, prop))) {
+                        if (!strncmp(tag, "img", 3) && !strncmp(prop, "src", 3)) {
                                 gchar *tmpurl = strplchr(url);
                                 xmlSetProp(doc, prop, tmpurl);
                                 g_free(tmpurl);
                         }
                         d(g_print("DEBUG: parsing: %s\n", url));
-                        if (url[0] == '/' && url[1] != '/')
-                        {
+                        if (url[0] == '/' && url[1] != '/') {
                                 gchar *server = get_server_from_uri(base);
                                 gchar *tmp = g_strdup_printf("%s/%s", server, url);
                                 xmlSetProp(doc, prop, tmp);
                                 g_free(tmp);
                                 g_free(server);
                         }
-                        if (url[0] == '/' && url[1] == '/')
-                        {
+                        if (url[0] == '/' && url[1] == '/') {
                                 /*FIXME handle ssl */
                                 gchar *tmp = g_strdup_printf("%s%s", "http:", url);
                                 xmlSetProp(doc, prop, tmp);
                                 g_free(tmp);
                         }
                         if (url[0] != '/' && !g_str_has_prefix(url,  "http://")
-                                        && !g_str_has_prefix(url, "https://"))
-                        {
+                                        && !g_str_has_prefix(url, "https://")) {
                                 // in case we have a base href= set then rewrite
                                 // all relative links
-                                if (basehref != NULL)
-                                {
+                                if (basehref != NULL) {
 #if LIBSOUP_VERSION < 2003000
                                         SoupUri *newbase_uri = soup_uri_new (basehref);
 #else
@@ -79,12 +72,10 @@ html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 #endif
                                         newuri = soup_uri_new_with_base (newbase_uri, url);
                                         soup_uri_free(newbase_uri);
-                                }
-                                else
+                                } else
                                         newuri = soup_uri_new_with_base (base_uri, url);
                                 //xmlSetProp(doc, prop, g_strdup_printf("%s/%s", get_server_from_uri(base), url));
-                                if (newuri)
-                                {
+                                if (newuri) {
                                         newuristr = soup_uri_to_string (newuri, FALSE);
                                         xmlSetProp(doc, prop, (xmlChar *)newuristr);
                                         g_free(newuristr);
@@ -609,6 +600,7 @@ layer_find_tag_prop (xmlNodePtr node,
 		}
                 node = node->next;
 	}
+	return fail;
 }
 
 static gchar *

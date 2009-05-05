@@ -1,5 +1,28 @@
 2009-05-05  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/Makefile.am:
+	* src/Makefile.in:
+	* src/dbus.c (filter_function):
+	* src/gecko-utils.h:
+	* src/misc.h:
+	* src/network-soup.c:
+	* src/parser.c (html_set_base), (layer_find_tag_prop):
+	* src/rss-config-factory.c:
+	* src/rss-config-factory.h:
+	* src/rss.c (statuscb), (create_user_pass_dialog),
+	(proxy_auth_dialog), (feed_to_xml), (feed_new_from_xml),
+	(migrate_old_config), (webkit_click), (gecko_click),
+	(generate_safe_chn_name), (setup_feed), (fetch_feed),
+	(print_comments), (finish_update_feed_image), (update_main_folder),
+	(write_feeds_folder_line), (custom_update_articles),
+	(custom_fetch_feed), (flaten_status), (rss_online),
+	(org_gnome_cooly_rss_startup), (org_gnome_cooly_rss),
+	(create_mail), (feed_is_new):
+	* src/rss.h: various cleanups; remove uneeded vars, add missing
+	headers, fix compile warnings; move proto to header files
+
+2009-05-05  Lucian Langa  <lucilanga@gnome.org>
+
 	* src/Makefile.am: add misc.c and rss-config-factory.c to build list
 	* src/fetch.c (fetch_blocking), (fetch_unblocking): headers cleanup
 	* src/misc.c (check_if_match), (gen_crc):
