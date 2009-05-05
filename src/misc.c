@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007  Lucian Langa <cooly@gnome.eu.org> 
+ *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org> 
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,15 @@
 #ifndef __MISC_C_
 #define __MISC_C_
 
+#define d(x)
+
+#include <stdint.h>
+#include <string.h>
+#include <glib.h>
 #include <libedataserver/md5-utils.h>
+#include <camel/camel-mime-utils.h>
+
+#include "misc.h"
 
 int
 getNumericConfValue(gpointer a)
@@ -44,6 +52,20 @@ free_hash(gpointer key, gpointer value, gpointer user_data)
 {
  	g_print("FREE - key:%p, value:%p\n", key, value);
  //	xmlFreeDoc(key);
+}
+
+gboolean
+check_if_match (gpointer key, gpointer value, gpointer user_data)
+{
+        char *sf_href = (char *)value;
+        char *int_uri = (char *)user_data;
+
+        d(g_print("checking hay:%s for neddle:%s\n", sf_href, int_uri));
+
+        if (!strcmp (sf_href, int_uri))
+                return TRUE; /* Quit calling the callback */
+
+        return FALSE; /* Continue calling the callback till end of table */
 }
 
 gchar *
@@ -193,7 +215,7 @@ strplchr(gchar *source)
  	return string;
 } 
 
-static gchar *
+gchar *
 markup_decode (gchar *str)
 {
         char *iterator, *temp;
@@ -248,7 +270,7 @@ markup_decode (gchar *str)
         return temp;
 }
 
-uint32_t
+gchar *
 gen_crc(const char *msg)
 {
          register unsigned long crc, poly;
@@ -272,17 +294,17 @@ gen_crc(const char *msg)
          crc = 0xFFFFFFFF;
          for (i = 0; i < strlen(msg); i++)
                  crc = ((crc >> 8) & 0x00FFFFFF) ^ crc_tab[(crc ^ *msg++) & 0xFF];
-    return (crc ^ 0xFFFFFFFF);
+    return g_strdup_printf("%x", (crc ^ 0xFFFFFFFF));
 }
  
-static char *
+gchar *
 gen_md5(gchar *buffer)
 {
-         unsigned char md5sum[16], res[17], *f;
-         int i;
-         const char tohex[16] = "0123456789abcdef";
+        unsigned char md5sum[16], res[17], *f;
+        int i;
+        const char tohex[16] = "0123456789abcdef";
  
-         md5_get_digest (buffer, strlen(buffer), md5sum);
+        md5_get_digest (buffer, strlen(buffer), md5sum);
   	for (i=0, f = res; i<16;i++)
  	{
                 unsigned int c = md5sum[i];

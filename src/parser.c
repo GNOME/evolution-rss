@@ -365,7 +365,7 @@ g_print("parser error 3_4 -> return NULL!!!\n");
 
 /* returns node disregarding type
  */
-static char *
+char *
 layer_find (xmlNodePtr node, 
 	    char *match, 
 	    char *fail)

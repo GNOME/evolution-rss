@@ -25,6 +25,9 @@
 #ifndef __RSS_H_
 #define __RSS_H_
 
+#include <libsoup/soup.h>
+#include <mail/mail-component.h>
+
 #define PLUGIN_INSTALL_DIR @PLUGIN_INSTALL_DIR@
 #define DEFAULT_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL "Untitled channel"
@@ -40,7 +43,6 @@
 #define HTTP_CACHE_PATH "http"
 
 GConfClient *rss_gconf;
-GSList *rss_list = NULL;
 
 typedef struct _RDF {
         char 		*uri;
@@ -289,23 +291,17 @@ typedef struct rss_auth {
 	GtkWidget *rememberpass;
 } RSS_AUTH;
 
-guint           upgrade = 0;                // set to 2 when initailization successfull
-guint count = 0;
-gchar *buffer = NULL;
 guint ftotal;
 guint farticle;
 
-uint32_t gen_crc(const char *msg);
 GtkDialog* create_user_pass_dialog(RSS_AUTH *auth);
-static void start_check_cb (GtkWidget *widget, gpointer data);
 static void err_destroy (GtkWidget *widget, guint response, gpointer data);
-static gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
 void save_gconf_feed(void);
 void rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg);
 void rss_select_folder(gchar *folder_name);
 gpointer lookup_chn_name_by_url(gchar *url);
 gboolean update_articles(gboolean disabler);
-static xmlNode *html_find (xmlNode *node, char *match);
+xmlNode *html_find (xmlNode *node, char *match);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
 gchar *decode_utf8_entities(gchar *str);
@@ -322,9 +318,9 @@ void update_feed_image(gchar *image, gchar *key);
 static void update_status_icon(const char *channel, gchar *title);
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_website (SoupMessage *msg, gint user_data);
+finish_website (SoupMessage *msg, gpointer user_data);
 #else
-finish_website (SoupSession *soup_sess, SoupMessage *msg, gint user_data);
+finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
 #endif
 static void
 #if LIBSOUP_VERSION < 2003000
@@ -344,7 +340,7 @@ void taskbar_pop_message(void);
 void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
 void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
 gchar *rss_component_peek_base_directory(MailComponent *component);
-static void custom_feed_timeout(void);
+void custom_feed_timeout(void);
 void gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data);
 gchar *encode_rfc2047(gchar *str);
 CamelFolder *check_feed_folder(gchar *folder_name);

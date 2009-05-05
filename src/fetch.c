@@ -23,7 +23,7 @@
 #include "file-gio.h"
 
 GString*
-fetch_blocking(const char *url, GSList *headers, GString *post,
+fetch_blocking(gchar *url, GSList *headers, GString *post,
                   NetStatusCallback cb, gpointer data,
                   GError **err) {
 
@@ -61,7 +61,7 @@ error:
 //FIXME gio callback hardcoded 
 
 gboolean
-fetch_unblocking(const char *url, NetStatusCallback cb, gpointer data, 
+fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data, 
 				gpointer cb2, gpointer cbdata2,
 				guint track,
 				GError **err)

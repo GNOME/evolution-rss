@@ -63,9 +63,10 @@ am__installdirs = "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(bindir)" \
 pluginLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(plugin_LTLIBRARIES)
 liborg_gnome_evolution_rss_la_LIBADD =
-am__liborg_gnome_evolution_rss_la_SOURCES_DIST = rss.c gecko-utils.cpp
+am__liborg_gnome_evolution_rss_la_SOURCES_DIST = rss.c \
+	rss-config-factory.c misc.c gecko-utils.cpp
 @HAVE_GECKO_TRUE@am__objects_1 = gecko-utils.lo
-am__objects_2 = rss.lo $(am__objects_1)
+am__objects_2 = rss.lo rss-config-factory.lo misc.lo $(am__objects_1)
 am_liborg_gnome_evolution_rss_la_OBJECTS = $(am__objects_2)
 liborg_gnome_evolution_rss_la_OBJECTS =  \
 	$(am_liborg_gnome_evolution_rss_la_OBJECTS)
@@ -346,7 +347,7 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 	org-gnome-evolution-rss.xml
 
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
-SOURCES = rss.c $(am__append_2)
+SOURCES = rss.c rss-config-factory.c misc.c $(am__append_2)
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(NO_UNDEFINED_LIBS) $(NO_UNDEFINED)
 #$(GECKO_RPATH)
@@ -500,6 +501,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/evolution-import-rss.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gecko-utils.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rss-config-factory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rss.Plo@am__quote@
 
 .c.o:

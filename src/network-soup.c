@@ -24,7 +24,7 @@
 
 #include "network.h"
 #include "rss.h"
-#include "misc.c"
+#include "misc.h"
 
 #define USE_PROXY FALSE
 
@@ -456,7 +456,7 @@ out:
 }
 
 gboolean
-net_get_unblocking(const char *url, 
+net_get_unblocking(gchar *url, 
 				NetStatusCallback cb, gpointer data, 
 				gpointer cb2, gpointer cbdata2,
 				guint track,
@@ -554,7 +554,7 @@ soup_message_add_header_handler (msg,
 }
 
 GString*
-net_post_blocking(const char *url, GSList *headers, GString *post,
+net_post_blocking(gchar *url, GSList *headers, GString *post,
                   NetStatusCallback cb, gpointer data,
                   GError **err) {
 #if LIBSOUP_VERSION < 2003000
@@ -640,6 +640,78 @@ out:
 	if (req) g_object_unref(G_OBJECT(req));
 	
 	return response;
+}
+
+gboolean
+cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
+{
+#if LIBSOUP_VERSION < 2003000
+        SoupUri *uri =  soup_message_get_uri((SoupMessage *)value);
+#else
+        SoupURI *uri =  soup_message_get_uri((SoupMessage *)value);
+#endif
+        d(g_print("cancel url:%s%s?%s\n", uri->host, uri->path, uri->query?uri->query:""));
+
+        if (SOUP_IS_SESSION(key))
+        {
+/*              if (SOUP_IS_MESSAGE(value))
+                {
+#if LIBSOUP_VERSION < 2003000
+                        soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
+                        soup_session_cancel_message(key, value);
+#else
+                        soup_session_cancel_message(key, value, SOUP_STATUS_CANCELLED);
+#endif
+                }*/
+                soup_session_abort(key);
+                g_hash_table_find(rf->key_session,
+                        remove_if_match,
+                        user_data);
+        }
+        return TRUE;
+}
+
+void
+remove_weak(gpointer key, gpointer value, gpointer user_data)
+{
+        g_object_weak_unref(value, unblock_free, key);
+}
+
+void
+abort_all_soup(void)
+{
+        //abort all session
+        rf->cancel = 1;
+        rf->cancel_all = 1;
+        if (rf->abort_session)
+        {
+                g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
+                g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
+//              g_hash_table_foreach(rf->abort_session, cancel_soup_sess, NULL);
+                g_hash_table_destroy(rf->session);
+                rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
+        }
+        if (rf->progress_bar)
+        {
+                gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
+                rf->progress_bar = NULL;        //there's no need to update bar once we canceled feeds
+        }
+        if (rf->b_session)
+        {
+/*              if (SOUP_IS_MESSAGE(rf->b_msg_session))
+                {
+#if LIBSOUP_VERSION < 2003000
+                        soup_message_set_status(rf->b_msg_session, SOUP_STATUS_CANCELLED);
+                        soup_session_cancel_message(rf->b_session, rf->b_msg_session);
+#else
+                        soup_session_cancel_message(rf->b_session, rf->b_msg_session, SOUP_STATUS_CANCELLED);
+#endif
+                }*/
+                soup_session_abort(rf->b_session);
+                rf->b_session = NULL;
+                rf->b_msg_session = NULL;
+        }
+        rf->cancel_all = 0;
 }
 
 void

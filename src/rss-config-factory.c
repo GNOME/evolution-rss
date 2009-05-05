@@ -21,15 +21,41 @@
 #include "config.h"
 #endif
 
+#include <errno.h>
 #include <string.h>
 #include <stdio.h>
 #include <glib.h>
+#include <gtk/gtk.h>
+#include <glade/glade.h>
+#include <gconf/gconf-client.h>
+#include <gdk/gdkkeysyms.h>
+
+#include <camel/camel-folder.h>
+#include <camel/camel-store.h>
+#include <camel/camel-operation.h>
+#include <camel/camel-provider.h>
+
+#include <mail/em-event.h>
+#include <mail/em-config.h>
+
+#include <shell/evolution-config-control.h>
+#include <bonobo/bonobo-shlib-factory.h>
 
 #include "rss.h"
+#include "misc.h"
+#include "parser.h"
+
+#define d(x)
 
 static guint feed_enabled = 0;
 static guint feed_validate = 0;
 static guint feed_html = 0;
+
+extern rssfeed *rf;
+extern guint upgrade;
+extern guint count; 
+extern gchar *buffer;
+extern GSList *rss_list;
 
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
@@ -108,6 +134,14 @@ render_engine_changed (GtkComboBox *dropdown, GCallback *user_data)
         if (id == 2)
                 rss_mozilla_init();
 #endif
+}
+
+static void
+start_check_cb (GtkWidget *widget, gpointer data)
+{
+    gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+    /* Save the new setting to gconf */
+    gconf_client_set_bool (rss_gconf, data, active, NULL);
 }
 
 static void
@@ -239,6 +273,7 @@ details_cb (GtkWidget *widget, gpointer data)
 
         gtk_widget_show(details);
 }
+
 
 static void
 construct_list(gpointer key, gpointer value, gpointer user_data)
@@ -739,7 +774,6 @@ delete_feed_folder_alloc(gchar *old_name)
                                 (GHFunc)populate_reversed,
                                 rf->reversed_feed_folders);
 }
-
 
 static void
 delete_response(GtkWidget *selector, guint response, gpointer user_data)

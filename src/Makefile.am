@@ -69,7 +69,9 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 
-SOURCES = rss.c
+SOURCES = 	rss.c			\
+		rss-config-factory.c	\
+	  	misc.c
 if HAVE_GECKO
 SOURCES+= gecko-utils.cpp
 endif

@@ -1,3 +1,15 @@
+2009-05-05  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/Makefile.am: add misc.c and rss-config-factory.c to build list
+	* src/fetch.c (fetch_blocking), (fetch_unblocking): headers cleanup
+	* src/misc.c (check_if_match), (gen_crc):
+	* src/rss-config-factory.c (start_check_cb): move function here
+	* src/rss.c (browser_write), (browsercb),
+	(create_user_pass_dialog), (web_auth_dialog), (mycall),
+	(webkit_click), (gecko_click), (org_gnome_rss_browser),
+	(org_gnome_cooly_format_rss), (finish_website), (finish_comments),
+	(fetch_comments): fix wrongly defined headers
+
 2009-05-03  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/gecko-utils.cpp:
