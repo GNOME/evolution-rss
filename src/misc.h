@@ -30,5 +30,6 @@ gboolean is_rfc822(char *in);
 gchar *extract_main_folder(gchar *folder);
 gchar *strextr(gchar *text, gchar *substr);
 gchar *sanitize_url(gchar *text);
+gchar *sanitize_folder(gchar *text);
 
 #endif

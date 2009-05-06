@@ -2032,7 +2032,7 @@ render_body:    if (category)
 				pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), rfrclsid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
 				pobj->counter = commcnt;
 				pobj->website = comments;
-//				pobj->object.free = free_rss_controls;
+				//pobj->object.free = free_rss_controls;
 				camel_stream_printf(fstream, 
                        			"<object height=25 classid=%s></object>", rfrclsid);
 				if (result && strlen(result))
@@ -2040,9 +2040,8 @@ render_body:    if (category)
 					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
 						frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
 				commstream = NULL;
-			}
-			else {
-				fetch_comments(comments, (EMFormatHTML *)t->format);
+			} else {
+				fetch_comments(comments, t->format);
 			}
 			camel_stream_printf (fstream, "</div>");
 		}	
@@ -2829,8 +2828,9 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 
 	commstream = response->str; 
 
-	if (reload)
-		em_format_redraw((EMFormat *)user_data);
+	if (reload) {
+		em_format_redraw((EMFormatHTML *)user_data);
+	}
 	
 	while (gtk_events_pending ())
             gtk_main_iteration ();
@@ -2852,7 +2852,7 @@ print_comments(gchar *url, gchar *stream)
         xmlNodePtr root = NULL;
         xmlSubstituteEntitiesDefaultValue = 0;
         doc = xml_parse_sux (stream, strlen(stream));
-//        d(g_print("content:\n%s\n", content->str));
+        d(g_print("content:\n%s\n", stream));
         root = xmlDocGetRootElement(doc);
 
         if ((doc != NULL && root != NULL)
@@ -2874,7 +2874,7 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 	GError *err = NULL;
 	g_print("\nFetching comments from: %s\n", 
 		url);
-	g_object_ref(stream);
+	
 
 	fetch_unblocking(
 				url,
@@ -2883,15 +2883,13 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 				(gpointer)finish_comments,
 				stream,	// we need to dupe key here
 				1,
-				&err);			// because we might lose it if
-							// feed gets deleted
-		if (err)
-		{
-                     	gchar *msg = g_strdup_printf("\n%s\n%s", 
-				 	url, err->message);
-                        rss_error(url, NULL, _("Error fetching feed."), msg);
-                     	g_free(msg);
-		}
+				&err);	
+	if (err) {
+              	gchar *msg = g_strdup_printf("\n%s\n%s", 
+			 	url, err->message);
+                rss_error(url, NULL, _("Error fetching feed."), msg);
+              	g_free(msg);
+	}
 }
 
 gboolean
