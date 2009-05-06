@@ -69,7 +69,7 @@ gecko_prefs_set_string (const gchar *key, const gchar *value)
 	return NS_SUCCEEDED(gPrefBranch->SetCharPref (key, value));
 }
 
-static gboolean
+extern "C" gboolean
 gecko_prefs_set_int (const gchar *key, gint value)
 {
 	NS_ENSURE_TRUE (gPrefBranch, FALSE);

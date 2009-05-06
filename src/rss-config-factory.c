@@ -35,6 +35,7 @@
 #include <mail/em-config.h>
 
 #include <shell/evolution-config-control.h>
+#include <e-util/e-error.h>
 #include <bonobo/bonobo-shlib-factory.h>
 
 #include "rss.h"
@@ -462,7 +463,7 @@ create_dialog_add(gchar *text, gchar *feed_text)
 	case 3:
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton6), 1);
 		break;
-	defaut:
+	default:
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton4), 1);
 		break;
 	}
@@ -825,6 +826,7 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
         rf->import = 0;
 }
 
+void
 feeds_dialog_disable(GtkDialog *d, gpointer data)
 {
         GtkTreeSelection *selection;
@@ -855,11 +857,8 @@ remove_feed_dialog(gchar *msg)
   GtkWidget *dialog1;
   GtkWidget *dialog_vbox1;
   GtkWidget *vbox1;
-  GtkWidget *label1;
   GtkWidget *checkbutton1;
   GtkWidget *dialog_action_area1;
-  GtkWidget *cancelbutton1;
-  GtkWidget *okbutton1;
 
   dialog1 = e_error_new(NULL, "org-gnome-evolution-rss:ask-delete-feed", msg, NULL);
   gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
@@ -889,6 +888,7 @@ remove_feed_dialog(gchar *msg)
   return dialog1;
 }
 
+void
 feeds_dialog_delete(GtkDialog *d, gpointer data)
 {
         GtkTreeSelection *selection;
@@ -1081,15 +1081,15 @@ iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type)
 
 	if (type == 0) {
         	src = html_find(src, "outline");
-        	*url = xmlGetProp(src, "xmlUrl");
-		*title = xmlGetProp(src, "title");
+        	*url = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
+		*title = xmlGetProp(src, (xmlChar *)"title");
 	} else if (type == 1) {
 		xmlNode *my;
 		src = html_find(src, "member");
 		my = layer_find_pos(src, "member", "Agent");
 		*title = xmlCharStrdup(layer_find(my, "name", NULL));
 		my =  html_find(my, "channel");
-		*url =  xmlGetProp(my, "about");
+		*url =  (gchar *)xmlGetProp(my, (xmlChar *)"about");
 	}
 	return src;
 	
@@ -1100,7 +1100,6 @@ import_opml(gchar *file)
 {
 	gchar *url = NULL;
 	xmlChar *name = NULL;
-        xmlChar *buff = NULL;
         guint total = 0;
         guint current = 0;
 	guint type = 0; //file type
@@ -1111,7 +1110,6 @@ import_opml(gchar *file)
 
         xmlNode *src = (xmlNode *)xmlParseFile (file);
         xmlNode *doc = src;
-	xmlNode *my = src;
         gchar *msg = g_strdup(_("Importing feeds..."));
         import_dialog = e_error_new((GtkWindow *)rf->preferences, "shell:importing", msg, NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
@@ -1130,10 +1128,9 @@ import_opml(gchar *file)
                 0);
         gtk_widget_show_all(import_dialog);
         g_free(msg);
-	if (src=src->children)
-	{
+	if ((src=src->children)) {
 		d(g_print("found %s\n", src->name));
-		if (!g_ascii_strcasecmp(src->name, "rdf")) {
+		if (!g_ascii_strcasecmp((char *)src->name, "rdf")) {
 			while (src) {
 				g_print("my cont:%s\n", src->content);
 				src=src->children;
@@ -1142,7 +1139,7 @@ import_opml(gchar *file)
 				src = src->children;
 				d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
 				src = src->next;
-				while (src = iterate_import_file(src, &url, &name, 1)) {
+				while ((src = iterate_import_file(src, &url, &name, 1))) {
                 			if (url) {
                         			total++;
                         			xmlFree(url);
@@ -1153,9 +1150,9 @@ import_opml(gchar *file)
 			type = 1;
 			}
 		}
-		else if (!g_ascii_strcasecmp(src->name, "opml")) {
+		else if (!g_ascii_strcasecmp((char *)src->name, "opml")) {
 			
-			while (src = iterate_import_file(src, &url, &name, 0)) {
+			while ((src = iterate_import_file(src, &url, &name, 0))) {
                 		if (url && strlen(url)) {
                         		total++;
                         		xmlFree(url);
@@ -1184,7 +1181,7 @@ import_opml(gchar *file)
 		d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
 		src = src->next;
 	}
-	while (src = iterate_import_file(src, &url, &name, type)) {
+	while ((src = iterate_import_file(src, &url, &name, type))) {
                 if (url && strlen(url)) {
 		g_print("url:%s\n", url);
                         if (rf->cancel)
@@ -1193,12 +1190,12 @@ import_opml(gchar *file)
                                 rf->cancel = 0;
                                 goto out;
                         }
-                        gtk_label_set_text(GTK_LABEL(import_label), name);
+                        gtk_label_set_text(GTK_LABEL(import_label), (gchar *)name);
 #if GTK_VERSION >= 2006000
                         gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
                         gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
-			import_one_feed(url, name);
+			import_one_feed(url, (gchar *)name);
 			if (name) xmlFree(name);
 			if (url) xmlFree(url);
 
@@ -1352,7 +1349,8 @@ create_import_dialog (void)
   GtkWidget *button1;
   GtkWidget *button2;
 
-  import_file_select = gtk_file_chooser_dialog_new (_("Select import file"), NULL, GTK_FILE_CHOOSER_ACTION_OPEN, NULL);
+  import_file_select = gtk_file_chooser_dialog_new (_("Select import file"),
+				 NULL, GTK_FILE_CHOOSER_ACTION_OPEN, NULL, NULL);
   gtk_window_set_keep_above(GTK_WINDOW(import_file_select), TRUE);
   gtk_window_set_modal (GTK_WINDOW (import_file_select), TRUE);
   gtk_window_set_destroy_with_parent (GTK_WINDOW (import_file_select), TRUE);
@@ -1388,7 +1386,8 @@ create_export_dialog (void)
   GtkWidget *button3;
   GtkWidget *button4;
 
-  export_file_select = gtk_file_chooser_dialog_new (_("Select file to export"), NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL);
+  export_file_select = gtk_file_chooser_dialog_new (_("Select file to export"), 
+				NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
   gtk_window_set_keep_above(GTK_WINDOW(export_file_select), TRUE);
   g_object_set (export_file_select,
                 "local-only", FALSE,
@@ -1634,7 +1633,6 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 {
 	GtkListStore  *store;
         GtkTreeIter iter;
-        GConfClient *gconf = gconf_client_get_default();
         GtkWidget *hbox;
 	guint i;
 
@@ -1681,7 +1679,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
                         break;
 #endif
                 default:
-                        g_printf("Selected render not supported! Failling back to default.\n");
+                        g_print("Selected render not supported! Failling back to default.\n");
                         gtk_combo_box_set_active(GTK_COMBO_BOX(combo), render);
 
         }
@@ -1766,15 +1764,10 @@ GtkWidget *
 folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 {
         EMConfigTargetFolder *target=  (EMConfigTargetFolder *)data->config->target;
-        CamelFolder *cml_folder = target->folder;
-        CamelService *service;
-        CamelProvider *provider;
         GtkWidget *lbl_size, *lbl_size_val;
-        GtkListStore *model;
         GtkVBox *vbx;
         GtkHBox *hbx_size;
-        char *folder_name, *folder_size;
-        int mode;
+        char *folder_size;
 	GladeXML  *gui;
 
         char *gladefile;
@@ -1825,7 +1818,6 @@ rss_config_control_new (void)
 	
 	GtkListStore  *store;
 	GtkTreeIter    iter;
-	int i;
 	GtkCellRenderer *cell;
 	GtkTreeSelection *selection;
 	GtkTreeViewColumn *column;

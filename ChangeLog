@@ -1,5 +1,27 @@
 2009-05-06  Lucian Langa  <lucilanga@gnome.org>
 
+	* src/gecko-utils.cpp:
+	* src/gecko-utils.h:
+	* src/misc.c (print_hash), (free_hash), (sanitize_folder),
+	(gen_crc), (gen_md5), (extract_main_folder):
+	* src/network-soup.c:
+	* src/parser.c (parse_href), (update_channel):
+	* src/rss-config-factory.c (create_dialog_add),
+	(remove_feed_dialog), (iterate_import_file), (import_opml),
+	(create_import_dialog), (create_export_dialog),
+	(e_plugin_lib_get_configure_widget), (folder_factory),
+	(rss_config_control_new):
+	* src/rss.c (taskbar_op_new), (browser_write),
+	(create_user_pass_dialog), (proxy_auth_dialog),
+	(feed_new_from_xml), (mycall), (webkit_set_preferences),
+	(gecko_set_preferences), (gecko_click), (org_gnome_rss_browser),
+	(org_gnome_cooly_format_rss), (setup_feed),
+	(org_gnome_cooly_rss_startup), (org_gnome_cooly_rss),
+	(rss_finalize), (create_mail): cleanups part 4;
+	make browser use evolution proxy.
+
+2009-05-06  Lucian Langa  <lucilanga@gnome.org>
+
 	* src/parser.c (html_set_base), (parse_html),
 	(layer_find_innerelement), (html_find), (layer_find),
 	(layer_find_all), (content_rss), (dublin_core_rss), (wfw_rss),

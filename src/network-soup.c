@@ -34,6 +34,7 @@ gint proxy_type = 0;
 extern rssfeed *rf;
 extern GConfClient *rss_gconf;
 EProxy *proxy;
+SoupSession *webkit_session = NULL;
 
 typedef struct {
 	NetStatusCallback user_cb;
@@ -186,6 +187,19 @@ proxy_init(void)
 	return proxy;
 }
 
+void
+proxify_webkit_session(EProxy *proxy, gchar *uri)
+{
+	SoupURI *proxy_uri = NULL;
+
+	if (e_proxy_require_proxy_for_uri (proxy, uri)) {
+		proxy_uri = e_proxy_peek_uri_for (proxy, uri);
+		g_print("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+	} else 
+		g_print("webkit no PROXY-%s\n", uri);
+
+	g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+}
 
 //this will insert proxy in the session
 void
@@ -200,7 +214,6 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 		g_print("no PROXY-%s\n", uri);
 
 	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
-
 }
 
 guint

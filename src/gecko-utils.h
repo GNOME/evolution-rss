@@ -27,6 +27,7 @@ G_BEGIN_DECLS
 
 gboolean gecko_prefs_set_bool (const gchar *key, gboolean value);
 gboolean gecko_prefs_set_string (const gchar *key, const gchar *value);
+gboolean gecko_prefs_set_int (const gchar *key, const gint value);
 gboolean       gecko_init         (void);
 void           gecko_shutdown     (void);
 void gecko_set_zoom (GtkWidget *moz, gfloat zoom);

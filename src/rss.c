@@ -351,7 +351,6 @@ taskbar_op_new(gchar *message)
 {
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	char *mcp = g_strdup_printf("%p", mail_component_peek());
-	static GdkPixbuf *progress_icon;
 	guint activity_id = 
 #if (EVOLUTION_VERSION >= 22306)
 		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
@@ -495,9 +494,12 @@ browser_write(gchar *string, gint length, gchar *base)
 #endif
 	break;
 	case 1:
+#ifdef HAVE_WEBKIT
+		proxify_webkit_session(proxy, base);
 		webkit_web_view_load_html_string(WEBKIT_WEB_VIEW(rf->mozembed),
                                                          str,
                                                          base);
+#endif
 		break;
 	}
 }
@@ -544,7 +546,6 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 GtkDialog *
 create_user_pass_dialog(RSS_AUTH *auth)
 {
-	GtkWidget *dialog1;
 	GtkWidget *username;
 	GtkWidget *password;
 	GtkWidget *checkbutton1;
@@ -553,7 +554,6 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	GtkWidget *widget;
 	GtkWidget *action_area;
 	GtkWidget *content_area;
-        gboolean visible;
         AtkObject *a11y;
 
         widget = gtk_dialog_new_with_buttons (
@@ -741,7 +741,6 @@ gboolean
 proxy_auth_dialog(gchar *title, gchar *user, gchar *pass)
 {
 	GtkDialog *dialog;
-	guint resp;
 
 	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
 	auth_info->user = user;
@@ -1075,9 +1074,8 @@ xml_set_bool (xmlNodePtr node, const char *name, gboolean *val)
 gboolean
 feed_new_from_xml(char *xml)
 {
-	xmlNodePtr node, cur;
+	xmlNodePtr node;
         xmlDocPtr doc;
-        gboolean changed = FALSE;
 	char *uid = NULL;
 	char *name = NULL;
 	char *url = NULL;
@@ -1394,11 +1392,12 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0)
 			{
 				if (engine == 2)
+#ifdef HAVE_GECKO
 					gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
 		    					po->website, "text/html");
+#endif
 		//browser_write("test", 4);
 				if (!browser_fetching) {
-					gint fill=0;
 					browser_fetching=1;
 					fetch_unblocking(
 						po->website,
@@ -1450,10 +1449,19 @@ rss_mozilla_init(void)
 }
 #endif
 
-#ifdef HAVE_GECKO
 void
-render_set_preferences(void)
+webkit_set_preferences(void)
 {
+#ifdef HAVE_WEBKIT
+	webkit_session = webkit_get_default_session();
+#endif
+}
+
+void
+gecko_set_preferences(void)
+{
+#ifdef HAVE_GECKO
+	SoupURI *uri;
 	gecko_prefs_set_bool("javascript.enabled", 
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL));
 	gecko_prefs_set_bool("security.enable_java", 
@@ -1464,8 +1472,18 @@ render_set_preferences(void)
                         EVOLUTION_VERSION_STRING, VERSION);
 	gecko_prefs_set_string("general.useragent.extra.firefox", agstr); 
 	g_free(agstr);
-}
+	//I'm only forcing scheme here
+	uri = e_proxy_peek_uri_for(proxy, "http:///");
+	gecko_prefs_set_string("network.proxy.http", uri->host); 
+	gecko_prefs_set_int("network.proxy.http_port", uri->port); 
+	gecko_prefs_set_int("network.proxy.type", 1); 
+//	soup_uri_free(uri);
+//	uri = e_proxy_peek_uri_for(proxy, "https:///");
+//	gecko_prefs_set_string("network.proxy.ssl", uri->host); 
+//	gecko_prefs_set_int("network.proxy.ssl_port", uri->port); 
+//	soup_uri_free(uri);
 #endif
+}
 
 static void
 rss_popup_zoom_in(EPopup *ep, EPopupItem *pitem, void *data)
@@ -1548,7 +1566,6 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
         GSList *menus = NULL;
         EMPopup *emp;
 	gint i=0, menu_size;
-	EMPopupTargetURI *t;
 	EPopupTarget *target;
 
 	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
@@ -1590,10 +1607,7 @@ static gboolean
 org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
 	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
-	int width, height;
-        GtkRequisition req;
 	GtkWidget *moz;
-	GString *content;
 
 //        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
 	guint engine = fallback_engine();
@@ -1606,6 +1620,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
+		webkit_set_preferences();
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
 		g_signal_connect (rf->mozembed, "populate-popup", G_CALLBACK (webkit_click), moz);
 	//	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
@@ -1616,7 +1631,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #ifdef HAVE_GECKO
 	if (engine == 2) {
 		rf->mozembed = gtk_moz_embed_new();
-		render_set_preferences();
+		gecko_set_preferences();
 
 		/* FIXME add all those profile shits */
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
@@ -1844,8 +1859,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	category  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-category");
 	gchar *subject = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
 				 "Subject"), NULL);
-	gchar *f = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
-				 "From"), NULL);
 	
 	gpointer is_html = NULL;
 	if (feedid)
@@ -2226,10 +2239,8 @@ char *strcasestr(const char *a, const char *b)
 gboolean
 setup_feed(add_feed *feed)
 {
-	CamelException ex;
 	guint ret = 0;
 	guint ttl;
-	guint ttl_multiply = 0;
         RDF *r = NULL;
         GString *post;
         GError *err = NULL;
@@ -3605,8 +3616,7 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
                                 (CamelObjectEventHookFunc)store_folder_renamed, NULL);
 	camel_object_hook_event(store, "folder_deleted",
                                 (CamelObjectEventHookFunc)store_folder_deleted, NULL);
-	CamelObject *session = mail_component_peek_session(NULL);
-	camel_object_hook_event(session, "online", (CamelObjectEventHookFunc)rss_online, NULL);
+	camel_object_hook_event(mail_component_peek_session(NULL), "online", (CamelObjectEventHookFunc)rss_online, NULL);
 }
 
 /* check if rss folders exists and create'em otherwise */
@@ -3760,9 +3770,6 @@ org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t)
 org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 #endif
 {
-	GtkWidget *readrss_dialog;
-	GtkWidget *readrss_label;
-	GtkWidget *readrss_progress;
 	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
 	GtkWidget *recv_icon;
 
@@ -3915,10 +3922,10 @@ rss_finalize(void)
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
 
-	guint render = GPOINTER_TO_INT(
+/*	guint render = GPOINTER_TO_INT(
 		gconf_client_get_int(rss_gconf, 
 			GCONF_KEY_HTML_RENDER, 
-			NULL));
+			NULL));*/
 #ifdef HAVE_GECKO
 	/*/really find a better way to deal with this//
 	//I do not know how to shutdown gecko (gtk_moz_embed_pop_startup)
@@ -4056,7 +4063,7 @@ create_mail(create_feed *CF)
 	CamelMimeMessage *new = camel_mime_message_new();
 	CamelInternetAddress *addr;
 	CamelMessageInfo *info;
-	CamelException *ex;
+	CamelException *ex = NULL;
 	struct tm tm;
 	time_t time;
 	CamelDataWrapper *rtext;
@@ -4533,14 +4540,14 @@ migrate_crc_md5(const char *name, gchar *url)
 gchar *
 decode_utf8_entities(gchar *str)
 {
-	guint inlen, utf8len;
+	int inlen, utf8len;
 	gchar *buffer;
 	g_return_val_if_fail (str != NULL, NULL);
 
 	inlen = strlen(str);
 	utf8len = 5*inlen+1;
 	buffer = g_malloc0(utf8len);
-	UTF8ToHtml(buffer, &utf8len, str, &inlen);
+	UTF8ToHtml((unsigned char *)buffer, &utf8len, (unsigned char *)str, &inlen);
 	return buffer;
 }
 

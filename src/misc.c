@@ -21,12 +21,14 @@
 
 #define d(x)
 
+#define _GNU_SOURCE
 #include <stdint.h>
 #include <string.h>
 #include <glib.h>
 #include <libedataserver/md5-utils.h>
 #include <camel/camel-mime-utils.h>
 
+#include "rss.h"
 #include "misc.h"
 
 int
@@ -44,13 +46,13 @@ on_next_unread_item_activate(gpointer a)
 static void
 print_hash(gpointer key, gpointer value, gpointer user_data)
 {
- 	g_print("key:%s, value:%s\n", key, value);
+ 	g_print("key:%s, value:%s\n", (gchar *)key, (gchar *)value);
 }
  
 static void
 free_hash(gpointer key, gpointer value, gpointer user_data)
 {
- 	g_print("FREE - key:%p, value:%p\n", key, value);
+ 	g_print("FREE - key:%p, value:%p\n", (gchar *)key, (gchar *)value);
  //	xmlFreeDoc(key);
 }
 
@@ -138,7 +140,7 @@ sanitize_folder(gchar *text)
         while (*s == '.' && len)
         {
                 str = g_string_erase (str, 0, 1);
-		s = str->str;
+		s = (unsigned char *)(str->str);
              	len--;
         }
         g_string_append_c(str, 0);
@@ -294,7 +296,7 @@ gen_crc(const char *msg)
          crc = 0xFFFFFFFF;
          for (i = 0; i < strlen(msg); i++)
                  crc = ((crc >> 8) & 0x00FFFFFF) ^ crc_tab[(crc ^ *msg++) & 0xFF];
-    return g_strdup_printf("%x", (crc ^ 0xFFFFFFFF));
+    return g_strdup_printf("%x", (unsigned int)(crc ^ 0xFFFFFFFF));
 }
  
 gchar *
@@ -311,7 +313,7 @@ gen_md5(gchar *buffer)
                 *f++ = tohex[c & 0xf];
          }
  	*f++ = 0;
-         return g_strdup(res);
+         return g_strdup((gchar *)res);
 }
 
 static void
@@ -369,8 +371,7 @@ gchar *extract_main_folder(gchar *folder)
         gchar *base = g_strdup_printf("%s/", main_folder);
         gchar **nnew;
 	gchar *tmp;
-	if (nnew = g_strsplit(folder, base, 0))
-	{
+	if ((nnew = g_strsplit(folder, base, 0))) {
 		g_free(base);
 		tmp = g_strdup(nnew[1]);
 		g_strfreev(nnew);

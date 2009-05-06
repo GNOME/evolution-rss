@@ -248,8 +248,6 @@ parse_html(char *url, const char *html, int len)
 static gchar *
 parse_href (const gchar *s, const gchar *base)
 {
-        gchar *retval;
-        gchar *tmp;
         gchar *tmpurl;
 
         if(s == NULL || *s == 0)
@@ -1037,7 +1035,6 @@ update_channel(RDF *r)
 	xmlNodePtr el;
 	char *q = NULL;
 	char *b = NULL;
-	gchar *encl;
 	gchar *subj;
 	create_feed *CF;
 	CamelFolder *mail_folder;
