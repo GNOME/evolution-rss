@@ -511,7 +511,7 @@ browsercb(NetStatusType status, gpointer statusdata, gpointer data)
 //		g_print("chunk:%s\n", progress->chunk);
 		g_print("total:%d\n", progress->total);
 		g_print("curent:%d\n", progress->current);
-		g_print("--------------\n chunk: %d \n=============\n", progress->chunksize);
+		g_print("--------------\n chunk: %d \n=============\n", GPOINTER_TO_INT(progress->chunksize));
 		//browser_write(progress->chunk, progress->chunksize, data);
 //		browser_fill+=progress->chunksize;
         break;
@@ -816,42 +816,42 @@ feed_to_xml(gchar *key)
         int n;
 	gchar *ctmp;
 
-        doc = xmlNewDoc ("1.0");
+        doc = xmlNewDoc ((xmlChar *)"1.0");
 
-        root = xmlNewDocNode (doc, NULL, "feed", NULL);
+        root = xmlNewDocNode (doc, NULL, (xmlChar *)"feed", NULL);
         xmlDocSetRootElement (doc, root);
 
-        xmlSetProp (root, "uid", g_hash_table_lookup(rf->hrname, key));
-        xmlSetProp (root, "enabled", g_hash_table_lookup(rf->hre, lookup_key(key)) ? "true" : "false");
-        xmlSetProp (root, "html", g_hash_table_lookup(rf->hrh, lookup_key(key)) ? "true" : "false");
+        xmlSetProp (root, (xmlChar *)"uid", (xmlChar *)(g_hash_table_lookup(rf->hrname, key)));
+        xmlSetProp (root, (xmlChar *)"enabled", (xmlChar *)(g_hash_table_lookup(rf->hre, lookup_key(key)) ? "true" : "false"));
+        xmlSetProp (root, (xmlChar *)"html", (xmlChar *)(g_hash_table_lookup(rf->hrh, lookup_key(key)) ? "true" : "false"));
 
 
-        xmlNewTextChild (root, NULL, "name", key);
-        xmlNewTextChild (root, NULL, "url", g_hash_table_lookup(rf->hr, lookup_key(key)));
-        xmlNewTextChild (root, NULL, "type", g_hash_table_lookup(rf->hrt, lookup_key(key)));
+        xmlNewTextChild (root, NULL, (xmlChar *)"name", (xmlChar *)key);
+        xmlNewTextChild (root, NULL, (xmlChar *)"url", (xmlChar *)g_hash_table_lookup(rf->hr, lookup_key(key)));
+        xmlNewTextChild (root, NULL, (xmlChar *)"type", (xmlChar *)g_hash_table_lookup(rf->hrt, lookup_key(key)));
 
-        src = xmlNewTextChild (root, NULL, "delete", NULL);
-        ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrdel_feed, lookup_key(key)));
-        xmlSetProp (src, "option", ctmp);
+        src = xmlNewTextChild (root, NULL, (xmlChar *)"delete", NULL);
+        ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, lookup_key(key))));
+        xmlSetProp (src, (xmlChar *)"option", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrdel_days, lookup_key(key)));
-        xmlSetProp (src, "days", ctmp);
+	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, lookup_key(key))));
+        xmlSetProp (src, (xmlChar *)"days", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrdel_messages, lookup_key(key)));
-        xmlSetProp (src, "messages", ctmp);
+	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(key))));
+        xmlSetProp (src, (xmlChar *)"messages", (xmlChar *)ctmp);
 	g_free(ctmp);
-        xmlSetProp (src, "unread", 
-		g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false");
+        xmlSetProp (src, (xmlChar *)"unread", 
+		(xmlChar *)(g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false"));
 
-        src = xmlNewTextChild (root, NULL, "ttl", NULL);
-	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrupdate, lookup_key(key)));
-        xmlSetProp (src, "option", ctmp);
+        src = xmlNewTextChild (root, NULL, (xmlChar *)"ttl", NULL);
+	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))));
+        xmlSetProp (src, (xmlChar *)"option", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrttl, lookup_key(key)));
-        xmlSetProp (src, "value", ctmp);
+	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key))));
+        xmlSetProp (src, (xmlChar *)"value", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", g_hash_table_lookup(rf->hrttl_multiply, lookup_key(key)));
-        xmlSetProp (src, "factor", ctmp);
+	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl_multiply, lookup_key(key))));
+        xmlSetProp (src, (xmlChar *)"factor", (xmlChar *)ctmp);
 	g_free(ctmp);
 	
 	xmlDocDumpMemory (doc, &xmlbuf, &n);
@@ -1009,7 +1009,7 @@ xml_set_content (xmlNodePtr node, char **val)
         char *buf;
         int res;
 
-        buf = xmlNodeGetContent(node);
+        buf = (char *)xmlNodeGetContent(node);
         if (buf == NULL) {
                 res = (*val != NULL);
                 if (res) {
@@ -1034,7 +1034,7 @@ xml_set_prop (xmlNodePtr node, const char *name, char **val)
         char *buf;
         int res;
 
-        buf = xmlGetProp (node, name);
+        buf = (char *)xmlGetProp (node, (xmlChar *)name);
         if (buf == NULL) {
                 res = (*val != NULL);
                 if (res) {
@@ -1059,7 +1059,7 @@ xml_set_bool (xmlNodePtr node, const char *name, gboolean *val)
         gboolean gbool;
         char *buf;
 
-        if ((buf = xmlGetProp (node, name))) {
+        if ((buf = (char *)xmlGetProp (node, (xmlChar *)name))) {
                 gbool = (!strcmp (buf, "true") || !strcmp (buf, "yes"));
                 xmlFree (buf);
 
@@ -1093,11 +1093,11 @@ feed_new_from_xml(char *xml)
 	guint update=0;
 	gchar *ctmp = NULL;
 
-        if (!(doc = xmlParseDoc ((char *)xml)))
+        if (!(doc = xmlParseDoc ((xmlChar *)xml)))
                 return FALSE;
 
         node = doc->children;
-        if (strcmp (node->name, "feed") != 0) {
+        if (strcmp ((char *)node->name, "feed") != 0) {
                 xmlFreeDoc (doc);
                 return FALSE;
         }
@@ -1107,25 +1107,25 @@ feed_new_from_xml(char *xml)
         xml_set_bool (node, "html", &html);
 
         for (node = node->children; node; node = node->next) {
-                if (!strcmp (node->name, "name")) {
+                if (!strcmp ((char *)node->name, "name")) {
 			xml_set_content (node, &name);
 		}
-                if (!strcmp (node->name, "url")) {
+                if (!strcmp ((char *)node->name, "url")) {
 			xml_set_content (node, &url);
 		}
-                if (!strcmp (node->name, "type")) {
+                if (!strcmp ((char *)node->name, "type")) {
 			xml_set_content (node, &type);
 		}
-		if (!strcmp (node->name, "delete")) {
+		if (!strcmp ((char *)node->name, "delete")) {
 			xml_set_prop (node, "option", &ctmp);
 			del_feed = atoi(ctmp);
 			xml_set_prop (node, "days", &ctmp);
 			del_days = atoi(ctmp);
 			xml_set_prop (node, "messages", &ctmp);
 			del_messages = atoi(ctmp);
-			xml_set_bool (node, "unread", &del_unread);
+			xml_set_bool (node, "unread", (gboolean *)&del_unread);
 		}
-		if (!strcmp (node->name, "ttl")) {
+		if (!strcmp ((char *)node->name, "ttl")) {
 			xml_set_prop (node, "option", &ctmp);
 			update = atoi(ctmp);
 			xml_set_prop (node, "value", &ctmp);
@@ -1179,11 +1179,11 @@ feeds_uid_from_xml (const char *xml)
         xmlDocPtr doc;
         char *uid = NULL;
 
-        if (!(doc = xmlParseDoc ((char *)xml)))
+        if (!(doc = xmlParseDoc ((xmlChar *)xml)))
                 return NULL;
 
         node = doc->children;
-        if (strcmp (node->name, "feed") != 0) {
+        if (strcmp ((char *)node->name, "feed") != 0) {
                 xmlFreeDoc (doc);
                 return NULL;
         }
@@ -1287,7 +1287,7 @@ read_feeds(rssfeed *rf)
 		load_gconf_feed();
 
 	res = 1;
-out:	g_free(feed_file);
+	g_free(feed_file);
 	return res;
 }
 
@@ -1963,7 +1963,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 		CamelDataWrapper *content = camel_medium_get_content_object(CAMEL_MEDIUM(t->part));
      		camel_data_wrapper_write_to_stream(content, (CamelStream *)stream);
-		g_byte_array_append (buffer, "", 1);
+		g_byte_array_append (buffer, (unsigned char *)"", 1);
 //#ifdef EVOLUTION_2_12	//aparently this ("?" char parsing) is fixed in 2.12
 //		//then again this does not work in evo > 2.12 perhaps is gtkhtml related 
 //		buff = buffer->data;
@@ -1971,12 +1971,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		gchar *tmp;
 	 	if (camel_content_type_is(type, "text", "evolution-rss-feed"))	//old evolution-rss content type
 		{
-			tmp = decode_utf8_entities(buffer->data);
+			tmp = decode_utf8_entities((gchar *)(buffer->data));
 		}
 		else
-			tmp = g_strdup(buffer->data);
+			tmp = g_strdup((gchar *)(buffer->data));
 
-		buff=tmp;
+		buff=(xmlChar *)tmp;
 		g_byte_array_free (buffer, 1);
 	//	char *buff = decode_html_entities(buffer2);
 ///		buff=tmp;
@@ -1989,7 +1989,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
                         frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
         	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
-			if (pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL)) {
+			if ((pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL))) {
                 		camel_stream_printf (fstream,
                         	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                         	"<img height=16 src=%s>"
@@ -2041,7 +2041,7 @@ render_body:    if (category)
 						frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
 				commstream = NULL;
 			} else {
-				fetch_comments(comments, t->format);
+				fetch_comments(comments, (EMFormatHTML *)t->format);
 			}
 			camel_stream_printf (fstream, "</div>");
 		}	
@@ -2200,11 +2200,11 @@ search_rss(char *buffer, int len)
 	xmlNode *doc = (xmlNode *)parse_html_sux (buffer, len);
 	while (doc) {
 		doc = html_find(doc, "link");
-		app = xmlGetProp(doc, "type");
+		app = (gchar *)xmlGetProp(doc, (xmlChar *)"type");
 		if (!g_ascii_strcasecmp(app, "application/atom+xml")
 		|| !g_ascii_strcasecmp(app, "application/xml")
 		|| !g_ascii_strcasecmp(app, "application/rss+xml")) {
-			return xmlGetProp(doc, "href");
+			return (gchar *)xmlGetProp(doc, (xmlChar *)"href");
 		}
 		xmlFree(app);
 	}
@@ -2338,9 +2338,9 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
 	root = xmlDocGetRootElement(doc);
 
 	if ((doc != NULL && root != NULL)
-		&& (strcasestr(root->name, "rss")
-		|| strcasestr(root->name, "rdf")
-		|| strcasestr(root->name, "feed"))) {
+		&& (strcasestr((char *)root->name, "rss")
+		|| strcasestr((char *)root->name, "rdf")
+		|| strcasestr((char *)root->name, "feed"))) {
         	r->cache = doc;
 		r->uri = feed->feed_url;
 		r->progress = feed->progress;
@@ -2582,7 +2582,8 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
         	g_set_error(&err, NET_ERROR, NET_ERROR_GENERIC,
                 	soup_status_get_phrase(msg->status_code));
-                gchar *tmsg = g_strdup_printf("\n%s\n%s", user_data, err->message);
+                gchar *tmsg = g_strdup_printf("\n%s\n%s", (gchar *)user_data, 
+							(gchar *)err->message);
                 rss_error(user_data, NULL, _("Error fetching feed."), tmsg);
                 g_free(tmsg);
         	goto out;
@@ -2627,7 +2628,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	GString *response = g_string_new_len(msg->body, msg->length);
 
-	g_print("feed %s\n", user_data);
+	g_print("feed %s\n", (gchar *)user_data);
 
 	while (gtk_events_pending ())
             gtk_main_iteration ();
@@ -2638,7 +2639,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
         r->cache = xml_parse_sux (response->str, response->len);
 	if (rsserror) {
 		xmlError *err = xmlGetLastError();
-                gchar *tmsg = g_strdup_printf("\n%s\nInvalid feed: %s", user_data, err->message);
+                gchar *tmsg = g_strdup_printf("\n%s\nInvalid feed: %s", (gchar *)user_data, err->message);
                 rss_error(user_data, NULL, _("Error while parsing feed."), tmsg);
                 g_free(tmsg);
 		goto out;
@@ -2693,7 +2694,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted)
 	{
-		gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), user_data);
+		gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), (gchar *)user_data);
 		gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 		gtk_label_set_justify(GTK_LABEL (rf->sr_feed), GTK_JUSTIFY_LEFT);
 		g_free(furl);
@@ -2748,7 +2749,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	if (g_hash_table_lookup(rf->hre, lookup_key(key)) && !rf->cancel && !rf->import)
 	{
 		d(g_print("\nFetching: %s..%s\n", 
-			(char *)g_hash_table_lookup(rf->hr, lookup_key(key)), key));
+			(gchar *)g_hash_table_lookup(rf->hr, lookup_key(key)), (gchar *)key));
 		rf->feed_queue++;
 
 		fetch_unblocking(
@@ -2764,7 +2765,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 		{
 			rf->feed_queue--;
                      	gchar *msg = g_strdup_printf("\n%s\n%s", 
-				 	key, err->message);
+				 	(gchar *)key, err->message);
                         rss_error(key, NULL, _("Error fetching feed."), msg);
                      	g_free(msg);
 		}
@@ -2783,10 +2784,10 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 {
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
 	guint engine = fallback_engine();
-	g_print("browser full:%d\n", response->len);
-	g_print("browser fill:%d\n", browser_fill);
+	g_print("browser full:%d\n", (int)response->len);
+	g_print("browser fill:%d\n", (int)browser_fill);
 	if (response->len)
-	g_print("browser fill:%d%%\n", (browser_fill*100)/response->len);
+	g_print("browser fill:%d%%\n", (int)((browser_fill*100)/response->len));
 	gchar *str = (response->str);
 	gint len = strlen(response->str);
 	*str+=browser_fill;
@@ -2856,9 +2857,9 @@ print_comments(gchar *url, gchar *stream)
         root = xmlDocGetRootElement(doc);
 
         if ((doc != NULL && root != NULL)
-                && (strcasestr(root->name, "rss")
-                || strcasestr(root->name, "rdf")
-                || strcasestr(root->name, "feed"))) {
+                && (strcasestr((char *)root->name, "rss")
+                || strcasestr((char *)root->name, "rdf")
+                || strcasestr((char *)root->name, "feed"))) {
                 r->cache = doc;
                 r->uri = url;
 
@@ -3029,7 +3030,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	xmlChar *icon = NULL;
 	gchar *icon_url = NULL;
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, user_data);
+        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, (gchar *)user_data);
         g_free(feed_dir);
 	gchar *url = g_hash_table_lookup(rf->hr, user_data);
 	gchar *urldir = g_path_get_dirname(url);
@@ -3047,10 +3048,10 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	xmlNode *doc = (xmlNode *)parse_html_sux (rfmsg->body, rfmsg->length);
 	while (doc) {
 		doc = html_find(doc, "link");
-                if (app = xmlGetProp(doc, "rel")) {
-			if (!g_ascii_strcasecmp(app, "shorcut icon")
-			|| !g_ascii_strcasecmp(app, "icon")) {
-				icon = xmlGetProp(doc, "href");
+                if ((app = xmlGetProp(doc, (xmlChar *)"rel"))) {
+			if (!g_ascii_strcasecmp((char *)app, "shorcut icon")
+			|| !g_ascii_strcasecmp((char *)app, "icon")) {
+				icon = xmlGetProp(doc, (xmlChar *)"href");
 				break;
 			}
 	
@@ -3271,7 +3272,7 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 		else
 			update_feed_folder(info->old_base, info->new->full_name);
 	}
-	gchar *path = mail_component_peek_base_directory (mail_component_peek());
+	gchar *path = (gchar *)mail_component_peek_base_directory (mail_component_peek());
 
 	CamelStore *store = mail_component_peek_local_store(NULL);
         CamelFolder *mail_folder;
@@ -3597,14 +3598,15 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
                                                          NULL);
 	g_free(pixfile);
 
+
         /* hook in rename event to catch feeds folder rename */
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	camel_object_hook_event(store, "folder_renamed",
                                 (CamelObjectEventHookFunc)store_folder_renamed, NULL);
 	camel_object_hook_event(store, "folder_deleted",
                                 (CamelObjectEventHookFunc)store_folder_deleted, NULL);
-	camel_object_hook_event((CamelObject *)mail_component_peek_session(NULL),
-				 "online", rss_online, NULL);
+	CamelObject *session = mail_component_peek_session(NULL);
+	camel_object_hook_event(session, "online", (CamelObjectEventHookFunc)rss_online, NULL);
 }
 
 /* check if rss folders exists and create'em otherwise */

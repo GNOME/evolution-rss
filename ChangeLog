@@ -1,3 +1,19 @@
+2009-05-06  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/parser.c (html_set_base), (parse_html),
+	(layer_find_innerelement), (html_find), (layer_find),
+	(layer_find_all), (content_rss), (dublin_core_rss), (wfw_rss),
+	(layer_find_ns_tag), (layer_find_tag), (media_rss),
+	(layer_find_tag_prop), (layer_find_innerhtml), (layer_find_pos),
+	(tree_walk), (parse_channel_line):
+	* src/rss.c (browsercb), (feed_to_xml), (xml_set_content),
+	(xml_set_prop), (xml_set_bool), (feed_new_from_xml),
+	(feeds_uid_from_xml), (read_feeds), (org_gnome_cooly_format_rss),
+	(search_rss), (setup_feed), (generic_finish_feed), (fetch_feed),
+	(finish_website), (print_comments), (finish_update_feed_image),
+	(store_folder_renamed), (org_gnome_cooly_rss_startup): various
+	cleanups part 3
+
 2009-05-05  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/Makefile.am:

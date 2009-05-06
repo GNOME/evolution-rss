@@ -40,24 +40,24 @@ html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
         SoupURI *base_uri = soup_uri_new (base);
 #endif
         while ((doc = html_find((xmlNode *)doc, tag))) {
-                if ((url = xmlGetProp(doc, prop))) {
+                if ((url = (gchar *)xmlGetProp(doc, (xmlChar *)prop))) {
                         if (!strncmp(tag, "img", 3) && !strncmp(prop, "src", 3)) {
                                 gchar *tmpurl = strplchr(url);
-                                xmlSetProp(doc, prop, tmpurl);
+                                xmlSetProp(doc, (xmlChar *)prop, (xmlChar *)tmpurl);
                                 g_free(tmpurl);
                         }
                         d(g_print("DEBUG: parsing: %s\n", url));
                         if (url[0] == '/' && url[1] != '/') {
                                 gchar *server = get_server_from_uri(base);
                                 gchar *tmp = g_strdup_printf("%s/%s", server, url);
-                                xmlSetProp(doc, prop, tmp);
+                                xmlSetProp(doc, (xmlChar *)prop, (xmlChar *)tmp);
                                 g_free(tmp);
                                 g_free(server);
                         }
                         if (url[0] == '/' && url[1] == '/') {
                                 /*FIXME handle ssl */
                                 gchar *tmp = g_strdup_printf("%s%s", "http:", url);
-                                xmlSetProp(doc, prop, tmp);
+                                xmlSetProp(doc, (xmlChar *)prop, (xmlChar *)tmp);
                                 g_free(tmp);
                         }
                         if (url[0] != '/' && !g_str_has_prefix(url,  "http://")
@@ -77,7 +77,7 @@ html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
                                 //xmlSetProp(doc, prop, g_strdup_printf("%s/%s", get_server_from_uri(base), url));
                                 if (newuri) {
                                         newuristr = soup_uri_to_string (newuri, FALSE);
-                                        xmlSetProp(doc, prop, (xmlChar *)newuristr);
+                                        xmlSetProp(doc, (xmlChar *)prop, (xmlChar *)newuristr);
                                         g_free(newuristr);
                                         soup_uri_free(newuri);
                                 }
@@ -218,7 +218,7 @@ parse_html(char *url, const char *html, int len)
                 return NULL;
         doc = src;
         gchar *newbase = NULL;
-        newbase = xmlGetProp(html_find((xmlNode *)doc, "base"), "href");
+        newbase = (gchar *)xmlGetProp(html_find((xmlNode *)doc, "base"), (xmlChar *)"href");
         d(g_print("newbase:|%s|\n", newbase));
         xmlDoc *tmpdoc = (xmlDoc *)html_find((xmlNode *)doc, "base");
         xmlUnlinkNode((xmlNode *)tmpdoc);
@@ -302,8 +302,8 @@ layer_find_innerelement (xmlNodePtr node,
 		xmlDebugDumpNode (stdout, node, 32);
 		printf("%s.\n", node->name);
 #endif
-		if (strcasecmp (node->name, match)==0) {
-			return xmlGetProp(node, el);
+		if (strcasecmp ((char *)node->name, match)==0) {
+			return (char *)xmlGetProp(node, (xmlChar *)el);
 		}
 		node = node->next;
 	}
@@ -339,7 +339,7 @@ g_print("parser error 3_2 -> return NULL!!!\n");
                 }
 
                 if (node->name) {
-                        if (!strcmp (node->name, match))
+                        if (!strcmp ((char *)node->name, match))
 {
 #ifdef RDF_DEBUG
 g_print("parser error 3_3 -> return NULL!!!\n");
@@ -366,9 +366,9 @@ layer_find (xmlNodePtr node,
 		xmlDebugDumpNode (stdout, node, 32);
 		printf("%s.\n", node->name);
 #endif
-		if (strcasecmp (node->name, match)==0) {
+		if (strcasecmp ((char *)node->name, match)==0) {
 			if (node->children != NULL && node->children->content != NULL) {
-				return node->children->content;
+				return (char *)(node->children->content);
 			} else {
 				return fail;
 			}
@@ -392,10 +392,10 @@ layer_find_all (xmlNodePtr node,
 		xmlDebugDumpNode (stdout, node, 32);
 		printf("%s.\n", node->name);
 #endif
-		if (strcasecmp (node->name, match)==0) {
-			while (strcasecmp (node->name, match)==0) {
+		if (strcasecmp ((char *)node->name, match)==0) {
+			while (strcasecmp ((char *)node->name, match)==0) {
 				if (node->children != NULL && node->children->content != NULL) {
-					category = g_list_append(category, g_strdup(node->children->content));
+					category = g_list_append(category, g_strdup((char *)node->children->content));
 				}
 				node = node->next;
 			}
@@ -424,7 +424,7 @@ content_rss(xmlNode *node, gchar *fail)
 {
 	gchar *content;
 
-	content = xmlNodeGetContent(node);
+	content = (char *)xmlNodeGetContent(node);
 	if (content)
 		return content;
 	else
@@ -436,7 +436,7 @@ dublin_core_rss(xmlNode *node, gchar *fail)
 {
 	gchar *content;
 
-	content = xmlNodeGetContent(node);
+	content = (char *)xmlNodeGetContent(node);
 	if (content)
 		return content;
 	else
@@ -454,7 +454,7 @@ wfw_rss(xmlNode *node, gchar *fail)
 {
 	gchar *content;
 
-	content = xmlNodeGetContent(node);
+	content = (char *)xmlNodeGetContent(node);
 	if (content)
 		return content;
 	else
@@ -481,10 +481,10 @@ layer_find_ns_tag(xmlNodePtr node,
         while (node!=NULL) {
 		if (node->ns && node->ns->prefix) {
 			for (i=0; i < 5; i++) {
-				if (!strcasecmp (node->ns->prefix, standard_rss_modules[i][1])) {
+				if (!strcasecmp ((char *)node->ns->prefix, standard_rss_modules[i][1])) {
 					func = (gpointer)standard_rss_modules[i][2];
-					if (strcasecmp (node->ns->prefix, nsmatch) == 0
-					&&  strcasecmp (node->name, match) == 0 ) {
+					if (strcasecmp ((char *)node->ns->prefix, nsmatch) == 0
+					&&  strcasecmp ((char *)node->name, match) == 0 ) {
 						return func(node, fail);
 					}
 				}
@@ -514,29 +514,29 @@ layer_find_tag (xmlNodePtr node,
 #endif
 		if (node->ns && node->ns->prefix) {
 			for (i=0; i < 4; i++) {
-				if (!strcasecmp (node->ns->prefix, standard_rss_modules[i][1])) {
+				if (!strcasecmp ((char *)node->ns->prefix, standard_rss_modules[i][1])) {
 					func = (gpointer)standard_rss_modules[i][2];
-					if (strcasecmp (node->ns->prefix, match)==0) {
+					if (strcasecmp ((char *)node->ns->prefix, match)==0) {
 						xmlBufferFree(buf);
 						return func(node, fail);
 					}
 				}
 			}
 		}
-                if (strcasecmp (node->name, match)==0) {
+                if (strcasecmp ((char *)node->name, match)==0) {
                         if (node->children != NULL) {
 				if (node->children->type == 1			//XML_NODE_ELEMENT
 	/*			|| node->children->type == 3		*/	//XML_NODE_TEXT
 					|| node->children->next != NULL) {
 				d(g_print("NODE DUMP:%s|\n", xmlNodeGetContent(node->children->next)));
-				gchar *nodetype = xmlGetProp(node, "type");
+				gchar *nodetype = (gchar *)xmlGetProp(node, (xmlChar *)"type");
 				if (!strcasecmp(nodetype, "xhtml")) {		// test this with "html" or smth else
 				//this looses html entities
  				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
 				content = g_strdup_printf("%s", xmlBufferContent(buf));
 				xmlBufferFree(buf);
 				} else
-					content = xmlNodeGetContent(node->children);
+					content = (char *)xmlNodeGetContent(node->children);
 				if (nodetype)
 					xmlFree(nodetype);
 				return content;
@@ -558,7 +558,7 @@ media_rss(xmlNode *node, gchar *search, gchar *fail)
 	gchar *content;
 	g_print("media_rss()\n");
 
-	content = xmlGetProp(node, search);
+	content = (gchar *)xmlGetProp(node, (xmlChar *)search);
 	if (content)
 		return content;
 	else
@@ -588,10 +588,10 @@ layer_find_tag_prop (xmlNodePtr node,
 		{
 			for (i=0; i < 1; i++)
 			{
-				if (!strcasecmp (node->ns->prefix, property_rss_modules[i][1]))
+				if (!strcasecmp ((char *)node->ns->prefix, property_rss_modules[i][1]))
 				{
 					func = (gpointer)property_rss_modules[i][2];
-					if (strcasecmp (node->ns->prefix, match)==0)
+					if (strcasecmp ((char *)node->ns->prefix, match)==0)
 					{
 						g_print("URL:%s\n", func(node, search, fail));
 					}
@@ -613,7 +613,7 @@ layer_find_innerhtml (xmlNodePtr node,
 		xmlDebugDumpNode (stdout, node, 32);
 		printf("%s.\n", node->name);
 #endif
-		if (strcasecmp (node->name, match)==0 && node->children) {
+		if (strcasecmp ((char *)node->name, match)==0 && node->children) {
 			return layer_find(node->children->next, submatch, fail);
 		}
 		node = node->next;
@@ -631,10 +631,10 @@ layer_find_pos (xmlNodePtr node,
                 xmlDebugDumpNode (stdout, node, 32);
                 printf("%s.\n", node->name);
 #endif
-                if (strcasecmp (node->name, match)==0 && node->children) {
+                if (strcasecmp ((char *)node->name, match)==0 && node->children) {
 			subnode = node->children;
 			while (subnode!=NULL) {
-                		if (strcasecmp (subnode->name, submatch)==0 && subnode->children)
+                		if (strcasecmp ((char *)subnode->name, submatch)==0 && subnode->children)
 				{
                         			return subnode->children->next;
 				}
@@ -725,7 +725,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 #ifdef RDF_DEBUG
 			printf ("%p, %s\n", walk, walk->name);
 #endif
-			if (strcasecmp (walk->name, "rdf") == 0) {
+			if (strcasecmp ((char *)walk->name, "rdf") == 0) {
 //				xmlNode *node = walk;
 				rewalk = walk->children;
 				walk = walk->next;
@@ -740,14 +740,14 @@ tree_walk (xmlNodePtr root, RDF *r)
 //					xmlFree(ver);
 				continue;
 			}
-			if (strcasecmp (walk->name, "rss") == 0){
+			if (strcasecmp ((char *)walk->name, "rss") == 0){
 				xmlNode *node = walk;
 				rewalk = walk->children;
 				walk = walk->next;
 				if (!r->type)
 				r->type = g_strdup("RSS");
 				r->type_id = RSS_FEED;
-                		gchar *ver = xmlGetProp(node, "version");
+                		gchar *ver = (gchar *)xmlGetProp(node, (xmlChar *)"version");
                 		if (r->version)
 					g_free(r->version);
 				r->version = g_strdup(ver);
@@ -755,12 +755,12 @@ tree_walk (xmlNodePtr root, RDF *r)
 					xmlFree(ver);
 				continue;
 			}
-			if (strcasecmp (walk->name, "feed") == 0) {
+			if (strcasecmp ((char *)walk->name, "feed") == 0) {
 				xmlNode *node = walk;
 				if (!r->type)
 				r->type = g_strdup("ATOM");
 				r->type_id = ATOM_FEED;
-                		gchar *ver = xmlGetProp(node, "version");
+                		gchar *ver = (gchar *)xmlGetProp(node, (xmlChar *)"version");
 				if (ver)
 				{
                 			if (r->version)
@@ -780,21 +780,21 @@ tree_walk (xmlNodePtr root, RDF *r)
 #ifdef RDF_DEBUG
 			printf ("Top level '%s'.\n", walk->name);
 #endif
-			if (strcasecmp (walk->name, "channel") == 0) {
+			if (strcasecmp ((char *)walk->name, "channel") == 0) {
 				channel = walk;
 				rewalk = channel->children;
 			}
-			if (strcasecmp (walk->name, "feed") == 0) {
+			if (strcasecmp ((char *)walk->name, "feed") == 0) {
 				channel = walk;
 				rewalk = channel->children;
 			}
-			if (strcasecmp (walk->name, "image") == 0) {
+			if (strcasecmp ((char *)walk->name, "image") == 0) {
 				image = walk;
 			}
-			if (strcasecmp (walk->name, "item") == 0) {
+			if (strcasecmp ((char *)walk->name, "item") == 0) {
 				g_array_append_val(item, walk);
 			}
-			if (strcasecmp (walk->name, "entry") == 0) {
+			if (strcasecmp ((char *)walk->name, "entry") == 0) {
 				g_array_append_val(item, walk);
 			}
 			walk = walk->next;
@@ -981,27 +981,25 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 
 			if (feed_name) {
                         	xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
-                        	if (src)
-                        	{
+                        	if (src) {
                                 	xmlNode *doc = (xmlNode *)src;
 
-                                	while (doc = html_find(doc, "img"))
-                                	{
+                                	while ((doc = html_find(doc, "img"))) {
                                         	gchar *name = NULL;
-                                        	xmlChar *url = xmlGetProp(doc, "src");
+                                        	xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
                                         	if (url) {
-                                                	if (name = fetch_image(url, link)) {
-                                                        	xmlSetProp(doc, "src", name);
+                                                	if ((name = fetch_image((gchar *)url, link))) {
+                                                        	xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)name);
 								g_free(name);
 							}
                                                 	xmlFree(url);
                                         	}
                                 	}
-                                	xmlDocDumpMemory(src, &buff, &size);
+                                	xmlDocDumpMemory(src, &buff, (int*)&size);
                                 	xmlFree(src);
                         	}
                         	g_free(tmp);
-                        	b=buff;
+                        	b=(gchar *)buff;
 			}
 			else
 				b = tmp;
