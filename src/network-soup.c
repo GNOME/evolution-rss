@@ -1,5 +1,5 @@
 /*  Evolution RSS Reader Plugin
- *  Copyright (C) 2007-2008 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org>
  *         
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,23 +18,31 @@
  * vim: tabstop=4 shiftwidth=4 noexpandtab :
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <string.h>
-//#include <libsoup/soup-gnome.h>
+#include <gconf/gconf-client.h>
 #include <libedataserver/e-proxy.h>
 
 #include "network.h"
+#include "network-soup.h"
 #include "rss.h"
 #include "misc.h"
+
 
 #define USE_PROXY FALSE
 
 #define SS_TIMEOUT 30
 
+#define d(x)
+
 gint proxy_type = 0;
 extern rssfeed *rf;
 extern GConfClient *rss_gconf;
+extern SoupSession *webkit_session;
 EProxy *proxy;
-SoupSession *webkit_session = NULL;
 
 typedef struct {
 	NetStatusCallback user_cb;
@@ -104,19 +112,16 @@ got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 #else
 	info->current += chunk->length;
 #endif
-	info->chunk = chunk->data;
+	info->chunk = (gchar *)chunk->data;
 	progress = g_new0(NetStatusProgress, 1);
 
 	progress->current = info->current;
 	progress->total = info->total;
-	progress->chunk = chunk->data;
-	progress->chunksize = chunk->length;
+	progress->chunk = (gchar *)chunk->data;
+	progress->chunksize = (gint)chunk->length;
 	info->user_cb(NET_STATUS_PROGRESS, progress, info->user_data);
 	g_free(progress);
 }
-
-int net_error_quark(void);
-#define NET_ERROR net_error_quark()
 
 int net_error_quark(void)
 {
@@ -171,11 +176,7 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 	g_hash_table_find(rf->key_session,
 		remove_if_match,
 		user_data);
-	gboolean prune = soup_session_try_prune_connection (user_data);
-	//I really don't know if his is necesarry
-	//but I believe it won't hurt
-	if (prune)
-		g_object_unref(user_data);
+	soup_session_abort (user_data);
 }
 
 EProxy *
@@ -554,7 +555,6 @@ soup_message_add_header_handler (msg,
 	if (info) {
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
-		g_print("connected for %s\n", url);
 	}
 
 	soup_session_queue_message (soup_sess, msg,

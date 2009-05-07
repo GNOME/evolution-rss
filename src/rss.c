@@ -17,7 +17,6 @@
  */
 
 #ifdef HAVE_CONFIG_H
-
 #include "config.h"
 #endif
 
@@ -29,22 +28,23 @@ int rss_verbose_debug = 0;
 #include <stdio.h>
 #include <ctype.h>
 #include <time.h>
+#include <errno.h>
 
 #include <camel/camel-mime-message.h>
 #include <camel/camel-folder.h>
-#include <camel/camel-exception.h>
+//#include <camel/camel-exception.h>
 #include <camel/camel-multipart.h>
 #include <camel/camel-stream-mem.h>
 #include <camel/camel-stream-fs.h>
 #include <camel/camel-text-index.h>
 
-#include <mail/em-popup.h>
+//#include <mail/em-popup.h>
 #include <e-util/e-error.h>
 #include <e-util/e-icon-factory.h>
 #include <e-util/e-mktemp.h>
 #include <e-util/e-util.h>
 
-#include <mail/em-config.h>
+//#include <mail/em-config.h>
 
 #ifdef EVOLUTION_2_12
 #include <mail/em-event.h>
@@ -52,19 +52,18 @@ int rss_verbose_debug = 0;
 
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
-#include <mail/em-folder-tree-model.h>
-#include <mail/em-folder-utils.h>
-#include <mail/em-folder-view.h>
-#include <mail/mail-mt.h>
+//#include <mail/em-folder-tree-model.h>
+//#include <mail/em-folder-utils.h>
+//#include <mail/em-folder-view.h>
+//#include <mail/mail-mt.h>
 #include <mail/mail-component.h>
 #include <mail/mail-tools.h>
 #include <mail/mail-ops.h>
 
 #include <misc/e-activity-handler.h>
 
-#include <mail/em-format.h>
+//#include <mail/em-format.h>
 #include <mail/em-format-html.h>
-
 #include <mail/em-format-hook.h>
 
 #include <sys/types.h>
@@ -82,12 +81,8 @@ int rss_verbose_debug = 0;
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <bonobo/bonobo-shlib-factory.h>
 
-#include <glade/glade-xml.h>
-#include <glade/glade.h>
-//#include <shell/e-component-view.h>///
 #include <shell/es-event.h>
 #include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
@@ -95,6 +90,7 @@ int rss_verbose_debug = 0;
 #include <libxml/parserInternals.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/HTMLparser.h>
+#include <libxml/HTMLtree.h>
 
 #ifdef HAVE_RENDERKIT
 #ifdef HAVE_GECKO
@@ -124,8 +120,6 @@ int rss_verbose_debug = 0;
 
 #endif
 
-#include <errno.h>
-
 #include <libsoup/soup.h>
 #if LIBSOUP_VERSION < 2003000
 #include <libsoup/soup-message-queue.h>
@@ -137,7 +131,7 @@ int rss_verbose_debug = 0;
 
 #include "rss.h"
 #include "parser.h"
-#include "network-soup.c"
+#include "network-soup.h"
 #include "file-gio.c"
 #include "fetch.c"
 #include "misc.h"
@@ -186,6 +180,8 @@ gchar *pixfile;
 char *pixfilebuf;
 gsize pixfilelen;
 extern int xmlSubstituteEntitiesDefaultValue;
+extern EProxy *proxy;
+SoupSession *webkit_session = NULL;
 
 rssfeed *rf = NULL;
 guint           upgrade = 0;                // set to 2 when initailization successfull
@@ -753,7 +749,7 @@ proxy_auth_dialog(gchar *title, gchar *user, gchar *pass)
 gboolean
 timeout_soup(void)
 {
-	g_print("Network timeout occured. Cancel active operations.\n");
+	d(g_print("Network timeout occured. Cancel active operations.\n"));
 	abort_all_soup();
 	return FALSE;
 }
@@ -1591,7 +1587,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 		menus = g_slist_prepend(menus, &rss_menu_items[i]);
 
         e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
-        menu = e_popup_create_menu_once((EPopup *)emp, target, 0);
+        menu = e_popup_create_menu_once((EPopup *)emp, NULL, 0);
 
 	if (button == 2)
 		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, button, gtk_get_current_event_time());
@@ -2242,7 +2238,7 @@ setup_feed(add_feed *feed)
 	guint ret = 0;
 	guint ttl;
         RDF *r = NULL;
-        GString *post;
+        GString *post = NULL;
         GError *err = NULL;
         GString *content = NULL;
 	gchar *chn_name = NULL;
@@ -3292,8 +3288,8 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 	g_print("mail_folder:%s\n", info->old_base);
 
 	gchar *idxname = g_strconcat(path, "/local/", info->new->full_name, ".ibex", NULL);
-	gchar *oldname = g_strconcat(path, "/local/", info->old_base, ".ibex", NULL);
-	g_print("idx:%s\n", idxname);
+	/*gchar *oldname = g_strconcat(path, "/local/", info->old_base, ".ibex", NULL);
+	g_print("idx:%s\n", idxname);*/
 	idx = (CamelIndex *)camel_text_index_new(idxname, O_TRUNC|O_CREAT|O_RDWR);
 //	camel_text_index_rename(oldname, idxname);
 	//camel_index_delete(idx);

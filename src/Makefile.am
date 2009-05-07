@@ -71,6 +71,7 @@ plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 SOURCES = 	dbus.c			\
 	  	misc.c			\
+		network-soup.c		\
 		rss.c			\
 		rss-config-factory.c
 if HAVE_GECKO

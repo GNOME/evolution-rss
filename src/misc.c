@@ -150,7 +150,7 @@ sanitize_folder(gchar *text)
         return string;
 }
  
-static gchar *
+gchar *
 get_url_basename(gchar *url)
 {
 	gchar *p;
@@ -316,7 +316,7 @@ gen_md5(gchar *buffer)
          return g_strdup((gchar *)res);
 }
 
-static void
+void
 header_decode_lwsp(const char **in)
 {
         const char *inptr = *in;
@@ -347,7 +347,7 @@ header_decode_lwsp(const char **in)
         *in = inptr;
 }
 
-static char *
+char *
 decode_token (const char **in)
 {
         const char *inptr = *in;

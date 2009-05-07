@@ -107,7 +107,7 @@ typedef struct {
     guint32 current;
     guint32 total;
     gchar *chunk;
-    gchar *chunksize;
+    guint chunksize;
 } NetStatusProgress;
 
 typedef void (*NetStatusCallback)(NetStatusType status,

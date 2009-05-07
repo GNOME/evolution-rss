@@ -26,10 +26,13 @@ gchar *markup_decode (gchar *str);
 gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
 gchar *get_server_from_uri(gchar *uri);
 gchar *get_port_from_uri(gchar *uri);
+gchar *get_url_basename(gchar *url);
 gboolean is_rfc822(char *in);
 gchar *extract_main_folder(gchar *folder);
 gchar *strextr(gchar *text, gchar *substr);
 gchar *sanitize_url(gchar *text);
 gchar *sanitize_folder(gchar *text);
+void header_decode_lwsp(const char **in);
+char *decode_token (const char **in);
 
 #endif

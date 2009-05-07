@@ -21,6 +21,7 @@
 #include "network.h"
 #include "rss.h"
 #include "file-gio.h"
+#include "network-soup.h"
 
 GString*
 fetch_blocking(gchar *url, GSList *headers, GString *post,

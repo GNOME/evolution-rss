@@ -23,6 +23,7 @@
 
 guint rsserror = FALSE;
 gchar *rssstrerror = NULL;
+extern rssfeed *rf;
 
 void
 html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
@@ -244,51 +245,6 @@ parse_html(char *url, const char *html, int len)
                 xmlFree(newbase);
         return doc;
 }
-
-static gchar *
-parse_href (const gchar *s, const gchar *base)
-{
-        gchar *tmpurl;
-
-        if(s == NULL || *s == 0)
-                return g_strdup ("");
-
-//      tmpurl = html_url_new (s);
-//        if (html_url_get_protocol (tmpurl) == NULL) {
-                if (s[0] == '/') {
-                        if (s[1] == '/') {
-                                gchar *t;
-
-                                /* Double slash at the beginning.  */
-
-                                /* FIXME?  This is a bit sucky.  */
-/*                                t = g_strconcat (html_url_get_protocol (baseURL),
-                                                 ":", s, NULL);
-                                html_url_destroy (tmpurl);
-                                tmpurl = html_url_new (t);
-                                retval = html_url_to_string (tmpurl);
-                                html_url_destroy (tmpurl);
-                                g_free (t);*/
-                        } else {
-                                /* Single slash at the beginning.  */
-
-                                tmpurl = g_strdup_printf("%s%s", base, s);
-                        }
-                } else {
-                                gchar *t;
-/*                        html_url_destroy (tmpurl);
-                        tmpurl = html_url_append_path (baseURL, s);
-                        retval = html_url_to_string (tmpurl);
-                        html_url_destroy (tmpurl);*/
-                }
-//        } else {
-  //              retval = html_url_to_string (tmpurl);
-    //            html_url_destroy (tmpurl);
-      //  }
-
-        return tmpurl;
-}
-
 
 static char *
 layer_find_innerelement (xmlNodePtr node, 
@@ -572,8 +528,6 @@ layer_find_tag_prop (xmlNodePtr node,
             char *search,
             char *fail)
 {
-	gchar *content;
-	guint len = 0;
 	int i;
 	char* (*func)();
 
@@ -1031,10 +985,7 @@ update_channel(RDF *r)
 {
         guint i;
 	gchar *sender;
-	char *d2 = NULL;
 	xmlNodePtr el;
-	char *q = NULL;
-	char *b = NULL;
 	gchar *subj;
 	create_feed *CF;
 	CamelFolder *mail_folder;

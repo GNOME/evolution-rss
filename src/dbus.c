@@ -144,7 +144,6 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
     		return DBUS_HANDLER_RESULT_HANDLED;
   	}
 	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "ping")) {
-		gchar *data = g_strdup("PONG");
 		DBusMessage *reply;
 		fprintf(stderr, "!!Ping!! received from %s\n",
 				dbus_message_get_sender(message));

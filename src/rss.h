@@ -348,6 +348,8 @@ void gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data);
 gchar *encode_rfc2047(gchar *str);
 CamelFolder *check_feed_folder(gchar *folder_name);
 gboolean setup_feed(add_feed *feed);
+gboolean feed_is_new(gchar *file_name, gchar *needle);
+gboolean web_auth_dialog(gchar *url);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);
