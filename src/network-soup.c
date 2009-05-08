@@ -25,6 +25,7 @@
 #include <string.h>
 #include <gconf/gconf-client.h>
 #include <libsoup/soup-gnome.h>
+#include <libsoup/soup-gnome-features.h>
 #include <libedataserver/e-proxy.h>
 
 #include "network.h"

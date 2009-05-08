@@ -60,7 +60,7 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
   [libgnome-2.0 >= $LIBGNOME_REQUIRED dnl
    libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED dnl
    gtk+-2.0 >= $LIBGTK_REQUIRED dnl
-   libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
+   dnl libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
    libsoup-gnome$SOUP >= $LIBSOUP_REQUIRED dnl
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
@@ -234,7 +234,7 @@ dnl ********************
 SOUP_VERSION=`$PKG_CONFIG --modversion libsoup$SOUP` 
 SOUP_VERSION=`echo $SOUP_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(SOUP_VERSION)
-LIBSOUP_LIBS=`$PKG_CONFIG --libs libsoup$SOUP`
+LIBSOUP_LIBS=`$PKG_CONFIG --libs libsoup$SOUP libsoup-gnome$SOUP`
 AC_SUBST(LIBSOUP_LIBS)
 
 dnl ***********

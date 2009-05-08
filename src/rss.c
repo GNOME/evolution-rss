@@ -1470,9 +1470,11 @@ gecko_set_preferences(void)
 	g_free(agstr);
 	//I'm only forcing scheme here
 	uri = e_proxy_peek_uri_for(proxy, "http:///");
-	gecko_prefs_set_string("network.proxy.http", uri->host); 
-	gecko_prefs_set_int("network.proxy.http_port", uri->port); 
-	gecko_prefs_set_int("network.proxy.type", 1); 
+	if (uri) {
+		gecko_prefs_set_string("network.proxy.http", uri->host); 
+		gecko_prefs_set_int("network.proxy.http_port", uri->port); 
+		gecko_prefs_set_int("network.proxy.type", 1); 
+	}
 //	soup_uri_free(uri);
 //	uri = e_proxy_peek_uri_for(proxy, "https:///");
 //	gecko_prefs_set_string("network.proxy.ssl", uri->host); 
