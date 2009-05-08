@@ -1,3 +1,9 @@
+2009-05-08  Lucian Langa  <lucilanga@gnome.org>
+
+	* configure.ac: add libsoup-gnome as a dependency
+	* src/network-soup.c: use feature SOUP_TYPE_PROXY_RESOLVER_GNOME if
+	using system proxy
+
 2009-05-07  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/dbus.c (filter_function):

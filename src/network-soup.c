@@ -24,6 +24,7 @@
 
 #include <string.h>
 #include <gconf/gconf-client.h>
+#include <libsoup/soup-gnome.h>
 #include <libedataserver/e-proxy.h>
 
 #include "network.h"
@@ -206,15 +207,23 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 void
 proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 {
+	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+
 	SoupURI *proxy_uri = NULL;
 
-	if (e_proxy_require_proxy_for_uri (proxy, uri)) {
-		proxy_uri = e_proxy_peek_uri_for (proxy, uri);
-		g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
-	} else 
-		g_print("no PROXY-%s\n", uri);
+	if (ptype == 2) {
+		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
+			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
+			g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+		} else 
+			g_print("no PROXY-%s\n", uri);
+		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+	}
 
-	g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+	/*avail only for > 2.26*/
+	if (ptype == 1)
+		soup_session_add_feature_by_type (session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+
 }
 
 guint
