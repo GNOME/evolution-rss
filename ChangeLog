@@ -1,3 +1,7 @@
+2009-05-09  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/network-soup.c: correctly use gnome settings entry
+
 2009-05-08  Lucian Langa  <lucilanga@gnome.org>
 
 	* configure.ac: add libsoup-gnome as a dependency

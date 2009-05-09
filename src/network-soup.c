@@ -212,18 +212,21 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 
 	SoupURI *proxy_uri = NULL;
 
-	if (ptype == 2) {
+	switch (ptype) {
+	case 2:
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
 			g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
 		} else 
 			g_print("no PROXY-%s\n", uri);
 		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
-	}
+		break;
 
 	/*avail only for > 2.26*/
-	if (ptype == 1)
+	case 0:
 		soup_session_add_feature_by_type (session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		break;
+	}
 
 }
 
@@ -527,20 +530,6 @@ net_get_unblocking(gchar *url,
 				soup_status_get_phrase(2));			//invalid url
 		return -1;
 	}
-/*
-soup_message_add_header_handler (msg,
-                                         "got_headers",
-//                                         soup_auth_is_for_proxy (auth) ?
-                                         "Authentication-Info",
-                                         G_CALLBACK (authenticate),
-                                         url);
-soup_message_add_header_handler (msg,
-                                         "got_headers",
-//                                         soup_auth_is_for_proxy (auth) ?
-                                         "Proxy-Authentication-Info",
-                                         G_CALLBACK (authenticate),
-                                         url);*/
-
 
 	if (track)
 	{
