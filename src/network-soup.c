@@ -40,6 +40,7 @@
 
 #define d(x)
 
+SoupCookieJar *rss_soup_jar = NULL;
 gint proxy_type = 0;
 extern rssfeed *rf;
 extern GConfClient *rss_gconf;
@@ -194,23 +195,30 @@ void
 proxify_webkit_session(EProxy *proxy, gchar *uri)
 {
 	SoupURI *proxy_uri = NULL;
+	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
 
-	if (e_proxy_require_proxy_for_uri (proxy, uri)) {
-		proxy_uri = e_proxy_peek_uri_for (proxy, uri);
-		g_print("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
-	} else 
-		g_print("webkit no PROXY-%s\n", uri);
+	switch (ptype) {
+	case 2:
+		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
+			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
+			g_print("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+		} else 
+			g_print("webkit no PROXY-%s\n", uri);
+		break;
+		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+	case 0:
+		soup_session_add_feature_by_type (webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		break;
+	}
 
-	g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 }
 
 //this will insert proxy in the session
 void
 proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 {
-	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
-
 	SoupURI *proxy_uri = NULL;
+	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
 
 	switch (ptype) {
 	case 2:
@@ -498,6 +506,7 @@ net_get_unblocking(gchar *url,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
+	soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
 	proxify_session(proxy, soup_sess, url);
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);
@@ -586,6 +595,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);		
 	else
 		soup_sess = rf->b_session;
+
 
 	g_signal_connect (soup_sess, "authenticate",
             G_CALLBACK (authenticate), soup_sess);
@@ -731,9 +741,5 @@ abort_all_soup(void)
 void
 rss_soup_init(void)
 {
-	proxy_type = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
-        if (proxy_type < PROXY_TYPE_SYSTEM || proxy_type > PROXY_TYPE_AUTO_URL)
-                proxy_type = PROXY_TYPE_SYSTEM;
- //       SoupCookieJar *soup_jar;
-//      soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.newcookies.sqlite", TRUE);
+	//rss_soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.newcookies.sqlite", FALSE);
 }

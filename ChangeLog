@@ -1,3 +1,9 @@
+2009-05-12  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/network-soup.c: add GNOME_PROXY_RESOLVER for webkit session
+	* src/rss.c (webkit_set_preferences), (gecko_set_preferences),
+	(finish_website): fix compiler defines
+
 2009-05-09  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/network-soup.c: correctly use gnome settings entry

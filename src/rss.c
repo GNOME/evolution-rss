@@ -182,6 +182,7 @@ gsize pixfilelen;
 extern int xmlSubstituteEntitiesDefaultValue;
 extern EProxy *proxy;
 SoupSession *webkit_session = NULL;
+SoupCookieJar *rss_soup_jar;
 
 rssfeed *rf = NULL;
 guint           upgrade = 0;                // set to 2 when initailization successfull
@@ -1450,6 +1451,7 @@ webkit_set_preferences(void)
 {
 #ifdef HAVE_WEBKIT
 	webkit_session = webkit_get_default_session();
+	soup_session_add_feature(webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
 #endif
 }
 
@@ -1467,6 +1469,8 @@ gecko_set_preferences(void)
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
                         EVOLUTION_VERSION_STRING, VERSION);
 	gecko_prefs_set_string("general.useragent.extra.firefox", agstr); 
+	gecko_prefs_set_int("browser.ssl_override_behaviour", 2); 
+	gecko_prefs_set_bool("browser.xul.error_pages.enabled", FALSE); 
 	g_free(agstr);
 	//I'm only forcing scheme here
 	uri = e_proxy_peek_uri_for(proxy, "http:///");
@@ -1556,6 +1560,7 @@ webkit_click (GtkEntry *entry,
 	return TRUE;
 }
 
+#ifdef HAVE_GECKO
 gboolean
 gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 {
@@ -1599,6 +1604,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	g_print("button:%d\n", button);
 	return TRUE;
 }
+#endif
 
 #ifdef HAVE_RENDERKIT
 static gboolean
@@ -2791,6 +2797,7 @@ finish_website (SoupMessage *msg, gpointer user_data)
 finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
+	g_return_if_fail(rf->mozembed);
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
 	guint engine = fallback_engine();
 	g_print("browser full:%d\n", (int)response->len);
@@ -2804,8 +2811,10 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	g_print("len:%d\n", len);
 	if (len>0) {
 		browser_write(str, len, user_data);
+#ifdef HAVE_GECKO
 		if (engine == 2)
 			gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
+#endif
 		g_string_free(response, 1);
 //		gtk_widget_show(rf->mozembed);
 	}
