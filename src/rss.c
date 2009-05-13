@@ -1810,11 +1810,11 @@ pfree(EMFormatHTMLPObject *o)
 	}
 #endif
 	g_signal_handler_disconnect(po->format->html, po->shandler);
-/*	if (rf->mozembed)
+	if (rf->mozembed)
 	{
 		gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
-	}*/
+	}
 	gtk_widget_destroy(po->container);
 	g_free(po->website);
 	browser_fetching = 0;
