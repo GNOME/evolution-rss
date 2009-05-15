@@ -211,8 +211,7 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 		break;
 		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 	case 0:
-		if (rss_soup_jar)
-			soup_session_add_feature_by_type (webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		soup_session_add_feature_by_type (webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 	}
 
@@ -237,7 +236,8 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 
 	/*avail only for > 2.26*/
 	case 0:
-		soup_session_add_feature_by_type (session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		if (rss_soup_jar)
+			soup_session_add_feature_by_type (session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 	}
 
