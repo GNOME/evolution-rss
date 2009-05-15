@@ -1,3 +1,25 @@
+2009-05-15  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/org-gnome-evolution-rss.eplug.xml:
+	* src/rss-config-factory.c (build_dialog_add),
+	(actions_dialog_add), (create_dialog_add), (delete_response),
+	(feeds_dialog_edit), (e_plugin_lib_get_configure_widget),
+	(rss_folder_factory_abort), (rss_folder_factory_commit),
+	(rss_folder_factory): hook rss properties in folder properties
+
+	* src/rss.c (rss_error), (taskbar_op_set_progress),
+	(taskbar_op_finish), (statuscb), (browser_write), (pfree),
+	(org_gnome_cooly_format_rss), (org_gnome_cooly_folder_icon),
+	(setup_feed), (update_sr_message), (generic_finish_feed),
+	(fetch_feed), (update_articles), (get_main_folder),
+	(get_feed_folders), (lookup_original_folder), (update_feed_folder),
+	(check_feed_folder), (store_folder_renamed),
+	(custom_update_articles), (custom_fetch_feed), (icon_activated),
+	(org_gnome_cooly_rss_startup), (check_folders),
+	(org_gnome_cooly_rss_refresh), (org_gnome_cooly_rss),
+	(create_mail), (write_feed_status_line), (finish_enclosure): - various
+	cleanups
+
 2009-05-12  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/network-soup.c: add GNOME_PROXY_RESOLVER for webkit session

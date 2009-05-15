@@ -19,7 +19,6 @@
 	* when adding a feed as opml file offer to import (file detection)
 	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
 	* cache large feeds
-	* hook feed properties in folder properties
 	* if necessary implement config code for evo 2.12
 	* fix recursivity on layer_find_pos
 	* fix annoying cursor jump when browsing through evo-rss folders

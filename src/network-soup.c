@@ -207,7 +207,8 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 		break;
 		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 	case 0:
-		soup_session_add_feature_by_type (webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		if (rss_soup_jar)
+			soup_session_add_feature_by_type (webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 	}
 
@@ -533,15 +534,13 @@ net_get_unblocking(gchar *url,
 
 	/* Queue an async HTTP request */
 	msg = soup_message_new ("GET", url);
-	if (!msg)
-	{
+	if (!msg) {
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
 				soup_status_get_phrase(2));			//invalid url
 		return -1;
 	}
 
-	if (track)
-	{
+	if (track) {
 		//we want to be able to abort this session by calling
 		//abort_all_soup
 		g_hash_table_insert(rf->session, soup_sess, msg);

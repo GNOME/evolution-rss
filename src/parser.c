@@ -246,7 +246,7 @@ parse_html(char *url, const char *html, int len)
         return doc;
 }
 
-static char *
+char *
 layer_find_innerelement (xmlNodePtr node, 
 	    char *match, char *el,
 	    char *fail)
@@ -450,7 +450,7 @@ layer_find_ns_tag(xmlNodePtr node,
 }
 
 /* find matching tag (with html entities) */
-static char *
+char *
 layer_find_tag (xmlNodePtr node,
             char *match,
             char *fail)
@@ -555,7 +555,7 @@ layer_find_tag_prop (xmlNodePtr node,
 	return fail;
 }
 
-static gchar *
+gchar *
 layer_find_innerhtml (xmlNodePtr node,
 	    char *match, char *submatch,
 	    char *fail)

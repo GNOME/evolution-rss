@@ -21,6 +21,7 @@
 
 void store_redraw(GtkTreeView *data);
 void import_dialog_response(GtkWidget *selector, guint response, gpointer user_data);
+void del_days_cb (GtkWidget *widget, add_feed *data);
 
 #endif /*__RSS_CONFIG_FACTORY_H_*/
 

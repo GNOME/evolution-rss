@@ -179,6 +179,8 @@ enum {
 typedef struct ADD_FEED {
 	GtkWidget	*dialog;
 	GtkWidget	*progress;
+	GtkWidget	*child;		//the dialog child
+	GladeXML	*gui;
         gchar           *feed_url;
 	gchar		*feed_name;
         gboolean        fetch_html;	//show webpage instead of summary
@@ -307,6 +309,7 @@ gboolean update_articles(gboolean disabler);
 xmlNode *html_find (xmlNode *node, char *match);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
+gchar *lookup_original_folder(gchar *folder);
 gchar *decode_utf8_entities(gchar *str);
 gchar *decode_html_entities(gchar *str);
 gchar *get_real_channel_name(gchar *uri, gchar *failed);
@@ -350,6 +353,7 @@ CamelFolder *check_feed_folder(gchar *folder_name);
 gboolean setup_feed(add_feed *feed);
 gboolean feed_is_new(gchar *file_name, gchar *needle);
 gboolean web_auth_dialog(gchar *url);
+gchar *get_main_folder(void);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);
