@@ -26,6 +26,7 @@ char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fai
 gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char *fail);
 xmlNodePtr layer_find_pos (xmlNodePtr node, char *match, char *submatch);
 char *layer_find_tag (xmlNodePtr node, char *match, char *fail);
+gchar *decode_entities(gchar *source);
 
 #endif /*__RSS_H__*/
 

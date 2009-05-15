@@ -22,7 +22,9 @@
 #include <config.h>
 #endif
 
+#include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 #include <glib.h>
@@ -148,13 +150,15 @@ no_evo_cb (gpointer user_data)
 	g_print("no evolution running!\n");
 	g_print("trying to start...\n");
 	g_main_loop_quit(loop);
+	return TRUE;
 }
 
 static gboolean
 err_evo_cb (gpointer user_data)
 {
-	g_print("cannot start evolution...retry %d\n", user_data);
+	g_print("cannot start evolution...retry %d\n", GPOINTER_TO_INT(user_data));
 	g_main_loop_quit(loop);
+	return TRUE;
 }
 
 int
@@ -178,20 +182,17 @@ main (int argc, char *argv[])
 		g_print("fireing evolution...\n");
 		sleep(30);
         	send_dbus_ping ();
-		g_timeout_add (EVOLUTION_PING_TIMEOUT, err_evo_cb, (gpointer)i++);
+		g_timeout_add (EVOLUTION_PING_TIMEOUT, err_evo_cb, GINT_TO_POINTER(i++));
 		g_main_loop_run(loop);
 	}
 	
 
-	if (evo_running)
-	{
+	if (evo_running) {
 		if (s)
         		send_dbus_message ("evolution_rss_feed", s);
 		else
 			g_print("Syntax: evolution-import-rss URL\n");
-	}
-	else
-	{
+	} else {
 		g_print("evolution repetably failed to start!\n");
 		g_print("Cannot add feed!");
 	}

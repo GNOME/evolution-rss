@@ -179,6 +179,10 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 	g_hash_table_find(rf->key_session,
 		remove_if_match,
 		user_data);
+	//this has been moved to soup-internal
+	/*gboolean prune = soup_session_try_prune_connection (user_data);
+	if (prune)
+		g_object_unref(user_data);*/
 	soup_session_abort (user_data);
 }
 
@@ -286,8 +290,7 @@ save_up(gpointer data)
 	g_free(feed_dir);
 
 	FILE *fr = fopen(feed_name, "w+");
-	if (fr)
-	{
+	if (fr) {
         	gchar *user = g_hash_table_lookup(rf->hruser, data);
 			fputs(user, fr);
 	        fputs("\n", fr);
@@ -395,17 +398,13 @@ reauthenticate (SoupSession *session,
         gpointer data)
 {
 	gchar *user, *pass;
-	if (rf->soup_auth_retry)
-	{
+	if (rf->soup_auth_retry) {
 		//means we're already tested once and probably
 		//won't try again
 		rf->soup_auth_retry = FALSE;
-		if (create_user_pass_dialog(data))
-		{
+		if (create_user_pass_dialog(data)) {
 			rf->soup_auth_retry = FALSE;
-		}
-		else
-		{
+		} else {
 			rf->soup_auth_retry = TRUE;
 		}
         	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
@@ -417,7 +416,7 @@ static int
 conn_mainloop_quit (void *data)
 {
 	g_print("loop quit");
-  g_main_loop_quit (data);
+	g_main_loop_quit (data);
 	return TRUE;
 }
 
@@ -432,7 +431,7 @@ net_get_status(const char *url, GError **err)
 	SoupMessage *req = NULL;
 	guint response = 0;
 	SoupSession *soup_sess = NULL;
-	GSList *headers;
+	GSList *headers = NULL;
 
 	if (!rf->b_session)
 		rf->b_session = soup_sess = 
@@ -441,8 +440,7 @@ net_get_status(const char *url, GError **err)
 		soup_sess = rf->b_session;
 
 	req = soup_message_new(SOUP_METHOD_GET, url);
-	if (!req)
-	{
+	if (!req) {
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
 				soup_status_get_phrase(2));			//invalid url
 		goto out;
@@ -604,8 +602,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 #endif
 
 	req = soup_message_new(SOUP_METHOD_GET, url);
-	if (!req)
-	{
+	if (!req) {
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
 				soup_status_get_phrase(2));			//invalid url
 		goto out;
@@ -668,24 +665,7 @@ out:
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-#if LIBSOUP_VERSION < 2003000
-        SoupUri *uri =  soup_message_get_uri((SoupMessage *)value);
-#else
-        SoupURI *uri =  soup_message_get_uri((SoupMessage *)value);
-#endif
-        d(g_print("cancel url:%s%s?%s\n", uri->host, uri->path, uri->query?uri->query:""));
-
-        if (SOUP_IS_SESSION(key))
-        {
-/*              if (SOUP_IS_MESSAGE(value))
-                {
-#if LIBSOUP_VERSION < 2003000
-                        soup_message_set_status(value,  SOUP_STATUS_CANCELLED);
-                        soup_session_cancel_message(key, value);
-#else
-                        soup_session_cancel_message(key, value, SOUP_STATUS_CANCELLED);
-#endif
-                }*/
+        if (SOUP_IS_SESSION(key)) {
                 soup_session_abort(key);
                 g_hash_table_find(rf->key_session,
                         remove_if_match,
@@ -706,30 +686,18 @@ abort_all_soup(void)
         //abort all session
         rf->cancel = 1;
         rf->cancel_all = 1;
-        if (rf->abort_session)
-        {
+        if (rf->abort_session) {
                 g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
                 g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
 //              g_hash_table_foreach(rf->abort_session, cancel_soup_sess, NULL);
                 g_hash_table_destroy(rf->session);
                 rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
         }
-        if (rf->progress_bar)
-        {
+        if (rf->progress_bar) {
                 gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
                 rf->progress_bar = NULL;        //there's no need to update bar once we canceled feeds
         }
-        if (rf->b_session)
-        {
-/*              if (SOUP_IS_MESSAGE(rf->b_msg_session))
-                {
-#if LIBSOUP_VERSION < 2003000
-                        soup_message_set_status(rf->b_msg_session, SOUP_STATUS_CANCELLED);
-                        soup_session_cancel_message(rf->b_session, rf->b_msg_session);
-#else
-                        soup_session_cancel_message(rf->b_session, rf->b_msg_session, SOUP_STATUS_CANCELLED);
-#endif
-                }*/
+        if (rf->b_session) {
                 soup_session_abort(rf->b_session);
                 rf->b_session = NULL;
                 rf->b_msg_session = NULL;

@@ -296,6 +296,13 @@ typedef struct rss_auth {
 	GtkWidget *rememberpass;
 } RSS_AUTH;
 
+struct _rfMessage {
+        guint    status_code;
+        gchar   *body;
+        goffset  length;
+};
+
+typedef struct _rfMessage rfMessage;
 guint ftotal;
 guint farticle;
 
@@ -334,6 +341,7 @@ finish_enclosure (SoupMessage *msg, create_feed *user_data);
 #else
 finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data);
 #endif
+void generic_finish_feed(rfMessage *msg, gpointer user_data);
 void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
@@ -372,12 +380,5 @@ typedef struct FEED_FOLDERS {
 	gchar *rname;		// renamed folder name
 } feed_folders;
 
-struct _rfMessage {
-        guint    status_code;
-        gchar   *body;
-        goffset  length;
-};
-
-typedef struct _rfMessage rfMessage;
 
 #endif

@@ -29,6 +29,7 @@
 #include <camel/camel-mime-utils.h>
 
 #include "rss.h"
+#include "parser.h"
 #include "misc.h"
 
 int

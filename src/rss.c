@@ -229,7 +229,6 @@ static void
 dialog_key_destroy (GtkWidget *widget, gpointer data);
 guint fallback_engine(void);
 
-void generic_finish_feed(rfMessage *msg, gpointer user_data);
 gchar *print_comments(gchar *url, gchar *stream);
 static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
