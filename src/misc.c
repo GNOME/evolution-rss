@@ -44,7 +44,7 @@ on_next_unread_item_activate(gpointer a)
  	return 1;
 }
  
-static void
+void
 print_hash(gpointer key, gpointer value, gpointer user_data)
 {
  	g_print("key:%s, value:%s\n", (gchar *)key, (gchar *)value);

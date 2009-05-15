@@ -2887,7 +2887,7 @@ lookup_original_folder(gchar *folder)
 {
 	gchar *tmp = NULL, *ofolder = NULL;
 
-	tmp = g_path_get_basename(folder);
+	tmp = extract_main_folder(folder);
 	if (tmp) {
         	ofolder = g_hash_table_lookup(rf->feed_folders, tmp);
 		if (ofolder) {
