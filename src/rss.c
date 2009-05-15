@@ -132,14 +132,14 @@ int rss_verbose_debug = 0;
 #include "rss.h"
 #include "parser.h"
 #include "network-soup.h"
-#include "file-gio.c"
-#include "fetch.c"
+#include "file-gio.h"
+#include "fetch.h"
 #include "misc.h"
 #if HAVE_DBUS
 #include "dbus.h"
 #endif
 #include "rss-config-factory.h"
-#include "rss-icon-factory.c"
+#include "rss-icon-factory.h"
 #include "parser.c"
 
 int pop = 0;
@@ -210,7 +210,6 @@ CamelMimePart *file_to_message(const char *name);
 void save_gconf_feed(void);
 void check_feed_age(void);
 void get_feed_age(gpointer key, gpointer value);
-gchar *encode_html_entities(gchar *str);
 static void
 #if LIBSOUP_VERSION < 2003000
 finish_image (SoupMessage *msg, CamelStream *user_data);
@@ -230,17 +229,6 @@ static void
 dialog_key_destroy (GtkWidget *widget, gpointer data);
 guint fallback_engine(void);
 
-gchar *
-decode_entities(gchar *source);
-
-struct _rfMessage {
-	guint 	 status_code;
-	gchar 	*body;
-	goffset	 length;
-};
-
-typedef struct _rfMessage rfMessage;
-
 void generic_finish_feed(rfMessage *msg, gpointer user_data);
 gchar *print_comments(gchar *url, gchar *stream);
 static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
@@ -250,7 +238,7 @@ static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 gpointer
 lookup_key(gpointer key)
 {
-	return g_hash_table_lookup(rf->hrname, key);
+        return g_hash_table_lookup(rf->hrname, key);
 }
 
 /* hash table of ops->dialogue of active errors */
@@ -912,68 +900,6 @@ rss_select_folder(gchar *folder_name)
 	camel_object_unref (folder);
 	g_free(real_name);
 }
-
-/*void
-get_selected_mail(void)
-{
-	MailComponent *mail_component = mail_component_peek();
-	MailComponentPrivate *priv = mail_component->priv;
-//	EComponentView *cv = priv->component_view;
-	g_print("priv:%p", priv);
-	g_print("cv:%p", cv);
-	GPtrArray *uids;
-	void *el = g_object_get_data((GObject *)cv, "info-label");
-        EMFolderView *emfv = g_object_get_data((GObject *)el, "folderview");
-	uids = message_list_get_selected(emfv->list);
-	g_print("selec:%d", uids->len);
-	
-}*/
-
-/*static void
-enable_html_cb(GtkCellRendererToggle *cell,
-               gchar *path_str,
-               gpointer data)
-{
-  GtkTreeModel *model = (GtkTreeModel *)data;
-  GtkTreeIter  iter;
-  GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
-  gchar *name;
-  gboolean fixed;
-
-  gtk_tree_model_get_iter (model, &iter, path);
-  gtk_tree_model_get (model, &iter, 1, &fixed, -1);
-  gtk_tree_model_get (model, &iter, 2, &name, -1);
-  fixed ^= 1;
-  g_hash_table_replace(rf->hrh, 
-			g_strdup(lookup_key(name)), 
-			GINT_TO_POINTER(fixed));
-  gtk_list_store_set (GTK_LIST_STORE (model), 
-			&iter, 
-			1, 
-			fixed, 
-			-1);
-  gtk_tree_path_free (path);
-  save_gconf_feed();
-  g_free(name);
-}
-
-static void
-tree_cb (GtkWidget *widget, gpointer data)
-{
-	GtkTreeSelection *selection;
-        GtkTreeModel     *model;
-        GtkTreeIter       iter;
-        gchar *name;
-
-        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(rf->treeview));
-        if (gtk_tree_selection_get_selected(selection, &model, &iter))
-        {
-                gtk_tree_model_get (model, &iter, 2, &name, -1);
-		gtk_button_set_label(data, 
-			g_hash_table_lookup(rf->hre, lookup_key(name)) ? _("Disable") : _("Enable"));
-		g_free(name);
-        }
-}*/
 
 static void
 dialog_key_destroy (GtkWidget *widget, gpointer data)
@@ -2481,29 +2407,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	g_free(rfmsg);
 }
 
-void
-gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data)
-{
-	gsize file_size;
-        char *file_contents;
-        gboolean result;
-
-	rfMessage *rfmsg = g_new0(rfMessage, 1);
-
-	result = g_file_load_contents_finish (G_FILE (object),
-                                              res,
-                                              &file_contents, &file_size,
-                                              NULL, NULL);
-	rfmsg->status_code = SOUP_STATUS_OK;
-	rfmsg->body = file_contents;
-	rfmsg->length = file_size;
-	generic_finish_feed(rfmsg, user_data);
-	if (result) {
-                g_free (file_contents);
-        }
-	g_free(rfmsg);
-}
-
 struct _MailComponentPrivate {
         GMutex *lock;
 
@@ -3120,7 +3023,7 @@ update_feed_image(gchar *image, gchar *key)
 	if (image) {		//we need to validate image here with load_pixbuf
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
 			O_RDWR|O_CREAT, 0666);
-                net_get_unblocking(image,
+                fetch_unblocking(image,
                                 textcb,
                                 NULL,
                                 (gpointer)finish_image,
@@ -3313,7 +3216,7 @@ custom_update_articles(CDATA *cdata)
                  		(char *)g_hash_table_lookup(rf->hr, lookup_key(cdata->key)), (char *)cdata->key));
                 	rf->feed_queue++;
 
-                	net_get_unblocking(
+                	fetch_unblocking(
                                        g_hash_table_lookup(rf->hr, lookup_key(cdata->key)),
                                        cdata->user_data,
                                        cdata->key,
@@ -4021,10 +3924,6 @@ free_filter_uids (gpointer user_data, GObject *ex_msg)
 	g_print("weak unref called on filter_uids\n");
 }
 
-#ifdef _WIN32
-#include "strptime.c"
-#endif
-
 void
 create_mail(create_feed *CF)
 {
@@ -4418,7 +4317,7 @@ fetch_image(gchar *url, gchar *link)
 	} else 
 		g_print("image cache HIT\n");
 
-	net_get_unblocking(tmpurl,
+	fetch_unblocking(tmpurl,
                        	        textcb,
                                	NULL,
                                	(gpointer)finish_image,
@@ -4491,135 +4390,6 @@ migrate_crc_md5(const char *name, gchar *url)
 	g_free(feed_name);
 	g_free(feed_dir);
 	g_free(md5_name);
-}
-
-gchar *
-decode_utf8_entities(gchar *str)
-{
-	int inlen, utf8len;
-	gchar *buffer;
-	g_return_val_if_fail (str != NULL, NULL);
-
-	inlen = strlen(str);
-	utf8len = 5*inlen+1;
-	buffer = g_malloc0(utf8len);
-	UTF8ToHtml((unsigned char *)buffer, &utf8len, (unsigned char *)str, &inlen);
-	return buffer;
-}
-
-gchar *
-decode_entities(gchar *source)
-{
- 	GString *str = g_string_new(NULL);
- 	GString *res = g_string_new(NULL);
- 	gchar *result;
-        const unsigned char *s;
-        guint len;
-	int in=0, out=0;
-	int state, pos;
-
-	g_string_append(res, source);
-reent:	s = (const unsigned char *)res->str;
-        len = strlen(res->str);
-	state = 0;
-	pos = 1;
-	g_string_truncate(str, 0);
-	while (*s != 0 || len) {
-		if (state) {
-			if (*s==';') {
-				state = 2; //entity found
-				out = pos;
-				break;
-			} else {
-				g_string_append_c(str, *s);
-			}
-		}
-		if (*s=='&') {
-			in = pos-1;
-			state = 1;
-                }
-		*s++;
-		pos++;
-		len--;
-	}
-	if (state == 2) {
-		htmlEntityDesc *my = (htmlEntityDesc *)htmlEntityLookup((xmlChar *)str->str);
-		if (my) {
-			g_string_erase(res, in, out-in);
-			g_string_insert_unichar(res, in, my->value);
-			gchar *result = res->str;
-			g_string_free(res, FALSE);
-			res = g_string_new(NULL);
-			g_string_append(res, result);
-			goto reent;
-		}
-	}
-	result = res->str;
-	g_string_free(res, FALSE);
-	return result;
-}	
-
-gchar *
-decode_html_entities(gchar *str)
-{
-	gchar *newstr;
-	g_return_val_if_fail (str != NULL, NULL);
-
-	xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
-	xmlCtxtUseOptions(ctxt,   XML_PARSE_RECOVER
-				| XML_PARSE_NOENT
-				| XML_PARSE_NOERROR
-				| XML_PARSE_NONET);
-
-	xmlChar *tmp =  xmlStringDecodeEntities(ctxt,
-					     BAD_CAST str,
-					     XML_SUBSTITUTE_REF
-					     & XML_SUBSTITUTE_PEREF,
-					     0,
-					     0,
-					     0);
-
-	newstr = g_strdup((gchar *)tmp);
-	xmlFree(tmp);
-	xmlFreeParserCtxt(ctxt);
-	return newstr;
-}
-
-gchar *
-encode_html_entities(gchar *str)
-{
-        g_return_val_if_fail (str != NULL, NULL);
-
-/*        xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
-        xmlCtxtUseOptions(ctxt,   XML_PARSE_RECOVER
-                                | XML_PARSE_NOENT
-                                | XML_PARSE_NOERROR
-                                | XML_PARSE_NONET);*/
-
-        xmlChar *tmp =  xmlEncodeEntitiesReentrant(NULL, (xmlChar *)str);
-
-/*        xmlChar *tmp =  (gchar *)xmlStringDecodeEntities(ctxt,
-                                             BAD_CAST str,
-                                             XML_SUBSTITUTE_REF
-                                             & XML_SUBSTITUTE_PEREF,
-                                             0,
-                                             0,
-                                             0);
-
-        newstr = g_strdup(tmp);
-        xmlFree(tmp);
-        xmlFreeParserCtxt(ctxt);
-        return newstr;*/
-	return (gchar *)tmp;
-}
-
-gchar *
-encode_rfc2047(gchar *str)
-{
-	gchar *tmp = decode_entities(str);
-        gchar *rfctmp = camel_header_encode_string((unsigned char*)tmp);
-        g_free(tmp);
-	return (gchar *)rfctmp;
 }
 
 static gchar *

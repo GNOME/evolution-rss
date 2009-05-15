@@ -1,5 +1,5 @@
 /*  Evolution RSS Reader Plugin
- *  Copyright (C) 2007-2008 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org>
  *         
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,10 +18,15 @@
  * vim: tabstop=4 shiftwidth=4 noexpandtab :
  */
 
+#include <stdio.h>
+#include <string.h>
+#include <error.h>
+#include <errno.h>
+#include "file-gio.h"
 #include "network.h"
-#include "rss.h"
 #include "file-gio.h"
 #include "network-soup.h"
+#include "fetch.h"
 
 GString*
 fetch_blocking(gchar *url, GSList *headers, GString *post,

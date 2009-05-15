@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007  Lucian Langa <cooly@gnome.eu.org> 
+ *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org> 
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -338,7 +338,6 @@ void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif
-gpointer lookup_key(gpointer key);
 void taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress);
 void taskbar_op_finish(gpointer key);
 void taskbar_push_message(gchar *message);
@@ -347,13 +346,12 @@ void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
 void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
 gchar *rss_component_peek_base_directory(MailComponent *component);
 void custom_feed_timeout(void);
-void gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data);
-gchar *encode_rfc2047(gchar *str);
 CamelFolder *check_feed_folder(gchar *folder_name);
 gboolean setup_feed(add_feed *feed);
 gboolean feed_is_new(gchar *file_name, gchar *needle);
 gboolean web_auth_dialog(gchar *url);
 gchar *get_main_folder(void);
+gpointer lookup_key(gpointer key);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);
@@ -373,5 +371,13 @@ typedef struct FEED_FOLDERS {
 	gchar *oname;		//original folder name
 	gchar *rname;		// renamed folder name
 } feed_folders;
+
+struct _rfMessage {
+        guint    status_code;
+        gchar   *body;
+        goffset  length;
+};
+
+typedef struct _rfMessage rfMessage;
 
 #endif

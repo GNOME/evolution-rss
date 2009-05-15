@@ -1071,3 +1071,123 @@ out:	g_free(sender);
 	return buf;
 }
 
+gchar *
+encode_html_entities(gchar *str)
+{
+        g_return_val_if_fail (str != NULL, NULL);
+
+/*        xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
+        xmlCtxtUseOptions(ctxt,   XML_PARSE_RECOVER
+                                | XML_PARSE_NOENT
+                                | XML_PARSE_NOERROR
+                                | XML_PARSE_NONET);*/
+
+        xmlChar *tmp =  xmlEncodeEntitiesReentrant(NULL, (xmlChar *)str);
+
+/*        xmlChar *tmp =  (gchar *)xmlStringDecodeEntities(ctxt,
+                                             BAD_CAST str,
+                                             XML_SUBSTITUTE_REF
+                                             & XML_SUBSTITUTE_PEREF,
+                                             0,
+                                             0,
+                                             0);
+
+        newstr = g_strdup(tmp);
+        xmlFree(tmp);
+        xmlFreeParserCtxt(ctxt);
+        return newstr;*/
+        return (gchar *)tmp;
+}
+
+gchar *
+decode_html_entities(gchar *str)
+{
+        gchar *newstr;
+        g_return_val_if_fail (str != NULL, NULL);
+
+        xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
+        xmlCtxtUseOptions(ctxt,   XML_PARSE_RECOVER
+                                | XML_PARSE_NOENT
+                                | XML_PARSE_NOERROR
+                                | XML_PARSE_NONET);
+
+        xmlChar *tmp =  xmlStringDecodeEntities(ctxt,
+                                             BAD_CAST str,
+                                             XML_SUBSTITUTE_REF
+                                             & XML_SUBSTITUTE_PEREF,
+                                             0,
+                                             0,
+                                             0);
+
+        newstr = g_strdup((gchar *)tmp);
+        xmlFree(tmp);
+        xmlFreeParserCtxt(ctxt);
+        return newstr;
+}
+
+gchar *
+decode_entities(gchar *source)
+{
+        GString *str = g_string_new(NULL);
+        GString *res = g_string_new(NULL);
+        gchar *result;
+        const unsigned char *s;
+        guint len;
+        int in=0, out=0;
+        int state, pos;
+
+        g_string_append(res, source);
+reent:  s = (const unsigned char *)res->str;
+        len = strlen(res->str);
+        state = 0;
+        pos = 1;
+        g_string_truncate(str, 0);
+        while (*s != 0 || len) {
+                if (state) {
+                        if (*s==';') {
+                                state = 2; //entity found
+                                out = pos;
+                                break;
+                        } else {
+                                g_string_append_c(str, *s);
+                        }
+                }
+                if (*s=='&') {
+                        in = pos-1;
+                        state = 1;
+                }
+                *s++;
+                pos++;
+                len--;
+        }
+        if (state == 2) {
+                htmlEntityDesc *my = (htmlEntityDesc *)htmlEntityLookup((xmlChar *)str->str);
+                if (my) {
+                        g_string_erase(res, in, out-in);
+                        g_string_insert_unichar(res, in, my->value);
+                        gchar *result = res->str;
+                        g_string_free(res, FALSE);
+                        res = g_string_new(NULL);
+                        g_string_append(res, result);
+                        goto reent;
+                }
+        }
+        result = res->str;
+        g_string_free(res, FALSE);
+        return result;
+}
+
+gchar *
+decode_utf8_entities(gchar *str)
+{
+        int inlen, utf8len;
+        gchar *buffer;
+        g_return_val_if_fail (str != NULL, NULL);
+
+        inlen = strlen(str);
+        utf8len = 5*inlen+1;
+        buffer = g_malloc0(utf8len);
+        UTF8ToHtml((unsigned char *)buffer, &utf8len, (unsigned char *)str, &inlen);
+        return buffer;
+}
+

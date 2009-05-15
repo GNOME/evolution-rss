@@ -18,8 +18,18 @@
  * vim: tabstop=4 shiftwidth=4 noexpandtab :
  */
 
+#include <gio/gio.h>
+#include <network.h>
+
+#ifndef _FILE_GIO_H_
+#define _FILE_GIO_H_ 1
+
 gboolean
 file_get_unblocking(const char *uri, NetStatusCallback cb,
                   gpointer data, gpointer cb2, gpointer cbdata2,
                   guint track, GError **err);
+
+void gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data);
+
+#endif
 

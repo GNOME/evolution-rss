@@ -454,5 +454,14 @@ is_rfc822(char *in)
 notrfc:	return 0;
 }
 
+gchar *
+encode_rfc2047(gchar *str)
+{
+        gchar *tmp = decode_entities(str);
+        gchar *rfctmp = camel_header_encode_string((unsigned char*)tmp);
+        g_free(tmp);
+        return (gchar *)rfctmp;
+}
+
 #endif
 

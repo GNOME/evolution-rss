@@ -70,12 +70,15 @@ plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 
 SOURCES = 	dbus.c			\
+		fetch.c			\
+		file-gio.c		\
 	  	misc.c			\
 		network-soup.c		\
 		rss.c			\
-		rss-config-factory.c
+		rss-config-factory.c	\
+		rss-icon-factory.c
 if HAVE_GECKO
-SOURCES+= gecko-utils.cpp
+SOURCES+= 	gecko-utils.cpp
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
