@@ -1800,7 +1800,14 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
                 goto out;
 
 	ofolder = lookup_original_folder(folder);
-	url = g_hash_table_lookup(rf->hr, lookup_key(ofolder));
+	gpointer key = lookup_key(ofolder);
+	g_print("key:%s\n", key);
+	if (!key) {
+		g_free(ofolder);
+		goto out;
+	}
+
+	url = g_hash_table_lookup(rf->hr, key);
 	if (url) {
 		feed = build_dialog_add(url, ofolder);
 		//we do not need ok/cancel buttons here

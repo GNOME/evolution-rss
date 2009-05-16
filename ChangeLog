@@ -1,3 +1,7 @@
+2009-05-16  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/parser.c (layer_find_all): fix for Debian Bug #528827
+
 2009-05-15  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/org-gnome-evolution-rss.eplug.xml:

@@ -21,6 +21,8 @@
 #ifndef _FETCH_H_
 #define _FETCH_H_ 1
 
+#include "network.h"
+
 GString *fetch_blocking(gchar *url, GSList *headers, GString *post,
                   NetStatusCallback cb, gpointer data,
                   GError **err);

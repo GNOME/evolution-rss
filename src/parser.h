@@ -27,6 +27,12 @@ gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char 
 xmlNodePtr layer_find_pos (xmlNodePtr node, char *match, char *submatch);
 char *layer_find_tag (xmlNodePtr node, char *match, char *fail);
 gchar *decode_entities(gchar *source);
+GList *layer_find_all (xmlNodePtr node, char *match, char *fail);
+xmlDoc *parse_html(char *url, const char *html, int len);
+xmlDoc *parse_html_sux (const char *buf, guint len);
+xmlDoc *xml_parse_sux (const char *buf, int len);
+create_feed *parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date);
+gchar *tree_walk (xmlNodePtr root, RDF *r);
 
 #endif /*__RSS_H__*/
 

@@ -87,9 +87,9 @@ int rss_verbose_debug = 0;
 #include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
 
-#include <libxml/parserInternals.h>
-#include <libxml/xmlmemory.h>
-#include <libxml/HTMLparser.h>
+//#include <libxml/parserInternals.h>
+//#include <libxml/xmlmemory.h>
+//#include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
 
 #ifdef HAVE_RENDERKIT
@@ -140,7 +140,7 @@ int rss_verbose_debug = 0;
 #endif
 #include "rss-config-factory.h"
 #include "rss-icon-factory.h"
-#include "parser.c"
+#include "parser.h"
 
 int pop = 0;
 GtkWidget *flabel;
@@ -183,6 +183,7 @@ extern int xmlSubstituteEntitiesDefaultValue;
 extern EProxy *proxy;
 SoupSession *webkit_session = NULL;
 SoupCookieJar *rss_soup_jar;
+extern guint rsserror;
 
 rssfeed *rf = NULL;
 guint           upgrade = 0;                // set to 2 when initailization successfull

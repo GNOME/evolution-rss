@@ -236,7 +236,6 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 
 	/*avail only for > 2.26*/
 	case 0:
-		if (rss_soup_jar)
 			soup_session_add_feature_by_type (session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 	}
@@ -505,7 +504,8 @@ net_get_unblocking(gchar *url,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
-	soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
+	if (rss_soup_jar)
+		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
 	proxify_session(proxy, soup_sess, url);
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);

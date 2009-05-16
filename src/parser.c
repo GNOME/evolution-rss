@@ -16,8 +16,21 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <string.h>
+#include <glib/gi18n.h>
+
+#include <libxml/parserInternals.h>
+#include <libxml/xmlmemory.h>
+#include <libxml/HTMLparser.h>
+#include <libxml/HTMLtree.h>
+#include <libxml/debugXML.h>
+
+#include "fetch.h"
 #include "rss.h"
 #include "parser.h"
+#include "misc.h"
+
+#define d(x)
 
 /************ RDF Parser *******************/
 
@@ -347,14 +360,15 @@ layer_find_all (xmlNodePtr node,
 		printf("%s.\n", node->name);
 #endif
 		if (strcasecmp ((char *)node->name, match)==0) {
-			while (strcasecmp ((char *)node->name, match)==0) {
+			while (node!=NULL && strcasecmp ((char *)node->name, match)==0) {
 				if (node->children != NULL && node->children->content != NULL) {
 					category = g_list_append(category, g_strdup((char *)node->children->content));
 				}
 				node = node->next;
 			}
 		}
-		node = node->next;
+		if (node)
+			node = node->next;
 	}
 	if (category)
 		return category;
@@ -1043,7 +1057,7 @@ update_channel(RDF *r)
 			ftotal++;
 			if (CF->encl) {
 				GError *err = NULL;
-				net_get_unblocking(
+				fetch_unblocking(
                         	        CF->encl,
                         	        textcb,
                                 	NULL,

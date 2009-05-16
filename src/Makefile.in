@@ -64,11 +64,11 @@ pluginLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(plugin_LTLIBRARIES)
 liborg_gnome_evolution_rss_la_LIBADD =
 am__liborg_gnome_evolution_rss_la_SOURCES_DIST = dbus.c fetch.c \
-	file-gio.c misc.c network-soup.c rss.c rss-config-factory.c \
-	rss-icon-factory.c gecko-utils.cpp
+	file-gio.c misc.c network-soup.c parser.c rss.c \
+	rss-config-factory.c rss-icon-factory.c gecko-utils.cpp
 @HAVE_GECKO_TRUE@am__objects_1 = gecko-utils.lo
 am__objects_2 = dbus.lo fetch.lo file-gio.lo misc.lo network-soup.lo \
-	rss.lo rss-config-factory.lo rss-icon-factory.lo \
+	parser.lo rss.lo rss-config-factory.lo rss-icon-factory.lo \
 	$(am__objects_1)
 am_liborg_gnome_evolution_rss_la_OBJECTS = $(am__objects_2)
 liborg_gnome_evolution_rss_la_OBJECTS =  \
@@ -350,8 +350,8 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 	org-gnome-evolution-rss.xml
 
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
-SOURCES = dbus.c fetch.c file-gio.c misc.c network-soup.c rss.c \
-	rss-config-factory.c rss-icon-factory.c $(am__append_2)
+SOURCES = dbus.c fetch.c file-gio.c misc.c network-soup.c parser.c \
+	rss.c rss-config-factory.c rss-icon-factory.c $(am__append_2)
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(NO_UNDEFINED_LIBS) $(NO_UNDEFINED)
 #$(GECKO_RPATH)
@@ -510,6 +510,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gecko-utils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/network-soup.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rss-config-factory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rss-icon-factory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rss.Plo@am__quote@

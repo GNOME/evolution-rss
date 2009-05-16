@@ -74,6 +74,7 @@ SOURCES = 	dbus.c			\
 		file-gio.c		\
 	  	misc.c			\
 		network-soup.c		\
+		parser.c		\
 		rss.c			\
 		rss-config-factory.c	\
 		rss-icon-factory.c
