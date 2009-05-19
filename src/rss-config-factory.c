@@ -631,9 +631,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
                            goto out;
                 }
                 setup_feed(feed);
-                GtkTreeModel *model = gtk_tree_view_get_model ((GtkTreeView *)data);
-                gtk_list_store_clear(GTK_LIST_STORE(model));
-                g_hash_table_foreach(rf->hrname, construct_list, model);
+		store_redraw((GtkTreeView *)data);
                 save_gconf_feed();
         }
 out:    gtk_widget_destroy(msg_feeds);
@@ -843,8 +841,7 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
                         remove_feed_hash(name);
                         g_free(name);
                 }
-                gtk_list_store_clear(GTK_LIST_STORE(model));
-                g_hash_table_foreach(rf->hrname, construct_list, model);
+		store_redraw(GTK_TREE_VIEW(rf->treeview));
                 save_gconf_feed();
         }
         gtk_widget_destroy(selector);
@@ -870,8 +867,7 @@ feeds_dialog_disable(GtkDialog *d, gpointer data)
                         g_hash_table_lookup(rf->hre, key) ? _("Disable") : _("Enable"));
         }
         //update list instead of rebuilding
-        gtk_list_store_clear(GTK_LIST_STORE(model));
-        g_hash_table_foreach(rf->hrname, construct_list, model);
+        store_redraw(GTK_TREE_VIEW(rf->treeview));
         save_gconf_feed();
 }
 
@@ -967,6 +963,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
                                                         _("Feed already exists!"));
                                                 goto out;
 			}
+	g_print("feed_name:%s\n", feed_name);
 			hrfeed *saved_feed = save_feed_hash(feed_name);
                        	remove_feed_hash(feed_name);
                         gpointer md5 = gen_md5(feed->feed_url);
@@ -1029,7 +1026,6 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
         GtkTreeModel     *model;
         GtkTreeIter       iter;
         gchar *name, *feed_name;
-        gchar *text;
 	gpointer key;
 	add_feed *feed = NULL;
 
@@ -1045,10 +1041,8 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                 gtk_widget_destroy(feed->dialog);
 			process_dialog_edit(feed, name, feed_name);
 		}
-        	if (feed->feed_url) {
-			gtk_list_store_clear(GTK_LIST_STORE(model));
-			g_hash_table_foreach(rf->hrname, construct_list, model);
-		}
+        	if (feed->feed_url)
+			store_redraw(GTK_TREE_VIEW(rf->treeview));
 	}
 }
 
@@ -1229,9 +1223,7 @@ import_opml(gchar *file)
                         g_free(what);
                         while (gtk_events_pending ())
                                 gtk_main_iteration ();
-                        GtkTreeModel *model = gtk_tree_view_get_model((GtkTreeView *)rf->treeview);
-                        gtk_list_store_clear(GTK_LIST_STORE(model));
-                        g_hash_table_foreach(rf->hrname, construct_list, model);
+			store_redraw(GTK_TREE_VIEW(rf->treeview));
                         save_gconf_feed();
                         if (src)
                                 xmlFree(src);
@@ -1792,7 +1784,6 @@ void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target)
 
 void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 {
-	g_print("commit");
 	add_feed *feed = (add_feed *)g_object_get_data((GObject *)epl, "add-feed");
 	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
 	gchar *ofolder = (gchar *)g_object_get_data((GObject *)epl, "ofolder");
@@ -1897,7 +1888,6 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 		g_object_set_data_full (G_OBJECT (epl), "add-feed", feed, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "url", url, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "ofolder", ofolder, NULL);
-		g_free(ofolder);
 		return feed->child;
 	}
 
