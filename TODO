@@ -59,3 +59,5 @@
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
 	* grey stop button on complete load
+	* display links from content in status bar
+	* grey out disabled folders (feeds)

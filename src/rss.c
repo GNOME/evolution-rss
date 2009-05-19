@@ -241,6 +241,21 @@ lookup_key(gpointer key)
         return g_hash_table_lookup(rf->hrname, key);
 }
 
+void
+compare_enabled(gpointer key, gpointer value, guint *data)
+{
+	if (value == 1)
+		*data = *data+1;
+}
+
+guint
+rss_find_enabled(void)
+{
+	guint enabled=0;
+	g_hash_table_foreach (rf->hre, compare_enabled, &enabled);
+	return enabled;
+}
+
 /* hash table of ops->dialogue of active errors */
 static GHashTable *active_errors = NULL;
 
@@ -423,8 +438,9 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 	        	g_free(what);
 		}
 #else
-		if (rf->progress_bar && 0 <= fraction && 1 >= fraction)
+		if (rf->progress_bar && 0 <= fraction && 1 >= fraction) {
 			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, fraction);
+		}
 		if (rf->sr_feed) {
 			gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), (char *)data);
 			gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
@@ -433,9 +449,10 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 #endif
         }
 	//update individual progress if previous percetage has not changed
-	if (rf->progress_bar && rf->feed_queue)
-		gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 
-			((gfloat)((100-(rf->feed_queue*100/g_hash_table_size(rf->hrname))))/100));
+	if (rf->progress_bar && rf->feed_queue) {
+			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 
+				(double)(100-rf->feed_queue*100/rss_find_enabled())/100);
+	}
         break;
     case NET_STATUS_DONE:
         //progress_window_set_cancel_cb(pw, NULL, NULL);
@@ -488,7 +505,7 @@ browsercb(NetStatusType status, gpointer statusdata, gpointer data)
 //		g_print("chunk:%s\n", progress->chunk);
 		g_print("total:%d\n", progress->total);
 		g_print("curent:%d\n", progress->current);
-		g_print("--------------\n chunk: %d \n=============\n", GPOINTER_TO_INT(progress->chunksize));
+		g_print("-------------- chunk: %d =============\n", GPOINTER_TO_INT(progress->chunksize));
 		//browser_write(progress->chunk, progress->chunksize, data);
 //		browser_fill+=progress->chunksize;
         break;
@@ -741,11 +758,12 @@ network_timeout(void)
 		g_source_remove(nettime_id);
 	
 	float timeout = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
+
 	if (!timeout)
                timeout = NETWORK_MIN_TIMEOUT;
 
 	nettime_id = g_timeout_add (
-				timeout*1000,
+				(guint)(timeout)*1000,
 				(GtkFunction) timeout_soup,
                            	0);
 }
@@ -2435,8 +2453,8 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	if (rf->feed_queue) {
 		rf->feed_queue--;
-		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
-		taskbar_op_set_progress("main", tmsg, rf->feed_queue ? ((gfloat)((100-(rf->feed_queue*100/g_hash_table_size(rf->hrname))))/100): 1);
+		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), rss_find_enabled());
+		taskbar_op_set_progress("main", tmsg, rf->feed_queue ? 1-(gdouble)((rf->feed_queue*100/rss_find_enabled()))/100: 1);
 		g_free(tmsg);
 	}
 
@@ -2456,6 +2474,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
                         gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete."));
                 	if (rf->info->cancel_button)
                         	gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
+			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
 
                 	g_hash_table_steal(rf->info->data->active, rf->info->uri);
                 	rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
@@ -4254,7 +4273,7 @@ finish_create_image (SoupMessage *msg, gchar *user_data)
 finish_create_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data)
 #endif
 {
-	g_print("finish_image(): status:%d, user_data:%s\n", msg->status_code, user_data);
+	d(g_print("finish_image(): status:%d, user_data:%s\n", msg->status_code, user_data));
 	if (404 != msg->status_code) {
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(user_data,
 			O_RDWR|O_CREAT, 0666);

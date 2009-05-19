@@ -860,8 +860,7 @@ feeds_dialog_disable(GtkDialog *d, gpointer data)
         gchar *name;
 
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(rf->treeview));
-        if (gtk_tree_selection_get_selected(selection, &model, &iter))
-        {
+        if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
                 gtk_tree_model_get (model, &iter, 3, &name, -1);
                 gpointer key = lookup_key(name);
                 g_free(name);
@@ -923,8 +922,7 @@ feeds_dialog_delete(GtkDialog *d, gpointer data)
 
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
         if (gtk_tree_selection_get_selected(selection, &model, &iter)
-                && !rf->import)
-        {
+                && !rf->import) {
                 rf->import = 1;
                 gtk_tree_model_get (model, &iter, 3, &name, -1);
                 GtkWidget *rfd = remove_feed_dialog(name);
@@ -935,76 +933,56 @@ feeds_dialog_delete(GtkDialog *d, gpointer data)
         }
 }
 
-static void
-feeds_dialog_edit(GtkDialog *d, gpointer data)
+void
+process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 {
-        GtkTreeSelection *selection;
-        GtkTreeModel     *model;
-        GtkTreeIter       iter;
-        gchar *name, *feed_name;
-        gchar *text;
-        gchar *url;
+	gchar *text = NULL;
+	gpointer key = lookup_key(feed_name);
 
-        /* This will only work in single or browse selection mode! */
-        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
-        if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
-                gtk_tree_model_get (model, &iter, 3, &feed_name, -1);
-                name = g_hash_table_lookup(rf->hr, lookup_key(feed_name));
-                if (name) {
-                        add_feed *feed = create_dialog_add(name, feed_name);
-                    	if (feed->dialog)
-                                gtk_widget_destroy(feed->dialog);
-        		GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", "", NULL);
-			GtkWidget *progress = gtk_progress_bar_new();
-        		gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
-        		gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
-			/* xgettext:no-c-format */
-        		gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
-			feed->progress=progress;
-        		gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);
-        		g_signal_connect(msg_feeds, "response", G_CALLBACK(msg_feeds_response), NULL);
-			gtk_widget_show_all(msg_feeds);
-        		while (gtk_events_pending ())
-                		gtk_main_iteration ();
-                        if (!feed->add)
-                                goto out;
-                        text = feed->feed_url;
-                        feed->feed_url = sanitize_url(feed->feed_url);
-                        g_free(text);
-                        url = name;
-                        if (feed->feed_url) {
-                                gtk_tree_model_get (model, &iter, 3, &name, -1);
-                                gpointer key = lookup_key(name);
-                                if (strcmp(url, feed->feed_url)) {
-                                        //prevent adding of an existing feed (url)
-                                        //which might screw things
-                                        if (g_hash_table_find(rf->hr,
+	GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", "", NULL);
+	GtkWidget *progress = gtk_progress_bar_new();
+       	gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
+       	gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
+	/* xgettext:no-c-format */
+       	gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
+	feed->progress=progress;
+       	gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);
+	g_signal_connect(msg_feeds, "response", G_CALLBACK(msg_feeds_response), NULL);
+	gtk_widget_show_all(msg_feeds);
+       	while (gtk_events_pending ())
+       		gtk_main_iteration ();
+	if (!feed->add)
+                 goto out;
+        text = feed->feed_url;
+        feed->feed_url = sanitize_url(feed->feed_url);
+        g_free(text);
+        if (feed->feed_url) {
+		if (strcmp(url, feed->feed_url)) {
+			//prevent adding of an existing feed (url)
+			//which might screw things
+                        if (g_hash_table_find(rf->hr,
                                                 check_if_match,
-                                                feed->feed_url))
-                                        {
-                                                rss_error(NULL, NULL, _("Error adding feed."),
+						feed->feed_url)) {
+				rss_error(NULL, NULL, _("Error adding feed."),
                                                         _("Feed already exists!"));
                                                 goto out;
-                                        }
-					hrfeed *saved_feed = save_feed_hash(name);
-                                      	remove_feed_hash(name);
-                                        gpointer md5 = gen_md5(feed->feed_url);
-                                        if (!setup_feed(feed)) {
-                                                //editing might loose a corectly setup feed
-                                                //so re-add previous deleted feed
-                                                restore_feed_hash(key, saved_feed);
-                                        } else
-                                              destroy_feed_hash_content(saved_feed);
-                                        gtk_list_store_clear(GTK_LIST_STORE(model));
-                                        g_hash_table_foreach(rf->hrname, construct_list, model);
-                                        save_gconf_feed();
-                                        g_free(md5);
-                                } else {
-                                        key = gen_md5(url);
-                                        g_hash_table_replace(rf->hrh,
+			}
+			hrfeed *saved_feed = save_feed_hash(feed_name);
+                       	remove_feed_hash(feed_name);
+                        gpointer md5 = gen_md5(feed->feed_url);
+			if (!setup_feed(feed)) {
+				//editing might loose a corectly setup feed
+				//so re-add previous deleted feed
+				restore_feed_hash(key, saved_feed);
+			} else
+				destroy_feed_hash_content(saved_feed);
+			g_free(md5);
+		} else {
+			key = gen_md5(url);
+			g_hash_table_replace(rf->hrh,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->fetch_html));
-					if (feed->update == 2) {
+			if (feed->update == 2) {
                                         	g_hash_table_replace(rf->hrttl,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->ttl));
@@ -1012,13 +990,13 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->ttl_multiply));
 						custom_feed_timeout();
-					}
-					if (feed->update == 3)
-                                        	g_hash_table_replace(rf->hre,
-                                                        g_strdup(key),
-                                                        0);
-					else
-                                        	g_hash_table_replace(rf->hre,
+			}
+			if (feed->update == 3)
+                                       	g_hash_table_replace(rf->hre,
+                                                       g_strdup(key),
+                                                       0);
+			else
+                                       	g_hash_table_replace(rf->hre,
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->enabled));
                                         g_hash_table_replace(rf->hrdel_feed,
@@ -1037,15 +1015,41 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->del_unread));
                                         g_free(key);
-                                        gtk_list_store_clear(GTK_LIST_STORE(model));
-                                        g_hash_table_foreach(rf->hrname, construct_list, model);
-                                        save_gconf_feed();
                                 }
-                        }
-out:			gtk_widget_destroy(msg_feeds);
-                        g_free(feed);
-                }
-        }
+	save_gconf_feed();
+	}
+out:	gtk_widget_destroy(msg_feeds);
+	g_free(feed);
+}
+
+static void
+feeds_dialog_edit(GtkDialog *d, gpointer data)
+{
+        GtkTreeSelection *selection;
+        GtkTreeModel     *model;
+        GtkTreeIter       iter;
+        gchar *name, *feed_name;
+        gchar *text;
+	gpointer key;
+	add_feed *feed = NULL;
+
+        /* This will only work in single or browse selection mode! */
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
+        if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+                gtk_tree_model_get (model, &iter, 3, &feed_name, -1);
+                key = lookup_key(feed_name);
+                name = g_hash_table_lookup(rf->hr, key);
+                if (name) {
+                        feed = create_dialog_add(name, feed_name);
+                    	if (feed->dialog)
+                                gtk_widget_destroy(feed->dialog);
+			process_dialog_edit(feed, name, feed_name);
+		}
+        	if (feed->feed_url) {
+			gtk_list_store_clear(GTK_LIST_STORE(model));
+			g_hash_table_foreach(rf->hrname, construct_list, model);
+		}
+	}
 }
 
 void
@@ -1775,6 +1779,12 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         return hbox;
 }
 
+typedef struct _EConfigTargetRSS EConfigTargetRSS;
+struct _EConfigTargetRSS
+{
+	gchar *label;
+} ER;
+
 void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target)
 {
 	g_print("abort");
@@ -1783,6 +1793,74 @@ void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target)
 void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 {
 	g_print("commit");
+	add_feed *feed = (add_feed *)g_object_get_data((GObject *)epl, "add-feed");
+	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
+	gchar *ofolder = (gchar *)g_object_get_data((GObject *)epl, "ofolder");
+	
+
+	GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "url_entry");
+        GtkWidget *checkbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "html_check");
+        GtkWidget *checkbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "enabled_check");
+        GtkWidget *checkbutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "validate_check");
+        GtkWidget *checkbutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_unread");
+        GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb1");
+        GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb2");
+        GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb3");
+        GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_global");
+        GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl");
+        GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_disabled");
+        GtkWidget *spinbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb1");
+        GtkWidget *spinbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb2");
+        GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_value");
+
+        gboolean fhtml = feed->fetch_html;
+	feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
+        fhtml = gtk_toggle_button_get_active (
+                        GTK_TOGGLE_BUTTON (checkbutton1));
+                fhtml ^= 1;
+                feed->fetch_html = fhtml;
+                feed->enabled = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(checkbutton2));
+                feed->validate = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(checkbutton3));
+                guint i=0;
+                while (i<3) {
+                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
+                                break;
+                        i++;
+                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton2)))
+                                break;
+                        i++;
+                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
+                                break;
+                }
+                feed->del_feed=i;
+                feed->del_unread = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON(checkbutton4));
+                gtk_spin_button_update((GtkSpinButton *)spinbutton1);
+                feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
+                gtk_spin_button_update((GtkSpinButton *)spinbutton2);
+                feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
+                i=1;
+                while (i<3) {
+                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton4)))
+                                break;
+                        i++;
+                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton5)))
+                                break;
+                        i++;
+                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton6)))
+                                break;
+                }
+                feed->update=i;
+                feed->ttl = gtk_spin_button_get_value((GtkSpinButton *)ttl_value);
+                feed->add = 1;
+                // there's no reason to feetch feed if url isn't changed
+		if (url && !strncmp(url, feed->feed_url, strlen(url)))
+			feed->changed = 0;
+		else
+			feed->changed = 1;
+		process_dialog_edit(feed, url, ofolder);
 }
 
 GtkWidget *
@@ -1801,7 +1879,6 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 
 	ofolder = lookup_original_folder(folder);
 	gpointer key = lookup_key(ofolder);
-	g_print("key:%s\n", key);
 	if (!key) {
 		g_free(ofolder);
 		goto out;
@@ -1817,9 +1894,13 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 		gtk_container_remove (GTK_CONTAINER (feed->child->parent), feed->child);
 		gtk_notebook_remove_page((GtkNotebook *) data->parent, 0);
 		gtk_notebook_insert_page((GtkNotebook *) data->parent, (GtkWidget *) feed->child, NULL, 0);
+		g_object_set_data_full (G_OBJECT (epl), "add-feed", feed, NULL);
+		g_object_set_data_full (G_OBJECT (epl), "url", url, NULL);
+		g_object_set_data_full (G_OBJECT (epl), "ofolder", ofolder, NULL);
+		g_free(ofolder);
+		return feed->child;
 	}
 
-	g_free(ofolder);
 out:	return NULL;
 }
 

@@ -1,3 +1,13 @@
+2009-05-18  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/rss-config-factory.c (feeds_dialog_disable),
+	(feeds_dialog_delete), (process_dialog_edit), (feeds_dialog_edit),
+	(rss_folder_factory_commit), (rss_folder_factory): fix save of folder
+	properties
+	* src/rss.c (compare_enabled), (rss_find_enabled), (statuscb),
+	(browsercb), (network_timeout), (generic_finish_feed): correctly
+	update progress bar
+
 2009-05-16  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/parser.c (layer_find_all): fix for Debian Bug #528827
