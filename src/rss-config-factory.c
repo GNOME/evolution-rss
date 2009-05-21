@@ -679,7 +679,7 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
         }
 }
 
-static void
+void
 rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex)
 {
         guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE | CAMEL_STORE_FOLDER_INFO_FAST | CAMEL_STORE_FOLDER_INFO_SUBSCRIBED;

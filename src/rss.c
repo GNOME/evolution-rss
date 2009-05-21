@@ -3170,11 +3170,43 @@ check_feed_folder(gchar *folder_name)
 
 }
 
+void
+rss_delete_feed(gchar *name)
+{
+        CamelException ex;
+        CamelStore *store = mail_component_peek_local_store(NULL);
+        gchar *full_path = g_strdup_printf("%s/%s",
+                lookup_main_folder(),
+                lookup_feed_folder(name));
+        delete_feed_folder_alloc(lookup_feed_folder(name));
+        camel_exception_init (&ex);
+        rss_delete_folders (store, full_path, &ex);
+        if (camel_exception_is_set (&ex)) {
+                e_error_run(NULL,
+                "mail:no-delete-folder", full_path, ex.desc, NULL);
+                camel_exception_clear (&ex);
+        }
+        g_free(full_path);
+        //also remove status file
+        gchar *url =  g_hash_table_lookup(rf->hr,
+                        g_hash_table_lookup(rf->hrname,
+                        name));
+        gchar *buf = gen_md5(url);
+        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+        gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+        g_free(feed_dir);
+        g_free(buf);
+        unlink(feed_name);
+        remove_feed_hash(name);
+        save_gconf_feed();
+}
+
 static void
 store_folder_deleted(CamelObject *o, void *event_data, void *data)
 {
 	CamelFolderInfo *info = event_data;
 	printf("Folder deleted '%s'\n", info->name);
+	rss_delete_feed(info->name);
 }
 
 static void

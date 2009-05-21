@@ -22,6 +22,9 @@
 void store_redraw(GtkTreeView *data);
 void import_dialog_response(GtkWidget *selector, guint response, gpointer user_data);
 void del_days_cb (GtkWidget *widget, add_feed *data);
+void delete_feed_folder_alloc(gchar *old_name);
+void rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex);
+void remove_feed_hash(gpointer name);
 
 #endif /*__RSS_CONFIG_FACTORY_H_*/
 

@@ -11,9 +11,7 @@
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
 	* make auth dialog not intrusive (peek others)
-	* fix ubuntu crashing when wrong entities (<0.0.6) and feed conf files stored in a file
 	* implement notify back of imported feed perhaps libnotify
-	* prefetch html content for all webkits (perhaps temp file)
 	* offline storage for article's home page
 	* implement web controls for diferent redering <Webkits> or <Gecko>
 	* when adding a feed as opml file offer to import (file detection)
@@ -42,7 +40,6 @@
     name=<value optimized out>, error=<value optimized out>, 
     emsg=<value optimized out>) at rss.c:273
 	* slow delete operation on large folders
-	* check operation cancel button
 	* add icon to feed setup panel
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* handle slash categories
@@ -51,13 +48,13 @@
 	* trigger resync after folder rename and initial folder creation
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
-	* perhaps make quoted text fancier			  
+	* perhaps make quoted text fancier
 	* if immage cannto be served from cache try to fetch it ( add 3 times retry for fetching an image)
 	* perform feeds images update weekly
 	* disable filters on setup_feed()
-	* check s&r progress bar on Complete.
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
 	* grey stop button on complete load
 	* display links from content in status bar
 	* grey out disabled folders (feeds)
+	* runtime validation
