@@ -497,8 +497,10 @@ net_get_unblocking(gchar *url,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
-	if (rss_soup_jar)
+	if (rss_soup_jar) {
+		g_print("juvr\n");
 		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
+	}
 	proxify_session(proxy, soup_sess, url);
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);

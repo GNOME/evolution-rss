@@ -733,12 +733,13 @@ gboolean
 proxy_auth_dialog(gchar *title, gchar *user, gchar *pass)
 {
 	GtkDialog *dialog;
+	gint result;
 
 	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
 	auth_info->user = user;
 	auth_info->pass = pass;
 	dialog = create_user_pass_dialog(auth_info);
-	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
+	result = gtk_dialog_run(GTK_DIALOG(dialog));
 	return TRUE;
 }
 
@@ -1234,7 +1235,8 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 static void
 back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-	guint engine = fallback_engine();
+	guint engine;
+	engine = fallback_engine();
 #ifdef	HAVE_GECKO
 	if (engine == 2)
 		gtk_moz_embed_go_back(GTK_MOZ_EMBED(rf->mozembed));
@@ -1248,7 +1250,8 @@ back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 static void
 forward_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-	guint engine = fallback_engine();
+	guint engine;
+	engine = fallback_engine();
 #ifdef	HAVE_GECKO
 	if (engine == 2)
 		gtk_moz_embed_go_forward(GTK_MOZ_EMBED(rf->mozembed));
@@ -1262,7 +1265,8 @@ forward_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 void
 stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-	guint engine = fallback_engine();
+	guint engine;
+	engine = fallback_engine();
 #ifdef	HAVE_GECKO
 	if (engine == 2)
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
@@ -1294,7 +1298,7 @@ reload_cb (GtkWidget *button, gpointer data)
 }
 
 
-static void
+void
 mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
 //	GtkAdjustment *a = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(widget));
@@ -1322,8 +1326,8 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0)
 			{
-				if (engine == 2)
 #ifdef HAVE_GECKO
+				if (engine == 2)
 					gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
 		    					po->website, "text/html");
 #endif
@@ -1385,7 +1389,8 @@ webkit_set_preferences(void)
 {
 #ifdef HAVE_WEBKIT
 	webkit_session = webkit_get_default_session();
-	soup_session_add_feature(webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
+	if (rss_soup_jar)
+		soup_session_add_feature(webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
 #endif
 }
 
@@ -1421,6 +1426,7 @@ gecko_set_preferences(void)
 #endif
 }
 
+#ifdef HAVE_GECKO
 static void
 rss_popup_zoom_in(EPopup *ep, EPopupItem *pitem, void *data)
 {
@@ -1456,7 +1462,7 @@ rss_popup_link_open(EPopup *ep, EPopupItem *pitem, void *data)
 	e_show_uri (NULL, data);
 }
 
-static EPopupItem rss_menu_items[] = {
+EPopupItem rss_menu_items[] = {
         { E_POPUP_BAR, "05.rss-browser", },
         { E_POPUP_ITEM, "05.rss-browser.00", N_("_Copy"), NULL, NULL, "edit-copy", EM_FOLDER_VIEW_SELECT_DISPLAY|EM_FOLDER_VIEW_SELECT_SELECTION },
 	{ E_POPUP_BAR, "05.rss-browser.01", NULL, NULL, NULL, NULL },
@@ -1470,8 +1476,9 @@ static EPopupItem rss_menu_items[] = {
 	{ E_POPUP_ITEM, "05.rss-browser.09", N_("_Open Link in Browser"), rss_popup_link_open, NULL, NULL, EM_POPUP_URI_HTTP },
         { E_POPUP_ITEM, "05.rss-browser.10", N_("_Copy Link Location"), rss_popup_link_copy, NULL, "edit-copy" },
 };
+#endif
 
-static void
+void
 rss_menu_items_free(EPopup *ep, GSList *items, void *data)
 {
         g_slist_free(items);
@@ -1776,6 +1783,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *comments = NULL;
 	gchar *category = NULL;
 	GdkPixbuf *pixbuf = NULL;
+	guint engine = 0;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -1829,7 +1837,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format)) {
-		guint engine = fallback_engine();
+		engine = fallback_engine();
 #ifdef HAVE_RENDERKIT
 		if (engine && engine != 10) { 
         		char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
@@ -2690,7 +2698,8 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 {
 	g_return_if_fail(rf->mozembed);
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
-	guint engine = fallback_engine();
+	guint engine;
+	engine = fallback_engine();
 	g_print("browser full:%d\n", (int)response->len);
 	g_print("browser fill:%d\n", (int)browser_fill);
 	if (response->len)
