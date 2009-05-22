@@ -25,6 +25,7 @@ GITIGNOREFILES= 	aclocal.m4				\
 			compile					\
 			config.guess				\
 			config.h.in				\
+			config.sub				\
 			ltmain.sh				\
 			m4/libtool.m4				\
 			m4/lt*.m4				\
