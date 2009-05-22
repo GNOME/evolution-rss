@@ -387,6 +387,7 @@ authenticate (SoupSession *session,
 	}
 }
 
+#if LIBSOUP_VERSION < 2003000
 static void
 reauthenticate (SoupSession *session,
         SoupMessage *msg,
@@ -396,7 +397,6 @@ reauthenticate (SoupSession *session,
         char **password,
         gpointer data)
 {
-	gchar *user, *pass;
 	if (rf->soup_auth_retry) {
 		//means we're already tested once and probably
 		//won't try again
@@ -410,14 +410,7 @@ reauthenticate (SoupSession *session,
         	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
 	}
 }
-
-static int
-conn_mainloop_quit (void *data)
-{
-	g_print("loop quit");
-	g_main_loop_quit (data);
-	return TRUE;
-}
+#endif
 
 guint
 net_get_status(const char *url, GError **err)

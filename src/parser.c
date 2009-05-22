@@ -536,7 +536,7 @@ media_rss(xmlNode *node, gchar *search, gchar *fail)
 gchar *property_rss_modules[1][3] = {
 	{"media", "media", (gchar *)media_rss}};
 
-static char *
+char *
 layer_find_tag_prop (xmlNodePtr node,
             char *match,
             char *search,
@@ -612,7 +612,7 @@ layer_find_pos (xmlNodePtr node,
         return NULL;
 }
 
-static char *
+char *
 layer_find_url (xmlNodePtr node, 
 		char *match, 
 		char *fail)

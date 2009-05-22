@@ -50,7 +50,7 @@ print_hash(gpointer key, gpointer value, gpointer user_data)
  	g_print("key:%s, value:%s\n", (gchar *)key, (gchar *)value);
 }
  
-static void
+void
 free_hash(gpointer key, gpointer value, gpointer user_data)
 {
  	g_print("FREE - key:%p, value:%p\n", (gchar *)key, (gchar *)value);
@@ -373,7 +373,7 @@ gchar *extract_main_folder(gchar *folder)
 }
 
 /* hrm, is there a library for this shit? */
-static struct {
+struct {
         char *name;
         int offset;
 } tz_offsets [] = {

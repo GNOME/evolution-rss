@@ -259,12 +259,12 @@ rss_find_enabled(void)
 /* hash table of ops->dialogue of active errors */
 static GHashTable *active_errors = NULL;
 
-static void error_destroy(GtkObject *o, void *data)
+void error_destroy(GtkObject *o, void *data)
 {
         g_hash_table_remove(active_errors, data);
 }
 
-static void error_response(GtkObject *o, int button, void *data)
+void error_response(GtkObject *o, int button, void *data)
 {
         gtk_widget_destroy((GtkWidget *)o);
 }
@@ -1477,7 +1477,7 @@ rss_menu_items_free(EPopup *ep, GSList *items, void *data)
         g_slist_free(items);
 }
 
-static gboolean
+gboolean
 webkit_click (GtkEntry *entry,
                          GtkMenu *menu,
                          gpointer user_data)
@@ -3438,12 +3438,6 @@ custom_feed_timeout(void)
 }
 
 static void
-store_folder_update(CamelObject *o, void *event_data, void *data)
-{
-	g_print("folder update\n");
-}
-
-static void
 rss_online(CamelSession *o, void *event_data, void *data)
 {
 	rf->online =  camel_session_is_online (o);
@@ -3969,7 +3963,7 @@ e_plugin_lib_disable(EPluginLib *ep)
 	g_print("DIE!\n");
 }
 
-static void
+void
 free_filter_uids (gpointer user_data, GObject *ex_msg)
 {
 	g_print("weak unref called on filter_uids\n");
