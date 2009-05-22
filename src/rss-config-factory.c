@@ -220,20 +220,6 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
-host_proxy_cb (GtkWidget *widget, gpointer data)
-{
-    gconf_client_set_string (rss_gconf, GCONF_KEY_HOST_PROXY,
-                gtk_entry_get_text((GtkEntry*)widget), NULL);
-}
-
-static void
-port_proxy_cb (GtkWidget *widget, gpointer data)
-{
-    gconf_client_set_int (rss_gconf, GCONF_KEY_PORT_PROXY,
-                gtk_spin_button_get_value_as_int((GtkSpinButton*)widget), NULL);
-}
-
-static void
 close_details_cb (GtkWidget *widget, gpointer data)
 {
         gtk_widget_hide(data);
@@ -330,8 +316,6 @@ build_dialog_add(gchar *url, gchar *feed_text)
   	gboolean fhtml = FALSE;
   	gboolean del_unread = FALSE;
   	guint del_feed = 0;
-  	guint del_days = 10;
-  	guint del_messages = 10;
 	GtkAccelGroup *accel_group = gtk_accel_group_new ();
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
@@ -807,7 +791,6 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
         GtkTreeIter       iter;
         gchar *name;
         CamelException ex;
-        CamelFolder *mail_folder;
         if (response == GTK_RESPONSE_OK) {
                 selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(user_data));
                 if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
@@ -1560,7 +1543,6 @@ select_export_response(GtkWidget *selector, guint response, gpointer user_data)
 static void
 decorate_export_fs (gpointer data)
 {
-        add_feed *feed = g_new0(add_feed, 1);
         gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (data), TRUE);
         gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
         gtk_file_chooser_set_local_only (data, FALSE);
@@ -2111,17 +2093,6 @@ rss_config_control_new (void)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->use_proxy),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL));
 	g_signal_connect(sf->use_proxy, "clicked", G_CALLBACK(start_check_cb), GCONF_KEY_USE_PROXY);
-
-	gchar *host = gconf_client_get_string(rss_gconf, GCONF_KEY_HOST_PROXY, NULL);
-	if (host)
-		gtk_entry_set_text(GTK_ENTRY(sf->host_proxy), host);
-	g_signal_connect(sf->host_proxy, "changed", G_CALLBACK(host_proxy_cb), NULL);
-
-  	gint port = gconf_client_get_int(rss_gconf, GCONF_KEY_PORT_PROXY, NULL);
-  	if (port)
-		gtk_spin_button_set_value((GtkSpinButton *)sf->port_proxy, (gdouble)port);
-	g_signal_connect(sf->port_proxy, "changed", G_CALLBACK(port_proxy_cb), NULL);
-	g_signal_connect(sf->port_proxy, "value_changed", G_CALLBACK(port_proxy_cb), NULL);
 #endif
 
 	g_signal_connect(sf->details, "clicked", G_CALLBACK(details_cb), sf->gui);

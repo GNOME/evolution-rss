@@ -311,7 +311,7 @@ void err_destroy (GtkWidget *widget, guint response, gpointer data);
 void save_gconf_feed(void);
 void rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg);
 void rss_select_folder(gchar *folder_name);
-gpointer lookup_chn_name_by_url(gchar *url);
+gchar *lookup_chn_name_by_url(gchar *url);
 gboolean update_articles(gboolean disabler);
 xmlNode *html_find (xmlNode *node, char *match);
 gchar *lookup_main_folder(void);

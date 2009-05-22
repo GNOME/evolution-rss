@@ -133,22 +133,12 @@ sanitize_folder(gchar *text)
 	//first convert "/" character
 	char *tmp = g_strdup(text);
 	g_strdelimit(tmp, "/", '|');
-	GString *str = g_string_new(NULL);
-        gchar *string;
-        const unsigned char *s = (const unsigned char *)tmp;
-	g_string_append(str, tmp);
-        guint len = strlen(tmp);
-        while (*s == '.' && len)
-        {
-                str = g_string_erase (str, 0, 1);
-		s = (unsigned char *)(str->str);
-             	len--;
-        }
-        g_string_append_c(str, 0);
-        string = str->str;
-        g_string_free(str, 0);
-	g_free(tmp);
-        return string;
+	// Strip leading dots
+	char *tmp2 = tmp;
+	while (*tmp2 == '.') tmp2++;
+		tmp2 = g_strdup (tmp2);
+	g_free (tmp);
+	return tmp2;
 }
  
 gchar *

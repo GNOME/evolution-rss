@@ -244,7 +244,7 @@ lookup_key(gpointer key)
 void
 compare_enabled(gpointer key, gpointer value, guint *data)
 {
-	if (value == 1)
+	if (GPOINTER_TO_INT(value) == 1)
 		*data = *data+1;
 }
 
@@ -252,7 +252,7 @@ guint
 rss_find_enabled(void)
 {
 	guint enabled=0;
-	g_hash_table_foreach (rf->hre, compare_enabled, &enabled);
+	g_hash_table_foreach (rf->hre, (GHFunc)compare_enabled, &enabled);
 	return enabled;
 }
 
@@ -2739,7 +2739,7 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 	commstream = response->str; 
 
 	if (reload) {
-		em_format_redraw((EMFormatHTML *)user_data);
+		em_format_redraw((EMFormat *)user_data);
 	}
 	
 	while (gtk_events_pending ())
@@ -2931,11 +2931,11 @@ lookup_feed_folder(gchar *folder)
 	return new_folder ? new_folder : folder;
 }
 
-gpointer
+gchar *
 lookup_chn_name_by_url(gchar *url)
 {
 	gpointer crc_feed = gen_md5(url);
-        gpointer chn_name = g_hash_table_lookup(rf->hrname_r,
+        gchar *chn_name = g_hash_table_lookup(rf->hrname_r,
                         g_strdup(crc_feed));
 	g_free(crc_feed);
 	return chn_name;

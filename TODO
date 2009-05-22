@@ -57,4 +57,4 @@
 	* grey stop button on complete load
 	* display links from content in status bar
 	* grey out disabled folders (feeds)
-	* runtime validation
+	* feed check runtime validation

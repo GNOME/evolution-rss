@@ -30,7 +30,7 @@
 #include <gtk/gtk.h>
 
 #include "rss.h"
-//#include <rss-config-factory.h>
+#include "rss-config-factory.h"
 #include "misc.h"
 #include "dbus.h"
 
@@ -45,17 +45,18 @@ static gboolean enabled = FALSE;
 
 extern rssfeed *rf;
 
-/*static void
+#if 0
+static void
 send_dbus_message (const char *name, const char *data, guint new)
 {
 	DBusMessage *message;
 	
 	/* Create a new message on the DBUS_INTERFACE */
-/*	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, name)))
+	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, name)))
 		return;
 	
 	/* Appends the data as an argument to the message */
-/*	dbus_message_append_args (message,
+	dbus_message_append_args (message,
 #if DBUS_VERSION >= 310
 				  DBUS_TYPE_STRING, &data,
 #else
@@ -64,11 +65,12 @@ send_dbus_message (const char *name, const char *data, guint new)
 				  DBUS_TYPE_INVALID);
 
 	/* Sends the message */
-//	dbus_connection_send (bus, message, NULL);
+	dbus_connection_send (bus, message, NULL);
 	
 	/* Frees the message */
-/*	dbus_message_unref (message);
-}*/
+	dbus_message_unref (message);
+}
+#endif
 
 static gboolean
 reinit_dbus (gpointer user_data)
@@ -122,7 +124,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
                 		if (setup_feed(feed))
 				{
 					gchar *msg = g_strdup_printf(_("New feed imported: %s"),
-							(char *)lookup_chn_name_by_url(feed->feed_url));
+							lookup_chn_name_by_url(feed->feed_url));
 					taskbar_push_message(msg);
 					g_free(msg);
 				}	
