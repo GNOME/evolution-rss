@@ -27,6 +27,7 @@
 #include "file-gio.h"
 #include "network-soup.h"
 #include "fetch.h"
+#define d(x)
 
 GString*
 fetch_blocking(gchar *url, GSList *headers, GString *post,
@@ -73,7 +74,11 @@ fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
 				GError **err)
 {
 	gchar *scheme = NULL;
-	scheme = g_uri_parse_scheme(url);
+	scheme = g_uri_parse_scheme(g_strstrip(url));
+	d(g_print("scheme:%s=>url:%s\n", scheme, url));
+
+	if (!scheme)
+		return FALSE;
 
 	if (!g_ascii_strcasecmp(scheme, "file")) {
 		g_free(scheme);

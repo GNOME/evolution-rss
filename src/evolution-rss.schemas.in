@@ -241,6 +241,20 @@
         </long>
       </locale>
     </schema>
+
+    <schema>
+      <key>/schemas/apps/evolution/evolution-rss/show_comments</key>
+      <applyto>/apps/evolution/evolution-rss/show_comments</applyto>
+      <owner>evolution-rss</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show articles comments</short>
+        <long>
+    	    It will display article's comments by default if present.
+        </long>
+      </locale>
+    </schema>
     
     <schema>
       <key>/schemas/apps/evolution/evolution-rss/use_proxy</key>

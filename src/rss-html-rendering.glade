@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--*- mode: xml -*-->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="window1">
     <child>
       <widget class="GtkVBox" id="settingsbox">
@@ -10,7 +10,7 @@
           <widget class="GtkFrame" id="html-rendering">
             <property name="visible">True</property>
             <property name="label_xalign">0</property>
-            <property name="shadow_type">GTK_SHADOW_NONE</property>
+            <property name="shadow_type">none</property>
             <child>
               <widget class="GtkAlignment" id="alignment1">
                 <property name="visible">True</property>
@@ -34,6 +34,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -43,6 +44,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
@@ -50,20 +52,23 @@
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkCheckButton" id="checkbutton1">
-                            <property name="can_focus">True</property>
                             <property name="label" translatable="yes">Block pop-up windows</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="enable_java">
+                            <property name="label" translatable="yes">Enable Java</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Enable Java</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
@@ -72,15 +77,46 @@
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="enable_js">
+                            <property name="label" translatable="yes">Enable JavaScript</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Enable JavaScript</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                           <packing>
                             <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkHBox" id="hbox3">
+                            <property name="visible">True</property>
+                            <child>
+                              <widget class="GtkCheckButton" id="checkbutton2">
+                                <property name="label" translatable="yes">Accept cookies from sites</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </widget>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="button1">
+                                <property name="label" translatable="yes">Import Cookies</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                              </widget>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">3</property>
                           </packing>
                         </child>
                       </widget>
@@ -100,6 +136,7 @@
                           </widget>
                           <packing>
                             <property name="expand">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -146,12 +183,15 @@
               </packing>
             </child>
           </widget>
+          <packing>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <widget class="GtkFrame" id="frame1">
             <property name="visible">True</property>
             <property name="label_xalign">0</property>
-            <property name="shadow_type">GTK_SHADOW_NONE</property>
+            <property name="shadow_type">none</property>
             <child>
               <widget class="GtkAlignment" id="alignment2">
                 <property name="visible">True</property>
@@ -161,13 +201,16 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkCheckButton" id="status_icon">
+                        <property name="label" translatable="yes">Show icon in notification area</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">Show icon in notification area</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
                       </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                     <child>
                       <widget class="GtkAlignment" id="alignment3">
@@ -175,11 +218,11 @@
                         <property name="xscale">0.80000001192092896</property>
                         <child>
                           <widget class="GtkCheckButton" id="blink_icon">
+                            <property name="label" translatable="yes">Blink icon in notification area</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Blink icon in notification area</property>
+                            <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                         </child>
@@ -190,11 +233,11 @@
                     </child>
                     <child>
                       <widget class="GtkCheckButton" id="feed_icon">
+                        <property name="label" translatable="yes">Show feed icon</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">Show feed icon</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
                       </widget>
                       <packing>

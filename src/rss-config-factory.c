@@ -71,6 +71,27 @@ typedef struct {
         GtkWidget   *check5;
 } UIData;
 
+typedef struct _setupfeed {
+        GladeXML  *gui;
+        GtkWidget *treeview;
+        GtkWidget *add_feed;
+        GtkWidget *check1;
+        GtkWidget *check2;
+        GtkWidget *check3;
+        GtkWidget *check4;
+        GtkWidget *spin;
+        GtkWidget *use_proxy;
+        GtkWidget *host_proxy;
+        GtkWidget *port_proxy;
+        GtkWidget *proxy_details;
+        GtkWidget *details;
+        GtkWidget *import;
+        GtkWidget *import_fs;
+        GtkWidget *export_fs;
+        GtkWidget *export;
+        GtkWidget *combo_hbox;
+} setupfeed;
+
 static void feeds_dialog_edit(GtkDialog *d, gpointer data);
 
 static void
@@ -374,7 +395,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
         GtkWidget *entry2 = (GtkWidget *)glade_xml_get_widget (gui, "entry2");
 	if (url != NULL) {
-        	flabel = g_strdup_printf("%s: <b>%s</b>", _("Folder"),
+        	flabel = g_markup_printf_escaped("%s: <b>%s</b>", _("Folder"),
                         lookup_feed_folder(feed_text));
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
         	gtk_label_set_use_markup(GTK_LABEL(entry2), 1);
@@ -601,15 +622,13 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 	gtk_widget_show_all(msg_feeds);
         while (gtk_events_pending ())
                 gtk_main_iteration ();
-        if (feed->feed_url && strlen(feed->feed_url))
-        {
+        if (feed->feed_url && strlen(feed->feed_url)) {
                 text = feed->feed_url;
                 feed->feed_url = sanitize_url(feed->feed_url);
                 g_free(text);
                 if (g_hash_table_find(rf->hr,
                                         check_if_match,
-                                        feed->feed_url))
-                {
+                                        feed->feed_url)) {
                            rss_error(NULL, NULL, _("Error adding feed."),
                                            _("Feed already exists!"));
                            goto out;
@@ -638,7 +657,6 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
                 CamelFolder *folder;
 
                 d(printf ("deleting folder '%s'\n", fi->full_name));
-                printf ("deleting folder '%s'\n", fi->full_name);
 
                 if (!(folder = camel_store_get_folder (store, fi->full_name, 0, ex)))
                         return;
@@ -790,38 +808,12 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
         GtkTreeModel     *model;
         GtkTreeIter       iter;
         gchar *name;
-        CamelException ex;
         if (response == GTK_RESPONSE_OK) {
                 selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(user_data));
                 if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
                         gtk_tree_model_get (model, &iter, 3, &name, -1);
-                        if (gconf_client_get_bool(rss_gconf, GCONF_KEY_REMOVE_FOLDER, NULL)) {
-                                //delete folder
-                                CamelStore *store = mail_component_peek_local_store(NULL);
-                                gchar *full_path = g_strdup_printf("%s/%s",
-                                                lookup_main_folder(),
-                                                lookup_feed_folder(name));
-                                delete_feed_folder_alloc(lookup_feed_folder(name));
-                                camel_exception_init (&ex);
-                                rss_delete_folders (store, full_path, &ex);
-                                if (camel_exception_is_set (&ex)) {
-                                        e_error_run(NULL,
-                                                "mail:no-delete-folder", full_path, ex.desc, NULL);
-                                        camel_exception_clear (&ex);
-                                }
-                                g_free(full_path);
-                                //also remove status file
-                                gchar *url =  g_hash_table_lookup(rf->hr,
-                                                        g_hash_table_lookup(rf->hrname,
-                                                        name));
-                                gchar *buf = gen_md5(url);
-				gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-                                gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
-                                g_free(feed_dir);
-                                g_free(buf);
-                                unlink(feed_name);
-                        }
-                        remove_feed_hash(name);
+			rss_delete_feed(name,
+				gconf_client_get_bool(rss_gconf, GCONF_KEY_REMOVE_FOLDER, NULL));
                         g_free(name);
                 }
 		store_redraw(GTK_TREE_VIEW(rf->treeview));
@@ -1052,8 +1044,7 @@ import_one_feed(gchar *url, gchar *title)
 	/* we'll get rid of this as soon as we fetch unblocking */
         if (g_hash_table_find(rf->hr,
                                      check_if_match,
-                                     feed->feed_url))
-        {
+                                     feed->feed_url)) {
                rss_error(NULL, feed->feed_name, _("Error adding feed."),
                                 _("Feed already exists!"));
                return FALSE;
@@ -1181,8 +1172,7 @@ import_opml(gchar *file)
 	while ((src = iterate_import_file(src, &url, &name, type))) {
                 if (url && strlen(url)) {
 		g_print("url:%s\n", url);
-                        if (rf->cancel)
-                        {
+                        if (rf->cancel) {
                                 if (src) xmlFree(src);
                                 rf->cancel = 0;
                                 goto out;
@@ -1210,8 +1200,7 @@ import_opml(gchar *file)
                         save_gconf_feed();
                         if (src)
                                 xmlFree(src);
-                }
-                else
+                } else
                         src = html_find(src, "outline");
 
         }
@@ -1227,8 +1216,7 @@ select_file_response(GtkWidget *selector, guint response, gpointer user_data)
 {
         if (response == GTK_RESPONSE_OK) {
                 char *name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (selector));
-                if (name)
-                {
+                if (name) {
                         gtk_widget_hide(selector);
                         import_opml(name);
                         g_free(name);
@@ -1988,6 +1976,7 @@ rss_config_control_new (void)
 	sf->check1 = glade_xml_get_widget(sf->gui, "checkbutton1");
 	sf->check2 = glade_xml_get_widget(sf->gui, "checkbutton2");
 	sf->check3 = glade_xml_get_widget(sf->gui, "checkbutton3");
+	sf->check4 = glade_xml_get_widget(sf->gui, "checkbutton4");
 	sf->spin = glade_xml_get_widget(sf->gui, "spinbutton1");
 
  	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check1), 
@@ -2011,6 +2000,12 @@ rss_config_control_new (void)
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
 		GCONF_KEY_DISPLAY_SUMMARY);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check4),
+        	gconf_client_get_bool(rss_gconf, GCONF_KEY_SHOW_COMMENTS, NULL));
+	g_signal_connect(sf->check4, 
+		"clicked", 
+		G_CALLBACK(start_check_cb), 
+		GCONF_KEY_SHOW_COMMENTS);
 
 
 #if (EVOLUTION_VERSION < 21900)		// include devel too

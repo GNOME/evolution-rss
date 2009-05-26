@@ -153,7 +153,7 @@ GQueue *status_msg;
 gchar *flat_status_msg;
 GPtrArray *filter_uids;
 
-static CamelDataCache *http_cache;
+static CamelDataCache *http_cache = NULL;
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -442,7 +442,7 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, fraction);
 		}
 		if (rf->sr_feed) {
-			gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), (char *)data);
+			gchar *furl = g_markup_printf_escaped("<b>%s</b>: %s", _("Feed"), (char *)data);
 			gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 			g_free(furl);
 		}
@@ -473,16 +473,19 @@ browser_write(gchar *string, gint length, gchar *base)
 	switch (engine) {
 	case 2:
 #ifdef HAVE_GECKO
+	gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
+			base, "text/html");
 	while (len > 0) {
-	if (len > 4096) {
-		gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
-			str, 4096);
-		str+=4096;
-	} else
-		gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
-		str, len);
-		len-=4096;
+		if (len > 4096) {
+			gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+				str, 4096);
+			str+=4096;
+		} else
+			gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
+				str, len);
+	len-=4096;
 	}
+	gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
 #endif
 	break;
 	case 1:
@@ -1326,13 +1329,8 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0)
 			{
-#ifdef HAVE_GECKO
-				if (engine == 2)
-					gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
-		    					po->website, "text/html");
-#endif
-		//browser_write("test", 4);
 				if (!browser_fetching) {
+					browser_write("Formatting...", 13, "file:///");
 					browser_fetching=1;
 					fetch_unblocking(
 						po->website,
@@ -1543,7 +1541,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	if (button == 0)
 		gtk_moz_embed_load_url(GTK_MOZ_EMBED(rf->mozembed), link);
 	g_print("button:%d\n", button);
-	return TRUE;
+	return FALSE;
 }
 #endif
 
@@ -1750,8 +1748,7 @@ pfree(EMFormatHTMLPObject *o)
 	}
 	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
 #ifdef HAVE_GECKO
-	if (engine == 2)
-	{
+	if (engine == 2) {
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
 //		gtk_moz_embed_pop_startup();
 	}
@@ -1977,7 +1974,8 @@ render_body:    if (category)
                         	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
                                 buff);
 
-		if (comments) {
+		if (comments && 
+  			gconf_client_get_bool (rss_gconf, GCONF_KEY_SHOW_COMMENTS, NULL)) {
 			if (commstream) {
 			camel_stream_printf (fstream, 
                         	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
@@ -2613,7 +2611,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 #ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted) {
-		gchar *furl = g_strdup_printf("<b>%s</b>: %s", _("Feed"), (gchar *)user_data);
+		gchar *furl = g_markup_printf_escaped("<b>%s</b>: %s", _("Feed"), (gchar *)user_data);
 		gtk_label_set_markup (GTK_LABEL (rf->sr_feed), furl);
 		gtk_label_set_justify(GTK_LABEL (rf->sr_feed), GTK_JUSTIFY_LEFT);
 		g_free(furl);
@@ -2711,10 +2709,6 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	g_print("len:%d\n", len);
 	if (len>0) {
 		browser_write(str, len, user_data);
-#ifdef HAVE_GECKO
-		if (engine == 2)
-			gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
-#endif
 		g_string_free(response, 1);
 //		gtk_widget_show(rf->mozembed);
 	}
@@ -3039,6 +3033,7 @@ void
 update_feed_image(gchar *image, gchar *key)
 {
         GError *err = NULL;
+	gchar *url = NULL;
 //	if (!image)
 //		return;
   //      g_return_if_fail (image != NULL);
@@ -3064,7 +3059,9 @@ update_feed_image(gchar *image, gchar *key)
 			return;
 		}
 	} else {
-		gchar *url = g_hash_table_lookup(rf->hr, key);
+		url = g_hash_table_lookup(rf->hr, key);
+		if (!url)
+			return;
 		gchar *server = get_server_from_uri(url);
 		fetch_unblocking(
 			server,
@@ -3180,7 +3177,7 @@ check_feed_folder(gchar *folder_name)
 }
 
 void
-rss_delete_feed(gchar *name)
+rss_delete_feed(gchar *name, gboolean folder)
 {
         CamelException ex;
         CamelStore *store = mail_component_peek_local_store(NULL);
@@ -3197,16 +3194,18 @@ rss_delete_feed(gchar *name)
         }
         g_free(full_path);
         //also remove status file
-        gchar *url =  g_hash_table_lookup(rf->hr,
-                        g_hash_table_lookup(rf->hrname,
-                        name));
+        gchar *tkey = g_hash_table_lookup(rf->hrname, name);
+	if (!tkey)
+		return;
+        gchar *url =  g_hash_table_lookup(rf->hr, tkey);
         gchar *buf = gen_md5(url);
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
         g_free(feed_dir);
         g_free(buf);
         unlink(feed_name);
-        remove_feed_hash(name);
+	if (folder)
+		remove_feed_hash(name);
         save_gconf_feed();
 }
 
@@ -3215,7 +3214,7 @@ store_folder_deleted(CamelObject *o, void *event_data, void *data)
 {
 	CamelFolderInfo *info = event_data;
 	printf("Folder deleted '%s'\n", info->name);
-	rss_delete_feed(info->name);
+	rss_delete_feed(info->name, 1);
 }
 
 static void
@@ -4350,26 +4349,31 @@ fetch_image(gchar *url, gchar *link)
 	if (!url)
 		return NULL;
 	if (strstr(url, "://") == NULL) {
-		if (*url == '/') {
-		tmpurl = g_strconcat(get_server_from_uri(link), "/", url, NULL);
-		g_print("fetch_image() tmpurl:%s\n", tmpurl);
-		}
-		if (*url == '.')
+		if (*url == '.') //test case when url begins with ".."
 			tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
+		else {
+			if (*url == '/')
+				tmpurl = g_strconcat(get_server_from_uri(link), "/", url, NULL);
+			else	//url is relative (does not begin with / or .)
+				tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
+		}
 	} else {
 		tmpurl = g_strdup(url);
 	}
+	d(g_print("fetch_image() tmpurl:%s\n", tmpurl));
 	gchar *feed_dir = g_build_path("/", rss_component_peek_base_directory(mail_component_peek()), "static", NULL);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
+	if (!http_cache)
+		return NULL;
 	g_free(feed_dir);
 	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
 	if (!stream) {
-		g_print("image cache MISS\n");
+		d(g_print("image cache MISS\n"));
 		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
 	} else 
-		g_print("image cache HIT\n");
+		d(g_print("image cache HIT\n"));
 
 	fetch_unblocking(tmpurl,
                        	        textcb,

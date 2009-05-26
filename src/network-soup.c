@@ -498,7 +498,6 @@ net_get_unblocking(gchar *url,
 		soup_session_async_new();
 			
 	if (rss_soup_jar) {
-		g_print("juvr\n");
 		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
 	}
 	proxify_session(proxy, soup_sess, url);
@@ -703,5 +702,5 @@ abort_all_soup(void)
 void
 rss_soup_init(void)
 {
-	//rss_soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.newcookies.sqlite", FALSE);
+	rss_soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.evolution/mail/rss/rss-cookies.sqlite", FALSE);
 }

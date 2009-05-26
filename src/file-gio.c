@@ -55,11 +55,11 @@ gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data)
                                               res,
                                               &file_contents, &file_size,
                                               NULL, NULL);
-        rfmsg->status_code = SOUP_STATUS_OK;
-        rfmsg->body = file_contents;
-        rfmsg->length = file_size;
-        generic_finish_feed(rfmsg, user_data);
-        if (result) {
+	if (result) {
+        	rfmsg->status_code = SOUP_STATUS_OK;
+        	rfmsg->body = file_contents;
+        	rfmsg->length = file_size;
+        	generic_finish_feed(rfmsg, user_data);
                 g_free (file_contents);
         }
         g_free(rfmsg);

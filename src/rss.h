@@ -162,6 +162,7 @@ typedef struct _rssfeed {
 #define GCONF_KEY_START_CHECK "/apps/evolution/evolution-rss/startup_check"
 #define GCONF_KEY_REP_CHECK "/apps/evolution/evolution-rss/rep_check"
 #define GCONF_KEY_REP_CHECK_TIMEOUT "/apps/evolution/evolution-rss/rep_check_timeout"
+#define GCONF_KEY_SHOW_COMMENTS "/apps/evolution/evolution-rss/show_comments"
 #define GCONF_KEY_REMOVE_FOLDER "/apps/evolution/evolution-rss/remove_folder"
 #define GCONF_KEY_HTML_RENDER "/apps/evolution/evolution-rss/html_render"
 #define GCONF_KEY_HTML_JS "/apps/evolution/evolution-rss/html_js"
@@ -201,26 +202,6 @@ typedef struct USERPASS {
 	gchar *username;
 	gchar *password;
 } userpass;
-
-typedef struct _setupfeed {
-	GladeXML  *gui;
-	GtkWidget *treeview;
-	GtkWidget *add_feed;
-	GtkWidget *check1;
-	GtkWidget *check2;
-	GtkWidget *check3;
-	GtkWidget *spin;
-	GtkWidget *use_proxy;
-	GtkWidget *host_proxy;
-	GtkWidget *port_proxy;
-	GtkWidget *proxy_details;
-	GtkWidget *details;
-	GtkWidget *import;
-	GtkWidget *import_fs;
-	GtkWidget *export_fs;
-	GtkWidget *export;
-	GtkWidget *combo_hbox;
-} setupfeed;
 
 struct _send_data {
         GList *infos;
@@ -360,6 +341,7 @@ gboolean feed_is_new(gchar *file_name, gchar *needle);
 gboolean web_auth_dialog(gchar *url);
 gchar *get_main_folder(void);
 gpointer lookup_key(gpointer key);
+void rss_delete_feed(gchar *name, gboolean folder);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);

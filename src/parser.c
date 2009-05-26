@@ -159,8 +159,9 @@ xml_parse_sux (const char *buf, int len)
         ctxt->vctxt.warning = my_xml_parser_error_handler;
 
         xmlCtxtUseOptions(ctxt, XML_PARSE_DTDLOAD
-                                | XML_PARSE_NOENT
-                                | XML_PARSE_NOCDATA);
+                                | XML_PARSE_NOENT);
+
+//                                | XML_PARSE_NOCDATA);
 
         xmlParseDocument (ctxt);
 
@@ -490,30 +491,29 @@ layer_find_tag (xmlNodePtr node,
 					}
 				}
 			}
-		}
-                if (strcasecmp ((char *)node->name, match)==0) {
-                        if (node->children != NULL) {
-				if (node->children->type == 1			//XML_NODE_ELEMENT
-	/*			|| node->children->type == 3		*/	//XML_NODE_TEXT
-					|| node->children->next != NULL) {
-				d(g_print("NODE DUMP:%s|\n", xmlNodeGetContent(node->children->next)));
-				gchar *nodetype = (gchar *)xmlGetProp(node, (xmlChar *)"type");
-				if (!strcasecmp(nodetype, "xhtml")) {		// test this with "html" or smth else
-				//this looses html entities
- 				len = xmlNodeDump(buf, node->doc, node->children, 0, 0);
-				content = g_strdup_printf("%s", xmlBufferContent(buf));
-				xmlBufferFree(buf);
-				} else
-					content = (char *)xmlNodeGetContent(node->children);
-				if (nodetype)
-					xmlFree(nodetype);
-				return content;
+		} else {		//in case was not a standard module process node normally
+					//above case should handle all modules
+			if (strcasecmp ((char *)node->name, match)==0) {
+				if (node->type == 1) {			//XML_NODE_ELEMENT
+					gchar *nodetype = (gchar *)xmlGetProp(node, (xmlChar *)"type");
+					//we need separate xhtml parsing because of xmlNodegetcontent substitutes html entities
+					if (nodetype && !strcasecmp(nodetype, "xhtml")) {		// test this with "html" or smth else
+						//this looses html entities
+ 						len = xmlNodeDump(buf, node->doc, node, 0, 0);
+						content = g_strdup_printf("%s", xmlBufferContent(buf));
+						xmlBufferFree(buf);
+					} else {
+						content = (char *)xmlNodeGetContent(node);
+					}
+					if (nodetype)
+						xmlFree(nodetype);
+					return content;
                         	} else {
 					xmlBufferFree(buf);
                                 	return fail;
                         	}
 			}
-                }
+		}
                 node = node->next;
         }
 	xmlBufferFree(buf);
@@ -882,11 +882,11 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 			}
 		}
 		//FIXME this might need xmlFree when namespacing
-		b = layer_find_tag (top, "description",
-				layer_find_tag (top, "content", 
+		b = layer_find_tag (top, "content",			//we prefer content first					  <--
+				layer_find_tag (top, "description", 	//it seems description is rather shorten version of the content, so |
 					layer_find_tag (top, "summary", 
 					NULL)));
-		if (b) 
+		if (b && strlen(b)) 
 			b = g_strstrip(b);
 		else
 	               	b = g_strdup(layer_find (top, "description",

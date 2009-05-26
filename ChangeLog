@@ -1,3 +1,18 @@
+2009-05-25  Lucian Langa  <lucilanga@gnome.org>
+
+	* src/fetch.c (fetch_unblocking): sanitize url before fetching (strip
+	whitespace)
+	* src/file-gio.c (gio_finish_feed): correctly handle errors
+	when fetching files
+	* src/parser.c (layer_find_tag), (parse_channel_line): correctly parse
+	atom description construct (debian bug #528827)
+	* src/rss-config-factory.c (build_dialog_add), (feeds_dialog_add),
+	(delete_response): correctly escape markup text
+	* src/rss-html-rendering.glade: add cookie import option
+	* src/rss.c (browser_write), (mycall), (gecko_click),
+	(finish_feed), (generic_finish_feed), (finish_website),
+	(update_feed_image), (rss_delete_feed), (store_folder_deleted):
+
 2009-05-18  Lucian Langa  <lucilanga@gnome.org>
 
 	* src/rss-config-factory.c (feeds_dialog_disable),
