@@ -1549,7 +1549,8 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 static gboolean
 org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
-	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
+	struct _org_gnome_rss_controls_pobject *po = 
+			(struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *moz;
 
 //        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
@@ -1630,7 +1631,8 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 static gboolean
 org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
-        struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
+        struct _org_gnome_rss_controls_pobject *po = 
+			(struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 
 	gchar *mem = g_strdup_printf("%s(%d):",  _("Comments"), po->counter);
@@ -1651,7 +1653,8 @@ org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 static gboolean
 org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
-	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) pobject;
+	struct _org_gnome_rss_controls_pobject *po = 
+			(struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
 	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
 
@@ -1728,7 +1731,8 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 void
 free_rss_controls(EMFormatHTMLPObject *o)
 {
-	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
+	struct _org_gnome_rss_controls_pobject *po = 
+			(struct _org_gnome_rss_controls_pobject *) o;
 	if (po->mem)
 		g_free(po->mem);
 	if (po->website)
@@ -1739,14 +1743,17 @@ free_rss_controls(EMFormatHTMLPObject *o)
 void
 pfree(EMFormatHTMLPObject *o)
 {
-	struct _org_gnome_rss_controls_pobject *po = (struct _org_gnome_rss_controls_pobject *) o;
+	struct _org_gnome_rss_controls_pobject *po = 
+			(struct _org_gnome_rss_controls_pobject *) o;
 	gpointer key = g_hash_table_lookup(rf->key_session, po->website);
 	g_print("key sess:%p\n", key);
 	if (key) {
 		g_hash_table_remove(rf->key_session, po->website);
 		soup_session_abort(key);
 	}
-	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+	guint engine = gconf_client_get_int(rss_gconf, 
+					GCONF_KEY_HTML_RENDER,
+					NULL);
 #ifdef HAVE_GECKO
 	if (engine == 2) {
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
@@ -1825,7 +1832,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
 			org_gnome_rss_controls_counter_id);
 	org_gnome_rss_controls_counter_id++;
-	pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), classid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
+	pobj = (struct _org_gnome_rss_controls_pobject *)
+			em_format_html_add_pobject ((EMFormatHTML *) t->format,
+						sizeof(*pobj),
+						classid,
+						message,
+						(EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
 	pobj->is_html = GPOINTER_TO_INT(is_html);
 	pobj->website = g_strstrip(g_strdup((gchar *)website));
 	pobj->stream = t->stream;
@@ -1841,11 +1853,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				org_gnome_rss_controls_counter_id);
 			org_gnome_rss_controls_counter_id++;
 			pobj = (struct _org_gnome_rss_controls_pobject *) 
-					em_format_html_add_pobject ((EMFormatHTML *) t->format, 
-										sizeof(*pobj), 
-										classid, 
-										message, 
-										(EMFormatHTMLPObjectFunc)org_gnome_rss_browser);
+				em_format_html_add_pobject ((EMFormatHTML *) t->format, 
+									sizeof(*pobj), 
+									classid, 
+									message, 
+									(EMFormatHTMLPObjectFunc)org_gnome_rss_browser);
 			pobj->website = g_strstrip(g_strdup((gchar *)website));
 			pobj->is_html = GPOINTER_TO_INT(is_html);
 			pobj->format = (EMFormatHTML *)t->format;
@@ -1853,11 +1865,14 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			pobj->part = t->part;
 			camel_stream_printf (t->stream,
 				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+				frame_colour & 0xffffff,
+				content_colour & 0xffffff,
+				text_colour & 0xffffff);
 			camel_stream_printf(t->stream,
 		 		"<table border=0 width=\"100%%\" cellpadding=1 cellspacing=1><tr><td>");
         		camel_stream_printf (t->stream, 
-				"<object classid=%s></object></td></tr></table></div>\n", classid);
+				"<object classid=%s></object></td></tr></table></div>\n",
+				classid);
 			goto out;
 		}
 #endif
@@ -1870,7 +1885,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			//such proxy error or transport error
 			camel_stream_printf (t->stream,
 				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+				frame_colour & 0xffffff,
+				content_colour & 0xffffff,
+				text_colour & 0xffffff);
 			camel_stream_printf(t->stream, 
         			"<div style=\"border: solid 0px; padding: 4px;\">\n");
      			camel_stream_printf (t->stream, "<h3>Error!</h3>");
@@ -1879,23 +1896,28 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                 	goto out;
         	}
 
+#if 0
 		gchar *tmp = decode_utf8_entities(content->str);
 		xmlDoc *src = (xmlDoc *)parse_html(addr, tmp, strlen(tmp));
 
 		if (src) {
 			htmlDocDumpMemory(src, &buff, &size);
-			d(g_print("htmlDocDumpMemory:%s\n", buff));
+			g_print("htmlDocDumpMemory:%s\n", buff);
 			xmlFree(src);
 		} else
 			goto out;
+#endif
 
 		camel_stream_printf (fstream,
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-			frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+			frame_colour & 0xffffff,
+			content_colour & 0xffffff,
+			text_colour & 0xffffff);
                 camel_stream_printf (fstream,
                         "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                         "<b><font size=+1><a href=%s>%s</a></font></b></div>",
-			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+			content_colour & 0xEDECEB & 0xffffff,
+			text_colour & 0xffffff,
                         website, subject);
                 if (category)
                         camel_stream_printf(fstream,
@@ -1903,9 +1925,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                                 "<b><font size=-1>Posted under: %s</font></b></div>",
                                 content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
                                 category);
-                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                camel_stream_printf (fstream, 
+				"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                                 "%s</div>",
-                        	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
+                        	frame_colour & 0xffffff,
+				content_colour & 0xffffff,
+				text_colour & 0xffffff,
                                 buff);
 
 		g_free(subject);
@@ -1945,11 +1970,14 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
 			if ((pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL))) {
                 		camel_stream_printf (fstream,
-                        	"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-                        	"<img height=16 src=%s>"
-                        	"<b><font size=+1><a href=%s>%s</a></font></b></div>",
-				content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-                        	feed_file, website, subject);
+                        		"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+                        		"<img height=16 src=%s>"
+                        		"<b><font size=+1><a href=%s>%s</a></font></b></div>",
+					content_colour & 0xEDECEB & 0xffffff,
+					text_colour & 0xffffff,
+                        		feed_file,
+					website,
+					subject);
 				g_object_unref(pixbuf);
 				goto render_body;
 			}
@@ -1967,24 +1995,36 @@ render_body:    if (category)
                         camel_stream_printf(fstream,
                                 "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                                 "<b><font size=-1>Posted under: %s</font></b></div>",
-                                content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
+                                content_colour & 0xEDECEB & 0xffffff,
+				text_colour & 0xffffff,
                                 category);
-                camel_stream_printf (fstream, "<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
+               	camel_stream_printf (fstream, 
+				"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
                                 "%s</div>",
-                        	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
+                        	frame_colour & 0xffffff,
+				content_colour & 0xffffff,
+				text_colour & 0xffffff,
                                 buff);
 
-		if (comments && 
-  			gconf_client_get_bool (rss_gconf, GCONF_KEY_SHOW_COMMENTS, NULL)) {
+		if (comments && gconf_client_get_bool (rss_gconf, 
+						GCONF_KEY_SHOW_COMMENTS, 
+						NULL)) {
 			if (commstream) {
 			camel_stream_printf (fstream, 
                         	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
-                        	frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
+                        		frame_colour & 0xffffff,
+					content_colour & 0xEDECEB & 0xffffff,
+					text_colour & 0xffffff);
 				gchar *result = print_comments(comments, commstream);
 				char *rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
 					org_gnome_rss_controls_counter_id);
 				org_gnome_rss_controls_counter_id++;
-				pobj = (struct _org_gnome_rss_controls_pobject *) em_format_html_add_pobject ((EMFormatHTML *) t->format, sizeof(*pobj), rfrclsid, message, (EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
+				pobj = (struct _org_gnome_rss_controls_pobject *) 
+							em_format_html_add_pobject ((EMFormatHTML *) t->format, 
+									sizeof(*pobj),
+									rfrclsid,
+									message,
+									(EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
 				pobj->counter = commcnt;
 				pobj->website = comments;
 				//pobj->object.free = free_rss_controls;
@@ -1993,7 +2033,10 @@ render_body:    if (category)
 				if (result && strlen(result))
 					camel_stream_printf(fstream, 
 					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
-						frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff, result);
+						frame_colour & 0xffffff, 
+						content_colour & 0xffffff,
+						text_colour & 0xffffff,
+						result);
 				commstream = NULL;
 			} else {
 				fetch_comments(comments, (EMFormatHTML *)t->format);
@@ -2006,7 +2049,9 @@ render_body:    if (category)
 	//this is required for proper charset rendering when html
       	camel_data_wrapper_construct_from_stream(dw, fstream);
       	camel_medium_set_content_object((CamelMedium *)part, dw);
-	em_format_format_text((EMFormat *)t->format, (CamelStream *)t->stream, (CamelDataWrapper *)part);
+	em_format_format_text((EMFormat *)t->format, 
+				(CamelStream *)t->stream,
+				(CamelDataWrapper *)part);
 	camel_object_unref(dw);
 	camel_object_unref(part);
 	camel_object_unref(fstream);
@@ -2055,7 +2100,12 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 				ofolder ? ofolder : rss_folder);
 	if (!key)
 		goto normal;
+
+#if (EVOLUTION_VERSION >= 22703)
+	if (!(g_hash_table_lookup(icons, key))) {
+#else
 	if (!(icon = g_hash_table_lookup(icons, key))) {
+#endif
   		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
 			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         		gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
@@ -2064,16 +2114,35 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 					// we use gdk_pixbuf_new_from_file to test the validity of the image file
 					pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
 					if (pixbuf) {
+#if (EVOLUTION_VERSION >= 22703)
+						icon = e_icon_factory_get_icon (feed_file, GTK_ICON_SIZE_DIALOG);
+						g_hash_table_insert(icons, g_strdup(key), GINT_TO_POINTER(1));
+						gtk_icon_theme_add_builtin_icon(key,
+							GTK_ICON_SIZE_INVALID,
+							icon);
+						gtk_tree_store_set(
+                					t->store, t->iter,
+                					COL_STRING_ICON_NAME, key,
+                					-1);
+#else
 						icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
 						g_hash_table_insert(icons, g_strdup(key), icon);
 						g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+#endif
 						g_object_unref(pixbuf);
 						goto out;
 					}
 			}
 		}
 	} else {
+#if (EVOLUTION_VERSION >= 22703)
+		gtk_tree_store_set (
+			t->store, t->iter,
+			COL_STRING_ICON_NAME, key,
+			-1);
+#else
 		g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+#endif
 		goto out;
 	}
 
@@ -2081,11 +2150,25 @@ normal:	if (!initialised) { //move this to startup
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
 	                                    "rss-16.png",
 						NULL);
+#if (EVOLUTION_VERSION >= 22703)
+		folder_icon = e_icon_factory_get_icon (iconfile, GTK_ICON_SIZE_MENU);
+		gtk_icon_theme_add_builtin_icon     ("evolution-rss-main",
+				GTK_ICON_SIZE_INVALID,
+				folder_icon);
+#else
 		folder_icon = e_icon_factory_get_icon (iconfile, E_ICON_SIZE_MENU);
+#endif
 		g_free(iconfile);
 		initialised = TRUE;
 	}
+#if (EVOLUTION_VERSION >= 22703)
+	gtk_tree_store_set (
+                t->store, t->iter,
+                COL_STRING_ICON_NAME, "evolution-rss-main",
+                -1);
+#else
 	g_object_set (t->renderer, "pixbuf", folder_icon, "visible", 1, NULL);
+#endif
 out:	g_free(main_folder);
 	return;
 }
@@ -4128,8 +4211,10 @@ file_to_message(const char *filename)
 	camel_mime_part_set_encoding(msg, CAMEL_TRANSFER_ENCODING_BINARY);
 	CamelDataWrapper *content = camel_data_wrapper_new();
 	
-        //file = (CamelStreamFs *)camel_stream_fs_new_with_name(name, O_RDONLY, 0);
-        file = (CamelStreamFs *)camel_stream_fs_new_with_name(filename, O_RDWR|O_CREAT, 0666);
+        file = (CamelStreamFs *)
+			camel_stream_fs_new_with_name(filename, 
+				O_RDWR|O_CREAT,
+				0666);
 
 	if (!file)
 		return NULL;
@@ -4191,49 +4276,6 @@ free_cf(create_feed *CF)
 }
 
 void
-write_feed_status_line(gchar *file, gchar *needle)
-{
-	FILE *fw = fopen(file, "a+");
-	if (fw) {
-		fputs(g_strstrip(needle), fw);
-		fputs("\n", fw);
-		fclose(fw);
-	}
-}
-
-//check if feed already exists in feed file
-//and if not add it to the feed file
-gboolean
-feed_is_new(gchar *file_name, gchar *needle)
-{
-	gchar rfeed[513];
-	memset(rfeed, 0, 512);
-	FILE *fr = fopen(file_name, "r");
-	int occ = 0;
-	gchar *tmpneedle = NULL;
-	gchar *port =  get_port_from_uri(needle);
-	if (port && atoi(port) == 80) {
-		gchar *tp = g_strconcat(":", port, NULL);
-		g_free(port);
-		tmpneedle = strextr(needle, tp);
-		g_free(tp);
-	} else
-		tmpneedle = g_strdup(needle);
-
-	if (fr) {
-	    while (fgets(rfeed, 511, fr) != NULL) {
-		if (rfeed && strstr(rfeed, tmpneedle)) {
-			occ=1;
-			break;
-		}
-	    }
-	    fclose(fr);
-	}
-	g_free(tmpneedle);
-	return occ;
-}
-
-void
 #if LIBSOUP_VERSION < 2003000
 finish_enclosure (SoupMessage *msg, create_feed *user_data)
 #else
@@ -4285,10 +4327,14 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 	      7 != msg->status_code) { //STATUS_IO_ERROR
 #if LIBSOUP_VERSION < 2003000
 		if (msg->response.body) {
-			camel_stream_write(user_data, msg->response.body, msg->response.length);
+			camel_stream_write(user_data,
+				msg->response.body,
+				msg->response.length);
 #else
 		if (msg->response_body->data) {
-			camel_stream_write(user_data, msg->response_body->data, msg->response_body->length);
+			camel_stream_write(user_data, 
+				msg->response_body->data, 
+				msg->response_body->length);
 #endif
 			camel_stream_close(user_data);
 			camel_object_unref(user_data);
@@ -4361,7 +4407,10 @@ fetch_image(gchar *url, gchar *link)
 		tmpurl = g_strdup(url);
 	}
 	d(g_print("fetch_image() tmpurl:%s\n", tmpurl));
-	gchar *feed_dir = g_build_path("/", rss_component_peek_base_directory(mail_component_peek()), "static", NULL);
+	gchar *feed_dir = g_build_path("/", 
+				rss_component_peek_base_directory(mail_component_peek()),
+				"static",
+				NULL);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 	http_cache = camel_data_cache_new(feed_dir, 0, NULL);

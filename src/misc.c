@@ -454,5 +454,48 @@ encode_rfc2047(gchar *str)
         return (gchar *)rfctmp;
 }
 
+//check if feed already exists in feed file
+//and if not add it to the feed file
+gboolean
+feed_is_new(gchar *file_name, gchar *needle)
+{
+        gchar rfeed[513];
+        memset(rfeed, 0, 512);
+        FILE *fr = fopen(file_name, "r");
+        int occ = 0;
+        gchar *tmpneedle = NULL;
+        gchar *port =  get_port_from_uri(needle);
+        if (port && atoi(port) == 80) {
+                gchar *tp = g_strconcat(":", port, NULL);
+                g_free(port);
+                tmpneedle = strextr(needle, tp);
+                g_free(tp);
+        } else
+                tmpneedle = g_strdup(needle);
+
+        if (fr) {
+            while (fgets(rfeed, 511, fr) != NULL) {
+                if (rfeed && strstr(rfeed, tmpneedle)) {
+                        occ=1;
+                        break;
+                }
+            }
+            fclose(fr);
+        }
+        g_free(tmpneedle);
+        return occ;
+}
+
+void
+write_feed_status_line(gchar *file, gchar *needle)
+{
+        FILE *fw = fopen(file, "a+");
+        if (fw) {
+                fputs(g_strstrip(needle), fw);
+                fputs("\n", fw);
+                fclose(fw);
+        }
+}
+
 #endif
 

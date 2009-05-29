@@ -60,8 +60,7 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
   [libgnome-2.0 >= $LIBGNOME_REQUIRED dnl
    libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED dnl
    gtk+-2.0 >= $LIBGTK_REQUIRED dnl
-   dnl libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
-   libsoup-gnome$SOUP >= $LIBSOUP_REQUIRED dnl
+   libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    libglade-2.0 dnl
@@ -234,7 +233,14 @@ dnl ********************
 SOUP_VERSION=`$PKG_CONFIG --modversion libsoup$SOUP` 
 SOUP_VERSION=`echo $SOUP_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(SOUP_VERSION)
-LIBSOUP_LIBS=`$PKG_CONFIG --libs libsoup$SOUP libsoup-gnome$SOUP`
+PKG_CHECK_MODULES([LIBSOUP_GNOME], libsoup-gnome$SOUP, [have_libsoup_gnome=yes], [have_libsoup_gnome=no])
+if test "x$have_libsoup_gnome" == "xyes"; then
+	LIBSOUP_LIBS=`$PKG_CONFIG --libs libsoup$SOUP libsoup-gnome$SOUP`
+	AC_DEFINE_UNQUOTED(HAVE_LIBSOUP_GNOME,1, [libsoup-gnome library present])
+	AC_SUBST(HAVE_LIBSOUP_GNOME)
+else
+	LIBSOUP_LIBS=`$PKG_CONFIG --libs libsoup$SOUP`
+fi
 AC_SUBST(LIBSOUP_LIBS)
 
 dnl ***********
@@ -350,6 +356,7 @@ echo "
 	HTML renders		: $kits
 	Primary HTML render	: $RENDER
 	D-BUS support		: $have_dbus_build
+	libsoup-gnome support	: $have_libsoup_gnome
 	Import feeds		: $import_feeds
 
 	"
