@@ -24,8 +24,10 @@
 
 #include <string.h>
 #include <gconf/gconf-client.h>
+#ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>
 #include <libsoup/soup-gnome-features.h>
+#endif
 #include <libedataserver/e-proxy.h>
 
 #include "network.h"
@@ -202,6 +204,9 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
 
 	switch (ptype) {
+#ifndef HAVE_LIBSOUP_GNOME
+	case 0:
+#endif
 	case 2:
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
@@ -210,9 +215,11 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 			g_print("webkit no PROXY-%s\n", uri);
 		break;
 		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+#ifdef HAVE_LIBSOUP_GNOME
 	case 0:
 		soup_session_add_feature_by_type (webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
+#endif
 	}
 
 }
@@ -225,6 +232,9 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
 
 	switch (ptype) {
+#ifndef HAVE_LIBSOUP_GNOME
+	case 0:
+#endif
 	case 2:
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
@@ -234,10 +244,11 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 		break;
 
-	/*avail only for > 2.26*/
+#ifdef HAVE_LIBSOUP_GNOME
 	case 0:
 			soup_session_add_feature_by_type (session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
+#endif
 	}
 
 }
@@ -702,5 +713,7 @@ abort_all_soup(void)
 void
 rss_soup_init(void)
 {
+#if LIBSOUP_VERSION < 2026002
 	rss_soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.evolution/mail/rss/rss-cookies.sqlite", FALSE);
+#endif
 }
