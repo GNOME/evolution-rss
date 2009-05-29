@@ -21,6 +21,8 @@
 #ifndef __NETWORK_H__
 #define __NETWORK_H__
 
+#include <glib.h>
+
 #define GCONF_KEY_USE_PROXY "/apps/evolution/evolution-rss/use_proxy"
 #define GCONF_KEY_HOST_PROXY "/apps/evolution/evolution-rss/host_proxy"
 #define GCONF_KEY_PORT_PROXY "/apps/evolution/evolution-rss/port_proxy"

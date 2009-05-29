@@ -70,8 +70,7 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 
-SOURCES = 	dbus.c			\
-		fetch.c			\
+SOURCES = 	fetch.c			\
 		file-gio.c		\
 	  	misc.c			\
 		network-soup.c		\
@@ -81,6 +80,9 @@ SOURCES = 	dbus.c			\
 		rss-icon-factory.c
 if HAVE_GECKO
 SOURCES+= 	gecko-utils.cpp
+endif
+if HAVE_DBUS
+SOURCES+=	dbus.c
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
