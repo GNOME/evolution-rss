@@ -511,6 +511,7 @@ net_get_unblocking(gchar *url,
 	if (rss_soup_jar) {
 		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
 	}
+
 	proxify_session(proxy, soup_sess, url);
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);
@@ -713,7 +714,15 @@ abort_all_soup(void)
 void
 rss_soup_init(void)
 {
-#if LIBSOUP_VERSION < 2026002
-	rss_soup_jar = soup_cookie_jar_sqlite_new ("/home/cooly/.evolution/mail/rss/rss-cookies.sqlite", FALSE);
+#if LIBSOUP_VERSION > 2026002
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
+	gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+	if (!g_file_test(moz_cookie_path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_SYMLINK))
+		symlink(cookie_path, moz_cookie_path);
+           
+	rss_soup_jar = 
+		soup_cookie_jar_sqlite_new (cookie_path, FALSE);
+	g_free(cookie_path);
 #endif
 }

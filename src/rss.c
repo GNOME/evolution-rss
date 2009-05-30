@@ -1312,8 +1312,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
   	struct _org_gnome_rss_controls_pobject *po = data;
 
 	guint k = rf->headers_mode ? 240 : 106;
-	if (GTK_IS_WIDGET(widget))
-	{
+	if (GTK_IS_WIDGET(widget)) {
         	width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
 		d(g_print("resize webkit :width:%d, height: %d\n", width, height));
@@ -1328,8 +1327,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 //        
 	guint engine = fallback_engine();
 		if (po->mozembedwindow && rf->mozembed)
-			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0)
-			{
+			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0) {
 				if (!browser_fetching) {
 					browser_write("Formatting...", 13, "file:///");
 					browser_fetching=1;
@@ -2788,8 +2786,8 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	g_print("browser fill:%d%%\n", (int)((browser_fill*100)/response->len));
 	gchar *str = (response->str);
 	gint len = strlen(response->str);
-	*str+=browser_fill;
-	len-=browser_fill;
+	*str+= browser_fill;
+	 len-= browser_fill;
 	g_print("len:%d\n", len);
 	if (len>0) {
 		browser_write(str, len, user_data);
@@ -3953,16 +3951,16 @@ fallback_engine(void)
 #ifdef HAVE_RENDERKIT
         guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
 #if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
-        engine=0;
+        engine = 0;
 #endif
 if (engine == 2) {
 #if !defined(HAVE_GECKO)
-        engine=1;
+        engine = 1;
 #endif
 }
 if (engine == 1) {
 #if !defined (HAVE_WEBKIT)
-        engine=2;
+        engine = 2;
 #endif
 }
 	return engine;
@@ -3986,8 +3984,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
                 	rss_verbose_debug = atoi(d);
 
 		//initiate main rss structure
-		if (!rf)
-		{
+		if (!rf) {
 			printf("RSS Plugin enabled (evolution %s, evolution-rss %s)\n",
 				EVOLUTION_VERSION_STRING,
 				VERSION);
@@ -4023,8 +4020,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 						GCONF_KEY_HTML_RENDER, 
 						NULL));
 		
-			if (!render) 	// set render just in case it was forced in configure
-			{
+			if (!render) {	// set render just in case it was forced in configure
 				render = RENDER_N;
   				gconf_client_set_int(rss_gconf, 
 						GCONF_KEY_HTML_RENDER, render, NULL);
