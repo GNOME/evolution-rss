@@ -34,8 +34,8 @@
 #include <camel/camel-operation.h>
 
 #define PLUGIN_INSTALL_DIR @PLUGIN_INSTALL_DIR@
-#define DEFAULT_FEEDS_FOLDER "News&Blogs"
-#define DEFAULT_NO_CHANNEL "Untitled channel"
+#define DEFAULT_FEEDS_FOLDER N_("News and Blogs")
+#define DEFAULT_NO_CHANNEL N_("Untitled channel")
 #define DEFAULT_TTL 1800
 
 /* ms between status updates to the gui */

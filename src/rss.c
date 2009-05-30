@@ -2388,7 +2388,7 @@ add:
 		if (feed->feed_name && !chn_name)
 	                chn_name = g_strdup(feed->feed_name);
                 if (chn_name == NULL)
-                        chn_name = g_strdup (DEFAULT_NO_CHANNEL);
+                        chn_name = g_strdup (_(DEFAULT_NO_CHANNEL));
                 //FIXME g_free
 		gchar *tmp = sanitize_folder(chn_name);
 		g_free(chn_name);
@@ -2943,7 +2943,7 @@ get_main_folder(void)
 		}
 	}
 	g_free(feed_file);
-	return g_strdup(DEFAULT_FEEDS_FOLDER);
+	return g_strdup(_(DEFAULT_FEEDS_FOLDER));
 }
 
 void
