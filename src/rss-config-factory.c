@@ -41,6 +41,7 @@
 #include "rss.h"
 #include "misc.h"
 #include "parser.h"
+#include <glib/gi18n-lib.h>
 
 #define d(x)
 
@@ -342,7 +343,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                                       "rss-ui.glade",
                                       NULL);
-        gui = glade_xml_new (gladefile, NULL, NULL);
+        gui = glade_xml_new (gladefile, NULL, GETTEXT_PACKAGE);
         g_free (gladefile);
 
         GtkWidget *dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "feed_dialog");
@@ -1625,7 +1626,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                         "rss-html-rendering.glade",
                         NULL);
-        ui->xml = glade_xml_new (gladefile, "settingsbox", NULL);
+        ui->xml = glade_xml_new (gladefile, "settingsbox", GETTEXT_PACKAGE);
         g_free (gladefile);
 
 
@@ -1887,7 +1888,7 @@ rss_config_control_new (void)
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                                       "rss-ui.glade",
                                       NULL);
-        sf->gui = glade_xml_new (gladefile, NULL, NULL);
+        sf->gui = glade_xml_new (gladefile, NULL, GETTEXT_PACKAGE);
         g_free (gladefile);
 
         GtkTreeView *treeview = (GtkTreeView *)glade_xml_get_widget (sf->gui, "feeds-treeview");

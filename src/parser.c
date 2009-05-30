@@ -17,7 +17,7 @@
  */
 
 #include <string.h>
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 
 #include <libxml/parserInternals.h>
 #include <libxml/xmlmemory.h>

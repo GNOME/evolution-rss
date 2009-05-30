@@ -141,6 +141,7 @@ int rss_verbose_debug = 0;
 #include "rss-config-factory.h"
 #include "rss-icon-factory.h"
 #include "parser.h"
+#include <glib/gi18n-lib.h>
 
 int pop = 0;
 GtkWidget *flabel;
@@ -3975,7 +3976,7 @@ int
 e_plugin_lib_enable(EPluginLib *ep, int enable)
 {
 	if (enable) {
-		bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 		rss_gconf = gconf_client_get_default();
 		upgrade = 1;
