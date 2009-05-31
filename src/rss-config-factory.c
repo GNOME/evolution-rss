@@ -782,7 +782,7 @@ delete_feed_folder_alloc(gchar *old_name)
         g_free(feed_dir);
         f = fopen(feed_file, "wb");
         if (!f)
-                        return;
+		return;
 
         gchar *orig_name = g_hash_table_lookup(rf->feed_folders, old_name);
         if (orig_name)

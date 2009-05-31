@@ -185,6 +185,7 @@ extern EProxy *proxy;
 SoupSession *webkit_session = NULL;
 SoupCookieJar *rss_soup_jar;
 extern guint rsserror;
+gboolean single_pending = FALSE;
 
 rssfeed *rf = NULL;
 guint           upgrade = 0;                // set to 2 when initailization successfull
@@ -225,6 +226,7 @@ finish_create_image (SoupMessage *msg, gchar *user_data);
 finish_create_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data);
 #endif
 gchar *get_main_folder(void);
+void fetch_feed(gpointer key, gpointer value, gpointer user_data);
 void fetch_comments(gchar *url, EMFormatHTML *stream);
 
 static void
@@ -398,9 +400,14 @@ taskbar_op_finish(gpointer key)
 }
 
 void
-taskbar_op_message(void)
+taskbar_op_message(gchar *msg)
 {
-		gchar *tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
+		gchar *tmsg;
+		if (!msg)
+			tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
+		else
+			tmsg = g_strdup(msg);
+
 #if (EVOLUTION_VERSION >= 22200)
 		guint activity_id = taskbar_op_new(tmsg, "main");
 #else
@@ -2074,7 +2081,24 @@ fmerror:
 
 void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 {
-	g_print("refrish %s\n", t->uri);
+	gchar *rss_folder = extract_main_folder(t->uri);
+	gchar *ofolder = g_hash_table_lookup(rf->feed_folders, rss_folder);
+	gchar *folder = ofolder ? ofolder : rss_folder;
+	gchar *key = g_hash_table_lookup(rf->hrname, folder);
+	gchar *name = g_strdup_printf("%s: %s", _("Fetching feed"), (gchar *)g_hash_table_lookup(rf->hrname_r, key));
+
+	if (g_hash_table_lookup(rf->hre, key)
+	  && !rf->pending && !rf->feed_queue
+	  && !single_pending && rf->online) {
+                single_pending = TRUE;
+		check_folders();
+		rf->err = NULL;
+		taskbar_op_message(name);
+		network_timeout();
+		fetch_feed(folder, key, statuscb);
+                single_pending = FALSE;
+	}
+	g_free(name);
 }
 
 #if (EVOLUTION_VERSION >= 22306)
@@ -2900,7 +2924,7 @@ update_articles(gboolean disabler)
 		rf->pending = TRUE;
 		check_folders();
 		rf->err = NULL;
-		taskbar_op_message();
+		taskbar_op_message(NULL);
 		network_timeout();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		rf->pending = FALSE;
@@ -3717,7 +3741,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 
                 rf->err = NULL;
 		force_update = 1;
-		taskbar_op_message();
+		taskbar_op_message(NULL);
 		network_timeout();
                 g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
                 // reset cancelation signal
@@ -3905,7 +3929,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	
 		rf->err = NULL;
 		force_update = 1;
-		taskbar_op_message();
+		taskbar_op_message(NULL);
 		network_timeout();
 		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
 		// reset cancelation signal
