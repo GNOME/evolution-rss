@@ -55,10 +55,8 @@
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
 	* grey stop button on complete load
-	* display links from content in status bar
 	* grey out disabled folders (feeds)
 	* feed check runtime validation
 	* wrong send and receive count of articles after import
 	* handle 404 for images in comments
-	* possibly prefer content:encoded (CDATA) over description on certiain atom feeds
 	* gtkhtml does not handle script properly

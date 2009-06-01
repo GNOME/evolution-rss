@@ -1500,12 +1500,27 @@ rss_menu_items_free(EPopup *ep, GSList *items, void *data)
         g_slist_free(items);
 }
 
+#ifdef HAVE_WEBKIT
+gboolean
+webkit_over_link(WebKitWebView *web_view,
+                                 gchar         *title,
+                                 gchar         *uri,
+                                 gpointer       user_data)
+{
+	if (uri) {
+		gchar *msg = g_strdup_printf("%s %s", _("Click to open"), uri);
+		taskbar_push_message(msg);
+		g_free(msg);
+	} else
+		taskbar_pop_message();
+
+}
+
 gboolean
 webkit_click (GtkEntry *entry,
                          GtkMenu *menu,
                          gpointer user_data)
 {
-	g_print("click\n");
 	GtkWidget *separator, *redo_menuitem;
 	redo_menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_REDO, NULL);
         gtk_widget_set_sensitive (redo_menuitem, TRUE);
@@ -1516,8 +1531,23 @@ webkit_click (GtkEntry *entry,
         gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
 	return TRUE;
 }
+#endif
 
 #ifdef HAVE_GECKO
+gboolean
+gecko_over_link(GtkMozEmbed *mozembed)
+{
+	gchar *link = gtk_moz_embed_get_link_message(mozembed);
+	if (link && strlen(link)) {
+		gchar *msg = g_strdup_printf("%s %s", _("Click to open"), link);
+		g_free(link);
+		taskbar_push_message(msg);
+		g_free(msg);
+	} else
+		taskbar_pop_message();
+	return FALSE;
+}
+
 gboolean
 gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 {
@@ -1585,6 +1615,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		webkit_set_preferences();
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
 		g_signal_connect (rf->mozembed, "populate-popup", G_CALLBACK (webkit_click), moz);
+		g_signal_connect (rf->mozembed, "hovering-over-link", G_CALLBACK (webkit_over_link), moz);
 	//	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
 	//	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 	}
@@ -1599,6 +1630,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
 		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 		g_signal_connect (rf->mozembed, "dom_mouse_click", G_CALLBACK(gecko_click), moz);
+		g_signal_connect (rf->mozembed, "link_message", G_CALLBACK(gecko_over_link), moz);
 	}
 #endif
 
