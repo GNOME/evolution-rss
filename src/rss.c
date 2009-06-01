@@ -141,7 +141,6 @@ int rss_verbose_debug = 0;
 #include "rss-config-factory.h"
 #include "rss-icon-factory.h"
 #include "parser.h"
-#include <glib/gi18n-lib.h>
 
 int pop = 0;
 GtkWidget *flabel;
@@ -226,7 +225,9 @@ finish_create_image (SoupMessage *msg, gchar *user_data);
 finish_create_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data);
 #endif
 gchar *get_main_folder(void);
-void fetch_feed(gpointer key, gpointer value, gpointer user_data);
+gboolean fetch_one_feed(gpointer key, gpointer value, gpointer user_data);
+gboolean fetch_feed(gpointer key, gpointer value, gpointer user_data);
+gboolean custom_fetch_feed(gpointer key, gpointer value, gpointer user_data);
 void fetch_comments(gchar *url, EMFormatHTML *stream);
 
 static void
@@ -340,6 +341,17 @@ taskbar_pop_message(void)
 	e_activity_handler_unset_message(activity_handler);
 }
 
+void
+taskbar_op_abort(gpointer key)
+{
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
+	if (activity_key)
+		e_activity_handler_operation_finished(activity_handler, activity_key);
+	g_hash_table_remove(rf->activity, key);
+	abort_all_soup();
+}
+
 guint
 #if (EVOLUTION_VERSION >= 22200)
 taskbar_op_new(gchar *message, gpointer key)
@@ -353,14 +365,14 @@ taskbar_op_new(gchar *message)
 #if (EVOLUTION_VERSION >= 22306)
 		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						message, TRUE,
-						(void (*) (gpointer))abort_all_soup,
+						(void (*) (gpointer))taskbar_op_abort,
 						 key);
 #else 
 	progress_icon = e_icon_factory_get_icon ("mail-unread", E_ICON_SIZE_MENU);
 #if (EVOLUTION_VERSION >= 22200)
 		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						progress_icon, message, TRUE,
-						(void (*) (gpointer))abort_all_soup,
+						(void (*) (gpointer))taskbar_op_abort,
 						 key);
 #else
 		e_activity_handler_operation_started(activity_handler, mcp,
@@ -2081,10 +2093,20 @@ fmerror:
 
 void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 {
+	gchar *main_folder = get_main_folder();
+	if (t->uri == NULL 
+	  || g_ascii_strncasecmp(t->uri, main_folder, strlen(main_folder)))
+		goto out;
+	if (!g_ascii_strcasecmp(t->uri, main_folder))
+		goto out;
 	gchar *rss_folder = extract_main_folder(t->uri);
+	if (!rss_folder)
+		goto out;
 	gchar *ofolder = g_hash_table_lookup(rf->feed_folders, rss_folder);
 	gchar *folder = ofolder ? ofolder : rss_folder;
 	gchar *key = g_hash_table_lookup(rf->hrname, folder);
+	if (!key)
+		goto out;
 	gchar *name = g_strdup_printf("%s: %s", _("Fetching feed"), (gchar *)g_hash_table_lookup(rf->hrname_r, key));
 
 	if (g_hash_table_lookup(rf->hre, key)
@@ -2095,10 +2117,12 @@ void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 		rf->err = NULL;
 		taskbar_op_message(name);
 		network_timeout();
-		fetch_feed(folder, key, statuscb);
+		if (!fetch_one_feed(folder, key, statuscb))
+			taskbar_op_finish("main");
                 single_pending = FALSE;
 	}
 	g_free(name);
+out:	return;
 }
 
 #if (EVOLUTION_VERSION >= 22306)
@@ -2754,16 +2778,10 @@ out:
 	return;
 }
 
-void
-fetch_feed(gpointer key, gpointer value, gpointer user_data)
-{ 
+gboolean
+fetch_one_feed(gpointer key, gpointer value, gpointer user_data)
+{
 	GError *err = NULL;
-
-	//exclude feeds that have special update interval or 
-	//no update at all
-	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) >= 2
-	&& !force_update)
-		return;
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
@@ -2788,9 +2806,22 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
                         rss_error(key, NULL, _("Error fetching feed."), msg);
                      	g_free(msg);
 		}
-		
+		return 1;	
 	} else if (rf->cancel && !rf->feed_queue)
 		rf->cancel = 0;		//all feeds where either procesed or skipped
+	return 0;
+}
+
+gboolean
+fetch_feed(gpointer key, gpointer value, gpointer user_data)
+{ 
+	//exclude feeds that have special update interval or 
+	//no update at all
+	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) >= 2
+	&& !force_update)
+		return 0;
+
+	return fetch_one_feed(key, value, user_data);
 }
 
 void
@@ -2926,7 +2957,7 @@ update_articles(gboolean disabler)
 		rf->err = NULL;
 		taskbar_op_message(NULL);
 		network_timeout();
-		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
+		g_hash_table_foreach(rf->hrname, (GHFunc)fetch_feed, (GHFunc *)statuscb);
 		rf->pending = FALSE;
 	}
 	return disabler;
@@ -3403,7 +3434,7 @@ custom_update_articles(CDATA *cdata)
 	return TRUE;
 }
 
-void
+gboolean
 custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 { 
 	guint time_id = 0;
@@ -3441,9 +3472,10 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 			g_hash_table_replace(custom_timeout, 
 				g_strdup(lookup_key(key)), 
 				GINT_TO_POINTER(time_id));
+			return 1;
 		}
 	}
-	
+	return 0;
 }
 
 void gtkut_window_popup(GtkWidget *window)
@@ -3548,7 +3580,7 @@ update_status_icon(const char *channel, gchar *title)
 void
 custom_feed_timeout(void)
 {
-	g_hash_table_foreach(rf->hrname, custom_fetch_feed, statuscb);
+	g_hash_table_foreach(rf->hrname, (GHFunc)custom_fetch_feed, statuscb);
 }
 
 static void
@@ -3931,7 +3963,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 		force_update = 1;
 		taskbar_op_message(NULL);
 		network_timeout();
-		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);	
+		g_hash_table_foreach(rf->hrname, (GHFunc)fetch_feed, statuscb);	
 		// reset cancelation signal
 		if (rf->cancel)
 			rf->cancel = 0;
