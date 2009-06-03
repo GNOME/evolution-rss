@@ -714,7 +714,7 @@ abort_all_soup(void)
 void
 rss_soup_init(void)
 {
-#if LIBSOUP_VERSION > 2026002
+#if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME) 
 	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
 	gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
