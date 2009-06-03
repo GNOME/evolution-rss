@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <gdk/gdkkeysyms.h>
@@ -41,7 +42,6 @@
 #include "rss.h"
 #include "misc.h"
 #include "parser.h"
-#include <glib/gi18n-lib.h>
 
 #define d(x)
 
@@ -341,6 +341,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
   	guint del_feed = 0;
 	gchar *iconfile = NULL, *deffile = NULL;
 	GdkPixbuf *folder_icon = NULL;
+	gpointer key = NULL;
 	GtkAccelGroup *accel_group = gtk_accel_group_new ();
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
@@ -364,8 +365,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
         GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (gui, "url_entry");
   	//editing
-  	gpointer key = lookup_key(feed_text);
   	if (url != NULL) {
+  		key = lookup_key(feed_text);
 		gtk_expander_set_expanded(GTK_EXPANDER(adv_options), TRUE);	
   		gtk_entry_set_text(GTK_ENTRY(entry1), url);
 		fhtml = GPOINTER_TO_INT(
@@ -425,14 +426,16 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
 	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
 	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
-        GtkWidget *folder_box = (GtkWidget *)glade_xml_get_widget (gui, "folder_box");
-        GtkWidget *image = (GtkWidget *)glade_xml_get_widget (gui, "image1");
+        GtkImage *image = (GtkImage *)glade_xml_get_widget (gui, "image1");
 	gtk_spin_button_set_range((GtkSpinButton *)ttl_value, 0, (guint)MAX_TTL);
 
 	/*set feed icon*/
-	gtk_image_set_from_icon_name(image, 
+	if (key) {
+		gtk_image_set_from_icon_name(image, 
 			g_hash_table_lookup(icons, key) ? key : "evolution-rss-main",
 			GTK_ICON_SIZE_LARGE_TOOLBAR);
+		gtk_widget_show(GTK_WIDGET(image));
+	}
 
   	switch (del_feed) {
         case 1:         //all but the last
