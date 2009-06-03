@@ -20,7 +20,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <error.h>
 #include <errno.h>
 #include "file-gio.h"
 #include "network.h"
