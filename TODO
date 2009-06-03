@@ -60,3 +60,4 @@
 	* wrong send and receive count of articles after import
 	* handle 404 for images in comments
 	* gtkhtml does not handle script properly
+	* gtkhtml does not handle &#xD; construct

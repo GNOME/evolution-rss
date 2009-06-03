@@ -55,6 +55,7 @@ extern guint count;
 extern gchar *buffer;
 extern GSList *rss_list;
 extern GConfClient *rss_gconf;
+extern GHashTable *icons;
 
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
@@ -338,6 +339,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
   	gboolean fhtml = FALSE;
   	gboolean del_unread = FALSE;
   	guint del_feed = 0;
+	gchar *iconfile = NULL, *deffile = NULL;
+	GdkPixbuf *folder_icon = NULL;
 	GtkAccelGroup *accel_group = gtk_accel_group_new ();
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
@@ -361,36 +364,28 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
         GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (gui, "url_entry");
   	//editing
+  	gpointer key = lookup_key(feed_text);
   	if (url != NULL) {
 		gtk_expander_set_expanded(GTK_EXPANDER(adv_options), TRUE);	
   		gtk_entry_set_text(GTK_ENTRY(entry1), url);
 		fhtml = GPOINTER_TO_INT(
-  	              	g_hash_table_lookup(rf->hrh,
-       	                         lookup_key(feed_text)));
+  	              	g_hash_table_lookup(rf->hrh, key));
        	 	feed->enabled = GPOINTER_TO_INT(
-       	         	g_hash_table_lookup(rf->hre,
-                                lookup_key(feed_text)));
+       	         	g_hash_table_lookup(rf->hre, key));
         	del_feed = GPOINTER_TO_INT(
-                	g_hash_table_lookup(rf->hrdel_feed,
-                                lookup_key(feed_text)));
+                	g_hash_table_lookup(rf->hrdel_feed, key));
         	del_unread = GPOINTER_TO_INT(
-                	g_hash_table_lookup(rf->hrdel_unread,
-                                lookup_key(feed_text)));
+                	g_hash_table_lookup(rf->hrdel_unread, key));
         	feed->del_days = GPOINTER_TO_INT(
-                	g_hash_table_lookup(rf->hrdel_days,
-                                lookup_key(feed_text)));
+                	g_hash_table_lookup(rf->hrdel_days, key));
         	feed->del_messages = GPOINTER_TO_INT(
-                	g_hash_table_lookup(rf->hrdel_messages,
-                                lookup_key(feed_text)));
+                	g_hash_table_lookup(rf->hrdel_messages, key));
         	feed->update = GPOINTER_TO_INT(
-                	g_hash_table_lookup(rf->hrupdate,
-                                lookup_key(feed_text)));
+                	g_hash_table_lookup(rf->hrupdate, key));
         	feed->ttl = GPOINTER_TO_INT(
-                	g_hash_table_lookup(rf->hrttl,
-                                lookup_key(feed_text)));
+                	g_hash_table_lookup(rf->hrttl, key));
         	feed->ttl_multiply = GPOINTER_TO_INT(
-                	g_hash_table_lookup(rf->hrttl_multiply,
-                                lookup_key(feed_text)));
+                	g_hash_table_lookup(rf->hrttl_multiply, key));
   	}
   	feed->validate = 1;
 
@@ -430,7 +425,14 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
 	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
 	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
+        GtkWidget *folder_box = (GtkWidget *)glade_xml_get_widget (gui, "folder_box");
+        GtkWidget *image = (GtkWidget *)glade_xml_get_widget (gui, "image1");
 	gtk_spin_button_set_range((GtkSpinButton *)ttl_value, 0, (guint)MAX_TTL);
+
+	/*set feed icon*/
+	gtk_image_set_from_icon_name(image, 
+			g_hash_table_lookup(icons, key) ? key : "evolution-rss-main",
+			GTK_ICON_SIZE_LARGE_TOOLBAR);
 
   	switch (del_feed) {
         case 1:         //all but the last
@@ -538,7 +540,7 @@ actions_dialog_add(add_feed *feed, gchar *url)
                 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
                         	break;
         	}
-        	feed->del_feed=i;
+        	feed->del_feed = i;
         	feed->del_unread = gtk_toggle_button_get_active(
                 	GTK_TOGGLE_BUTTON(checkbutton4));
 		gtk_spin_button_update((GtkSpinButton *)spinbutton1);
