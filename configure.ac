@@ -296,10 +296,16 @@ case "$host" in
 *-mingw*)
     os_win32=yes
     NO_UNDEFINED='-no-undefined'
-       NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemiscwidgets'
+	evolution_int_version="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
+	echo $evolution_int_version
+	if test $evolution_int_version -ge 22700; then
+		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail-shared -lemiscwidgets'
+	else
+		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemiscwidgets'
+	fi
     SOEXT='.dll'
-       PLUGINDIR_IN_SERVER_FILE="../../../lib/evolution/$EVOLUTION_EXEC_VERSION/plugins"
-       IMAGESDIR_IN_SERVER_FILE="../../../share/evolution/$EVOLUTION_EXEC_VERSION/images"
+	PLUGINDIR_IN_SERVER_FILE="../../../lib/evolution/$EVOLUTION_EXEC_VERSION/plugins"
+	IMAGESDIR_IN_SERVER_FILE="../../../share/evolution/$EVOLUTION_EXEC_VERSION/images"
     ;;
 *)  os_win32=no
     NO_UNDEFINED=''

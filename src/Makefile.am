@@ -86,7 +86,8 @@ SOURCES+=	dbus.c
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(NO_UNDEFINED_LIBS) $(NO_UNDEFINED)
+liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(NO_UNDEFINED_LIBS)
+liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 #$(GECKO_RPATH)
 
 evolution_import_rss_SOURCES = evolution-import-rss.c
