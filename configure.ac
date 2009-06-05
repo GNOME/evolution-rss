@@ -297,9 +297,8 @@ case "$host" in
     os_win32=yes
     NO_UNDEFINED='-no-undefined'
 	evolution_int_version="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
-	echo $evolution_int_version
 	if test $evolution_int_version -ge 22700; then
-		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail-shared -lemiscwidgets'
+		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail-shared -levolution-mail -lemiscwidgets'
 	else
 		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemiscwidgets'
 	fi
