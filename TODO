@@ -1,12 +1,9 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
 	* probably move to soup_unblocking when rendering of an article
-	* when browsing a different feed/mail folder cancel all sessions
 	* also create groups when importing
-	* create progress popup when render with an external engine (webkit/gecko)
 	* check webkit area sizing when using zoom in/out
 	* failback to old handler when formatting error
-	* when deleting a folder offer to delete feed also
 	* jump to folder when adding through d-bus
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
@@ -20,30 +17,13 @@
 	* if necessary implement config code for evo 2.12
 	* fix recursivity on layer_find_pos
 	* fix annoying cursor jump when browsing through evo-rss folders
-	* try harder to get feeds images (check by size 0) provide a expiration mechanism
 	* provide predefined groups of feeds (OSS & co)
 	* evolution import rss add no. of retries
 	* fix images when replying
 	* provide expire option for images
-	* crash when no connection 
-#11 0x00007f258ec191d0 in gtk_widget_set_parent ()
-   from /usr/lib64/libgtk-x11-2.0.so.0
-#12 0x00007f258ea6096a in ?? () from /usr/lib64/libgtk-x11-2.0.so.0
-#13 0x00007f25958569ee in e_task_widget_update_image (task_widget=0x3281e80, 
-    stock=<value optimized out>, text=0x34dcfb0 "Error fetching feed.")
-    at e-task-widget.c:229
-#14 0x00007f2595833509 in e_activity_handler_make_error (
-    activity_handler=0x226be20, component_id=<value optimized out>, 
-    error_type=<value optimized out>, error=0x2bd6160)
-    at e-activity-handler.c:576
-#15 0x00007f257c9dec29 in rss_error (key=<value optimized out>, 
-    name=<value optimized out>, error=<value optimized out>, 
-    emsg=<value optimized out>) at rss.c:273
 	* slow delete operation on large folders
-	* add icon to feed setup panel
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* handle slash categories
-	* hook update in the properties  of folder
 	* use combo popup for moving and placement of feed folders
 	* trigger resync after folder rename and initial folder creation
 	* check webbuttons for webkit

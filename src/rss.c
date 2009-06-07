@@ -1324,10 +1324,7 @@ reload_cb (GtkWidget *button, gpointer data)
 void
 mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
-//	GtkAdjustment *a = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(widget));
-//	g_print("page size:%d\n", a->page_size);
 	int width;
-        GtkRequisition req;
   	struct _org_gnome_rss_controls_pobject *po = data;
 
 	guint k = rf->headers_mode ? 240 : 106;
@@ -1335,20 +1332,12 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
         	width = widget->allocation.width - 16 - 2;// - 16;
         	int height = widget->allocation.height - 16 - k;
 		d(g_print("resize webkit :width:%d, height: %d\n", width, height));
-//	EMFormat *myf = (EMFormat *)efh;
-//	GtkRequisition req;
-//	gtk_widget_size_request(data, &req);
-//	GtkWidget *my = data;
-//	g_print("w:%d,h:%d\n", req.width, req.height);
-//	g_print("w2:%d,h2:%d\n", my->allocation.width, my->allocation.height);
-//	int wheight = height - (req.height - height) - 20;
-//        height = req.height - 200;// - 16 - 194;
-//        
-	guint engine = fallback_engine();
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0) {
 				if (!browser_fetching) {
-					browser_write("Formatting...", 13, "file:///");
+					gchar *msg = g_strdup(_("Formatting..."));
+					browser_write(msg, strlen(msg), "file:///");
+					g_free(msg);
 					browser_fetching=1;
 					fetch_unblocking(
 						po->website,
@@ -1359,20 +1348,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 						1,
 						NULL);
 				}
-/*				gchar *str = content->str;
-				gint len = strlen(content->str);
-				while (len > 0) {
-					if (len > 4096) {
-						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
-							str, 4096);
-					str+=4096;
-					}
-					else
-						gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
-			    				str, len);
-				len-=4096;
-				}
-				gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));*/
 				gtk_widget_set_size_request((GtkWidget *)po->mozembedwindow, width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
@@ -1390,12 +1365,6 @@ void
 rss_mozilla_init(void)
 {
 	GError *err = NULL;
-/*#ifdef GECKO_HOME
-	g_setenv("MOZILLA_FIVE_HOME", GECKO_HOME, 1);
-#endif
-	g_unsetenv("MOZILLA_FIVE_HOME");*/
-
-
 	gecko_init();
 }
 #endif
@@ -2863,21 +2832,19 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 {
 	g_return_if_fail(rf->mozembed);
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
-	guint engine;
-	engine = fallback_engine();
 	g_print("browser full:%d\n", (int)response->len);
 	g_print("browser fill:%d\n", (int)browser_fill);
-	if (response->len)
-	g_print("browser fill:%d%%\n", (int)((browser_fill*100)/response->len));
-	gchar *str = (response->str);
-	gint len = strlen(response->str);
-	*str+= browser_fill;
-	 len-= browser_fill;
-	g_print("len:%d\n", len);
-	if (len>0) {
+	if (!response->len) {
+		gchar *msg = g_strdup(_("Formatting error."));
+		browser_write(msg, strlen(msg), "file://");
+		g_free(msg);
+	} else {
+		gchar *str = (response->str);
+		gint len = strlen(response->str);
+		*str+= browser_fill;
+		len-= browser_fill;
 		browser_write(str, len, user_data);
 		g_string_free(response, 1);
-//		gtk_widget_show(rf->mozembed);
 	}
 	browser_fill = 0;
 }
