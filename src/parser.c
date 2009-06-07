@@ -982,7 +982,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		CF->encl 	= g_strdup(encl);
 		CF->comments 	= g_strdup(comments);
 		CF->feed_fname  = g_strdup(feed_name);	//feed file name
-		CF->feed_uri	= g_strdup(feed);	//feed file url
+		CF->feed_uri	= g_strdup(feed);	//feed uri (uid!)
 		CF->category	= category;		//list of category feed is posted under
 		g_free(p);
 		if (q) g_free(q);
@@ -1045,6 +1045,11 @@ update_channel(RDF *r)
 		}
 
 		CF = parse_channel_line(el->children, feed_name, main_date);
+		if (!r->uids) {
+			r->uids = g_array_new(TRUE, TRUE, sizeof(gpointer));
+		}
+		gchar *uid = g_strdup(CF->feed_uri);
+		g_array_append_val(r->uids, uid);
 		CF->feedid 	= g_strdup(buf);
 		CF->sender 	= g_strdup(sender);
 		CF->full_path 	= g_strdup(chn_name);

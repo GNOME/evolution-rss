@@ -210,8 +210,7 @@ rep_check_cb (GtkWidget *widget, gpointer data)
     //if we already have a timeout set destroy it first
     if (rf->rc_id && !active)
          g_source_remove(rf->rc_id);
-         if (active)
-         {
+         if (active) {
 	     gtk_spin_button_update((GtkSpinButton *)data);
              //we have to make sure we have a timeout value
              if (!gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL))
@@ -232,8 +231,7 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
     gtk_spin_button_update((GtkSpinButton *)widget);
     gconf_client_set_float (rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT,
                 gtk_spin_button_get_value((GtkSpinButton*)widget), NULL);
-    if (active)
-    {
+    if (active) {
         if (rf->rc_id)
                 g_source_remove(rf->rc_id);
         rf->rc_id = g_timeout_add (60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)widget),
@@ -392,9 +390,9 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
         GtkWidget *entry2 = (GtkWidget *)glade_xml_get_widget (gui, "entry2");
 	if (url != NULL) {
-        	flabel = g_markup_printf_escaped("%s: <b>%s</b>", _("Folder"),
-                        lookup_feed_folder(feed_text));
-		gtk_label_set_text(GTK_LABEL(entry2), flabel);
+//        	flabel = g_markup_printf_escaped("%s: <b>%s</b>", _("Folder"),
+  //                      lookup_feed_folder(feed_text));
+		gtk_label_set_text(GTK_LABEL(entry2), lookup_feed_folder(feed_text));
         	gtk_label_set_use_markup(GTK_LABEL(entry2), 1);
   	} else
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
@@ -422,6 +420,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb1");
 	GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb2");
 	GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb3");
+	GtkWidget *radiobutton7 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb4");
 	GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_global");
 	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
 	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
@@ -445,6 +444,10 @@ build_dialog_add(gchar *url, gchar *feed_text)
         case 2:         //older than days
                 gtk_toggle_button_set_active(
                         GTK_TOGGLE_BUTTON(radiobutton3), 1);
+                break;
+        case 3:         //articles not present in feed
+                gtk_toggle_button_set_active(
+                        GTK_TOGGLE_BUTTON(radiobutton7), 1);
                 break;
         default:
                 gtk_toggle_button_set_active(
@@ -496,8 +499,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
         feed->dialog = dialog1;
         feed->child = child;
 	feed->gui = gui;
-  	if (flabel)
-        	g_free(flabel);
+//  	if (flabel)
+  //      	g_free(flabel);
   	return feed;
 }
 
@@ -512,6 +515,7 @@ actions_dialog_add(add_feed *feed, gchar *url)
 	GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb1");
 	GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb2");
 	GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb3");
+	GtkWidget *radiobutton7 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb4");
 	GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_global");
 	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl");
 	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_disabled");
@@ -533,7 +537,7 @@ actions_dialog_add(add_feed *feed, gchar *url)
         	feed->validate = gtk_toggle_button_get_active(
                 	GTK_TOGGLE_BUTTON(checkbutton3));
         	guint i=0;
-        	while (i<3) {
+        	while (i<4) {
                 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
                         	break;
                 	i++;
@@ -541,6 +545,9 @@ actions_dialog_add(add_feed *feed, gchar *url)
                         	break;
                 	i++;
                 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
+                        	break;
+			i++;
+                	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton7)))
                         	break;
         	}
         	feed->del_feed = i;
@@ -944,7 +951,6 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
                                                         _("Feed already exists!"));
                                                 goto out;
 			}
-	g_print("feed_name:%s\n", feed_name);
 			hrfeed *saved_feed = save_feed_hash(feed_name);
                        	remove_feed_hash(feed_name);
                         gpointer md5 = gen_md5(feed->feed_url);
@@ -1227,8 +1233,7 @@ select_file_response(GtkWidget *selector, guint response, gpointer user_data)
                         import_opml(name);
                         g_free(name);
                 }
-        }
-        else
+        } else
                 gtk_widget_destroy(selector);
 }
 
@@ -1410,8 +1415,7 @@ create_export_dialog (void)
 static void
 import_cb (GtkWidget *widget, gpointer data)
 {
-        if (!rf->import)
-        {
+        if (!rf->import) {
                 GtkWidget *import = create_import_dialog();
                 decorate_import_fs(import);
                 gtk_widget_show(import);
@@ -1498,13 +1502,10 @@ export_opml(gchar *file)
                 goto out;
 
 over:   f = fopen(file, "w+");
-        if (f)
-        {
+        if (f) {
                 fwrite(opml, strlen(opml), 1, f);
                 fclose(f);
-        }
-        else
-        {
+        } else {
                 e_error_run(NULL,
                         "org-gnome-evolution-rss:feederr",
                         _("Error exporting feeds!"),
@@ -1522,14 +1523,12 @@ select_export_response(GtkWidget *selector, guint response, gpointer user_data)
                 char *name;
 
                 name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (selector));
-                if (name)
-                {
+                if (name) {
                         gtk_widget_destroy(selector);
                         export_opml(name);
                         g_free(name);
                 }
-        }
-        else
+        } else
                 gtk_widget_destroy(selector);
 
 }
@@ -1574,13 +1573,11 @@ decorate_export_fs (gpointer data)
 static void
 export_cb (GtkWidget *widget, gpointer data)
 {
-        if (!rf->import)
-        {
+        if (!rf->import) {
                 GtkWidget *export = create_export_dialog();
                 decorate_export_fs(export);
                 gtk_dialog_set_default_response (GTK_DIALOG (export), GTK_RESPONSE_OK);
-                if (g_hash_table_size(rf->hrname)<1)
-                {
+                if (g_hash_table_size(rf->hrname)<1) {
                         e_error_run(NULL,
                                 "org-gnome-evolution-rss:generr",
                                 _("No RSS feeds configured!\nUnable to export."),
@@ -1773,6 +1770,7 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
         GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb1");
         GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb2");
         GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb3");
+        GtkWidget *radiobutton7 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb4");
         GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_global");
         GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl");
         GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_disabled");
@@ -1791,7 +1789,7 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
                 feed->validate = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(checkbutton3));
                 guint i=0;
-                while (i<3) {
+                while (i<4) {
                         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
                                 break;
                         i++;
@@ -1799,6 +1797,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
                                 break;
                         i++;
                         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
+                                break;
+                        i++;
+                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton7)))
                                 break;
                 }
                 feed->del_feed=i;
@@ -2040,8 +2041,7 @@ rss_config_control_new (void)
                                     GCONF_KEY_HTML_RENDER,
                                     NULL));
 
-	switch (render)
-	{
+	switch (render) {
 		case 10:
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
 			break;

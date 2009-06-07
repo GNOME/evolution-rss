@@ -211,7 +211,7 @@ void check_folders(void);
 CamelMimePart *file_to_message(const char *name);
 void save_gconf_feed(void);
 void check_feed_age(void);
-void get_feed_age(gpointer key, gpointer value);
+void get_feed_age(RDF *r, gpointer name);
 static void
 #if LIBSOUP_VERSION < 2003000
 finish_image (SoupMessage *msg, CamelStream *user_data);
@@ -1513,6 +1513,7 @@ webkit_over_link(WebKitWebView *web_view,
 		g_free(msg);
 	} else
 		taskbar_pop_message();
+	return TRUE;
 
 }
 
@@ -1831,7 +1832,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         GError *err = NULL;
         GString *content;
 	xmlChar *buff = NULL;
-	int size = 0;
 	CamelContentType *type;
 	gchar *feedid = NULL;
 	gchar *comments = NULL;
@@ -2752,6 +2752,8 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 				update_ttl(md5, r->ttl);
 				user_data = chn_name;
 			}
+		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
+			get_feed_age(r, user_data);
 		}
 		if (r->cache)
 			xmlFreeDoc(r->cache);
@@ -2765,10 +2767,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	g_free(r);
 	g_string_free(response, 1);
 
-	if (!deleted) {
-		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
-			get_feed_age(user_data, lookup_key(user_data));
-	}
 //tout:	
 
 #ifdef EVOLUTION_2_12
@@ -4707,29 +4705,63 @@ out:          	camel_message_info_free(info);
 }
 
 void
-get_feed_age(gpointer key, gpointer value)
+get_feed_age(RDF *r, gpointer name)
 {
 	CamelMessageInfo *info;
         CamelFolder *folder;
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	GPtrArray *uids;
 	time_t date, now;
-	guint i,total;
+	guint i,j,total;
 	guint32 flags;
+	gpointer key = lookup_key(name);
+	gchar *el, *feedid;
+	gboolean match;
 
-	gchar *real_folder = lookup_feed_folder(key);
+	gchar *real_folder = lookup_feed_folder(name);
 	d(g_print("Cleaning folder: %s\n", real_folder));
 
+	
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
                         goto fail;
 	time (&now);
 	
-	guint del_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, value));
-	guint del_feed = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, value));
+	guint del_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, key));
+	guint del_feed = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, key));
 	inhibit_read = 1;
+	if (del_feed == 3) {
+		uids = camel_folder_get_uids (folder);
+        	camel_folder_freeze(folder);
+        	for (i = 0; i < uids->len; i++) {
+			el = NULL;
+			match = FALSE;
+			feedid  = (gchar *)camel_medium_get_header (
+							CAMEL_MEDIUM(camel_folder_get_message(
+								folder, 
+								uids->pdata[i], 
+								NULL)), 
+							"X-Evolution-Rss-Feed-id");
+			for (j=0; NULL != (el = g_array_index(r->uids, gpointer, j)); j++) {
+				if (!g_ascii_strcasecmp(g_strstrip(feedid), g_strstrip(el)))
+					match = TRUE;
+			}
+			if (!match) {
+				info = camel_folder_get_message_info(folder, uids->pdata[i]);
+				flags = camel_message_info_flags(info);
+				if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED)) {
+					camel_folder_delete_message(folder, uids->pdata[i]);
+				}
+                        	camel_folder_free_message_info(folder, info);
+			}
+		}
+        	camel_folder_free_uids (folder, uids);
+        	camel_folder_sync (folder, TRUE, NULL);
+        	camel_folder_thaw(folder);
+      		camel_folder_expunge (folder, NULL);
+	}
 	if (del_feed == 2) {	
-		guint del_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, value));
+		guint del_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, key));
 		uids = camel_folder_get_uids (folder);
         	camel_folder_freeze(folder);
         	for (i = 0; i < uids->len; i++) {
@@ -4758,7 +4790,7 @@ get_feed_age(gpointer key, gpointer value)
       		camel_folder_expunge (folder, NULL);
 	}
 	if (del_feed == 1) {
-		guint del_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, value));
+		guint del_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, key));
 		guint total = camel_folder_get_message_count(folder);
 		i=1;
 		while (del_messages < camel_folder_get_message_count(folder) 

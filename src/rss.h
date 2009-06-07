@@ -67,6 +67,7 @@ typedef struct _RDF {
         SoupMessage *message;
 	guint		error;		//invalid feed
 	char		*strerror;	//error msg
+	GArray		*uids;
 } RDF;
 
 //we keep these values of a feed to be deleted in order
