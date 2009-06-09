@@ -197,6 +197,7 @@ typedef struct ADD_FEED {
 	guint		ttl;	// recommended update time
 	guint		ttl_multiply;	// how much we multiyply ttl value (minutes)
 	guint		update;	// feed update method global; ttl; disabled
+	gboolean	renamed;
 } add_feed;
 
 typedef struct USERPASS {
@@ -341,6 +342,7 @@ gboolean web_auth_dialog(gchar *url);
 gchar *get_main_folder(void);
 gpointer lookup_key(gpointer key);
 void rss_delete_feed(gchar *name, gboolean folder);
+void update_feed_folder(gchar *old_name, gchar *new_name);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);

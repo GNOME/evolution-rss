@@ -389,10 +389,23 @@ build_dialog_add(gchar *url, gchar *feed_text)
   	feed->validate = 1;
 
         GtkWidget *entry2 = (GtkWidget *)glade_xml_get_widget (gui, "entry2");
+        GtkWidget *feed_name = (GtkWidget *)glade_xml_get_widget (gui, "feed_name");
 	if (url != NULL) {
-//        	flabel = g_markup_printf_escaped("%s: <b>%s</b>", _("Folder"),
-  //                      lookup_feed_folder(feed_text));
-		gtk_label_set_text(GTK_LABEL(entry2), lookup_feed_folder(feed_text));
+		flabel = g_build_path("/", 
+				lookup_main_folder(),
+				lookup_feed_folder(feed_text),
+				NULL);
+		gtk_label_set_text(GTK_LABEL(entry2), flabel);
+		gchar *fname = g_path_get_basename(lookup_feed_folder(feed_text));
+		gtk_entry_set_text(GTK_ENTRY(feed_name), fname);
+		g_free(fname);
+		gtk_widget_show(feed_name);
+        	GtkWidget *feed_name_label = (GtkWidget *)glade_xml_get_widget (gui, "feed_name_label");
+		gtk_widget_show(feed_name_label);
+        	GtkWidget *location_button = (GtkWidget *)glade_xml_get_widget (gui, "location_button");
+		gtk_widget_show(location_button);
+        	GtkWidget *location_label = (GtkWidget *)glade_xml_get_widget (gui, "location_label");
+		gtk_widget_show(location_label);
         	gtk_label_set_use_markup(GTK_LABEL(entry2), 1);
   	} else
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
@@ -432,7 +445,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	if (key) {
 		gtk_image_set_from_icon_name(image, 
 			g_hash_table_lookup(icons, key) ? key : "evolution-rss-main",
-			GTK_ICON_SIZE_LARGE_TOOLBAR);
+			GTK_ICON_SIZE_SMALL_TOOLBAR);
 		gtk_widget_show(GTK_WIDGET(image));
 	}
 
@@ -499,8 +512,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
         feed->dialog = dialog1;
         feed->child = child;
 	feed->gui = gui;
-//  	if (flabel)
-  //      	g_free(flabel);
+	if (flabel)
+		g_free(flabel);
   	return feed;
 }
 
@@ -623,9 +636,16 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
         add_feed *feed = create_dialog_add(NULL, NULL);
 	if (feed->dialog)
                 gtk_widget_destroy(feed->dialog);
-        GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", "", NULL);
+        GtkWidget *msg_feeds = e_error_new(NULL,
+					"org-gnome-evolution-rss:rssmsg",
+					"",
+					NULL);
 	GtkWidget *progress = gtk_progress_bar_new();
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
+				 	progress,
+					FALSE,
+					FALSE,
+					0);
         gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
 	/* xgettext:no-c-format */
         gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
@@ -967,39 +987,59 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
                                                         g_strdup(key),
                                                         GINT_TO_POINTER(feed->fetch_html));
 			if (feed->update == 2) {
-                                        	g_hash_table_replace(rf->hrttl,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->ttl));
-                                        	g_hash_table_replace(rf->hrttl_multiply,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->ttl_multiply));
-						custom_feed_timeout();
+				g_hash_table_replace(rf->hrttl,
+						g_strdup(key),
+						GINT_TO_POINTER(feed->ttl));
+                              	g_hash_table_replace(rf->hrttl_multiply,
+						g_strdup(key),
+						GINT_TO_POINTER(feed->ttl_multiply));
+				custom_feed_timeout();
 			}
 			if (feed->update == 3)
-                                       	g_hash_table_replace(rf->hre,
-                                                       g_strdup(key),
-                                                       0);
-			else
-                                       	g_hash_table_replace(rf->hre,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->enabled));
-                                        g_hash_table_replace(rf->hrdel_feed,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->del_feed));
-                                        g_hash_table_replace(rf->hrdel_days,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->del_days));
-                                        g_hash_table_replace(rf->hrdel_messages,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->del_messages));
-                                       	g_hash_table_replace(rf->hrupdate,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->update));
-                                        g_hash_table_replace(rf->hrdel_unread,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->del_unread));
-                                        g_free(key);
+				g_hash_table_replace(rf->hre,
+						g_strdup(key),
+						0);
+			else {
+                              	g_hash_table_replace(rf->hre,
+						g_strdup(key),
+						GINT_TO_POINTER(feed->enabled));
+			} 
+
+			if (feed->renamed) {
+				gchar *a = g_build_path("/", lookup_main_folder(), lookup_feed_folder(feed_name), NULL);
+				gchar *dir = g_path_get_dirname(a);
+				gchar *b = g_build_path("/", dir, feed->feed_name, NULL);
+				CamelException ex;
+				camel_exception_init (&ex);
+				CamelStore *store = mail_component_peek_local_store(NULL);
+                                camel_store_rename_folder (store, a, b, &ex);
+                                if (camel_exception_is_set (&ex)) {
+                                        e_error_run(NULL,
+                                                    "mail:no-rename-folder", a, b, ex.desc, NULL);
+                                        camel_exception_clear (&ex);
                                 }
+				g_free(dir);
+				g_free(b);
+				g_free(a);
+			}
+
+			g_hash_table_replace(rf->hrdel_feed,
+					g_strdup(key),
+					GINT_TO_POINTER(feed->del_feed));
+			g_hash_table_replace(rf->hrdel_days,
+					g_strdup(key),
+					GINT_TO_POINTER(feed->del_days));
+			g_hash_table_replace(rf->hrdel_messages,
+					g_strdup(key),
+					GINT_TO_POINTER(feed->del_messages));
+					g_hash_table_replace(rf->hrupdate,
+					g_strdup(key),
+					GINT_TO_POINTER(feed->update));
+			g_hash_table_replace(rf->hrdel_unread,
+					g_strdup(key),
+					GINT_TO_POINTER(feed->del_unread));
+			g_free(key);
+		}
 	save_gconf_feed();
 	}
 out:	gtk_widget_destroy(msg_feeds);
@@ -1777,6 +1817,8 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
         GtkWidget *spinbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb1");
         GtkWidget *spinbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb2");
         GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_value");
+        GtkWidget *feed_name_entry = (GtkWidget *)glade_xml_get_widget (feed->gui, "feed_name");
+	gchar *feed_name = g_strdup(gtk_entry_get_text(GTK_ENTRY(feed_name_entry)));
 
         gboolean fhtml = feed->fetch_html;
 	feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
@@ -1823,11 +1865,16 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
                 feed->update=i;
                 feed->ttl = gtk_spin_button_get_value((GtkSpinButton *)ttl_value);
                 feed->add = 1;
+		feed->feed_name = feed_name;
                 // there's no reason to feetch feed if url isn't changed
 		if (url && !strncmp(url, feed->feed_url, strlen(url)))
 			feed->changed = 0;
 		else
 			feed->changed = 1;
+		if (feed_name && !g_ascii_strncasecmp(feed_name, ofolder, strlen(feed_name)))
+			feed->renamed = 0;
+		else
+			feed->renamed = 1;
 		process_dialog_edit(feed, url, ofolder);
 }
 

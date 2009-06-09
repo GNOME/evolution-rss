@@ -4709,6 +4709,9 @@ get_feed_age(RDF *r, gpointer name)
 								uids->pdata[i], 
 								NULL)), 
 							"X-Evolution-Rss-Feed-id");
+			if (!r->uids)
+				break;
+
 			for (j=0; NULL != (el = g_array_index(r->uids, gpointer, j)); j++) {
 				if (!g_ascii_strcasecmp(g_strstrip(feedid), g_strstrip(el)))
 					match = TRUE;
