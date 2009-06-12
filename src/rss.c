@@ -654,6 +654,8 @@ create_user_pass_dialog(RSS_AUTH *auth)
                 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 	if (auth->user)
 		gtk_entry_set_text (GTK_ENTRY (username), auth->user);
+	auth->username = username;
+
 
         widget = gtk_label_new (NULL);
         gtk_label_set_markup (GTK_LABEL (widget), _("Password: "));
@@ -674,6 +676,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
                 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 	if (auth->pass)
 		gtk_entry_set_text (GTK_ENTRY (password), auth->pass);
+	auth->password = password;
 
         /* Caps Lock Label */
         widget = gtk_label_new (NULL);
@@ -700,7 +703,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
     //            if (msg->flags & E_PASSWORDS_DISABLE_REMEMBER)
        //                 gtk_widget_set_sensitive (widget, FALSE);
 	gtk_widget_show (checkbutton1);
-      //          msg->check = widget;
+	auth->rememberpass = checkbutton1;
 
 	gtk_table_attach (
                         GTK_TABLE (container), checkbutton1,
@@ -723,18 +726,23 @@ web_auth_dialog(gchar *url)
 	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
 	auth_info->user = g_hash_table_lookup(rf->hruser, url);
 	auth_info->pass = g_hash_table_lookup(rf->hruser, url);
+	auth_info->url = url;
 	dialog = create_user_pass_dialog(auth_info);
 	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 	switch (result) {
 	case GTK_RESPONSE_OK:
         	if (auth_info->user)
         	    g_hash_table_remove(rf->hruser, url);
+
         	g_hash_table_insert(rf->hruser, url, 
 			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->username))));
+
         	if (auth_info->pass)
             		g_hash_table_remove(rf->hrpass, url);
+
         	g_hash_table_insert(rf->hrpass, url, 
 			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->password))));
+
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auth_info->rememberpass)))
 			save_up(url);
 		else

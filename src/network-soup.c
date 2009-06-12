@@ -257,10 +257,14 @@ guint
 read_up(gpointer data)
 {
 	char rfeed[512];
+	guint res = 0;
+	
+	if (NULL != g_hash_table_lookup(rf->hruser, data))
+		return 1;
+
 	gchar *tmp = gen_md5(data);
 	gchar *buf = g_strconcat(tmp, ".rec", NULL);
 	g_free(tmp);
-	guint res = 0;
 
 	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
@@ -349,7 +353,6 @@ authenticate (SoupSession *session,
 	gpointer data)
 #endif
 {
-
 	if (msg->status_code == SOUP_STATUS_PROXY_UNAUTHORIZED) {
 		g_print("proxy:%d\n", soup_auth_is_for_proxy(auth));
 	SoupURI *proxy_uri;
@@ -601,10 +604,10 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 
 
 	g_signal_connect (soup_sess, "authenticate",
-            G_CALLBACK (authenticate), soup_sess);
+            G_CALLBACK (authenticate), (gpointer)url);
 #if LIBSOUP_VERSION < 2003000
 	g_signal_connect (soup_sess, "reauthenticate",
-            G_CALLBACK (reauthenticate), soup_sess);
+            G_CALLBACK (reauthenticate), (gpointer)url);
 #endif
 
 	req = soup_message_new(SOUP_METHOD_GET, url);

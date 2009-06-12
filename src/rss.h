@@ -99,7 +99,7 @@ typedef struct _rssfeed {
         GHashTable      *hrt;   		//feeds name hash
         GHashTable      *hrh;   		//fetch html flag
         GHashTable      *hruser;   		//auth user hash
-        GHashTable      *hrpass;   		//auth user hash
+        GHashTable      *hrpass;   		//auth pass hash
 	gboolean	soup_auth_retry;	//wether to retry auth after an unsucessful auth
         GHashTable      *hrdel_feed;   		//option to delete messages in current feed
         GHashTable      *hrdel_days;   		//option to delete messages older then days

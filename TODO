@@ -25,7 +25,7 @@
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* handle slash categories
 	* use combo popup for moving and placement of feed folders
-	* trigger resync after folder rename and initial folder creation
+	* trigger resync after folder rename and initial folder creation (cmeta update!)
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
 	* perhaps make quoted text fancier
@@ -34,7 +34,7 @@
 	* disable filters on setup_feed()
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
-	* grey stop button on complete load
+	* grey browser stop button on complete load
 	* grey out disabled folders (feeds)
 	* feed check runtime validation
 	* wrong send and receive count of articles after import
