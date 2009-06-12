@@ -488,22 +488,21 @@ void
 browser_write(gchar *string, gint length, gchar *base)
 {
 	gchar *str = string;
-	gint len = length;
 	guint engine = fallback_engine();
 	switch (engine) {
 	case 2:
 #ifdef HAVE_GECKO
 	gtk_moz_embed_open_stream(GTK_MOZ_EMBED(rf->mozembed),
 			base, "text/html");
-	while (len > 0) {
-		if (len > 4096) {
+	while (length > 0) {
+		if (length > 4096) {
 			gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
 				str, 4096);
 			str+=4096;
 		} else
 			gtk_moz_embed_append_data(GTK_MOZ_EMBED(rf->mozembed),
-				str, len);
-	len-=4096;
+				str, length);
+	length-=4096;
 	}
 	gtk_moz_embed_close_stream(GTK_MOZ_EMBED(rf->mozembed));
 #endif
@@ -1740,8 +1739,8 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
 	gtk_widget_show_all (vbox);
 
-      	int width = vbox->allocation.width;
-       	int height = vbox->allocation.height;
+//      	int width = vbox->allocation.width;
+//       	int height = vbox->allocation.height;
 
 	if (GTK_IS_WIDGET(eb))
         	gtk_container_add ((GtkContainer *) eb, vbox);
@@ -2307,12 +2306,12 @@ search_rss(char *buffer, int len)
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b)
 {
-       char *a2=g_ascii_strdown(a,-1), *b2=g_ascii_strdown(b,-1), *r=strstr(a2,b2);
-       if(r)
-               r=a+(r-a2);
-       g_free(a2);
-       g_free(b2);
-       return r;
+	char *a2=g_ascii_strdown(a,-1), *b2=g_ascii_strdown(b,-1), *r=strstr(a2,b2);
+	if(r)
+		r=(char *)a+(r-a2);
+	g_free(a2);
+	g_free(b2);
+	return r;
 }
 #endif
 

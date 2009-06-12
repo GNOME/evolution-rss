@@ -1175,7 +1175,7 @@ reent:  s = (const unsigned char *)res->str;
                         in = pos-1;
                         state = 1;
                 }
-                *s++;
+                s++;
                 pos++;
                 len--;
         }

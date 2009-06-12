@@ -196,7 +196,7 @@ strplchr(gchar *source)
              if (*s == 0x3f)
              {
                    g_string_append(str, "%3F");
-                   *s++;
+                   s++;
              }
              else
                    g_string_append_c (str, *s++);
@@ -475,7 +475,7 @@ feed_is_new(gchar *file_name, gchar *needle)
 
         if (fr) {
             while (fgets(rfeed, 511, fr) != NULL) {
-                if (rfeed && strstr(rfeed, tmpneedle)) {
+                if (strstr(rfeed, tmpneedle)) {
                         occ=1;
                         break;
                 }

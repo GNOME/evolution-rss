@@ -162,8 +162,10 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp, void *stat
   int cnt;
   int cnt_longest;
   size_t val;
+#ifdef _NL_CURRENT
   size_t num_eras;
   struct era_entry *era = NULL;
+#endif
   enum ptime_locale_status { nott, loc, raw } decided_longest;
   struct __strptime_state
   {
@@ -393,7 +395,9 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp, void *stat
       break;
     case 'C':
       /* Match century number.  */
+#ifdef _NL_CURRENT
     match_century:
+#endif
       get_number (0, 99, 2);
       s.century = val;
       s.want_xday = 1;
@@ -632,7 +636,9 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp, void *stat
       s.have_wday = 1;
       break;
     case 'y':
+#ifdef _NL_CURRENT
     match_year_in_century:
+#endif
       /* Match year within century.  */
       get_number (0, 99, 2);
       /* The "Year 2000: The Millennium Rollover" paper suggests that
@@ -662,7 +668,7 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp, void *stat
           ++rp;
         if (*rp != '+' && *rp != '-')
           return NULL;
-        bool neg = *rp++ == '-';
+        rp++;
         int n = 0;
         while (n < 4 && *rp >= '0' && *rp <= '9')
           {
@@ -683,9 +689,6 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp, void *stat
           }
         if (val > 1200)
           return NULL;
-        //tm->tm_gmtoff = (val * 3600) / 100;
-        //if (neg)
-        //  tm->tm_gmtoff = -tm->tm_gmtoff;
       }
       break;
     case 'E':
