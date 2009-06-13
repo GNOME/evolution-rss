@@ -3000,7 +3000,7 @@ get_main_folder(void)
 		}
 	}
 	g_free(feed_file);
-	return g_strdup(_(DEFAULT_FEEDS_FOLDER));
+	return g_strdup(DEFAULT_FEEDS_FOLDER);
 }
 
 void
@@ -3308,7 +3308,7 @@ check_feed_folder(gchar *folder_name)
 	d(g_print("real_folder:%s\n", real_folder));
 	d(g_print("real_name:%s\n", real_name));
         mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
-        if (mail_folder == NULL) {
+	if (mail_folder == NULL) {
                 camel_store_create_folder (store, main_folder, real_folder, NULL);
                 mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
         }
@@ -3365,9 +3365,11 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 	CamelIndex *idx;
 
 	gchar *main_folder = lookup_main_folder();
-	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))) {
-		printf("Folder renamed to '%s' from '%s'\n", info->new->full_name, info->old_base);
-		if (!g_ascii_strncasecmp(main_folder, info->old_base, strlen(info->old_base)))
+	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
+		|| !g_ascii_strncasecmp(info->old_base, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
+		d(printf("Folder renamed to '%s' from '%s'\n", info->new->full_name, info->old_base));
+		if (!g_ascii_strncasecmp(main_folder, info->old_base, strlen(info->old_base))
+		|| !g_ascii_strncasecmp(OLD_FEEDS_FOLDER, info->old_base, strlen(info->old_base)))
 			update_main_folder(info->new->full_name);
 		else
 			update_feed_folder(info->old_base, info->new->full_name);
@@ -3377,8 +3379,8 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 	CamelStore *store = mail_component_peek_local_store(NULL);
         CamelFolder *mail_folder;
         mail_folder = camel_store_get_folder (store, info->new->full_name, 0, NULL);
-	g_print("mail_folder:%s\n", info->new->uri);
-	g_print("mail_folder:%s\n", info->old_base);
+	d(g_print("mail_folder:%s\n", info->new->uri));
+	d(g_print("mail_folder:%s\n", info->old_base));
 
 	gchar *idxname = g_strconcat(path, "/local/", info->new->full_name, ".ibex", NULL);
 	/*gchar *oldname = g_strconcat(path, "/local/", info->old_base, ".ibex", NULL);
@@ -3699,9 +3701,13 @@ check_folders(void)
 {
         CamelException ex;
 	CamelStore *store = mail_component_peek_local_store(NULL);
-	//I'm not sure folder name can be translatable
-	CamelFolder *mail_folder = camel_store_get_folder (store, lookup_main_folder(), 0, NULL);
-	if (mail_folder == NULL) {
+	CamelFolder *mail_folder, *old_folder;
+
+	mail_folder = camel_store_get_folder (store, lookup_main_folder(), 0, NULL);
+        old_folder = camel_store_get_folder (store, OLD_FEEDS_FOLDER, 0, NULL);
+	if (old_folder) {
+		camel_store_rename_folder(store, OLD_FEEDS_FOLDER, lookup_main_folder(), NULL);
+	} else if (mail_folder == NULL) {
 		camel_store_create_folder (store, NULL, lookup_main_folder(), &ex);
 	}
 	camel_object_unref (mail_folder);
@@ -4036,6 +4042,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+		textdomain (GETTEXT_PACKAGE);
 		rss_gconf = gconf_client_get_default();
 		upgrade = 1;
 		char *d;
