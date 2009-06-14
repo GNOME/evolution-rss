@@ -1892,13 +1892,16 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 {
         EMConfigTargetFolder *target = (EMConfigTargetFolder *)data->config->target;
 	gchar *url = NULL, *ofolder = NULL;
-	gchar *main_folder = get_main_folder();
+	gchar *main_folder = lookup_main_folder();
 	gchar *folder = target->folder->full_name;
 	add_feed *feed = NULL;
 
+	g_print("folder:%s\n", folder);
+	g_print("main_folder:%s\n", main_folder);
 	//filter only rss folders
 	if (folder == NULL
-          || g_ascii_strncasecmp(folder, main_folder, strlen(main_folder)))
+          || g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
+          || !g_ascii_strcasecmp(folder, main_folder))
                 goto out;
 
 	ofolder = lookup_original_folder(folder);

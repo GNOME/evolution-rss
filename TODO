@@ -34,10 +34,10 @@
 	* disable filters on setup_feed()
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
-	* grey browser stop button on complete load
 	* grey out disabled folders (feeds)
 	* feed check runtime validation
 	* wrong send and receive count of articles after import
 	* handle 404 for images in comments
 	* gtkhtml does not handle script properly
 	* gtkhtml does not handle &#xD; construct
+	* switch webkit -> gecko leeds to crash on pfree()

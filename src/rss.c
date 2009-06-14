@@ -164,6 +164,7 @@ struct _org_gnome_rss_controls_pobject {
         EMFormatHTML *format;
 	GtkWidget *html;
 	GtkWidget *container;
+	GtkWidget *stopbut;		//browser stop button
 	CamelStream *stream;
 	GtkWidget *mozembedwindow;	//window containing GtkMozEmbed
 	gchar *website;
@@ -1371,7 +1372,6 @@ if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
 void
 rss_mozilla_init(void)
 {
-	GError *err = NULL;
 	gecko_init();
 }
 #endif
@@ -1477,6 +1477,25 @@ rss_menu_items_free(EPopup *ep, GSList *items, void *data)
 }
 
 #ifdef HAVE_WEBKIT
+#if (WEBKIT_VERSION >= 1001007)
+static void
+webkit_net_status (WebKitWebView *view,
+                        GParamSpec *spec,
+                        GtkWidget *data)
+{
+	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
+	switch (status) {
+		case WEBKIT_LOAD_FINISHED:
+			gtk_widget_set_sensitive(data, FALSE);
+		break;
+		default:
+			gtk_widget_set_sensitive(data, TRUE);
+		break;
+	}
+
+}
+#endif
+
 gboolean
 webkit_over_link(WebKitWebView *web_view,
                                  gchar         *title,
@@ -1511,6 +1530,18 @@ webkit_click (GtkEntry *entry,
 #endif
 
 #ifdef HAVE_GECKO
+void
+gecko_net_start(GtkMozEmbed *mozembed, GtkWidget *data)
+{
+	gtk_widget_set_sensitive(data, TRUE);
+}
+
+void
+gecko_net_stop(GtkMozEmbed *mozembed, GtkWidget *data)
+{
+	gtk_widget_set_sensitive(data, FALSE);
+}
+
 gboolean
 gecko_over_link(GtkMozEmbed *mozembed)
 {
@@ -1578,7 +1609,6 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 			(struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *moz;
 
-//        gtk_widget_size_request (efhd->priv->attachment_bar, &req);
 	guint engine = fallback_engine();
 	moz = gtk_scrolled_window_new(NULL,NULL);
 //	moz = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -1593,8 +1623,9 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
 		g_signal_connect (rf->mozembed, "populate-popup", G_CALLBACK (webkit_click), moz);
 		g_signal_connect (rf->mozembed, "hovering-over-link", G_CALLBACK (webkit_over_link), moz);
-	//	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-	//	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
+#if (WEBKIT_VERSION >= 1001007)
+		g_signal_connect (rf->mozembed, "load-status", G_CALLBACK(webkit_net_status), po->stopbut);
+#endif
 	}
 #endif
 
@@ -1608,6 +1639,8 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 		g_signal_connect (rf->mozembed, "dom_mouse_click", G_CALLBACK(gecko_click), moz);
 		g_signal_connect (rf->mozembed, "link_message", G_CALLBACK(gecko_over_link), moz);
+		g_signal_connect (rf->mozembed, "net_start", G_CALLBACK(gecko_net_start), po->stopbut);
+		g_signal_connect (rf->mozembed, "net_stop", G_CALLBACK(gecko_net_stop), po->stopbut);
 	}
 #endif
 
@@ -1720,8 +1753,10 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 		gtk_widget_set_sensitive (button5, rf->online);
         	gtk_widget_show (button5);
 		gtk_box_pack_start (GTK_BOX (hbox2), button5, TRUE, TRUE, 0);
-        	GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
+        	//GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
+        	GtkWidget *button2 = po->stopbut;
 		g_signal_connect (button2, "clicked", G_CALLBACK(stop_cb), efh);
+
 //		gtk_widget_set_size_request(button2, 100, 10);
 		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button2, rf->online);
@@ -1788,7 +1823,7 @@ pfree(EMFormatHTMLPObject *o)
 	}
 #endif
 	if (rf->mozembed) {
-		if (engine ==2) //crashes webkit - https://bugs.webkit.org/show_bug.cgi?id=25042
+		if (engine == 2) //crashes webkit - https://bugs.webkit.org/show_bug.cgi?id=25042
 			gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
 	}
@@ -1869,6 +1904,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	pobj->stream = t->stream;
 	pobj->object.free = free_rss_controls;
         camel_stream_printf (t->stream, "<object classid=%s></object>\n", classid);
+	//precreate stop button as we need it to control it later
+       	GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
+	pobj->stopbut = button2;
 
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format)) {
@@ -1889,6 +1927,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			pobj->format = (EMFormatHTML *)t->format;
 			pobj->object.free = pfree;
 			pobj->part = t->part;
+			pobj->stopbut =  button2;
 			camel_stream_printf (t->stream,
 				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 				frame_colour & 0xffffff,

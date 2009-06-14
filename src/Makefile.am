@@ -13,6 +13,7 @@ INCLUDES =							\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
 	-DGTK_VERSION="$(GTK_VERSION)"	          	  	\
 	-DLIBSOUP_VERSION="$(SOUP_VERSION)"	            	\
+	-DWEBKIT_VERSION="$(WEBKIT_VERSION)"	            	\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
 	-DHAVE_DBUS=$(DBD)					\
