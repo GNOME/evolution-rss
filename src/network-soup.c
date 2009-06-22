@@ -238,7 +238,8 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 	case 2:
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
-			g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+			if (proxy_uri)
+				g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
 		} else 
 			g_print("no PROXY-%s\n", uri);
 		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);

@@ -38,6 +38,7 @@
 #define OLD_FEEDS_FOLDER "News&Blogs"
 #define DEFAULT_NO_CHANNEL N_("Untitled channel")
 #define DEFAULT_TTL 1800
+#define FEED_IMAGE_TTL 604800 /*ohne week*/
 
 /* ms between status updates to the gui */
 #ifndef _WIN32

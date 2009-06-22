@@ -30,7 +30,6 @@
 	* cancel operation should cancel fetching feed components
 	* perhaps make quoted text fancier
 	* if immage cannto be served from cache try to fetch it ( add 3 times retry for fetching an image)
-	* perform feeds images update weekly
 	* disable filters on setup_feed()
 	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
@@ -41,3 +40,5 @@
 	* gtkhtml does not handle script properly
 	* gtkhtml does not handle &#xD; construct
 	* switch webkit -> gecko leeds to crash on pfree()
+	* import/export window resizable
+	* show feed icons in send & receive dialog

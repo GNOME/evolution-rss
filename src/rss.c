@@ -125,6 +125,7 @@ int rss_verbose_debug = 0;
 #include <libsoup/soup-message-queue.h>
 #endif
 
+#include <sys/time.h>
 #ifdef _WIN32
 #include "strptime.c"
 #endif
@@ -1273,8 +1274,10 @@ back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 		gtk_moz_embed_go_back(GTK_MOZ_EMBED(rf->mozembed));
 #endif
 #if HAVE_WEBKIT
-	if (engine == 1)
+	if (engine == 1) {
+		g_print("going back\n");
 		webkit_web_view_go_back (WEBKIT_WEB_VIEW(rf->mozembed));
+	}
 #endif
 }
 
@@ -3209,14 +3212,51 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	g_free(urldir);
 }
 
+gboolean
+check_update_feed_image(gchar *key)
+{
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *fav_file = g_strdup_printf("%s/%s.fav", feed_dir, key);
+	struct timeval start;
+	FILE *f = NULL;
+	gboolean ret = TRUE;
+	unsigned long int remain;
+	gchar rfeed[80];
+	memset(rfeed, 0, 79);
+	gettimeofday(&start, NULL);
+        g_free(feed_dir);
+        if (!g_file_test(fav_file, G_FILE_TEST_EXISTS)) {
+		if ((f = fopen(fav_file, "w"))) {
+			fprintf(f, "%lu", start.tv_sec);	
+                	fclose(f);
+        	}
+		ret = TRUE;
+		goto out;
+	}
+	if ((f = fopen(fav_file, "r"))) {
+		while (fgets(rfeed, 50, f) != NULL) {
+        	}
+               	fclose(f);
+		remain = start.tv_sec - strtoul((const char *)&rfeed, NULL, 10);
+		if (FEED_IMAGE_TTL <= remain) {
+			ret =  TRUE;
+			goto out;
+		} else {
+			d(g_print("next favicon will be fetched in %lu seconds\n", FEED_IMAGE_TTL - remain));
+			ret = FALSE;
+		}
+	}
+out:	g_free(fav_file);
+	return ret;
+}
+
 void
 update_feed_image(gchar *image, gchar *key)
 {
         GError *err = NULL;
 	gchar *url = NULL;
-//	if (!image)
-//		return;
-  //      g_return_if_fail (image != NULL);
+	if (!check_update_feed_image(key))
+		return;
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
@@ -3401,7 +3441,6 @@ static void
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
 {
 	CamelRenameInfo *info = event_data;
-	CamelIndex *idx;
 
 	gchar *main_folder = lookup_main_folder();
 	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
@@ -3413,23 +3452,6 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 		else
 			update_feed_folder(info->old_base, info->new->full_name);
 	}
-	gchar *path = (gchar *)mail_component_peek_base_directory (mail_component_peek());
-
-	CamelStore *store = mail_component_peek_local_store(NULL);
-        CamelFolder *mail_folder;
-        mail_folder = camel_store_get_folder (store, info->new->full_name, 0, NULL);
-	d(g_print("mail_folder:%s\n", info->new->uri));
-	d(g_print("mail_folder:%s\n", info->old_base));
-
-	gchar *idxname = g_strconcat(path, "/local/", info->new->full_name, ".ibex", NULL);
-	/*gchar *oldname = g_strconcat(path, "/local/", info->old_base, ".ibex", NULL);
-	g_print("idx:%s\n", idxname);*/
-	idx = (CamelIndex *)camel_text_index_new(idxname, O_TRUNC|O_CREAT|O_RDWR);
-//	camel_text_index_rename(oldname, idxname);
-	//camel_index_delete(idx);
-//	camel_index_sync(idx);
-	camel_object_unref((CamelObject *)idx);
-	g_free(idxname);
 }
 
 typedef struct custom_fetch_data {
