@@ -1,0 +1,828 @@
+# translation of bn_IN.po to Bengali INDIA
+# Bengali (India) translation of evolution-rss.
+# Copyright (C) 2009 evolution-rss's COPYRIGHT HOLDER
+# This file is distributed under the same license as the evolution-rss package.
+#
+# Runa Bhattacharjee <runab@redhat.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: bn_IN\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
+"POT-Creation-Date: 2009-06-22 11:34+0000\n"
+"PO-Revision-Date: 2009-06-23 12:54+0530\n"
+"Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
+"Language-Team: Bengali INDIA <discuss@lists.ankur.org.in>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../src/dbus.c:120 ../src/rss-config-factory.c:674
+#: ../src/rss-config-factory.c:979 ../src/rss-config-factory.c:1109
+msgid "Error adding feed."
+msgstr "ফিড যোগ করতে সমস্যা"
+
+#: ../src/dbus.c:121 ../src/rss-config-factory.c:675
+#: ../src/rss-config-factory.c:980 ../src/rss-config-factory.c:1110
+msgid "Feed already exists!"
+msgstr "ফিড বর্তমানে উপস্থিত রয়েছে!"
+
+#: ../src/dbus.c:126
+#, c-format
+msgid "New feed imported: %s"
+msgstr "নতুন ফিড ইম্পোর্ট করা হয়েছে: %s"
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Auto check for new articles."
+msgstr "স্বয়ংক্রিয়ভাবে নতুন নিবন্ধের উপস্থিতি পরীক্ষা করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Blink Status Icon"
+msgstr "অবস্থা সূচক আইকন ঝলকানো হবে"
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink status icon when new article received"
+msgstr "নতুন নিবন্ধ প্রাপ্ত হলে অবস্থা সূচক আইকন ঝলকাবে"
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Check New articles"
+msgstr "নতুন নিবন্ধ পরীক্ষা করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Check for new articles everytime Evolution is started."
+msgstr "Evolution প্রতিবার আরম্ভের সময় নতুন নিবন্ধের উপস্থিতি পরীক্ষা করা হবে।"
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Checks articles on startup"
+msgstr "প্রারম্ভকালে নিবন্ধ পরীক্ষা করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Contains list of the currently setup feeds."
+msgstr "বর্তমানে নির্ধারণ করা ফিডের তালিকা উপস্থিত রয়েছে।"
+
+#: ../src/evolution-rss.schemas.in.h:8
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "ফিড এনট্রি মুছে ফেলা হলে সংশ্লিষ্ট ফিড ফোল্ডার মুছে যাবে।"
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Display article's summary"
+msgstr "নিবন্ধের সারসংক্ষেপ প্রদর্শন করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Display feed icon on feed folder"
+msgstr "ফিড ফোল্ডারের উপর ফিডের আইকন প্রদর্শন করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Enable Feed Icon"
+msgstr "ফিড আইকন সক্রিয় করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable Status Icon"
+msgstr "ফিডের অবস্থা সীচক আইকন"
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid "Enable status icon in notification area"
+msgstr "বিজ্ঞপ্তিস্থলে অবস্থা সূচক আইকন সক্রিয় করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid ""
+"Evolution will show artile's summary instead of article's webpage. Sumarry "
+"can also be html."
+msgstr "নিবন্ধের ওয়েব-পেজের পরিবর্তে Evolution দ্বারা নিবন্ধের সারসংক্ষেপ প্রদর্শন করা হবে। সারসংক্ষেপের ক্ষেত্রেও html ব্যবহার করা যাবে।"
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Feeds list"
+msgstr "ফিডের তালিকা"
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "নতুন নিবন্ধ পরীক্ষার বিরতি (মিনিটে ধার্য)।"
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Hostname of the proxy server"
+msgstr "প্রক্সি সার্ভারের হোস্ট-নেম"
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Hostname of the proxy server."
+msgstr "প্রক্সি সার্ভারের হোস্ট-নেম।"
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid "Html render"
+msgstr "Html রেন্ডার"
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid "If the proxy server requires authentication. This is the password field."
+msgstr "প্রক্সি সার্ভারের ক্ষেত্রে অনুমোদন প্রয়োজন হলে, পাসওয়ার্ডের জন্য এই ক্ষেত্রটি ব্যবহার করা যাবে।"
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Interval in seconds before a conection is dropped."
+msgstr "সংযোগ বিচ্ছিন্ন করার পূর্ববর্তী বিলম্ব, সেকেন্ডে ধার্য।"
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "It will display article's comments by default if present."
+msgstr "নিবন্ধ সংক্রান্ত কোনো মন্তব্য থাকলে তা ডিফল্টরূপে প্রদর্শন করা হবে।"
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "Java Enabled"
+msgstr "Java সক্রিয়"
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "JavaScript Enabled"
+msgstr "JavaScript সক্রিয়"
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "Network proxy requires authentication."
+msgstr "নেটওয়ার্ক প্রক্সির ক্ষেত্রে অনুমোদন প্রয়োজন।"
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "Network timeout"
+msgstr "নেটওয়ার্কের সময়সীমা"
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "New articles timeout"
+msgstr "নতুন নিবন্ধ সম্পর্কিত সময়সীমা"
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Password for proxy server"
+msgstr "প্রক্সি সার্ভারের পাসওয়ার্ড"
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Proxy requires authentication"
+msgstr "প্রক্সির ক্ষেত্রে অনুমোদন প্রয়োজন"
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Proxy server port"
+msgstr "প্রক্সি সার্ভারের পোর্ট"
+
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "Proxy server user"
+msgstr "প্রক্সি সার্ভারের ব্যবহারকারী"
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "Remove feed folder"
+msgstr "ফিড ফোল্ডার মুছে ফেলা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "Show articles comments"
+msgstr "নিবন্ধ সংক্রান্ত মন্তব্য প্রদর্শন করা হবে"
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "The port number for proxy server."
+msgstr "প্রক্সি সার্ভারের পোর্ট সংখ্যা।"
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "The username to use for proxy server authentication."
+msgstr "প্রক্সি সার্ভারে অনুমোদনের জন্য ব্যবহারকারীর নাম।"
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "Type HTML Render used to display html pages."
+msgstr "html পৃষ্ঠা প্রদর্শনের জন্য ব্যবহারযোগ্য HTML রেন্ডারের ধরন।"
+
+#: ../src/evolution-rss.schemas.in.h:37
+msgid "Use a proxy server to fetch articles"
+msgstr "নিবন্ধ প্রাপ্ত করার জন্য প্রক্সি সার্ভার প্রয়োগ করা হবে।"
+
+#: ../src/evolution-rss.schemas.in.h:38
+msgid "Use proxy server"
+msgstr "প্রক্সি সার্ভার ব্যবহার করা হবে"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Evolution RSS Reader প্লাগ-ইন\n"
+"\n"
+"এই প্লাগ-ইনের সাহায্যে evolution মেইলের সাথে RSS ফিড পড়া সম্ভব হবে। evolution-1.4 শাখায় উপস্থিত RSS সমর্থনব্যবস্থার উপর ভিত্তি করে RSS সমর্থনের এই বৈশিষ্ট্য নির্মিত হয়েছে। মেইল ও RSS-কে একত্রিত করার মূল উদ্দেশ্য দ্বারা এটি চালিত হয়েছে এবং RSS নিবন্ধগুলি ই-মেইল বার্তার অনুরূপ হওয়ার ফলে RSS পাঠের পৃথক কোনো সরঞ্জাম নির্মাণ করার প্রয়োজন দেখা দেয় না।\n"
+"\n"
+"Evolution RSS দ্বারা সারসংক্ষেপ অথবা HTML প্রদর্শন ব্যবস্থা অনুযায়ী নিবন্ধ প্রদর্শন করা যাবে। \n"
+"\n"
+"চিহ্নিত ইঞ্জিনগুলি দ্বারা HTML প্রদর্শন করা যাবে: gtkHTML, Apple's Webkit "
+"অথবা Firefox/Gecko।\n"
+"\n"
+"<b>সংস্করণ: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "মাপ"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Delete \"{0}\"?"
+msgstr "\"{0}\" মুছে ফেলা হবে কি?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Reading RSS Feeds..."
+msgstr "RSS ফিড পড়া হবে..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "Really delete feed '{0}' ?"
+msgstr "ফিড '{0}' কি নিশ্চিতরূপে মুছে ফেলা হবে ?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Updating Feeds..."
+msgstr "ফিড আপডেট করা হচ্ছে..."
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Setup RSS"
+msgstr "RSS প্রস্তুতি"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "Setup RSS feeds"
+msgstr "RSS ফিড প্রস্তুতি"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Update RSS feeds"
+msgstr "RSS ফিড আপডেট করুন"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "_Read RSS"
+msgstr "RSS পড়ুন (_R)"
+
+#: ../src/rss.c:420 ../src/rss.c:2639
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "ফিড প্রাপ্ত করা হচ্ছে (%d সক্রিয়)"
+
+#: ../src/rss.c:456 ../src/rss-config-factory.c:1255
+#: ../src/rss-config-factory.c:1492
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% সমাপ্ত"
+
+#: ../src/rss.c:466 ../src/rss.c:2789
+msgid "Feed"
+msgstr "ফিড"
+
+#: ../src/rss.c:575
+msgid "Enter User/Pass for feed"
+msgstr "ফিডের জন্য ব্যবহারকারীর নাম/পাসওয়ার্ড লিখুন"
+
+#: ../src/rss.c:622
+#, c-format
+msgid ""
+"Enter your username and password for:\n"
+" '%s'"
+msgstr ""
+"চিহ্নিত স্থানের জন্য আপনার ব্যবহারকারীর নাম ও পাসওয়ার্ড লিখুন:\n"
+" '%s'"
+
+#: ../src/rss.c:639
+msgid "Username: "
+msgstr "ব্যবহারকারীর নাম: "
+
+#: ../src/rss.c:661 ../src/rss-ui.glade.h:36
+msgid "Password: "
+msgstr "পাসওয়ার্ড: "
+
+#: ../src/rss.c:699
+msgid "_Remember this password"
+msgstr "এই পাসওয়ার্ড মনে রাখা হবে (_R)"
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:823
+msgid "Canceling..."
+msgstr "বাতিল করা হচ্ছে..."
+
+#: ../src/rss.c:1346
+msgid "Formatting..."
+msgstr "ফরম্যাট করা হচ্ছে..."
+
+#: ../src/rss.c:1459
+msgid "_Copy"
+msgstr "কপি করুন (_C)"
+
+#: ../src/rss.c:1461
+msgid "Zoom _In"
+msgstr "বড় করে প্রদর্শন (_I)"
+
+#: ../src/rss.c:1462
+msgid "Zoom _Out"
+msgstr "ছোট করে প্রদর্শন (_O)"
+
+#: ../src/rss.c:1463
+msgid "_Normal Size"
+msgstr "স্বাভাবিক মাপ (_N)"
+
+#: ../src/rss.c:1465
+msgid "_Print..."
+msgstr "প্রিন্ট করুন...(_P)"
+
+#: ../src/rss.c:1466
+msgid "Save _As"
+msgstr "নতুন রূপে সংরক্ষণ (_A)"
+
+#: ../src/rss.c:1468
+msgid "_Open Link in Browser"
+msgstr "ব্রাউজারের মধ্যে লিংক খুলুন (_O)"
+
+#: ../src/rss.c:1469
+msgid "_Copy Link Location"
+msgstr "লিংক দ্বারা চিহ্নিত অবস্থান কপি করুন (_C)"
+
+#: ../src/rss.c:1506 ../src/rss.c:1550
+msgid "Click to open"
+msgstr "খোলার জন্য ক্লিক করুন"
+
+#: ../src/rss.c:1698
+msgid "Comments"
+msgstr "মন্তব্য"
+
+#: ../src/rss.c:1703
+msgid "Refresh"
+msgstr "নতুন করে প্রদর্শন"
+
+#: ../src/rss.c:1722
+msgid "Feed view"
+msgstr "ফিড অনুযায়ী প্রদর্শন"
+
+#: ../src/rss.c:1728
+msgid "Show Summary"
+msgstr "সারসংক্ষেপ প্রদর্শন করা হবে"
+
+#: ../src/rss.c:1728
+msgid "Show Full Text"
+msgstr "সম্পূর্ণ লেখা প্রদর্শন করা হবে"
+
+#: ../src/rss.c:2157
+msgid "Fetching feed"
+msgstr "ফিড প্রাপ্ত করা হচ্ছে"
+
+#: ../src/rss.c:2458
+msgid "Unamed feed"
+msgstr "নামবিহীন ফিড"
+
+#: ../src/rss.c:2458 ../src/rss.c:2566
+msgid "Error while fetching feed."
+msgstr "ফিড প্রাপ্ত করতে সমস্যা।"
+
+#: ../src/rss.c:2566
+msgid "Invalid Feed"
+msgstr "ফিড বৈধ নয়"
+
+#: ../src/rss.c:2577
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "বার্তা %d প্রাপ্ত করা হচ্ছে, সর্বমোট %d"
+
+#: ../src/rss.c:2657
+msgid "Complete."
+msgstr "সমাপ্ত।"
+
+#: ../src/rss.c:2688 ../src/rss.c:2851 ../src/rss.c:2983 ../src/rss.c:3472
+msgid "Error fetching feed."
+msgstr "ফিড প্রাপ্ত করতে সমস্যা।"
+
+#: ../src/rss.c:2698
+msgid "Canceled."
+msgstr "বাতিল করা হয়েছে।"
+
+#: ../src/rss.c:2742
+msgid "Error while parsing feed."
+msgstr "ফিড পার্স করতে সমস্যা।"
+
+#: ../src/rss.c:2797
+msgid "Complete"
+msgstr "সমাপ্ত"
+
+#: ../src/rss.c:2884
+msgid "Formatting error."
+msgstr "বিন্যাস সংক্রান্ত ত্রুটি।"
+
+#: ../src/rss.c:3784 ../src/rss.c:3898
+msgid "No RSS feeds configured!"
+msgstr "কোনো RSS ফিড কনফিগার করা হয়নি!"
+
+#: ../src/rss.c:3790 ../src/rss.c:3987
+msgid "Reading RSS feeds..."
+msgstr "RSS ফিড পড়া হচ্ছে..."
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:3804 ../src/rss.c:3991 ../src/rss-config-factory.c:1166
+#: ../src/rss-config-factory.c:1514
+msgid "Please wait"
+msgstr "অনুগ্রহ করে অপেক্ষা করুন"
+
+#: ../src/rss.c:3812 ../src/rss.c:3999 ../src/rss-config-factory.c:660
+#: ../src/rss-config-factory.c:960
+#, no-c-format
+msgid "0% done"
+msgstr "০% সমাপ্ত"
+
+#: ../src/rss.c:3946
+msgid "Waiting..."
+msgstr "অপেক্ষারত..."
+
+#: ../src/rss.h:37 ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "খবর ও ব্লগ"
+
+#: ../src/rss.h:39
+msgid "Untitled channel"
+msgstr "নামবিহীন চ্যানেল"
+
+#: ../src/rss-config-factory.c:137
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:138
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:139
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:356
+msgid "Edit Feed"
+msgstr "ফিড সম্পাদনা"
+
+#: ../src/rss-config-factory.c:358
+msgid "Add Feed"
+msgstr "ফিড সংযোজন"
+
+#: ../src/rss-config-factory.c:884
+msgid "Disable"
+msgstr "নিষ্ক্রিয়"
+
+#: ../src/rss-config-factory.c:884
+msgid "Enable"
+msgstr "সক্রিয়"
+
+#: ../src/rss-config-factory.c:911 ../src/rss-ui.glade.h:38
+msgid "Remove folder contents"
+msgstr "ফোল্ডারের সামগ্রী মুছে ফেলুন"
+
+#: ../src/rss-config-factory.c:1162
+msgid "Importing feeds..."
+msgstr "ফিড ইম্পোর্ট করুন..."
+
+#: ../src/rss-config-factory.c:1316 ../src/rss-config-factory.c:1594
+msgid "All Files"
+msgstr "সর্বধরনের ফাইল"
+
+#: ../src/rss-config-factory.c:1322 ../src/rss-config-factory.c:1600
+msgid "OPML Files"
+msgstr "OPML ফাইল"
+
+#: ../src/rss-config-factory.c:1328 ../src/rss-config-factory.c:1606
+msgid "XML Files"
+msgstr "XML ফাইল"
+
+#: ../src/rss-config-factory.c:1348
+msgid "Show article's summary"
+msgstr "নিবন্ধের সারসংক্ষেপ প্রদর্শন করা হবে"
+
+#: ../src/rss-config-factory.c:1354
+msgid "Feed Enabled"
+msgstr "ফিড সক্রিয় করা হয়েছে"
+
+#: ../src/rss-config-factory.c:1360
+msgid "Validate feed"
+msgstr "ফিডের বৈধতা যাচাই করুন"
+
+#: ../src/rss-config-factory.c:1395 ../src/rss-ui.glade.h:40
+msgid "Select import file"
+msgstr "ইম্পোর্ট করার উদ্দেশ্যে ফাইল নির্বাচন করুন"
+
+#: ../src/rss-config-factory.c:1432 ../src/rss-ui.glade.h:39
+msgid "Select file to export"
+msgstr "এক্সপোর্ট করার উদ্দেশ্যে ফাইল নির্বাচন করুন"
+
+#: ../src/rss-config-factory.c:1510
+msgid "Exporting feeds..."
+msgstr "ফিড এক্সপোর্ট করা হচ্ছে..."
+
+#: ../src/rss-config-factory.c:1539
+msgid ""
+"A file by that name already exists.\n"
+"Overwrite it?"
+msgstr ""
+"এই নামের একটি ফাইল বর্তমানে উপস্থিত রয়েছে।\n"
+"নতুন করে লেখা হবে কি?"
+
+#: ../src/rss-config-factory.c:1541
+msgid "Overwrite file?"
+msgstr "ফাইলটি নতুন করে লেখা হবে কি?"
+
+#: ../src/rss-config-factory.c:1560
+msgid "Error exporting feeds!"
+msgstr "ফিড এক্সপোর্ট করতে সমস্যা!"
+
+#: ../src/rss-config-factory.c:1632
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"কোনো RSS ফিড কনফিগার করা হয়নি!\n"
+"এক্সপোর্ট করতে ব্যর্থ।"
+
+#: ../src/rss-config-factory.c:1727 ../src/rss-config-factory.c:2130
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"উল্লেখ্য: রেন্ডারের জন্য Mozilla (Firefox) অথবা Apple Webkit ব্যবহার করার জন্য \n"
+"যথাক্রমে firefox অথবা webkit devel প্যাকেজগুলি ইনস্টল থাকা আবশ্যক \n"
+"ও এই প্যাকেজগুলি সনাক্ত করা জন্য evolution-rss পুনরায় কম্পাইল করা প্রয়োজন।"
+
+#: ../src/rss-config-factory.c:1972 ../src/rss-ui.glade.h:25
+msgid "Enabled"
+msgstr "সক্রিয়"
+
+#: ../src/rss-config-factory.c:1988
+msgid "Feed Name"
+msgstr "ফিডের নাম"
+
+#: ../src/rss-config-factory.c:1998
+msgid "Type"
+msgstr "ধরন"
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr "<b>নিবন্ধ সংক্রান্ত সূচনা</b>"
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr "<b>ইঞ্জিন: </b>"
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:4
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML রেন্ডারিং</b>"
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr "<b>নেটওয়ার্কের সময়সীমা:</b>"
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Accept cookies from sites"
+msgstr "সাইট থেকে কুকি গ্রহণ করা হবে"
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Blink icon in notification area"
+msgstr "বিজ্ঞপ্তিস্থলে আইকন ঝলকানো হবে"
+
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Block pop-up windows"
+msgstr "পপ-আপ উইন্ডো প্রদর্শন রোধ করা হবে"
+
+#: ../src/rss-html-rendering.glade.h:8
+msgid "Enable Java"
+msgstr "Java সক্রিয় করা হবে"
+
+#: ../src/rss-html-rendering.glade.h:9 ../src/rss-ui.glade.h:23
+msgid "Enable JavaScript"
+msgstr "JavaScript সক্রিয় করা হবে"
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Import Cookies"
+msgstr "কুকি ইম্পোর্ট করুন"
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "Show feed icon"
+msgstr "ফিডের আইকন প্রদর্শন করা হবে"
+
+#: ../src/rss-html-rendering.glade.h:12
+msgid "Show icon in notification area"
+msgstr "বিজ্ঞপ্তিস্থলে আইকন প্রদর্শন করা হবে"
+
+#: ../src/rss-html-rendering.glade.h:13
+msgid "seconds"
+msgstr "সেকেন্ড"
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr "<b>উন্নত বিকল্প</b>"
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed Name: </b>"
+msgstr "<b>ফিডের নাম: </b>"
+
+#: ../src/rss-ui.glade.h:3
+msgid "<b>Feed URL:</b>"
+msgstr "<b>ফিডের URL:</b>"
+
+#: ../src/rss-ui.glade.h:5
+msgid "<b>Location:</b>"
+msgstr "<b>অবস্থান:</b>"
+
+#: ../src/rss-ui.glade.h:6
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr "<span weight=\"bold\">বিবিধ বৈশিষ্ট্য</span>"
+
+#: ../src/rss-ui.glade.h:7
+msgid "Add"
+msgstr "সংযোজন"
+
+#: ../src/rss-ui.glade.h:8
+msgid "Always delete unread articles"
+msgstr "না পড়া নিবন্ধ সর্বদা মুছে ফেলা হবে"
+
+#: ../src/rss-ui.glade.h:9
+msgid "Authentication"
+msgstr "অনুমোদন"
+
+#: ../src/rss-ui.glade.h:10
+msgid "By default show article summary instead of webpage"
+msgstr "ডিফল্টরূপে ওয়েব-পেজের পরিবর্তে নিবন্ধের সারসংক্ষেপ প্রদর্শন করা হবে"
+
+#: ../src/rss-ui.glade.h:11
+msgid "Certificates Table"
+msgstr "সার্টিফিকেটের টেবিল"
+
+#: ../src/rss-ui.glade.h:12
+msgid "Check for new articles at startup"
+msgstr "প্রারম্ভকালে নতুন নিবন্ধের উপস্থিতি পরীক্ষা করা হবে"
+
+#: ../src/rss-ui.glade.h:13
+msgid "Check for new articles every"
+msgstr "নতুন নিবন্ধের উপস্থিতি পরীক্ষা করা হবে প্রতি"
+
+#: ../src/rss-ui.glade.h:14
+msgid "Delete all but the last"
+msgstr "সর্বশেষ ব্যতীত অন্যান্য সকল মুছে ফেলা হবে"
+
+#: ../src/rss-ui.glade.h:15
+msgid "Delete articles older than"
+msgstr "চিহ্নিত সময়ের থেকে পুরোনো নিবন্ধ মুছে ফেলা হবে"
+
+#: ../src/rss-ui.glade.h:16
+msgid "Delete articles that are no longer in the feed"
+msgstr "ফিডের মধ্যে অনুপস্থিত নিবন্ধ মুছে ফেলা হবে"
+
+#: ../src/rss-ui.glade.h:17
+msgid "Delete feed?"
+msgstr "ফিড মুছে ফেলা হবে কি?"
+
+#: ../src/rss-ui.glade.h:18
+msgid "Details"
+msgstr "বিবরণ"
+
+#: ../src/rss-ui.glade.h:19
+msgid "Display only feed summary"
+msgstr "শুধুমাত্র ফিডের সারসংক্ষেপ প্রদর্শন করা হবে"
+
+#: ../src/rss-ui.glade.h:20
+msgid "Do no update feed"
+msgstr "ফিড আপডেট করা হবে না"
+
+#: ../src/rss-ui.glade.h:21
+msgid "Do not delete feeds"
+msgstr "ফিড মুছে ফেলা হবে না"
+
+#: ../src/rss-ui.glade.h:22
+msgid "Edit"
+msgstr "সম্পাদনা"
+
+#: ../src/rss-ui.glade.h:24
+msgid "Enable Plugins"
+msgstr "প্লাগ-ইন সক্রিয় করুন"
+
+#: ../src/rss-ui.glade.h:26
+msgid "Engine: "
+msgstr "ইঞ্জিন: "
+
+#: ../src/rss-ui.glade.h:27
+msgid "Export"
+msgstr "এক্সপোর্ট করুন"
+
+#: ../src/rss-ui.glade.h:28
+msgid "Feeds"
+msgstr "ফিড"
+
+#: ../src/rss-ui.glade.h:29
+msgid "General"
+msgstr "সাধারণ"
+
+#: ../src/rss-ui.glade.h:30
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:31
+msgid "HTTP Proxy Details"
+msgstr "HTTP প্রক্সির বিবরণ"
+
+#: ../src/rss-ui.glade.h:32
+msgid "HTTP proxy:"
+msgstr "HTTP প্রক্সির:"
+
+#: ../src/rss-ui.glade.h:33
+msgid "Import"
+msgstr "ইম্পোর্ট করুন"
+
+#: ../src/rss-ui.glade.h:34
+msgid "Network"
+msgstr "নেটওয়ার্ক"
+
+#: ../src/rss-ui.glade.h:35
+msgid "No proxy for:"
+msgstr "এর জন্য কোনো প্রক্সি উপস্থিত নেই:"
+
+#: ../src/rss-ui.glade.h:37
+msgid "Port:"
+msgstr "পোর্ট:"
+
+#: ../src/rss-ui.glade.h:41
+msgid "Setup"
+msgstr "প্রস্তুতি"
+
+#: ../src/rss-ui.glade.h:42
+msgid "Show article comments"
+msgstr "নিবন্ধ সম্পর্কে মন্তব্য পড়ুন"
+
+#: ../src/rss-ui.glade.h:43
+msgid "Storage"
+msgstr "সংগ্রহস্থল"
+
+#: ../src/rss-ui.glade.h:44
+msgid "Update"
+msgstr "আপডেট করুন"
+
+#: ../src/rss-ui.glade.h:45
+msgid "Update in"
+msgstr "আপডেট করা হবে"
+
+#: ../src/rss-ui.glade.h:46
+msgid "Use Proxy"
+msgstr "প্রক্সি ব্যবহার করা হবে"
+
+#: ../src/rss-ui.glade.h:47
+msgid "Use authentication"
+msgstr "অনুমোদন ব্যবস্থা প্রয়োগ করা হবে"
+
+#: ../src/rss-ui.glade.h:48
+msgid "Use global update interval"
+msgstr "আপডেটের জন্য সার্বজনীন সময়ের বিরতি প্রয়োগ করা হবে"
+
+#: ../src/rss-ui.glade.h:49
+msgid "Username:"
+msgstr "ব্যবহারকারীর নাম:"
+
+#: ../src/rss-ui.glade.h:50
+msgid "Validate"
+msgstr "বৈধতা যাচাই"
+
+#. for translators: this label is part of the "Delete articles older than X days" message.
+#: ../src/rss-ui.glade.h:52
+msgid "days"
+msgstr "দিন"
+
+#: ../src/rss-ui.glade.h:53
+msgid "label"
+msgstr "লেবেল"
+
+#. To translators: this label is part of the following message: "Delete all but the last X messages.
+#: ../src/rss-ui.glade.h:55
+msgid "messages"
+msgstr "বার্তা"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-ui.glade.h:57
+msgid "minutes"
+msgstr "মিনিট"
+
+#. to translators: message is part of "Update in X minutes"
+#: ../src/rss-ui.glade.h:59
+msgid ""
+"minutes\n"
+"hours\n"
+"days"
+msgstr ""
+"মিনিট\n"
+"ঘন্টা\n"
+"দিন"
+
+#: ../src/parser.c:918
+msgid "No Information"
+msgstr "কোনো তথ্য উপস্থিত নেই"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr "Evolution ফিড নিয়ন্ত্রণ ব্যবস্থা"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr "Evolution RSS পাঠ ব্যবস্থা"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr "RDF,RSS,ATOM ফিড এইখানে পরিচালনা করুন"
+
