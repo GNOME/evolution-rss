@@ -24,8 +24,8 @@
       <locale name="C">
         <short>Display article's summary</short>
         <long>
-    	    Evolution will show artile's summary instead of article's
-    	    webpage. Sumarry can also be html.
+    	    Evolution will show article's summary instead of article's
+    	    webpage. Summary can also be html.
         </long>
       </locale>
     </schema>
