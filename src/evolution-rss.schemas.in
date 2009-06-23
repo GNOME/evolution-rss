@@ -54,7 +54,7 @@
       <locale name="C">
         <short>Hostname of the proxy server</short>
         <long>
-    	    Hostname of the proxy server.
+    	    Hostname of the proxy server used for feeds and content.
         </long>
       </locale>
     </schema>
@@ -114,6 +114,21 @@
         </long>
       </locale>
     </schema>
+
+    <schema>
+      <key>/schemas/apps/evolution/evolution-rss/accept_cookies</key>
+      <applyto>/apps/evolution/evolution-rss/accept_cookies</applyto>
+      <owner>evolution-rss</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Accepts Cookies</short>
+        <long>
+    	    Evolution RSS will accept cookies from articles you browse.
+        </long>
+      </locale>
+    </schema>
+
 
     <schema>
       <key>/schemas/apps/evolution/evolution-rss/status_icon</key>
@@ -181,7 +196,7 @@
       <locale name="C">
         <short>Proxy server port</short>
         <long>
-    	    The port number for proxy server.
+    	    The port number for proxy server used for feeds and content.
         </long>
       </locale>
     </schema>
@@ -265,7 +280,7 @@
       <locale name="C">
         <short>Use proxy server</short>
         <long>
-    	    Use a proxy server to fetch articles
+    	    Use a proxy server to fetch articles and content.
         </long>
       </locale>
     </schema>
