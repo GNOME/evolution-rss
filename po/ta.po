@@ -335,7 +335,7 @@ msgstr "இந்த கடவுச் சொல்லை நினைவில
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
 #: ../src/rss.c:824
-y
+
 msgid "Canceling..."
 msgstr "ரத்து செய்கிறது..."
 
