@@ -1,4 +1,4 @@
-# translation of evolution-rss.master.po to Tamil
+# translation of ta.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
@@ -6,16 +6,16 @@
 # Dr.T.Vasudevan <agnihot3@gmail.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: evolution-rss.master\n"
+"Project-Id-Version: ta\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2009-06-23 07:26+0000\n"
-"PO-Revision-Date: 2009-06-24 11:38+0530\n"
-"Last-Translator: Dr.T.Vasudevan <agnihot3@gmail.com>\n"
-"Language-Team: Tamil <Ubuntu-l10n-tam@lists.ubuntu.com>\n"
+"POT-Creation-Date: 2009-06-24 10:31+0000\n"
+"PO-Revision-Date: 2009-06-25 18:15+0530\n"
+"Last-Translator: \n"
+"Language-Team:  <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 0.3\n"
+"X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../src/dbus.c:120 ../src/rss-config-factory.c:674
@@ -29,187 +29,182 @@ msgid "Feed already exists!"
 msgstr "உள்ளீட்டுத் தரவு ஏற்கனவே உள்ளது!"
 
 #: ../src/dbus.c:126
+#, c-format
 msgid "New feed imported: %s"
 msgstr "புதிய உள்ளீட்டுத் தரவு இறக்குமதி செய்யப்பட்டது: %s"
 
 #: ../src/evolution-rss.schemas.in.h:1
+#| msgid "Import Cookies"
+msgid "Accepts Cookies"
+msgstr "நினைவிகள் ஏற்கிறது"
+
+#: ../src/evolution-rss.schemas.in.h:2
 msgid "Auto check for new articles."
 msgstr " புதிய கட்டுரைகளுக்கு தானியங்கி சோதனை"
 
-#: ../src/evolution-rss.schemas.in.h:2
+#: ../src/evolution-rss.schemas.in.h:3
 msgid "Blink Status Icon"
 msgstr "சிமிட்டும் நிலை சின்னம்"
 
-#: ../src/evolution-rss.schemas.in.h:3
+#: ../src/evolution-rss.schemas.in.h:4
 msgid "Blink status icon when new article received"
 msgstr "புதிய பொருட்கள் வரும்போது  நிலை சின்னத்தை சிமிட்டு."
 
-#: ../src/evolution-rss.schemas.in.h:4
+#: ../src/evolution-rss.schemas.in.h:5
 msgid "Check New articles"
 msgstr "புதிய கட்டுரைகளுக்கு சோதி"
 
-#: ../src/evolution-rss.schemas.in.h:5
+#: ../src/evolution-rss.schemas.in.h:6
 msgid "Check for new articles everytime Evolution is started."
 msgstr "எவலூஷன் துவங்கும் போது புதிய கட்டுரைகளுக்கு சோதி"
 
-#: ../src/evolution-rss.schemas.in.h:6
+#: ../src/evolution-rss.schemas.in.h:7
 msgid "Checks articles on startup"
 msgstr "துவங்கும்போது கட்டுரைகளுக்கு சோதி"
 
-#: ../src/evolution-rss.schemas.in.h:7
+#: ../src/evolution-rss.schemas.in.h:8
 msgid "Contains list of the currently setup feeds."
 msgstr "தற்போது அமைத்த தரவுகள் பட்டியலை உள்ளடக்கியது"
 
-#: ../src/evolution-rss.schemas.in.h:8
+#: ../src/evolution-rss.schemas.in.h:9
 msgid "Deleting feed entry will also remove feed folder."
 msgstr "தரவு உள்ளீட்டை நீக்கினால் தரவுகள் அடைவும் நீக்கப்படும்"
 
-#: ../src/evolution-rss.schemas.in.h:9
+#: ../src/evolution-rss.schemas.in.h:10
 msgid "Display article's summary"
 msgstr "பொருளின் சுருக்க காட்சி"
 
-#: ../src/evolution-rss.schemas.in.h:10
+#: ../src/evolution-rss.schemas.in.h:11
 msgid "Display feed icon on feed folder"
 msgstr "தரவு அடைவில் தரவு சின்னத்தை காட்டுக"
 
-#: ../src/evolution-rss.schemas.in.h:11
+#: ../src/evolution-rss.schemas.in.h:12
 msgid "Enable Feed Icon"
 msgstr "தரவு  சின்னத்தை செயல்படுத்து"
 
-#: ../src/evolution-rss.schemas.in.h:12
+#: ../src/evolution-rss.schemas.in.h:13
 msgid "Enable Status Icon"
 msgstr "நிலை சின்னத்தை செயல்படுத்து"
 
-#: ../src/evolution-rss.schemas.in.h:13
+#: ../src/evolution-rss.schemas.in.h:14
 msgid "Enable status icon in notification area"
 msgstr "அறிவிப்பு பகுதியில் நிலை சின்னத்தை செயல்படுத்து"
 
-#: ../src/evolution-rss.schemas.in.h:14
-
-msgid ""
-"Evolution will show artile's summary instead of article's webpage. Sumarry "
-"can also be html."
-msgstr " எவல்யூஷன் கட்டுரையின் வலைப்பக்கத்தை காட்டாமல் சுருக்கத்தை காட்டும்.  இந்த சுருக்கமும் ஹெச்டிஎம்எல் ஆக இருக்கலாம். "
-
 #: ../src/evolution-rss.schemas.in.h:15
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Evolution RSS நீங்கள் உலாவும் கட்டுரைகளிலிருந்து குக்கீகளை ஏற்கிறது."
+
+#: ../src/evolution-rss.schemas.in.h:16
+#| msgid ""
+#| "Evolution will show artile's summary instead of article's webpage. "
+#| "Sumarry can also be html."
+msgid ""
+"Evolution will show article's summary instead of article's webpage. Summary "
+"can also be html."
+msgstr ""
+"எவல்யூஷன் கட்டுரையின் வலைப்பக்கத்தை காட்டாமல் சுருக்கத்தை காட்டும்.  இந்த சுருக்கமும் "
+"ஹெச்டிஎம்எல் ஆக இருக்கலாம். "
+
+#: ../src/evolution-rss.schemas.in.h:17
 msgid "Feeds list"
 msgstr "தரவுகள் பட்டியல்"
 
-#: ../src/evolution-rss.schemas.in.h:16
-
+#: ../src/evolution-rss.schemas.in.h:18
 msgid "Frequency to check for new articles (in minutes)."
 msgstr "புதிய கட்டுரைகளுக்கு சோதிக்க இடைவெளி (நிமிடங்களில்)"
 
-#: ../src/evolution-rss.schemas.in.h:17
-
+#: ../src/evolution-rss.schemas.in.h:19
 msgid "Hostname of the proxy server"
 msgstr "பதிலாள் சேவையகத்தின் புரவலன் பெயர்"
 
-#: ../src/evolution-rss.schemas.in.h:18
+#: ../src/evolution-rss.schemas.in.h:20
+#| msgid "Hostname of the proxy server."
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "பதிலாள் சேவையகத்தின் புரவலன் பெயர் ஃபிட்கள் மற்றும் உள்ளடக்கத்திற்கு பயன்படுத்தப்படுகிறது"
 
-msgid "Hostname of the proxy server."
-msgstr "பதிலாள் சேவையகத்தின் புரவலன் பெயர்"
-
-#: ../src/evolution-rss.schemas.in.h:19
+#: ../src/evolution-rss.schemas.in.h:21
 msgid "Html render"
 msgstr "ஹெச்டிஎம்எல் வரைவு"
 
-#: ../src/evolution-rss.schemas.in.h:20
-
+#: ../src/evolution-rss.schemas.in.h:22
 msgid "If the proxy server requires authentication. This is the password field."
 msgstr "பதிலாள் சேவையகத்துக்கு  கடவுச்சொல் தெவை. இது கடவுச்சொல் உள்ளீட்டு புலம்."
 
-#: ../src/evolution-rss.schemas.in.h:21
-
+#: ../src/evolution-rss.schemas.in.h:23
 msgid "Interval in seconds before a conection is dropped."
 msgstr "ஒரு இணைப்பை கைவிடுமுன் இடைவெளி  (நொடிகளில்)"
 
-#: ../src/evolution-rss.schemas.in.h:22
-
+#: ../src/evolution-rss.schemas.in.h:24
 msgid "It will display article's comments by default if present."
 msgstr "இது முன்னிருப்பாக கட்டுரையின் பின்னூட்டங்கள் இருப்பின் அவற்றையும் காட்டும்."
 
-#: ../src/evolution-rss.schemas.in.h:23
-
+#: ../src/evolution-rss.schemas.in.h:25
 msgid "Java Enabled"
 msgstr "ஜாவா செயலாக்கப்பட்டது"
 
-#: ../src/evolution-rss.schemas.in.h:24
-
+#: ../src/evolution-rss.schemas.in.h:26
 msgid "JavaScript Enabled"
 msgstr "ஜாவாகுறுநிரல் செயலாக்கப்பட்டது"
 
-#: ../src/evolution-rss.schemas.in.h:25
-
+#: ../src/evolution-rss.schemas.in.h:27
 msgid "Network proxy requires authentication."
 msgstr "வலையமைப்பு பதிலாளுக்கு உறுதிபடுத்தல் தேவை."
 
-#: ../src/evolution-rss.schemas.in.h:26
-
+#: ../src/evolution-rss.schemas.in.h:28
 msgid "Network timeout"
 msgstr "வலையமைப்பு காலாவதி"
 
-#: ../src/evolution-rss.schemas.in.h:27
-
+#: ../src/evolution-rss.schemas.in.h:29
 msgid "New articles timeout"
 msgstr "புதிய கட்டுரைகளுக்கு காலாவதி"
 
-#: ../src/evolution-rss.schemas.in.h:28
-
+#: ../src/evolution-rss.schemas.in.h:30
 msgid "Password for proxy server"
 msgstr "பதிலாள் சேவையகத்துக்கு கடவுச்சொல்"
 
-#: ../src/evolution-rss.schemas.in.h:29
-
+#: ../src/evolution-rss.schemas.in.h:31
 msgid "Proxy requires authentication"
 msgstr "பதிலாளுக்கு உறுதிபடுத்தல் தேவை"
 
-#: ../src/evolution-rss.schemas.in.h:30
-
+#: ../src/evolution-rss.schemas.in.h:32
 msgid "Proxy server port"
 msgstr "பதிலாள் சேவையகத்துறை"
 
-#: ../src/evolution-rss.schemas.in.h:31
-
+#: ../src/evolution-rss.schemas.in.h:33
 msgid "Proxy server user"
 msgstr "பதிலாள் சேவையக பயனர்"
 
-#: ../src/evolution-rss.schemas.in.h:32
-
+#: ../src/evolution-rss.schemas.in.h:34
 msgid "Remove feed folder"
 msgstr "தரவு அடைவை நீக்கு"
 
-#: ../src/evolution-rss.schemas.in.h:33
-
+#: ../src/evolution-rss.schemas.in.h:35
 msgid "Show articles comments"
 msgstr "கட்டுரை பின்னூட்டங்களை காட்டு"
 
-#: ../src/evolution-rss.schemas.in.h:34
+#: ../src/evolution-rss.schemas.in.h:36
+#| msgid "The port number for proxy server."
+msgid "The port number for proxy server used for feeds and content."
+msgstr "பதிலாள் சேவையகத்துக்கு துறை எண் ஃபீட் மற்றும் உள்ளடக்கத்திற்கு பயன்படுத்தப்பட்டது"
 
-msgid "The port number for proxy server."
-msgstr "பதிலாள் சேவையகத்துக்கு துறை எண்"
-
-#: ../src/evolution-rss.schemas.in.h:35
-
+#: ../src/evolution-rss.schemas.in.h:37
 msgid "The username to use for proxy server authentication."
 msgstr "பதிலாள் சேவையகத்துக்கு உறுதி படுத்த பயனர் பெயர்."
 
-#: ../src/evolution-rss.schemas.in.h:36
-
+#: ../src/evolution-rss.schemas.in.h:38
 msgid "Type HTML Render used to display html pages."
 msgstr "ஹெச்டிஎம்எல்(HTML) பக்கங்களை காட்ட  பயன்பட்ட ஹெச்டிஎம்எல் வரைவி வகை"
 
-#: ../src/evolution-rss.schemas.in.h:37
-
-msgid "Use a proxy server to fetch articles"
+#: ../src/evolution-rss.schemas.in.h:39
+#| msgid "Use a proxy server to fetch articles"
+msgid "Use a proxy server to fetch articles and content."
 msgstr "கட்டுரைகளை கொணர பதிலாள் சேவையகத்தை பயன்படுத்து"
 
-#: ../src/evolution-rss.schemas.in.h:38
+#: ../src/evolution-rss.schemas.in.h:40
 msgid "Use proxy server"
 msgstr "பதிலாள் சேவையகத்தை பயன்படுத்து"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
-
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
@@ -230,37 +225,34 @@ msgid ""
 msgstr ""
 "எவல்யூஷன் ஆர்எஸ்எஸ் ரீடர் செருகி. \n"
 "\n"
-"இந்த சொருகி  எவொலூஷன் மெய்ல் க்கு ஆர்எஸ்எஸ் தரவு ஆதரவு சேர்க்கிறது. "
-"இந்த ஆதரவு ஏற்கெனெவே எவொலூஷன்-1.4 கிளைக்கு உள்ள ஆர்எஸ்எஸ்  "
-"ஆதரவு மேல் கட்டப்பட்டு உள்ளது. இது ஏனெனில் ஆர்எஸ்எஸ்க்கு அஞ்சல்களுக்கு தரும்"
-" அதே முக்கியத்துவம் தருவது. ஆர்எஸ்எஸ் கட்டுரைகள் அஞ்சல் போலவே இருப்பதால் "
-"அதற்காக தனியாக ஒரு பார்வை மென்பொருள் தேவையில்லை என்று நினைக்கிறேன்.\n"
-"\n" "எவொலூஷன் ஆர்எஸ்எஸ்  கட்டுரைகளை சுருக்கமாயோ அல்லது  ஹெச்டிஎம்எல்(HTML) ஆகவோ காட்ட இயலும். \n"
+"இந்த சொருகி  எவொலூஷன் மெய்ல் க்கு ஆர்எஸ்எஸ் தரவு ஆதரவு சேர்க்கிறது. இந்த ஆதரவு ஏற்கெனெவே "
+"எவொலூஷன்-1.4 கிளைக்கு உள்ள ஆர்எஸ்எஸ்  ஆதரவு மேல் கட்டப்பட்டு உள்ளது. இது ஏனெனில் "
+"ஆர்எஸ்எஸ்க்கு அஞ்சல்களுக்கு தரும் அதே முக்கியத்துவம் தருவது. ஆர்எஸ்எஸ் கட்டுரைகள் அஞ்சல் போலவே "
+"இருப்பதால் அதற்காக தனியாக ஒரு பார்வை மென்பொருள் தேவையில்லை என்று நினைக்கிறேன்.\n"
 "\n"
-"ஹெச்டிஎம்எல் பின்வரும் பொறிகளால் காட்டப்பட முடியும். ஹிடிகே ஹெச்டிஎம்எல்,"
-" ஆப்பிளின் வெப்கிட், அல்லது  பயர்பாக்ஸ்/ கெக்கோ.\n"
+"எவொலூஷன் ஆர்எஸ்எஸ்  கட்டுரைகளை சுருக்கமாயோ அல்லது  ஹெச்டிஎம்எல்(HTML) ஆகவோ காட்ட "
+"இயலும். \n"
+"\n"
+"ஹெச்டிஎம்எல் பின்வரும் பொறிகளால் காட்டப்பட முடியும். ஹிடிகே ஹெச்டிஎம்எல், ஆப்பிளின் "
+"வெப்கிட், அல்லது  பயர்பாக்ஸ்/ கெக்கோ.\n"
 "\n"
 "<b>பதிப்பு: evolution-rss +VERSION+</b>\n"
 "\n"
 "+URL+"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:12
-
 msgid "Size"
 msgstr "அளவு"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
-
 msgid "Delete \"{0}\"?"
 msgstr "\"{0}\" ஐ நீக்கவா? "
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:2
-
 msgid "Reading RSS Feeds..."
 msgstr "ஆர்எஸ்எஸ் தரவுகளை படிக்கிறது..."
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:3
-
 msgid "Really delete feed '{0}' ?"
 msgstr "தரவு '{0}' ஐ நிச்சயம் நீக்கவா?"
 
@@ -269,28 +261,23 @@ msgid "Updating Feeds..."
 msgstr "தரவுகளை இற்றைப்படுத்துகிறது"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
-
 msgid "Setup RSS"
 msgstr "ஆர்எஸ்எஸ் ஐ அமை"
 
 #: ../src/org-gnome-evolution-rss.xml.h:2
-
 msgid "Setup RSS feeds"
 msgstr "ஆர்எஸ்எஸ் தரவுகளை ஐ அமை"
 
 #: ../src/org-gnome-evolution-rss.xml.h:3
-
 msgid "Update RSS feeds"
 msgstr "ஆர்எஸ்எஸ் தரவுகளை ஐ இற்றைப்படுத்து"
 
 #: ../src/org-gnome-evolution-rss.xml.h:4
-
 msgid "_Read RSS"
 msgstr "(_R) ஆர்எஸ்எஸ் ஐ படி"
 
 #: ../src/rss.c:421 ../src/rss.c:2642
 #, c-format
-
 msgid "Fetching Feeds (%d enabled)"
 msgstr "தரவுகளை கொண்டு வருகிறது (%d செயலாக்கியது)"
 
@@ -305,37 +292,33 @@ msgid "Feed"
 msgstr "தரவு"
 
 #: ../src/rss.c:576
-
 msgid "Enter User/Pass for feed"
 msgstr "தரவுக்கு பயனர் /கடவு உள்ளிடு"
 
 #: ../src/rss.c:623
 #, c-format
-
 msgid ""
 "Enter your username and password for:\n"
 " '%s'"
-msgstr "உங்கள் பயனர் பெயர்  மற்றும் கடவுச்சொல் ஐ உள்ளிடு  இவருக்கு:\n"
+msgstr ""
+"உங்கள் பயனர் பெயர்  மற்றும் கடவுச்சொல் ஐ உள்ளிடு  இவருக்கு:\n"
 " '%s'"
-#: ../src/rss.c:640
 
+#: ../src/rss.c:640
 msgid "Username: "
 msgstr "பயனர் பெயர் "
 
 #: ../src/rss.c:662 ../src/rss-ui.glade.h:36
-
 msgid "Password: "
 msgstr "கடவுச்சொல் "
 
 #: ../src/rss.c:700
-
 msgid "_Remember this password"
 msgstr "இந்த கடவுச் சொல்லை நினைவில் கொள்ளவும் (_R)"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
 #: ../src/rss.c:824
-
 msgid "Canceling..."
 msgstr "ரத்து செய்கிறது..."
 
@@ -344,47 +327,38 @@ msgid "Formatting..."
 msgstr "ஒழுங்கு செய்கிறது ..."
 
 #: ../src/rss.c:1462
-
 msgid "_Copy"
 msgstr "(_C) நகலெடு"
 
 #: ../src/rss.c:1464
-
 msgid "Zoom _In"
 msgstr "(_I) அணுகு"
 
 #: ../src/rss.c:1465
-
 msgid "Zoom _Out"
 msgstr "விலகிப்பார்  (_O)"
 
 #: ../src/rss.c:1466
-
 msgid "_Normal Size"
 msgstr "(_N) இயல்பான அளவு"
 
 #: ../src/rss.c:1468
-
 msgid "_Print..."
 msgstr "_P அச்சிடு..."
 
 #: ../src/rss.c:1469
-
 msgid "Save _As"
 msgstr "மறுபெயரில் சேமி (_A)"
 
 #: ../src/rss.c:1471
-
 msgid "_Open Link in Browser"
 msgstr "(_O)இணைப்பை உலாவியில் திற"
 
 #: ../src/rss.c:1472
-
 msgid "_Copy Link Location"
 msgstr "(_C) தொடுப்பு இடத்தை நகலெடு"
 
 #: ../src/rss.c:1509 ../src/rss.c:1553
-
 msgid "Click to open"
 msgstr "திறக்க சொடுக்கு"
 
@@ -393,7 +367,6 @@ msgid "Comments"
 msgstr "பின்னூட்டங்கள்"
 
 #: ../src/rss.c:1706
-
 msgid "Refresh"
 msgstr "புதுப்பி"
 
@@ -402,12 +375,10 @@ msgid "Feed view"
 msgstr "தரவு காட்சி"
 
 #: ../src/rss.c:1731
-
 msgid "Show Summary"
 msgstr "சுருக்கம் காட்டு"
 
 #: ../src/rss.c:1731
-
 msgid "Show Full Text"
 msgstr " முழு உரையும் காட்டு"
 
@@ -420,65 +391,53 @@ msgid "Unamed feed"
 msgstr "பெயரில்லா தரவு"
 
 #: ../src/rss.c:2461 ../src/rss.c:2569
-
 msgid "Error while fetching feed."
 msgstr "தரவை கொணருகையில் பிழை."
 
 #: ../src/rss.c:2569
-
 msgid "Invalid Feed"
 msgstr "செல்லுபடியாகாத தரவு"
 
 #: ../src/rss.c:2580
 #, c-format
-
 msgid "Getting message %d of %d"
 msgstr "%d யில் %d செய்தியை பெறுகிறது"
 
 #: ../src/rss.c:2660
-
 msgid "Complete."
 msgstr "முடிந்தது"
 
 #: ../src/rss.c:2691 ../src/rss.c:2854 ../src/rss.c:2986 ../src/rss.c:3494
-
 msgid "Error fetching feed."
 msgstr "தரவை கொணருகையில் பிழை."
 
 #: ../src/rss.c:2701
-
 msgid "Canceled."
 msgstr "இரத்து செய்யப்பட்டது."
 
 #: ../src/rss.c:2745
-
 msgid "Error while parsing feed."
 msgstr "தரவை அலகிடுகையில் பிழை."
 
 #: ../src/rss.c:2800
-
 msgid "Complete"
 msgstr "முடிந்தது"
 
 #: ../src/rss.c:2887
-
 msgid "Formatting error."
 msgstr "ஒழுங்கு செய்கையில் பிழை."
 
 #: ../src/rss.c:3806 ../src/rss.c:3920
-
 msgid "No RSS feeds configured!"
 msgstr "ஆர்எஸ்எஸ் தரவுகள் ஏதும் அமைக்கப்படவில்லை"
 
 #: ../src/rss.c:3812 ../src/rss.c:4009
-
 msgid "Reading RSS feeds..."
 msgstr "ஆர்எஸ்எஸ் தரவுகள் படிக்கப்படுகின்றன."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
 #: ../src/rss.c:3826 ../src/rss.c:4013 ../src/rss-config-factory.c:1166
 #: ../src/rss-config-factory.c:1514
-
 msgid "Please wait"
 msgstr "தயவு செய்து காத்திருக்கவும்"
 
@@ -489,17 +448,14 @@ msgid "0% done"
 msgstr "0% முடிந்தது"
 
 #: ../src/rss.c:3968
-
 msgid "Waiting..."
 msgstr "காத்திருக்கிறது...."
 
 #: ../src/rss.h:37 ../src/GNOME_Evolution_RSS.server.in.in.h:4
-
 msgid "News and Blogs"
 msgstr "செய்திகள் மற்றும் வலைப்பூக்கள்"
 
 #: ../src/rss.h:39
-
 msgid "Untitled channel"
 msgstr "தலைப்பில்லாத ஓடை"
 
@@ -512,17 +468,14 @@ msgid "WebKit"
 msgstr "வெப்கிட்"
 
 #: ../src/rss-config-factory.c:139
-
 msgid "Mozilla"
 msgstr "மோசில்லா"
 
 #: ../src/rss-config-factory.c:356
-
 msgid "Edit Feed"
 msgstr "தரவை திருத்து"
 
 #: ../src/rss-config-factory.c:358
-
 msgid "Add Feed"
 msgstr "தரவை சேர்"
 
@@ -531,42 +484,34 @@ msgid "Disable"
 msgstr "செயல்நீக்கு"
 
 #: ../src/rss-config-factory.c:884
-
 msgid "Enable"
 msgstr "செயல்படுத்து"
 
 #: ../src/rss-config-factory.c:911 ../src/rss-ui.glade.h:38
-
 msgid "Remove folder contents"
 msgstr "அடைவின் உள்ளடக்கத்தை நீக்கு"
 
 #: ../src/rss-config-factory.c:1162
-
 msgid "Importing feeds..."
 msgstr "தரவுகளை இறக்குமதி செய்கிறது..."
 
 #: ../src/rss-config-factory.c:1316 ../src/rss-config-factory.c:1594
-
 msgid "All Files"
 msgstr "அனைத்து கோப்புகள்"
 
 #: ../src/rss-config-factory.c:1322 ../src/rss-config-factory.c:1600
-
 msgid "OPML Files"
 msgstr "ஓபிஎம்எல் கோப்புகள்"
 
 #: ../src/rss-config-factory.c:1328 ../src/rss-config-factory.c:1606
-
 msgid "XML Files"
 msgstr "XML கோப்புகள்"
 
 #: ../src/rss-config-factory.c:1348
-
 msgid "Show article's summary"
 msgstr "கட்டுரையின் சுருக்கத்தை காட்டு"
 
 #: ../src/rss-config-factory.c:1354
-
 msgid "Feed Enabled"
 msgstr "தரவு செயலாக்கப்பட்டது"
 
@@ -575,12 +520,10 @@ msgid "Validate feed"
 msgstr "தரவை செல்லத்தக்கதாக்கு"
 
 #: ../src/rss-config-factory.c:1395 ../src/rss-ui.glade.h:40
-
 msgid "Select import file"
 msgstr "இறக்குமதி செய்ய கோப்பை தேர்வுசெய்க"
 
 #: ../src/rss-config-factory.c:1432 ../src/rss-ui.glade.h:39
-
 msgid "Select file to export"
 msgstr "ஏற்றுமதி செய்ய கோப்பை தேர்வுசெய்க"
 
@@ -589,58 +532,52 @@ msgid "Exporting feeds..."
 msgstr "தரவுகளை ஏற்றுமதி செய்கிறது..."
 
 #: ../src/rss-config-factory.c:1539
-
 msgid ""
 "A file by that name already exists.\n"
 "Overwrite it?"
-msgstr "அந்த பெயர் ஆல் கோப்பு உள்ளது?\n"
+msgstr ""
+"அந்த பெயர் ஆல் கோப்பு உள்ளது?\n"
 "மேலெழுதவா?"
 
 #: ../src/rss-config-factory.c:1541
-
 msgid "Overwrite file?"
 msgstr "கோப்பை மேலெழுத வேண்டுமா?"
 
 #: ../src/rss-config-factory.c:1560
-
 msgid "Error exporting feeds!"
 msgstr "தரவுகளை ஏற்றுமதி செய்வதில் பிழை!"
 
 #: ../src/rss-config-factory.c:1632
-
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
-msgstr "ஆர்எஸ்எஸ் தரவுகள் ஏதும் அமைக்கப்படவில்லை!\n"
+msgstr ""
+"ஆர்எஸ்எஸ் தரவுகள் ஏதும் அமைக்கப்படவில்லை!\n"
 "ஏற்றுமதி செய்ய முடியவில்லை."
 
 #: ../src/rss-config-factory.c:1727 ../src/rss-config-factory.c:2130
-
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
 "installed and evolution-rss should be recompiled to see those packages."
-msgstr "குறிப்பு: மோசில்லா பயர்பாக்ஸ் அல்லது ஆப்பிள்வெப்கிட் வரைவு  வேண்டுமானால்\n"
+msgstr ""
+"குறிப்பு: மோசில்லா பயர்பாக்ஸ் அல்லது ஆப்பிள்வெப்கிட் வரைவு  வேண்டுமானால்\n"
 " நீங்கள் பயபாக்ஸ் அல்லது வெப்கிட் டெவெல் பொதியை நிறூவி இருக்க வேண்டும். மற்றும் இந்த\n"
 " பொதிகளை காண எவொலூஷன்-ஆர்எஸ்எஸ் ஐ மீண்டும் தொகுக்க வேண்டும்."
 
 #: ../src/rss-config-factory.c:1972 ../src/rss-ui.glade.h:25
-
 msgid "Enabled"
 msgstr "செயலாக்கப்பட்டது"
 
 #: ../src/rss-config-factory.c:1988
-
 msgid "Feed Name"
 msgstr "தரவு பெயர்"
 
 #: ../src/rss-config-factory.c:1998
-
 msgid "Type"
 msgstr "வகை"
 
 #: ../src/rss-html-rendering.glade.h:1
-
 msgid "<b>Article Notification</b>"
 msgstr "<b>கட்டுரை அறிவிப்பு</b>"
 
@@ -649,167 +586,134 @@ msgid "<b>Engine: </b>"
 msgstr "<b>பொறி: </b>"
 
 #: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:4
-
 msgid "<b>HTML Rendering</b>"
 msgstr "<b> ஹெச்டிஎம்எல்(HTML) வரைவு</b>"
 
 #: ../src/rss-html-rendering.glade.h:4
-
 msgid "<b>Network timeout:</b>"
 msgstr "<b> வலையமைப்பு காலாவதி </b>"
 
 #: ../src/rss-html-rendering.glade.h:5
-
 msgid "Accept cookies from sites"
 msgstr "நினைவிகள் ஐ வலையகங்களில் இருந்து ஏற்றுக்கொள்"
 
 #: ../src/rss-html-rendering.glade.h:6
-
 msgid "Blink icon in notification area"
 msgstr "அறிவிப்பு இடத்தில் சின்னத்தை சிமிட்டு"
 
 #: ../src/rss-html-rendering.glade.h:7
-
 msgid "Block pop-up windows"
 msgstr "துள்ளு சாளரங்களை தடுக்கவும்"
 
 #: ../src/rss-html-rendering.glade.h:8
-
 msgid "Enable Java"
 msgstr "ஜாவாவை செயல்படுத்துக"
 
 #: ../src/rss-html-rendering.glade.h:9 ../src/rss-ui.glade.h:23
-
 msgid "Enable JavaScript"
 msgstr "ஜாவாஸ்கிரிப்ட் ஐ செயல்படுத்துக"
 
 #: ../src/rss-html-rendering.glade.h:10
-
 msgid "Import Cookies"
 msgstr "நினைவிகள் ஐ இறக்குமதி செய் "
 
 #: ../src/rss-html-rendering.glade.h:11
-
 msgid "Show feed icon"
 msgstr "தரவு சின்னம் காட்டு"
 
 #: ../src/rss-html-rendering.glade.h:12
-
 msgid "Show icon in notification area"
 msgstr "அறிவிப்பு இடத்தில் சின்னத்தை காட்டு "
 
 #: ../src/rss-html-rendering.glade.h:13
-
 msgid "seconds"
 msgstr "நொடிகள்"
 
 #: ../src/rss-ui.glade.h:1
-
 msgid "<b>Advanced options</b>"
 msgstr "<b> கூடுதல் தேர்வுகள்</b>"
 
 #: ../src/rss-ui.glade.h:2
-
 msgid "<b>Feed Name: </b>"
 msgstr "<b>தரவு பெயர்:</b>"
 
 #: ../src/rss-ui.glade.h:3
-
 msgid "<b>Feed URL:</b>"
 msgstr "<b>தரவு யூஆர்எல்(URL):</b>"
 
 #: ../src/rss-ui.glade.h:5
-
 msgid "<b>Location:</b>"
 msgstr "<b>இடம்:</b>"
 
 #: ../src/rss-ui.glade.h:6
-
 msgid "<span weight=\"bold\">Settings</span>"
 msgstr "<span weight=\"bold\">அமைப்புகள்</span>"
 
 #: ../src/rss-ui.glade.h:7
-
 msgid "Add"
 msgstr "சேர்"
 
 #: ../src/rss-ui.glade.h:8
-
 msgid "Always delete unread articles"
 msgstr "படிக்காத கட்டுரைகளை எப்போதும் நீக்கு"
 
 #: ../src/rss-ui.glade.h:9
-
 msgid "Authentication"
 msgstr "அங்கீகாரம்"
 
 #: ../src/rss-ui.glade.h:10
-
 msgid "By default show article summary instead of webpage"
 msgstr "முன்னிருப்பாக வலைப்பக்கத்தை காட்டாமல் கட்டுரை சுருக்கத்தை மட்டும் காட்டுக"
 
 #: ../src/rss-ui.glade.h:11
-
 msgid "Certificates Table"
 msgstr "சான்றிதழ்கள் அட்டவணை"
 
 #: ../src/rss-ui.glade.h:12
-
 msgid "Check for new articles at startup"
 msgstr "துவங்கும்போது புதிய கட்டுரைகளுக்கு சோதி"
 
 #: ../src/rss-ui.glade.h:13
-
 msgid "Check for new articles every"
 msgstr "புதிய கட்டுரைகளுக்கு இந்த இடைவெளியில் சோதி"
 
 #: ../src/rss-ui.glade.h:14
-
 msgid "Delete all but the last"
 msgstr "கடைசி தவிர அனைத்தும் நீக்கு "
 
 #: ../src/rss-ui.glade.h:15
-
 msgid "Delete articles older than"
 msgstr "இதைவிட பழமையான கட்டுரைகளை நீக்கு"
 
 #: ../src/rss-ui.glade.h:16
-
 msgid "Delete articles that are no longer in the feed"
 msgstr "தரவில் இன்னும் இல்லாத கட்டுரைகளை நீக்கு."
 
 #: ../src/rss-ui.glade.h:17
-
 msgid "Delete feed?"
 msgstr "தரவை நீக்கவா?"
 
 #: ../src/rss-ui.glade.h:18
-
 msgid "Details"
 msgstr "விவரங்கள்"
 
 #: ../src/rss-ui.glade.h:19
-
 msgid "Display only feed summary"
 msgstr "தரவு சுருக்கம் மட்டும் காட்டு"
 
 #: ../src/rss-ui.glade.h:20
-
 msgid "Do no update feed"
 msgstr "தரவு மேம்படுத்தல் செய்யாதே"
 
 #: ../src/rss-ui.glade.h:21
-
 msgid "Do not delete feeds"
 msgstr "தரவுகளை நீக்காதே"
 
 #: ../src/rss-ui.glade.h:22
-
 msgid "Edit"
 msgstr "திருத்து"
 
 #: ../src/rss-ui.glade.h:24
-
 msgid "Enable Plugins"
 msgstr "சொருகுபொருள்களை செயல்படுத்து"
 
@@ -818,7 +722,6 @@ msgid "Engine: "
 msgstr "பொறி:"
 
 #: ../src/rss-ui.glade.h:27
-
 msgid "Export"
 msgstr "ஏற்றுமதி"
 
@@ -827,72 +730,58 @@ msgid "Feeds"
 msgstr "தரவுகள்"
 
 #: ../src/rss-ui.glade.h:29
-
 msgid "General"
 msgstr "பொது"
 
 #: ../src/rss-ui.glade.h:30
-
 msgid "HTML"
 msgstr "ஹெச்டிஎம்எல்(HTML)"
 
 #: ../src/rss-ui.glade.h:31
-
 msgid "HTTP Proxy Details"
 msgstr "HTTP பதிலாள் விவரங்கள்"
 
 #: ../src/rss-ui.glade.h:32
-
 msgid "HTTP proxy:"
 msgstr "ஹெச்டிடிபி பதிலாள்:"
 
 #: ../src/rss-ui.glade.h:33
-
 msgid "Import"
 msgstr "இறக்குமதி செய்"
 
 #: ../src/rss-ui.glade.h:34
-
 msgid "Network"
 msgstr "வலையமைப்பு"
 
 #: ../src/rss-ui.glade.h:35
-
 msgid "No proxy for:"
 msgstr "இவருக்கு பதிலாள் இல்லை:"
 
 #: ../src/rss-ui.glade.h:37
-
 msgid "Port:"
 msgstr "துறை:"
 
 #: ../src/rss-ui.glade.h:41
-
 msgid "Setup"
 msgstr "அமைப்பு"
 
 #: ../src/rss-ui.glade.h:42
-
 msgid "Show article comments"
 msgstr "கட்டுரை  பின்னூட்டங்களை காட்டு"
 
 #: ../src/rss-ui.glade.h:43
-
 msgid "Storage"
 msgstr "கிடங்கு"
 
 #: ../src/rss-ui.glade.h:44
-
 msgid "Update"
 msgstr "இற்றைப்படுத்து"
 
 #: ../src/rss-ui.glade.h:45
-
 msgid "Update in"
 msgstr "இற்றைப்படுத்தும் இடைவெளி."
 
 #: ../src/rss-ui.glade.h:46
-
 msgid "Use Proxy"
 msgstr "பதிலாள்"
 
@@ -905,7 +794,6 @@ msgid "Use global update interval"
 msgstr "பொது இற்றைப்படுத்தும் இடைவெளி ஐ பயன்படுத்து"
 
 #: ../src/rss-ui.glade.h:49
-
 msgid "Username:"
 msgstr "பயனர் பெயர்:"
 
@@ -915,12 +803,10 @@ msgstr "செல்லுபடியாக்கு"
 
 #. for translators: this label is part of the "Delete articles older than X days" message.
 #: ../src/rss-ui.glade.h:52
-
 msgid "days"
 msgstr "நாட்கள்"
 
 #: ../src/rss-ui.glade.h:53
-
 msgid "label"
 msgstr "அடையாள சீட்டு"
 
@@ -931,13 +817,11 @@ msgstr "செய்திகள்"
 
 #. to translators: label part of Check for new articles every X minutes" message
 #: ../src/rss-ui.glade.h:57
-
 msgid "minutes"
 msgstr "நிமிடங்கள்"
 
 #. to translators: message is part of "Update in X minutes"
 #: ../src/rss-ui.glade.h:59
-
 msgid ""
 "minutes\n"
 "hours\n"
@@ -948,22 +832,18 @@ msgstr ""
 "நாட்கள்"
 
 #: ../src/parser.c:918
-
 msgid "No Information"
 msgstr "தகவல் இல்லை"
 
 #: ../src/GNOME_Evolution_RSS.server.in.in.h:1
-
 msgid "Evolution Feeds Control"
 msgstr "எவல்யூஷன் தரவு கட்டுப்பாடு"
 
 #: ../src/GNOME_Evolution_RSS.server.in.in.h:2
-
 msgid "Evolution RSS Reader"
 msgstr "எவல்யூஷன் ஆர்எஸ்எஸ்  ரீடர்"
 
 #: ../src/GNOME_Evolution_RSS.server.in.in.h:3
 msgid "Manage your RDF,RSS,ATOM feeds here"
 msgstr "உங்கள் RDF,RSS,ATOM தரவுகளை இங்கே மேலாளுக"
-
 
