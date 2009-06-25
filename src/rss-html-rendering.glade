@@ -92,7 +92,7 @@
                           <widget class="GtkHBox" id="hbox3">
                             <property name="visible">True</property>
                             <child>
-                              <widget class="GtkCheckButton" id="checkbutton2">
+                              <widget class="GtkCheckButton" id="accept_cookies">
                                 <property name="label" translatable="yes">Accept cookies from sites</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -104,7 +104,7 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="button1">
+                              <widget class="GtkButton" id="import_cookies">
                                 <property name="label" translatable="yes">Import Cookies</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>

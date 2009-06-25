@@ -712,6 +712,7 @@ abort_all_soup(void)
                 rf->b_session = NULL;
                 rf->b_msg_session = NULL;
         }
+	rf->cancel = 0;
         rf->cancel_all = 0;
 }
 
@@ -719,14 +720,22 @@ void
 rss_soup_init(void)
 {
 #if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME) 
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-	gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
-	gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
-	if (!g_file_test(moz_cookie_path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_SYMLINK))
-		symlink(cookie_path, moz_cookie_path);
-           
-	rss_soup_jar = 
-		soup_cookie_jar_sqlite_new (cookie_path, FALSE);
-	g_free(cookie_path);
+	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL)) {
+		gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+		gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
+		gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+		if (!g_file_test(moz_cookie_path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_SYMLINK)) {
+
+			//this currently sux as firefox 3.5b will open
+			//cookie database file exclusively, that means import will fail
+			//even fetch will fail - we should copy this file separately for
+			//gecko renderer
+			symlink(cookie_path, moz_cookie_path);
+		}
+
+		rss_soup_jar = 
+			soup_cookie_jar_sqlite_new (cookie_path, FALSE);
+		g_free(cookie_path);
+	}
 #endif
 }

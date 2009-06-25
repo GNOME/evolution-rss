@@ -173,6 +173,7 @@ typedef struct _rssfeed {
 #define GCONF_KEY_STATUS_ICON "/apps/evolution/evolution-rss/status_icon"
 #define GCONF_KEY_BLINK_ICON "/apps/evolution/evolution-rss/blink_icon"
 #define GCONF_KEY_FEED_ICON "/apps/evolution/evolution-rss/feed_icon"
+#define GCONF_KEY_ACCEPT_COOKIES "/apps/evolution/evolution-rss/accept_cookies"
 
 enum {
 	RSS_FEED,
@@ -311,7 +312,7 @@ void migrate_crc_md5(const char *name, gchar *url);
 void free_cf(create_feed *CF);
 gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
-void update_feed_image(gchar *image, gchar *key);
+void update_feed_image(RDF *r);
 void update_status_icon(const char *channel, gchar *title);
 void
 #if LIBSOUP_VERSION < 2003000

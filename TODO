@@ -25,7 +25,6 @@
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* handle slash categories
 	* use combo popup for moving and placement of feed folders
-	* trigger resync after folder rename and initial folder creation (cmeta update!)
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
 	* perhaps make quoted text fancier
@@ -40,5 +39,9 @@
 	* gtkhtml does not handle script properly
 	* gtkhtml does not handle &#xD; construct
 	* switch webkit -> gecko leeds to crash on pfree()
-	* import/export window resizable
 	* show feed icons in send & receive dialog
+	* folder creation/articles not fetched after adding feed
+	* favicon is not displayed after it is fetched
+	* cancel fetching comments when summary display is changed
+	* detect duplicate items by content not by feedid
+	* sometimes adding feeds is interrupted by rf->cancel signal

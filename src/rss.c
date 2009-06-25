@@ -207,6 +207,8 @@ gboolean browser_fetching = 0; //mycall event could be triggered many times in f
 gint browser_fill = 0;	//how much data currently written to browser
 
 gboolean setup_feed(add_feed *feed);
+gchar *process_feed(RDF *r);
+void display_feed(RDF *r);
 gchar *display_doc (RDF *r);
 gchar *display_comments (RDF *r);
 void check_folders(void);
@@ -2206,7 +2208,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
   		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
 			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         		gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
-        		if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
+//        		if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 					// unfortunately e_icon_factory_get_icon return broken image in case of error
 					// we use gdk_pixbuf_new_from_file to test the validity of the image file
 					pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
@@ -2229,7 +2231,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 						g_object_unref(pixbuf);
 						goto out;
 					}
-			}
+//			}
 		}
 	} else {
 #if (EVOLUTION_VERSION >= 22703)
@@ -2363,10 +2365,9 @@ setup_feed(add_feed *feed)
 	guint ret = 0;
 	guint ttl;
         RDF *r = NULL;
-        GString *post = NULL;
+        GString *post = NULL, *content = NULL;
         GError *err = NULL;
-        GString *content = NULL;
-	gchar *chn_name = NULL;
+	gchar *chn_name = NULL, *tmp_chn_name = NULL;
 
 	check_folders();
 
@@ -2476,7 +2477,12 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
 		r->uri = feed->feed_url;
 		r->progress = feed->progress;
 
-        	chn_name = display_doc (r);
+		//chn_name = display_doc (r);
+		//we preprocess feed first in order to get name, icon, etc
+		//and later display the actual feed (once rf-> structure is
+		//properly populated
+		chn_name = process_feed(r);
+	g_print("add chn_name:%s\n", chn_name);
 add:
 		//feed name can only come from an import so we rather prefer
 		//resulted channel name instead of supplied one
@@ -2487,7 +2493,7 @@ add:
                         chn_name = g_strdup (_(DEFAULT_NO_CHANNEL));
                 //FIXME g_free
 		gchar *tmp = sanitize_folder(chn_name);
-		g_free(chn_name);
+		tmp_chn_name = chn_name;
 		chn_name = tmp;
                	chn_name = generate_safe_chn_name(chn_name);
 		
@@ -2545,7 +2551,13 @@ add:
 		g_hash_table_insert(rf->hrh, 
 			g_strdup(crc_feed), 
 			GINT_TO_POINTER(feed->fetch_html));
+
+
+		display_feed(r);
+
+		g_free(tmp_chn_name);
 		g_free(chn_name);
+
 		if (r->cache)
                 	xmlFreeDoc(r->cache);
         	if (r->type)
@@ -3138,9 +3150,11 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	xmlChar *icon = NULL;
 	gchar *icon_url = NULL;
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, (gchar *)user_data);
+	gchar *url = (gchar *)user_data;
+	gchar *key = gen_md5(url);
+        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+	g_free(key);
         g_free(feed_dir);
-	gchar *url = g_hash_table_lookup(rf->hr, user_data);
 	gchar *urldir = g_path_get_dirname(url);
 	gchar *server = get_server_from_uri(url);
 	rfMessage *rfmsg = g_new0(rfMessage, 1);
@@ -3210,6 +3224,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	g_free(icon_url);
 	g_free(server);
 	g_free(urldir);
+	g_free(user_data);
 }
 
 gboolean
@@ -3234,8 +3249,7 @@ check_update_feed_image(gchar *key)
 		goto out;
 	}
 	if ((f = fopen(fav_file, "r"))) {
-		while (fgets(rfeed, 50, f) != NULL) {
-        	}
+		fgets(rfeed, 50, f);
                	fclose(f);
 		remain = start.tv_sec - strtoul((const char *)&rfeed, NULL, 10);
 		if (FEED_IMAGE_TTL <= remain) {
@@ -3251,12 +3265,13 @@ out:	g_free(fav_file);
 }
 
 void
-update_feed_image(gchar *image, gchar *key)
+update_feed_image(RDF *r)
 {
         GError *err = NULL;
-	gchar *url = NULL;
+	gchar *key = gen_md5(r->uri);
+	gchar *image = r->image;
 	if (!check_update_feed_image(key))
-		return;
+		goto out;
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
@@ -3276,23 +3291,22 @@ update_feed_image(gchar *image, gchar *key)
                 if (err) {
 			g_print("ERR:%s\n", err->message);
                 	g_free(feed_file);
-			return;
+			goto out;
 		}
 	} else {
-		url = g_hash_table_lookup(rf->hr, key);
-		if (!url)
-			return;
-		gchar *server = get_server_from_uri(url);
+		gchar *server = get_server_from_uri(r->uri);
 		fetch_unblocking(
 			server,
 			textcb,
 			NULL,
 			(gpointer)finish_update_feed_image,
-			key,	// we need to dupe key here
+			g_strdup(r->uri),	// we need to dupe key here
 			0,
-			&err);			// because we might lose it if
+			&err);			// because we might loose it if
+						// feeds get deleted
         }
 	}
+out:	g_free(key);
 }
 
 void
@@ -3400,6 +3414,7 @@ void
 rss_delete_feed(gchar *name, gboolean folder)
 {
         CamelException ex;
+	gchar *tmp;
         CamelStore *store = mail_component_peek_local_store(NULL);
         gchar *full_path = g_strdup_printf("%s/%s",
                 lookup_main_folder(),
@@ -3424,6 +3439,12 @@ rss_delete_feed(gchar *name, gboolean folder)
         g_free(feed_dir);
         g_free(buf);
         unlink(feed_name);
+	tmp = g_strdup_printf("%s.img", feed_name);
+        unlink(tmp);
+	g_free(tmp);
+	tmp = g_strdup_printf("%s.fav", feed_name);
+        unlink(tmp);
+	g_free(tmp);
 	if (folder)
 		remove_feed_hash(name);
         save_gconf_feed();
@@ -4669,21 +4690,34 @@ display_comments (RDF *r)
 	return NULL;
 }
 
+gchar *
+process_feed(RDF *r)
+{
+	xmlNodePtr root = xmlDocGetRootElement (r->cache);
+	if (tree_walk (root, r)) {
+		update_feed_image(r);
+		return r->title;
+	}
+	return NULL;
+}
+
+void
+display_feed(RDF *r)
+{
+	r->feedid = update_channel(r);
+	if (r->maindate)
+		g_free(r->maindate);
+	g_array_free(r->item, TRUE);
+	g_free(r->feedid);
+}
 
 gchar *
 display_doc (RDF *r)
 {
-	xmlNodePtr root = xmlDocGetRootElement (r->cache);
-	if (tree_walk (root, r)) {
-		update_feed_image(r->image, gen_md5(r->uri));
-		r->feedid = update_channel(r);
-		if (r->maindate)
-			g_free(r->maindate);
-		g_array_free(r->item, TRUE);
-		g_free(r->feedid);
-		return r->title;
-	}
-	return NULL;
+	gchar *title = NULL;
+	if ((title = process_feed(r)))
+		display_feed(r);
+	return title;
 }
 
 static void

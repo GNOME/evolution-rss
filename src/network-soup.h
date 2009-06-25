@@ -43,3 +43,4 @@ guint save_up(gpointer data);
 guint del_up(gpointer data);
 void rss_soup_init(void);
 EProxy *proxy_init(void);
+guint read_up(gpointer data);
