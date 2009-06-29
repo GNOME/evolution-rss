@@ -36,12 +36,10 @@
 	* feed check runtime validation
 	* wrong send and receive count of articles after import
 	* handle 404 for images in comments
-	* gtkhtml does not handle script properly
+	* gtkhtml does not handle script tag properly
 	* gtkhtml does not handle &#xD; construct
 	* switch webkit -> gecko leeds to crash on pfree()
 	* show feed icons in send & receive dialog
-	* folder creation/articles not fetched after adding feed
 	* favicon is not displayed after it is fetched
 	* cancel fetching comments when summary display is changed
 	* detect duplicate items by content not by feedid
-	* sometimes adding feeds is interrupted by rf->cancel signal

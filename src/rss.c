@@ -240,6 +240,7 @@ guint fallback_engine(void);
 
 gchar *print_comments(gchar *url, gchar *stream);
 static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
+void dup_auth_data(gchar *origurl, gchar *url);
 
 /*======================================================================*/
 
@@ -1730,7 +1731,8 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
 
 	GtkWidget *button = gtk_button_new_with_label(
-				rf->cur_format ? _("Show Summary") : _("Show Full Text"));
+				rf->cur_format ? _("Show Summary") :
+						 _("Show Full Text"));
 
 	gtk_button_set_image (
                 GTK_BUTTON (button),
@@ -1992,9 +1994,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                 if (category)
                         camel_stream_printf(fstream,
                                 "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-                                "<b><font size=-1>Posted under: %s</font></b></div>",
+                                "<b><font size=-1>%s: %s</font></b></div>",
                                 content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-                                category);
+                                _("Posted under"), category);
                 camel_stream_printf (fstream, 
 				"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                                 "%s</div>",
@@ -3187,8 +3189,9 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 		else
 			icon_url = (char *)icon;
 
+		dup_auth_data(url, g_strdup(icon_url));
 		fetch_unblocking(
-			icon_url,
+			g_strdup(icon_url),
 			textcb,
 			NULL,
 			(gpointer)finish_create_image,
@@ -3199,8 +3202,9 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	} else {
                 //              r->image = NULL;
 		icon_url = g_strconcat(urldir, "/favicon.ico", NULL);
+		dup_auth_data(url, g_strdup(icon_url));
 		fetch_unblocking(
-				icon_url,
+				g_strdup(icon_url),
 				textcb,
 				NULL,
 				(gpointer)finish_create_image,
@@ -3210,8 +3214,9 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 				NULL);
 		g_free(icon_url);
 		icon_url = g_strconcat(server, "/favicon.ico", NULL);
+		dup_auth_data(url, g_strdup(icon_url));
 		fetch_unblocking(
-				icon_url,
+				g_strdup(icon_url),
 				textcb,
 				NULL,
 				(gpointer)finish_create_image,
@@ -3265,6 +3270,17 @@ out:	g_free(fav_file);
 }
 
 void
+dup_auth_data(gchar *origurl, gchar *url)
+{
+	gchar *user = g_hash_table_lookup(rf->hruser, origurl);
+        gchar *pass = g_hash_table_lookup(rf->hrpass, origurl);
+	if (user && pass) {
+		g_hash_table_insert(rf->hruser, url, g_strdup(user));
+		g_hash_table_insert(rf->hrpass, url, g_strdup(pass));
+	}
+}
+
+void
 update_feed_image(RDF *r)
 {
         GError *err = NULL;
@@ -3281,6 +3297,7 @@ update_feed_image(RDF *r)
 	if (image) {		//we need to validate image here with load_pixbuf
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
 			O_RDWR|O_CREAT, 0666);
+		dup_auth_data(r->uri, image);
                 fetch_unblocking(image,
                                 textcb,
                                 NULL,
@@ -3295,6 +3312,8 @@ update_feed_image(RDF *r)
 		}
 	} else {
 		gchar *server = get_server_from_uri(r->uri);
+		//authentication data might be different
+		dup_auth_data(r->uri, server);
 		fetch_unblocking(
 			server,
 			textcb,
@@ -4124,7 +4143,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-		textdomain (GETTEXT_PACKAGE);
+	//	textdomain (GETTEXT_PACKAGE);
 		rss_gconf = gconf_client_get_default();
 		upgrade = 1;
 		char *d;

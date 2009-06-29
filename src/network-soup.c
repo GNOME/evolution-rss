@@ -275,8 +275,7 @@ read_up(gpointer data)
 	g_free(feed_dir);
 
 	FILE *fr = fopen(feed_name, "r");
-	if (fr)
-	{
+	if (fr) {
         	fgets(rfeed, 511, fr);
         	g_hash_table_insert(rf->hruser, data, g_strstrip(g_strdup(rfeed)));
         	fgets(rfeed, 511, fr);
