@@ -891,7 +891,10 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		else
 	               	b = g_strdup(layer_find (top, "description",
 				layer_find (top, "content",
-				layer_find (top, "summary", "No information"))));
+				layer_find (top, "summary", NULL))));
+
+		if (!b || !strlen(b))
+			b = g_strdup(_("No information"));
 
                 char *d = layer_find (top, "pubDate", NULL);
 		//date in dc module format
