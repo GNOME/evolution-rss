@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=evolution-rss&component=general\n"
 "POT-Creation-Date: 2009-06-29 08:44+0000\n"
-"PO-Revision-Date: 2009-06-29 16:31+0530\n"
+"PO-Revision-Date: 2009-06-30 13:21+0530\n"
 "Last-Translator: Amitakhya Phukan <aphukan@fedoraproject.org>\n"
 "Language-Team: Assamese <fedora-trans-as@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -567,6 +567,10 @@ msgid ""
 "as renders you need firefox or webkit devel package \n"
 "installed and evolution-rss should be recompiled to see those packages."
 msgstr ""
+"মন কৰিব: Mozilla (Firefox) বা Apple Webkit ব্যৱহাৰ কৰিব পৰা হ'লে\n"
+"ৰেণ্ডাৰ কৰা মতে আপোনাক firefox বা webkit বিকাশৰ সৰঞ্জামৰ সংস্থাপিত হোৱাৰ "
+"প্ৰয়োজন \n"
+"আৰু evolution-rss ক সেই সৰঞ্জাম চাবলৈ পুনঃ সঙ্কলণ কৰিব লাগিব ।"
 
 #: ../src/rss-config-factory.c:2177 ../src/rss-ui.glade.h:25
 msgid "Enabled"
@@ -662,166 +666,166 @@ msgstr "নপঢ়া প্ৰবন্ধ সদায়ে আঁতৰাব"
 
 #: ../src/rss-ui.glade.h:9
 msgid "Authentication"
-msgstr ""
+msgstr "অনুমোদন"
 
 #: ../src/rss-ui.glade.h:10
 msgid "By default show article summary instead of webpage"
-msgstr ""
+msgstr "অবিকল্পিতৰূপে ৱেবপৃষ্ঠাৰ সলনি প্ৰবন্ধৰ সাৰাংশ দেখুৱাওক"
 
 #: ../src/rss-ui.glade.h:11
 msgid "Certificates Table"
-msgstr ""
+msgstr "প্ৰমাণপত্ৰৰ টেবুল"
 
 #: ../src/rss-ui.glade.h:12
 msgid "Check for new articles at startup"
-msgstr ""
+msgstr "আৰম্ভণিত নতুন প্ৰবন্ধ পৰীক্ষা কৰিব"
 
 #: ../src/rss-ui.glade.h:13
 msgid "Check for new articles every"
-msgstr ""
+msgstr "ইয়াৰ প্ৰত্যেকতে নতুন প্ৰবন্ধ পৰীক্ষা কৰক"
 
 #: ../src/rss-ui.glade.h:14
 msgid "Delete all but the last"
-msgstr ""
+msgstr "শেষৰটো এৰি সকলো আঁতৰাওক"
 
 #: ../src/rss-ui.glade.h:15
 msgid "Delete articles older than"
-msgstr ""
+msgstr "ইয়াতকৈ পুৰণি প্ৰবন্ধ আঁতৰাওক"
 
 #: ../src/rss-ui.glade.h:16
 msgid "Delete articles that are no longer in the feed"
-msgstr ""
+msgstr "ফীড আৰু নথকা প্ৰবন্ধ আঁতৰাওক"
 
 #: ../src/rss-ui.glade.h:17
 msgid "Delete feed?"
-msgstr ""
+msgstr "ফীড আঁতৰাওক ?"
 
 #: ../src/rss-ui.glade.h:18
 msgid "Details"
-msgstr ""
+msgstr "বিৱৰণ"
 
 #: ../src/rss-ui.glade.h:19
 msgid "Display only feed summary"
-msgstr ""
+msgstr "অকল ফীডৰ সাৰাংশ দেখুৱাওক"
 
 #: ../src/rss-ui.glade.h:20
 msgid "Do no update feed"
-msgstr ""
+msgstr "ফীড উন্নত নকৰিব"
 
 #: ../src/rss-ui.glade.h:21
 msgid "Do not delete feeds"
-msgstr ""
+msgstr "ফীড আঁতৰাই নিদিব"
 
 #: ../src/rss-ui.glade.h:22
 msgid "Edit"
-msgstr ""
+msgstr "সম্পাদন"
 
 #: ../src/rss-ui.glade.h:24
 msgid "Enable Plugins"
-msgstr ""
+msgstr "প্লাগ-ইন সক্ৰিয় কৰক"
 
 #: ../src/rss-ui.glade.h:26
 msgid "Engine: "
-msgstr ""
+msgstr "কলঘৰ:"
 
 #: ../src/rss-ui.glade.h:27
 msgid "Export"
-msgstr ""
+msgstr "ৰপ্তানি"
 
 #: ../src/rss-ui.glade.h:28
 msgid "Feeds"
-msgstr ""
+msgstr "ফীডসমূহ"
 
 #: ../src/rss-ui.glade.h:29
 msgid "General"
-msgstr "<b>সাধাৰণ</b>"
+msgstr "সাধাৰণ"
 
 #: ../src/rss-ui.glade.h:30
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #: ../src/rss-ui.glade.h:31
 msgid "HTTP Proxy Details"
-msgstr ""
+msgstr "HTTP নিযুক্তকৰ বিৱৰণ"
 
 #: ../src/rss-ui.glade.h:32
 msgid "HTTP proxy:"
-msgstr ""
+msgstr "HTTP নিযুক্তক:"
 
 #: ../src/rss-ui.glade.h:33
 msgid "Import"
-msgstr ""
+msgstr "আমদানি"
 
 #: ../src/rss-ui.glade.h:34
 msgid "Network"
-msgstr ""
+msgstr "নে'টৱৰ্ক"
 
 #: ../src/rss-ui.glade.h:35
 msgid "No proxy for:"
-msgstr ""
+msgstr "ইয়াৰ কাৰণে নিযুক্তক নাই:"
 
 #: ../src/rss-ui.glade.h:37
 msgid "Port:"
-msgstr ""
+msgstr "প'ৰ্ট:"
 
 #: ../src/rss-ui.glade.h:41
 msgid "Setup"
-msgstr ""
+msgstr "প্ৰতিষ্ঠা"
 
 #: ../src/rss-ui.glade.h:42
 msgid "Show article comments"
-msgstr ""
+msgstr "প্ৰবন্ধৰ মন্তব্য দেখুৱাওক"
 
 #: ../src/rss-ui.glade.h:43
 msgid "Storage"
-msgstr ""
+msgstr "ভঁৰাল"
 
 #: ../src/rss-ui.glade.h:44
 msgid "Update"
-msgstr ""
+msgstr "উন্নয়ন"
 
 #: ../src/rss-ui.glade.h:45
 msgid "Update in"
-msgstr ""
+msgstr "ইয়াত উন্নত কৰক"
 
 #: ../src/rss-ui.glade.h:46
 msgid "Use Proxy"
-msgstr ""
+msgstr "নিযুক্তক ব্যৱহাৰ কৰক"
 
 #: ../src/rss-ui.glade.h:47
 msgid "Use authentication"
-msgstr ""
+msgstr "প্ৰমাণীকৰণ ব্যৱহাৰ কৰক"
 
 #: ../src/rss-ui.glade.h:48
 msgid "Use global update interval"
-msgstr ""
+msgstr "সৰ্বব্যাপী উন্নয়নৰ সময় ব্যৱহাৰ কৰক"
 
 #: ../src/rss-ui.glade.h:49
 msgid "Username:"
-msgstr ""
+msgstr "ব্যৱহাৰকৰ্তাৰ নাম:"
 
 #: ../src/rss-ui.glade.h:50
 msgid "Validate"
-msgstr ""
+msgstr "বৈধ কৰক"
 
 #. for translators: this label is part of the "Delete articles older than X days" message.
 #: ../src/rss-ui.glade.h:52
 msgid "days"
-msgstr ""
+msgstr "দিন"
 
 #: ../src/rss-ui.glade.h:53
 msgid "label"
-msgstr ""
+msgstr "লেবেল"
 
 #. To translators: this label is part of the following message: "Delete all but the last X messages.
 #: ../src/rss-ui.glade.h:55
 msgid "messages"
-msgstr ""
+msgstr "সম্বাদসমূহ"
 
 #. to translators: label part of Check for new articles every X minutes" message
 #: ../src/rss-ui.glade.h:57
 msgid "minutes"
-msgstr ""
+msgstr "মিনিট"
 
 #. to translators: message is part of "Update in X minutes"
 #: ../src/rss-ui.glade.h:59
@@ -830,21 +834,24 @@ msgid ""
 "hours\n"
 "days"
 msgstr ""
+"মিনিট\n"
+"ঘন্টা\n"
+"দিন"
 
 #: ../src/parser.c:918
 msgid "No Information"
-msgstr ""
+msgstr "কোনো তথ্য নাই"
 
 #: ../src/GNOME_Evolution_RSS.server.in.in.h:1
 msgid "Evolution Feeds Control"
-msgstr ""
+msgstr "Evolution Feeds Control"
 
 #: ../src/GNOME_Evolution_RSS.server.in.in.h:2
 msgid "Evolution RSS Reader"
-msgstr ""
+msgstr "Evolution RSS Reader"
 
 #: ../src/GNOME_Evolution_RSS.server.in.in.h:3
 msgid "Manage your RDF,RSS,ATOM feeds here"
-msgstr ""
+msgstr "আপোনাৰ RDF,RSS,ATOM ফীডক ইয়াত পৰিচালিত কৰক"
 
 
