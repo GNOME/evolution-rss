@@ -584,7 +584,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
         gtk_dialog_set_default_response (
                 GTK_DIALOG (widget), GTK_RESPONSE_OK);
         gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
-//        gtk_window_set_transient_for (GTK_WINDOW (widget), msg->parent);
+        gtk_window_set_transient_for (GTK_WINDOW (widget), widget->parent);
         gtk_window_set_position (GTK_WINDOW (widget), GTK_WIN_POS_CENTER_ON_PARENT);
         gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
         GtkWidget *password_dialog = GTK_WIDGET (widget);
@@ -752,14 +752,14 @@ web_auth_dialog(gchar *url)
 		else
 			del_up(url);
 	
-        	gtk_widget_destroy (GTK_WIDGET(dialog));
 		resp = 0;
         	break;
     	default:
-        	gtk_widget_destroy (GTK_WIDGET(dialog));
+		g_print("destroy\n");
 		resp = 1;
         	break;
 	}
+       	gtk_widget_destroy (GTK_WIDGET(dialog));
 	g_free(auth_info);
 	return resp;
 }
@@ -2484,7 +2484,6 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
 		//and later display the actual feed (once rf-> structure is
 		//properly populated
 		chn_name = process_feed(r);
-	g_print("add chn_name:%s\n", chn_name);
 add:
 		//feed name can only come from an import so we rather prefer
 		//resulted channel name instead of supplied one
@@ -2494,9 +2493,9 @@ add:
                 if (chn_name == NULL)
                         chn_name = g_strdup (_(DEFAULT_NO_CHANNEL));
                 //FIXME g_free
-		gchar *tmp = sanitize_folder(chn_name);
 		tmp_chn_name = chn_name;
-		chn_name = tmp;
+		chn_name = sanitize_folder(chn_name);
+		g_free(chn_name);
                	chn_name = generate_safe_chn_name(chn_name);
 		
 		gpointer crc_feed = gen_md5(feed->feed_url);
@@ -2745,6 +2744,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	GString *response = g_string_new_len(msg->body, msg->length);
 
 	g_print("feed %s\n", (gchar *)user_data);
+	goto out;
 
 	while (gtk_events_pending ())
             gtk_main_iteration ();
@@ -2880,7 +2880,7 @@ fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	//exclude feeds that have special update interval or 
 	//no update at all
 	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) >= 2
-	&& !force_update)
+		&& !force_update)
 		return 0;
 
 	return fetch_one_feed(key, value, user_data);

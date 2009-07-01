@@ -1639,7 +1639,7 @@ import_cookies(gchar *file)
 	SoupCookieJar *jar = NULL;
 	gchar header[16];
 	memset(header, 0, 16);
-	g_print("import cookies from %s\n", file);
+	d(g_print("import cookies from %s\n", file));
 	FILE *f = fopen(file, "r");
 	if (f) {
 		fgets(header, 16, f);
@@ -1699,6 +1699,8 @@ process_cookies(SoupCookieJar *jar)
 	//reset cancel signal
 	rf->cancel = 0;
 	gtk_widget_destroy(import_dialog);
+	//copy gecko data over (gecko will open database locked exclusively)
+	sync_gecko_cookies();
 }
 
 static void

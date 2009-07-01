@@ -239,9 +239,9 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
 			if (proxy_uri)
-				g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+				d(g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port));
 		} else 
-			g_print("no PROXY-%s\n", uri);
+			d(g_print("no PROXY-%s\n", uri));
 		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 		break;
 
@@ -716,6 +716,28 @@ abort_all_soup(void)
 }
 
 void
+sync_gecko_cookies(void)
+{
+	//this currently sux as firefox 3.5b will open
+	//cookie database file exclusively, that means import will fail
+	//even fetch will fail - we should copy this file separately for
+	//gecko renderer
+	//symlink(cookie_path, moz_cookie_path);
+	GFile *cookie_file, *moz_cookie_file;
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
+	gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+
+	cookie_file = g_file_new_for_path (cookie_path);
+	moz_cookie_file = g_file_new_for_path (moz_cookie_path);
+	g_file_copy(cookie_file, moz_cookie_file, 
+			G_FILE_COPY_OVERWRITE,
+			NULL, NULL, NULL, NULL);
+	g_free(cookie_path);
+	g_free(moz_cookie_path);
+}
+
+void
 rss_soup_init(void)
 {
 #if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME) 
@@ -723,18 +745,15 @@ rss_soup_init(void)
 		gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 		gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
 		gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
-		if (!g_file_test(moz_cookie_path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_SYMLINK)) {
-
-			//this currently sux as firefox 3.5b will open
-			//cookie database file exclusively, that means import will fail
-			//even fetch will fail - we should copy this file separately for
-			//gecko renderer
-			symlink(cookie_path, moz_cookie_path);
-		}
 
 		rss_soup_jar = 
 			soup_cookie_jar_sqlite_new (cookie_path, FALSE);
+
+		if (!g_file_test(moz_cookie_path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_SYMLINK)) {
+			sync_gecko_cookies();
+		}
 		g_free(cookie_path);
+		g_free(moz_cookie_path);
 	}
 #endif
 }
