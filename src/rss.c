@@ -2744,7 +2744,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	GString *response = g_string_new_len(msg->body, msg->length);
 
 	g_print("feed %s\n", (gchar *)user_data);
-	goto out;
 
 	while (gtk_events_pending ())
             gtk_main_iteration ();
