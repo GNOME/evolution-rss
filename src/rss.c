@@ -561,6 +561,46 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
     }
 }
 
+void
+user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
+{
+	gchar *user = NULL, *pass = NULL;
+	switch (response) {
+        case GTK_RESPONSE_OK:
+                if (auth_info->user)
+                    g_hash_table_remove(rf->hruser, auth_info->url);
+
+                g_hash_table_insert(rf->hruser, auth_info->url,
+                        g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->username))));
+
+                if (auth_info->pass)
+                        g_hash_table_remove(rf->hrpass, auth_info->url);
+
+                g_hash_table_insert(rf->hrpass, auth_info->url,
+                        g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->password))));
+
+                if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auth_info->rememberpass)))
+                        save_up(auth_info->url);
+                else
+                        del_up(auth_info->url);
+
+		rf->soup_auth_retry = FALSE;
+		auth_info->user = g_hash_table_lookup(rf->hruser, auth_info->url);
+		auth_info->pass = g_hash_table_lookup(rf->hrpass, auth_info->url);
+        	if (!auth_info->retrying)
+                	soup_auth_authenticate (auth_info->soup_auth, 
+					auth_info->user,
+					auth_info->pass);
+                break;
+        default:
+		rf->soup_auth_retry = TRUE;
+                break;
+        }
+	soup_session_unpause_message(auth_info->session, auth_info->message);
+	gtk_widget_destroy(dialog);
+        g_free(auth_info);
+
+}
 
 GtkDialog *
 create_user_pass_dialog(RSS_AUTH *auth)
@@ -584,7 +624,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
         gtk_dialog_set_default_response (
                 GTK_DIALOG (widget), GTK_RESPONSE_OK);
         gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
-        gtk_window_set_transient_for (GTK_WINDOW (widget), widget->parent);
+//        gtk_window_set_transient_for (GTK_WINDOW (widget), widget->parent);
         gtk_window_set_position (GTK_WINDOW (widget), GTK_WIN_POS_CENTER_ON_PARENT);
         gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
         GtkWidget *password_dialog = GTK_WIDGET (widget);
@@ -713,11 +753,12 @@ create_user_pass_dialog(RSS_AUTH *auth)
                         GTK_TABLE (container), checkbutton1,
                         1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
 
+	gtk_widget_show_all(password_dialog);
 	return GTK_DIALOG(password_dialog);
 }
 
-gboolean
-web_auth_dialog(gchar *url)
+void
+web_auth_dialog(RSS_AUTH *auth_info)
 {
 	GtkDialog *dialog;
 	guint resp;
@@ -727,41 +768,13 @@ web_auth_dialog(gchar *url)
 	if (!rf->hrpass)
 		rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
 
-	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
-	auth_info->user = g_hash_table_lookup(rf->hruser, url);
-	auth_info->pass = g_hash_table_lookup(rf->hruser, url);
-	auth_info->url = url;
+	auth_info->user = g_hash_table_lookup(rf->hruser, auth_info->url);
+	auth_info->pass = g_hash_table_lookup(rf->hruser, auth_info->url);
 	dialog = create_user_pass_dialog(auth_info);
-	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
-	switch (result) {
-	case GTK_RESPONSE_OK:
-        	if (auth_info->user)
-        	    g_hash_table_remove(rf->hruser, url);
-
-        	g_hash_table_insert(rf->hruser, url, 
-			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->username))));
-
-        	if (auth_info->pass)
-            		g_hash_table_remove(rf->hrpass, url);
-
-        	g_hash_table_insert(rf->hrpass, url, 
-			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->password))));
-
-		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auth_info->rememberpass)))
-			save_up(url);
-		else
-			del_up(url);
-	
-		resp = 0;
-        	break;
-    	default:
-		g_print("destroy\n");
-		resp = 1;
-        	break;
-	}
-       	gtk_widget_destroy (GTK_WIDGET(dialog));
-	g_free(auth_info);
-	return resp;
+	g_signal_connect_swapped (dialog,
+                             "response",
+                             G_CALLBACK (user_pass_cb),
+                             auth_info);
 }
 
 gboolean

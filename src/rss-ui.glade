@@ -947,9 +947,9 @@
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <property name="local_only">False</property>
-    <property name="action">save</property>
     <property name="show_hidden">True</property>
+    <property name="action">save</property>
+    <property name="local_only">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="vbox26">
         <property name="visible">True</property>
@@ -1479,7 +1479,7 @@ days</property>
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <widget class="GtkCheckButton" id="proxy_auth">
+                              <widget class="GtkCheckButton" id="use_auth">
                                 <property name="label" translatable="yes">Use authentication</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>

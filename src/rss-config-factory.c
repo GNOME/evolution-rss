@@ -347,6 +347,17 @@ del_messages_cb (GtkWidget *widget, add_feed *data)
         data->del_messages = adj;
 }
 
+void
+disable_widget_cb(GtkWidget *widget, GladeXML *data)
+{
+	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (data, "auth_user");
+	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (data, "auth_pass");
+	GtkWidget *useauth = (GtkWidget *)glade_xml_get_widget (data, "use_auth");
+	gboolean auth_enabled = gtk_toggle_button_get_active(useauth);
+
+	gtk_widget_set_sensitive(authuser, auth_enabled);
+	gtk_widget_set_sensitive(authpass, auth_enabled);
+}
 
 add_feed *
 build_dialog_add(gchar *url, gchar *feed_text)
@@ -514,12 +525,17 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (gui, "auth_user");
 	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (gui, "auth_pass");
+	GtkWidget *useauth = (GtkWidget *)glade_xml_get_widget (gui, "use_auth");
 
-	if (url) {
-		read_up(url);
+	if (url && read_up(url)) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (useauth), 1);
 		gtk_entry_set_text(GTK_ENTRY(authuser), g_hash_table_lookup(rf->hruser, url));
 		gtk_entry_set_text(GTK_ENTRY(authpass), g_hash_table_lookup(rf->hrpass, url));
 	}
+	gboolean auth_enabled = gtk_toggle_button_get_active(useauth);
+	gtk_widget_set_sensitive(authuser, auth_enabled);
+	gtk_widget_set_sensitive(authpass, auth_enabled);
+	g_signal_connect(useauth, "toggled", G_CALLBACK(disable_widget_cb), gui);
 
 	GtkWidget *ok = (GtkWidget *)glade_xml_get_widget (gui, "ok_button");
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
@@ -2040,9 +2056,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
         fhtml = gtk_toggle_button_get_active (
                         GTK_TOGGLE_BUTTON (checkbutton1));
-                fhtml ^= 1;
-                feed->fetch_html = fhtml;
-                feed->enabled = gtk_toggle_button_get_active(
+	fhtml ^= 1;
+        feed->fetch_html = fhtml;
+	feed->enabled = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(checkbutton2));
                 feed->validate = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(checkbutton3));
@@ -2092,6 +2108,29 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 		else
 			feed->renamed = 1;
 		process_dialog_edit(feed, url, ofolder);
+	   
+	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_user");
+	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_pass");
+	GtkWidget *useauth = (GtkWidget *)glade_xml_get_widget (feed->gui, "use_auth");
+	
+	gchar *user = gtk_entry_get_text(GTK_ENTRY(authuser));
+	gchar *pass = gtk_entry_get_text(GTK_ENTRY(authpass));
+	gboolean auth_enabled = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (useauth));
+
+	if (user)
+		g_hash_table_remove(rf->hruser, url);
+
+        if (pass)
+		g_hash_table_remove(rf->hrpass, url);
+
+	if (auth_enabled) {
+		g_hash_table_insert(rf->hruser, url, 
+			g_strdup(gtk_entry_get_text (GTK_ENTRY (authuser))));
+		g_hash_table_insert(rf->hrpass, url, 
+			g_strdup(gtk_entry_get_text (GTK_ENTRY (authpass))));
+		save_up(url);
+	} else
+		del_up(url);
 }
 
 GtkWidget *

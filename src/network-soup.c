@@ -383,10 +383,17 @@ authenticate (SoupSession *session,
 		//won't try again
 		rf->soup_auth_retry = FALSE;
 		if (!read_up(data)) {
-			if (web_auth_dialog(data))
-				rf->soup_auth_retry = FALSE;
-			else
-				rf->soup_auth_retry = TRUE;
+			//we will continue after user has made a decision on 
+			//web auth dialog
+			soup_session_pause_message(session, msg);
+			RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
+			auth_info->url = data;
+			auth_info->soup_auth = auth;
+			auth_info->retrying = retrying;
+			auth_info->session = session;
+			auth_info->message = msg;
+			web_auth_dialog(auth_info);
+			return;
 		}
 #if LIBSOUP_VERSION < 2003000
 		*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
