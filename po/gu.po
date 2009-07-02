@@ -1,4 +1,4 @@
-# translation of evolution-rss.po.master.gu.po to Gujarati
+# translation of evolution-rss.master.gu.po to Gujarati
 # Gujarati translation of evolution-rss.
 # Copyright (C) 2009 evolution-rss's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evolution-rss package.
@@ -6,10 +6,10 @@
 # Sweta Kothari <swkothar@redhat.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: evolution-rss.po.master.gu\n"
+"Project-Id-Version: evolution-rss.master.gu\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2009-06-28 18:17+0000\n"
-"PO-Revision-Date: 2009-06-29 14:12+0530\n"
+"POT-Creation-Date: 2009-06-29 19:44+0000\n"
+"PO-Revision-Date: 2009-07-02 15:41+0530\n"
 "Last-Translator: Sweta Kothari <swkothar@redhat.com>\n"
 "Language-Team: Gujarati\n"
 "MIME-Version: 1.0\n"
@@ -214,6 +214,21 @@ msgid ""
 "\n"
 "+URL+"
 msgstr ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"આ પ્લગઇન એ ઇવોલ્યુશન મેઇલ માટે RSS ફીડોને ઉમેરે છે. RSS આધાર એ evolution-1.4 "
+"બ્રાન્ચમાં હાલનાં RSS આધાર ઉપર બિલ્ટ કરતુ હતુ. આની પાછળ પ્રેરણા એ છે કે આ મેઇલો તરીકે "
+"અમુક સ્થાનમાં RSS હતુ, આ સમયે હું RSS રેન્ડરને અલગ કરવાનાં મુદ્દાને જોતી નથી જ્યાં સુધી "
+"RSS લેખ એ ઇમેઇલ સંદેશ જેવુ છે.\n"
+"\n"
+"Evolution RSS એ સારાંશ દ્રશ્ય અથવા HTML દ્રશ્યની મદદથી લેખને દર્શાવી શકે છે. \n"
+"\n"
+"HTML એ નીચેનાં એંજિનોની મદદથી દર્શાવી શકાય છે: gtkHTML, Apple નું Webkit "
+"અથવા Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:12
 msgid "Size"
@@ -251,26 +266,26 @@ msgstr "RSS ફીડોને સુધારો"
 msgid "_Read RSS"
 msgstr "RSS ને વાંચો (_R)"
 
-#: ../src/rss.c:423 ../src/rss.c:2654
+#: ../src/rss.c:424 ../src/rss.c:2656
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "ફીડોને લાવી રહ્યા છે (%d નિષ્ક્રિય થયેલ)"
 
-#: ../src/rss.c:459 ../src/rss-config-factory.c:1275
+#: ../src/rss.c:460 ../src/rss-config-factory.c:1275
 #: ../src/rss-config-factory.c:1560 ../src/rss-config-factory.c:1665
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% પૂરુ થયુ"
 
-#: ../src/rss.c:469 ../src/rss.c:2804
+#: ../src/rss.c:470 ../src/rss.c:2806
 msgid "Feed"
 msgstr "ફીડ"
 
-#: ../src/rss.c:578
+#: ../src/rss.c:579
 msgid "Enter User/Pass for feed"
 msgstr "ફીડ માટે વપાશકર્તા/પાસવર્ડને દાખલ કરો"
 
-#: ../src/rss.c:625
+#: ../src/rss.c:626
 #, c-format
 msgid ""
 "Enter your username and password for:\n"
@@ -279,150 +294,154 @@ msgstr ""
 "તેની માટે વપરાશકર્તા નામ અને પાસવર્ડને દાખલ કરો:\n"
 " '%s'"
 
-#: ../src/rss.c:642
+#: ../src/rss.c:643
 msgid "Username: "
 msgstr "વપરાશકર્તા નામ: "
 
-#: ../src/rss.c:664 ../src/rss-ui.glade.h:36
+#: ../src/rss.c:665 ../src/rss-ui.glade.h:36
 msgid "Password: "
 msgstr "પાસવર્ડ: "
 
-#: ../src/rss.c:702
+#: ../src/rss.c:703
 msgid "_Remember this password"
 msgstr "આ પાસવર્ડને યાદ રાખો (_R)"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:826
+#: ../src/rss.c:827
 msgid "Canceling..."
 msgstr "રદ કરી રહ્યા છે..."
 
-#: ../src/rss.c:1351
+#: ../src/rss.c:1352
 msgid "Formatting..."
 msgstr "બંધારણ કરી રહ્યા છે..."
 
-#: ../src/rss.c:1464
+#: ../src/rss.c:1465
 msgid "_Copy"
 msgstr "નકલ કરો (_C)"
 
-#: ../src/rss.c:1466
+#: ../src/rss.c:1467
 msgid "Zoom _In"
 msgstr "મોટુ કરો (_I)"
 
-#: ../src/rss.c:1467
+#: ../src/rss.c:1468
 msgid "Zoom _Out"
 msgstr "નાનું કરો (_O)"
 
-#: ../src/rss.c:1468
+#: ../src/rss.c:1469
 msgid "_Normal Size"
 msgstr "સામાન્ય માપ (_N)"
 
-#: ../src/rss.c:1470
+#: ../src/rss.c:1471
 msgid "_Print..."
 msgstr "છાપો (_P)..."
 
-#: ../src/rss.c:1471
+#: ../src/rss.c:1472
 msgid "Save _As"
 msgstr "આ તરીકે સંગ્રહો (_A)"
 
-#: ../src/rss.c:1473
+#: ../src/rss.c:1474
 msgid "_Open Link in Browser"
 msgstr "બ્રાઉઝરમાં કડીને ખોલો (_O)"
 
-#: ../src/rss.c:1474
+#: ../src/rss.c:1475
 msgid "_Copy Link Location"
 msgstr "કડી સ્થાનની નકલ કરો (_C)"
 
-#: ../src/rss.c:1511 ../src/rss.c:1555
+#: ../src/rss.c:1512 ../src/rss.c:1556
 msgid "Click to open"
 msgstr "ખોલવા માટે ક્લિક કરો"
 
-#: ../src/rss.c:1703
+#: ../src/rss.c:1704
 msgid "Comments"
 msgstr "ટિપ્પણીઓ"
 
-#: ../src/rss.c:1708
+#: ../src/rss.c:1709
 msgid "Refresh"
 msgstr "તાજુ કરો"
 
-#: ../src/rss.c:1727
+#: ../src/rss.c:1728
 msgid "Feed view"
 msgstr "ફીડ દ્રશ્ય"
 
-#: ../src/rss.c:1733
+#: ../src/rss.c:1734
 msgid "Show Summary"
 msgstr "સારાંશને બતાવો"
 
-#: ../src/rss.c:1733
+#: ../src/rss.c:1735
 msgid "Show Full Text"
 msgstr "સંપૂર્ણ લખાણને બતાવો"
 
-#: ../src/rss.c:2162
+#: ../src/rss.c:1999
+msgid "Posted under"
+msgstr "નીચે પોસ્ટ કરેલ છે"
+
+#: ../src/rss.c:2164
 msgid "Fetching feed"
 msgstr "ફીડને લાવી રહ્યા છે"
 
-#: ../src/rss.c:2462
+#: ../src/rss.c:2464
 msgid "Unamed feed"
 msgstr "નામ ન થયેલ ફીડ"
 
-#: ../src/rss.c:2462 ../src/rss.c:2581
+#: ../src/rss.c:2464 ../src/rss.c:2583
 msgid "Error while fetching feed."
 msgstr "જ્યારે ફીડને લાવી રહ્યા હોય ત્યારે ભૂલ."
 
-#: ../src/rss.c:2581
+#: ../src/rss.c:2583
 msgid "Invalid Feed"
 msgstr "અયોગ્ય ફીડ"
 
-#: ../src/rss.c:2592
+#: ../src/rss.c:2594
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "%d માંનો સંદેશ %d ને મેળવી રહ્યા છે"
 
-#: ../src/rss.c:2672
+#: ../src/rss.c:2674
 msgid "Complete."
 msgstr "સમાપ્ત."
 
-#: ../src/rss.c:2703 ../src/rss.c:2866 ../src/rss.c:2998 ../src/rss.c:3515
+#: ../src/rss.c:2705 ../src/rss.c:2868 ../src/rss.c:3000 ../src/rss.c:3534
 msgid "Error fetching feed."
 msgstr "ફીડને લાવતી વખતે ભૂલ."
 
-#: ../src/rss.c:2713
+#: ../src/rss.c:2715
 msgid "Canceled."
 msgstr "રદ થયેલ."
 
-#: ../src/rss.c:2757
+#: ../src/rss.c:2759
 msgid "Error while parsing feed."
 msgstr "જ્યારે ફીડને પદચ્છેદન કરી રહ્યા હોય ત્યારે ભૂલ."
 
-#: ../src/rss.c:2812
+#: ../src/rss.c:2814
 msgid "Complete"
 msgstr "સમાપ્ત"
 
-#: ../src/rss.c:2899
+#: ../src/rss.c:2901
 msgid "Formatting error."
 msgstr "બંધારણ ભૂલ."
 
-#: ../src/rss.c:3827 ../src/rss.c:3941
+#: ../src/rss.c:3846 ../src/rss.c:3960
 msgid "No RSS feeds configured!"
 msgstr "RSS ફીડો રૂપરેખાંકિત થયેલ નથી!"
 
-#: ../src/rss.c:3833 ../src/rss.c:4030
+#: ../src/rss.c:3852 ../src/rss.c:4049
 msgid "Reading RSS feeds..."
 msgstr "RSS ફીડોને વાંચી રહ્યા છે..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:3847 ../src/rss.c:4034 ../src/rss-config-factory.c:1186
+#: ../src/rss.c:3866 ../src/rss.c:4053 ../src/rss-config-factory.c:1186
 #: ../src/rss-config-factory.c:1582 ../src/rss-config-factory.c:1684
 msgid "Please wait"
 msgstr "મહેરબાની કરીને થોભો"
 
-#: ../src/rss.c:3855 ../src/rss.c:4042 ../src/rss-config-factory.c:680
+#: ../src/rss.c:3874 ../src/rss.c:4061 ../src/rss-config-factory.c:680
 #: ../src/rss-config-factory.c:980
 #, no-c-format
 msgid "0% done"
 msgstr "0% પૂરુ થયુ"
 
-#: ../src/rss.c:3989
+#: ../src/rss.c:4008
 msgid "Waiting..."
 msgstr "રાહ જોઇ રહ્યા છે..."
 
@@ -553,6 +572,9 @@ msgid ""
 "as renders you need firefox or webkit devel package \n"
 "installed and evolution-rss should be recompiled to see those packages."
 msgstr ""
+"નોંધ: આકાર આપવા તરીકે Mozilla (Firefox) અથવા Apple Webkit ને વાપરવાનું સક્ષમ કરવા માટે \n"
+"તમારે ફાયરફોક્ષ અથવા વેબકીટ ડેવેલ પેકેજ ને સ્થાપિત કરવાની જરૂર છે \n"
+"અને evolution-rss એ પેલા પેકેજોને જોવા માટે પુન:કમ્પાઇલ કરવુ જોઇએ."
 
 #: ../src/rss-config-factory.c:2177 ../src/rss-ui.glade.h:25
 msgid "Enabled"
@@ -820,7 +842,12 @@ msgstr ""
 "કલાકો\n"
 "દિવસો"
 
-#: ../src/parser.c:918
+#: ../src/parser.c:897
+#| msgid "No Information"
+msgid "No information"
+msgstr "જાણકારી નથી"
+
+#: ../src/parser.c:921
 msgid "No Information"
 msgstr "જાણકારી નથી"
 
