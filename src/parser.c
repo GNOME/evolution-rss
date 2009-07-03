@@ -38,6 +38,33 @@ guint rsserror = FALSE;
 gchar *rssstrerror = NULL;
 extern rssfeed *rf;
 
+//
+// decodes url_encoded strings that might appear in a html body
+//
+xmlDoc *
+rss_html_url_decode(const char *html, int len)
+{
+        xmlDoc *src = NULL;
+        xmlDoc *doc = NULL;
+        gchar *url, *tmpurl;
+
+        src = (xmlDoc *)parse_html_sux(html, len);
+
+        if (!src)
+                return NULL;
+
+        doc = src;
+
+        while ((doc = html_find((xmlNode *)doc, "img"))) {
+                if ((url = (gchar *)xmlGetProp(doc, (xmlChar *)"src"))) {
+			tmpurl = camel_url_decode_path(strstr(url, "http:"));
+			xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)tmpurl);
+			g_free(tmpurl);
+		}
+	}
+	return src;
+}
+
 void
 html_set_base(xmlNode *doc, char *base, char *tag, char *prop, char *basehref)
 {

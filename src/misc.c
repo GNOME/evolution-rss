@@ -191,14 +191,11 @@ strplchr(gchar *source)
  	gchar *string;
         const unsigned char *s = (const unsigned char *)source;
         guint len = strlen(source);
-        while (*s != 0 || len)
-        {
-             if (*s == 0x3f)
-             {
+        while (*s != 0 || len) {
+             if (*s == 0x3f) {
                    g_string_append(str, "%3F");
                    s++;
-             }
-             else
+             } else
                    g_string_append_c (str, *s++);
              len--;
         }
@@ -226,35 +223,25 @@ markup_decode (gchar *str)
                         int jump = 0;
                         int i;
 
-                        if (g_ascii_strncasecmp (iterator, "&amp;", 5) == 0)
-                        {
+                        if (g_ascii_strncasecmp (iterator, "&amp;", 5) == 0) {
                                 g_string_append_c (result, '&');
                                 jump = 5;
-                        }
-                        else if (g_ascii_strncasecmp (iterator, "&lt;", 4) == 0)
-                        {
+                        } else if (g_ascii_strncasecmp (iterator, "&lt;", 4) == 0) {
                                 g_string_append_c (result, '<');
                                 jump = 4;
-                        }
-                        else if (g_ascii_strncasecmp (iterator, "&gt;", 4) == 0)
-                        {
+                        } else if (g_ascii_strncasecmp (iterator, "&gt;", 4) == 0) {
                                 g_string_append_c (result, '>');
                                 jump = 4;
-                        }
-                        else if (g_ascii_strncasecmp (iterator, "&quot;", 6) == 0)
-                        {
+                        } else if (g_ascii_strncasecmp (iterator, "&quot;", 6) == 0) {
                                 g_string_append_c (result, '\"');
                                 jump = 6;
                         }
-                        for (i = jump - 1; i > 0; i--)
-                        {
+                        for (i = jump - 1; i > 0; i--) {
                                 iterator++;
                                 if (*iterator == '\0')
                                         break;
                         }
-                }
-                else
-                {
+                } else {
                         g_string_append_c (result, *iterator);
                 }
         }
@@ -271,11 +258,9 @@ gen_crc(const char *msg)
          int i,j;
  
          poly = 0xEDB88320L;
-         for (i = 0; i < 256; i++)
-         {
+         for (i = 0; i < 256; i++) {
                  crc = i;
-                 for (j = 8; j > 0; j--)
-                 {
+                 for (j = 8; j > 0; j--) {
                          if (crc & 1)
                                  crc = (crc >> 1) ^ poly;
                          else
@@ -298,13 +283,12 @@ gen_md5(gchar *buffer)
         const char tohex[16] = "0123456789abcdef";
  
         md5_get_digest (buffer, strlen(buffer), md5sum);
-  	for (i=0, f = res; i<16;i++)
- 	{
+  	for (i=0, f = res; i<16;i++) {
                 unsigned int c = md5sum[i];
                 *f++ = tohex[c & 0xf];
          }
  	*f++ = 0;
-         return g_strdup((gchar *)res);
+        return g_strdup((gchar *)res);
 }
 
 void

@@ -7,7 +7,6 @@
 	* jump to folder when adding through d-bus
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
-	* make auth dialog not intrusive (peek others)
 	* implement notify back of imported feed perhaps libnotify
 	* offline storage for article's home page
 	* implement web controls for diferent redering <Webkits> or <Gecko>
@@ -19,7 +18,6 @@
 	* fix annoying cursor jump when browsing through evo-rss folders
 	* provide predefined groups of feeds (OSS & co)
 	* evolution import rss add no. of retries
-	* fix images when replying
 	* provide expire option for images
 	* slow delete operation on large folders
 	* add handling parser error to setup_feed (check HIG for error msg)
@@ -38,7 +36,7 @@
 	* handle 404 for images in comments
 	* gtkhtml does not handle script tag properly
 	* gtkhtml does not handle &#xD; construct
-	* switch webkit -> gecko leeds to crash on pfree()
+	* switch webkit -> gecko leads to crash on pfree()
 	* show feed icons in send & receive dialog
 	* favicon is not displayed after it is fetched
 	* cancel fetching comments when summary display is changed

@@ -1851,6 +1851,30 @@ pfree(EMFormatHTMLPObject *o)
 	browser_fetching = 0;
 }
 
+
+void
+org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
+{
+	gchar *tmsg;
+	xmlChar *buff = NULL;
+	gint size, length;
+	gchar *text;
+
+	/* unfortunately e_msg_composer does not have raw get/set text body
+	 * so it is far easier using gtkhtml_editor_* functions rather than
+	 * procesing CamelMimeMessage or GByteArray
+	 */
+	text = gtkhtml_editor_get_text_html (t->composer, &length);
+
+	xmlDoc *doc = rss_html_url_decode(text, strlen(text));
+	if (doc) {
+		htmlDocDumpMemory(doc, &buff, &size);
+		xmlFree(doc);
+	}
+
+	gtkhtml_editor_set_text_html(t->composer, buff, size);
+}
+
 EMFormat *fom;
 CamelStream *som;
 
