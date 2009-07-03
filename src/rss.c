@@ -564,7 +564,6 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 void
 user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
 {
-	gchar *user = NULL, *pass = NULL;
 	switch (response) {
         case GTK_RESPONSE_OK:
                 if (auth_info->user)
@@ -597,7 +596,7 @@ user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
                 break;
         }
 	soup_session_unpause_message(auth_info->session, auth_info->message);
-	gtk_widget_destroy(dialog);
+	gtk_widget_destroy(GTK_WIDGET(dialog));
         g_free(auth_info);
 
 }
@@ -761,7 +760,6 @@ void
 web_auth_dialog(RSS_AUTH *auth_info)
 {
 	GtkDialog *dialog;
-	guint resp;
 
 	if (!rf->hruser)
 		rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);

@@ -352,7 +352,7 @@ disable_widget_cb(GtkWidget *widget, GladeXML *data)
 {
 	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (data, "auth_user");
 	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (data, "auth_pass");
-	GtkWidget *useauth = (GtkWidget *)glade_xml_get_widget (data, "use_auth");
+	GtkToggleButton *useauth = (GtkToggleButton *)glade_xml_get_widget (data, "use_auth");
 	gboolean auth_enabled = gtk_toggle_button_get_active(useauth);
 
 	gtk_widget_set_sensitive(authuser, auth_enabled);
@@ -525,7 +525,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (gui, "auth_user");
 	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (gui, "auth_pass");
-	GtkWidget *useauth = (GtkWidget *)glade_xml_get_widget (gui, "use_auth");
+	GtkToggleButton *useauth = (GtkToggleButton *)glade_xml_get_widget (gui, "use_auth");
 
 	if (url && read_up(url)) {
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (useauth), 1);
@@ -2029,6 +2029,7 @@ void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target)
 
 void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 {
+	const gchar *user = NULL, *pass = NULL;
 	add_feed *feed = (add_feed *)g_object_get_data((GObject *)epl, "add-feed");
 	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
 	gchar *ofolder = (gchar *)g_object_get_data((GObject *)epl, "ofolder");
@@ -2113,8 +2114,8 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_pass");
 	GtkWidget *useauth = (GtkWidget *)glade_xml_get_widget (feed->gui, "use_auth");
 	
-	gchar *user = gtk_entry_get_text(GTK_ENTRY(authuser));
-	gchar *pass = gtk_entry_get_text(GTK_ENTRY(authpass));
+	user = gtk_entry_get_text(GTK_ENTRY(authuser));
+	pass = gtk_entry_get_text(GTK_ENTRY(authpass));
 	gboolean auth_enabled = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (useauth));
 
 	if (user)
