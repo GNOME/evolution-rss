@@ -2363,7 +2363,7 @@ generate_safe_chn_name(gchar *chn_name)
 		g_string_free (result, TRUE);
 		g_free(tmp);
 	}
-	return chn_name;
+	return g_strdup(chn_name);
 }
 
 gchar *
@@ -2404,7 +2404,7 @@ setup_feed(add_feed *feed)
         RDF *r = NULL;
         GString *post = NULL, *content = NULL;
         GError *err = NULL;
-	gchar *chn_name = NULL, *tmp_chn_name = NULL;
+	gchar *chn_name = NULL, *tmp_chn_name = NULL, *tmp = NULL;
 
 	check_folders();
 
@@ -2530,7 +2530,7 @@ add:
                 //FIXME g_free
 		tmp_chn_name = chn_name;
 		chn_name = sanitize_folder(chn_name);
-		g_free(chn_name);
+		tmp = chn_name;
                	chn_name = generate_safe_chn_name(chn_name);
 		
 		gpointer crc_feed = gen_md5(feed->feed_url);
@@ -2592,6 +2592,7 @@ add:
 		display_feed(r);
 
 		g_free(tmp_chn_name);
+		g_free(tmp);
 		g_free(chn_name);
 
 		if (r->cache)
@@ -4518,7 +4519,7 @@ finish_image (SoupMessage *msg, CamelStream *user_data)
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
-	g_print("finish_image:%d\n", msg->status_code);
+	d(g_print("finish_image:%d\n", msg->status_code));
 	// we might need to handle more error codes here
 	if (503 != msg->status_code && //handle this timedly fasion
 	    404 != msg->status_code &&

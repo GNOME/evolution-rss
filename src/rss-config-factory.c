@@ -1168,6 +1168,8 @@ iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type)
         	src = html_find(src, "outline");
         	*url = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
 		*title = xmlGetProp(src, (xmlChar *)"title");
+		if (!(*title = xmlGetProp(src, (xmlChar *)"title")))
+			*title = xmlGetProp(src, (xmlChar *)"text");
 	} else if (type == 1) {
 		xmlNode *my;
 		src = html_find(src, "member");
