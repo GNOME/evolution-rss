@@ -1175,8 +1175,12 @@ iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type)
 		src = html_find(src, "member");
 		my = layer_find_pos(src, "member", "Agent");
 		*title = xmlCharStrdup(layer_find(my, "name", NULL));
-		my =  html_find(my, "channel");
+		my =  html_find(my, "Document");
 		*url =  (gchar *)xmlGetProp(my, (xmlChar *)"about");
+		if (!*url) {
+			my =  html_find(my, "channel");
+			*url =  (gchar *)xmlGetProp(my, (xmlChar *)"about");
+		}
 	}
 	return src;
 	
@@ -1219,10 +1223,8 @@ import_opml(gchar *file)
 		d(g_print("found %s\n", src->name));
 		if (!g_ascii_strcasecmp((char *)src->name, "rdf")) {
 			while (src) {
-				g_print("my cont:%s\n", src->content);
 				src=src->children;
 				src = src->next;
-				g_print("found %s\n", src->name);
 				src = src->children;
 				d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
 				src = src->next;
@@ -1260,10 +1262,10 @@ import_opml(gchar *file)
                 gtk_main_iteration ();
 	if (type == 1) {
 		src=src->children;
-		g_print("my cont:%s\n", src->content);
+		d(g_print("my cont:%s\n", src->content));
 		src=src->children;
 		src = src->next;
-		g_print("found %s\n", src->name);
+		d(g_print("found %s\n", src->name));
 		src = src->children;
 		d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
 		src = src->next;
@@ -1297,11 +1299,6 @@ import_opml(gchar *file)
                                 gtk_main_iteration ();
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
                         save_gconf_feed();
-                        if (src)
-                                xmlFree(src);
-                } else
-                        src = html_find(src, "outline");
-
         }
         while (gtk_events_pending ())
                 gtk_main_iteration ();

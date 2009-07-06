@@ -136,7 +136,7 @@ sanitize_folder(gchar *text)
 	// Strip leading dots
 	char *tmp2 = tmp;
 	while (*tmp2 == '.') tmp2++;
-		tmp2 = g_strdup (tmp2);
+	tmp2 = g_strdup (tmp2);
 	g_free (tmp);
 	return tmp2;
 }

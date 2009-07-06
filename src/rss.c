@@ -1890,7 +1890,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *comments = NULL;
 	gchar *category = NULL;
 	GdkPixbuf *pixbuf = NULL;
-	guint engine = 0;
+	guint engine = 0, size;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -1985,8 +1985,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 #endif
 		//replace with unblocking
 		content = fetch_blocking(addr, NULL, NULL, textcb, NULL, &err);
-		if (err)
-        	{
+		if (err) {
 			//we do not need to setup a pop error menu since we're in 
 			//formatting process. But instead display mail body an error
 			//such proxy error or transport error
@@ -2003,17 +2002,15 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                 	goto out;
         	}
 
-#if 0
 		gchar *tmp = decode_utf8_entities(content->str);
 		xmlDoc *src = (xmlDoc *)parse_html(addr, tmp, strlen(tmp));
 
 		if (src) {
 			htmlDocDumpMemory(src, &buff, &size);
-			g_print("htmlDocDumpMemory:%s\n", buff);
+			d(g_print("htmlDocDumpMemory:%s\n", buff));
 			xmlFree(src);
 		} else
 			goto out;
-#endif
 
 		camel_stream_printf (fstream,
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
@@ -2341,10 +2338,11 @@ generate_safe_chn_name(gchar *chn_name)
 {
 	guint i = 0;
 	gchar *c;
-	gchar *stmp;
-	while (check_chn_name(chn_name)) {
+	gchar *stmp, *tmp2 = NULL;
+	tmp2 = g_strdup(chn_name);
+	while (check_chn_name(tmp2)) {
 		GString *result = g_string_new (NULL);
-		gchar *tmp = chn_name;
+		gchar *tmp = tmp2;
 		if ((c = strrchr(tmp, '#'))) {
 			if (isdigit(*(c+1))) {
 				stmp = g_strndup(tmp, c - tmp);
@@ -2353,17 +2351,17 @@ generate_safe_chn_name(gchar *chn_name)
 					c++;
 				}
 				i = atoi(result->str);
-				chn_name = g_strdup_printf("%s#%d", stmp, i+1);
+				tmp2 = g_strdup_printf("%s#%d", stmp, i+1);
 				g_free(stmp);
 			} else
-				chn_name = g_strdup_printf("%s #%d", tmp, i+1);
+				tmp2 = g_strdup_printf("%s #%d", tmp, i+1);
 		} else
-			chn_name = g_strdup_printf("%s #%d", tmp, i+1);
+			tmp2 = g_strdup_printf("%s #%d", tmp, i+1);
 		memset(result->str, 0, result->len);
 		g_string_free (result, TRUE);
 		g_free(tmp);
 	}
-	return g_strdup(chn_name);
+	return tmp2;
 }
 
 gchar *
@@ -2374,9 +2372,9 @@ search_rss(char *buffer, int len)
 	while (doc) {
 		doc = html_find(doc, "link");
 		app = (gchar *)xmlGetProp(doc, (xmlChar *)"type");
-		if (!g_ascii_strcasecmp(app, "application/atom+xml")
+		if (app && (!g_ascii_strcasecmp(app, "application/atom+xml")
 		|| !g_ascii_strcasecmp(app, "application/xml")
-		|| !g_ascii_strcasecmp(app, "application/rss+xml")) {
+		|| !g_ascii_strcasecmp(app, "application/rss+xml"))) {
 			return (gchar *)xmlGetProp(doc, (xmlChar *)"href");
 		}
 		xmlFree(app);
@@ -2527,7 +2525,7 @@ add:
 	                chn_name = g_strdup(feed->feed_name);
                 if (chn_name == NULL)
                         chn_name = g_strdup (_(DEFAULT_NO_CHANNEL));
-                //FIXME g_free
+
 		tmp_chn_name = chn_name;
 		chn_name = sanitize_folder(chn_name);
 		tmp = chn_name;
@@ -2588,8 +2586,8 @@ add:
 			g_strdup(crc_feed), 
 			GINT_TO_POINTER(feed->fetch_html));
 
-
-		display_feed(r);
+		if (feed->validate)
+			display_feed(r);
 
 		g_free(tmp_chn_name);
 		g_free(tmp);
@@ -2608,10 +2606,25 @@ add:
 		ret = 1;
 		goto out;
 	}
+
 	//search for a feed entry
 	gchar *rssurl = search_rss(content->str, content->len);
 	if (rssurl) {
+		if (doc)
+	               	xmlFreeDoc(doc);
+//       		if (r->type)
+  //             		g_free(r->type);
+		if (content)
+			g_string_free(content, 1);
 		feed->feed_url = rssurl;
+		
+                if (g_hash_table_find(rf->hr,
+                                        check_if_match,
+                                        feed->feed_url)) {
+                           rss_error(NULL, NULL, _("Error adding feed."),
+                                           _("Feed already exists!"));
+                           goto out;
+                }
 		goto top;
 	}
 
@@ -3487,6 +3500,8 @@ rss_delete_feed(gchar *name, gboolean folder)
 	if (!tkey)
 		return;
         gchar *url =  g_hash_table_lookup(rf->hr, tkey);
+	if (!url)
+		goto out;
         gchar *buf = gen_md5(url);
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
@@ -3499,7 +3514,7 @@ rss_delete_feed(gchar *name, gboolean folder)
 	tmp = g_strdup_printf("%s.fav", feed_name);
         unlink(tmp);
 	g_free(tmp);
-	if (folder)
+out:	if (folder)
 		remove_feed_hash(name);
         save_gconf_feed();
 }
