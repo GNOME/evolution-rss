@@ -382,7 +382,10 @@ authenticate (SoupSession *session,
 		//means we're already tested once and probably
 		//won't try again
 		rf->soup_auth_retry = FALSE;
-		if (!read_up(data)) {
+		//we test for autofetching in progresss because it seems
+		//preety annoying to pop the authentication popup in front
+		//of the user every time feeds are automatically fetched
+		if (!read_up(data) && !rf->autoupdate) {
 			//we will continue after user has made a decision on 
 			//web auth dialog
 			soup_session_pause_message(session, msg);

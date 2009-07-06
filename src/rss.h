@@ -132,6 +132,7 @@ typedef struct _rssfeed {
         gboolean        setup;
         gboolean        pending;
         gboolean        import;			//import going on
+	gboolean 	autoupdate;		//feed is currently auto fetched
 	guint		feed_queue;
         gboolean        cancel; 		//cancelation signal
         gboolean        cancel_all; 		//cancelation signal

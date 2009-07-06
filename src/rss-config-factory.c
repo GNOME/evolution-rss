@@ -1272,7 +1272,7 @@ import_opml(gchar *file)
 	}
 	while ((src = iterate_import_file(src, &url, &name, type))) {
                 if (url && strlen(url)) {
-		g_print("url:%s\n", url);
+			d(g_print("url:%s\n", url));
                         if (rf->cancel) {
                                 if (src) xmlFree(src);
                                 rf->cancel = 0;
@@ -1299,6 +1299,7 @@ import_opml(gchar *file)
                                 gtk_main_iteration ();
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
                         save_gconf_feed();
+		}
         }
         while (gtk_events_pending ())
                 gtk_main_iteration ();

@@ -2709,6 +2709,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (rf->feed_queue == 0) {
 		d(g_print("taskbar_op_finish()\n"));
 		taskbar_op_finish("main");
+		rf->autoupdate = FALSE;
 		farticle=0;
 		ftotal=0;
 #ifndef EVOLUTION_2_12
@@ -2916,10 +2917,12 @@ fetch_one_feed(gpointer key, gpointer value, gpointer user_data)
                         rss_error(key, NULL, _("Error fetching feed."), msg);
                      	g_free(msg);
 		}
-		return 1;	
-	} else if (rf->cancel && !rf->feed_queue)
-		rf->cancel = 0;		//all feeds where either procesed or skipped
-	return 0;
+		return TRUE;	
+	} else if (rf->cancel && !rf->feed_queue) {
+		rf->cancel = 0;		//all feeds were either procesed or skipped
+		rf->autoupdate = FALSE;
+	}
+	return FALSE;
 }
 
 gboolean
@@ -3060,6 +3063,7 @@ update_articles(gboolean disabler)
 
 	if (!rf->pending && !rf->feed_queue && !rf->cancel_all && rf->online) {
 		g_print("Reading RSS articles...\n");
+		rf->autoupdate = TRUE;
 		rf->pending = TRUE;
 		check_folders();
 		rf->err = NULL;
@@ -3560,6 +3564,7 @@ custom_update_articles(CDATA *cdata)
 		g_print("Fetch (custom) RSS articles...\n");
 		check_folders();
 		rf->err = NULL;
+		rf->autoupdate = TRUE;
 		//taskbar_op_message();
 		network_timeout();
         	// check if we're enabled and no cancelation signal pending
@@ -3585,8 +3590,10 @@ custom_update_articles(CDATA *cdata)
                      		g_free(msg);
 			}
                                                                // feed gets deleted
-		} else if (rf->cancel && !rf->feed_queue)
+		} else if (rf->cancel && !rf->feed_queue) {
                 	rf->cancel = 0;         //all feeds where either procesed or skipped
+			rf->autoupdate = FALSE;
+		}
 	}
 	return TRUE;
 }
