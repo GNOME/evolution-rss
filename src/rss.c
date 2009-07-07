@@ -794,6 +794,7 @@ timeout_soup(void)
 {
 	d(g_print("Network timeout occured. Cancel active operations.\n"));
 	abort_all_soup();
+	rf->autoupdate = FALSE;
 	return FALSE;
 }
 
@@ -2742,8 +2743,10 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 #endif
 	}
 
-	if (rf->cancel_all)
+	if (rf->cancel_all) {
+		rf->autoupdate = FALSE;
 		goto out;
+	}
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
@@ -2759,6 +2762,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (rf->cancel) {
 #ifdef EVOLUTION_2_12
 		if(rf->label && rf->feed_queue == 0 && rf->info) {
+			rf->autoupdate = FALSE;
 			farticle=0;
 			ftotal=0;
                 	gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled."));
@@ -2858,6 +2862,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		g_free(furl);
 	}
 	if(rf->label && rf->feed_queue == 0 && rf->info) {
+		rf->autoupdate = FALSE;
 		farticle=0;
 		ftotal=0;
 		gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete"));
@@ -3936,6 +3941,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 flabel       = label2;
         }
         if (!rf->pending && !rf->feed_queue) {
+                rf->autoupdate = FALSE;
                 rf->pending = TRUE;
                 check_folders();
 
@@ -4124,6 +4130,7 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	}
 #endif
 	if (!rf->pending && !rf->feed_queue) {
+		rf->autoupdate = FALSE;
 		rf->pending = TRUE;
 		check_folders();
 	
@@ -4140,8 +4147,6 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	}
 	
 
-//camel_store_subscribe_folder (store, ->node->info->full_name, &mm->ex);
-//camel_store_subscribe_folder (store, "www", NULL);
 }
 
 void
