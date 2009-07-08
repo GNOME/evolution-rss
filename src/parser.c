@@ -55,10 +55,10 @@ rss_html_url_decode(const char *html, int len)
 
         doc = src;
 
-        while ((doc = html_find((xmlNode *)doc, "img"))) {
-                if ((url = (gchar *)xmlGetProp(doc, (xmlChar *)"src"))) {
+        while ((doc = (xmlDoc *)html_find((xmlNode *)doc, "img"))) {
+                if ((url = (gchar *)xmlGetProp((xmlNodePtr)doc, (xmlChar *)"src"))) {
 			tmpurl = camel_url_decode_path(strstr(url, "http:"));
-			xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)tmpurl);
+			xmlSetProp((xmlNodePtr)doc, (xmlChar *)"src", (xmlChar *)tmpurl);
 			g_free(tmpurl);
 		}
 	}

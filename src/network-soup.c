@@ -359,8 +359,6 @@ authenticate (SoupSession *session,
 	g_object_get (G_OBJECT(session),
 				"proxy-uri", &proxy_uri,
 				NULL);
-	g_print("user:%s\n", proxy_uri->user);
-	g_print("pass:%s\n", proxy_uri->password);
 	//proxy_auth_dialog("Proxy Authentication", proxy_uri->user, proxy_uri->password);
 	//g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 	return;
@@ -376,19 +374,22 @@ authenticate (SoupSession *session,
 #else
 	if (!retrying)
 		soup_auth_authenticate (auth, user, pass);
+	else {
+		if (!rf->autoupdate)
+			goto authpop;
+	}
 #endif
 	} else {
-		if (rf->soup_auth_retry) {
-		//means we're already tested once and probably
-		//won't try again
-		rf->soup_auth_retry = FALSE;
 		//we test for autofetching in progresss because it seems
 		//preety annoying to pop the authentication popup in front
 		//of the user every time feeds are automatically fetched
 		if (!read_up(data) && !rf->autoupdate) {
 			//we will continue after user has made a decision on 
 			//web auth dialog
-			soup_session_pause_message(session, msg);
+			//Bug 522147 – need to be able to pause synchronous I/O
+authpop:		if (G_OBJECT_TYPE(session) == SOUP_TYPE_SESSION_ASYNC) {
+				soup_session_pause_message(session, msg);
+			}
 			RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
 			auth_info->url = data;
 			auth_info->soup_auth = auth;
@@ -396,17 +397,6 @@ authenticate (SoupSession *session,
 			auth_info->session = session;
 			auth_info->message = msg;
 			web_auth_dialog(auth_info);
-			return;
-		}
-#if LIBSOUP_VERSION < 2003000
-		*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
-		*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
-#else
-	user = g_hash_table_lookup(rf->hruser, data);
-	pass = g_hash_table_lookup(rf->hrpass, data);
-	if (!retrying)
-		soup_auth_authenticate (auth, user, pass);
-#endif
 		}
 	}
 }

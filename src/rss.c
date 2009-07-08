@@ -595,7 +595,8 @@ user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
 		rf->soup_auth_retry = TRUE;
                 break;
         }
-	soup_session_unpause_message(auth_info->session, auth_info->message);
+	if (soup_session_get_async_context(auth_info->session))
+		soup_session_unpause_message(auth_info->session, auth_info->message);
 	gtk_widget_destroy(GTK_WIDGET(dialog));
         g_free(auth_info);
 
@@ -760,6 +761,7 @@ void
 web_auth_dialog(RSS_AUTH *auth_info)
 {
 	GtkDialog *dialog;
+	gint response;
 
 	if (!rf->hruser)
 		rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
@@ -767,9 +769,14 @@ web_auth_dialog(RSS_AUTH *auth_info)
 		rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
 
 	auth_info->user = g_hash_table_lookup(rf->hruser, auth_info->url);
-	auth_info->pass = g_hash_table_lookup(rf->hruser, auth_info->url);
+	auth_info->pass = g_hash_table_lookup(rf->hrpass, auth_info->url);
 	dialog = create_user_pass_dialog(auth_info);
-	g_signal_connect_swapped (dialog,
+	//Bug 522147 – need to be able to pause synchronous I/O
+	if (G_OBJECT_TYPE(auth_info->session) != SOUP_TYPE_SESSION_ASYNC) {
+		response = gtk_dialog_run(dialog);
+		user_pass_cb(auth_info, response, dialog);
+	} else
+		g_signal_connect_swapped (dialog,
                              "response",
                              G_CALLBACK (user_pass_cb),
                              auth_info);
@@ -794,7 +801,6 @@ timeout_soup(void)
 {
 	d(g_print("Network timeout occured. Cancel active operations.\n"));
 	abort_all_soup();
-	rf->autoupdate = FALSE;
 	return FALSE;
 }
 
@@ -1856,16 +1862,16 @@ pfree(EMFormatHTMLPObject *o)
 void
 org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 {
-	gchar *tmsg;
 	xmlChar *buff = NULL;
-	gint size, length;
+	gint size;
+	gsize length;
 	gchar *text;
 
 	/* unfortunately e_msg_composer does not have raw get/set text body
 	 * so it is far easier using gtkhtml_editor_* functions rather than
 	 * procesing CamelMimeMessage or GByteArray
 	 */
-	text = gtkhtml_editor_get_text_html (t->composer, &length);
+	text = gtkhtml_editor_get_text_html ((GtkhtmlEditor *)t->composer, &length);
 
 	xmlDoc *doc = rss_html_url_decode(text, strlen(text));
 	if (doc) {
@@ -1873,7 +1879,7 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 		xmlFree(doc);
 	}
 
-	gtkhtml_editor_set_text_html(t->composer, buff, size);
+	gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
 }
 
 EMFormat *fom;
@@ -1891,7 +1897,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *comments = NULL;
 	gchar *category = NULL;
 	GdkPixbuf *pixbuf = NULL;
-	guint engine = 0, size;
+	guint engine = 0;
+	int size;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
@@ -2743,10 +2750,8 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 #endif
 	}
 
-	if (rf->cancel_all) {
-		rf->autoupdate = FALSE;
+	if (rf->cancel_all)
 		goto out;
-	}
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
@@ -2762,7 +2767,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (rf->cancel) {
 #ifdef EVOLUTION_2_12
 		if(rf->label && rf->feed_queue == 0 && rf->info) {
-			rf->autoupdate = FALSE;
 			farticle=0;
 			ftotal=0;
                 	gtk_label_set_markup (GTK_LABEL (rf->label), _("Canceled."));
@@ -2862,7 +2866,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		g_free(furl);
 	}
 	if(rf->label && rf->feed_queue == 0 && rf->info) {
-		rf->autoupdate = FALSE;
 		farticle=0;
 		ftotal=0;
 		gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete"));
@@ -2925,7 +2928,6 @@ fetch_one_feed(gpointer key, gpointer value, gpointer user_data)
 		return TRUE;	
 	} else if (rf->cancel && !rf->feed_queue) {
 		rf->cancel = 0;		//all feeds were either procesed or skipped
-		rf->autoupdate = FALSE;
 	}
 	return FALSE;
 }
@@ -3310,15 +3312,18 @@ check_update_feed_image(gchar *key)
 		ret = TRUE;
 		goto out;
 	}
-	if ((f = fopen(fav_file, "r"))) {
+	if ((f = fopen(fav_file, "r+"))) {
 		fgets(rfeed, 50, f);
-               	fclose(f);
 		remain = start.tv_sec - strtoul((const char *)&rfeed, NULL, 10);
 		if (FEED_IMAGE_TTL <= remain) {
+		    	(void)fseek(f, 0L, SEEK_SET);
+			fprintf(f, "%lu", start.tv_sec);	
+               		fclose(f);
 			ret =  TRUE;
 			goto out;
 		} else {
 			d(g_print("next favicon will be fetched in %lu seconds\n", FEED_IMAGE_TTL - remain));
+               		fclose(f);
 			ret = FALSE;
 		}
 	}
@@ -3597,7 +3602,6 @@ custom_update_articles(CDATA *cdata)
                                                                // feed gets deleted
 		} else if (rf->cancel && !rf->feed_queue) {
                 	rf->cancel = 0;         //all feeds where either procesed or skipped
-			rf->autoupdate = FALSE;
 		}
 	}
 	return TRUE;
@@ -3941,7 +3945,6 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
                 flabel       = label2;
         }
         if (!rf->pending && !rf->feed_queue) {
-                rf->autoupdate = FALSE;
                 rf->pending = TRUE;
                 check_folders();
 
@@ -4130,7 +4133,6 @@ org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 	}
 #endif
 	if (!rf->pending && !rf->feed_queue) {
-		rf->autoupdate = FALSE;
 		rf->pending = TRUE;
 		check_folders();
 	

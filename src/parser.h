@@ -20,7 +20,7 @@
 #define __PARSER_H__
 
 gchar *update_channel(RDF *r);
-
+xmlDoc *rss_html_url_decode(const char *html, int len);
 char *layer_find (xmlNodePtr node, char *match, char *fail);
 char *layer_find_innerelement (xmlNodePtr node, char *match, char *el, char *fail);
 gchar *layer_find_innerhtml (xmlNodePtr node, char *match, char *submatch, char *fail);
