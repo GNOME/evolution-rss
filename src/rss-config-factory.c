@@ -538,6 +538,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	g_signal_connect(useauth, "toggled", G_CALLBACK(disable_widget_cb), gui);
 
 	GtkWidget *ok = (GtkWidget *)glade_xml_get_widget (gui, "ok_button");
+	/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
 	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
 

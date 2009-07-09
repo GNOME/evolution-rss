@@ -98,6 +98,9 @@ sanitize_url(gchar *text)
 {
 	gchar *out;
 	gchar *tmptext = g_strdup(text);
+	if (strcasestr(text, "file://"))
+		return tmptext;
+
 	if (strcasestr(text, "feed://"))
 		tmptext = strextr(text, "feed://");
 	else if (strcasestr(text, "feed//"))
