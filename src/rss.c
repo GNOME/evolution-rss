@@ -38,13 +38,11 @@ int rss_verbose_debug = 0;
 #include <camel/camel-stream-fs.h>
 #include <camel/camel-text-index.h>
 
-//#include <mail/em-popup.h>
 #include <e-util/e-error.h>
 #include <e-util/e-icon-factory.h>
 #include <e-util/e-mktemp.h>
 #include <e-util/e-util.h>
 
-//#include <mail/em-config.h>
 
 #ifdef EVOLUTION_2_12
 #include <mail/em-event.h>
@@ -52,17 +50,12 @@ int rss_verbose_debug = 0;
 
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
-//#include <mail/em-folder-tree-model.h>
-//#include <mail/em-folder-utils.h>
-//#include <mail/em-folder-view.h>
-//#include <mail/mail-mt.h>
 #include <mail/mail-component.h>
 #include <mail/mail-tools.h>
 #include <mail/mail-ops.h>
 
 #include <misc/e-activity-handler.h>
 
-//#include <mail/em-format.h>
 #include <mail/em-format-html.h>
 #include <mail/em-format-hook.h>
 
@@ -87,9 +80,8 @@ int rss_verbose_debug = 0;
 #include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
 
-//#include <libxml/parserInternals.h>
-//#include <libxml/xmlmemory.h>
-//#include <libxml/HTMLparser.h>
+#include <editor/gtkhtml-editor.h>
+
 #include <libxml/HTMLtree.h>
 
 #ifdef HAVE_RENDERKIT
