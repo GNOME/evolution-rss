@@ -309,14 +309,18 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
         GtkTreeIter    iter;
 
         gtk_list_store_append (store, &iter);
-	gchar *name = g_path_get_basename(lookup_feed_folder(key));
+	gchar *full_name = lookup_feed_folder(key);
+	gchar *name = g_path_get_basename(full_name);
+	gchar *full_path = g_strconcat(lookup_main_folder(), "/", full_name, NULL);
         gtk_list_store_set (store, &iter,
                 0, g_hash_table_lookup(rf->hre, lookup_key(key)),
                 1, name,
                 2, g_hash_table_lookup(rf->hrt, lookup_key(key)),
 		3, key,
+		4, full_path,
                 -1);
 	g_free(name);
+	g_free(full_path);
 }
 
 static void
@@ -890,7 +894,7 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
         if (response == GTK_RESPONSE_OK) {
                 selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(user_data));
                 if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
-                        gtk_tree_model_get (model, &iter, 3, &name, -1);
+                        gtk_tree_model_get (model, &iter, 4, &name, -1);
 			rss_delete_feed(name,
 				gconf_client_get_bool(rss_gconf, GCONF_KEY_REMOVE_FOLDER, NULL));
                         g_free(name);
@@ -1129,7 +1133,7 @@ import_dialog_response(GtkWidget *selector, guint response, gpointer user_data)
 }
 
 gboolean
-import_one_feed(gchar *url, gchar *title)
+import_one_feed(gchar *url, gchar *title, gchar *prefix)
 {
         add_feed *feed = g_new0(add_feed, 1);
         feed->changed=0;
@@ -1139,6 +1143,7 @@ import_one_feed(gchar *url, gchar *title)
 	feed->enabled = feed_enabled;
 	feed->feed_url = g_strdup(url);
 	feed->feed_name = decode_html_entities(title);
+	feed->prefix = prefix;
 	/* we'll get rid of this as soon as we fetch unblocking */
         if (g_hash_table_find(rf->hr,
                                      check_if_match,
@@ -1221,7 +1226,6 @@ import_opml(gchar *file)
         gtk_widget_show_all(import_dialog);
         g_free(msg);
 	if ((src=src->children)) {
-		d(g_print("found %s\n", src->name));
 		if (!g_ascii_strcasecmp((char *)src->name, "rdf")) {
 			while (src) {
 				src=src->children;
@@ -1236,7 +1240,7 @@ import_opml(gchar *file)
                 			}
 					if (name) xmlFree(name);
 				}
-			g_print("total:%d\n", total);
+			d(g_print("total:%d\n", total));
 			type = 1;
 			}
 		}
@@ -1250,7 +1254,7 @@ import_opml(gchar *file)
 				if (name) xmlFree(name);
         		}
 			type = 0;
-			g_print("total:%d\n", total);
+			d(g_print("total:%d\n", total));
 		}
 	}	
         src = doc;
@@ -1271,6 +1275,85 @@ import_opml(gchar *file)
 		d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
 		src = src->next;
 	}
+
+	gint size = 0;
+	gchar *base = NULL, *root = NULL, *last = NULL;
+	gchar *rssprefix = NULL, *rssurl = NULL, *rsstitle = NULL;
+	while (src) {
+		if (rf->cancel) {
+			if (src) xmlFree(src);
+			rf->cancel = 0;
+			goto out;
+		}
+                if (src->children)
+                        src = src->children;
+                else {
+                        while (src && !src->next) {
+                                src = src->parent;
+				g_print("<-");
+				last =  g_path_get_basename(root);
+				if (last && strcmp(last, ".")) {
+					g_print("retract:%s\n", last);
+					size = strstr(root, last)-root-1;
+					gchar *tmp = root;
+					if (size > 0)
+						root = g_strndup(root, size);
+					else
+						root = NULL;
+					g_free(last);
+					if (tmp) g_free(tmp);
+				}
+			}
+                        if (!src) break;
+                        src = src->next;
+                }
+                if (src->name) {
+			gchar *prop = (gchar *)xmlGetProp(src, (xmlChar *)"type");
+			if (prop) {
+				if (!strcmp(prop, "folder")) {
+					base = (gchar *)xmlGetProp(src, (xmlChar *)"text");
+					if (NULL != src->last) {
+						gchar *tmp = root;
+						if (!root)
+							root = g_build_path("/", base, NULL);
+						else
+							root = g_build_path("/", root, base, NULL);
+						if (base) xmlFree(base);
+						if (tmp) g_free(tmp);
+					}
+				// we're insterested in rss/pie only
+				// we might just handle all variations of type= property
+				} else if (strcmp(prop, "link")) {
+					rssprefix = root;
+					rssurl = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
+					rsstitle = (gchar *)xmlGetProp(src, (xmlChar *)"title");
+					gtk_label_set_text(GTK_LABEL(import_label), (gchar *)rsstitle);
+#if GTK_VERSION >= 2006000
+					gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
+#endif
+					gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
+					import_one_feed(rssurl, rsstitle, rssprefix);
+					if (rssurl) xmlFree(rssurl);
+					if (rsstitle) xmlFree(rsstitle);
+                        		while (gtk_events_pending ())
+                                		gtk_main_iteration ();
+					current++;
+					float fr = ((current*100)/total);
+					gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
+					what = g_strdup_printf(_("%2.0f%% done"), fr);
+					gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
+					g_free(what);
+					while (gtk_events_pending ())
+						gtk_main_iteration ();
+					store_redraw(GTK_TREE_VIEW(rf->treeview));
+					save_gconf_feed();
+				}
+			xmlFree(prop);
+			}
+                }
+        }
+
+	goto out;
 	while ((src = iterate_import_file(src, &url, &name, type))) {
                 if (url && strlen(url)) {
 			d(g_print("url:%s\n", url));
@@ -1284,7 +1367,7 @@ import_opml(gchar *file)
                         gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
                         gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
-			import_one_feed(url, (gchar *)name);
+			import_one_feed(url, (gchar *)name, NULL);
 			if (name) xmlFree(name);
 			if (url) xmlFree(url);
 
@@ -1558,14 +1641,72 @@ import_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
+get_folder_info (CamelStore *store, CamelFolderInfo *info, CamelException *ex)
+{
+while (info) {
+                CamelFolder *fold;
+		gchar **path, *fpath;
+		gint i=0;
+
+                if (info->child) {
+			get_folder_info(store, info->child, ex);
+                        if (camel_exception_is_set (ex))
+                                return;
+                }
+
+                if (!(fold = camel_store_get_folder (store, info->full_name, 0, ex)))
+                        return;
+
+//		g_print("fold:%s\n", fold->full_name);
+		fpath = extract_main_folder(fold->full_name);
+		g_print("fpath:%s\n", fpath);
+	
+		path = g_strsplit(fpath, "/", 0);
+		if (path) {
+			do {
+				g_print("path:%s\n", path[i]);
+			} while (NULL != path[i++]);
+		}
+
+                info = info->next;
+        }
+
+
+}
+
+static void
 construct_opml_line(gpointer key, gpointer value, gpointer user_data)
 {
         gchar *url = g_hash_table_lookup(rf->hr, value);
         gchar *type = g_hash_table_lookup(rf->hrt, value);
         gchar *url_esc = g_markup_escape_text(url, strlen(url));
         gchar *key_esc = g_markup_escape_text(key, strlen(key));
-        gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"%s\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
-                key_esc, key_esc, type, url_esc, url_esc);
+	g_print("value:%s\n", g_hash_table_lookup(rf->hrname_r, value));
+	g_print("name:%s\n", g_path_get_dirname(g_hash_table_lookup(rf->hrname_r, value)));
+
+
+CamelFolderInfo *info;
+	CamelStore *store = mail_component_peek_local_store(NULL);
+        CamelException ex;
+        gint response;
+        guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE | CAMEL_STORE_FOLDER_INFO_FAST;
+
+
+        camel_exception_init (&ex);
+
+        info = camel_store_get_folder_info (store, "News and Blogs", flags, &ex);
+
+        if (camel_exception_is_set (&ex))
+                goto out;
+	get_folder_info(store, info, &ex);
+
+out:
+        camel_store_free_folder_info(store, info);
+
+
+        //gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"%s\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
+        gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
+                key_esc, key_esc, url_esc, url_esc);
         if (buffer != NULL)
                 buffer = g_strconcat(buffer, tmp, NULL);
         else
@@ -1615,6 +1756,7 @@ export_opml(gchar *file)
                 buffer);
         g_free(buffer);
 
+#if 0
         if (g_file_test (file, G_FILE_TEST_IS_REGULAR)) {
                 GtkWidget *dlg;
 
@@ -1634,6 +1776,7 @@ export_opml(gchar *file)
                 goto over;
         else
                 goto out;
+#endif
 
 over:   f = fopen(file, "w+");
         if (f) {
@@ -2144,8 +2287,6 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	gchar *folder = target->folder->full_name;
 	add_feed *feed = NULL;
 
-	g_print("folder:%s\n", folder);
-	g_print("main_folder:%s\n", main_folder);
 	//filter only rss folders
 	if (folder == NULL
           || g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
@@ -2210,8 +2351,8 @@ rss_config_control_new (void)
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
 
-	store = gtk_list_store_new (4, G_TYPE_BOOLEAN, G_TYPE_STRING,
-                                G_TYPE_STRING, G_TYPE_STRING);
+	store = gtk_list_store_new (5, G_TYPE_BOOLEAN, G_TYPE_STRING,
+                                G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (treeview), (GtkTreeModel *)store);
 

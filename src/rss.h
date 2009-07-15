@@ -59,6 +59,7 @@ typedef struct _RDF {
 	gchar		*version;	//feed version
         gchar		*feedid;  	//md5 string id of feed
 	gchar		*title;		//title of the feed
+	gchar		*prefix;	//directory path
 	gchar		*maindate;	//channel date
 	GArray		*item;		//feed content
 	gchar		*image;		//feed image
@@ -189,6 +190,7 @@ typedef struct ADD_FEED {
 	GladeXML	*gui;
         gchar           *feed_url;
 	gchar		*feed_name;
+	gchar 		*prefix;
         gboolean        fetch_html;	//show webpage instead of summary
         gboolean        add;		//ok button
 	gboolean	changed;

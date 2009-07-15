@@ -2502,7 +2502,9 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
         content = fetch_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
         if (err) {
 		g_print("setup_feed() -> err:%s\n", err->message);
-		rss_error(NULL, feed->feed_name ? feed->feed_name: _("Unamed feed"), _("Error while fetching feed."), err->message);
+		gchar *tmpkey = gen_md5(feed->feed_url);
+		rss_error(tmpkey, feed->feed_name ? feed->feed_name: _("Unamed feed"), _("Error while fetching feed."), err->message);
+		g_free(tmpkey);
 		goto out;
         }
         xmlDocPtr doc = NULL;
@@ -2538,6 +2540,9 @@ add:
 		chn_name = sanitize_folder(chn_name);
 		tmp = chn_name;
                	chn_name = generate_safe_chn_name(chn_name);
+		if (feed->prefix)
+			chn_name = g_build_path("/", feed->prefix, chn_name, NULL);
+		r->prefix = feed->prefix;
 		
 		gpointer crc_feed = gen_md5(feed->feed_url);
 		g_hash_table_insert(rf->hrname, 
@@ -3475,6 +3480,10 @@ check_feed_folder(gchar *folder_name)
 {
 	CamelStore *store = mail_component_peek_local_store(NULL);
 	CamelFolder *mail_folder;
+	char **path = NULL;
+	gint i=0;
+	gchar *base_folder;
+
 	gchar *main_folder = lookup_main_folder();
 	gchar *real_folder = lookup_feed_folder(folder_name);
 	gchar *real_name = g_strdup_printf("%s/%s", main_folder, real_folder);
@@ -3482,8 +3491,16 @@ check_feed_folder(gchar *folder_name)
 	d(g_print("real_folder:%s\n", real_folder));
 	d(g_print("real_name:%s\n", real_name));
         mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
+	base_folder = main_folder;
 	if (mail_folder == NULL) {
-                camel_store_create_folder (store, main_folder, real_folder, NULL);
+        	path = g_strsplit(real_folder, "/", 0);
+		if (path) {
+			do {
+               			camel_store_create_folder (store, base_folder, path[i], NULL);
+				base_folder = g_strconcat(base_folder, "/", path[i], NULL);
+			} while (NULL != path[++i]);
+			g_strfreev(path);
+		}
                 mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
         }
 	g_free(real_name);
@@ -3492,14 +3509,14 @@ check_feed_folder(gchar *folder_name)
 }
 
 void
-rss_delete_feed(gchar *name, gboolean folder)
+rss_delete_feed(gchar *full_path, gboolean folder)
 {
         CamelException ex;
 	gchar *tmp;
         CamelStore *store = mail_component_peek_local_store(NULL);
-        gchar *full_path = g_strdup_printf("%s/%s",
-                lookup_main_folder(),
-                lookup_feed_folder(name));
+	gchar *name = extract_main_folder(full_path);
+	if (!name)
+		return;
         delete_feed_folder_alloc(lookup_feed_folder(name));
         camel_exception_init (&ex);
         rss_delete_folders (store, full_path, &ex);
@@ -3508,7 +3525,6 @@ rss_delete_feed(gchar *name, gboolean folder)
                 "mail:no-delete-folder", full_path, ex.desc, NULL);
                 camel_exception_clear (&ex);
         }
-        g_free(full_path);
         //also remove status file
         gchar *tkey = g_hash_table_lookup(rf->hrname, name);
 	if (!tkey)
@@ -3530,6 +3546,7 @@ rss_delete_feed(gchar *name, gboolean folder)
 	g_free(tmp);
 out:	if (folder)
 		remove_feed_hash(name);
+	g_free(name);
         save_gconf_feed();
 }
 
@@ -3537,8 +3554,8 @@ static void
 store_folder_deleted(CamelObject *o, void *event_data, void *data)
 {
 	CamelFolderInfo *info = event_data;
-	printf("Folder deleted '%s'\n", info->name);
-	rss_delete_feed(info->name, 1);
+	d(printf("Folder deleted '%s' full '%s'\n", info->name, info->full_name));
+	rss_delete_feed(info->full_name, 1);
 }
 
 static void

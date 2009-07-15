@@ -309,9 +309,6 @@ xmlNode *
 html_find (xmlNode *node,
             char *match)
 {
-#ifdef RDF_DEBUG
-g_print("parser entry 3_1!!!\n");
-#endif
 	while (node) {
 #ifdef RDF_DEBUG
                 xmlDebugDumpNode (stdout, node, 32);
@@ -322,30 +319,16 @@ g_print("parser entry 3_1!!!\n");
                 else {
                         while (node && !node->next)
                                 node = node->parent;
-                        //if (!node || node == top)
                         if (!node)
-{
-#ifdef RDF_DEBUG
-g_print("parser error 3_2 -> return NULL!!!\n");
-#endif
                                 return NULL;
-}
                         node = node->next;
                 }
 
                 if (node->name) {
                         if (!strcmp ((char *)node->name, match))
-{
-#ifdef RDF_DEBUG
-g_print("parser error 3_3 -> return NULL!!!\n");
-#endif
                                 return node;
-}
                 }
         }
-#ifdef RDF_DEBUG
-g_print("parser error 3_4 -> return NULL!!!\n");
-#endif
         return NULL;
 }
 
@@ -1078,7 +1061,11 @@ update_channel(RDF *r)
 		g_array_append_val(r->uids, uid);
 		CF->feedid 	= g_strdup(buf);
 		CF->sender 	= g_strdup(sender);
-		CF->full_path 	= g_strdup(chn_name);
+		if (r->prefix)
+			CF->full_path	= g_strconcat(r->prefix, "/", chn_name, NULL);
+		else
+			CF->full_path 	= g_strdup(chn_name);
+
 		subj = CF->subj;
 
 		while (gtk_events_pending())
