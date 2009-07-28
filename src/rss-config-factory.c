@@ -1282,6 +1282,7 @@ import_opml(gchar *file)
 		src = src->next;
 	}
 
+	if (type == 0) {
 	gint size = 0;
 	gchar *base = NULL, *root = NULL, *last = NULL;
 	gchar *rssprefix = NULL, *rssurl = NULL, *rsstitle = NULL;
@@ -1358,8 +1359,9 @@ import_opml(gchar *file)
 			}
                 }
         }
+		goto out;
+	}
 
-	goto out;
 	while ((src = iterate_import_file(src, &url, &name, type))) {
                 if (url && strlen(url)) {
 			d(g_print("url:%s\n", url));
