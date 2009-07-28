@@ -107,6 +107,7 @@ typedef struct _setupfeed {
 
 static void feeds_dialog_edit(GtkDialog *d, gpointer data);
 void decorate_import_cookies_fs (gpointer data);
+gboolean store_redrawing = FALSE;
 
 static void
 set_sensitive (GtkCellLayout   *cell_layout,
@@ -316,7 +317,7 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
                 0, g_hash_table_lookup(rf->hre, lookup_key(key)),
                 1, name,
                 2, g_hash_table_lookup(rf->hrt, lookup_key(key)),
-		3, key,
+		3, g_strdup(key),
 		4, full_path,
                 -1);
 	g_free(name);
@@ -657,12 +658,17 @@ create_dialog_add(gchar *url, gchar *feed_text)
 	return feed;
 }
 
-void
+gboolean
 store_redraw(GtkTreeView *data)
 {
-        GtkTreeModel *model = gtk_tree_view_get_model (data);
-	gtk_list_store_clear(GTK_LIST_STORE(model));
-        g_hash_table_foreach(rf->hrname, construct_list, model);
+	if (!store_redrawing) {
+		store_redrawing = 1;
+        	GtkTreeModel *model = gtk_tree_view_get_model (data);
+		gtk_list_store_clear(GTK_LIST_STORE(model));
+        	g_hash_table_foreach(rf->hrname, construct_list, model);
+		store_redrawing = 0;
+	}
+	return FALSE;
 }
 
 ////////////////////
@@ -1681,14 +1687,11 @@ construct_opml_line(gpointer key, gpointer value, gpointer user_data)
         gchar *type = g_hash_table_lookup(rf->hrt, value);
         gchar *url_esc = g_markup_escape_text(url, strlen(url));
         gchar *key_esc = g_markup_escape_text(key, strlen(key));
-	g_print("value:%s\n", g_hash_table_lookup(rf->hrname_r, value));
-	g_print("name:%s\n", g_path_get_dirname(g_hash_table_lookup(rf->hrname_r, value)));
 
-
+#if 0
 CamelFolderInfo *info;
 	CamelStore *store = mail_component_peek_local_store(NULL);
         CamelException ex;
-        gint response;
         guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE | CAMEL_STORE_FOLDER_INFO_FAST;
 
 
@@ -1702,7 +1705,7 @@ CamelFolderInfo *info;
 
 out:
         camel_store_free_folder_info(store, info);
-
+#endif
 
         //gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"%s\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
         gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",

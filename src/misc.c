@@ -49,6 +49,12 @@ print_hash(gpointer key, gpointer value, gpointer user_data)
 {
  	g_print("key:%s, value:%s\n", (gchar *)key, (gchar *)value);
 }
+
+void
+print_hash_int(gpointer key, gpointer value, gpointer user_data)
+{
+ 	g_print("key:%s, value:%d\n", (gchar *)key, (int)value);
+}
  
 void
 free_hash(gpointer key, gpointer value, gpointer user_data)

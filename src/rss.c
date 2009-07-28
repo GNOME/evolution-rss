@@ -214,7 +214,7 @@ finish_image (SoupMessage *msg, CamelStream *user_data);
 #else
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
 #endif
-static void
+void
 #if LIBSOUP_VERSION < 2003000
 finish_create_image (SoupMessage *msg, gchar *user_data);
 #else
@@ -233,6 +233,27 @@ guint fallback_engine(void);
 gchar *print_comments(gchar *url, gchar *stream);
 static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 void dup_auth_data(gchar *origurl, gchar *url);
+gboolean display_folder_icon(GtkTreeStore *store, gchar *key);
+
+typedef struct _FEED_IMAGE {
+	gchar *img_file;
+	CamelStream *feed_fs;
+	gchar *key;
+} FEED_IMAGE;
+
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_create_icon (SoupMessage *msg, FEED_IMAGE *user_data);
+#else
+finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data);
+#endif
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_create_icon_stream (SoupMessage *msg, FEED_IMAGE *user_data);
+#else
+finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data);
+#endif
+GtkTreeStore *evolution_store = NULL;
 
 /*======================================================================*/
 
@@ -2215,7 +2236,9 @@ out:	return;
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
+#if (EVOLUTION_VERSION < 22703)
 	GdkPixbuf *icon, *pixbuf;
+#endif
 
 	gchar *main_folder = get_main_folder();
 	if (t->folder_name == NULL 
@@ -2227,12 +2250,15 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	if (!rss_folder)
 		goto out;
 	if (!icons)
-		icons = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+		icons = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	gchar *ofolder = g_hash_table_lookup(rf->feed_folders, rss_folder);
 	gchar *key = g_hash_table_lookup(rf->hrname,
 				ofolder ? ofolder : rss_folder);
 	if (!key)
 		goto normal;
+
+	if (!evolution_store)
+		evolution_store = t->store;
 
 #if (EVOLUTION_VERSION >= 22703)
 	if (!(g_hash_table_lookup(icons, key))) {
@@ -2240,32 +2266,26 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	if (!(icon = g_hash_table_lookup(icons, key))) {
 #endif
   		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
-			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-        		gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
 //        		if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 					// unfortunately e_icon_factory_get_icon return broken image in case of error
 					// we use gdk_pixbuf_new_from_file to test the validity of the image file
-					pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
-					if (pixbuf) {
 #if (EVOLUTION_VERSION >= 22703)
-						icon = e_icon_factory_get_icon (feed_file, GTK_ICON_SIZE_DIALOG);
-						g_hash_table_insert(icons, g_strdup(key), GINT_TO_POINTER(1));
-						gtk_icon_theme_add_builtin_icon(key,
-							GTK_ICON_SIZE_INVALID,
-							icon);
-						gtk_tree_store_set(
-                					t->store, t->iter,
-                					COL_STRING_ICON_NAME, key,
-                					-1);
+			if (display_folder_icon(t->store, key))
+				goto out;
 #else
-						icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
-						g_hash_table_insert(icons, g_strdup(key), icon);
-						g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+			gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+			pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
+			g_free(feed_file);
+			g_free(feed_dir);
+
+			if (pixbuf) {
+				icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
+				g_hash_table_insert(icons, g_strdup(key), icon);
+				g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+			} else
+				goto out;
 #endif
-						g_object_unref(pixbuf);
-						goto out;
-					}
-//			}
 		}
 	} else {
 #if (EVOLUTION_VERSION >= 22703)
@@ -3207,11 +3227,11 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 {
 	xmlChar *icon = NULL;
 	gchar *icon_url = NULL;
+	FEED_IMAGE *fi = NULL;
         gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 	gchar *url = (gchar *)user_data;
 	gchar *key = gen_md5(url);
-        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
-	g_free(key);
+        gchar *img_file = g_strdup_printf("%s/%s.img", feed_dir, key);
         g_free(feed_dir);
 	gchar *urldir = g_path_get_dirname(url);
 	gchar *server = get_server_from_uri(url);
@@ -3246,12 +3266,15 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 			icon_url = (char *)icon;
 
 		dup_auth_data(url, g_strdup(icon_url));
+		fi = g_new0(FEED_IMAGE, 1);
+		fi->img_file = g_strdup(img_file);
+		fi->key = g_strdup(key);
 		fetch_unblocking(
 			g_strdup(icon_url),
 			textcb,
 			NULL,
-			(gpointer)finish_create_image,
-			g_strdup(feed_file),	// we need to dupe key here
+			(gpointer)finish_create_icon,
+			fi,
 			0,
 //			&err);			// because we might lose it if
 			NULL);
@@ -3259,29 +3282,36 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
                 //              r->image = NULL;
 		icon_url = g_strconcat(urldir, "/favicon.ico", NULL);
 		dup_auth_data(url, g_strdup(icon_url));
+		fi = g_new0(FEED_IMAGE, 1);
+		fi->img_file = g_strdup(img_file);
+		fi->key = g_strdup(key);
 		fetch_unblocking(
 				g_strdup(icon_url),
 				textcb,
 				NULL,
-				(gpointer)finish_create_image,
-				g_strdup(feed_file),	// we need to dupe key here
+				(gpointer)finish_create_icon,
+				fi,
 				0,
 //				&err);			// because we might lose it if
 				NULL);
 		g_free(icon_url);
 		icon_url = g_strconcat(server, "/favicon.ico", NULL);
 		dup_auth_data(url, g_strdup(icon_url));
+		fi = g_new0(FEED_IMAGE, 1);
+		fi->img_file = g_strdup(img_file);
+		fi->key = g_strdup(key);
 		fetch_unblocking(
 				g_strdup(icon_url),
 				textcb,
 				NULL,
-				(gpointer)finish_create_image,
-				g_strdup(feed_file),	// we need to dupe key here
+				(gpointer)finish_create_icon,
+				fi,
 				0,
 //				&err);			// because we might lose it if
 				NULL);
 	}
-	g_free(feed_file);
+	g_free(key);
+	g_free(img_file);
 	g_free(icon_url);
 	g_free(server);
 	g_free(urldir);
@@ -3344,6 +3374,7 @@ update_feed_image(RDF *r)
 {
         GError *err = NULL;
 	gchar *key = gen_md5(r->uri);
+	FEED_IMAGE *fi = g_new0(FEED_IMAGE, 1);
 	gchar *image = r->image;
 	if (!check_update_feed_image(key))
 		goto out;
@@ -3351,17 +3382,20 @@ update_feed_image(RDF *r)
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+	d(g_print("feed_image() tmpurl:%s\n", feed_file));
         g_free(feed_dir);
         if (!g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 	if (image) {		//we need to validate image here with load_pixbuf
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
 			O_RDWR|O_CREAT, 0666);
 		dup_auth_data(r->uri, image);
+		fi->feed_fs = feed_fs;
+		fi->key = g_strdup(key);
                 fetch_unblocking(image,
                                 textcb,
                                 NULL,
-                                (gpointer)finish_image,
-                                feed_fs,
+                                (gpointer)finish_create_icon_stream,
+                                fi,
                                 0,
                                 &err);
                 if (err) {
@@ -3507,9 +3541,12 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	gchar *tmp;
         CamelStore *store = mail_component_peek_local_store(NULL);
 	gchar *name = extract_main_folder(full_path);
+	g_print("name to delete:%s\n", name);
 	if (!name)
 		return;
-        delete_feed_folder_alloc(lookup_feed_folder(name));
+	gchar *real_name = g_hash_table_lookup(rf->feed_folders, name);
+	if (!real_name)
+		real_name = name;
         camel_exception_init (&ex);
         rss_delete_folders (store, full_path, &ex);
         if (camel_exception_is_set (&ex)) {
@@ -3518,7 +3555,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
                 camel_exception_clear (&ex);
         }
         //also remove status file
-        gchar *tkey = g_hash_table_lookup(rf->hrname, name);
+        gchar *tkey = g_hash_table_lookup(rf->hrname, real_name);
 	if (!tkey)
 		return;
         gchar *url =  g_hash_table_lookup(rf->hr, tkey);
@@ -3537,8 +3574,10 @@ rss_delete_feed(gchar *full_path, gboolean folder)
         unlink(tmp);
 	g_free(tmp);
 out:	if (folder)
-		remove_feed_hash(name);
+		remove_feed_hash(real_name);
+        delete_feed_folder_alloc(name);
 	g_free(name);
+	g_idle_add(store_redraw, GTK_TREE_VIEW(rf->treeview));
         save_gconf_feed();
 }
 
@@ -4586,18 +4625,85 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_create_image (SoupMessage *msg, gchar *user_data)
+finish_create_icon (SoupMessage *msg, FEED_IMAGE *user_data)
 #else
-finish_create_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data)
+finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
 #endif
 {
-	d(g_print("finish_image(): status:%d, user_data:%s\n", msg->status_code, user_data));
+	d(g_print("finish_image(): status:%d, user_data:%s\n", msg->status_code, user_data->img_file));
 	if (404 != msg->status_code) {
-		CamelStream *feed_fs = camel_stream_fs_new_with_name(user_data,
+		CamelStream *feed_fs = camel_stream_fs_new_with_name(user_data->img_file,
 			O_RDWR|O_CREAT, 0666);
 		finish_image(soup_sess, msg, feed_fs);
+		display_folder_icon(evolution_store, user_data->key);
 	}
+	g_free(user_data->key);
 	g_free(user_data);
+}
+
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_create_icon_stream (SoupMessage *msg, FEED_IMAGE *user_data)
+#else
+finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
+#endif
+{
+	finish_image(soup_sess, msg, user_data->feed_fs);
+	display_folder_icon(evolution_store, user_data->key);
+	g_free(user_data->key);
+	g_free(user_data);
+}
+
+gboolean
+display_folder_icon(GtkTreeStore *tree_store, gchar *key)
+{
+	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *img_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+	GdkPixbuf *icon, *pixbuf;
+	gboolean result = FALSE;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkTreeRowReference *row;
+	EMFolderTreeModel *mod = (EMFolderTreeModel *)tree_store;
+	struct _EMFolderTreeModelStoreInfo *si;
+	CamelStore *store = mail_component_peek_local_store(NULL);
+	CamelFolder *rss_folder;
+
+	pixbuf = gdk_pixbuf_new_from_file(img_file, NULL);
+
+	if (pixbuf) {
+		gchar *name = g_hash_table_lookup(rf->hrname_r, key);
+		gchar *full_name = g_strdup_printf("%s/%s", get_main_folder(),
+							lookup_feed_folder(name));
+        	rss_folder = camel_store_get_folder (store, full_name, 0, NULL);
+		if (!rss_folder) {
+			g_free(full_name);
+			result = FALSE; 
+			goto out;
+		}
+		icon = e_icon_factory_get_icon (img_file, GTK_ICON_SIZE_DIALOG);
+		g_hash_table_insert(icons, g_strdup(key), GINT_TO_POINTER(1));
+		gtk_icon_theme_add_builtin_icon(key,
+						GTK_ICON_SIZE_INVALID,
+						icon);
+		si = g_hash_table_lookup (mod->store_hash, store);
+		row = g_hash_table_lookup (si->full_hash, full_name);
+		path = gtk_tree_row_reference_get_path (row);
+        	gtk_tree_model_get_iter ((GtkTreeModel *)tree_store, &iter, path);
+		gtk_tree_path_free (path);
+
+		gtk_tree_store_set(
+				tree_store, &iter,
+				COL_STRING_ICON_NAME, key,
+				-1);
+		g_free(full_name);
+		camel_object_unref (rss_folder);
+		g_object_unref(pixbuf);
+		result = TRUE;
+	}
+out:	g_free(img_file);
+	g_free(feed_dir);
+	return result;
 }
 
 #define CAMEL_DATA_CACHE_BITS (6)

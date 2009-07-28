@@ -21,7 +21,7 @@
 
 #define SQLITE_MAGIC "SQLite format 3"
 
-void store_redraw(GtkTreeView *data);
+gboolean store_redraw(GtkTreeView *data);
 void import_dialog_response(GtkWidget *selector, guint response, gpointer user_data);
 void del_days_cb (GtkWidget *widget, add_feed *data);
 void delete_feed_folder_alloc(gchar *old_name);
