@@ -24,6 +24,7 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
 #include <libxml/debugXML.h>
+#include <camel/camel-url.h>
 
 #include "fetch.h"
 #include "rss.h"

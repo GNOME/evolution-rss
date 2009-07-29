@@ -144,9 +144,13 @@ EXTRA_DIST = 					\
         $(schema_in_files)			\
 	rss.h network.h				\
 	network-soup.c				\
+	network-soup.h				\
 	misc.c					\
+	misc.h					\
 	dbus.c					\
+	dbus.h					\
 	fetch.c					\
+	fetch.h					\
 	file-gio.c				\
 	file-gio.h				\
 	gecko-utils.cpp				\

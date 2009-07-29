@@ -2257,10 +2257,11 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	if (!key)
 		goto normal;
 
+
+#if (EVOLUTION_VERSION >= 22703)
 	if (!evolution_store)
 		evolution_store = t->store;
 
-#if (EVOLUTION_VERSION >= 22703)
 	if (!(g_hash_table_lookup(icons, key))) {
 #else
 	if (!(icon = g_hash_table_lookup(icons, key))) {
@@ -4654,6 +4655,7 @@ finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE 
 	g_free(user_data);
 }
 
+#if (EVOLUTION_VERSION >= 22703)
 gboolean
 display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 {
@@ -4705,6 +4707,7 @@ out:	g_free(img_file);
 	g_free(feed_dir);
 	return result;
 }
+#endif
 
 #define CAMEL_DATA_CACHE_BITS (6)
 #define CAMEL_DATA_CACHE_MASK ((1<<CAMEL_DATA_CACHE_BITS)-1)
