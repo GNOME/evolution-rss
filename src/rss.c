@@ -1421,6 +1421,11 @@ webkit_set_preferences(void)
 	if (rss_soup_jar)
 		soup_session_add_feature(webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
 #endif
+	//requires webkit >= 1.1.11
+	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
+                        EVOLUTION_VERSION_STRING, VERSION);
+	g_object_set (rf->mozembed, "user-agent", agstr,  NULL);
+	g_free(agstr);
 }
 
 void
