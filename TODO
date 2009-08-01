@@ -1,7 +1,5 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
-	* probably move to soup_unblocking when rendering of an article
-	* also create groups when importing
 	* check webkit area sizing when using zoom in/out
 	* failback to old handler when formatting error
 	* jump to folder when adding through d-bus
@@ -45,4 +43,3 @@
 	* use ellipsize in web auth dialog
 	* check feed_folders for errors
 	* check rss_delete_feed for race condition when deletion of camel folder
-	* make clist update feed list information

@@ -3604,6 +3604,8 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 			update_main_folder(info->new->full_name);
 		else
 			update_feed_folder(info->old_base, info->new->full_name);
+		g_idle_add(store_redraw, GTK_TREE_VIEW(rf->treeview));
+        	save_gconf_feed();
 	}
 }
 
