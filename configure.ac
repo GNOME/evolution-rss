@@ -186,6 +186,8 @@ if test "x$have_webkit" == "xno"; then
 	AC_DEFINE_UNQUOTED(WEBKIT_UNSTD, 1, [unstandard webkit installation])
 	WEBKIT_CFLAGS=$WebKitGtk_CFLAGS
 	WEBKIT_LIBS=$WebKitGtk_LIBS
+	WEBKIT_VERSION=`$PKG_CONFIG --modversion WebKitGtk` 
+	WEBKIT_VERSION=`echo $WEBKIT_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 else
 	WEBKIT_VERSION=`$PKG_CONFIG --modversion webkit-1.0` 
 	WEBKIT_VERSION=`echo $WEBKIT_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`

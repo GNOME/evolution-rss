@@ -1417,9 +1417,11 @@ void
 webkit_set_preferences(void)
 {
 #ifdef HAVE_WEBKIT
+#if (WEBKIT_VERSION >= 1001001)
 	webkit_session = webkit_get_default_session();
 	if (rss_soup_jar)
 		soup_session_add_feature(webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
+#endif
 #endif
 	//requires webkit >= 1.1.11
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
