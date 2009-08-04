@@ -1848,7 +1848,7 @@ free_rss_controls(EMFormatHTMLPObject *o)
 }
 
 void
-pfree(EMFormatHTMLPObject *o)
+free_rss_browser(EMFormatHTMLPObject *o)
 {
 	struct _org_gnome_rss_controls_pobject *po = 
 			(struct _org_gnome_rss_controls_pobject *) o;
@@ -1864,7 +1864,6 @@ pfree(EMFormatHTMLPObject *o)
 #ifdef HAVE_GECKO
 	if (engine == 2) {
 		gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
-//		gtk_moz_embed_pop_startup();
 	}
 #endif
 	if (rf->mozembed) {
@@ -1949,7 +1948,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	
 	gpointer is_html = NULL;
 	if (feedid)
-		is_html =  g_hash_table_lookup(rf->hrh, g_strstrip(feedid));
+		is_html =  g_hash_table_lookup(rf->hrh, g_strstrip(feedid)); //feedid is modified
 	if (comments)
 		comments = g_strstrip(comments);
 	
@@ -1995,7 +1994,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			pobj->website = g_strstrip(g_strdup((gchar *)website));
 			pobj->is_html = GPOINTER_TO_INT(is_html);
 			pobj->format = (EMFormatHTML *)t->format;
-			pobj->object.free = pfree;
+			pobj->object.free = free_rss_browser;
 			pobj->part = t->part;
 			pobj->stopbut =  button2;
 			camel_stream_printf (t->stream,
@@ -2089,6 +2088,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 		buff=(xmlChar *)tmp;
 		g_byte_array_free (buffer, 1);
+		camel_object_unref(stream);
 	//	char *buff = decode_html_entities(buffer2);
 ///		buff=tmp;
 
@@ -2142,12 +2142,13 @@ render_body:    if (category)
 						GCONF_KEY_SHOW_COMMENTS, 
 						NULL)) {
 			if (commstream) {
-			camel_stream_printf (fstream, 
-                        	"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
+				camel_stream_printf (fstream, 
+                        		"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
                         		frame_colour & 0xffffff,
 					content_colour & 0xEDECEB & 0xffffff,
 					text_colour & 0xffffff);
 				gchar *result = print_comments(comments, commstream);
+				g_free(commstream);
 				char *rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
 					org_gnome_rss_controls_counter_id);
 				org_gnome_rss_controls_counter_id++;
@@ -2158,17 +2159,20 @@ render_body:    if (category)
 									message,
 									(EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
 				pobj->counter = commcnt;
-				pobj->website = comments;
-				//pobj->object.free = free_rss_controls;
+				pobj->website = g_strdup(comments);
+				//this might not be needed but we want to make sure po->html is destroyed
+				pobj->object.free = free_rss_controls;
 				camel_stream_printf(fstream, 
                        			"<object height=25 classid=%s></object>", rfrclsid);
-				if (result && strlen(result))
+				if (result && strlen(result)) {
 					camel_stream_printf(fstream, 
 					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
 						frame_colour & 0xffffff, 
 						content_colour & 0xffffff,
 						text_colour & 0xffffff,
 						result);
+					g_free(result);
+				}
 				commstream = NULL;
 			} else {
 				fetch_comments(comments, (EMFormatHTML *)t->format);
@@ -2542,7 +2546,6 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
 		r->uri = feed->feed_url;
 		r->progress = feed->progress;
 
-		//chn_name = display_doc (r);
 		//we preprocess feed first in order to get name, icon, etc
 		//and later display the actual feed (once rf-> structure is
 		//properly populated
@@ -3003,7 +3006,6 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 #endif
 {
 	guint reload=0;
-	taskbar_op_set_progress("comments", "www", 0.01);
 
 //	if (!msg->length)
 	//	goto out;
@@ -3013,13 +3015,11 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
 
-//#ifdef RSS_DEBUG
-//	g_print("feed %s\n", user_data);
-//#endif
 	if (!commstream)
 		reload = 1;
 
 	commstream = response->str; 
+	g_string_free(response, 0);
 
 	if (reload) {
 		em_format_redraw((EMFormat *)user_data);
@@ -3067,16 +3067,15 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 	GError *err = NULL;
 	g_print("\nFetching comments from: %s\n", 
 		url);
-	
 
 	fetch_unblocking(
-				url,
-				NULL,
-				NULL,
-				(gpointer)finish_comments,
-				stream,	// we need to dupe key here
-				1,
-				&err);	
+			url,
+			NULL,
+			NULL,
+			(gpointer)finish_comments,
+			stream,	// we need to dupe key here
+			1,
+			&err);	
 	if (err) {
               	gchar *msg = g_strdup_printf("\n%s\n%s", 
 			 	url, err->message);
@@ -3585,7 +3584,7 @@ out:	if (folder)
 		remove_feed_hash(real_name);
         delete_feed_folder_alloc(name);
 	g_free(name);
-	g_idle_add(store_redraw, GTK_TREE_VIEW(rf->treeview));
+	g_idle_add((GSourceFunc)store_redraw, GTK_TREE_VIEW(rf->treeview));
         save_gconf_feed();
 }
 
@@ -3611,7 +3610,7 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 			update_main_folder(info->new->full_name);
 		else
 			update_feed_folder(info->old_base, info->new->full_name);
-		g_idle_add(store_redraw, GTK_TREE_VIEW(rf->treeview));
+		g_idle_add((GSourceFunc)store_redraw, GTK_TREE_VIEW(rf->treeview));
         	save_gconf_feed();
 	}
 }
@@ -4864,7 +4863,6 @@ update_comments(RDF *r)
         GString *comments = g_string_new(NULL);
         for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
                 CF = parse_channel_line(el->children, NULL, NULL);
-        //print_cf(CF);
 		g_string_append_printf (comments,
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 0px; color: #%06x;\">",
                         frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
@@ -4879,6 +4877,7 @@ update_comments(RDF *r)
                         	frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
                                 CF->body);
                 g_string_append_printf(comments, "</div>&nbsp;");
+		free_cf(CF);
         }
 	commcnt=i;
         gchar *scomments=comments->str;
@@ -4895,6 +4894,11 @@ display_comments (RDF *r)
 		if (r->maindate)
 			g_free(r->maindate);
 		g_array_free(r->item, TRUE);
+		g_free(r->cache);
+        	if (r->type)
+                	g_free(r->type);
+		if (r)
+			g_free(r);
 		return comments;
 	}
 	return NULL;
