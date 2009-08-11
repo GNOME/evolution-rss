@@ -754,9 +754,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 			}
 
 			/* This is the channel top level */
-#ifdef RDF_DEBUG
-			printf ("Top level '%s'.\n", walk->name);
-#endif
+			d(printf ("Top level '%s'.\n", walk->name));
 			if (strcasecmp ((char *)walk->name, "channel") == 0) {
 				channel = walk;
 				rewalk = channel->children;

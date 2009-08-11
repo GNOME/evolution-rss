@@ -56,6 +56,7 @@ int rss_verbose_debug = 0;
 
 #include <misc/e-activity-handler.h>
 
+#include <mail/em-format.h>
 #include <mail/em-format-html.h>
 #include <mail/em-format-hook.h>
 
@@ -2426,21 +2427,9 @@ char *strcasestr(const char *a, const char *b)
 }
 #endif
 
-gboolean
-setup_feed(add_feed *feed)
+void
+prepare_hashes(void)
 {
-	guint ret = 0;
-	guint ttl;
-        RDF *r = NULL;
-        GString *post = NULL, *content = NULL;
-        GError *err = NULL;
-	gchar *chn_name = NULL, *tmp_chn_name = NULL, *tmp = NULL;
-
-	check_folders();
-
-        r = g_new0 (RDF, 1);
-        r->shown = TRUE;
-
 	if (rf->hr == NULL)	
 		rf->hr  = g_hash_table_new_full(g_str_hash,
 						g_str_equal, 
@@ -2516,6 +2505,24 @@ setup_feed(add_feed *feed)
 						 g_str_equal,
 						 g_free,
 						 NULL);
+}
+
+gboolean
+setup_feed(add_feed *feed)
+{
+	guint ret = 0;
+	guint ttl;
+        RDF *r = NULL;
+        GString *post = NULL, *content = NULL;
+        GError *err = NULL;
+	gchar *chn_name = NULL, *tmp_chn_name = NULL, *tmp = NULL;
+
+	check_folders();
+
+        r = g_new0 (RDF, 1);
+        r->shown = TRUE;
+
+	prepare_hashes();
 
 	rf->pending = TRUE;
 
@@ -2527,7 +2534,10 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
         if (err) {
 		g_print("setup_feed() -> err:%s\n", err->message);
 		gchar *tmpkey = gen_md5(feed->feed_url);
-		rss_error(tmpkey, feed->feed_name ? feed->feed_name: _("Unamed feed"), _("Error while fetching feed."), err->message);
+		rss_error(tmpkey, 
+			feed->feed_name ? feed->feed_name: _("Unamed feed"), 
+			_("Error while fetching feed."),
+			 err->message);
 		g_free(tmpkey);
 		goto out;
         }
@@ -2553,9 +2563,12 @@ top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
 add:
 		//feed name can only come from an import so we rather prefer
 		//resulted channel name instead of supplied one
-
-		if (feed->feed_name && !chn_name)
+		if (feed->feed_name && !chn_name) {
+		//if (feed->feed_name) {
 	                chn_name = g_strdup(feed->feed_name);
+		//	feed->orig_name = r->title;
+		//	r->title = chn_name;
+		}
                 if (chn_name == NULL)
                         chn_name = g_strdup (_(DEFAULT_NO_CHANNEL));
 
@@ -2563,9 +2576,6 @@ add:
 		chn_name = sanitize_folder(chn_name);
 		tmp = chn_name;
                	chn_name = generate_safe_chn_name(chn_name);
-		if (feed->prefix)
-			chn_name = g_build_path("/", feed->prefix, chn_name, NULL);
-		r->prefix = feed->prefix;
 		
 		gpointer crc_feed = gen_md5(feed->feed_url);
 		g_hash_table_insert(rf->hrname, 
@@ -2622,6 +2632,15 @@ add:
 			g_strdup(crc_feed), 
 			GINT_TO_POINTER(feed->fetch_html));
 
+		if (feed->edit) {
+			gchar *a = g_build_path("/", feed->prefix ? feed->prefix : "", feed->feed_name, NULL);
+			gchar *b = g_build_path("/", r->title, NULL);
+			update_feed_folder(b, a);
+			//r->title = feed->feed_name;
+			r->title = a;
+			g_free(b);
+		}
+
 		if (feed->validate)
 			display_feed(r);
 
@@ -2664,7 +2683,9 @@ add:
 		goto top;
 	}
 
- 	rss_error(NULL, NULL, _("Error while fetching feed."), _("Invalid Feed"));
+ 	rss_error(NULL, NULL, 
+		_("Error while fetching feed."), 
+		_("Invalid Feed"));
 	ret = 0;
 
 out:	rf->pending = FALSE;
@@ -3065,8 +3086,8 @@ void
 fetch_comments(gchar *url, EMFormatHTML *stream)
 {
 	GError *err = NULL;
-	g_print("\nFetching comments from: %s\n", 
-		url);
+	d(g_print("\nFetching comments from: %s\n", 
+		url));
 
 	fetch_unblocking(
 			url,
@@ -3475,6 +3496,10 @@ update_feed_folder(gchar *old_name, gchar *new_name)
 {
 	gchar *oname = extract_main_folder(old_name);
 	gchar *nname = extract_main_folder(new_name);
+	if (!oname)
+		oname = g_strdup(old_name);
+	if (!nname)
+		nname = g_strdup(new_name);
 	FILE *f;
 	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
@@ -4644,7 +4669,9 @@ finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_d
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(user_data->img_file,
 			O_RDWR|O_CREAT, 0666);
 		finish_image(soup_sess, msg, feed_fs);
+#if (EVOLUTION_VERSION >= 22703)
 		display_folder_icon(evolution_store, user_data->key);
+#endif
 	}
 	g_free(user_data->key);
 	g_free(user_data);
@@ -4658,7 +4685,9 @@ finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE 
 #endif
 {
 	finish_image(soup_sess, msg, user_data->feed_fs);
+#if (EVOLUTION_VERSION >= 22703)
 	display_folder_icon(evolution_store, user_data->key);
+#endif
 	g_free(user_data->key);
 	g_free(user_data);
 }

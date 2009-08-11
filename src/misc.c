@@ -53,7 +53,7 @@ print_hash(gpointer key, gpointer value, gpointer user_data)
 void
 print_hash_int(gpointer key, gpointer value, gpointer user_data)
 {
- 	g_print("key:%s, value:%d\n", (gchar *)key, (int)value);
+ 	g_print("key:%s, value:%d\n", (gchar *)key, GPOINTER_TO_INT(value));
 }
  
 void

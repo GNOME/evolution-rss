@@ -38,7 +38,8 @@
 	* show feed icons in send & receive dialog
 	* cancel fetching comments when summary display is changed
 	* detect duplicate items by content not by feedid
-	* make gtkhtml rendering non-bloking
+	* make gtkhtml rendering non-blocking
 	* use ellipsize in web auth dialog
 	* check feed_folders for errors
 	* check rss_delete_feed for race condition when deletion of camel folder
+	* folder delete should delete feed_folders allocation

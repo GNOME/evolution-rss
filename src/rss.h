@@ -204,6 +204,7 @@ typedef struct ADD_FEED {
 	guint		ttl_multiply;	// how much we multiyply ttl value (minutes)
 	guint		update;	// feed update method global; ttl; disabled
 	gboolean	renamed;
+	gboolean	edit;
 } add_feed;
 
 typedef struct USERPASS {

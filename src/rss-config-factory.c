@@ -998,6 +998,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 {
 	gchar *text = NULL;
 	gpointer key = lookup_key(feed_name);
+	gchar *prefix = NULL;
 
 	GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", "", NULL);
 	GtkWidget *progress = gtk_progress_bar_new();
@@ -1017,6 +1018,11 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
         feed->feed_url = sanitize_url(feed->feed_url);
         g_free(text);
         if (feed->feed_url) {
+	feed->edit=1;
+			feed->feed_name = g_path_get_basename(lookup_feed_folder(feed_name));
+			prefix = g_path_get_dirname(lookup_feed_folder(feed_name));
+			if (*prefix != '.')
+				feed->prefix = prefix;
 		if (strcmp(url, feed->feed_url)) {
 			//prevent adding of an existing feed (url)
 			//which might screw things
@@ -1040,8 +1046,8 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 		} else {
 			key = gen_md5(url);
 			g_hash_table_replace(rf->hrh,
-                                                        g_strdup(key),
-                                                        GINT_TO_POINTER(feed->fetch_html));
+						g_strdup(key),
+						GINT_TO_POINTER(feed->fetch_html));
 			if (feed->update == 2) {
 				g_hash_table_replace(rf->hrttl,
 						g_strdup(key),
@@ -1088,7 +1094,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 			g_hash_table_replace(rf->hrdel_messages,
 					g_strdup(key),
 					GINT_TO_POINTER(feed->del_messages));
-					g_hash_table_replace(rf->hrupdate,
+			g_hash_table_replace(rf->hrupdate,
 					g_strdup(key),
 					GINT_TO_POINTER(feed->update));
 			g_hash_table_replace(rf->hrdel_unread,
@@ -1734,7 +1740,6 @@ export_opml(gchar *file)
         char outstr[200];
         time_t t;
         struct tm *tmp;
-        int btn = GTK_RESPONSE_YES;
         FILE *f;
 
 
@@ -1761,29 +1766,7 @@ export_opml(gchar *file)
                 buffer);
         g_free(buffer);
 
-#if 0
-        if (g_file_test (file, G_FILE_TEST_IS_REGULAR)) {
-                GtkWidget *dlg;
-
-                dlg = gtk_message_dialog_new (GTK_WINDOW (rf->preferences), 0,
-                                              GTK_MESSAGE_QUESTION,
-                                              GTK_BUTTONS_YES_NO,
-                                              _("A file by that name already exists.\n"
-                                                "Overwrite it?"));
-                gtk_window_set_title (GTK_WINDOW (dlg), _("Overwrite file?"));
-                gtk_dialog_set_has_separator (GTK_DIALOG (dlg), FALSE);
-
-                btn = gtk_dialog_run (GTK_DIALOG (dlg));
-                gtk_widget_destroy (dlg);
-        }
-
-        if (btn == GTK_RESPONSE_YES)
-                goto over;
-        else
-                goto out;
-#endif
-
-over:   f = fopen(file, "w+");
+	f = fopen(file, "w+");
         if (f) {
                 fwrite(opml, strlen(opml), 1, f);
                 fclose(f);
@@ -1794,7 +1777,7 @@ over:   f = fopen(file, "w+");
                         g_strerror(errno),
                         NULL);
         }
-out:    g_free(opml);
+	g_free(opml);
 
 }
 
@@ -2318,6 +2301,16 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 		g_object_set_data_full (G_OBJECT (epl), "add-feed", feed, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "url", url, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "ofolder", ofolder, NULL);
+		GtkWidget *ok = (GtkWidget *)glade_xml_get_widget (feed->gui, "ok_button");
+
+		GtkAccelGroup *accel_group = gtk_accel_group_new ();
+		gtk_widget_add_accelerator (ok, "activate", accel_group,
+                              GDK_Return, (GdkModifierType) 0,
+                              GTK_ACCEL_VISIBLE);
+		gtk_widget_add_accelerator (ok, "activate", accel_group,
+                              GDK_KP_Enter, (GdkModifierType) 0,
+                              GTK_ACCEL_VISIBLE);
+		gtk_window_add_accel_group (GTK_WINDOW (feed->dialog), accel_group);
 		return feed->child;
 	}
 
