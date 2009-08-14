@@ -2263,6 +2263,7 @@ out:	return;
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	static gboolean initialised = FALSE;
+	gchar *iconfile;
 #if (EVOLUTION_VERSION < 22703)
 	GdkPixbuf *icon, *pixbuf;
 #endif
@@ -2304,7 +2305,6 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
 			gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
 			pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
-			g_free(feed_file);
 			g_free(feed_dir);
 
 			if (pixbuf) {
@@ -2312,7 +2312,9 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 				g_hash_table_insert(icons, g_strdup(key), icon);
 				g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
 			} else
-				goto out;
+				goto defico; //failed to load the icon so just throw the default
+
+			g_free(feed_file);
 #endif
 		}
 	} else {
@@ -2322,13 +2324,13 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 			COL_STRING_ICON_NAME, key,
 			-1);
 #else
-		g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
+	g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
 #endif
 		goto out;
 	}
 
 normal:	if (!initialised) { //move this to startup
-		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+defico:		iconfile = g_build_filename (EVOLUTION_ICONDIR,
 	                                    "rss-16.png",
 						NULL);
 #if (EVOLUTION_VERSION >= 22703)
