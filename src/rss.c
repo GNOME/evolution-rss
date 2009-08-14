@@ -193,6 +193,7 @@ gboolean delete_op = FALSE;	//delete in progress
 gchar *commstream = NULL; 	//global comments stream
 guint commcnt = 0; 	//global number of comments
 gchar *commstatus = "";
+GSList *comments_session = NULL;	//comments to be fetched queue
 guint32 frame_colour;
 guint32 content_colour;
 guint32 text_colour;
@@ -543,12 +544,14 @@ browsercb(NetStatusType status, gpointer statusdata, gpointer data)
     NetStatusProgress *progress = (NetStatusProgress*)statusdata;
     switch (status) {
     case NET_STATUS_PROGRESS:
+#if 0
 //		g_print("chunk:%s\n", progress->chunk);
 		g_print("total:%d\n", progress->total);
 		g_print("curent:%d\n", progress->current);
 		g_print("-------------- chunk: %d =============\n", GPOINTER_TO_INT(progress->chunksize));
 		//browser_write(progress->chunk, progress->chunksize, data);
 //		browser_fill+=progress->chunksize;
+#endif
         break;
     default:
         g_warning("unhandled network status %d\n", status);
@@ -1379,7 +1382,9 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
         	int height = widget->allocation.height - 16 - k;
 		d(g_print("resize webkit :width:%d, height: %d\n", width, height));
 		if (po->mozembedwindow && rf->mozembed)
-			if(GTK_IS_WIDGET(po->mozembedwindow) && height > 0) {
+			if(GTK_IS_WIDGET(po->mozembedwindow) 
+			&& GTK_WIDGET_REALIZED(rf->mozembed)
+			&& height > 0) {
 				if (!browser_fetching) {
 					gchar *msg = g_strdup(_("Formatting..."));
 					browser_write(msg, strlen(msg), "file:///");
@@ -1837,6 +1842,13 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 }
 
 void
+cancel_comments_session(SoupSession *sess)
+{
+	g_print("comment session to cancel:%p\n", sess);
+	soup_session_abort(sess);
+}
+
+void
 free_rss_controls(EMFormatHTMLPObject *o)
 {
 	struct _org_gnome_rss_controls_pobject *po = 
@@ -1845,7 +1857,10 @@ free_rss_controls(EMFormatHTMLPObject *o)
 		g_free(po->mem);
 	if (po->website)
 		g_free(po->website);
-	gtk_widget_destroy(po->html);
+	//gtk_widget_destroy(po->html);
+	g_slist_foreach(comments_session, (GFunc)cancel_comments_session, NULL);
+	g_slist_free(comments_session);
+	comments_session = NULL;
 }
 
 void
@@ -1854,7 +1869,7 @@ free_rss_browser(EMFormatHTMLPObject *o)
 	struct _org_gnome_rss_controls_pobject *po = 
 			(struct _org_gnome_rss_controls_pobject *) o;
 	gpointer key = g_hash_table_lookup(rf->key_session, po->website);
-	g_print("key sess:%p\n", key);
+	d(g_print("key sess:%p\n", key));
 	if (key) {
 		g_hash_table_remove(rf->key_session, po->website);
 		soup_session_abort(key);
@@ -3002,8 +3017,8 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 {
 	g_return_if_fail(rf->mozembed);
 	GString *response = g_string_new_len(msg->response_body->data, msg->response_body->length);
-	g_print("browser full:%d\n", (int)response->len);
-	g_print("browser fill:%d\n", (int)browser_fill);
+	d(g_print("browser full:%d\n", (int)response->len));
+	d(g_print("browser fill:%d\n", (int)browser_fill));
 	if (!response->len) {
 		gchar *msg = g_strdup(_("Formatting error."));
 		browser_write(msg, strlen(msg), "file://");
@@ -3026,7 +3041,10 @@ finish_comments (SoupMessage *msg, EMFormatHTML *user_data)
 finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data)
 #endif
 {
+	g_print("...fetch coments end.\n");
 	guint reload=0;
+
+	comments_session = g_slist_remove(comments_session, soup_sess);
 
 //	if (!msg->length)
 	//	goto out;
@@ -3042,7 +3060,7 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 	commstream = response->str; 
 	g_string_free(response, 0);
 
-	if (reload) {
+	if (reload && !rf->cur_format) {
 		em_format_redraw((EMFormat *)user_data);
 	}
 	
@@ -3086,17 +3104,20 @@ void
 fetch_comments(gchar *url, EMFormatHTML *stream)
 {
 	GError *err = NULL;
-	d(g_print("\nFetching comments from: %s\n", 
-		url));
-
-	fetch_unblocking(
+	SoupSession *comm_sess = NULL;
+	g_print("\nFetching comments from: %s\n", url);
+	
+	comm_sess = fetch_unblocking(
 			url,
 			NULL,
 			NULL,
 			(gpointer)finish_comments,
 			stream,	// we need to dupe key here
 			1,
-			&err);	
+			&err);
+
+	comments_session = g_slist_append(comments_session, comm_sess);
+	
 	if (err) {
               	gchar *msg = g_strdup_printf("\n%s\n%s", 
 			 	url, err->message);

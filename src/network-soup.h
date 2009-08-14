@@ -23,7 +23,7 @@
 
 void abort_all_soup(void);
 gboolean cancel_soup_sess(gpointer key, gpointer value, gpointer user_data);
-gboolean net_get_unblocking(gchar *url,
+SoupSession *net_get_unblocking(gchar *url,
                                 NetStatusCallback cb, gpointer data,
                                 gpointer cb2, gpointer cbdata2,
                                 guint track,

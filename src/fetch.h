@@ -21,13 +21,14 @@
 #ifndef _FETCH_H_
 #define _FETCH_H_ 1
 
+#include <libsoup/soup-gnome.h>
 #include "network.h"
 
 GString *fetch_blocking(gchar *url, GSList *headers, GString *post,
                   NetStatusCallback cb, gpointer data,
                   GError **err);
 
-gboolean fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
+SoupSession *fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
                                 gpointer cb2, gpointer cbdata2,
                                 guint track,
                                 GError **err);

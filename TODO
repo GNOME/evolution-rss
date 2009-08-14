@@ -1,7 +1,6 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
 	* check webkit area sizing when using zoom in/out
-	* failback to old handler when formatting error
 	* jump to folder when adding through d-bus
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
@@ -26,7 +25,6 @@
 	* perhaps make quoted text fancier
 	* if immage cannto be served from cache try to fetch it ( add 3 times retry for fetching an image)
 	* disable filters on setup_feed()
-	* store feed in an alternate file to serve images from
 	* migrate fetch_blocking -> fetch_unblocking
 	* grey out disabled folders (feeds)
 	* feed check runtime validation
@@ -36,7 +34,6 @@
 	* gtkhtml does not handle &#xD; construct
 	* switch webkit -> gecko leads to crash on pfree()
 	* show feed icons in send & receive dialog
-	* cancel fetching comments when summary display is changed
 	* detect duplicate items by content not by feedid
 	* make gtkhtml rendering non-blocking
 	* use ellipsize in web auth dialog

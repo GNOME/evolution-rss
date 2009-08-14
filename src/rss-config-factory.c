@@ -2156,7 +2156,7 @@ struct _EConfigTargetRSS
 
 void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target)
 {
-	g_print("abort");
+	d(g_print("abort"));
 }
 
 void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)

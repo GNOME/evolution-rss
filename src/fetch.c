@@ -66,7 +66,7 @@ error:
 //fetch feed
 //FIXME gio callback hardcoded 
 
-gboolean
+SoupSession*
 fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data, 
 				gpointer cb2, gpointer cbdata2,
 				guint track,
@@ -81,13 +81,14 @@ fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
 
 	if (!g_ascii_strcasecmp(scheme, "file")) {
 		g_free(scheme);
-		return file_get_unblocking(url,
+		file_get_unblocking(url,
 				NULL, // add status here //
 				NULL,
 				gio_finish_feed,
 				cbdata2,
 				0,
 				err);	
+		return NULL;
 	} else {
 		g_free(scheme);
 		return net_get_unblocking(url,
