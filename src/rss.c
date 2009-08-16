@@ -197,6 +197,8 @@ GSList *comments_session = NULL;	//comments to be fetched queue
 guint32 frame_colour;
 guint32 content_colour;
 guint32 text_colour;
+
+gboolean gecko_ready = FALSE;
 gboolean browser_fetching = 0; //mycall event could be triggered many times in first step (fetching)
 gint browser_fill = 0;	//how much data currently written to browser
 
@@ -1415,7 +1417,10 @@ if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
 void
 rss_mozilla_init(void)
 {
-	gecko_init();
+	if (!gecko_ready) {
+		gecko_init();
+		gecko_ready = 1;
+	}
 }
 #endif
 
@@ -1428,12 +1433,15 @@ webkit_set_preferences(void)
 	if (rss_soup_jar)
 		soup_session_add_feature(webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
 #endif
-#endif
-	//requires webkit >= 1.1.11
+#if (WEBKIT_VERSION >= 1001011)
+	WebKitWebSettings *settings;
+	settings = webkit_web_view_get_settings(WEBKIT_WEB_VIEW(webView));
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
                         EVOLUTION_VERSION_STRING, VERSION);
-	g_object_set (rf->mozembed, "user-agent", agstr,  NULL);
+	g_object_set (settings, "user-agent", agstr,  NULL);
 	g_free(agstr);
+#endif
+#endif
 }
 
 void
@@ -1673,14 +1681,16 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
 		g_signal_connect (rf->mozembed, "populate-popup", G_CALLBACK (webkit_click), moz);
 		g_signal_connect (rf->mozembed, "hovering-over-link", G_CALLBACK (webkit_over_link), moz);
+//add zoom level
 #if (WEBKIT_VERSION >= 1001007)
-		g_signal_connect (rf->mozembed, "load-status", G_CALLBACK(webkit_net_status), po->stopbut);
+		g_signal_connect (rf->mozembed, "notify::load-status", G_CALLBACK(webkit_net_status), po->stopbut);
 #endif
 	}
 #endif
 
 #ifdef HAVE_GECKO
 	if (engine == 2) {
+		rss_mozilla_init();	//in case we this is a failover
 		rf->mozembed = gtk_moz_embed_new();
 		gecko_set_preferences();
 
