@@ -1435,7 +1435,7 @@ webkit_set_preferences(void)
 #endif
 #if (WEBKIT_VERSION >= 1001011)
 	WebKitWebSettings *settings;
-	settings = webkit_web_view_get_settings(WEBKIT_WEB_VIEW(webView));
+	settings = webkit_web_view_get_settings(WEBKIT_WEB_VIEW(rf->mozembed));
 	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
                         EVOLUTION_VERSION_STRING, VERSION);
 	g_object_set (settings, "user-agent", agstr,  NULL);
