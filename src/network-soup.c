@@ -497,7 +497,7 @@ out:
 	return response;
 }
 
-SoupSession*
+gboolean
 net_get_unblocking(gchar *url, 
 				NetStatusCallback cb, gpointer data, 
 				gpointer cb2, gpointer cbdata2,
@@ -544,7 +544,7 @@ net_get_unblocking(gchar *url,
 	if (!msg) {
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
 				soup_status_get_phrase(2));			//invalid url
-		return (SoupSession *)-1;
+		return FALSE;
 	}
 
 	if (track) {
@@ -579,7 +579,7 @@ net_get_unblocking(gchar *url,
 //	g_object_weak_ref (G_OBJECT(soup_sess), unblock_free, soup_sess);
 //	GMainLoop *mainloop = g_main_loop_new (g_main_context_default (), FALSE);
   //	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);
-	return soup_sess;
+	return TRUE;
 }
 
 GString*

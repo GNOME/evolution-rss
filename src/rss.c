@@ -3043,7 +3043,6 @@ finish_comments (SoupMessage *msg, EMFormatHTML *user_data)
 finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data)
 #endif
 {
-	g_print("...fetch coments end.\n");
 	guint reload=0;
 
 	comments_session = g_slist_remove(comments_session, soup_sess);
@@ -3107,17 +3106,18 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 {
 	GError *err = NULL;
 	SoupSession *comm_sess = NULL;
-	g_print("\nFetching comments from: %s\n", url);
+	d(g_print("\nFetching comments from: %s\n", url));
+	gchar *uniqcomm = g_strdup_printf("COMMENT-%s", url);
 	
-	comm_sess = fetch_unblocking(
+	fetch_unblocking(
 			url,
 			NULL,
-			NULL,
+			uniqcomm,
 			(gpointer)finish_comments,
 			stream,	// we need to dupe key here
 			1,
 			&err);
-
+	comm_sess = g_hash_table_lookup(rf->key_session, uniqcomm);
 	comments_session = g_slist_append(comments_session, comm_sess);
 	
 	if (err) {

@@ -28,7 +28,7 @@ GString *fetch_blocking(gchar *url, GSList *headers, GString *post,
                   NetStatusCallback cb, gpointer data,
                   GError **err);
 
-SoupSession *fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
+gboolean fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
                                 gpointer cb2, gpointer cbdata2,
                                 guint track,
                                 GError **err);
