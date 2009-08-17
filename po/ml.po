@@ -1,0 +1,855 @@
+# translation of evolution-rss.po.master.ml.po to
+# translation of evolution-rss.HEAD.ml.po to
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss.po.master.ml\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
+"POT-Creation-Date: 2009-08-11 18:36+0000\n"
+"PO-Revision-Date: 2009-08-14 15:55+0530\n"
+"Last-Translator: \n"
+"Language-Team:  <en@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../src/dbus.c:120 ../src/rss.c:2679 ../src/rss-config-factory.c:721
+#: ../src/rss-config-factory.c:1032 ../src/rss-config-factory.c:1163
+msgid "Error adding feed."
+msgstr "ഫീഡ് ചേര്‍ക്കുന്നതില്‍ പിശക്."
+
+#: ../src/dbus.c:121 ../src/rss.c:2680 ../src/rss-config-factory.c:722
+#: ../src/rss-config-factory.c:1033 ../src/rss-config-factory.c:1164
+msgid "Feed already exists!"
+msgstr "ഫീഡ് നിലവിലുണ്ടു്!"
+
+#: ../src/dbus.c:126
+#, c-format
+msgid "New feed imported: %s"
+msgstr "പുതിയ ഫീഡ് ഇംപോര്‍ട്ട് ചെയ്തിരിക്കുന്നു: %s"
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Accepts Cookies"
+msgstr "കുക്കികള്‍ സ്വീകരിക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Auto check for new articles."
+msgstr "പുതിയ ലേഖനങ്ങള്‍ക്കായി സ്വയമേ പരിശോധിക്കുക."
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Blink Status Icon"
+msgstr "അവസ്ഥയുടെ ചിഹ്നം മിന്നുക"
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Blink status icon when new article received"
+msgstr "പുതിയ ലേഖനം ലഭ്യമാകുമ്പോള്‍ അവസ്ഥയുടെ ചിഹ്നം മിന്നുക"
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Check New articles"
+msgstr "പുതിയ ലേഖനങ്ങള്‍ പരിശോധിക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Check for new articles everytime Evolution is started."
+msgstr "എപ്പോഴും ഇവല്യൂഷന്‍ ആരംഭിക്കുമ്പോള്‍, പുതിയ ലേഖനങ്ങള്‍ക്കായി പരിശോധിക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Checks articles on startup"
+msgstr "ആരംഭത്തില്‍ ലേഖനങ്ങള്‍ പരിശോധിക്കുന്നു"
+
+#: ../src/evolution-rss.schemas.in.h:8
+msgid "Contains list of the currently setup feeds."
+msgstr "നിലവില്‍ സജ്ജമാക്കിയിരിക്കുന്ന ഫീഡുകളുടെ പട്ടിക അടങ്ങുന്നു."
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "ഫീഡ് എന്‍ട്രി വെട്ടിനീക്കിയാല്‍ ഫീഡ് ഫോള്‍ഡറും നീക്കം ചെയ്യപ്പെടുന്നു."
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Display article's summary"
+msgstr "ലേഖനം ചുരുക്കത്തില്‍ കാണിക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Display feed icon on feed folder"
+msgstr "ഫീഡ് ഫോള്‍ഡറില്‍ ഫീഡിനുള്ള ചിഹ്നം കാണിക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Enable Feed Icon"
+msgstr "ഫീഡിനുള്ള ചിഹ്നം സജ്ജമാക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid "Enable Status Icon"
+msgstr "അവസ്ഥയ്ക്കുള്ള ചിഹ്നം സജ്ജമാക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid "Enable status icon in notification area"
+msgstr "അറിയിപ്പിനുള്ള സ്ഥലത്തു് അവസ്ഥയ്ക്കുള്ള ചിഹ്നം സജ്ജമാക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "നിങ്ങള്‍ തെരയുന്ന ലേഖനങ്ങളില്‍ നിന്നും എവല്യൂഷന്‍ RSS കുക്കികള്‍ സ്വീകരിക്കുന്നു."
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid ""
+"Evolution will show article's summary instead of article's webpage. Summary "
+"can also be html."
+msgstr ""
+"ലേഖനത്തിനുള്ള വെബ്താളിനു് പകരം ഇവല്യൂഷന്‍ ലേഖനം ചുരുക്കത്തില്‍ "
+"കാണിക്കുന്നു. ഇതും html-ല്‍ ആവാം."
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Feeds list"
+msgstr "ഫീഡുകളുടെ പട്ടിക"
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "പുതിയ ലേഖനങ്ങള്‍ പരിശോധിക്കേണ്ട സമയം (മിനിറ്റുകളില്‍)."
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid "Hostname of the proxy server"
+msgstr "പ്രോക്സി സര്‍വറിനുള്ള ഹോസ്റ്റ്നാമം"
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "ഫീഡുകള്‍ക്കും ഉള്ളടക്കത്തിനും ഉപയോഗിക്കുന്ന പ്രോക്സി സര്‍വറിനുള്ള ഹോസ്റ്റ്നാമം."
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Html render"
+msgstr "Html റെന്‍ഡര്‍"
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "If the proxy server requires authentication. This is the password field."
+msgstr "പ്രോക്സി സര്‍വറിനു് ആധികാരികത ഉറപ്പാക്കേണ്ടതുണ്ടെങ്കില്‍. ഇതാണു് രഹസ്യവാക്കിനുള്ള ഫീള്‍ഡ്."
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "Interval in seconds before a conection is dropped."
+msgstr "ഒരു കണക്ഷന്‍‍ വിഛേദിക്കപ്പെടുന്നതിനു് മുമ്പുള്ള ഇടവേള സെക്കന്‍ഡില്‍."
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "It will display article's comments by default if present."
+msgstr "ലേഖനത്തിനുള്ള അഭിപ്രായങ്ങള്‍ ഇതു് സ്വതവേ ലഭ്യമാക്കുന്നു."
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "Java Enabled"
+msgstr "ജാവാ സജ്ജമാക്കിയിരിക്കുന്നു"
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "JavaScript Enabled"
+msgstr "ജാവാസ്ക്രിപ്റ്റ് സജ്ജമാക്കിയിരിക്കുന്നു"
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Network proxy requires authentication."
+msgstr "നെറ്റ്‌വര്‍ക്ക് പ്രോക്സിയ്ക്കു് ആധികാരികത ഉറപ്പാക്കേണ്ടതുണ്ടു്."
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "Network timeout"
+msgstr "നെറ്റ്‌വര്‍ക്ക് സമയപരിധി"
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "New articles timeout"
+msgstr "പുതിയ ലേഖനങ്ങളുടെ സമയപരിധി"
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Password for proxy server"
+msgstr "പ്രോക്സി സര്‍വറിനുള്ള രഹസ്യവാക്ക്"
+
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "Proxy requires authentication"
+msgstr "പ്രോക്സിയ്ക്കു് ആധികാരികത ഉറപ്പാക്കേണ്ടതുണ്ടു്"
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "Proxy server port"
+msgstr "പ്രോക്സി സര്‍വര്‍ പോര്‍ട്ട്"
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "Proxy server user"
+msgstr "പ്രോക്സി സര്‍വര്‍ ഉപയോക്താവ്"
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Remove feed folder"
+msgstr "ഫീഡ് ഫോള്‍ഡര്‍ നീക്കം ചെയ്യുക"
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Show articles comments"
+msgstr "ലേഖനത്തിനുള്ള അഭിപ്രായങ്ങള്‍ കാണിക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "The port number for proxy server used for feeds and content."
+msgstr "ഫീഡുകള്‍ക്കും ഉള്ളടക്കത്തിനും ഉപയോഗിക്കുന്ന പ്രോക്സി സര്‍വറിനുള്ള പോര്‍ട്ട് നമ്പര്‍."
+
+#: ../src/evolution-rss.schemas.in.h:37
+msgid "The username to use for proxy server authentication."
+msgstr "പ്രോക്സി സര്‍വറിനുള്ള ആധികാരികത ഉറപ്പാക്കേണ്ടതിനായി ഉപയേഗിക്കേണ്ട ഉപയോക്തൃനാമം."
+
+#: ../src/evolution-rss.schemas.in.h:38
+msgid "Type HTML Render used to display html pages."
+msgstr "html താളുകള്‍ കാണിക്കേണ്ടതിനു് ഉപയോഗിക്കേണ്ട HTML റെന്‍ഡര്‍."
+
+#: ../src/evolution-rss.schemas.in.h:39
+msgid "Use a proxy server to fetch articles and content."
+msgstr "ലേഖനങ്ങളും ഉള്ളടക്കവും ലഭ്യമാക്കുന്നതിനായി ഒരു പ്രോക്സി സര്‍വര്‍ ഉപയോഗിക്കുക"
+
+#: ../src/evolution-rss.schemas.in.h:40
+msgid "Use proxy server"
+msgstr "പ്രോക്സി സര്‍വര്‍ ഉപയോഗിക്കുക"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"ഇവല്യൂഷന്‍ RSS റീഡര്‍ പ്ലഗിന്‍.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view. \n"
+"\n"
+"ഈ എഞ്ചിനുകള്‍ ഉപയോഗിച്ചു് HTML കാണിക്കുവാന്‍ സാധിക്കുന്നു: gtkHTML, Apple's Webkit അല്ലെങ്കില്‍ "
+"Firefox/Gecko.\n"
+"\n"
+"<b>പതിപ്പു്: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "വ്യാപ്തി"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Delete \"{0}\"?"
+msgstr "\"{0}\" വെട്ടിനീക്കണമോ?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Reading RSS Feeds..."
+msgstr "RSS ഫീഡുകള്‍ ലഭ്യമാക്കുന്നു..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "Really delete feed '{0}' ?"
+msgstr "ഫീഡ് '{0}' നീക്കം ചെയ്യണമോ ?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Updating Feeds..."
+msgstr "ഫീഡുകള്‍ പരിഷ്കരിക്കുന്നു..."
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Setup RSS"
+msgstr "RSS സജ്ജീകരിക്കുക"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "Setup RSS feeds"
+msgstr "RSS ഫീഡുകള്‍ സജ്ജീകരിക്കുക"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Update RSS feeds"
+msgstr "RSS ഫീഡുകള്‍ പരിഷ്കരിക്കുക"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "_Read RSS"
+msgstr "RSS _ലഭ്യമാക്കുക"
+
+#: ../src/rss.c:438 ../src/rss.c:2761
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "ഫീഡുകള്‍ ലഭ്യമാക്കുന്നു (%d സജ്ജമാണു്)"
+
+#: ../src/rss.c:474 ../src/rss-config-factory.c:1356
+#: ../src/rss-config-factory.c:1393 ../src/rss-config-factory.c:1729
+#: ../src/rss-config-factory.c:1813
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% പൂര്‍ത്തിയായി"
+
+#: ../src/rss.c:484 ../src/rss.c:2912
+msgid "Feed"
+msgstr "ഫീഡ്"
+
+#: ../src/rss.c:633
+msgid "Enter User/Pass for feed"
+msgstr "ഫീഡിനുള്ള ഉപയോക്താവ്/പാസ് നല്‍കുക"
+
+#: ../src/rss.c:680
+#, c-format
+msgid ""
+"Enter your username and password for:\n"
+" '%s'"
+msgstr ""
+"നിങ്ങളുടെ ഉപയോക്തൃനാമവും പാസ്‌വേര്‍ഡും നല്‍കുക:\n"
+" '%s'"
+
+#: ../src/rss.c:697
+msgid "Username: "
+msgstr "ഉപയോക്തൃനാമം: "
+
+#: ../src/rss.c:719 ../src/rss-ui.glade.h:36
+msgid "Password: "
+msgstr "രഹസ്യവാക്ക്:"
+
+#: ../src/rss.c:757
+msgid "_Remember this password"
+msgstr "രഹസ്യവാക്ക് _ഓര്‍ത്തു വയ്ക്കുക"
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:859
+msgid "Canceling..."
+msgstr "റദ്ദാക്കുന്നു..."
+
+#: ../src/rss.c:1384
+msgid "Formatting..."
+msgstr "ഫോര്‍മാറ്റ് ചെയ്യുന്നു..."
+
+#: ../src/rss.c:1504
+msgid "_Copy"
+msgstr "_പകര്‍ത്തുക"
+
+#: ../src/rss.c:1506
+msgid "Zoom _In"
+msgstr "_ചെറുതാക്കുക"
+
+#: ../src/rss.c:1507
+msgid "Zoom _Out"
+msgstr "_വലുതാക്കുക"
+
+#: ../src/rss.c:1508
+msgid "_Normal Size"
+msgstr "_സാധാരണ വലിപ്പം"
+
+#: ../src/rss.c:1510
+msgid "_Print..."
+msgstr "_പ്രിന്റ് ചെയ്യുക..."
+
+#: ../src/rss.c:1511
+msgid "Save _As"
+msgstr "പേര് മാറ്റി _സൂക്ഷിക്കുക"
+
+#: ../src/rss.c:1513
+msgid "_Open Link in Browser"
+msgstr "ലിങ്ക് ബ്രൌസറില്‍ _തുറക്കുക"
+
+#: ../src/rss.c:1514
+msgid "_Copy Link Location"
+msgstr "ലിങ്കിന്റെ സ്ഥാനം _പകര്‍ത്തുക"
+
+#: ../src/rss.c:1551 ../src/rss.c:1595
+msgid "Click to open"
+msgstr "തുറക്കുന്നതിനായി ക്ലിക്ക് ചെയ്യുക"
+
+#: ../src/rss.c:1743
+msgid "Comments"
+msgstr "അഭിപ്രായങ്ങള്‍"
+
+#: ../src/rss.c:1748
+msgid "Refresh"
+msgstr "പുതുക്കുക"
+
+#: ../src/rss.c:1767
+msgid "Feed view"
+msgstr "ഫീഡ് കാഴ്ച"
+
+#: ../src/rss.c:1773
+msgid "Show Summary"
+msgstr "ചുരുക്കം കാണിക്കുക"
+
+#: ../src/rss.c:1774
+msgid "Show Full Text"
+msgstr "പൂര്‍ണ്ണ വാചകം കാണിക്കുക"
+
+#: ../src/rss.c:2059
+msgid "Posted under"
+msgstr "പോസ്റ്റ് ചെയ്തിരിക്കുന്നതു്"
+
+#: ../src/rss.c:2229
+msgid "Fetching feed"
+msgstr "ഫീഡ് ലഭ്യമാക്കുന്നു"
+
+#: ../src/rss.c:2538
+msgid "Unamed feed"
+msgstr "പേരിട്ടിട്ടില്ലാത്ത ഫീഡ്"
+
+#: ../src/rss.c:2539 ../src/rss.c:2687
+msgid "Error while fetching feed."
+msgstr "ഫീഡ് ലഭ്യമാക്കുന്നതില്‍ പിശക്."
+
+#: ../src/rss.c:2688
+msgid "Invalid Feed"
+msgstr "തെറ്റായ ഫീഡ്"
+
+#: ../src/rss.c:2699
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "%d സന്ദേശം ലഭ്യമാക്കുന്നു, മൊത്തം %d"
+
+#: ../src/rss.c:2780
+msgid "Complete."
+msgstr "പൂര്‍ത്തിയായി."
+
+#: ../src/rss.c:2811 ../src/rss.c:2974 ../src/rss.c:3103 ../src/rss.c:3681
+msgid "Error fetching feed."
+msgstr "ഫീഡ് ലഭ്യമാക്കുന്നതില്‍ പിശക്."
+
+#: ../src/rss.c:2821
+msgid "Canceled."
+msgstr "റദ്ദാക്കിയിരിക്കുന്നു."
+
+#: ../src/rss.c:2865
+msgid "Error while parsing feed."
+msgstr "ഫീഡ് പാഴ്സ് ചെയ്യുന്നതില്‍ പിശക്."
+
+#: ../src/rss.c:2920
+msgid "Complete"
+msgstr "പൂര്‍ത്തിയായി"
+
+#: ../src/rss.c:3008
+msgid "Formatting error."
+msgstr "ഫോര്‍മാറ്റിങിലുള്ള പിശക്."
+
+#: ../src/rss.c:3994 ../src/rss.c:4108
+msgid "No RSS feeds configured!"
+msgstr "RSS ഫീഡുകള്‍ ക്രമീകരിച്ചിട്ടില്ല!"
+
+#: ../src/rss.c:4000 ../src/rss.c:4197
+msgid "Reading RSS feeds..."
+msgstr "RSS ഫീഡുകള്‍ ലഭ്യമാക്കുന്നു..."
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:4014 ../src/rss.c:4201 ../src/rss-config-factory.c:1226
+#: ../src/rss-config-factory.c:1750 ../src/rss-config-factory.c:1832
+msgid "Please wait"
+msgstr "ദയവായി കാത്തിരിക്കുക"
+
+#: ../src/rss.c:4022 ../src/rss.c:4209 ../src/rss-config-factory.c:707
+#: ../src/rss-config-factory.c:1008
+#, no-c-format
+msgid "0% done"
+msgstr "0% പൂര്‍ത്തിയായിരിക്കുന്നു"
+
+#: ../src/rss.c:4156
+msgid "Waiting..."
+msgstr "കാത്തിരിക്കുന്നു..."
+
+#: ../src/rss.h:37 ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "വാര്‍ത്തകളും ബ്ലോഗുകളും"
+
+#: ../src/rss.h:39
+msgid "Untitled channel"
+msgstr "തലക്കെട്ടില്ലാത്ത ചാനല്‍"
+
+#: ../src/rss-config-factory.c:150
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:151
+msgid "WebKit"
+msgstr "വെബ്കിറ്റ്"
+
+#: ../src/rss-config-factory.c:152
+msgid "Mozilla"
+msgstr "മോസില്ലാ"
+
+#: ../src/rss-config-factory.c:392
+msgid "Edit Feed"
+msgstr "ഫീഡ് ചിട്ടപ്പെടുത്തുക"
+
+#: ../src/rss-config-factory.c:394
+msgid "Add Feed"
+msgstr "ഫീഡ് ചേര്‍ക്കുക"
+
+#: ../src/rss-config-factory.c:931
+msgid "Disable"
+msgstr "പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#: ../src/rss-config-factory.c:931
+msgid "Enable"
+msgstr "സജ്ജമാക്കുക"
+
+#: ../src/rss-config-factory.c:958 ../src/rss-ui.glade.h:38
+msgid "Remove folder contents"
+msgstr "ഫോള്‍ഡറിലുള്ളവ നീക്കം ചെയ്യുക"
+
+#: ../src/rss-config-factory.c:1222
+msgid "Importing feeds..."
+msgstr "ഫീഡുകള്‍ ഇംപോര്‍ട്ട് ചെയ്യുന്നു..."
+
+#: ../src/rss-config-factory.c:1450 ../src/rss-config-factory.c:1900
+#: ../src/rss-config-factory.c:1936
+msgid "All Files"
+msgstr "എല്ലാ ഫയലുകളും"
+
+#: ../src/rss-config-factory.c:1456 ../src/rss-config-factory.c:1906
+msgid "OPML Files"
+msgstr "OPML ഫയലുകള്‍"
+
+#: ../src/rss-config-factory.c:1462 ../src/rss-config-factory.c:1912
+msgid "XML Files"
+msgstr "XML ഫയലുകള്‍"
+
+#: ../src/rss-config-factory.c:1482
+msgid "Show article's summary"
+msgstr "ലേഖനത്തിന്റെ ചുരുക്കം കാണിക്കുക"
+
+#: ../src/rss-config-factory.c:1488
+msgid "Feed Enabled"
+msgstr "ഫീഡ് സജ്ജമാക്കിയിരിക്കുന്നു"
+
+#: ../src/rss-config-factory.c:1494
+msgid "Validate feed"
+msgstr "ഫീഡ് ഉറപ്പാക്കുക"
+
+#: ../src/rss-config-factory.c:1529 ../src/rss-ui.glade.h:40
+msgid "Select import file"
+msgstr "ഇംപോര്‍ട്ട് ഫയല്‍ തെരഞ്ഞെടുക്കുക"
+
+#: ../src/rss-config-factory.c:1566 ../src/rss-ui.glade.h:39
+msgid "Select file to export"
+msgstr "എക്സ്പോര്‍ട്ട് ചെയ്യുന്നതിനായി ഫയല്‍ തെരഞ്ഞെടുക്കുക"
+
+#: ../src/rss-config-factory.c:1607
+msgid "Select file to import"
+msgstr "ഇംപോര്‍ട്ട് ചെയ്യുന്നതിനായി ഫയല്‍ തെരഞ്ഞെടുക്കുക"
+
+#: ../src/rss-config-factory.c:1746
+msgid "Exporting feeds..."
+msgstr "ഫീഡുകള്‍ എക്സ്പോര്‍ട്ട് ചെയ്യുന്നു..."
+
+#: ../src/rss-config-factory.c:1776
+msgid "Error exporting feeds!"
+msgstr "ഫീഡുകള്‍ എക്സ്പോര്‍ട്ട് ചെയ്യുന്നതില്‍ പിശക്!"
+
+#: ../src/rss-config-factory.c:1828
+msgid "Importing cookies..."
+msgstr "കുക്കികള്‍ ഇംപോര്‍ട്ട് ചെയ്യുന്നു..."
+
+#: ../src/rss-config-factory.c:1942
+msgid "Mozilla/Netscape Format"
+msgstr "മോസില്ല/നെറ്റ്‌സ്കേപ്പ് മാതൃക"
+
+#: ../src/rss-config-factory.c:1948
+msgid "Firefox new Format"
+msgstr "ഫയര്‍ഫോക്സിന്റെ പുതിയ മാതൃക"
+
+#: ../src/rss-config-factory.c:1974
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"RSS ഫീഡുകള്‍ ക്രമീകരിച്ചിട്ടില്ല!\n"
+"എക്സ്പോര്‍ട്ട് ചെയ്യുവാന്‍ സാധ്യമല്ല."
+
+#: ../src/rss-config-factory.c:2069 ../src/rss-config-factory.c:2517
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"കുറിപ്പു്: മോസിലാ (ഫയര്‍ഫോക്സ്) അല്ലെങ്കില്‍ ആപ്പിള്‍ വെബ്കിറ്റ് റെന്‍ഡറുകളായി ഉപയോഗിക്കുന്നതിനു്\n"
+"നിങ്ങള്‍ക്കു് ഫയര്‍ഫോക്സ് അല്ലെങ്കില്‍ വെബ്കിറ്റ് ഡവല്‍ പാക്കേജ് ഇന്‍സ്റ്റോള്‍ ചെയ്യേണ്ടതാണു് \n"
+"കൂടാതെ ഈ പാക്കേജുകള്‍ കാണുന്നതിനായി evolution-rss വീണ്ടും കംപൈല്‍ ചെയ്യേണ്ടതുണ്ടു്."
+
+#: ../src/rss-config-factory.c:2359 ../src/rss-ui.glade.h:25
+msgid "Enabled"
+msgstr "പ്രവര്‍ത്തന സജ്ജം"
+
+#: ../src/rss-config-factory.c:2375
+msgid "Feed Name"
+msgstr "ഫീഡ് നാമം"
+
+#: ../src/rss-config-factory.c:2385
+msgid "Type"
+msgstr "തരം"
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr "<b>ലേഖനങ്ങള്‍ക്കുള്ള അറിയിപ്പു്</b>"
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr "<b>എ‍ഞ്ചിന്‍: </b>"
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:4
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML റെന്‍ഡറിങ്</b>"
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr "<b>നെറ്റ്‌വര്‍ക്ക് സമയപരിധി:</b>"
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Accept cookies from sites"
+msgstr "സൈറ്റുകളില്‍ നിന്നും കുക്കികള്‍ സ്വീകരിക്കുക"
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Blink icon in notification area"
+msgstr "അറിയിപ്പിനുള്ള സ്ഥലത്തു് ചിഹ്നം മിന്നുക"
+
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Block pop-up windows"
+msgstr "പോപ്പ്-അപ് ജാലകങ്ങള്‍ ബ്ലോക്ക് ചെയ്യുക"
+
+#: ../src/rss-html-rendering.glade.h:8
+msgid "Enable Java"
+msgstr "ജാവാ സജ്ജമാക്കുക"
+
+#: ../src/rss-html-rendering.glade.h:9 ../src/rss-ui.glade.h:23
+msgid "Enable JavaScript"
+msgstr "ജാവാസ്ക്രിപ്റ്റ് സജ്ജമാക്കുക"
+
+#: ../src/rss-html-rendering.glade.h:10
+msgid "Import Cookies"
+msgstr "കുക്കികള്‍ ഇംപോര്‍ട്ട് ചെയ്യുക"
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "Show feed icon"
+msgstr "ഫീഡിനുള്ള ചിഹ്നം കാണിക്കുക"
+
+#: ../src/rss-html-rendering.glade.h:12
+msgid "Show icon in notification area"
+msgstr "അറിയിപ്പിനുള്ള സ്ഥലത്തു് ചിഹ്നം കാണിക്കുക"
+
+#: ../src/rss-html-rendering.glade.h:13
+msgid "seconds"
+msgstr "സെക്കന്‍ഡുകള്‍"
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr "<b>അധികമായ ഉപാധികള്‍</b>"
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed Name: </b>"
+msgstr "<b>ഫീഡ് നാമം:</b>"
+
+#: ../src/rss-ui.glade.h:3
+msgid "<b>Feed URL:</b>"
+msgstr "<b>ഫീഡ് URL:</b>"
+
+#: ../src/rss-ui.glade.h:5
+msgid "<b>Location:</b>"
+msgstr "<b>സ്ഥാനം:</b>"
+
+#: ../src/rss-ui.glade.h:6
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr "<span weight=\"bold\">സജ്ജീകരണങ്ങള്‍</span>"
+
+#: ../src/rss-ui.glade.h:7
+msgid "Add"
+msgstr "ചേര്‍ക്കുക"
+
+#: ../src/rss-ui.glade.h:8
+msgid "Always delete unread articles"
+msgstr "വായിക്കാത്ത ലേഖനങ്ങള്‍ എപ്പോഴും വെട്ടിനീക്കുക"
+
+#: ../src/rss-ui.glade.h:9
+msgid "Authentication"
+msgstr "ആധികാരികത ഉറപ്പിക്കല്‍ സംവിധാനം"
+
+#: ../src/rss-ui.glade.h:10
+msgid "By default show article summary instead of webpage"
+msgstr "വെബ്താളിനു് പകരം സ്വതവേ ലേഖനം ചുരുക്കത്തില്‍ കാണിക്കുക"
+
+#: ../src/rss-ui.glade.h:11
+msgid "Certificates Table"
+msgstr "സര്‍ട്ടിഫിക്കേറ്റുകള്‍ക്കുള്ള പട്ടിക"
+
+#: ../src/rss-ui.glade.h:12
+msgid "Check for new articles at startup"
+msgstr "ആരംഭത്തില്‍ പുതിയ ലേഖനങ്ങള്‍ പരിശോധിക്കുക"
+
+#: ../src/rss-ui.glade.h:13
+msgid "Check for new articles every"
+msgstr "പുതിയ ലേഖനങ്ങള്‍ പരിശോധിക്കേണ്ടതു് എല്ലാ"
+
+#: ../src/rss-ui.glade.h:14
+msgid "Delete all but the last"
+msgstr "Delete all but the last"
+
+#: ../src/rss-ui.glade.h:15
+msgid "Delete articles older than"
+msgstr "ഇതിലും പഴയ ലേഖനങ്ങള്‍ വെട്ടിനീക്കുക"
+
+#: ../src/rss-ui.glade.h:16
+msgid "Delete articles that are no longer in the feed"
+msgstr "ഫീഡിലില്ലാത്ത ലേഖനങ്ങള്‍ വെട്ടിനീക്കുക"
+
+#: ../src/rss-ui.glade.h:17
+msgid "Delete feed?"
+msgstr "ഫീഡ് വെട്ടിനീക്കണമോ?"
+
+#: ../src/rss-ui.glade.h:18
+msgid "Details"
+msgstr "വിശദാംശങ്ങള്‍"
+
+#: ../src/rss-ui.glade.h:19
+msgid "Display only feed summary"
+msgstr "ഫീഡ് ചുരുക്കത്തില്‍ മാത്രം കാണിക്കുക"
+
+#: ../src/rss-ui.glade.h:20
+msgid "Do no update feed"
+msgstr "ഫീഡ് പരിഷ്കരിക്കുവാന്‍ പാടില്ല"
+
+#: ../src/rss-ui.glade.h:21
+msgid "Do not delete feeds"
+msgstr "ഫീഡുകള്‍ വെട്ടിനീക്കുവാന്‍ പാടില്ല"
+
+#: ../src/rss-ui.glade.h:22
+msgid "Edit"
+msgstr "ചിട്ടപ്പെടുത്തുക"
+
+#: ../src/rss-ui.glade.h:24
+msgid "Enable Plugins"
+msgstr "പ്ലഗിനുകള്‍ സജ്ജമാക്കുക"
+
+#: ../src/rss-ui.glade.h:26
+msgid "Engine: "
+msgstr "എഞ്ചിന്‍: "
+
+#: ../src/rss-ui.glade.h:27
+msgid "Export"
+msgstr "എക്സ്പോര്‍ട്ട് ചെയ്യുക"
+
+#: ../src/rss-ui.glade.h:28
+msgid "Feeds"
+msgstr "ഫീഡുകള്‍"
+
+#: ../src/rss-ui.glade.h:29
+msgid "General"
+msgstr "സാധാരണ"
+
+#: ../src/rss-ui.glade.h:30
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:31
+msgid "HTTP Proxy Details"
+msgstr "HTTP പ്രോക്സി വിശദാംശങ്ങള്‍"
+
+#: ../src/rss-ui.glade.h:32
+msgid "HTTP proxy:"
+msgstr "HTTP പ്രോക്സി:"
+
+#: ../src/rss-ui.glade.h:33
+msgid "Import"
+msgstr "ഇംപോര്‍ട്ട് ചെയ്യുക"
+
+#: ../src/rss-ui.glade.h:34
+msgid "Network"
+msgstr "നെറ്റ്‌വര്‍ക്ക്"
+
+#: ../src/rss-ui.glade.h:35
+msgid "No proxy for:"
+msgstr "പ്രോക്സി ലഭ്യമല്ല:"
+
+#: ../src/rss-ui.glade.h:37
+msgid "Port:"
+msgstr "പോര്‍ട്ട്: "
+
+#: ../src/rss-ui.glade.h:41
+msgid "Setup"
+msgstr "സജ്ജീകരണം"
+
+#: ../src/rss-ui.glade.h:42
+msgid "Show article comments"
+msgstr "ലേഖനത്തിന്റെ അഭിപ്രായം കാണിക്കുക"
+
+#: ../src/rss-ui.glade.h:43
+msgid "Storage"
+msgstr "സംഭരണം"
+
+#: ../src/rss-ui.glade.h:44
+msgid "Update"
+msgstr "പരിഷ്കരിക്കുക"
+
+#: ../src/rss-ui.glade.h:45
+msgid "Update in"
+msgstr "പരിഷ്കരിക്കേണ്ടതു്"
+
+#: ../src/rss-ui.glade.h:46
+msgid "Use Proxy"
+msgstr "പ്രോക്സി ഉപയോഗിക്കുക"
+
+#: ../src/rss-ui.glade.h:47
+msgid "Use authentication"
+msgstr "ആധികാരികത ഉറപ്പിക്കല്‍ സംവിധാനം ഉപയോഗിക്കുക"
+
+#: ../src/rss-ui.glade.h:48
+msgid "Use global update interval"
+msgstr "ഗ്ലോബല്‍ പരിഷ്കരണ ഇടവേള ഉപയോഗിക്കുക"
+
+#: ../src/rss-ui.glade.h:49
+msgid "Username:"
+msgstr "ഉപയോക്തൃനാമം:"
+
+#: ../src/rss-ui.glade.h:50
+msgid "Validate"
+msgstr "ഉറപ്പാക്കുക"
+
+#. for translators: this label is part of the "Delete articles older than X days" message.
+#: ../src/rss-ui.glade.h:52
+msgid "days"
+msgstr "ദിവസങ്ങള്‍"
+
+#: ../src/rss-ui.glade.h:53
+msgid "label"
+msgstr "ലേബല്‍"
+
+#. To translators: this label is part of the following message: "Delete all but the last X messages.
+#: ../src/rss-ui.glade.h:55
+msgid "messages"
+msgstr "സന്ദേശങ്ങള്‍"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-ui.glade.h:57
+msgid "minutes"
+msgstr "മിനിറ്റുകള്‍"
+
+#. to translators: message is part of "Update in X minutes"
+#: ../src/rss-ui.glade.h:59
+msgid ""
+"minutes\n"
+"hours\n"
+"days"
+msgstr ""
+"മിനിറ്റുകള്‍\n"
+"മണിക്കൂറുകള്‍\n"
+"ദിവസങ്ങള്‍"
+
+#: ../src/parser.c:906
+msgid "No information"
+msgstr "വിവരം ലഭ്യമല്ല"
+
+#: ../src/parser.c:930
+msgid "No Information"
+msgstr "വിവരം ലഭ്യമല്ല"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr "ഇവല്യൂഷന്‍ ഫീഡ്സ് കണ്ട്രോള്‍"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr "ഇവല്യൂഷന്‍ RSS റീഡര്‍"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr "നിങ്ങളുടെ RDF,RSS,ATOM ഫീഡുകള്‍ ഇവിടെ കൈകാര്യം ചെയ്യുക"
+
