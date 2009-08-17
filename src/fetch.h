@@ -21,7 +21,7 @@
 #ifndef _FETCH_H_
 #define _FETCH_H_ 1
 
-#include <libsoup/soup-gnome.h>
+#include <libsoup/soup.h>
 #include "network.h"
 
 GString *fetch_blocking(gchar *url, GSList *headers, GString *post,
