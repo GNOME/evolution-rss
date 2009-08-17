@@ -1,3 +1,7 @@
+2009-08-17  Ani Peter  <apeter@redhat.com>
+	* ml.po: Added Malayalam (ml) Translations.
+	* LINGUAS: Added ml to the list of languages.
+
 2009-04-05  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
 	* es.po: Updated Spanish translation by Roby Sottini.
@@ -9,12 +13,12 @@
 
 2009-03-30  Shankar Prasad  <svenkate@redhat.com>
 
-        * kn.po: Updated Kannada translations.
+	* kn.po: Updated Kannada translations.
 
 2009-03-30  Shankar Prasad  <svenkate@redhat.com>
 
-        * kn.po: Added Kannada(kn) translations.
-        * LINGUAS: Added kn to the list.
+	* kn.po: Added Kannada(kn) translations.
+	* LINGUAS: Added kn to the list.
 
 2009-03-28  Claude Paroz  <claude@2xlibre.net>
 
