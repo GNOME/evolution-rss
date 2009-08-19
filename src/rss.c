@@ -1615,6 +1615,13 @@ gecko_over_link(GtkMozEmbed *mozembed)
 }
 
 gboolean
+show_webkit(GtkWidget *webkit)
+{
+	gtk_widget_show_all(webkit);
+	return FALSE;
+}
+
+gboolean
 gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 {
 	gint button;
@@ -1669,7 +1676,6 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 
 	guint engine = fallback_engine();
 	moz = gtk_scrolled_window_new(NULL,NULL);
-//	moz = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(moz),
                                        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	
@@ -1679,6 +1685,8 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
 		webkit_set_preferences();
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
+		//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
+		//gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 		g_signal_connect (rf->mozembed, "populate-popup", G_CALLBACK (webkit_click), moz);
 		g_signal_connect (rf->mozembed, "hovering-over-link", G_CALLBACK (webkit_over_link), moz);
 //add zoom level
@@ -1695,8 +1703,9 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gecko_set_preferences();
 
 		/* FIXME add all those profile shits */
-		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
+		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
+		//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
+		//gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 		g_signal_connect (rf->mozembed, "dom_mouse_click", G_CALLBACK(gecko_click), moz);
 		g_signal_connect (rf->mozembed, "link_message", G_CALLBACK(gecko_over_link), moz);
 		g_signal_connect (rf->mozembed, "net_start", G_CALLBACK(gecko_net_start), po->stopbut);
@@ -1732,9 +1741,16 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 
 //	gtk_container_set_resize_mode(w, GTK_RESIZE_PARENT);
 //	gtk_scrolled_window_set_policy(w, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-	gtk_widget_show_all(moz);
+	//aparently webkit will hang if its not run from the main thread when compiled
+	//with soup
+	//this is as ugly as can be
+	if (engine == 1)
+		g_idle_add(show_webkit, moz);
+	if (engine == 2)
+		gtk_widget_show_all(moz);
+		
         gtk_container_add ((GtkContainer *) eb, moz);
-        gtk_container_check_resize ((GtkContainer *) eb);
+///        gtk_container_check_resize ((GtkContainer *) eb);
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	EMFormat *myf = (EMFormat *)efh;

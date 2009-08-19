@@ -186,11 +186,11 @@ if test "x$have_webkit" == "xno"; then
 	AC_DEFINE_UNQUOTED(WEBKIT_UNSTD, 1, [unstandard webkit installation])
 	WEBKIT_CFLAGS=$WebKitGtk_CFLAGS
 	WEBKIT_LIBS=$WebKitGtk_LIBS
-	WEBKIT_VERSION=`$PKG_CONFIG --modversion WebKitGtk` 
-	WEBKIT_VERSION=`echo $WEBKIT_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
+	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion WebKitGtk` 
+	WEBKIT_VERSION=`echo $WEBKIT_S_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 else
-	WEBKIT_VERSION=`$PKG_CONFIG --modversion webkit-1.0` 
-	WEBKIT_VERSION=`echo $WEBKIT_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
+	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion webkit-1.0` 
+	WEBKIT_VERSION=`echo $WEBKIT_S_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 	
 fi
 AC_SUBST([WEBKIT_VERSION])
@@ -341,7 +341,7 @@ pixmaps/Makefile
 
 kits="gtkHTML"
 if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
-        kits=$kits", WebKit"
+        kits=$kits", WebKit ($WEBKIT_S_VERSION)"
 fi
 # rename libxul to xulrunner to prevent confusion on debian
 if test "x$gecko_cv_gecko" == "xlibxul"; then
