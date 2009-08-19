@@ -1617,13 +1617,6 @@ gecko_over_link(GtkMozEmbed *mozembed)
 }
 
 gboolean
-show_webkit(GtkWidget *webkit)
-{
-	gtk_widget_show_all(webkit);
-	return FALSE;
-}
-
-gboolean
 gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 {
 	gint button;
@@ -1667,6 +1660,13 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	return FALSE;
 }
 #endif
+
+gboolean
+show_webkit(GtkWidget *webkit)
+{
+	gtk_widget_show_all(webkit);
+	return FALSE;
+}
 
 #ifdef HAVE_RENDERKIT
 static gboolean
@@ -1747,7 +1747,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	//with soup
 	//this is as ugly as can be
 	if (engine == 1)
-		g_idle_add(show_webkit, moz);
+		g_idle_add((GSourceFunc)show_webkit, moz);
 	if (engine == 2)
 		gtk_widget_show_all(moz);
 		
