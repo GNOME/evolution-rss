@@ -210,9 +210,9 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 	case 2:
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
-			g_print("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+			d(g_print("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port));
 		} else 
-			g_print("webkit no PROXY-%s\n", uri);
+			d(g_print("webkit no PROXY-%s\n", uri));
 		break;
 		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 #ifdef HAVE_LIBSOUP_GNOME

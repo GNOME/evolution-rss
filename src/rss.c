@@ -257,6 +257,8 @@ finish_create_icon_stream (SoupMessage *msg, FEED_IMAGE *user_data);
 #else
 finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data);
 #endif
+gboolean show_webkit(GtkWidget *webkit);
+
 GtkTreeStore *evolution_store = NULL;
 
 /*======================================================================*/
