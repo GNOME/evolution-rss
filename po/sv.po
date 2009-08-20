@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-07 12:18+0200\n"
-"PO-Revision-Date: 2009-07-07 16:25+0100\n"
+"POT-Creation-Date: 2009-08-20 23:16+0200\n"
+"PO-Revision-Date: 2009-08-20 23:16+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../src/dbus.c:120
-#: ../src/rss.c:2625
-#: ../src/rss-config-factory.c:710
-#: ../src/rss-config-factory.c:1015
-#: ../src/rss-config-factory.c:1145
+#: ../src/rss.c:2721
+#: ../src/rss-config-factory.c:721
+#: ../src/rss-config-factory.c:1032
+#: ../src/rss-config-factory.c:1163
 msgid "Error adding feed."
 msgstr "Fel när kanal lades till."
 
 #: ../src/dbus.c:121
-#: ../src/rss.c:2626
-#: ../src/rss-config-factory.c:711
-#: ../src/rss-config-factory.c:1016
-#: ../src/rss-config-factory.c:1146
+#: ../src/rss.c:2722
+#: ../src/rss-config-factory.c:722
+#: ../src/rss-config-factory.c:1033
+#: ../src/rss-config-factory.c:1164
 msgid "Feed already exists!"
 msgstr "Kanalen finns redan!"
 
@@ -259,30 +259,31 @@ msgstr "Uppdatera RSS-kanaler"
 msgid "_Read RSS"
 msgstr "_Läs RSS"
 
-#: ../src/rss.c:424
-#: ../src/rss.c:2705
+#: ../src/rss.c:443
+#: ../src/rss.c:2803
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Hämtar kanaler (%d aktiverad)"
 
-#: ../src/rss.c:460
-#: ../src/rss-config-factory.c:1295
-#: ../src/rss-config-factory.c:1576
-#: ../src/rss-config-factory.c:1681
+#: ../src/rss.c:479
+#: ../src/rss-config-factory.c:1356
+#: ../src/rss-config-factory.c:1393
+#: ../src/rss-config-factory.c:1729
+#: ../src/rss-config-factory.c:1813
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% färdigt"
 
-#: ../src/rss.c:470
-#: ../src/rss.c:2859
+#: ../src/rss.c:489
+#: ../src/rss.c:2954
 msgid "Feed"
 msgstr "Kanal"
 
-#: ../src/rss.c:618
+#: ../src/rss.c:640
 msgid "Enter User/Pass for feed"
 msgstr "Ange användare/lösenord för kanalen"
 
-#: ../src/rss.c:665
+#: ../src/rss.c:687
 #, c-format
 msgid ""
 "Enter your username and password for:\n"
@@ -291,167 +292,167 @@ msgstr ""
 "Ange ditt användarnamn och lösenord för:\n"
 " \"%s\""
 
-#: ../src/rss.c:682
+#: ../src/rss.c:704
 msgid "Username: "
 msgstr "Användarnamn: "
 
-#: ../src/rss.c:704
+#: ../src/rss.c:726
 #: ../src/rss-ui.glade.h:36
 msgid "Password: "
 msgstr "Lösenord: "
 
-#: ../src/rss.c:742
+#: ../src/rss.c:764
 msgid "_Remember this password"
 msgstr "Kom ihåg detta _lösenord"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:839
+#: ../src/rss.c:866
 msgid "Canceling..."
 msgstr "Avbryter..."
 
-#: ../src/rss.c:1364
-msgid "Formatting..."
-msgstr "Formaterar..."
+#: ../src/rss.c:1393
+msgid "Formatting Message..."
+msgstr "Formaterar meddelande..."
 
-#: ../src/rss.c:1477
+#: ../src/rss.c:1519
 msgid "_Copy"
 msgstr "_Kopiera"
 
-#: ../src/rss.c:1479
+#: ../src/rss.c:1521
 msgid "Zoom _In"
 msgstr "Zooma _in"
 
-#: ../src/rss.c:1480
+#: ../src/rss.c:1522
 msgid "Zoom _Out"
 msgstr "Zooma _ut"
 
-#: ../src/rss.c:1481
+#: ../src/rss.c:1523
 msgid "_Normal Size"
 msgstr "_Normal storlek"
 
-#: ../src/rss.c:1483
+#: ../src/rss.c:1525
 msgid "_Print..."
 msgstr "Skriv _ut..."
 
-#: ../src/rss.c:1484
+#: ../src/rss.c:1526
 msgid "Save _As"
 msgstr "Spara so_m"
 
-#: ../src/rss.c:1486
+#: ../src/rss.c:1528
 msgid "_Open Link in Browser"
 msgstr "_Öppna länk i webbläsare"
 
-#: ../src/rss.c:1487
+#: ../src/rss.c:1529
 msgid "_Copy Link Location"
 msgstr "_Kopiera länkens adress"
 
-#: ../src/rss.c:1524
-#: ../src/rss.c:1568
+#: ../src/rss.c:1566
+#: ../src/rss.c:1610
 msgid "Click to open"
 msgstr "Klicka för att öppna"
 
-#: ../src/rss.c:1716
+#: ../src/rss.c:1773
 msgid "Comments"
 msgstr "Kommentarer"
 
-#: ../src/rss.c:1721
+#: ../src/rss.c:1778
 msgid "Refresh"
 msgstr "Uppdatera"
 
-#: ../src/rss.c:1740
+#: ../src/rss.c:1797
 msgid "Feed view"
 msgstr "Kanalvy"
 
-#: ../src/rss.c:1746
+#: ../src/rss.c:1803
 msgid "Show Summary"
 msgstr "Visa sammandrag"
 
-#: ../src/rss.c:1747
+#: ../src/rss.c:1804
 msgid "Show Full Text"
 msgstr "Visa fullständig text"
 
-#: ../src/rss.c:2032
+#: ../src/rss.c:2099
 msgid "Posted under"
 msgstr "Postad under"
 
-#: ../src/rss.c:2197
+#: ../src/rss.c:2269
 msgid "Fetching feed"
 msgstr "Hämtar kanal"
 
-#: ../src/rss.c:2498
+#: ../src/rss.c:2580
 msgid "Unamed feed"
 msgstr "Namnlös kanal"
 
-#: ../src/rss.c:2498
-#: ../src/rss.c:2632
+#: ../src/rss.c:2581
+#: ../src/rss.c:2729
 msgid "Error while fetching feed."
 msgstr "Fel vid hämtning av kanal."
 
-#: ../src/rss.c:2632
+#: ../src/rss.c:2730
 msgid "Invalid Feed"
 msgstr "Ogiltig kanal"
 
-#: ../src/rss.c:2643
+#: ../src/rss.c:2741
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Hämtar meddelande %d av %d"
 
-#: ../src/rss.c:2724
+#: ../src/rss.c:2822
 msgid "Complete."
 msgstr "Färdig."
 
-#: ../src/rss.c:2757
-#: ../src/rss.c:2922
-#: ../src/rss.c:3056
-#: ../src/rss.c:3594
+#: ../src/rss.c:2853
+#: ../src/rss.c:3016
+#: ../src/rss.c:3151
+#: ../src/rss.c:3729
 msgid "Error fetching feed."
 msgstr "Fel vid hämtning av kanal."
 
-#: ../src/rss.c:2768
+#: ../src/rss.c:2863
 msgid "Canceled."
 msgstr "Avbruten."
 
-#: ../src/rss.c:2812
+#: ../src/rss.c:2907
 msgid "Error while parsing feed."
 msgstr "Fel vid tolkning av kanal."
 
-#: ../src/rss.c:2868
+#: ../src/rss.c:2962
 msgid "Complete"
 msgstr "Färdig"
 
-#: ../src/rss.c:2957
+#: ../src/rss.c:3050
 msgid "Formatting error."
 msgstr "Formateringsfel."
 
-#: ../src/rss.c:3908
-#: ../src/rss.c:4023
+#: ../src/rss.c:4042
+#: ../src/rss.c:4156
 msgid "No RSS feeds configured!"
 msgstr "Inga RSS-kanaler har konfigurerats!"
 
-#: ../src/rss.c:3914
-#: ../src/rss.c:4112
+#: ../src/rss.c:4048
+#: ../src/rss.c:4245
 msgid "Reading RSS feeds..."
 msgstr "Läser RSS-kanaler..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:3928
-#: ../src/rss.c:4116
-#: ../src/rss-config-factory.c:1208
-#: ../src/rss-config-factory.c:1598
-#: ../src/rss-config-factory.c:1700
+#: ../src/rss.c:4062
+#: ../src/rss.c:4249
+#: ../src/rss-config-factory.c:1226
+#: ../src/rss-config-factory.c:1750
+#: ../src/rss-config-factory.c:1832
 msgid "Please wait"
 msgstr "Var god vänta"
 
-#: ../src/rss.c:3936
-#: ../src/rss.c:4124
-#: ../src/rss-config-factory.c:696
-#: ../src/rss-config-factory.c:996
+#: ../src/rss.c:4070
+#: ../src/rss.c:4257
+#: ../src/rss-config-factory.c:707
+#: ../src/rss-config-factory.c:1008
 #, no-c-format
 msgid "0% done"
 msgstr "0% färdigt"
 
-#: ../src/rss.c:4071
+#: ../src/rss.c:4204
 msgid "Waiting..."
 msgstr "Väntar..."
 
@@ -464,118 +465,106 @@ msgstr "Nyheter och bloggar"
 msgid "Untitled channel"
 msgstr "Namnlös kanal"
 
-#: ../src/rss-config-factory.c:149
+#: ../src/rss-config-factory.c:150
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:150
+#: ../src/rss-config-factory.c:151
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:151
+#: ../src/rss-config-factory.c:152
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:387
+#: ../src/rss-config-factory.c:392
 msgid "Edit Feed"
 msgstr "Redigera kanal"
 
-#: ../src/rss-config-factory.c:389
+#: ../src/rss-config-factory.c:394
 msgid "Add Feed"
 msgstr "Lägg till kanal"
 
-#: ../src/rss-config-factory.c:920
+#: ../src/rss-config-factory.c:931
 msgid "Disable"
 msgstr "Inaktivera"
 
-#: ../src/rss-config-factory.c:920
+#: ../src/rss-config-factory.c:931
 msgid "Enable"
 msgstr "Aktivera"
 
-#: ../src/rss-config-factory.c:947
+#: ../src/rss-config-factory.c:958
 #: ../src/rss-ui.glade.h:38
 msgid "Remove folder contents"
 msgstr "Ta bort mappinnehåll"
 
-#: ../src/rss-config-factory.c:1204
+#: ../src/rss-config-factory.c:1222
 msgid "Importing feeds..."
 msgstr "Importerar kanaler..."
 
-#: ../src/rss-config-factory.c:1352
-#: ../src/rss-config-factory.c:1768
-#: ../src/rss-config-factory.c:1804
+#: ../src/rss-config-factory.c:1450
+#: ../src/rss-config-factory.c:1900
+#: ../src/rss-config-factory.c:1936
 msgid "All Files"
 msgstr "Alla filer"
 
-#: ../src/rss-config-factory.c:1358
-#: ../src/rss-config-factory.c:1774
+#: ../src/rss-config-factory.c:1456
+#: ../src/rss-config-factory.c:1906
 msgid "OPML Files"
 msgstr "OPML-filer"
 
-#: ../src/rss-config-factory.c:1364
-#: ../src/rss-config-factory.c:1780
+#: ../src/rss-config-factory.c:1462
+#: ../src/rss-config-factory.c:1912
 msgid "XML Files"
 msgstr "XML-filer"
 
-#: ../src/rss-config-factory.c:1384
+#: ../src/rss-config-factory.c:1482
 msgid "Show article's summary"
 msgstr "Visa artikelsammandrag"
 
-#: ../src/rss-config-factory.c:1390
+#: ../src/rss-config-factory.c:1488
 msgid "Feed Enabled"
 msgstr "Kanal aktiverad"
 
-#: ../src/rss-config-factory.c:1396
+#: ../src/rss-config-factory.c:1494
 msgid "Validate feed"
 msgstr "Validera kanal"
 
-#: ../src/rss-config-factory.c:1431
+#: ../src/rss-config-factory.c:1529
 #: ../src/rss-ui.glade.h:40
 msgid "Select import file"
 msgstr "Välj fil att importera"
 
-#: ../src/rss-config-factory.c:1468
+#: ../src/rss-config-factory.c:1566
 #: ../src/rss-ui.glade.h:39
 msgid "Select file to export"
 msgstr "Välj fil att exportera"
 
-#: ../src/rss-config-factory.c:1509
+#: ../src/rss-config-factory.c:1607
 msgid "Select file to import"
 msgstr "Välj fil att importera"
 
-#: ../src/rss-config-factory.c:1594
+#: ../src/rss-config-factory.c:1746
 msgid "Exporting feeds..."
 msgstr "Exporterar kanaler..."
 
-#: ../src/rss-config-factory.c:1623
-msgid ""
-"A file by that name already exists.\n"
-"Overwrite it?"
-msgstr ""
-"En fil med det namnet finns redan.\n"
-"Skriv över den?"
-
-#: ../src/rss-config-factory.c:1625
-msgid "Overwrite file?"
-msgstr "Skriv över fil?"
-
-#: ../src/rss-config-factory.c:1644
+#: ../src/rss-config-factory.c:1776
 msgid "Error exporting feeds!"
 msgstr "Fel vid export av kanaler!"
 
-#: ../src/rss-config-factory.c:1696
+#: ../src/rss-config-factory.c:1828
 msgid "Importing cookies..."
 msgstr "Importerar kakor..."
 
-#: ../src/rss-config-factory.c:1810
+#: ../src/rss-config-factory.c:1942
 msgid "Mozilla/Netscape Format"
 msgstr "Mozilla/Netscape-format"
 
-#: ../src/rss-config-factory.c:1816
+#: ../src/rss-config-factory.c:1948
 msgid "Firefox new Format"
 msgstr "Nytt Firefox-format"
 
-#: ../src/rss-config-factory.c:1842
+#: ../src/rss-config-factory.c:1974
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -583,8 +572,8 @@ msgstr ""
 "Inga RSS-kanaler konfigurerade!\n"
 "Kan inte exportera."
 
-#: ../src/rss-config-factory.c:1937
-#: ../src/rss-config-factory.c:2377
+#: ../src/rss-config-factory.c:2069
+#: ../src/rss-config-factory.c:2517
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -594,16 +583,16 @@ msgstr ""
 "som renderare så behöver du ha utvecklingspaketen för firefox eller webkit \n"
 "installerade och evolution-rss bör kompileras om för att se dessa paket."
 
-#: ../src/rss-config-factory.c:2219
+#: ../src/rss-config-factory.c:2359
 #: ../src/rss-ui.glade.h:25
 msgid "Enabled"
 msgstr "Aktiverad"
 
-#: ../src/rss-config-factory.c:2235
+#: ../src/rss-config-factory.c:2375
 msgid "Feed Name"
 msgstr "Kanalnamn"
 
-#: ../src/rss-config-factory.c:2245
+#: ../src/rss-config-factory.c:2385
 msgid "Type"
 msgstr "Typ"
 
@@ -863,11 +852,11 @@ msgstr ""
 "timmar\n"
 "dagar"
 
-#: ../src/parser.c:924
+#: ../src/parser.c:906
 msgid "No information"
 msgstr "Ingen information"
 
-#: ../src/parser.c:948
+#: ../src/parser.c:930
 msgid "No Information"
 msgstr "Ingen information"
 
@@ -883,6 +872,14 @@ msgstr "RSS-läsare för Evolution"
 msgid "Manage your RDF,RSS,ATOM feeds here"
 msgstr "Hantera dina RDF, RSS, ATOM-kanaler här"
 
+#~ msgid ""
+#~ "A file by that name already exists.\n"
+#~ "Overwrite it?"
+#~ msgstr ""
+#~ "En fil med det namnet finns redan.\n"
+#~ "Skriv över den?"
+#~ msgid "Overwrite file?"
+#~ msgstr "Skriv över fil?"
 #~ msgid "{0}"
 #~ msgstr "{0}"
 #~ msgid "{1}"
