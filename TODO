@@ -34,6 +34,7 @@
 	* gtkhtml does not handle &#xD; construct
 	* switch webkit -> gecko leads to crash on pfree()
 	* show feed icons in send & receive dialog
+	* support comments postings
 	* detect duplicate items by content not by feedid
 	* make gtkhtml rendering non-blocking
 	* use ellipsize in web auth dialog

@@ -1390,7 +1390,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 			&& GTK_WIDGET_REALIZED(rf->mozembed)
 			&& height > 0) {
 				if (!browser_fetching) {
-					gchar *msg = g_strdup(_("Formatting..."));
+					gchar *msg = g_strdup_printf("<h5>%s</h5>", _("Formatting Message..."));
 					browser_write(msg, strlen(msg), "file:///");
 					g_free(msg);
 					browser_fetching=1;
@@ -1687,8 +1687,6 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
 		webkit_set_preferences();
 		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
-		//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-		//gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 		g_signal_connect (rf->mozembed, "populate-popup", G_CALLBACK (webkit_click), moz);
 		g_signal_connect (rf->mozembed, "hovering-over-link", G_CALLBACK (webkit_over_link), moz);
 //add zoom level
@@ -1705,8 +1703,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gecko_set_preferences();
 
 		/* FIXME add all those profile shits */
-		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
-		//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
+		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
 		//gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
 		g_signal_connect (rf->mozembed, "dom_mouse_click", G_CALLBACK(gecko_click), moz);
 		g_signal_connect (rf->mozembed, "link_message", G_CALLBACK(gecko_over_link), moz);
