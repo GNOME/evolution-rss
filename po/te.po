@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss.master.te\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2009-08-11 18:36+0000\n"
-"PO-Revision-Date: 2009-08-17 15:26+0530\n"
+"POT-Creation-Date: 2009-08-20 19:41+0000\n"
+"PO-Revision-Date: 2009-08-21 22:49+0530\n"
 "Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
 "Language-Team: Telugu <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,13 +19,14 @@ msgstr ""
 "\n"
 "\n"
 "\n"
+"\n"
 
-#: ../src/dbus.c:120 ../src/rss.c:2679 ../src/rss-config-factory.c:721
+#: ../src/dbus.c:120 ../src/rss.c:2721 ../src/rss-config-factory.c:721
 #: ../src/rss-config-factory.c:1032 ../src/rss-config-factory.c:1163
 msgid "Error adding feed."
 msgstr "ఫీడ్ జతచేయుటలో దోషము"
 
-#: ../src/dbus.c:121 ../src/rss.c:2680 ../src/rss-config-factory.c:722
+#: ../src/dbus.c:121 ../src/rss.c:2722 ../src/rss-config-factory.c:722
 #: ../src/rss-config-factory.c:1033 ../src/rss-config-factory.c:1164
 msgid "Feed already exists!"
 msgstr "ఫీడ్ యిప్పటికే వుంది!"
@@ -96,9 +97,6 @@ msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "Evolution RSS మీరు బ్రౌజ్ చేసిన ప్రకరణములనుండి కుకీలను ఆమోదిస్తుంది."
 
 #: ../src/evolution-rss.schemas.in.h:16
-#| msgid ""
-#| "Evolution will show artile's summary instead of article's webpage. "
-#| "Sumarry can also be html."
 msgid ""
 "Evolution will show article's summary instead of article's webpage. Summary "
 "can also be html."
@@ -119,7 +117,6 @@ msgid "Hostname of the proxy server"
 msgstr "ప్రోక్సీ సేవిక యొక్క హోస్టునామము"
 
 #: ../src/evolution-rss.schemas.in.h:20
-#| msgid "Hostname of the proxy server."
 msgid "Hostname of the proxy server used for feeds and content."
 msgstr "ఫీడ్లు మరియు సారము కొరకు వుపయోగించబడిన ప్రోక్సీ సేవికయొక్క హోస్టునామము."
 
@@ -180,12 +177,10 @@ msgid "Remove feed folder"
 msgstr "ఫీడ్ ఫోల్డర్‌ను తీసివేయుము"
 
 #: ../src/evolution-rss.schemas.in.h:35
-#| msgid "Show article's summary"
 msgid "Show articles comments"
 msgstr "ప్రకరణముల వ్యాఖ్యానములను చూపుము"
 
 #: ../src/evolution-rss.schemas.in.h:36
-#| msgid "The port number for proxy server."
 msgid "The port number for proxy server used for feeds and content."
 msgstr "ఫీడ్లు మరియు సారమునకు వుపయోగించబడిన ప్రోక్సీ సేవిక కొరకు పోర్టు సంఖ్య."
 
@@ -198,7 +193,6 @@ msgid "Type HTML Render used to display html pages."
 msgstr "html పుటలను ప్రదర్శించుటకు వుపయోగించు HTML రెండర్‌ను టైపుచేయుము"
 
 #: ../src/evolution-rss.schemas.in.h:39
-#| msgid "Use a proxy server to fetch articles"
 msgid "Use a proxy server to fetch articles and content."
 msgstr "ప్రకరణములు మరియు సారమును పొందుటకు ప్రోక్సీ సేవికను వుపయోగించుము."
 
@@ -242,12 +236,10 @@ msgstr ""
 "+URL+"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:12
-#| msgid "Size:"
 msgid "Size"
 msgstr "పరిమాణము"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
-#| msgid "Delete feed?"
 msgid "Delete \"{0}\"?"
 msgstr "\"{0}\" తొలగించవలెనా?"
 
@@ -279,28 +271,27 @@ msgstr "RSS ఫీడ్లను నవీకరిస్తోంది"
 msgid "_Read RSS"
 msgstr "RSS చదవండి (_R)"
 
-#: ../src/rss.c:438 ../src/rss.c:2761
+#: ../src/rss.c:443 ../src/rss.c:2803
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "ఫీడ్లను తెస్తోంది (%d చేతనమైంది)"
 
-#: ../src/rss.c:474 ../src/rss-config-factory.c:1356
+#: ../src/rss.c:479 ../src/rss-config-factory.c:1356
 #: ../src/rss-config-factory.c:1393 ../src/rss-config-factory.c:1729
 #: ../src/rss-config-factory.c:1813
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% పూర్తైంది"
 
-#: ../src/rss.c:484 ../src/rss.c:2912
+#: ../src/rss.c:489 ../src/rss.c:2954
 msgid "Feed"
 msgstr "ఫీడ్"
 
-#: ../src/rss.c:633
-#| msgid "Enter User/Pass for Feed"
+#: ../src/rss.c:640
 msgid "Enter User/Pass for feed"
 msgstr "ఫీడ్ కొరకు వినియోగదారి/సంకేతపదము ప్రవేశపెట్టుము"
 
-#: ../src/rss.c:680
+#: ../src/rss.c:687
 #, c-format
 msgid ""
 "Enter your username and password for:\n"
@@ -309,159 +300,155 @@ msgstr ""
 "దీని కొరకు వినియోగదారినామము మరియు సంకేతపదమును ప్రవేశపెట్టుము:\n"
 " '%s'"
 
-#: ../src/rss.c:697
-#| msgid "Username:"
+#: ../src/rss.c:704
 msgid "Username: "
 msgstr "వినియోగదారినామము:"
 
-#: ../src/rss.c:719 ../src/rss-ui.glade.h:36
+#: ../src/rss.c:726 ../src/rss-ui.glade.h:36
 msgid "Password: "
 msgstr "సంకేతపదము: "
 
-#: ../src/rss.c:757
-#| msgid "Remember password"
+#: ../src/rss.c:764
 msgid "_Remember this password"
 msgstr "సంకేతపదమును గుర్తుంచుకొనుము (_R)"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:859
+#: ../src/rss.c:866
 msgid "Canceling..."
 msgstr "రద్దుచేస్తోంది..."
 
-#: ../src/rss.c:1384
-#| msgid "Waiting..."
-msgid "Formatting..."
-msgstr "ఫార్మాటుచేయుచున్నది..."
+#: ../src/rss.c:1393
+#| msgid "Formatting..."
+msgid "Formatting Message..."
+msgstr "సందేశము ఫార్మాటింగ్ చేయుచున్నది..."
 
-#: ../src/rss.c:1504
+#: ../src/rss.c:1519
 msgid "_Copy"
 msgstr "నకలుతీయి (_C)"
 
-#: ../src/rss.c:1506
+#: ../src/rss.c:1521
 msgid "Zoom _In"
 msgstr "జూమ్ చేయి (_I)"
 
-#: ../src/rss.c:1507
+#: ../src/rss.c:1522
 msgid "Zoom _Out"
 msgstr "జూమ్ తగ్గించు (_O)"
 
-#: ../src/rss.c:1508
+#: ../src/rss.c:1523
 msgid "_Normal Size"
 msgstr "సాదారణ పరిమాణము (_N)"
 
-#: ../src/rss.c:1510
+#: ../src/rss.c:1525
 msgid "_Print..."
 msgstr "ముద్రించు... (_P)"
 
-#: ../src/rss.c:1511
+#: ../src/rss.c:1526
 msgid "Save _As"
 msgstr "ఇలా దాయి (_A)"
 
-#: ../src/rss.c:1513
+#: ../src/rss.c:1528
 msgid "_Open Link in Browser"
 msgstr "లింకును బ్రౌజర్‌నందు తెరువుము (_O)"
 
-#: ../src/rss.c:1514
+#: ../src/rss.c:1529
 msgid "_Copy Link Location"
 msgstr "లింకు స్థానమును నకలుతీయుము (_C)"
 
-#: ../src/rss.c:1551 ../src/rss.c:1595
+#: ../src/rss.c:1566 ../src/rss.c:1610
 msgid "Click to open"
 msgstr "తెరువుటకు నొక్కుము"
 
-#: ../src/rss.c:1743
-#| msgid "Complete"
+#: ../src/rss.c:1773
 msgid "Comments"
 msgstr "వ్యాఖ్యానములు"
 
-#: ../src/rss.c:1748
+#: ../src/rss.c:1778
 msgid "Refresh"
 msgstr "రీఫ్రెష్"
 
-#: ../src/rss.c:1767
+#: ../src/rss.c:1797
 msgid "Feed view"
 msgstr "ఫీడ్ దర్శనం"
 
-#: ../src/rss.c:1773
+#: ../src/rss.c:1803
 msgid "Show Summary"
 msgstr "సంక్షిప్తసమాచారము చూపుము"
 
-#: ../src/rss.c:1774
+#: ../src/rss.c:1804
 msgid "Show Full Text"
 msgstr "పూర్తి పాఠము చూపుము"
 
-#: ../src/rss.c:2059
+#: ../src/rss.c:2099
 msgid "Posted under"
 msgstr "క్రింద పోస్టు చేయబడింది"
 
-#: ../src/rss.c:2229
-#| msgid "Error fetching feed."
+#: ../src/rss.c:2269
 msgid "Fetching feed"
 msgstr "ఫీడ్‌ను ఫెచ్‌చేయుచున్నది"
 
-#: ../src/rss.c:2538
+#: ../src/rss.c:2580
 msgid "Unamed feed"
 msgstr "నామములేని ఫీడ్"
 
-#: ../src/rss.c:2539 ../src/rss.c:2687
+#: ../src/rss.c:2581 ../src/rss.c:2729
 msgid "Error while fetching feed."
 msgstr "ఫీడ్‌ను తెస్తున్నప్పుడు దోషము."
 
-#: ../src/rss.c:2688
+#: ../src/rss.c:2730
 msgid "Invalid Feed"
 msgstr "చెల్లని ఫీడ్"
 
-#: ../src/rss.c:2699
+#: ../src/rss.c:2741
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "%d లో %d సందేశాన్ని పోందుతున్నది"
 
-#: ../src/rss.c:2780
+#: ../src/rss.c:2822
 msgid "Complete."
 msgstr "పూర్తయినది."
 
-#: ../src/rss.c:2811 ../src/rss.c:2974 ../src/rss.c:3103 ../src/rss.c:3681
+#: ../src/rss.c:2853 ../src/rss.c:3016 ../src/rss.c:3151 ../src/rss.c:3729
 msgid "Error fetching feed."
 msgstr "ఫీడ్ తెస్తున్నప్పుడు దోషము."
 
-#: ../src/rss.c:2821
+#: ../src/rss.c:2863
 msgid "Canceled."
 msgstr "రద్దుచేయబడింది."
 
-#: ../src/rss.c:2865
+#: ../src/rss.c:2907
 msgid "Error while parsing feed."
 msgstr "ఫీడ్‌ను పార్శ్ చేస్తున్నప్పుడు దోషము."
 
-#: ../src/rss.c:2920
+#: ../src/rss.c:2962
 msgid "Complete"
 msgstr "పూర్తి"
 
-#: ../src/rss.c:3008
+#: ../src/rss.c:3050
 msgid "Formatting error."
 msgstr "ఫార్మేటింగ్ దోషము."
 
-#: ../src/rss.c:3994 ../src/rss.c:4108
+#: ../src/rss.c:4042 ../src/rss.c:4156
 msgid "No RSS feeds configured!"
 msgstr "ఎటువంటి RSS ఫీడ్లు ఆకృతీకరించలేదు!"
 
-#: ../src/rss.c:4000 ../src/rss.c:4197
+#: ../src/rss.c:4048 ../src/rss.c:4245
 msgid "Reading RSS feeds..."
 msgstr "RSS ఫీడ్లను చదువుతోంది..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:4014 ../src/rss.c:4201 ../src/rss-config-factory.c:1226
+#: ../src/rss.c:4062 ../src/rss.c:4249 ../src/rss-config-factory.c:1226
 #: ../src/rss-config-factory.c:1750 ../src/rss-config-factory.c:1832
 msgid "Please wait"
 msgstr "దయచేసి వేచిఉండండి"
 
-#: ../src/rss.c:4022 ../src/rss.c:4209 ../src/rss-config-factory.c:707
+#: ../src/rss.c:4070 ../src/rss.c:4257 ../src/rss-config-factory.c:707
 #: ../src/rss-config-factory.c:1008
 #, no-c-format
 msgid "0% done"
 msgstr "0% పూర్తైంది"
 
-#: ../src/rss.c:4156
+#: ../src/rss.c:4204
 msgid "Waiting..."
 msgstr "వేచిఉంది..."
 
@@ -543,7 +530,6 @@ msgid "Select file to export"
 msgstr "ఎగుమతి చేయుటకు దస్త్రమును యెంపికచేయుము"
 
 #: ../src/rss-config-factory.c:1607
-#| msgid "Select file to export"
 msgid "Select file to import"
 msgstr "దిగుమతి చేయుటకు ఫైలును యెంపికచేయుము"
 
@@ -556,7 +542,6 @@ msgid "Error exporting feeds!"
 msgstr "ఫీడ్లను ఎగుమతి చేయుటలో దోషము!"
 
 #: ../src/rss-config-factory.c:1828
-#| msgid "Importing feeds..."
 msgid "Importing cookies..."
 msgstr "కుకీలను దిగుమతిచేయుచున్నది..."
 
@@ -635,7 +620,6 @@ msgid "Enable JavaScript"
 msgstr "జావా లిపి ఉపయోగించు"
 
 #: ../src/rss-html-rendering.glade.h:10
-#| msgid "Import"
 msgid "Import Cookies"
 msgstr "కుకీలను దిగుమతిచేయి"
 
@@ -656,7 +640,6 @@ msgid "<b>Advanced options</b>"
 msgstr "<b>అధునాతన ఐచ్చికములు</b>"
 
 #: ../src/rss-ui.glade.h:2
-#| msgid "<b>Feed URL:</b>"
 msgid "<b>Feed Name: </b>"
 msgstr "<b>ఫీడ్ నామము: </b>"
 
@@ -665,7 +648,6 @@ msgid "<b>Feed URL:</b>"
 msgstr "<b>ఫీడ్ URL:</b>"
 
 #: ../src/rss-ui.glade.h:5
-#| msgid "<b>Article Notification</b>"
 msgid "<b>Location:</b>"
 msgstr "<b>స్థానము:</b>"
 
@@ -682,7 +664,6 @@ msgid "Always delete unread articles"
 msgstr "చదువని ప్రకరణములను యెల్లప్పుడూ తొలగించుము"
 
 #: ../src/rss-ui.glade.h:9
-#| msgid "Use authentication"
 msgid "Authentication"
 msgstr "దృవీకరణము"
 
@@ -711,7 +692,6 @@ msgid "Delete articles older than"
 msgstr "ఇంతకన్నా పాత ప్రకరణములను తొలగించుము"
 
 #: ../src/rss-ui.glade.h:16
-#| msgid "Delete articles older than"
 msgid "Delete articles that are no longer in the feed"
 msgstr "ఫీడ్‌నందు లేని ప్రకరణములను తొలగించుము"
 
@@ -792,7 +772,6 @@ msgid "Setup"
 msgstr "అమర్చిపెట్టు"
 
 #: ../src/rss-ui.glade.h:42
-#| msgid "Show article's summary"
 msgid "Show article comments"
 msgstr "ప్రకరణము వ్యాఖ్యానములను చూపుము"
 
@@ -859,7 +838,6 @@ msgstr ""
 "రోజులు"
 
 #: ../src/parser.c:906
-#| msgid "No Information"
 msgid "No information"
 msgstr "సమాచారం లేదు"
 
