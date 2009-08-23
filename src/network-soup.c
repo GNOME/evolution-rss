@@ -28,7 +28,10 @@
 #include <libsoup/soup-gnome.h>
 #include <libsoup/soup-gnome-features.h>
 #endif
+
+#if (DATASERVER_VERSION >= 2023001)
 #include <libedataserver/e-proxy.h>
+#endif
 
 #include "network.h"
 #include "network-soup.h"
@@ -42,12 +45,16 @@
 
 #define d(x)
 
+#if LIBSOUP_VERSION > 2024000
 SoupCookieJar *rss_soup_jar = NULL;
+#endif
 gint proxy_type = 0;
 extern rssfeed *rf;
 extern GConfClient *rss_gconf;
 extern SoupSession *webkit_session;
+#if (DATASERVER_VERSION >= 2023001)
 EProxy *proxy;
+#endif
 
 typedef struct {
 	NetStatusCallback user_cb;
@@ -188,6 +195,7 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 	soup_session_abort (user_data);
 }
 
+#if (DATASERVER_VERSION >= 2023001)
 EProxy *
 proxy_init(void)
 {
@@ -253,6 +261,7 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 	}
 
 }
+#endif
 
 guint
 read_up(gpointer data)
@@ -511,11 +520,16 @@ net_get_unblocking(gchar *url,
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 			
+
+#if LIBSOUP_VERSION > 2024000
 	if (rss_soup_jar) {
 		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
 	}
+#endif
 
+#if (DATASERVER_VERSION >= 2023001)
 	proxify_session(proxy, soup_sess, url);
+#endif
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);
 		info->user_cb = cb;
@@ -643,7 +657,9 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 #endif
 	g_free(agstr);
 
+#if (DATASERVER_VERSION >= 2023001)
 	proxify_session(proxy, soup_sess, url);
+#endif
 	rf->b_session = soup_sess;
 	rf->b_msg_session = req;
 	soup_session_send_message(soup_sess, req);

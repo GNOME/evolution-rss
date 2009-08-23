@@ -5,10 +5,12 @@ INCLUDES =							\
 	$(RENDER_CFLAGS)					\
 	$(DBUS_CFLAGS)						\
 	$(LIBSOUP_GNOME_CFLAGS)					\
+	$(GTKHTML_EDITOR_CFLAGS)				\
 	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
 	-DLOCALEDIR="\"$(LOCALEDIR)\""				\
 	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\"\
 	-DEVOLUTION_VERSION=$(evolution_exec_int)		\
+	-DDATASERVER_VERSION=$(DATASERVER_VERSION)		\
 	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"            	\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
 	-DGTK_VERSION="$(GTK_VERSION)"	          	  	\
@@ -87,7 +89,7 @@ SOURCES+=	dbus.c
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(NO_UNDEFINED_LIBS)
+liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(NO_UNDEFINED_LIBS)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 #$(GECKO_RPATH)
 

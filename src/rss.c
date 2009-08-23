@@ -48,8 +48,10 @@ int rss_verbose_debug = 0;
 #include <mail/em-event.h>
 #endif
 
+#include <mail/em-popup.h>
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
+#include <mail/em-folder-view.h>
 #include <mail/mail-component.h>
 #include <mail/mail-tools.h>
 #include <mail/mail-ops.h>
@@ -81,7 +83,9 @@ int rss_verbose_debug = 0;
 #include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
 
+#ifdef HAVE_GTKHTMLEDITOR
 #include <editor/gtkhtml-editor.h>
+#endif
 
 #include <libxml/HTMLtree.h>
 
@@ -175,9 +179,13 @@ gchar *pixfile;
 char *pixfilebuf;
 gsize pixfilelen;
 extern int xmlSubstituteEntitiesDefaultValue;
+#if (DATASERVER_VERSION >= 2023001)
 extern EProxy *proxy;
+#endif
 SoupSession *webkit_session = NULL;
+#if LIBSOUP_VERSION > 2024000
 SoupCookieJar *rss_soup_jar;
+#endif
 extern guint rsserror;
 gboolean single_pending = FALSE;
 
@@ -383,6 +391,7 @@ taskbar_op_new(gchar *message, gpointer key)
 taskbar_op_new(gchar *message)
 #endif
 {
+	GdkPixbuf *progress_icon;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	char *mcp = g_strdup_printf("%p", mail_component_peek());
 	guint activity_id = 
@@ -533,7 +542,9 @@ browser_write(gchar *string, gint length, gchar *base)
 	break;
 	case 1:
 #ifdef HAVE_WEBKIT
+#if (DATASERVER_VERSION >= 2023001)
 		proxify_webkit_session(proxy, base);
+#endif
 		webkit_web_view_load_html_string(WEBKIT_WEB_VIEW(rf->mozembed),
                                                          str,
                                                          base);
@@ -650,8 +661,13 @@ create_user_pass_dialog(RSS_AUTH *auth)
         gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
         GtkWidget *password_dialog = GTK_WIDGET (widget);
 
+#if GTK_VERSION >= 2014000
         action_area = gtk_dialog_get_action_area (GTK_DIALOG(password_dialog));
         content_area = gtk_dialog_get_content_area (GTK_DIALOG(password_dialog));
+#else
+	action_area = GTK_DIALOG (password_dialog)->action_area;
+	content_area = NULL;
+#endif
 
         /* Override GtkDialog defaults */
         gtk_box_set_spacing (GTK_BOX (action_area), 12);
@@ -1463,6 +1479,7 @@ gecko_set_preferences(void)
 	gecko_prefs_set_int("browser.ssl_override_behaviour", 2); 
 	gecko_prefs_set_bool("browser.xul.error_pages.enabled", FALSE); 
 	g_free(agstr);
+#if (DATASERVER_VERSION >= 2023001)
 	//I'm only forcing scheme here
 	uri = e_proxy_peek_uri_for(proxy, "http:///");
 	if (uri) {
@@ -1470,6 +1487,7 @@ gecko_set_preferences(void)
 		gecko_prefs_set_int("network.proxy.http_port", uri->port); 
 		gecko_prefs_set_int("network.proxy.type", 1); 
 	}
+#endif
 //	soup_uri_free(uri);
 //	uri = e_proxy_peek_uri_for(proxy, "https:///");
 //	gecko_prefs_set_string("network.proxy.ssl", uri->host); 
@@ -1511,7 +1529,9 @@ rss_popup_link_copy(EPopup *ep, EPopupItem *pitem, void *data)
 static void
 rss_popup_link_open(EPopup *ep, EPopupItem *pitem, void *data)
 {
+#if (EVOLUTION_VERSION >= 22505)
 	e_show_uri (NULL, data);
+#endif
 }
 
 EPopupItem rss_menu_items[] = {
@@ -1922,6 +1942,7 @@ free_rss_browser(EMFormatHTMLPObject *o)
 void
 org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 {
+#ifdef HAVE_GTKHTMLEDITOR
 	xmlChar *buff = NULL;
 	gint size;
 	gsize length;
@@ -1933,6 +1954,7 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 	 */
 	text = gtkhtml_editor_get_text_html ((GtkhtmlEditor *)t->composer, &length);
 
+
 	xmlDoc *doc = rss_html_url_decode(text, strlen(text));
 	if (doc) {
 		htmlDocDumpMemory(doc, &buff, &size);
@@ -1940,6 +1962,7 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 	}
 
 	gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
+#endif
 }
 
 EMFormat *fom;
@@ -4364,7 +4387,9 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 			status_msg = g_queue_new();
 			get_feed_folders();
 			rss_build_stock_images();
+#if (DATASERVER_VERSION >= 2023001)
 			proxy = proxy_init();
+#endif
 			rss_soup_init();
 #if HAVE_DBUS
 			d(g_print("init_dbus()\n"));

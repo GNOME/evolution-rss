@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include "file-gio.h"
 #include "network.h"
 #include "file-gio.h"
 #include "network-soup.h"

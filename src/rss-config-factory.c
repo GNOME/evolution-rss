@@ -64,7 +64,9 @@ extern gchar *buffer;
 extern GSList *rss_list;
 extern GConfClient *rss_gconf;
 extern GHashTable *icons;
+#if LIBSOUP_VERSION > 2024000
 extern SoupCookieJar *rss_soup_jar;
+#endif
 
 #define RSS_CONTROL_ID  "OAFIID:GNOME_Evolution_RSS:" EVOLUTION_VERSION_STRING
 #define FACTORY_ID      "OAFIID:GNOME_Evolution_RSS_Factory:" EVOLUTION_VERSION_STRING
@@ -1781,6 +1783,7 @@ export_opml(gchar *file)
 
 }
 
+#if LIBSOUP_VERSION > 2024000
 SoupCookieJar *
 import_cookies(gchar *file)
 {
@@ -1850,6 +1853,7 @@ process_cookies(SoupCookieJar *jar)
 	//copy gecko data over (gecko will open database locked exclusively)
 	sync_gecko_cookies();
 }
+#endif
 
 static void
 select_export_response(GtkWidget *selector, guint response, gpointer user_data)
@@ -1868,6 +1872,7 @@ select_export_response(GtkWidget *selector, guint response, gpointer user_data)
 
 }
 
+#if LIBSOUP_VERSION > 2024000
 static void
 select_import_cookies_response(GtkWidget *selector, guint response, gpointer user_data)
 {
@@ -1887,6 +1892,7 @@ select_import_cookies_response(GtkWidget *selector, guint response, gpointer use
                 gtk_widget_destroy(selector);
 
 }
+#endif
 
 static void
 decorate_export_fs (gpointer data)
@@ -1957,7 +1963,9 @@ decorate_import_cookies_fs (gpointer data)
         gtk_file_filter_add_pattern (filter, "*.txt");
         gtk_file_filter_add_pattern (filter, "*.sqilte");
         gtk_file_chooser_set_filter(data, filter);
+#if LIBSOUP_VERSION > 2024000
         g_signal_connect(data, "response", G_CALLBACK(select_import_cookies_response), data);
+#endif
         g_signal_connect(data, "destroy", G_CALLBACK(gtk_widget_destroy), data);
 }
 
@@ -2274,6 +2282,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	gchar *main_folder = lookup_main_folder();
 	gchar *folder = target->folder->full_name;
 	add_feed *feed = NULL;
+	GtkWidget *action_area;
 
 	//filter only rss folders
 	if (folder == NULL
@@ -2292,7 +2301,12 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	if (url) {
 		feed = build_dialog_add(url, ofolder);
 		//we do not need ok/cancel buttons here
-		GtkWidget *action_area = gtk_dialog_get_action_area(GTK_DIALOG(feed->dialog));
+
+#if GTK_VERSION >= 2014000
+		action_area = gtk_dialog_get_action_area(GTK_DIALOG(feed->dialog));
+#else
+		action_area = GTK_DIALOG (feed->dialog)->action_area;
+#endif
 		gtk_widget_hide(action_area);
 		gtk_widget_ref(feed->child);
 		gtk_container_remove (GTK_CONTAINER (feed->child->parent), feed->child);

@@ -19,7 +19,9 @@
  */
 
 
+#if (DATASERVER_VERSION >= 2023001)
 #include <libedataserver/e-proxy.h>
+#endif
 
 void abort_all_soup(void);
 gboolean cancel_soup_sess(gpointer key, gpointer value, gpointer user_data);
@@ -36,13 +38,15 @@ GString *net_post_blocking(gchar *url, GSList *headers, GString *post,
 #define NET_ERROR net_error_quark()
 int net_error_quark(void);
 
+#if (DATASERVER_VERSION >= 2023001)
+EProxy *proxy_init(void);
 void proxify_webkit_session(EProxy *proxy, gchar *uri);
 void proxify_session(EProxy *proxy, SoupSession *session, gchar *uri);
+#endif
 
 guint save_up(gpointer data);
 guint del_up(gpointer data);
 void rss_soup_init(void);
-EProxy *proxy_init(void);
 guint read_up(gpointer data);
 void sync_gecko_cookies(void);
 

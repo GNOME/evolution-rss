@@ -1,4 +1,4 @@
-AC_INIT([evolution-rss], [0.1.3], http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss)
+AC_INIT([evolution-rss], [0.1.4], http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss)
 AC_CONFIG_SRCDIR(src)
 
 AM_INIT_AUTOMAKE
@@ -49,20 +49,34 @@ fi
 fi
 
 dnl base packages and versions
-LIBGTK_REQUIRED=2.4.0
+LIBGLIB_REQUIRED=2.16.2
+LIBGTK_REQUIRED=2.12.0
 EVOLUTION_REQUIRED=2.4.1
 LIBSOUP_REQUIRED=2.2
 LIBGLADE_REQUIRED=2.0
+LIBGTKHTML_REQUIRED=3.18.3
 
 PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
-[   gtk+-2.0 >= $LIBGTK_REQUIRED dnl
+[  glib-2.0 >= $LIBGLIB_REQUIRED dnl
+   gtk+-2.0 >= $LIBGTK_REQUIRED dnl
    libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    libglade-2.0 dnl
-   libgtkhtml-3.14 dnl
-   gtkhtml-editor dnl
+   libgtkhtml-3.14 >= $LIBGTKHTML_REQUIRED
 ])
+
+PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor, [GTKHTMLEDITOR=YES], [GTKHTMLEDITOR=NO])
+if test "x$GTKHTMLEDITOR" == "xYES"; then
+        AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
+        AC_SUBST(HAVE_GTKHTMLEDITOR)
+        AC_SUBST(GTKHTML_EDITOR_CFLAGS)
+        AC_SUBST(GTKHTML_EDITOR_LIBS)
+fi
+
+DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2` 
+DATASERVER_VERSION=`echo $DATASERVER_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
+AC_SUBST(DATASERVER_VERSION)
 
 dnl default renderer and fall it it in case no other render is found
 RENDER=gtkhtml

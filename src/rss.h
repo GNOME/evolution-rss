@@ -16,6 +16,10 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if HAVE_DBUS
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
@@ -25,6 +29,7 @@
 #ifndef __RSS_H_
 #define __RSS_H_
 
+#include <gtk/gtk.h>
 #include <libsoup/soup.h>
 #include <mail/mail-component.h>
 
