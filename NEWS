@@ -1,3 +1,83 @@
+Evolution-RSS 0.1.4
+------------------------------
+
+Bug fixes:
+	#587790 -  Import RSS from xml doesn't work
+	#587789 -  Crash when importing .opml
+	#586749 -  Typo in a string
+	#586273 -  sending way too many HTTP requests
+	#584301 -  Translate default folder names
+	#584296 -  i18n does not work
+	#584274 -  Hardcoded path in src/network-soup.c
+	#582275 -  Wrong LDFLAGS is used when linking evolution-rss
+	#581455 -  Makes DNS requests although proxified
+	#562759 -  replying does not preserve image source
+	#568338 -  Crash when browsing hack-a-day feed
+	#568857 -  adding rss feed via menu, makes evolution seg.fault
+	#572718 -  No longer applying filters to feed folders automatically
+	#561874 -  Optionally select a cookie file to access feeds that require login cookies
+	#562757 -  authentication dialog does not display feed name
+	#576966 -  Adding private feed causes error
+	#581449 -  Fails to build
+	#562249 -  realloc(): error: modified chunk-pointer
+	#565230 -  Temporary feeds for blog post comments
+	#581466 -  View is empty when using webkit
+	#578912 -  Doesn't work with authenticating proxy
+	#577819 -  No more proxy support
+	#574727 -  can't set interval longer than 100 minutes
+	#563997 -  Show categories and tags of the posts
+	#571956 -  0.1.0-ubuntu2 doesn't show folder for certain RSS urls.
+	#571481 -  bug in a translation string
+	#580116 -  Duplicate items
+	#587775 -  Evolution crashes when adding a RSS feed from localhost or 127.0.0.1
+	#561873 -  file:// URLs not supported
+	#573914 -  feeds are not readable with Ubuntu Darkroom theme
+
+Translations:
+        Jorge González (es)
+	Daniel Nylander (sw)
+	Fran Dieguez (gl)
+	krishnababu k (te)
+	Peter Ani (ml)
+	Akom C (th)
+	Sweta Kothari (gu)
+	Shankar Prasad (kn)
+	Sandeep Shedmake (mr)
+	Runa Bhattacharjee (bn_IN)
+	ifelix (ta)
+	drtvasudevan (ta)
+	Manoj Kumar Giri (or)
+	Claude Paroz (fr)
+	António Lima (pt)
+	Kuo Yang (zn_CN)
+	Philip Withnall (en_GB)
+	Lucian Langa (ro)
+	miloc (it)
+	Nickolay V. Shmyrev (ru)
+	Petr Kovář (cs)
+
+Other fixes:
+New option to remove articles that are no longer present in the feed
+Add individual feed refresh option via folder
+Add feed operations in right click menu (delete, rename, properties)
+Use evolution's proxy support
+Rebuilt authentication dialog
+Better support for feed icons
+Add icon to feed article display
+Added support for displaying feed categories and tags
+Added support for feed comments
+Better support for handling international title, sender
+Atom feed parsing fixes
+Added support for adding feeds from files
+Better handling of time interval in refresh function.
+Dark themes support
+Proxy support for browsers
+Support repling/forwarding of feed articles
+Add support for cookies. Feed articles displayed as Full Text can
+now store user and passwords in cookies
+Add support for importing cookies from browsers.
+
+
 Evolution-RSS 0.1.2
 ------------------------------
 
