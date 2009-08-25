@@ -1820,7 +1820,11 @@ inject_cookie(SoupCookie *cookie, GtkProgressBar *progress)
 		text = g_strdup_printf(_("%2.0f%% done"), fr);
 		gtk_progress_bar_set_text(progress, text);
 		g_free(text);
+#if LIBSOUP_VERSION > 2026000
 		soup_cookie_jar_add_cookie(rss_soup_jar, cookie);
+#else
+		g_print("WARN: soup_cookie_jar_add_cookie() requires libsoup 2.26\n");
+#endif
 		while (gtk_events_pending ())
 			gtk_main_iteration ();
 	}
@@ -1831,7 +1835,13 @@ process_cookies(SoupCookieJar *jar)
 {
 	ccurrent = 0;
 	ctotal = 0;
-	GSList *list = soup_cookie_jar_all_cookies(jar);
+	GSList *list = NULL;
+#if LIBSOUP_VERSION > 2026000
+	list = soup_cookie_jar_all_cookies(jar);
+#else
+	g_print("WARN: soup_cookie_jar_all_cookies() requires libsoup 2.26\n");
+	return;
+#endif
         gchar *msg = g_strdup(_("Importing cookies..."));
         GtkWidget *import_dialog = e_error_new(NULL, "shell:importing", msg, NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);

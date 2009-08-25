@@ -1479,14 +1479,18 @@ gecko_set_preferences(void)
 	gecko_prefs_set_int("browser.ssl_override_behaviour", 2); 
 	gecko_prefs_set_bool("browser.xul.error_pages.enabled", FALSE); 
 	g_free(agstr);
-#if (DATASERVER_VERSION >= 2023001)
+#if (DATASERVER_VERSION >= 2026000)
 	//I'm only forcing scheme here
 	uri = e_proxy_peek_uri_for(proxy, "http:///");
+
 	if (uri) {
 		gecko_prefs_set_string("network.proxy.http", uri->host); 
 		gecko_prefs_set_int("network.proxy.http_port", uri->port); 
 		gecko_prefs_set_int("network.proxy.type", 1); 
 	}
+#else
+	g_print("WARN e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
+	return;
 #endif
 //	soup_uri_free(uri);
 //	uri = e_proxy_peek_uri_for(proxy, "https:///");

@@ -217,8 +217,13 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 #endif
 	case 2:
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
+#if (DATASERVER_VERSION >=2026000)
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
 			d(g_print("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port));
+#else
+			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
+			return;
+#endif
 		} else 
 			d(g_print("webkit no PROXY-%s\n", uri));
 		break;
@@ -245,7 +250,12 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 #endif
 	case 2:
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
+#if (DATASERVER_VERSION >=2026000)
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
+#else
+			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
+			return;
+#endif
 			if (proxy_uri)
 				d(g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port));
 		} else 
