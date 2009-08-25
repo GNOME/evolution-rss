@@ -1597,54 +1597,6 @@ create_export_dialog (void)
   return export_file_select;
 }
 
-GtkWidget*
-create_import_cookies_dialog (void)
-{
-  GtkWidget *import_file_select;
-  GtkWidget *vbox26;
-  GtkWidget *hbuttonbox1;
-  GtkWidget *button3;
-  GtkWidget *button4;
-
-  import_file_select = gtk_file_chooser_dialog_new (_("Select file to import"),
-                                NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
-  gtk_window_set_keep_above(GTK_WINDOW(import_file_select), TRUE);
-  g_object_set (import_file_select,
-                "local-only", FALSE,
-                NULL);
-  gtk_window_set_modal (GTK_WINDOW (import_file_select), FALSE);
-  gtk_window_set_resizable (GTK_WINDOW (import_file_select), TRUE);
-  gtk_window_set_destroy_with_parent (GTK_WINDOW (import_file_select), TRUE);
-  gtk_window_set_type_hint (GTK_WINDOW (import_file_select), GDK_WINDOW_TYPE_HINT_DIALOG);
-
-  vbox26 = GTK_DIALOG (import_file_select)->vbox;
-  gtk_widget_show (vbox26);
-
-  hbuttonbox1 = GTK_DIALOG (import_file_select)->action_area;
-  gtk_widget_show (hbuttonbox1);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_END);
-
-  button3 = gtk_button_new_from_stock ("gtk-cancel");
-  gtk_widget_show (button3);
-  gtk_dialog_add_action_widget (GTK_DIALOG (import_file_select), button3, GTK_RESPONSE_CANCEL);
-  GTK_WIDGET_SET_FLAGS (button3, GTK_CAN_DEFAULT);
-
-  button4 = gtk_button_new_from_stock ("gtk-save");
-  gtk_widget_show (button4);
-  gtk_dialog_add_action_widget (GTK_DIALOG (import_file_select), button4, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (button4, GTK_CAN_DEFAULT);
-
-  gtk_widget_grab_default (button4);
-  return import_file_select;
-}
-static void
-import_cookies_cb (GtkWidget *widget, gpointer data)
-{
-	GtkWidget *import = create_import_cookies_dialog();
-	decorate_import_cookies_fs(import);
-	gtk_widget_show(import);
-}
-
 static void
 import_cb (GtkWidget *widget, gpointer data)
 {
@@ -1783,12 +1735,34 @@ export_opml(gchar *file)
 
 }
 
-#if LIBSOUP_VERSION > 2024000
+
+static void
+select_export_response(GtkWidget *selector, guint response, gpointer user_data)
+{
+        if (response == GTK_RESPONSE_OK) {
+                char *name;
+
+                name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (selector));
+                if (name) {
+                        gtk_widget_destroy(selector);
+                        export_opml(name);
+                        g_free(name);
+                }
+        } else
+                gtk_widget_destroy(selector);
+
+}
+
+/* 
+ * unfortunately versions earlier than libsoup-2.26 cannot
+ * manipulate cookies so we will disable import cookies function completely
+ */
+
+#if LIBSOUP_VERSION >= 2026000
 SoupCookieJar *
 import_cookies(gchar *file)
 {
 	SoupCookieJar *jar = NULL;
-#if LIBSOUP_VERSION > 2026002
 	gchar header[16];
 	memset(header, 0, 16);
 	d(g_print("import cookies from %s\n", file));
@@ -1797,7 +1771,7 @@ import_cookies(gchar *file)
 		fgets(header, 16, f);
 		fclose(f);
 		if (!g_ascii_strncasecmp(header, SQLITE_MAGIC, sizeof(SQLITE_MAGIC))) {
-#if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME)
+#ifdef HAVE_LIBSOUP_GNOME
 			jar = soup_cookie_jar_sqlite_new(file, TRUE);
 #else
 			g_print("Importing sqlite format requires libsoup-gnome\n");
@@ -1805,7 +1779,6 @@ import_cookies(gchar *file)
 		} else
 			jar = soup_cookie_jar_text_new(file, TRUE);
 	}
-#endif
 	return jar;
 }
 
@@ -1820,11 +1793,7 @@ inject_cookie(SoupCookie *cookie, GtkProgressBar *progress)
 		text = g_strdup_printf(_("%2.0f%% done"), fr);
 		gtk_progress_bar_set_text(progress, text);
 		g_free(text);
-#if LIBSOUP_VERSION > 2026000
 		soup_cookie_jar_add_cookie(rss_soup_jar, cookie);
-#else
-		g_print("WARN: soup_cookie_jar_add_cookie() requires libsoup 2.26\n");
-#endif
 		while (gtk_events_pending ())
 			gtk_main_iteration ();
 	}
@@ -1836,12 +1805,7 @@ process_cookies(SoupCookieJar *jar)
 	ccurrent = 0;
 	ctotal = 0;
 	GSList *list = NULL;
-#if LIBSOUP_VERSION > 2026000
 	list = soup_cookie_jar_all_cookies(jar);
-#else
-	g_print("WARN: soup_cookie_jar_all_cookies() requires libsoup 2.26\n");
-	return;
-#endif
         gchar *msg = g_strdup(_("Importing cookies..."));
         GtkWidget *import_dialog = e_error_new(NULL, "shell:importing", msg, NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
@@ -1867,26 +1831,7 @@ process_cookies(SoupCookieJar *jar)
 	//copy gecko data over (gecko will open database locked exclusively)
 	sync_gecko_cookies();
 }
-#endif
 
-static void
-select_export_response(GtkWidget *selector, guint response, gpointer user_data)
-{
-        if (response == GTK_RESPONSE_OK) {
-                char *name;
-
-                name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (selector));
-                if (name) {
-                        gtk_widget_destroy(selector);
-                        export_opml(name);
-                        g_free(name);
-                }
-        } else
-                gtk_widget_destroy(selector);
-
-}
-
-#if LIBSOUP_VERSION > 2024000
 static void
 select_import_cookies_response(GtkWidget *selector, guint response, gpointer user_data)
 {
@@ -1905,6 +1850,91 @@ select_import_cookies_response(GtkWidget *selector, guint response, gpointer use
         } else
                 gtk_widget_destroy(selector);
 
+}
+
+GtkWidget*
+create_import_cookies_dialog (void)
+{
+  GtkWidget *import_file_select;
+  GtkWidget *vbox26;
+  GtkWidget *hbuttonbox1;
+  GtkWidget *button3;
+  GtkWidget *button4;
+
+  import_file_select = gtk_file_chooser_dialog_new (_("Select file to import"),
+                                NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
+  gtk_window_set_keep_above(GTK_WINDOW(import_file_select), TRUE);
+  g_object_set (import_file_select,
+                "local-only", FALSE,
+                NULL);
+  gtk_window_set_modal (GTK_WINDOW (import_file_select), FALSE);
+  gtk_window_set_resizable (GTK_WINDOW (import_file_select), TRUE);
+  gtk_window_set_destroy_with_parent (GTK_WINDOW (import_file_select), TRUE);
+  gtk_window_set_type_hint (GTK_WINDOW (import_file_select), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+  vbox26 = GTK_DIALOG (import_file_select)->vbox;
+  gtk_widget_show (vbox26);
+
+  hbuttonbox1 = GTK_DIALOG (import_file_select)->action_area;
+  gtk_widget_show (hbuttonbox1);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_END);
+
+  button3 = gtk_button_new_from_stock ("gtk-cancel");
+  gtk_widget_show (button3);
+  gtk_dialog_add_action_widget (GTK_DIALOG (import_file_select), button3, GTK_RESPONSE_CANCEL);
+  GTK_WIDGET_SET_FLAGS (button3, GTK_CAN_DEFAULT);
+
+  button4 = gtk_button_new_from_stock ("gtk-save");
+  gtk_widget_show (button4);
+  gtk_dialog_add_action_widget (GTK_DIALOG (import_file_select), button4, GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS (button4, GTK_CAN_DEFAULT);
+
+  gtk_widget_grab_default (button4);
+  return import_file_select;
+}
+
+void
+decorate_import_cookies_fs (gpointer data)
+{
+        gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
+        gtk_file_chooser_set_local_only (data, FALSE);
+
+        GtkFileFilter *file_filter = gtk_file_filter_new ();
+        gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*");
+        gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("All Files"));
+        gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
+                                        GTK_FILE_FILTER(file_filter));
+
+        file_filter = gtk_file_filter_new ();
+        gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*.txt");
+        gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("Mozilla/Netscape Format"));
+        gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
+                                        GTK_FILE_FILTER(file_filter));
+
+        file_filter = gtk_file_filter_new ();
+        gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*.sqlite");
+        gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("Firefox new Format"));
+        gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
+                                        GTK_FILE_FILTER(file_filter));
+
+        gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (data),
+                                        GTK_FILE_FILTER(file_filter));
+
+
+        GtkFileFilter *filter = gtk_file_filter_new ();
+        gtk_file_filter_add_pattern (filter, "*.txt");
+        gtk_file_filter_add_pattern (filter, "*.sqlite");
+        gtk_file_chooser_set_filter(data, filter);
+        g_signal_connect(data, "response", G_CALLBACK(select_import_cookies_response), data);
+        g_signal_connect(data, "destroy", G_CALLBACK(gtk_widget_destroy), data);
+}
+
+static void
+import_cookies_cb (GtkWidget *widget, gpointer data)
+{
+	GtkWidget *import = create_import_cookies_dialog();
+	decorate_import_cookies_fs(import);
+	gtk_widget_show(import);
 }
 #endif
 
@@ -1942,44 +1972,6 @@ decorate_export_fs (gpointer data)
         gtk_file_filter_add_pattern (filter, "*.xml");
         gtk_file_chooser_set_filter(data, filter);
         g_signal_connect(data, "response", G_CALLBACK(select_export_response), data);
-        g_signal_connect(data, "destroy", G_CALLBACK(gtk_widget_destroy), data);
-}
-
-void
-decorate_import_cookies_fs (gpointer data)
-{
-        gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
-        gtk_file_chooser_set_local_only (data, FALSE);
-
-        GtkFileFilter *file_filter = gtk_file_filter_new ();
-        gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*");
-        gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("All Files"));
-        gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
-                                        GTK_FILE_FILTER(file_filter));
-
-        file_filter = gtk_file_filter_new ();
-        gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*.txt");
-        gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("Mozilla/Netscape Format"));
-        gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
-                                        GTK_FILE_FILTER(file_filter));
-
-        file_filter = gtk_file_filter_new ();
-        gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*.sqlite");
-        gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("Firefox new Format"));
-        gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
-                                        GTK_FILE_FILTER(file_filter));
-
-        gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (data),
-                                        GTK_FILE_FILTER(file_filter));
-
-
-        GtkFileFilter *filter = gtk_file_filter_new ();
-        gtk_file_filter_add_pattern (filter, "*.txt");
-        gtk_file_filter_add_pattern (filter, "*.sqilte");
-        gtk_file_chooser_set_filter(data, filter);
-#if LIBSOUP_VERSION > 2024000
-        g_signal_connect(data, "response", G_CALLBACK(select_import_cookies_response), data);
-#endif
         g_signal_connect(data, "destroy", G_CALLBACK(gtk_widget_destroy), data);
 }
 
@@ -2122,7 +2114,12 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		G_CALLBACK(accept_cookies_cb), 
 		ui->import);
 
+#if LIBSOUP_VERSION >= 2026000
 	g_signal_connect(ui->import, "clicked", G_CALLBACK(import_cookies_cb), ui->import);
+#else
+	gtk_widget_set_sensitive(ui->import, FALSE);
+	gtk_widget_set_sensitive(ui->check6, FALSE);
+#endif
 
 	ui->nettimeout = glade_xml_get_widget(ui->xml, "nettimeout");
   	gdouble adj = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
