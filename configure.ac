@@ -164,8 +164,9 @@ if test "x$have_gecko" != "xno"; then
         AC_MSG_RESULT([$gecko_cv_have_xpcom_glue])
 #               	CPPFLAGS="$_SAVE_CPPFLAGS"
 		AC_ARG_WITH([primary-render],
-        		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
-        			[RENDER=$with_primary_render], [RENDER=gtkhtml])
+        	[AS_HELP_STRING([--with-primary-render],
+		[Forces Gecko or Webkit to be the primary html renderer [default:gtkHTML]])],
+       		[RENDER=$with_primary_render], [RENDER=gtkhtml])
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xgecko"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
 			RENDER_N=2
@@ -216,8 +217,9 @@ if test "x$have_webkit" != "xno"; then
 	RENDER_CFLAGS="$RENDER_CFLAGS $WEBKIT_CFLAGS" 
 	if test "x$RENDER" != "xgecko"; then
 		AC_ARG_WITH([primary-render],
-        		AS_HELP_STRING([--with-primary-render],[Forces Gecko to be the primary html renderer  @<:@=gecko|webkit@:>@ (default:gtkHTML)]),
-        			[RENDER=$with_primary_render], [RENDER=gtkhtml])
+        	[AS_HELP_STRING([--with-primary-render=@<:@gecko/webkit/gtkhtml@:>@],
+		[Forces Gecko or Webkit to be the primary html renderer [default:gtkhtml]])],
+       		[RENDER=$with_primary_render], [RENDER=gtkhtml])
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xwebkit"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
 			RENDER_N=1

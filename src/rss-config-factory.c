@@ -1788,6 +1788,7 @@ SoupCookieJar *
 import_cookies(gchar *file)
 {
 	SoupCookieJar *jar = NULL;
+#if LIBSOUP_VERSION > 2026002
 	gchar header[16];
 	memset(header, 0, 16);
 	d(g_print("import cookies from %s\n", file));
@@ -1798,10 +1799,13 @@ import_cookies(gchar *file)
 		if (!g_ascii_strncasecmp(header, SQLITE_MAGIC, sizeof(SQLITE_MAGIC))) {
 #if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME)
 			jar = soup_cookie_jar_sqlite_new(file, TRUE);
+#else
+			g_print("Importing sqlite format requires libsoup-gnome\n");
 #endif
 		} else
 			jar = soup_cookie_jar_text_new(file, TRUE);
 	}
+#endif
 	return jar;
 }
 
