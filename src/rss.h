@@ -373,11 +373,4 @@ const char *_e_get_imagesdir (void) G_GNUC_CONST;
 #define EVOLUTION_ICONDIR _e_get_imagesdir ()
 
 #endif
-
-typedef struct FEED_FOLDERS {
-	gchar *oname;		//original folder name
-	gchar *rname;		// renamed folder name
-} feed_folders;
-
-
 #endif

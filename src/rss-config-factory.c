@@ -1354,8 +1354,6 @@ import_opml(gchar *file)
 					gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
 					gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
-g_print("rsstitle:%s\n", rsstitle);
-g_print("rssprefix:%s\n", rssprefix);
 					import_one_feed(rssurl, rsstitle, rssprefix);
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
