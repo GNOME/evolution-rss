@@ -41,4 +41,3 @@
 	* check feed_folders for errors
 	* check rss_delete_feed for race condition when deletion of camel folder
 	* folder delete should delete feed_folders allocation
-	* fix folder rename (rename all components in feed_folders searching by folder/)

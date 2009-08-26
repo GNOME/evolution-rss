@@ -358,7 +358,7 @@ void web_auth_dialog(RSS_AUTH *auth_info);
 gchar *get_main_folder(void);
 gpointer lookup_key(gpointer key);
 void rss_delete_feed(gchar *name, gboolean folder);
-void update_feed_folder(gchar *old_name, gchar *new_name);
+gint update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);

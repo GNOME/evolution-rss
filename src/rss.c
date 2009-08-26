@@ -266,6 +266,7 @@ finish_create_icon_stream (SoupMessage *msg, FEED_IMAGE *user_data);
 finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data);
 #endif
 gboolean show_webkit(GtkWidget *webkit);
+void sync_folders(void);
 
 GtkTreeStore *evolution_store = NULL;
 
@@ -2704,9 +2705,17 @@ add:
 		if (feed->edit) {
 			gchar *a = g_build_path("/", feed->prefix ? feed->prefix : "", feed->feed_name, NULL);
 			gchar *b = g_build_path("/", r->title, NULL);
-			update_feed_folder(b, a);
+			update_feed_folder(b, a, 0);
 			//r->title = feed->feed_name;
 			r->title = a;
+			g_free(b);
+		}
+
+		if (rf->import && feed->prefix) {
+			gchar *a = g_build_path("/", feed->prefix ? feed->prefix : "", feed->feed_name, NULL);
+			gchar *b = g_build_path("/", r->title, NULL);
+			update_feed_folder(b, a, 0);
+			g_free(a);
 			g_free(b);
 		}
 
@@ -3548,9 +3557,6 @@ update_main_folder(gchar *new_name)
 void
 write_feeds_folder_line(gpointer key, gpointer value, FILE *file)
 {
-	feed_folders *ff = g_new0(feed_folders, 1);
-	ff->rname = key;
-	ff->oname = value;
 	fprintf(file, "%s\n", (char *)key);
 	fprintf(file, "%s\n", (char *)value);
 }
@@ -3561,13 +3567,89 @@ populate_reversed(gpointer key, gpointer value, GHashTable *hash)
 	g_hash_table_insert(hash, g_strdup(value), g_strdup(key));
 }
 
+
+GList *rebase_keys = NULL;
+
+typedef struct _rebase_name rebase_name;
+struct _rebase_name {
+	gchar *oname;
+	gchar *nname;
+};
+
+void
+rebase_feed(gchar *key, rebase_name *rn)
+{
+	gchar *value = g_strdup(g_hash_table_lookup(rf->feed_folders, key));
+	gchar *base_key = strextr(key, rn->oname);
+	gchar *tmp = g_strconcat(rn->nname, base_key, NULL);
+	g_hash_table_remove(rf->feed_folders, key);
+	g_hash_table_insert(rf->feed_folders, tmp, value);
+}
+
+void
+search_rebase(gpointer key, gpointer value, gchar *oname)
+{
+	gchar *tmp = g_strdup_printf("%s/", oname);
+	if (!strncmp(key, tmp, strlen(tmp))) {
+		rebase_keys = g_list_append(rebase_keys, key);
+	}
+}
+
+void
+rebase_feeds(gchar *old_name, gchar *new_name)
+{
+	gchar *oname = extract_main_folder(old_name);
+	gchar *nname = extract_main_folder(new_name);
+	rebase_name *rn = g_new0(rebase_name, 1);
+	rn->oname = oname;
+	rn->nname = nname;
+	g_hash_table_foreach(rf->feed_folders,
+			search_rebase, oname);
+	g_list_foreach(rebase_keys, rebase_feed, rn);
+	g_list_free(rebase_keys);
+	rebase_keys = NULL;
+	sync_folders();
+}
+
+/*
+ * sync feeds folders data on disk
+ */
+
+void
+sync_folders(void)
+{
+	FILE *f;
+        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+        if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
+            g_mkdir_with_parents (feed_dir, 0755);
+        gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
+        g_free(feed_dir);
+        f = fopen(feed_file, "wb");
+        if (!f)
+                return;
+
+        g_hash_table_foreach(rf->feed_folders,
+                                (GHFunc)write_feeds_folder_line,
+                                (gpointer *)f);
+        fclose(f);
+        g_free(feed_file);
+	g_hash_table_destroy(rf->reversed_feed_folders);
+	rf->reversed_feed_folders = g_hash_table_new_full(g_str_hash, 
+			g_str_equal, 
+			g_free, 
+			g_free);
+	g_hash_table_foreach(rf->feed_folders, 
+			(GHFunc)populate_reversed, 
+			rf->reversed_feed_folders);
+}
+
 /*construct feed_folders file with rename allocation
  * old_name initial channel name
  * new_name renamed name
  */
 
-void
-update_feed_folder(gchar *old_name, gchar *new_name)
+gint
+update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder)
 {
 	gchar *oname = extract_main_folder(old_name);
 	gchar *nname = extract_main_folder(new_name);
@@ -3575,37 +3657,20 @@ update_feed_folder(gchar *old_name, gchar *new_name)
 		oname = g_strdup(old_name);
 	if (!nname)
 		nname = g_strdup(new_name);
-	FILE *f;
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-        if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-            g_mkdir_with_parents (feed_dir, 0755);
-        gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
-        g_free(feed_dir);
-	f = fopen(feed_file, "wb");
-	if (!f)
-		return;
 	gchar *orig_name = g_hash_table_lookup(rf->feed_folders, oname);
-	if (!orig_name)
+	if (!orig_name) {
+		if (valid_folder)
+			return 0;
 		g_hash_table_replace(rf->feed_folders, g_strdup(nname), g_strdup(oname));
-	else {
+	} else {
 		g_hash_table_replace(rf->feed_folders, g_strdup(nname), g_strdup(orig_name));
 		g_hash_table_remove(rf->feed_folders, oname);
 	}
 
-	g_hash_table_foreach(rf->feed_folders, 
-				(GHFunc)write_feeds_folder_line, 
-				(gpointer *)f);
-	fclose(f);
-	g_hash_table_destroy(rf->reversed_feed_folders);
-	rf->reversed_feed_folders = g_hash_table_new_full(g_str_hash, 
-							g_str_equal, 
-							g_free, 
-							g_free);
-	g_hash_table_foreach(rf->feed_folders, 
-				(GHFunc)populate_reversed, 
-				rf->reversed_feed_folders);
+	sync_folders();
 	g_free(oname);
 	g_free(nname);
+	return 1;
 }
 
 CamelFolder *
@@ -3648,7 +3713,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	gchar *tmp;
         CamelStore *store = mail_component_peek_local_store(NULL);
 	gchar *name = extract_main_folder(full_path);
-	g_print("name to delete:%s\n", name);
+	d(g_print("name to delete:%s\n", name));
 	if (!name)
 		return;
 	gchar *real_name = g_hash_table_lookup(rf->feed_folders, name);
@@ -3709,7 +3774,12 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 		|| !g_ascii_strncasecmp(OLD_FEEDS_FOLDER, info->old_base, strlen(info->old_base)))
 			update_main_folder(info->new->full_name);
 		else
-			update_feed_folder(info->old_base, info->new->full_name);
+			if (0 == update_feed_folder(info->old_base, info->new->full_name, 1)) {
+g_print("info->old_base:%s\n", info->old_base);
+g_print("info->new->full_name:%s\n", info->new->full_name);
+				g_print("this is not a feed!!\n");
+				rebase_feeds(info->old_base, info->new->full_name);
+			}
 		g_idle_add((GSourceFunc)store_redraw, GTK_TREE_VIEW(rf->treeview));
         	save_gconf_feed();
 	}

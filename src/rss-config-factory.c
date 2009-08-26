@@ -663,6 +663,9 @@ create_dialog_add(gchar *url, gchar *feed_text)
 gboolean
 store_redraw(GtkTreeView *data)
 {
+	g_return_val_if_fail(data, FALSE);
+	g_return_val_if_fail(GTK_WIDGET_REALIZED(data), FALSE);
+
 	if (!store_redrawing) {
 		store_redrawing = 1;
         	GtkTreeModel *model = gtk_tree_view_get_model (data);
@@ -1215,12 +1218,18 @@ import_opml(gchar *file)
         guint current = 0;
 	guint type = 0; //file type
         gchar *what = NULL;
-        GtkWidget *import_dialog;
+        GtkWidget *import_dialog = NULL;
         GtkWidget *import_label;
         GtkWidget *import_progress;
 
         xmlNode *src = (xmlNode *)xmlParseFile (file);
-        xmlNode *doc = src;
+	xmlNode *doc = NULL;
+
+	if (!src) {
+		rss_error(NULL, NULL, _("Import error."), _("Invalid file or this is not an import file."));
+		goto out;
+	}
+        doc = src;
         gchar *msg = g_strdup(_("Importing feeds..."));
         import_dialog = e_error_new((GtkWindow *)rf->preferences, "shell:importing", msg, NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
@@ -1272,8 +1281,6 @@ import_opml(gchar *file)
 		}
 	}	
         src = doc;
-//	//force out for now
-//	goto out;
         //we'll be safer this way
         rf->import = 1;
 	name = NULL;
@@ -1347,6 +1354,8 @@ import_opml(gchar *file)
 					gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
 					gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
+g_print("rsstitle:%s\n", rsstitle);
+g_print("rssprefix:%s\n", rssprefix);
 					import_one_feed(rssurl, rsstitle, rssprefix);
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
@@ -1404,7 +1413,8 @@ import_opml(gchar *file)
         while (gtk_events_pending ())
                 gtk_main_iteration ();
 out:    rf->import = 0;
-        xmlFree(doc);
+	if (doc)
+        	xmlFree(doc);
         gtk_widget_destroy(import_dialog);
 }
 
