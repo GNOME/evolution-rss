@@ -3604,8 +3604,8 @@ rebase_feeds(gchar *old_name, gchar *new_name)
 	rn->oname = oname;
 	rn->nname = nname;
 	g_hash_table_foreach(rf->feed_folders,
-			search_rebase, oname);
-	g_list_foreach(rebase_keys, rebase_feed, rn);
+			(GHFunc)search_rebase, oname);
+	g_list_foreach(rebase_keys, (GFunc)rebase_feed, rn);
 	g_list_free(rebase_keys);
 	rebase_keys = NULL;
 	sync_folders();
