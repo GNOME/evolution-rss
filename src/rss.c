@@ -48,17 +48,26 @@ int rss_verbose_debug = 0;
 #include <mail/em-event.h>
 #endif
 
-#include <mail/em-popup.h>
+
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
+
+
+#if EVOLUTION_VERSION < 22800 //kb//
+#include <mail/em-popup.h>
 #include <mail/em-folder-view.h>
+#include <mail/em-format.h>
 #include <mail/mail-component.h>
+#include <misc/e-activity-handler.h>
+#else
+#include <mail/e-mail-local.h>
+#endif
+
 #include <mail/mail-tools.h>
 #include <mail/mail-ops.h>
 
-#include <misc/e-activity-handler.h>
 
-#include <mail/em-format.h>
+
 #include <mail/em-format-html.h>
 #include <mail/em-format-hook.h>
 
@@ -188,6 +197,9 @@ SoupCookieJar *rss_soup_jar;
 #endif
 extern guint rsserror;
 gboolean single_pending = FALSE;
+#if EVOLUTION_VERSION >= 22800
+extern CamelSession *session;
+#endif
 
 rssfeed *rf = NULL;
 guint           upgrade = 0;                // set to 2 when initailization successfull
@@ -320,6 +332,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 #if (EVOLUTION_VERSION >= 22200)
 	if (key) { 
 		if (!g_hash_table_lookup(rf->error_hash, key)) {
+#if EVOLUTION_VERSION < 22800 //kb//
         		EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
 //			guint activity_id = g_hash_table_lookup(rf->activity, key);
                 	ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
@@ -333,6 +346,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
         		guint id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), msg, ed);
 #endif
 			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
+#endif //kb//
 		}
 /*		taskbar_op_finish(key);*/
 		goto out;
@@ -363,26 +377,33 @@ cancel_active_op(gpointer key)
 void
 taskbar_push_message(gchar *message)
 {
+//kb//
+#if 0
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
+#endif
 }
 
 void
 taskbar_pop_message(void)
 {
+#if EVOLUTION_VERSION < 22800 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_unset_message(activity_handler);
+#endif
 }
 
 void
 taskbar_op_abort(gpointer key)
 {
+#if EVOLUTION_VERSION < 22800 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 	if (activity_key)
 		e_activity_handler_operation_finished(activity_handler, activity_key);
 	g_hash_table_remove(rf->activity, key);
 	abort_all_soup();
+#endif
 }
 
 guint
@@ -392,6 +413,8 @@ taskbar_op_new(gchar *message, gpointer key)
 taskbar_op_new(gchar *message)
 #endif
 {
+//kb//
+#if 0
 	GdkPixbuf *progress_icon;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	char *mcp = g_strdup_printf("%p", mail_component_peek());
@@ -416,11 +439,14 @@ taskbar_op_new(gchar *message)
 
 	g_free(mcp);
 	return activity_id;
+#endif //kb//
 }
 
 void
 taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress)
 {
+//kb//
+#if 0
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 
@@ -430,11 +456,14 @@ taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress)
                                 g_strdup(msg), 
                                 progress);
 	}
+#endif
 }
 
 void
 taskbar_op_finish(gpointer key)
 {
+//kb//
+#if 0
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	
 	if (rf->activity) {
@@ -443,6 +472,7 @@ taskbar_op_finish(gpointer key)
 			e_activity_handler_operation_finished(activity_handler, activity_key);
 		g_hash_table_remove(rf->activity, key);
 	}
+#endif
 }
 
 void
@@ -982,7 +1012,8 @@ save_gconf_feed(void)
 void
 rss_select_folder(gchar *folder_name)
 {
-	CamelStore *store = mail_component_peek_local_store(NULL);
+#if 0 //kb//
+	CamelStore *store = rss_component_peek_local_store();
 	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
         gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), folder_name);
         CamelFolder *folder = camel_store_get_folder (store, real_name, 0, NULL);
@@ -1009,6 +1040,7 @@ rss_select_folder(gchar *folder_name)
 	g_free(uri);
 	camel_object_unref (folder);
 	g_free(real_name);
+#endif
 }
 
 static void
@@ -1281,7 +1313,7 @@ read_feeds(rssfeed *rf)
 {
 	guint res = 0;
 	//contruct feeds
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 	gchar *feed_file = g_strdup_printf("%s/evolution-feeds", feed_dir);
@@ -1501,6 +1533,8 @@ gecko_set_preferences(void)
 #endif
 }
 
+//kb//
+#if 0
 #ifdef HAVE_GECKO
 static void
 rss_popup_zoom_in(EPopup *ep, EPopupItem *pitem, void *data)
@@ -1523,6 +1557,7 @@ rss_popup_zoom_orig(EPopup *ep, EPopupItem *pitem, void *data)
 {
 	gecko_set_zoom(rf->mozembed, 1);
 }
+#endif
 
 static void
 rss_popup_link_copy(EPopup *ep, EPopupItem *pitem, void *data)
@@ -1553,13 +1588,13 @@ EPopupItem rss_menu_items[] = {
 	{ E_POPUP_ITEM, "05.rss-browser.09", N_("_Open Link in Browser"), rss_popup_link_open, NULL, NULL, EM_POPUP_URI_HTTP },
         { E_POPUP_ITEM, "05.rss-browser.10", N_("_Copy Link Location"), rss_popup_link_copy, NULL, "edit-copy" },
 };
-#endif
 
 void
 rss_menu_items_free(EPopup *ep, GSList *items, void *data)
 {
         g_slist_free(items);
 }
+#endif
 
 #ifdef HAVE_WEBKIT
 #if (WEBKIT_VERSION >= 1001007)
@@ -1644,6 +1679,8 @@ gecko_over_link(GtkMozEmbed *mozembed)
 gboolean
 gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 {
+//kb//
+#if 0
 	gint button;
 	GtkMenu *menu;
         GSList *menus = NULL;
@@ -1683,6 +1720,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 		gtk_moz_embed_load_url(GTK_MOZ_EMBED(rf->mozembed), link);
 	g_print("button:%d\n", button);
 	return FALSE;
+#endif //kb//
 }
 #endif
 
@@ -1985,6 +2023,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *comments = NULL;
 	gchar *category = NULL;
 	GdkPixbuf *pixbuf = NULL;
+	GdkColor color;
 	guint engine = 0;
 	int size;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
@@ -1998,11 +2037,33 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
 	/* force loading of images even if mail images disabled */
-	emfh->load_http_now = TRUE;
+	/* //KB// */
+	//emfh->load_http_now = TRUE;
 	/* assuming 0xffffff will ruin dark themes */
+#if EVOLUTION_VERSION < 22800
 	frame_colour = emfh->frame_colour;// ? emfh->frame_colour: 0xffffff;
 	content_colour = emfh->content_colour;// ? emfh->content_colour: 0xffffff;
 	text_colour = emfh->text_colour;// ? emfh->text_colour: 0xffffff;
+#else
+
+	em_format_html_get_color(
+				emfh,
+				EM_FORMAT_HTML_COLOR_FRAME,
+				&color);
+	frame_colour = e_color_to_value(&color);
+
+	em_format_html_get_color(
+				emfh,
+				EM_FORMAT_HTML_COLOR_CONTENT,
+				&color);
+	content_colour = e_color_to_value(&color);
+
+	em_format_html_get_color(
+				emfh,
+				EM_FORMAT_HTML_COLOR_TEXT,
+				&color);
+	text_colour = e_color_to_value(&color);
+#endif
 
 	type = camel_mime_part_get_content_type(message);
 	const char *website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");
@@ -2162,8 +2223,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 ///		buff=tmp;
 
 
-		gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
-                gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, feedid);
+		gchar *feed_dir = rss_component_peek_base_directory();
+        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, feedid);
 
 		camel_stream_printf (fstream,
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
@@ -2280,6 +2341,7 @@ fmerror:
 
 void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 {
+	g_print("refrish\n");
 	gchar *main_folder = get_main_folder();
 	if (t->uri == NULL 
 	  || g_ascii_strncasecmp(t->uri, main_folder, strlen(main_folder)))
@@ -2355,7 +2417,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 			if (display_folder_icon(t->store, key))
 				goto out;
 #else
-			gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+			gchar *feed_dir = rss_component_peek_base_directory();
 			gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
 			pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
 			g_free(feed_dir);
@@ -2828,9 +2890,12 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (!key)
 		deleted = 1;
 
+//kb//
+#if 0
 	MailComponent *mc = mail_component_peek ();
         if (mc->priv->quit_state != -1)
 		rf->cancel_all=1;
+#endif
 
 	d(g_print("taskbar_op_finish() queue:%d\n", rf->feed_queue));
 
@@ -3192,10 +3257,13 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 gboolean
 update_articles(gboolean disabler)
 {
+//kb//
+#if 0
 	MailComponent *mc = mail_component_peek ();
 	g_print("stAte:%d\n", mc->priv->quit_state);
         if (mc->priv->quit_state != -1)
 		rf->cancel=1;
+#endif
 
 	if (!rf->pending && !rf->feed_queue && !rf->cancel_all && rf->online) {
 		g_print("Reading RSS articles...\n");
@@ -3212,8 +3280,15 @@ update_articles(gboolean disabler)
 }
 
 gchar *
-rss_component_peek_base_directory(MailComponent *component)
+rss_component_peek_base_directory(void)
 {
+#if (EVOLUTION_VERSION >= 22800) 
+/*temporary hack as mail backend might not be up when we're called*/
+	return g_strdup_printf("%s/mail/rss", 
+//		em_utils_get_data_dir());
+		e_get_user_data_dir());
+#else
+	MailComponent *componet = mail_component_peek();
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
 #if (EVOLUTION_VERSION >= 22300)		// include devel too
 	return g_strdup_printf("%s/rss",
@@ -3222,13 +3297,24 @@ rss_component_peek_base_directory(MailComponent *component)
 	return g_strdup_printf("%s/mail/rss",
             	mail_component_peek_base_directory (component));
 #endif
+#endif
+}
+
+CamelStore *
+rss_component_peek_local_store(void)
+{
+#if (EVOLUTION_VERSION < 22800)
+	return mail_component_peek_local_store(NULL);
+#else
+	return e_mail_local_get_store();
+#endif
 }
 
 gchar *
 get_main_folder(void)
 {
 	gchar mf[512];
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/main_folder", feed_dir);
@@ -3255,7 +3341,7 @@ get_feed_folders(void)
 	
 	rf->feed_folders = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 	rf->reversed_feed_folders = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
@@ -3340,7 +3426,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 	xmlChar *icon = NULL;
 	gchar *icon_url = NULL;
 	FEED_IMAGE *fi = NULL;
-        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
 	gchar *url = (gchar *)user_data;
 	gchar *key = gen_md5(url);
         gchar *img_file = g_strdup_printf("%s/%s.img", feed_dir, key);
@@ -3433,7 +3519,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 gboolean
 check_update_feed_image(gchar *key)
 {
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
 	gchar *fav_file = g_strdup_printf("%s/%s.fav", feed_dir, key);
 	struct timeval start;
 	FILE *f = NULL;
@@ -3490,7 +3576,7 @@ update_feed_image(RDF *r)
 	gchar *image = r->image;
 	if (!check_update_feed_image(key))
 		goto out;
-        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
@@ -3541,7 +3627,7 @@ update_main_folder(gchar *new_name)
 		g_free(rf->main_folder);
 	rf->main_folder = g_strdup(new_name);
 	
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/main_folder", feed_dir);
@@ -3619,7 +3705,7 @@ void
 sync_folders(void)
 {
 	FILE *f;
-        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
@@ -3676,7 +3762,7 @@ update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder)
 CamelFolder *
 check_feed_folder(gchar *folder_name)
 {
-	CamelStore *store = mail_component_peek_local_store(NULL);
+	CamelStore *store = rss_component_peek_local_store();
 	CamelFolder *mail_folder;
 	char **path = NULL;
 	gint i=0;
@@ -3711,7 +3797,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 {
         CamelException ex;
 	gchar *tmp;
-        CamelStore *store = mail_component_peek_local_store(NULL);
+        CamelStore *store = rss_component_peek_local_store();
 	gchar *name = extract_main_folder(full_path);
 	d(g_print("name to delete:%s\n", name));
 	if (!name)
@@ -3734,7 +3820,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	if (!url)
 		goto out;
         gchar *buf = gen_md5(url);
-        gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+		gchar *feed_dir = rss_component_peek_base_directory();
         gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
         g_free(feed_dir);
         g_free(buf);
@@ -3986,6 +4072,7 @@ custom_feed_timeout(void)
 static void
 rss_online(CamelSession *o, void *event_data, void *data)
 {
+	g_print("Apoc, are we online?... Almost.\n");
 	rf->online =  camel_session_is_online (o);
 }
 
@@ -4042,14 +4129,22 @@ typedef struct _EShell EShell;
 
 void get_shell(void *ep, ESEventTargetShell *t)
 {
+#if EVOLUTION_VERSION < 22800 //KB//
 	EShell *shell = t->shell;
 	EShellPrivate *priv = (EShellPrivate *)shell->priv;
 	evo_window = (GtkWidget *)priv->windows;
+#endif
 }
 
+#if EVOLUTION_VERSION < 22800 //KB
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
+#else
+void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t);
+
+void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
+#endif
 {
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
 		//as I don't know how to set this I'll setup a 10 secs timeout
@@ -4081,12 +4176,20 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 
 
         /* hook in rename event to catch feeds folder rename */
-	CamelStore *store = mail_component_peek_local_store(NULL);
+	CamelStore *store = rss_component_peek_local_store();
 	camel_object_hook_event(store, "folder_renamed",
                                 (CamelObjectEventHookFunc)store_folder_renamed, NULL);
 	camel_object_hook_event(store, "folder_deleted",
                                 (CamelObjectEventHookFunc)store_folder_deleted, NULL);
-	camel_object_hook_event(mail_component_peek_session(NULL), "online", (CamelObjectEventHookFunc)rss_online, NULL);
+	camel_object_hook_event(
+#if EVOLUTION_VERSION < 22800
+			mail_component_peek_session(NULL),
+#else
+			session,
+#endif
+			"online",
+			(CamelObjectEventHookFunc)rss_online,
+			NULL);
 }
 
 /* check if rss folders exists and create'em otherwise */
@@ -4094,7 +4197,7 @@ void
 check_folders(void)
 {
         CamelException ex;
-	CamelStore *store = mail_component_peek_local_store(NULL);
+	CamelStore *store = rss_component_peek_local_store();
 	CamelFolder *mail_folder, *old_folder;
 
 	mail_folder = camel_store_get_folder (store, lookup_main_folder(), 0, NULL);
@@ -4107,13 +4210,16 @@ check_folders(void)
 	camel_object_unref (mail_folder);
 }
 
-void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
+
 
 gboolean 
 check_if_enabled (gpointer key, gpointer value, gpointer user_data)
 {
 	return GPOINTER_TO_INT(value);
 }
+
+#if 0
+void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
 
 void
 org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
@@ -4188,6 +4294,7 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
         }
 #endif
 }
+#endif
 
 static void
 set_send_status(struct _send_info *info, const char *desc, int pc)
@@ -4682,7 +4789,11 @@ file_to_message(const char *filename)
 	camel_medium_set_content_object((CamelMedium *)msg, content);
         camel_object_unref(content);
 	
+#if EVOLUTION_VERSION < 22800
 	type = em_utils_snoop_type(msg);
+#else
+	type = em_format_snoop_type(msg);
+#endif
 	if (type)
 		camel_data_wrapper_set_mime_type((CamelDataWrapper *)msg, type);
 
@@ -4843,7 +4954,7 @@ finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE 
 gboolean
 display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 {
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
 	gchar *img_file = g_strdup_printf("%s/%s.img", feed_dir, key);
 	GdkPixbuf *icon, *pixbuf;
 	gboolean result = FALSE;
@@ -4852,7 +4963,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	GtkTreeRowReference *row;
 	EMFolderTreeModel *mod = (EMFolderTreeModel *)tree_store;
 	struct _EMFolderTreeModelStoreInfo *si;
-	CamelStore *store = mail_component_peek_local_store(NULL);
+	CamelStore *store = rss_component_peek_local_store();
 	CamelFolder *rss_folder;
 
 	pixbuf = gdk_pixbuf_new_from_file(img_file, NULL);
@@ -4872,7 +4983,13 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 		gtk_icon_theme_add_builtin_icon(key,
 						GTK_ICON_SIZE_INVALID,
 						icon);
+
+#if EVOLUTION_VERSION < 22800 //kb//
 		si = g_hash_table_lookup (mod->store_hash, store);
+#else
+		si = em_folder_tree_model_lookup_store_info (
+                		EM_FOLDER_TREE_MODEL (mod), store);
+#endif
 		row = g_hash_table_lookup (si->full_hash, full_name);
 		path = gtk_tree_row_reference_get_path (row);
         	gtk_tree_model_get_iter ((GtkTreeModel *)tree_store, &iter, path);
@@ -4939,7 +5056,7 @@ fetch_image(gchar *url, gchar *link)
 	}
 	d(g_print("fetch_image() tmpurl:%s\n", tmpurl));
 	gchar *feed_dir = g_build_path("/", 
-				rss_component_peek_base_directory(mail_component_peek()),
+				rss_component_peek_base_directory(),
 				"static",
 				NULL);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
@@ -4980,7 +5097,7 @@ migrate_crc_md5(const char *name, gchar *url)
 	gchar *crc2 = gen_crc(url);
 	gchar *md5 = gen_md5(url);
 
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 
@@ -5175,7 +5292,7 @@ get_feed_age(RDF *r, gpointer name)
 {
 	CamelMessageInfo *info;
         CamelFolder *folder;
-	CamelStore *store = mail_component_peek_local_store(NULL);
+	CamelStore *store = rss_component_peek_local_store();
 	GPtrArray *uids;
 	time_t date, now;
 	guint i,j,total;

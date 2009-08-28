@@ -35,7 +35,10 @@
 
 #include <mail/em-config.h>
 
+#if EVOLUTION_VERSION < 22800 //kb//
 #include <shell/evolution-config-control.h>
+#endif
+
 #include <e-util/e-error.h>
 #include <bonobo/bonobo-shlib-factory.h>
 
@@ -868,7 +871,7 @@ void
 delete_feed_folder_alloc(gchar *old_name)
 {
         FILE *f;
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
         gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
@@ -1078,7 +1081,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 				gchar *b = g_build_path("/", dir, feed->feed_name, NULL);
 				CamelException ex;
 				camel_exception_init (&ex);
-				CamelStore *store = mail_component_peek_local_store(NULL);
+				CamelStore *store = rss_component_peek_local_store();
                                 camel_store_rename_folder (store, a, b, &ex);
                                 if (camel_exception_is_set (&ex)) {
                                         e_error_run(NULL,
@@ -2354,6 +2357,8 @@ out:	return NULL;
  * BONOBO part *
  *=============*/
 
+//kb//
+#if 0
 EvolutionConfigControl*
 rss_config_control_new (void)
 {
@@ -2588,7 +2593,11 @@ rss_config_control_new (void)
 
         gtk_container_remove (GTK_CONTAINER (control_widget->parent), control_widget);
 
+#if EVOLUTION_VERSION < 22800 //kb//
         return evolution_config_control_new (control_widget);
+#else
+	return NULL;
+#endif
 }
 
 static BonoboObject *
@@ -2609,3 +2618,4 @@ factory (BonoboGenericFactory *factory,
 
 
 BONOBO_ACTIVATION_SHLIB_FACTORY (FACTORY_ID, "Evolution RSS component factory", factory, NULL)
+#endif

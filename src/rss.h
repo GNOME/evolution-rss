@@ -31,12 +31,14 @@
 
 #include <gtk/gtk.h>
 #include <libsoup/soup.h>
+#if EVOLUTION_VERSION < 22800 //kb//
 #include <mail/mail-component.h>
+#endif
 
 #include <glade/glade.h>
-#include <mail/em-event.h>
 #include <camel/camel-folder.h>
 #include <camel/camel-operation.h>
+#include <mail/em-event.h>
 
 #define PLUGIN_INSTALL_DIR @PLUGIN_INSTALL_DIR@
 #define DEFAULT_FEEDS_FOLDER N_("News and Blogs")
@@ -350,7 +352,12 @@ void taskbar_push_message(gchar *message);
 void taskbar_pop_message(void);
 void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
 void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
+#if EVOLUTION_VERSION < 22800 //kb//
 gchar *rss_component_peek_base_directory(MailComponent *component);
+#else
+gchar *rss_component_peek_base_directory(void);
+#endif
+CamelStore *rss_component_peek_local_store(void);
 void custom_feed_timeout(void);
 CamelFolder *check_feed_folder(gchar *folder_name);
 gboolean setup_feed(add_feed *feed);

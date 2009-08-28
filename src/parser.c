@@ -1029,7 +1029,7 @@ update_channel(RDF *r)
 
 	gchar *buf = gen_md5(url);
 
-	gchar *feed_dir = rss_component_peek_base_directory(mail_component_peek());
+	gchar *feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 
