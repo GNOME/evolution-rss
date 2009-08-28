@@ -2267,8 +2267,7 @@ render_body:    if (category)
 				content_colour & 0xffffff,
 				text_colour & 0xffffff,
                                 buff);
-
-		if (comments && gconf_client_get_bool (rss_gconf, 
+/*		if (comments && gconf_client_get_bool (rss_gconf, 
 						GCONF_KEY_SHOW_COMMENTS, 
 						NULL)) {
 			if (commstream) {
@@ -2308,7 +2307,7 @@ render_body:    if (category)
 				fetch_comments(comments, (EMFormatHTML *)t->format);
 			}
 			camel_stream_printf (fstream, "</div>");
-		}	
+		}*/
                 camel_stream_printf (fstream, "</div>");
 	}
 
