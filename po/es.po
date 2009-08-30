@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: evolution-rss.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2009-08-20 06:48+0000\n"
-"PO-Revision-Date: 2009-08-22 12:25+0200\n"
+"POT-Creation-Date: 2009-08-26 06:53+0000\n"
+"PO-Revision-Date: 2009-08-30 11:30+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../src/dbus.c:120 ../src/rss.c:2721 ../src/rss-config-factory.c:721
-#: ../src/rss-config-factory.c:1032 ../src/rss-config-factory.c:1163
+#: ../src/dbus.c:120 ../src/rss.c:2757 ../src/rss-config-factory.c:726
+#: ../src/rss-config-factory.c:1037 ../src/rss-config-factory.c:1168
 msgid "Error adding feed."
 msgstr "Error al añadir el proveedor."
 
-#: ../src/dbus.c:121 ../src/rss.c:2722 ../src/rss-config-factory.c:722
-#: ../src/rss-config-factory.c:1033 ../src/rss-config-factory.c:1164
+#: ../src/dbus.c:121 ../src/rss.c:2758 ../src/rss-config-factory.c:727
+#: ../src/rss-config-factory.c:1038 ../src/rss-config-factory.c:1169
 msgid "Feed already exists!"
 msgstr "El proveedor ya existe"
 
@@ -280,27 +280,27 @@ msgstr "Actualizar proveedores RSS"
 msgid "_Read RSS"
 msgstr "_Leer RSS"
 
-#: ../src/rss.c:443 ../src/rss.c:2803
+#: ../src/rss.c:453 ../src/rss.c:2839
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Obteniendo proveedores (%d activado)"
 
-#: ../src/rss.c:479 ../src/rss-config-factory.c:1356
-#: ../src/rss-config-factory.c:1393 ../src/rss-config-factory.c:1729
-#: ../src/rss-config-factory.c:1813
+#: ../src/rss.c:489 ../src/rss-config-factory.c:1367
+#: ../src/rss-config-factory.c:1404 ../src/rss-config-factory.c:1693
+#: ../src/rss-config-factory.c:1803
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% terminado"
 
-#: ../src/rss.c:489 ../src/rss.c:2954
+#: ../src/rss.c:499 ../src/rss.c:2990
 msgid "Feed"
 msgstr "Proveedor"
 
-#: ../src/rss.c:640
+#: ../src/rss.c:652
 msgid "Enter User/Pass for feed"
 msgstr "Introducir usuario/contraseña para el proveedor"
 
-#: ../src/rss.c:687
+#: ../src/rss.c:704
 #, c-format
 msgid ""
 "Enter your username and password for:\n"
@@ -309,260 +309,268 @@ msgstr ""
 "Escriba su nombre de usuario y contraseña para:\n"
 "·«%s»"
 
-#: ../src/rss.c:704
+#: ../src/rss.c:721
 msgid "Username: "
 msgstr "Usuario: "
 
-#: ../src/rss.c:726 ../src/rss-ui.glade.h:36
+#: ../src/rss.c:743 ../src/rss-ui.glade.h:36
 msgid "Password: "
 msgstr "Contraseña: "
 
-#: ../src/rss.c:764
+#: ../src/rss.c:781
 msgid "_Remember this password"
 msgstr "_Recordar esta contraseña"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:866
+#: ../src/rss.c:883
 msgid "Canceling..."
 msgstr "Cancelando…"
 
-#: ../src/rss.c:1393
-#| msgid "Formatting..."
+#: ../src/rss.c:1410
 msgid "Formatting Message..."
 msgstr "Formateando el mensaje…"
 
-#: ../src/rss.c:1519
+#: ../src/rss.c:1544
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../src/rss.c:1521
+#: ../src/rss.c:1546
 msgid "Zoom _In"
 msgstr "_Ampliar"
 
-#: ../src/rss.c:1522
+#: ../src/rss.c:1547
 msgid "Zoom _Out"
 msgstr "_Reducir"
 
-#: ../src/rss.c:1523
+#: ../src/rss.c:1548
 msgid "_Normal Size"
 msgstr "Tamaño _normal"
 
-#: ../src/rss.c:1525
+#: ../src/rss.c:1550
 msgid "_Print..."
 msgstr "_Imprimir…"
 
-#: ../src/rss.c:1526
+#: ../src/rss.c:1551
 msgid "Save _As"
 msgstr "Guardar _como"
 
-#: ../src/rss.c:1528
+#: ../src/rss.c:1553
 msgid "_Open Link in Browser"
 msgstr "_Abrir enlace en el navegador"
 
-#: ../src/rss.c:1529
+#: ../src/rss.c:1554
 msgid "_Copy Link Location"
 msgstr "_Copiar dirección del enlace"
 
-#: ../src/rss.c:1566 ../src/rss.c:1610
+#: ../src/rss.c:1591 ../src/rss.c:1635
 msgid "Click to open"
 msgstr "Pulsar para abrir"
 
-#: ../src/rss.c:1773
+#: ../src/rss.c:1798
 msgid "Comments"
 msgstr "Comentarios"
 
-#: ../src/rss.c:1778
+#: ../src/rss.c:1803
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: ../src/rss.c:1797
+#: ../src/rss.c:1822
 msgid "Feed view"
 msgstr "Vista de proveedores"
 
-#: ../src/rss.c:1803
+#: ../src/rss.c:1828
 msgid "Show Summary"
 msgstr "Mostrar resumen"
 
-#: ../src/rss.c:1804
+#: ../src/rss.c:1829
 msgid "Show Full Text"
 msgstr "Mostrar texto completo"
 
-#: ../src/rss.c:2099
+#: ../src/rss.c:2127
 msgid "Posted under"
 msgstr "Publicado bajo"
 
-#: ../src/rss.c:2269
+#: ../src/rss.c:2297
 msgid "Fetching feed"
 msgstr "Obteniendo proveedor"
 
-#: ../src/rss.c:2580
+#: ../src/rss.c:2608
 msgid "Unamed feed"
 msgstr "Proveedor sin nombre"
 
-#: ../src/rss.c:2581 ../src/rss.c:2729
+#: ../src/rss.c:2609 ../src/rss.c:2765
 msgid "Error while fetching feed."
 msgstr "Error al obtener el proveedor."
 
-#: ../src/rss.c:2730
+#: ../src/rss.c:2766
 msgid "Invalid Feed"
 msgstr "Proveedor no válido"
 
-#: ../src/rss.c:2741
+#: ../src/rss.c:2777
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Obteniendo mensaje %d de %d"
 
-#: ../src/rss.c:2822
+#: ../src/rss.c:2858
 msgid "Complete."
 msgstr "Completado."
 
-#: ../src/rss.c:2853 ../src/rss.c:3016 ../src/rss.c:3151 ../src/rss.c:3729
+#: ../src/rss.c:2889 ../src/rss.c:3052 ../src/rss.c:3187 ../src/rss.c:3826
 msgid "Error fetching feed."
 msgstr "Error al obtener el proveedor."
 
-#: ../src/rss.c:2863
+#: ../src/rss.c:2899
 msgid "Canceled."
 msgstr "Cancelado."
 
-#: ../src/rss.c:2907
+#: ../src/rss.c:2943
 msgid "Error while parsing feed."
 msgstr "Error mientras se analizaba el proveedor."
 
-#: ../src/rss.c:2962
+#: ../src/rss.c:2998
 msgid "Complete"
 msgstr "Terminado"
 
-#: ../src/rss.c:3050
+#: ../src/rss.c:3086
 msgid "Formatting error."
 msgstr "Error de formateado."
 
-#: ../src/rss.c:4042 ../src/rss.c:4156
+#: ../src/rss.c:4139 ../src/rss.c:4253
 msgid "No RSS feeds configured!"
 msgstr "No hay proveedores RSS configurados"
 
-#: ../src/rss.c:4048 ../src/rss.c:4245
+#: ../src/rss.c:4145 ../src/rss.c:4342
 msgid "Reading RSS feeds..."
 msgstr "Leyendo proveedores RSS..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:4062 ../src/rss.c:4249 ../src/rss-config-factory.c:1226
-#: ../src/rss-config-factory.c:1750 ../src/rss-config-factory.c:1832
+#: ../src/rss.c:4159 ../src/rss.c:4346 ../src/rss-config-factory.c:1237
+#: ../src/rss-config-factory.c:1714 ../src/rss-config-factory.c:1823
 msgid "Please wait"
 msgstr "Por favor, espere"
 
-#: ../src/rss.c:4070 ../src/rss.c:4257 ../src/rss-config-factory.c:707
-#: ../src/rss-config-factory.c:1008
+#: ../src/rss.c:4167 ../src/rss.c:4354 ../src/rss-config-factory.c:712
+#: ../src/rss-config-factory.c:1013
 #, no-c-format
 msgid "0% done"
 msgstr "0% terminado"
 
-#: ../src/rss.c:4204
+#: ../src/rss.c:4301
 msgid "Waiting..."
 msgstr "Esperando…"
 
-#: ../src/rss.h:37 ../src/GNOME_Evolution_RSS.server.in.in.h:4
+#: ../src/rss.h:42 ../src/GNOME_Evolution_RSS.server.in.in.h:4
 msgid "News and Blogs"
 msgstr "Noticias y blogs"
 
-#: ../src/rss.h:39
+#: ../src/rss.h:44
 msgid "Untitled channel"
 msgstr "Canal sin título"
 
-#: ../src/rss-config-factory.c:150
+#: ../src/rss-config-factory.c:152
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:151
+#: ../src/rss-config-factory.c:153
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:152
+#: ../src/rss-config-factory.c:154
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:392
+#: ../src/rss-config-factory.c:394
 msgid "Edit Feed"
 msgstr "Editar proveedor"
 
-#: ../src/rss-config-factory.c:394
+#: ../src/rss-config-factory.c:396
 msgid "Add Feed"
 msgstr "Añadir proveedor"
 
-#: ../src/rss-config-factory.c:931
+#: ../src/rss-config-factory.c:936
 msgid "Disable"
 msgstr "Desactivar"
 
-#: ../src/rss-config-factory.c:931
+#: ../src/rss-config-factory.c:936
 msgid "Enable"
 msgstr "Habilitar"
 
-#: ../src/rss-config-factory.c:958 ../src/rss-ui.glade.h:38
+#: ../src/rss-config-factory.c:963 ../src/rss-ui.glade.h:38
 msgid "Remove folder contents"
 msgstr "Borrar contenido de la carpeta"
 
-#: ../src/rss-config-factory.c:1222
+#: ../src/rss-config-factory.c:1229
+#| msgid "Formatting error."
+msgid "Import error."
+msgstr "Error al importar."
+
+#: ../src/rss-config-factory.c:1229
+msgid "Invalid file or this is not an import file."
+msgstr "Archivo no válido o este no es un archivo de importación."
+
+#: ../src/rss-config-factory.c:1233
 msgid "Importing feeds..."
 msgstr "Importando proveedores..."
 
-#: ../src/rss-config-factory.c:1450 ../src/rss-config-factory.c:1900
-#: ../src/rss-config-factory.c:1936
+#: ../src/rss-config-factory.c:1462 ../src/rss-config-factory.c:1914
+#: ../src/rss-config-factory.c:1960
 msgid "All Files"
 msgstr "Todos los archivos"
 
-#: ../src/rss-config-factory.c:1456 ../src/rss-config-factory.c:1906
+#: ../src/rss-config-factory.c:1468 ../src/rss-config-factory.c:1966
 msgid "OPML Files"
 msgstr "Archivos OPML"
 
-#: ../src/rss-config-factory.c:1462 ../src/rss-config-factory.c:1912
+#: ../src/rss-config-factory.c:1474 ../src/rss-config-factory.c:1972
 msgid "XML Files"
 msgstr "Archivos XML"
 
-#: ../src/rss-config-factory.c:1482
+#: ../src/rss-config-factory.c:1494
 msgid "Show article's summary"
 msgstr "Mostrar resumen de artículo"
 
-#: ../src/rss-config-factory.c:1488
+#: ../src/rss-config-factory.c:1500
 msgid "Feed Enabled"
 msgstr "Proveedor activado"
 
-#: ../src/rss-config-factory.c:1494
+#: ../src/rss-config-factory.c:1506
 msgid "Validate feed"
 msgstr "Validar proveedor"
 
-#: ../src/rss-config-factory.c:1529 ../src/rss-ui.glade.h:40
+#: ../src/rss-config-factory.c:1541 ../src/rss-ui.glade.h:40
 msgid "Select import file"
 msgstr "Seleccionar archivo para importar"
 
-#: ../src/rss-config-factory.c:1566 ../src/rss-ui.glade.h:39
+#: ../src/rss-config-factory.c:1578 ../src/rss-ui.glade.h:39
 msgid "Select file to export"
 msgstr "Seleccionar archivo para exportar"
 
-#: ../src/rss-config-factory.c:1607
-msgid "Select file to import"
-msgstr "Seleccionar archivo para importar"
-
-#: ../src/rss-config-factory.c:1746
+#: ../src/rss-config-factory.c:1710
 msgid "Exporting feeds..."
 msgstr "Exportando proveedores..."
 
-#: ../src/rss-config-factory.c:1776
+#: ../src/rss-config-factory.c:1740
 msgid "Error exporting feeds!"
 msgstr "Error al exportar proveedores"
 
-#: ../src/rss-config-factory.c:1828
+#: ../src/rss-config-factory.c:1819
 msgid "Importing cookies..."
 msgstr "Importando cookies..."
 
-#: ../src/rss-config-factory.c:1942
+#: ../src/rss-config-factory.c:1874
+msgid "Select file to import"
+msgstr "Seleccionar archivo para importar"
+
+#: ../src/rss-config-factory.c:1920
 msgid "Mozilla/Netscape Format"
 msgstr "Formato Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:1948
+#: ../src/rss-config-factory.c:1926
 msgid "Firefox new Format"
 msgstr "Formato nuevo de Firefox"
 
-#: ../src/rss-config-factory.c:1974
+#: ../src/rss-config-factory.c:1998
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -570,7 +578,7 @@ msgstr ""
 "No hay proveedores RSS configurados.\n"
 "No se pudo exportar."
 
-#: ../src/rss-config-factory.c:2069 ../src/rss-config-factory.c:2517
+#: ../src/rss-config-factory.c:2093 ../src/rss-config-factory.c:2552
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -580,15 +588,15 @@ msgstr ""
 "lectores necesita tener instalado Firefox o el paquete de desarrollo \n"
 "de webkit y Evolution-rss debe recompilarse para ver esos paquetes."
 
-#: ../src/rss-config-factory.c:2359 ../src/rss-ui.glade.h:25
+#: ../src/rss-config-factory.c:2394 ../src/rss-ui.glade.h:25
 msgid "Enabled"
 msgstr "Activado"
 
-#: ../src/rss-config-factory.c:2375
+#: ../src/rss-config-factory.c:2410
 msgid "Feed Name"
 msgstr "Nombre del proveedor"
 
-#: ../src/rss-config-factory.c:2385
+#: ../src/rss-config-factory.c:2420
 msgid "Type"
 msgstr "Tipo"
 
