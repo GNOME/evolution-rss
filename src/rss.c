@@ -61,6 +61,12 @@ int rss_verbose_debug = 0;
 #include <misc/e-activity-handler.h>
 #else
 #include <mail/e-mail-local.h>
+#include <shell/e-shell.h>
+#include <shell/e-shell-taskbar.h>
+#include <shell/e-shell-view.h>
+//#include <misc/e-activity.h>
+//#include <misc/e-timeout-activity.h>
+//#include <misc/e-alert-activity.h>
 #endif
 
 #include <mail/mail-tools.h>
@@ -332,21 +338,40 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 #if (EVOLUTION_VERSION >= 22200)
 	if (key) { 
 		if (!g_hash_table_lookup(rf->error_hash, key)) {
-#if EVOLUTION_VERSION < 22800 //kb//
-        		EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
 //			guint activity_id = g_hash_table_lookup(rf->activity, key);
                 	ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                 	             error, msg, NULL);
 			gpointer newkey = g_strdup(key);
                 	g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
                 	g_signal_connect(ed, "destroy", G_CALLBACK(dialog_key_destroy), newkey);
+
+#if (EVOLUTION_VERSION >= 22800)
+	EShell *shell;
+	EShellBackend *shell_backend;
+	EActivity *activity = NULL;
+
+        shell = e_shell_get_default ();
+        shell_backend = e_shell_get_backend_by_name (shell, "mail");
+
+        activity = e_alert_activity_new_warning (ed);
+	g_print("activity:%p\n", activity);
+        e_shell_backend_add_activity (shell_backend, activity);
+        g_object_unref (activity);
+        if (g_object_get_data (G_OBJECT (ed), "response-handled") == NULL)
+                g_signal_connect (
+                        ed, "response",
+                        G_CALLBACK (gtk_widget_destroy), NULL);
+	g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(1));
+
+#else
+        		EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
 #if (EVOLUTION_VERSION >= 22300)
         		guint id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), E_LOG_ERROR, ed);
 #else
         		guint id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), msg, ed);
 #endif
 			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
-#endif //kb//
+#endif
 		}
 /*		taskbar_op_finish(key);*/
 		goto out;
@@ -377,10 +402,17 @@ cancel_active_op(gpointer key)
 void
 taskbar_push_message(gchar *message)
 {
-//kb//
-#if 0
+#if EVOLUTION_VERSION < 22800 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
+#else
+	EShell *shell;
+	EShellTaskbar *shell_taskbar;
+
+	shell = e_shell_get_default ();
+	shell_taskbar = e_shell_view_get_shell_taskbar (shell);
+
+	e_shell_taskbar_set_message (shell_taskbar, message);
 #endif
 }
 
@@ -406,15 +438,36 @@ taskbar_op_abort(gpointer key)
 #endif
 }
 
+#if EVOLUTION_VERSION >= 22800
+EActivity *
+#else
 guint
+#endif
 #if (EVOLUTION_VERSION >= 22200)
 taskbar_op_new(gchar *message, gpointer key)
 #else
 taskbar_op_new(gchar *message)
 #endif
 {
-//kb//
-#if 0
+#if EVOLUTION_VERSION >= 22800 //kb//
+	EShell *shell;
+        EShellBackend *shell_backend;
+	EActivity *activity;
+
+	shell = e_shell_get_default ();
+        shell_backend = e_shell_get_backend_by_name (shell, "mail");
+
+	activity = e_activity_new (message);
+	e_activity_set_allow_cancel (activity, TRUE);
+	e_activity_set_percent (activity, 0.0);
+	e_shell_backend_add_activity (shell_backend, activity);
+
+	g_signal_connect (
+		activity, "cancelled",
+		G_CALLBACK (taskbar_op_abort),
+		key);
+	return activity;
+#else
 	GdkPixbuf *progress_icon;
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	char *mcp = g_strdup_printf("%p", mail_component_peek());
@@ -445,34 +498,46 @@ taskbar_op_new(gchar *message)
 void
 taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress)
 {
-//kb//
-#if 0
+#if (EVOLUTION_VERSION < 22800) //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
+#else
+	EActivity *activity_id = g_hash_table_lookup(rf->activity, key);
+#endif
 
 	if (activity_id) {
+#if (EVOLUTION_VERSION < 22800)
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
                                 g_strdup(msg), 
                                 progress);
-	}
+#else
+	e_activity_set_percent (activity_id, progress);
 #endif
+	}
 }
 
 void
 taskbar_op_finish(gpointer key)
 {
-//kb//
-#if 0
+#if  EVOLUTION_VERSION < 22800 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+#endif
 	
 	if (rf->activity) {
+#if  EVOLUTION_VERSION < 22800
 		guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
+#else
+		EActivity *activity_key = g_hash_table_lookup(rf->activity, key);
+#endif
 		if (activity_key)
+#if  EVOLUTION_VERSION < 22800 //kb//
 			e_activity_handler_operation_finished(activity_handler, activity_key);
+#else
+			e_activity_complete (activity_key);
+#endif
 		g_hash_table_remove(rf->activity, key);
 	}
-#endif
 }
 
 void
@@ -484,10 +549,14 @@ taskbar_op_message(gchar *msg)
 		else
 			tmsg = g_strdup(msg);
 
+#if (EVOLUTION_VERSION >= 22800)
+		EActivity *activity_id = taskbar_op_new(tmsg, "main");
+#else
 #if (EVOLUTION_VERSION >= 22200)
 		guint activity_id = taskbar_op_new(tmsg, "main");
 #else
 		guint activity_id = taskbar_op_new(tmsg);
+#endif
 #endif
 		g_hash_table_insert(rf->activity, "main", GUINT_TO_POINTER(activity_id));
 		g_free(tmsg);
@@ -1719,8 +1788,8 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	if (button == 0)
 		gtk_moz_embed_load_url(GTK_MOZ_EMBED(rf->mozembed), link);
 	g_print("button:%d\n", button);
-	return FALSE;
 #endif //kb//
+	return FALSE;
 }
 #endif
 
@@ -2267,7 +2336,7 @@ render_body:    if (category)
 				content_colour & 0xffffff,
 				text_colour & 0xffffff,
                                 buff);
-/*		if (comments && gconf_client_get_bool (rss_gconf, 
+		if (comments && gconf_client_get_bool (rss_gconf, 
 						GCONF_KEY_SHOW_COMMENTS, 
 						NULL)) {
 			if (commstream) {
@@ -2276,7 +2345,7 @@ render_body:    if (category)
                         		frame_colour & 0xffffff,
 					content_colour & 0xEDECEB & 0xffffff,
 					text_colour & 0xffffff);
-				gchar *result = print_comments(comments, commstream);
+/*				gchar *result = print_comments(comments, commstream);
 				g_free(commstream);
 				char *rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
 					org_gnome_rss_controls_counter_id);
@@ -2301,13 +2370,13 @@ render_body:    if (category)
 						text_colour & 0xffffff,
 						result);
 					g_free(result);
-				}
+				}*/
 				commstream = NULL;
 			} else {
 				fetch_comments(comments, (EMFormatHTML *)t->format);
 			}
 			camel_stream_printf (fstream, "</div>");
-		}*/
+		}
                 camel_stream_printf (fstream, "</div>");
 	}
 
@@ -3168,6 +3237,7 @@ finish_comments (SoupMessage *msg, EMFormatHTML *user_data)
 finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data)
 #endif
 {
+	return;
 	guint reload=0;
 
 	comments_session = g_slist_remove(comments_session, soup_sess);
@@ -3282,10 +3352,8 @@ gchar *
 rss_component_peek_base_directory(void)
 {
 #if (EVOLUTION_VERSION >= 22800) 
-/*temporary hack as mail backend might not be up when we're called*/
-	return g_strdup_printf("%s/mail/rss", 
-//		em_utils_get_data_dir());
-		e_get_user_data_dir());
+	return g_strdup_printf("%s/rss", 
+		em_utils_get_data_dir());
 #else
 	MailComponent *componet = mail_component_peek();
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
@@ -4117,14 +4185,14 @@ struct __EShellPrivate {
  *            permissions from all the components to quit.  */
         unsigned int preparing_to_quit : 1;
 };
-typedef struct __EShellPrivate EShellPrivate;
+/*typedef struct __EShellPrivate EShellPrivate;
 
 struct _EShell {
         BonoboObject parent;
 
         EShellPrivate *priv;
 };
-typedef struct _EShell EShell;
+typedef struct _EShell EShell;*/
 
 void get_shell(void *ep, ESEventTargetShell *t)
 {
@@ -4346,6 +4414,7 @@ org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t)
 org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 #endif
 {
+	g_print("send an d receive\n");
 	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
 	GtkWidget *recv_icon;
 
@@ -4532,10 +4601,28 @@ if (engine == 1) {
 	return 0;
 }
 
+gboolean        e_plugin_ui_init                (GtkUIManager *ui_manager,
+                                                 EShellView *shell_view);
+
+gboolean
+e_plugin_ui_init (GtkUIManager *ui_manager,
+                  EShellView *shell_view)
+{
+	g_print("ui init\n");
+}
+
+#if (EVOLUTION_VERSION < 22800)
 int e_plugin_lib_enable(EPluginLib *ep, int enable);
+#else
+int e_plugin_lib_enable(EPlugin *ep, int enable);
+#endif
 
 int
+#if (EVOLUTION_VERSION < 22800)
 e_plugin_lib_enable(EPluginLib *ep, int enable)
+#else
+e_plugin_lib_enable(EPlugin *ep, int enable)
+#endif
 {
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
@@ -4610,10 +4697,19 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 	return 0;
 }
 
+
+#if (EVOLUTION_VERSION < 22800)
 void e_plugin_lib_disable(EPluginLib *ep);
+#else
+void e_plugin_lib_disable(EPlugin *ep);
+#endif
 
 void
+#if (EVOLUTION_VERSION < 22800)
 e_plugin_lib_disable(EPluginLib *ep)
+#else
+e_plugin_lib_disable(EPlugin *ep)
+#endif
 {
 	g_print("DIE!\n");
 }

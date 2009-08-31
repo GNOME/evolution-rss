@@ -63,6 +63,7 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
    libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
+   evolution-data-server-1.2 dnl
    libglade-2.0 dnl
    libgtkhtml-3.14 >= $LIBGTKHTML_REQUIRED
 ])
