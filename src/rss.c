@@ -287,6 +287,7 @@ gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
 
 GtkTreeStore *evolution_store = NULL;
+EShellView *rss_shell_view = NULL;
 
 /*======================================================================*/
 
@@ -406,12 +407,8 @@ taskbar_push_message(gchar *message)
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
 #else
-	EShell *shell;
 	EShellTaskbar *shell_taskbar;
-
-	shell = e_shell_get_default ();
-	shell_taskbar = e_shell_view_get_shell_taskbar (shell);
-
+	shell_taskbar = e_shell_view_get_shell_taskbar (rss_shell_view);
 	e_shell_taskbar_set_message (shell_taskbar, message);
 #endif
 }
@@ -422,6 +419,10 @@ taskbar_pop_message(void)
 #if EVOLUTION_VERSION < 22800 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_unset_message(activity_handler);
+#else
+	EShellTaskbar *shell_taskbar;
+	shell_taskbar = e_shell_view_get_shell_taskbar (rss_shell_view);
+	e_shell_taskbar_set_message (shell_taskbar, "");
 #endif
 }
 
@@ -4609,6 +4610,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
                   EShellView *shell_view)
 {
 	g_print("ui init\n");
+	rss_shell_view = shell_view;
 }
 
 #if (EVOLUTION_VERSION < 22800)
