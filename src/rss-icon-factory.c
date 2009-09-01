@@ -59,3 +59,7 @@ rss_build_stock_images(void)
         gtk_icon_source_free(source);
 }
 
+void
+init_rss_builtin_images(void)
+{
+}

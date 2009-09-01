@@ -343,25 +343,22 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
                 	ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                 	             error, msg, NULL);
 			gpointer newkey = g_strdup(key);
-                	g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
-                	g_signal_connect(ed, "destroy", G_CALLBACK(dialog_key_destroy), newkey);
+                	g_signal_connect(
+				ed, "response",
+				G_CALLBACK(err_destroy),
+				NULL);
+			g_object_set_data (
+                        	ed, "response-handled",
+                        	GINT_TO_POINTER (TRUE));
+                	g_signal_connect(ed,
+				"destroy",
+				G_CALLBACK(dialog_key_destroy),
+				newkey);
+			//lame widget destruction, seems e_activity timeout does not destroy it
+			g_timeout_add_seconds(60, (GSourceFunc)gtk_widget_destroy, ed);
 
 #if (EVOLUTION_VERSION >= 22800)
-	EShell *shell;
-	EShellBackend *shell_backend;
-	EActivity *activity = NULL;
-
-        shell = e_shell_get_default ();
-        shell_backend = e_shell_get_backend_by_name (shell, "mail");
-
-        activity = e_alert_activity_new_warning (ed);
-	g_print("activity:%p\n", activity);
-        e_shell_backend_add_activity (shell_backend, activity);
-        g_object_unref (activity);
-        if (g_object_get_data (G_OBJECT (ed), "response-handled") == NULL)
-                g_signal_connect (
-                        ed, "response",
-                        G_CALLBACK (gtk_widget_destroy), NULL);
+	em_utils_show_error_silent(ed);
 	g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(1));
 
 #else
@@ -374,7 +371,6 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
 #endif
 		}
-/*		taskbar_op_finish(key);*/
 		goto out;
 	}
 #endif
@@ -434,9 +430,9 @@ taskbar_op_abort(gpointer key)
 	guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 	if (activity_key)
 		e_activity_handler_operation_finished(activity_handler, activity_key);
+#endif
 	g_hash_table_remove(rf->activity, key);
 	abort_all_soup();
-#endif
 }
 
 #if EVOLUTION_VERSION >= 22800
@@ -1116,6 +1112,7 @@ rss_select_folder(gchar *folder_name)
 static void
 dialog_key_destroy (GtkWidget *widget, gpointer data)
 {
+	g_print("dialog destroy\n");
 	if (data)
 		g_hash_table_remove(rf->error_hash, data);
 }
@@ -3918,6 +3915,7 @@ store_folder_deleted(CamelObject *o, void *event_data, void *data)
 static void
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
 {
+g_print("folder rename\n");
 	CamelRenameInfo *info = event_data;
 
 	gchar *main_folder = lookup_main_folder();
@@ -4214,6 +4212,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t);
 void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 #endif
 {
+g_print("startup\n");
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
 		//as I don't know how to set this I'll setup a 10 secs timeout
 		//and return false for disableation
@@ -4415,7 +4414,6 @@ org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t)
 org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
 #endif
 {
-	g_print("send an d receive\n");
 	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
 	GtkWidget *recv_icon;
 
@@ -4613,6 +4611,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 	rss_shell_view = shell_view;
 }
 
+
 #if (EVOLUTION_VERSION < 22800)
 int e_plugin_lib_enable(EPluginLib *ep, int enable);
 #else
@@ -4685,8 +4684,9 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			if (2 == render)
 				rss_mozilla_init();
 #endif
+			init_rss_prefs();
 		}
-		upgrade = 2;
+		upgrade = 2; //init done
 	} else {
 #if HAVE_DBUS
                 if (rf->bus != NULL)

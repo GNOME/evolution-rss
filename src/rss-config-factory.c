@@ -37,6 +37,10 @@
 
 #if EVOLUTION_VERSION < 22800 //kb//
 #include <shell/evolution-config-control.h>
+#else
+#include <misc/e-preferences-window.h>
+#include <mail/e-mail-local.h>
+#include <shell/e-shell.h>
 #endif
 
 #include <e-util/e-error.h>
@@ -2358,8 +2362,11 @@ out:	return NULL;
  *=============*/
 
 //kb//
-#if 0
-EvolutionConfigControl*
+#if EVOLUTION_VERSION < 22800
+EvolutionConfigControl *
+#else
+GtkWidget *
+#endif
 rss_config_control_new (void)
 {
         GtkWidget *control_widget;
@@ -2596,7 +2603,7 @@ rss_config_control_new (void)
 #if EVOLUTION_VERSION < 22800 //kb//
         return evolution_config_control_new (control_widget);
 #else
-	return NULL;
+	return control_widget;
 #endif
 }
 
@@ -2616,6 +2623,34 @@ factory (BonoboGenericFactory *factory,
         return NULL;
 }
 
-
+#if EVOLUTION_VERSION < 22800
 BONOBO_ACTIVATION_SHLIB_FACTORY (FACTORY_ID, "Evolution RSS component factory", factory, NULL)
 #endif
+
+void
+init_rss_prefs(void)
+{
+	EShell *shell;
+        GtkWidget *preferences_window;
+
+	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+	                                    "rss.png",
+						NULL);
+	GdkPixbuf *folder_icon = gdk_pixbuf_new_from_file (iconfile, NULL);
+	gtk_icon_theme_add_builtin_icon ("evolution-rss-large",
+				GTK_ICON_SIZE_INVALID,
+				folder_icon);
+	g_free(iconfile);
+			
+	shell = e_shell_get_default();
+        preferences_window = e_shell_get_preferences_window (shell);
+
+        e_preferences_window_add_page (
+                E_PREFERENCES_WINDOW (preferences_window),
+                "page-rss",
+                "evolution-rss-large",
+                _("News And Blogs"),
+		rss_config_control_new(),
+                800);
+}
+
