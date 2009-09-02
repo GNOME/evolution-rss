@@ -348,7 +348,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 				G_CALLBACK(err_destroy),
 				NULL);
 			g_object_set_data (
-                        	ed, "response-handled",
+                        	(GObject *)ed, "response-handled",
                         	GINT_TO_POINTER (TRUE));
                 	g_signal_connect(ed,
 				"destroy",
@@ -4605,8 +4605,8 @@ gboolean
 e_plugin_ui_init (GtkUIManager *ui_manager,
                   EShellView *shell_view)
 {
-	g_print("ui init\n");
 	rss_shell_view = shell_view;
+	return TRUE;
 }
 
 

@@ -37,6 +37,7 @@
 
 #if EVOLUTION_VERSION < 22800 //kb//
 #include <shell/evolution-config-control.h>
+#include <bonobo/bonobo-shlib-factory.h>
 #else
 #include <misc/e-preferences-window.h>
 #include <mail/e-mail-local.h>
@@ -44,7 +45,6 @@
 #endif
 
 #include <e-util/e-error.h>
-#include <bonobo/bonobo-shlib-factory.h>
 
 #ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>
@@ -2607,6 +2607,7 @@ rss_config_control_new (void)
 #endif
 }
 
+#if EVOLUTION_VERSION < 22800
 static BonoboObject *
 factory (BonoboGenericFactory *factory,
          const char *component_id,
@@ -2623,7 +2624,6 @@ factory (BonoboGenericFactory *factory,
         return NULL;
 }
 
-#if EVOLUTION_VERSION < 22800
 BONOBO_ACTIVATION_SHLIB_FACTORY (FACTORY_ID, "Evolution RSS component factory", factory, NULL)
 #endif
 
