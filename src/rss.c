@@ -294,6 +294,8 @@ EShellView *rss_shell_view = NULL;
 gpointer
 lookup_key(gpointer key)
 {
+	g_return_val_if_fail(key, NULL);
+
         return g_hash_table_lookup(rf->hrname, key);
 }
 
@@ -1112,7 +1114,6 @@ rss_select_folder(gchar *folder_name)
 static void
 dialog_key_destroy (GtkWidget *widget, gpointer data)
 {
-	g_print("dialog destroy\n");
 	if (data)
 		g_hash_table_remove(rf->error_hash, data);
 }
@@ -2013,9 +2014,9 @@ free_rss_controls(EMFormatHTMLPObject *o)
 	if (po->website)
 		g_free(po->website);
 	//gtk_widget_destroy(po->html);
-	g_slist_foreach(comments_session, (GFunc)cancel_comments_session, NULL);
-	g_slist_free(comments_session);
-	comments_session = NULL;
+//	g_slist_foreach(comments_session, (GFunc)cancel_comments_session, NULL);
+//	g_slist_free(comments_session);
+//	comments_session = NULL;
 }
 
 void
@@ -2343,7 +2344,7 @@ render_body:    if (category)
                         		frame_colour & 0xffffff,
 					content_colour & 0xEDECEB & 0xffffff,
 					text_colour & 0xffffff);
-/*				gchar *result = print_comments(comments, commstream);
+				gchar *result = print_comments(comments, commstream);
 				g_free(commstream);
 				char *rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
 					org_gnome_rss_controls_counter_id);
@@ -2368,7 +2369,7 @@ render_body:    if (category)
 						text_colour & 0xffffff,
 						result);
 					g_free(result);
-				}*/
+				}
 				commstream = NULL;
 			} else {
 				fetch_comments(comments, (EMFormatHTML *)t->format);
@@ -2405,21 +2406,36 @@ fmerror:
 	return;
 }
 
+#if EVOLUTION_VERSION < 22800 //kb//
 void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
+#else
+void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
+#endif
 {
-	g_print("refrish\n");
+	gchar *folder_name;
+#if EVOLUTION_VERSION > 22800 //kb//
+	EMFolderTree *folder_tree;
+        CamelFolder *folder;
+	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(shell_view);
+	folder_tree = e_mail_shell_sidebar_get_folder_tree (shell_sidebar);
+        folder = em_folder_tree_get_selected_folder (folder_tree);
+        g_return_if_fail (folder != NULL);
+	folder_name = folder->full_name;
+#else
+	gchar *folder_name = t->uri;
+#endif
 	gchar *main_folder = get_main_folder();
-	if (t->uri == NULL 
-	  || g_ascii_strncasecmp(t->uri, main_folder, strlen(main_folder)))
+	if (folder_name == NULL 
+	  || g_ascii_strncasecmp(folder_name, main_folder, strlen(main_folder)))
 		goto out;
-	if (!g_ascii_strcasecmp(t->uri, main_folder))
+	if (!g_ascii_strcasecmp(folder_name, main_folder))
 		goto out;
-	gchar *rss_folder = extract_main_folder(t->uri);
+	gchar *rss_folder = extract_main_folder(folder_name);
 	if (!rss_folder)
 		goto out;
 	gchar *ofolder = g_hash_table_lookup(rf->feed_folders, rss_folder);
-	gchar *folder = ofolder ? ofolder : rss_folder;
-	gchar *key = g_hash_table_lookup(rf->hrname, folder);
+	gchar *fname = ofolder ? ofolder : rss_folder;
+	gchar *key = g_hash_table_lookup(rf->hrname, fname);
 	if (!key)
 		goto out;
 	gchar *name = g_strdup_printf("%s: %s", _("Fetching feed"), (gchar *)g_hash_table_lookup(rf->hrname_r, key));
@@ -2432,7 +2448,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 		rf->err = NULL;
 		taskbar_op_message(name);
 		network_timeout();
-		if (!fetch_one_feed(folder, key, statuscb))
+		if (!fetch_one_feed(fname, key, statuscb))
 			taskbar_op_finish("main");
                 single_pending = FALSE;
 	}
@@ -3235,7 +3251,6 @@ finish_comments (SoupMessage *msg, EMFormatHTML *user_data)
 finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data)
 #endif
 {
-	return;
 	guint reload=0;
 
 	comments_session = g_slist_remove(comments_session, soup_sess);
@@ -3260,12 +3275,6 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 	
 	while (gtk_events_pending ())
             gtk_main_iteration ();
-}
-
-static void
-refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
-{
-	em_format_redraw((EMFormat *)pobject);
 }
 
 gchar *
@@ -3808,10 +3817,19 @@ update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder)
 		oname = g_strdup(old_name);
 	if (!nname)
 		nname = g_strdup(new_name);
+g_print("oname:%s\n", oname);
+g_print("nname:%s\n", nname);
 	gchar *orig_name = g_hash_table_lookup(rf->feed_folders, oname);
 	if (!orig_name) {
-		if (valid_folder)
-			return 0;
+		if (valid_folder) {
+			gchar *ofolder = lookup_original_folder(old_name);
+g_print("ofolder:%s\n", ofolder);
+g_print("ofolkey:%s\n", lookup_key(ofolder));
+			if (!ofolder)
+				return 0;
+			else if (!lookup_key(ofolder))
+				return 0;
+		}
 		g_hash_table_replace(rf->feed_folders, g_strdup(nname), g_strdup(oname));
 	} else {
 		g_hash_table_replace(rf->feed_folders, g_strdup(nname), g_strdup(orig_name));
@@ -4200,6 +4218,14 @@ void get_shell(void *ep, ESEventTargetShell *t)
 	evo_window = (GtkWidget *)priv->windows;
 #endif
 }
+
+void
+mail_folder_refresh_cb (EShellWindow *shell_window,
+			gpointer data)
+{
+	g_print("refrish\n");
+}
+	
 
 #if EVOLUTION_VERSION < 22800 //KB
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
@@ -4606,6 +4632,11 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
                   EShellView *shell_view)
 {
 	rss_shell_view = shell_view;
+	EShellWindow *shell_window = e_shell_view_get_shell_window (rss_shell_view);
+	g_signal_connect (
+		e_shell_window_get_action (E_SHELL_WINDOW (shell_window), "mail-folder-refresh"), "activate",
+		G_CALLBACK (org_gnome_cooly_folder_refresh),
+		shell_view);
 	return TRUE;
 }
 
