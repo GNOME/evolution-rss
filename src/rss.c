@@ -3915,7 +3915,6 @@ store_folder_deleted(CamelObject *o, void *event_data, void *data)
 static void
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
 {
-g_print("folder rename\n");
 	CamelRenameInfo *info = event_data;
 
 	gchar *main_folder = lookup_main_folder();
@@ -4212,7 +4211,6 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t);
 void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 #endif
 {
-g_print("startup\n");
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
 		//as I don't know how to set this I'll setup a 10 secs timeout
 		//and return false for disableation

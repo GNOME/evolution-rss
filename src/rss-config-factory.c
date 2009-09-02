@@ -2633,14 +2633,8 @@ init_rss_prefs(void)
 	EShell *shell;
         GtkWidget *preferences_window;
 
-	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss.png",
-						NULL);
-	GdkPixbuf *folder_icon = gdk_pixbuf_new_from_file (iconfile, NULL);
-	gtk_icon_theme_add_builtin_icon ("evolution-rss-large",
-				GTK_ICON_SIZE_INVALID,
-				folder_icon);
-	g_free(iconfile);
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           EVOLUTION_ICONDIR);
 			
 	shell = e_shell_get_default();
         preferences_window = e_shell_get_preferences_window (shell);
@@ -2648,7 +2642,7 @@ init_rss_prefs(void)
         e_preferences_window_add_page (
                 E_PREFERENCES_WINDOW (preferences_window),
                 "page-rss",
-                "evolution-rss-large",
+                "rss",
                 _("News And Blogs"),
 		rss_config_control_new(),
                 800);
