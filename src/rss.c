@@ -3277,6 +3277,12 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
             gtk_main_iteration ();
 }
 
+static void
+refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
+{
+	em_format_redraw((EMFormat *)pobject);
+}
+
 gchar *
 print_comments(gchar *url, gchar *stream)
 {
@@ -4219,14 +4225,6 @@ void get_shell(void *ep, ESEventTargetShell *t)
 #endif
 }
 
-void
-mail_folder_refresh_cb (EShellWindow *shell_window,
-			gpointer data)
-{
-	g_print("refrish\n");
-}
-	
-
 #if EVOLUTION_VERSION < 22800 //KB
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
@@ -4237,6 +4235,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t);
 void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 #endif
 {
+	return;
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
 		//as I don't know how to set this I'll setup a 10 secs timeout
 		//and return false for disableation
@@ -4654,6 +4653,7 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 e_plugin_lib_enable(EPlugin *ep, int enable)
 #endif
 {
+	return;
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
