@@ -3823,14 +3823,10 @@ update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder)
 		oname = g_strdup(old_name);
 	if (!nname)
 		nname = g_strdup(new_name);
-g_print("oname:%s\n", oname);
-g_print("nname:%s\n", nname);
 	gchar *orig_name = g_hash_table_lookup(rf->feed_folders, oname);
 	if (!orig_name) {
 		if (valid_folder) {
 			gchar *ofolder = lookup_original_folder(old_name);
-g_print("ofolder:%s\n", ofolder);
-g_print("ofolkey:%s\n", lookup_key(ofolder));
 			if (!ofolder)
 				return 0;
 			else if (!lookup_key(ofolder))
@@ -4235,7 +4231,6 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t);
 void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 #endif
 {
-	return;
   	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
 		//as I don't know how to set this I'll setup a 10 secs timeout
 		//and return false for disableation
@@ -4653,7 +4648,6 @@ e_plugin_lib_enable(EPluginLib *ep, int enable)
 e_plugin_lib_enable(EPlugin *ep, int enable)
 #endif
 {
-	return;
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");

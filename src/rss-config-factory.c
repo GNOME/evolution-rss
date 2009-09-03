@@ -2585,9 +2585,9 @@ rss_config_control_new (void)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->use_proxy),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL));
 	g_signal_connect(sf->use_proxy, "clicked", G_CALLBACK(start_check_cb), GCONF_KEY_USE_PROXY);
+	g_signal_connect(sf->details, "clicked", G_CALLBACK(details_cb), sf->gui);
 #endif
 
-	g_signal_connect(sf->details, "clicked", G_CALLBACK(details_cb), sf->gui);
 
 
 	sf->import = glade_xml_get_widget(sf->gui, "import");
