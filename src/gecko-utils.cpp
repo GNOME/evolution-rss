@@ -24,6 +24,8 @@
 #include "config.h"
 
 #include <stdlib.h>
+#include <glib.h>
+#include <gtk/gtk.h>
 
 #include <nsStringAPI.h>
  
@@ -39,7 +41,7 @@
 #include <gtkembedmoz/gtkmozembed.h>
 #include <gtkembedmoz/gtkmozembed_internal.h>
 #endif
-//#include <gtkmozembed.h>
+
 #include <nsCOMPtr.h>
 #include <nsIPrefService.h>
 #include <nsIServiceManager.h>

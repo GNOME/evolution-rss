@@ -53,7 +53,7 @@ int rss_verbose_debug = 0;
 #include <mail/em-folder-tree.h>
 
 
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
 #include <mail/em-popup.h>
 #include <mail/em-folder-view.h>
 #include <mail/em-format.h>
@@ -203,7 +203,7 @@ SoupCookieJar *rss_soup_jar;
 #endif
 extern guint rsserror;
 gboolean single_pending = FALSE;
-#if EVOLUTION_VERSION >= 22800
+#if EVOLUTION_VERSION >= 22900
 extern CamelSession *session;
 #endif
 
@@ -342,8 +342,21 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 	if (key) { 
 		if (!g_hash_table_lookup(rf->error_hash, key)) {
 //			guint activity_id = g_hash_table_lookup(rf->activity, key);
+#if (EVOLUTION_VERSION >= 22900) //kb//
+			EShell *shell;
+			GtkWindow *parent;
+			GList *windows;
+		
+			shell = e_shell_get_default ();
+			windows = e_shell_get_watched_windows (shell);
+			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
+			
+                	ed  = e_error_new(parent, "org-gnome-evolution-rss:feederr",
+                	             error, msg, NULL);
+#else
                 	ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                 	             error, msg, NULL);
+#endif
 			gpointer newkey = g_strdup(key);
                 	g_signal_connect(
 				ed, "response",
@@ -359,7 +372,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			//lame widget destruction, seems e_activity timeout does not destroy it
 			g_timeout_add_seconds(60, (GSourceFunc)gtk_widget_destroy, ed);
 
-#if (EVOLUTION_VERSION >= 22800)
+#if (EVOLUTION_VERSION >= 22900) //kb//
 	em_utils_show_error_silent(ed);
 	g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(1));
 
@@ -378,9 +391,21 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 #endif
 
 	if (!rf->errdialog) {
+#if (EVOLUTION_VERSION >= 22900) //kb//
+		EShell *shell;
+		GtkWindow *parent;
+		GList *windows;
 
+		shell = e_shell_get_default ();
+		windows = e_shell_get_watched_windows (shell);
+		parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
+
+                ed  = e_error_new(parent, "org-gnome-evolution-rss:feederr",
+                             error, msg, NULL);
+#else
                 ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                              error, msg, NULL);
+#endif
                 g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
                 gtk_widget_show(ed);
                 rf->errdialog = ed;
@@ -401,7 +426,7 @@ cancel_active_op(gpointer key)
 void
 taskbar_push_message(gchar *message)
 {
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
 #else
@@ -414,7 +439,7 @@ taskbar_push_message(gchar *message)
 void
 taskbar_pop_message(void)
 {
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_unset_message(activity_handler);
 #else
@@ -427,7 +452,7 @@ taskbar_pop_message(void)
 void
 taskbar_op_abort(gpointer key)
 {
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 	if (activity_key)
@@ -437,7 +462,7 @@ taskbar_op_abort(gpointer key)
 	abort_all_soup();
 }
 
-#if EVOLUTION_VERSION >= 22800
+#if EVOLUTION_VERSION >= 22900 //kb//
 EActivity *
 #else
 guint
@@ -448,7 +473,7 @@ taskbar_op_new(gchar *message, gpointer key)
 taskbar_op_new(gchar *message)
 #endif
 {
-#if EVOLUTION_VERSION >= 22800 //kb//
+#if EVOLUTION_VERSION >= 22900 //kb//
 	EShell *shell;
         EShellBackend *shell_backend;
 	EActivity *activity;
@@ -497,7 +522,7 @@ taskbar_op_new(gchar *message)
 void
 taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress)
 {
-#if (EVOLUTION_VERSION < 22800) //kb//
+#if (EVOLUTION_VERSION < 22900) //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 #else
@@ -505,7 +530,7 @@ taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress)
 #endif
 
 	if (activity_id) {
-#if (EVOLUTION_VERSION < 22800)
+#if (EVOLUTION_VERSION < 22900) //kb//
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
                                 g_strdup(msg), 
@@ -519,18 +544,18 @@ taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress)
 void
 taskbar_op_finish(gpointer key)
 {
-#if  EVOLUTION_VERSION < 22800 //kb//
+#if  EVOLUTION_VERSION < 22900 //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 #endif
 	
 	if (rf->activity) {
-#if  EVOLUTION_VERSION < 22800
+#if  EVOLUTION_VERSION < 22900 //kb//
 		guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 #else
 		EActivity *activity_key = g_hash_table_lookup(rf->activity, key);
 #endif
 		if (activity_key)
-#if  EVOLUTION_VERSION < 22800 //kb//
+#if  EVOLUTION_VERSION < 22900 //kb//
 			e_activity_handler_operation_finished(activity_handler, activity_key);
 #else
 			e_activity_complete (activity_key);
@@ -548,7 +573,7 @@ taskbar_op_message(gchar *msg)
 		else
 			tmsg = g_strdup(msg);
 
-#if (EVOLUTION_VERSION >= 22800)
+#if (EVOLUTION_VERSION >= 22900) //kb//
 		EActivity *activity_id = taskbar_op_new(tmsg, "main");
 #else
 #if (EVOLUTION_VERSION >= 22200)
@@ -1752,7 +1777,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	gint button;
 	GtkMenu *menu;
         GSList *menus = NULL;
-        EMPopup *emp;
+        EPopup *emp;
 	gint i=0, menu_size;
 	EPopupTarget *target;
 
@@ -1775,10 +1800,10 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	else
 		menu_size-=2;
 
-	for (; i<menu_size; i++)
-		menus = g_slist_prepend(menus, &rss_menu_items[i]);
-
-        e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
+//	for (; i<menu_size; i++)
+//		menus = g_slist_prepend(menus, &rss_menu_items[i]);
+//
+  //      e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
         menu = e_popup_create_menu_once((EPopup *)emp, NULL, 0);
 
 	if (button == 2)
@@ -2108,7 +2133,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	/* //KB// */
 	//emfh->load_http_now = TRUE;
 	/* assuming 0xffffff will ruin dark themes */
-#if EVOLUTION_VERSION < 22800
+#if EVOLUTION_VERSION < 22900 //kb//
 	frame_colour = emfh->frame_colour;// ? emfh->frame_colour: 0xffffff;
 	content_colour = emfh->content_colour;// ? emfh->content_colour: 0xffffff;
 	text_colour = emfh->text_colour;// ? emfh->text_colour: 0xffffff;
@@ -2406,14 +2431,14 @@ fmerror:
 	return;
 }
 
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
 void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
 #else
 void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 #endif
 {
 	gchar *folder_name;
-#if EVOLUTION_VERSION > 22800 //kb//
+#if EVOLUTION_VERSION > 22900 //kb//
 	EMFolderTree *folder_tree;
         CamelFolder *folder;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(shell_view);
@@ -2952,12 +2977,14 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	g_free(rfmsg);
 }
 
+#if EVOLUTION_VERSION < 22900 //kb//
 struct _MailComponentPrivate {
         GMutex *lock;
 
         /* states/data used during shutdown */
         enum { MC_QUIT_START, MC_QUIT_SYNC, MC_QUIT_THREADS } quit_state;
 };
+#endif
 
 void
 generic_finish_feed(rfMessage *msg, gpointer user_data)
@@ -2972,8 +2999,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (!key)
 		deleted = 1;
 
-//kb//
-#if 0
+#if EVOLUTION_VERSION < 22900 //kb//
 	MailComponent *mc = mail_component_peek ();
         if (mc->priv->quit_state != -1)
 		rf->cancel_all=1;
@@ -3339,10 +3365,8 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 gboolean
 update_articles(gboolean disabler)
 {
-//kb//
-#if 0
+#if EVOLUTION_VERSION < 22900 //kb//
 	MailComponent *mc = mail_component_peek ();
-	g_print("stAte:%d\n", mc->priv->quit_state);
         if (mc->priv->quit_state != -1)
 		rf->cancel=1;
 #endif
@@ -3364,7 +3388,7 @@ update_articles(gboolean disabler)
 gchar *
 rss_component_peek_base_directory(void)
 {
-#if (EVOLUTION_VERSION >= 22800) 
+#if (EVOLUTION_VERSION >= 22900) //kb//
 	return g_strdup_printf("%s/rss", 
 		em_utils_get_data_dir());
 #else
@@ -3383,7 +3407,7 @@ rss_component_peek_base_directory(void)
 CamelStore *
 rss_component_peek_local_store(void)
 {
-#if (EVOLUTION_VERSION < 22800)
+#if (EVOLUTION_VERSION < 22900) //kb//
 	return mail_component_peek_local_store(NULL);
 #else
 	return e_mail_local_get_store();
@@ -3946,9 +3970,9 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 			update_main_folder(info->new->full_name);
 		else
 			if (0 == update_feed_folder(info->old_base, info->new->full_name, 1)) {
-g_print("info->old_base:%s\n", info->old_base);
-g_print("info->new->full_name:%s\n", info->new->full_name);
-				g_print("this is not a feed!!\n");
+				d(g_print("info->old_base:%s\n", info->old_base));
+				d(g_print("info->new->full_name:%s\n", info->new->full_name));
+				d(g_print("this is not a feed!!\n"));
 				rebase_feeds(info->old_base, info->new->full_name);
 			}
 		g_idle_add((GSourceFunc)store_redraw, GTK_TREE_VIEW(rf->treeview));
@@ -4157,10 +4181,11 @@ custom_feed_timeout(void)
 static void
 rss_online(CamelSession *o, void *event_data, void *data)
 {
-	g_print("Apoc, are we online?... Almost.\n");
+	d(g_print("Apoc, are we online?... Almost.\n"));
 	rf->online =  camel_session_is_online (o);
 }
 
+#if 0
 struct __EShellPrivate {
         /* IID for registering the object on OAF.  */
         char *iid;
@@ -4203,25 +4228,30 @@ struct __EShellPrivate {
  *            permissions from all the components to quit.  */
         unsigned int preparing_to_quit : 1;
 };
-/*typedef struct __EShellPrivate EShellPrivate;
+#endif
+
+
+#if EVOLUTION_VERSION < 22900 //KB//
+typedef struct __EShellPrivate EShellPrivate;
 
 struct _EShell {
         BonoboObject parent;
 
         EShellPrivate *priv;
 };
-typedef struct _EShell EShell;*/
+typedef struct _EShell EShell;
+#endif
 
 void get_shell(void *ep, ESEventTargetShell *t)
 {
-#if EVOLUTION_VERSION < 22800 //KB//
+#if EVOLUTION_VERSION < 22900 //KB//
 	EShell *shell = t->shell;
 	EShellPrivate *priv = (EShellPrivate *)shell->priv;
 	evo_window = (GtkWidget *)priv->windows;
 #endif
 }
 
-#if EVOLUTION_VERSION < 22800 //KB
+#if EVOLUTION_VERSION < 22900 //KB
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
@@ -4267,7 +4297,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 	camel_object_hook_event(store, "folder_deleted",
                                 (CamelObjectEventHookFunc)store_folder_deleted, NULL);
 	camel_object_hook_event(
-#if EVOLUTION_VERSION < 22800
+#if EVOLUTION_VERSION < 22900 //kb//
 			mail_component_peek_session(NULL),
 #else
 			session,
@@ -4618,6 +4648,12 @@ if (engine == 1) {
 	return 0;
 }
 
+void quit_cb(void *ep, EShellView *shell_view)
+{
+	g_print("RSS: Preparing to quit...\n");
+	rf->cancel_all=1;
+}
+
 gboolean        e_plugin_ui_init                (GtkUIManager *ui_manager,
                                                  EShellView *shell_view);
 
@@ -4630,19 +4666,23 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 	g_signal_connect (
 		e_shell_window_get_action (E_SHELL_WINDOW (shell_window), "mail-folder-refresh"), "activate",
 		G_CALLBACK (org_gnome_cooly_folder_refresh),
-		shell_view);
+		rss_shell_view);
+	g_signal_connect (
+		e_shell_window_get_action (E_SHELL_WINDOW (shell_window), "quit"), "activate",
+		G_CALLBACK (quit_cb),
+		rss_shell_view);
 	return TRUE;
 }
 
 
-#if (EVOLUTION_VERSION < 22800)
+#if (EVOLUTION_VERSION < 22900)
 int e_plugin_lib_enable(EPluginLib *ep, int enable);
 #else
 int e_plugin_lib_enable(EPlugin *ep, int enable);
 #endif
 
 int
-#if (EVOLUTION_VERSION < 22800)
+#if (EVOLUTION_VERSION < 22900)
 e_plugin_lib_enable(EPluginLib *ep, int enable)
 #else
 e_plugin_lib_enable(EPlugin *ep, int enable)
@@ -4723,14 +4763,14 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 }
 
 
-#if (EVOLUTION_VERSION < 22800)
+#if (EVOLUTION_VERSION < 22900)
 void e_plugin_lib_disable(EPluginLib *ep);
 #else
 void e_plugin_lib_disable(EPlugin *ep);
 #endif
 
 void
-#if (EVOLUTION_VERSION < 22800)
+#if (EVOLUTION_VERSION < 22900)
 e_plugin_lib_disable(EPluginLib *ep)
 #else
 e_plugin_lib_disable(EPlugin *ep)
@@ -4909,7 +4949,7 @@ file_to_message(const char *filename)
 	camel_medium_set_content_object((CamelMedium *)msg, content);
         camel_object_unref(content);
 	
-#if EVOLUTION_VERSION < 22800
+#if EVOLUTION_VERSION < 22900
 	type = em_utils_snoop_type(msg);
 #else
 	type = em_format_snoop_type(msg);
@@ -5104,7 +5144,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 						GTK_ICON_SIZE_INVALID,
 						icon);
 
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
 		si = g_hash_table_lookup (mod->store_hash, store);
 #else
 		si = em_folder_tree_model_lookup_store_info (

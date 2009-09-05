@@ -272,6 +272,7 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
     }
 }
 
+#if (EVOLUTION_VERSION < 22200)		// include devel too
 static void
 close_details_cb (GtkWidget *widget, gpointer data)
 {
@@ -310,6 +311,7 @@ details_cb (GtkWidget *widget, gpointer data)
 
         gtk_widget_show(details);
 }
+#endif
 
 
 static void
@@ -704,22 +706,28 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
         add_feed *feed = create_dialog_add(NULL, NULL);
 	if (feed->dialog)
                 gtk_widget_destroy(feed->dialog);
-        GtkWidget *msg_feeds = e_error_new(NULL,
-					"org-gnome-evolution-rss:rssmsg",
-					"",
-					NULL);
+        GtkWidget *msg_feeds = e_error_new(
+				GTK_WINDOW(rf->preferences),
+				"org-gnome-evolution-rss:rssmsg",
+				"",
+				NULL);
 	GtkWidget *progress = gtk_progress_bar_new();
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
-				 	progress,
-					FALSE,
-					FALSE,
-					0);
+        gtk_box_pack_start(
+		GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
+	 	progress,
+		FALSE,
+		FALSE,
+		0);
         gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
 	/* xgettext:no-c-format */
         gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
 	feed->progress=progress;
         gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);
-        g_signal_connect(msg_feeds, "response", G_CALLBACK(msg_feeds_response), NULL);
+        g_signal_connect(
+		msg_feeds,
+		"response",
+		G_CALLBACK(msg_feeds_response),
+		NULL);
 	gtk_widget_show_all(msg_feeds);
         while (gtk_events_pending ())
                 gtk_main_iteration ();
@@ -785,7 +793,9 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
 void
 rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex)
 {
-        guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE | CAMEL_STORE_FOLDER_INFO_FAST | CAMEL_STORE_FOLDER_INFO_SUBSCRIBED;
+        guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE
+		| CAMEL_STORE_FOLDER_INFO_FAST
+		| CAMEL_STORE_FOLDER_INFO_SUBSCRIBED;
         CamelFolderInfo *fi;
 
         fi = camel_store_get_folder_info (store, full_name, flags, ex);
@@ -956,7 +966,11 @@ remove_feed_dialog(gchar *msg)
   GtkWidget *checkbutton1;
   GtkWidget *dialog_action_area1;
 
-  dialog1 = e_error_new(NULL, "org-gnome-evolution-rss:ask-delete-feed", msg, NULL);
+  dialog1 = e_error_new(
+		GTK_WINDOW(rf->preferences),
+		"org-gnome-evolution-rss:ask-delete-feed",
+		msg,
+		NULL);
   gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
 
   dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
@@ -969,17 +983,26 @@ remove_feed_dialog(gchar *msg)
 
   checkbutton1 = gtk_check_button_new_with_mnemonic (_("Remove folder contents"));
   gtk_widget_show (checkbutton1);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1),
+  gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (checkbutton1),
                 gconf_client_get_bool(rss_gconf, GCONF_KEY_REMOVE_FOLDER, NULL));
-  g_signal_connect(checkbutton1,
+  g_signal_connect(
+		checkbutton1,
                 "clicked",
                 G_CALLBACK(start_check_cb),
                 GCONF_KEY_REMOVE_FOLDER);
-  gtk_box_pack_start (GTK_BOX (vbox1), checkbutton1, FALSE, FALSE, 0);
+  gtk_box_pack_start (
+		GTK_BOX (vbox1),
+		checkbutton1,
+		FALSE,
+		FALSE,
+		0);
 
   dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
   gtk_widget_show (dialog_action_area1);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
+  gtk_button_box_set_layout (
+		GTK_BUTTON_BOX (dialog_action_area1),
+		GTK_BUTTONBOX_END);
 
   return dialog1;
 }
@@ -1012,9 +1035,18 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 	gpointer key = lookup_key(feed_name);
 	gchar *prefix = NULL;
 
-	GtkWidget *msg_feeds = e_error_new(NULL, "org-gnome-evolution-rss:rssmsg", "", NULL);
+	GtkWidget *msg_feeds = e_error_new(
+			GTK_WINDOW(rf->preferences),
+			"org-gnome-evolution-rss:rssmsg",
+			"",
+			NULL);
 	GtkWidget *progress = gtk_progress_bar_new();
-       	gtk_box_pack_start(GTK_BOX(((GtkDialog *)msg_feeds)->vbox), progress, FALSE, FALSE, 0);
+       	gtk_box_pack_start(
+			GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
+			progress,
+			FALSE,
+			FALSE,
+			0);
        	gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
 	/* xgettext:no-c-format */
        	gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
@@ -1030,7 +1062,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
         feed->feed_url = sanitize_url(feed->feed_url);
         g_free(text);
         if (feed->feed_url) {
-	feed->edit=1;
+			feed->edit=1;
 			feed->feed_name = g_path_get_basename(lookup_feed_folder(feed_name));
 			prefix = g_path_get_dirname(lookup_feed_folder(feed_name));
 			if (*prefix != '.')
@@ -1080,7 +1112,10 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 			} 
 
 			if (feed->renamed) {
-				gchar *a = g_build_path("/", lookup_main_folder(), lookup_feed_folder(feed_name), NULL);
+				gchar *a = g_build_path("/",
+					lookup_main_folder(),
+					lookup_feed_folder(feed_name),
+					NULL);
 				gchar *dir = g_path_get_dirname(a);
 				gchar *b = g_build_path("/", dir, feed->feed_name, NULL);
 				CamelException ex;
@@ -1089,7 +1124,11 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
                                 camel_store_rename_folder (store, a, b, &ex);
                                 if (camel_exception_is_set (&ex)) {
                                         e_error_run(NULL,
-                                                    "mail:no-rename-folder", a, b, ex.desc, NULL);
+						"mail:no-rename-folder",
+						a,
+						b,
+						ex.desc,
+						NULL);
                                         camel_exception_clear (&ex);
                                 }
 				g_free(dir);
@@ -1233,22 +1272,35 @@ import_opml(gchar *file)
 	xmlNode *doc = NULL;
 
 	if (!src) {
-		rss_error(NULL, NULL, _("Import error."), _("Invalid file or this is not an import file."));
+		rss_error(NULL,
+			NULL,
+			_("Import error."),
+			_("Invalid file or this is not an import file."));
 		goto out;
 	}
         doc = src;
         gchar *msg = g_strdup(_("Importing feeds..."));
-        import_dialog = e_error_new((GtkWindow *)rf->preferences, "shell:importing", msg, NULL);
+        import_dialog = e_error_new(
+		GTK_WINDOW(rf->preferences),
+		"shell:importing",
+		msg,
+		NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
-        g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+        g_signal_connect(
+		import_dialog,
+		"response",
+		G_CALLBACK(import_dialog_response),
+		NULL);
         import_label = gtk_label_new(_("Please wait"));
         import_progress = gtk_progress_bar_new();
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+        gtk_box_pack_start(
+		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
                 import_label,
                 FALSE,
                 FALSE,
                 0);
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+        gtk_box_pack_start(
+		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
                 import_progress,
                 FALSE,
                 FALSE,
@@ -1713,17 +1765,34 @@ export_opml(gchar *file)
 
 
         gchar *msg = g_strdup(_("Exporting feeds..."));
-        import_dialog = e_error_new((GtkWindow *)rf->preferences, "shell:importing", msg, NULL);
+        import_dialog = e_error_new(
+			GTK_WINDOW(rf->preferences),
+			"shell:importing",
+			msg,
+			NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
 //        g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
         import_label = gtk_label_new(_("Please wait"));
         import_progress = gtk_progress_bar_new();
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)import_dialog)->vbox), import_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)import_dialog)->vbox), import_progress, FALSE, FALSE, 0);
+        gtk_box_pack_start(
+			GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+			import_label,
+			FALSE,
+			FALSE,
+			0);
+        gtk_box_pack_start(
+			GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+			import_progress,
+			FALSE,
+			FALSE,
+			0);
         gtk_widget_show_all(import_dialog);
         g_free(msg);
         count = 0;
-        g_hash_table_foreach(rf->hrname, construct_opml_line, import_progress);
+        g_hash_table_foreach(
+			rf->hrname,
+			construct_opml_line,
+			import_progress);
         gtk_widget_destroy(import_dialog);
         t = time(NULL);
         tmp = localtime(&t);
@@ -1822,17 +1891,27 @@ process_cookies(SoupCookieJar *jar)
 	GSList *list = NULL;
 	list = soup_cookie_jar_all_cookies(jar);
         gchar *msg = g_strdup(_("Importing cookies..."));
-        GtkWidget *import_dialog = e_error_new(NULL, "shell:importing", msg, NULL);
+        GtkWidget *import_dialog = e_error_new(
+			GTK_WINDOW(rf->preferences),
+			"shell:importing",
+			msg,
+			NULL);
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
-        g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+        g_signal_connect(
+		import_dialog,
+		"response",
+		G_CALLBACK(import_dialog_response),
+		NULL);
         GtkWidget *import_label = gtk_label_new(_("Please wait"));
         GtkWidget *import_progress = gtk_progress_bar_new();
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+        gtk_box_pack_start(
+		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
                 import_label,
                 FALSE,
                 FALSE,
                 0);
-        gtk_box_pack_start(GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+        gtk_box_pack_start(
+		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
                 import_progress,
                 FALSE,
                 FALSE,
