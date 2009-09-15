@@ -43,7 +43,9 @@
 #endif
 
 #include <nsCOMPtr.h>
+#include <nsICommandManager.h>
 #include <nsIPrefService.h>
+#include <nsIInterfaceRequestorUtils.h>
 #include <nsIServiceManager.h>
 #include <nsServiceManagerUtils.h>
 #include <nsIDOMMouseEvent.h>
@@ -146,6 +148,33 @@ gecko_get_zoom (GtkWidget *embed)
         mDOMWindow->GetTextZoom (&zoom);
         return zoom;
 }
+
+static nsresult
+gecko_do_command (GtkMozEmbed *embed,
+            const char  *command)
+{
+        nsCOMPtr<nsIWebBrowser>     webBrowser;
+        nsCOMPtr<nsICommandManager> cmdManager;
+
+        gtk_moz_embed_get_nsIWebBrowser (embed, getter_AddRefs (webBrowser));
+
+        cmdManager = do_GetInterface (webBrowser);
+
+        return cmdManager->DoCommand (command, nsnull, nsnull);
+}
+
+extern "C" void
+gecko_copy_selection (GtkMozEmbed *embed)
+{
+	gecko_do_command (embed, "cmd_copy");
+}
+
+extern "C" void
+gecko_select_all (GtkMozEmbed *embed)
+{
+	gecko_do_command (embed, "cmd_selectAll");
+}
+
 
 extern "C" gboolean
 gecko_init (void)

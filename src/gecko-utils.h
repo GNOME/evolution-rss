@@ -33,6 +33,9 @@ void           gecko_shutdown     (void);
 void gecko_set_zoom (GtkWidget *moz, gfloat zoom);
 gfloat gecko_get_zoom (GtkWidget *moz);
 gint gecko_get_mouse_event_button(gpointer event);
+void gecko_copy_selection (GtkMozEmbed *embed);
+void gecko_select_all (GtkMozEmbed *embed);
+
 
 G_END_DECLS
 

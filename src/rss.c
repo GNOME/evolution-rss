@@ -64,9 +64,7 @@ int rss_verbose_debug = 0;
 #include <shell/e-shell.h>
 #include <shell/e-shell-taskbar.h>
 #include <shell/e-shell-view.h>
-//#include <misc/e-activity.h>
-//#include <misc/e-timeout-activity.h>
-//#include <misc/e-alert-activity.h>
+#include <misc/e-popup-menu.h>
 #endif
 
 #include <mail/mail-tools.h>
@@ -1604,6 +1602,7 @@ gecko_set_preferences(void)
 	gecko_prefs_set_string("general.useragent.extra.firefox", agstr); 
 	gecko_prefs_set_int("browser.ssl_override_behaviour", 2); 
 	gecko_prefs_set_bool("browser.xul.error_pages.enabled", FALSE); 
+	gecko_prefs_set_bool("browser.xul.error_pages.expert_bad_cert", FALSE); 
 	g_free(agstr);
 #if (DATASERVER_VERSION >= 2026000)
 	//I'm only forcing scheme here
@@ -1626,11 +1625,13 @@ gecko_set_preferences(void)
 #endif
 }
 
-//kb//
-#if 0
 #ifdef HAVE_GECKO
 static void
-rss_popup_zoom_in(EPopup *ep, EPopupItem *pitem, void *data)
+#if EVOLUTION_VERSION < 22900
+rss_popup_zoom_in(GtkWidget *widget, gpointer data)
+#else
+rss_popup_zoom_in(GtkWidget *widget, gpointer data)
+#endif
 {
 	gfloat zoom = gecko_get_zoom(rf->mozembed);
 	zoom*=1.2;
@@ -1638,7 +1639,11 @@ rss_popup_zoom_in(EPopup *ep, EPopupItem *pitem, void *data)
 }
 
 static void
+#if EVOLUTION_VERSION < 22900
 rss_popup_zoom_out(EPopup *ep, EPopupItem *pitem, void *data)
+#else
+rss_popup_zoom_out(GtkWidget *widget, gpointer data)
+#endif
 {
 	gfloat zoom = gecko_get_zoom(rf->mozembed);
 	zoom/=1.2;
@@ -1646,30 +1651,67 @@ rss_popup_zoom_out(EPopup *ep, EPopupItem *pitem, void *data)
 }
 
 static void
+#if EVOLUTION_VERSION < 22900
 rss_popup_zoom_orig(EPopup *ep, EPopupItem *pitem, void *data)
+#else
+rss_popup_zoom_orig(GtkWidget *widget, gpointer data)
+#endif
 {
 	gecko_set_zoom(rf->mozembed, 1);
 }
 #endif
 
 static void
+#if EVOLUTION_VERSION < 22900
 rss_popup_link_copy(EPopup *ep, EPopupItem *pitem, void *data)
+#else
+rss_popup_link_copy(GtkWidget *widget, gpointer data)
+#endif
 {
+g_print("data:%s\n", data);
 	gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_PRIMARY), data, -1);
         gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), data, -1);
 }
 
 static void
+#if EVOLUTION_VERSION < 22900
 rss_popup_link_open(EPopup *ep, EPopupItem *pitem, void *data)
+#else
+rss_popup_link_open(GtkWidget *widget, gpointer data)
+#endif
 {
 #if (EVOLUTION_VERSION >= 22505)
 	e_show_uri (NULL, data);
 #endif
 }
 
-EPopupItem rss_menu_items[] = {
-        { E_POPUP_BAR, "05.rss-browser", },
-        { E_POPUP_ITEM, "05.rss-browser.00", N_("_Copy"), NULL, NULL, "edit-copy", EM_FOLDER_VIEW_SELECT_DISPLAY|EM_FOLDER_VIEW_SELECT_SELECTION },
+void
+browser_copy_selection(GtkWidget *widget, gpointer data)
+{
+	gecko_copy_selection(rf->mozembed);
+}
+
+void
+browser_select_all(GtkWidget *widget, gpointer data)
+{
+	gecko_select_all(rf->mozembed);
+}
+
+
+
+EPopupMenu rss_menu_items[] = {
+	E_POPUP_ITEM (N_("_Copy"), browser_copy_selection, 1),
+	E_POPUP_ITEM (N_("Select _All"), browser_select_all, 1),
+	E_POPUP_SEPARATOR,
+	E_POPUP_ITEM (N_("Zoom _In"), rss_popup_zoom_in, 2),
+	E_POPUP_ITEM (N_("Zoom _Out"), rss_popup_zoom_out, 2),
+	E_POPUP_ITEM (N_("_Normal Size"), rss_popup_zoom_orig, 2),
+	E_POPUP_SEPARATOR,
+	E_POPUP_ITEM (N_("_Open Link"), rss_popup_link_open, 4),
+	E_POPUP_ITEM (N_("_Copy Link Location"), rss_popup_link_copy, 4),
+	E_POPUP_TERMINATOR
+ };
+#if 0
 	{ E_POPUP_BAR, "05.rss-browser.01", NULL, NULL, NULL, NULL },
 	{ E_POPUP_ITEM, "05.rss-browser.02", N_("Zoom _In"), rss_popup_zoom_in, NULL, "zoom-in", EM_POPUP_URI_HTTP },
 	{ E_POPUP_ITEM, "05.rss-browser.03", N_("Zoom _Out"), rss_popup_zoom_out, NULL, "zoom-out", EM_POPUP_URI_HTTP },
@@ -1772,21 +1814,38 @@ gecko_over_link(GtkMozEmbed *mozembed)
 gboolean
 gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 {
-//kb//
-#if 0
 	gint button;
+	EShellContent *shell_content;
+	EMailReader *reader;
 	GtkMenu *menu;
-        GSList *menus = NULL;
-        EPopup *emp;
-	gint i=0, menu_size;
-	EPopupTarget *target;
+	GtkActionGroup *action_group;
+	gchar *link = NULL;
 
 	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
                 g_warning ("Cannot determine mouse button!\n");
                 return FALSE;
         }
 
-	gchar *link = gtk_moz_embed_get_link_message(GTK_MOZ_EMBED(rf->mozembed));
+	link = gtk_moz_embed_get_link_message(GTK_MOZ_EMBED(rf->mozembed));
+
+	menu = e_popup_menu_create_with_domain (rss_menu_items,
+                                                NULL, strlen(link) ? 8:4,
+						NULL,
+						GETTEXT_PACKAGE);
+	if (button == 2)
+		e_popup_menu (menu, NULL);
+//gtk_menu_popup (
+// menu, NULL, NULL, NULL, NULL,
+// 0, gtk_get_current_event_time ());
+
+#if 0
+	GtkMenu *menu;
+        GSList *menus = NULL;
+        EPopup *emp;
+	gint i=0, menu_size;
+	EPopupTarget *target;
+
+
 	emp = em_popup_new("org.gnome.evolution.mail.formathtmldisplay.popup");
 //	t = em_popup_target_new_part(emp, user_data, NULL);
 //	t = em_popup_target_new_uri(emp, link);
@@ -1808,11 +1867,10 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 
 	if (button == 2)
 		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, button, gtk_get_current_event_time());
+#endif
 	/*normal click let event pass normally*/
 	if (button == 0)
 		gtk_moz_embed_load_url(GTK_MOZ_EMBED(rf->mozembed), link);
-	g_print("button:%d\n", button);
-#endif //kb//
 	return FALSE;
 }
 #endif
