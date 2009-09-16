@@ -2279,6 +2279,14 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
 	gchar *ofolder = (gchar *)g_object_get_data((GObject *)epl, "ofolder");
 	
+	EMConfigTargetFolder *targetfolder = (EMConfigTargetFolder *)target->config->target;
+	gchar *main_folder = lookup_main_folder();
+	gchar *folder = targetfolder->folder->full_name;
+ 	
+	if (folder == NULL
+	|| g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
+	|| !g_ascii_strcasecmp(folder, main_folder))
+		return;
 
 	GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "url_entry");
         GtkWidget *checkbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "html_check");
