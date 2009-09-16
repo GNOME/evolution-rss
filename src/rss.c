@@ -678,7 +678,7 @@ browser_write(gchar *string, gint length, gchar *base)
 static void
 browsercb(NetStatusType status, gpointer statusdata, gpointer data)
 {
-    NetStatusProgress *progress = (NetStatusProgress*)statusdata;
+    //NetStatusProgress *progress = (NetStatusProgress*)statusdata;
     switch (status) {
     case NET_STATUS_PROGRESS:
 #if 0
@@ -1688,27 +1688,27 @@ rss_popup_link_open(GtkWidget *widget, gpointer data)
 void
 browser_copy_selection(GtkWidget *widget, gpointer data)
 {
-	gecko_copy_selection(rf->mozembed);
+	gecko_copy_selection(GTK_MOZ_EMBED(rf->mozembed));
 }
 
 void
 browser_select_all(GtkWidget *widget, gpointer data)
 {
-	gecko_select_all(rf->mozembed);
+	gecko_select_all(GTK_MOZ_EMBED(rf->mozembed));
 }
 
 
 
 EPopupMenu rss_menu_items[] = {
-	E_POPUP_ITEM (N_("_Copy"), browser_copy_selection, 1),
-	E_POPUP_ITEM (N_("Select _All"), browser_select_all, 1),
+	E_POPUP_ITEM (N_("_Copy"), 		G_CALLBACK(browser_copy_selection), 1),
+	E_POPUP_ITEM (N_("Select _All"),	G_CALLBACK(browser_select_all), 1),
 	E_POPUP_SEPARATOR,
-	E_POPUP_ITEM (N_("Zoom _In"), rss_popup_zoom_in, 2),
-	E_POPUP_ITEM (N_("Zoom _Out"), rss_popup_zoom_out, 2),
-	E_POPUP_ITEM (N_("_Normal Size"), rss_popup_zoom_orig, 2),
+	E_POPUP_ITEM (N_("Zoom _In"), 		G_CALLBACK(rss_popup_zoom_in), 2),
+	E_POPUP_ITEM (N_("Zoom _Out"), 		G_CALLBACK(rss_popup_zoom_out), 2),
+	E_POPUP_ITEM (N_("_Normal Size"), 	G_CALLBACK(rss_popup_zoom_orig), 2),
 	E_POPUP_SEPARATOR,
-	E_POPUP_ITEM (N_("_Open Link"), rss_popup_link_open, 4),
-	E_POPUP_ITEM (N_("_Copy Link Location"), rss_popup_link_copy, 4),
+	E_POPUP_ITEM (N_("_Open Link"), 	G_CALLBACK(rss_popup_link_open), 4),
+	E_POPUP_ITEM (N_("_Copy Link Location"),G_CALLBACK( rss_popup_link_copy), 4),
 	E_POPUP_TERMINATOR
  };
 #if 0
@@ -1815,10 +1815,7 @@ gboolean
 gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 {
 	gint button;
-	EShellContent *shell_content;
-	EMailReader *reader;
 	GtkMenu *menu;
-	GtkActionGroup *action_group;
 	gchar *link = NULL;
 
 	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
@@ -1829,7 +1826,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	link = gtk_moz_embed_get_link_message(GTK_MOZ_EMBED(rf->mozembed));
 
 	menu = e_popup_menu_create_with_domain (rss_menu_items,
-                                                NULL, strlen(link) ? 8:4,
+                                                0, (guint32)(strlen(link) ? 8:4),
 						NULL,
 						GETTEXT_PACKAGE);
 	if (button == 2)
