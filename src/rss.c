@@ -284,7 +284,9 @@ gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
 
 GtkTreeStore *evolution_store = NULL;
+#if EVOLUTION_VERSION >= 22900
 EShellView *rss_shell_view = NULL;
+#endif
 
 /*======================================================================*/
 
@@ -1627,7 +1629,7 @@ gecko_set_preferences(void)
 #ifdef HAVE_GECKO
 static void
 #if EVOLUTION_VERSION < 22900
-rss_popup_zoom_in(GtkWidget *widget, gpointer data)
+rss_popup_zoom_in(EPopup *ep, EPopupItem *pitem, void *data)
 #else
 rss_popup_zoom_in(GtkWidget *widget, gpointer data)
 #endif
@@ -1696,8 +1698,7 @@ browser_select_all(GtkWidget *widget, gpointer data)
 	gecko_select_all(GTK_MOZ_EMBED(rf->mozembed));
 }
 
-
-
+#if EVOLUTION_VERSION >= 22900
 EPopupMenu rss_menu_items[] = {
 	E_POPUP_ITEM (N_("_Copy"), 		G_CALLBACK(browser_copy_selection), 1),
 	E_POPUP_ITEM (N_("Select _All"),	G_CALLBACK(browser_select_all), 1),
@@ -1710,7 +1711,8 @@ EPopupMenu rss_menu_items[] = {
 	E_POPUP_ITEM (N_("_Copy Link Location"),G_CALLBACK( rss_popup_link_copy), 4),
 	E_POPUP_TERMINATOR
  };
-#if 0
+#else
+EPopupItem rss_menu_items[] = {
 	{ E_POPUP_BAR, "05.rss-browser.01", NULL, NULL, NULL, NULL },
 	{ E_POPUP_ITEM, "05.rss-browser.02", N_("Zoom _In"), rss_popup_zoom_in, NULL, "zoom-in", EM_POPUP_URI_HTTP },
 	{ E_POPUP_ITEM, "05.rss-browser.03", N_("Zoom _Out"), rss_popup_zoom_out, NULL, "zoom-out", EM_POPUP_URI_HTTP },
@@ -1824,46 +1826,36 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 
 	link = gtk_moz_embed_get_link_message(GTK_MOZ_EMBED(rf->mozembed));
 
+#if EVOLUTION_VERSION >= 22900
 	menu = e_popup_menu_create_with_domain (rss_menu_items,
                                                 0, (guint32)(strlen(link) ? 8:4),
 						NULL,
 						GETTEXT_PACKAGE);
 	if (button == 2)
 		e_popup_menu (menu, NULL);
-//gtk_menu_popup (
-// menu, NULL, NULL, NULL, NULL,
-// 0, gtk_get_current_event_time ());
+#else
 
-#if 0
-	GtkMenu *menu;
-        GSList *menus = NULL;
         EPopup *emp;
+        GSList *menus = NULL;
 	gint i=0, menu_size;
-	EPopupTarget *target;
-
 
 	emp = em_popup_new("org.gnome.evolution.mail.formathtmldisplay.popup");
-//	t = em_popup_target_new_part(emp, user_data, NULL);
-//	t = em_popup_target_new_uri(emp, link);
-  //      target = (EPopupTarget *)t;
-//        target = em_popup_target_new_part(emp, info->puri.part, info->handle?info->handle->mime_type:NULL);
-//        target->target.widget = w;
-	
 	menu_size=sizeof(rss_menu_items)/sizeof(rss_menu_items[0]);
 	if (strlen(link))
 		i+=9;
 	else
 		menu_size-=2;
 
-//	for (; i<menu_size; i++)
-//		menus = g_slist_prepend(menus, &rss_menu_items[i]);
-//
-  //      e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
+	for (; i<menu_size; i++)
+		menus = g_slist_prepend(menus, &rss_menu_items[i]);
+
+        e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
         menu = e_popup_create_menu_once((EPopup *)emp, NULL, 0);
 
 	if (button == 2)
 		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, button, gtk_get_current_event_time());
 #endif
+
 	/*normal click let event pass normally*/
 	if (button == 0)
 		gtk_moz_embed_load_url(GTK_MOZ_EMBED(rf->mozembed), link);
@@ -2501,7 +2493,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
         g_return_if_fail (folder != NULL);
 	folder_name = folder->full_name;
 #else
-	gchar *folder_name = t->uri;
+	folder_name = t->uri;
 #endif
 	gchar *main_folder = get_main_folder();
 	if (folder_name == NULL 
@@ -3446,7 +3438,7 @@ rss_component_peek_base_directory(void)
 	return g_strdup_printf("%s/rss", 
 		em_utils_get_data_dir());
 #else
-	MailComponent *componet = mail_component_peek();
+	MailComponent *component = mail_component_peek();
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
 #if (EVOLUTION_VERSION >= 22300)		// include devel too
 	return g_strdup_printf("%s/rss",
@@ -4298,10 +4290,13 @@ typedef struct _EShell EShell;
 
 void get_shell(void *ep, ESEventTargetShell *t)
 {
+#if 0 //kb//
+// disabled for the time being
 #if EVOLUTION_VERSION < 22900 //KB//
 	EShell *shell = t->shell;
 	EShellPrivate *priv = (EShellPrivate *)shell->priv;
 	evo_window = (GtkWidget *)priv->windows;
+#endif
 #endif
 }
 
@@ -4702,6 +4697,7 @@ if (engine == 1) {
 	return 0;
 }
 
+#if EVOLUTION_VERSION >= 22900
 void quit_cb(void *ep, EShellView *shell_view)
 {
 	g_print("RSS: Preparing to quit...\n");
@@ -4727,6 +4723,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 		rss_shell_view);
 	return TRUE;
 }
+#endif
 
 
 #if (EVOLUTION_VERSION < 22900)
@@ -4801,7 +4798,9 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			if (2 == render)
 				rss_mozilla_init();
 #endif
+#if EVOLUTION_VERSION >= 22900
 			init_rss_prefs();
+#endif
 		}
 		upgrade = 2; //init done
 	} else {

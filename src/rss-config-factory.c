@@ -2714,6 +2714,7 @@ factory (BonoboGenericFactory *factory,
 BONOBO_ACTIVATION_SHLIB_FACTORY (FACTORY_ID, "Evolution RSS component factory", factory, NULL)
 #endif
 
+#if EVOLUTION_VERSION >= 22900
 void
 init_rss_prefs(void)
 {
@@ -2734,4 +2735,5 @@ init_rss_prefs(void)
 		rss_config_control_new(),
                 800);
 }
+#endif
 
