@@ -1669,7 +1669,6 @@ rss_popup_link_copy(EPopup *ep, EPopupItem *pitem, void *data)
 rss_popup_link_copy(GtkWidget *widget, gpointer data)
 #endif
 {
-g_print("data:%s\n", data);
 	gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_PRIMARY), data, -1);
         gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), data, -1);
 }
@@ -1708,7 +1707,7 @@ EPopupMenu rss_menu_items[] = {
 	E_POPUP_ITEM (N_("_Normal Size"), 	G_CALLBACK(rss_popup_zoom_orig), 2),
 	E_POPUP_SEPARATOR,
 	E_POPUP_ITEM (N_("_Open Link"), 	G_CALLBACK(rss_popup_link_open), 4),
-	E_POPUP_ITEM (N_("_Copy Link Location"),G_CALLBACK( rss_popup_link_copy), 4),
+	E_POPUP_ITEM (N_("_Copy Link Location"),G_CALLBACK(rss_popup_link_copy), 4),
 	E_POPUP_TERMINATOR
  };
 #else
@@ -1829,7 +1828,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 #if EVOLUTION_VERSION >= 22900
 	menu = e_popup_menu_create_with_domain (rss_menu_items,
                                                 0, (guint32)(strlen(link) ? 8:4),
-						NULL,
+						link,
 						GETTEXT_PACKAGE);
 	if (button == 2)
 		e_popup_menu (menu, NULL);
