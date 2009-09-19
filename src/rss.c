@@ -32,7 +32,6 @@ int rss_verbose_debug = 0;
 
 #include <camel/camel-mime-message.h>
 #include <camel/camel-folder.h>
-//#include <camel/camel-exception.h>
 #include <camel/camel-multipart.h>
 #include <camel/camel-stream-mem.h>
 #include <camel/camel-stream-fs.h>
@@ -48,10 +47,8 @@ int rss_verbose_debug = 0;
 #include <mail/em-event.h>
 #endif
 
-
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
-
 
 #if EVOLUTION_VERSION < 22900 //kb//
 #include <mail/em-popup.h>
@@ -59,12 +56,15 @@ int rss_verbose_debug = 0;
 #include <mail/em-format.h>
 #include <mail/mail-component.h>
 #include <misc/e-activity-handler.h>
+#include <bonobo/bonobo-shlib-factory.h>
 #else
+#include <glib/gi18n.h>
 #include <mail/e-mail-local.h>
 #include <shell/e-shell.h>
 #include <shell/e-shell-taskbar.h>
 #include <shell/e-shell-view.h>
 #include <misc/e-popup-menu.h>
+#include <misc/e-gui-utils.h>
 #endif
 
 #include <mail/mail-tools.h>
@@ -90,7 +90,6 @@ int rss_verbose_debug = 0;
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <bonobo/bonobo-shlib-factory.h>
 
 #include <shell/es-event.h>
 #include <camel/camel-data-cache.h>

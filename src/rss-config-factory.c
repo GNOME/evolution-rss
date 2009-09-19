@@ -35,7 +35,7 @@
 
 #include <mail/em-config.h>
 
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
 #include <shell/evolution-config-control.h>
 #include <bonobo/bonobo-shlib-factory.h>
 #else
@@ -2449,7 +2449,7 @@ out:	return NULL;
  *=============*/
 
 //kb//
-#if EVOLUTION_VERSION < 22800
+#if EVOLUTION_VERSION < 22900
 EvolutionConfigControl *
 #else
 GtkWidget *
@@ -2687,14 +2687,14 @@ rss_config_control_new (void)
 
         gtk_container_remove (GTK_CONTAINER (control_widget->parent), control_widget);
 
-#if EVOLUTION_VERSION < 22800 //kb//
+#if EVOLUTION_VERSION < 22900 //kb//
         return evolution_config_control_new (control_widget);
 #else
 	return control_widget;
 #endif
 }
 
-#if EVOLUTION_VERSION < 22800
+#if EVOLUTION_VERSION < 22900
 static BonoboObject *
 factory (BonoboGenericFactory *factory,
          const char *component_id,
