@@ -1713,11 +1713,11 @@ static void
 construct_opml_line(gpointer key, gpointer value, gpointer user_data)
 {
         gchar *url = g_hash_table_lookup(rf->hr, value);
-        gchar *type = g_hash_table_lookup(rf->hrt, value);
         gchar *url_esc = g_markup_escape_text(url, strlen(url));
         gchar *key_esc = g_markup_escape_text(key, strlen(key));
 
 #if 0
+        gchar *type = g_hash_table_lookup(rf->hrt, value);
 CamelFolderInfo *info;
 	CamelStore *store = mail_component_peek_local_store(NULL);
         CamelException ex;

@@ -2496,7 +2496,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	EMFolderTree *folder_tree;
         CamelFolder *folder;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(shell_view);
-	folder_tree = e_mail_shell_sidebar_get_folder_tree (shell_sidebar);
+	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
         folder = em_folder_tree_get_selected_folder (folder_tree);
         g_return_if_fail (folder != NULL);
 	folder_name = folder->full_name;
