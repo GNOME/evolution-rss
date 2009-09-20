@@ -83,13 +83,8 @@ typedef struct {
         GladeXML *xml;
         GConfClient *gconf;
         GtkWidget   *combobox;
-        GtkWidget   *check1;
-        GtkWidget   *check2;
+        GtkWidget   *check;
         GtkWidget   *nettimeout;
-        GtkWidget   *check3;
-        GtkWidget   *check4;
-        GtkWidget   *check5;
-        GtkWidget   *check6;
         GtkWidget   *import;
 } UIData;
 
@@ -2181,38 +2176,45 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         gtk_widget_show(combo);
         gtk_box_pack_start(GTK_BOX(ui->combobox), combo, FALSE, FALSE, 0);
 
-	ui->check1 = glade_xml_get_widget(ui->xml, "enable_java");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check1),
+	ui->check = glade_xml_get_widget(ui->xml, "enable_java");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL));
-	g_signal_connect(ui->check1, 
+	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
 		GCONF_KEY_HTML_JAVA);
 
-	ui->check2 = glade_xml_get_widget(ui->xml, "enable_js");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check2),
+	ui->check = glade_xml_get_widget(ui->xml, "image_resize");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
+        	gconf_client_get_bool(rss_gconf, GCONF_KEY_IMAGE_RESIZE, NULL));
+	g_signal_connect(ui->check, 
+		"clicked", 
+		G_CALLBACK(start_check_cb), 
+		GCONF_KEY_IMAGE_RESIZE);
+
+	ui->check = glade_xml_get_widget(ui->xml, "enable_js");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL));
-	g_signal_connect(ui->check2, 
+	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
 		GCONF_KEY_HTML_JS);
 
-	ui->check6 = glade_xml_get_widget(ui->xml, "accept_cookies");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check6),
+	ui->check = glade_xml_get_widget(ui->xml, "accept_cookies");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL));
-
-	ui->import = glade_xml_get_widget(ui->xml, "import_cookies");
-	//we have to have ui->import looked up
-	g_signal_connect(ui->check6, 
+	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(accept_cookies_cb), 
 		ui->import);
+	ui->import = glade_xml_get_widget(ui->xml, "import_cookies");
+	//we have to have ui->import looked up
 
 #if LIBSOUP_VERSION >= 2026000
 	g_signal_connect(ui->import, "clicked", G_CALLBACK(import_cookies_cb), ui->import);
 #else
 	gtk_widget_set_sensitive(ui->import, FALSE);
-	gtk_widget_set_sensitive(ui->check6, FALSE);
+	gtk_widget_set_sensitive(ui->check, FALSE);
 #endif
 
 	ui->nettimeout = glade_xml_get_widget(ui->xml, "nettimeout");
@@ -2228,24 +2230,24 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 
 	//feed notification
 	
-	ui->check3 = glade_xml_get_widget(ui->xml, "status_icon");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check3),
+	ui->check = glade_xml_get_widget(ui->xml, "status_icon");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_STATUS_ICON, NULL));
-	g_signal_connect(ui->check3, 
+	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
 		GCONF_KEY_STATUS_ICON);
-	ui->check4 = glade_xml_get_widget(ui->xml, "blink_icon");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check4),
+	ui->check = glade_xml_get_widget(ui->xml, "blink_icon");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_BLINK_ICON, NULL));
-	g_signal_connect(ui->check4, 
+	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
 		GCONF_KEY_BLINK_ICON);
-	ui->check5 = glade_xml_get_widget(ui->xml, "feed_icon");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check5),
+	ui->check = glade_xml_get_widget(ui->xml, "feed_icon");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_FEED_ICON, NULL));
-	g_signal_connect(ui->check5, 
+	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
 		GCONF_KEY_FEED_ICON);

@@ -129,6 +129,19 @@
       </locale>
     </schema>
 
+    <schema>
+	<key>/schemas/apps/evolution/evolution-rss/image_resize</key>
+	<applyto>/apps/evolution/evolution-rss/image_resize</applyto>
+	<owner>evolution-rss</owner>
+	<type>bool</type>
+	<default>true</default>
+	<locale name="C">
+		<short>Automaticaly Resize Images</short>
+		<long>
+			Evolution RSS will automatically resize images lager than displayed area.
+		</long>
+	</locale>
+    </schema>
 
     <schema>
       <key>/schemas/apps/evolution/evolution-rss/status_icon</key>
