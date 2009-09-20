@@ -2357,7 +2357,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		if (gconf_client_get_bool (rss_gconf, 
 					GCONF_KEY_IMAGE_RESIZE, 
 					NULL)) {
-			GtkWidget *obj = emfh->html;
+			GtkWidget *obj = (GtkWidget *)emfh->html;
         		guint width = obj->allocation.width - 56;
 			gchar *wids = g_strdup_printf("%d", width);
 			xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
@@ -2366,18 +2366,18 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				while ((doc = html_find(doc, "img"))) {
 					int real_width = 0;
 					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
-					GdkPixbuf *pix = gdk_pixbuf_new_from_file(url,
-                                                         NULL);
+					GdkPixbuf *pix = gdk_pixbuf_new_from_file((const char *)url,
+                                                         (GError **)NULL);
 					if (pix)
 						real_width = gdk_pixbuf_get_width(pix);
 					if (real_width > width) {
-						xmlSetProp(doc, (xmlChar *)"width", wids);
+						xmlSetProp(doc, (xmlChar *)"width", (xmlChar *)wids);
 						goto pixdone;
 					}
 					xmlChar *wid = xmlGetProp(doc, (xmlChar *)"width");
 					if (wid) {
-						if (atof(wid) > width)
-							xmlSetProp(doc, (xmlChar *)"width", wids);
+						if (atof((const char *)wid) > width)
+							xmlSetProp(doc, (xmlChar *)"width", (xmlChar *)wids);
 						g_free(wid);
 					}
 pixdone:			g_free(url);
