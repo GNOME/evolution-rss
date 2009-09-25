@@ -374,6 +374,7 @@ layer_find_all (xmlNodePtr node,
 		if (strcasecmp ((char *)node->name, match)==0) {
 			while (node!=NULL && strcasecmp ((char *)node->name, match)==0) {
 				if (node->children != NULL && node->children->content != NULL) {
+					/* FIXME */
 					category = g_list_append(category, g_strdup((char *)node->children->content));
 				}
 				node = node->next;
@@ -512,10 +513,10 @@ layer_find_tag (xmlNodePtr node,
 						//this looses html entities
  						len = xmlNodeDump(buf, node->doc, node, 0, 0);
 						content = g_strdup_printf("%s", xmlBufferContent(buf));
-						xmlBufferFree(buf);
 					} else {
 						content = (char *)xmlNodeGetContent(node);
 					}
+					xmlBufferFree(buf);
 					if (nodetype)
 						xmlFree(nodetype);
 					return content;
@@ -836,6 +837,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 	char *q = NULL;
 	char *b = NULL;
 	char *d2 = NULL;
+	char *sp = NULL;
 	gchar *feed = NULL;
 	gchar *encl;
 	xmlChar *buff = NULL;
@@ -953,7 +955,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		//not very nice but prevents unnecessary long body processing
 		if (!feed_is_new(feed_name, feed)) {
                         ftotal++;
-                        p =  decode_html_entities (p);
+                        sp =  decode_html_entities (p);
                         gchar *tmp = decode_utf8_entities(b);
                         g_free(b);
 
@@ -978,15 +980,14 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
                         	}
                         	g_free(tmp);
                         	b=(gchar *)buff;
-			}
-			else
+			} else
 				b = tmp;
 		}
 
 		create_feed *CF = g_new0(create_feed, 1);	
 		/* pack all data */
 		CF->q 		= g_strdup(q);
-		CF->subj 	= g_strdup(p);
+		CF->subj 	= g_strdup(sp);
 		CF->body 	= g_strdup(b);
 		CF->date 	= g_strdup(d);
 		CF->dcdate 	= g_strdup(d2);
@@ -996,7 +997,9 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		CF->feed_fname  = g_strdup(feed_name);	//feed file name
 		CF->feed_uri	= g_strdup(feed);	//feed uri (uid!)
 		CF->category	= category;		//list of category feed is posted under
+		g_free(comments);
 		g_free(p);
+		g_free(sp);
 		if (q) g_free(q);
 		g_free(b);
 		if (feed) g_free(feed);

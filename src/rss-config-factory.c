@@ -1956,7 +1956,7 @@ create_import_cookies_dialog (void)
   g_object_set (import_file_select,
                 "local-only", FALSE,
                 NULL);
-  gtk_window_set_modal (GTK_WINDOW (import_file_select), FALSE);
+  gtk_window_set_modal (GTK_WINDOW (import_file_select), TRUE);
   gtk_window_set_resizable (GTK_WINDOW (import_file_select), TRUE);
   gtk_window_set_destroy_with_parent (GTK_WINDOW (import_file_select), TRUE);
   gtk_window_set_type_hint (GTK_WINDOW (import_file_select), GDK_WINDOW_TYPE_HINT_DIALOG);

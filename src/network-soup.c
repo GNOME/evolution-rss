@@ -771,6 +771,7 @@ rss_soup_init(void)
 		gchar *feed_dir = rss_component_peek_base_directory();
 		gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
 		gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+		g_free(feed_dir);
 
 		rss_soup_jar = 
 			soup_cookie_jar_sqlite_new (cookie_path, FALSE);

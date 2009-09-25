@@ -42,7 +42,6 @@
 	* check rss_delete_feed for race condition when deletion of camel folder
 	* folder delete should delete feed_folders allocation
 	* fix comment cancellation
-	* check modality of new windows/dialogs
 	* fix wrong SSL browser dialog
 	* check custom interval fetching right after it was setup
 

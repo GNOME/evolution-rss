@@ -1222,13 +1222,13 @@ gboolean
 feed_new_from_xml(char *xml)
 {
 	xmlNodePtr node;
-        xmlDocPtr doc;
+        xmlDocPtr doc = NULL;
 	char *uid = NULL;
 	char *name = NULL;
 	char *url = NULL;
 	char *type = NULL;
-	gboolean enabled;
-	gboolean html;
+	gboolean enabled = FALSE;
+	gboolean html = FALSE;
 	guint del_feed=0;
 	guint del_days=0;
 	guint del_messages=0;
@@ -1314,6 +1314,7 @@ feed_new_from_xml(char *xml)
 	g_hash_table_insert(rf->hrttl_multiply, 
 				g_strdup(uid), 
 				GINT_TO_POINTER(ttl_multiply));
+	xmlFreeDoc (doc);
 	return TRUE;
 }
 
@@ -1356,6 +1357,8 @@ load_gconf_feed(void)
 
                 g_free (uid);
         }
+	g_slist_foreach(list, (GFunc) g_free, NULL);
+        g_slist_free(list);
 }
 
 void
@@ -2244,6 +2247,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	//precreate stop button as we need it to control it later
        	GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
 	pobj->stopbut = button2;
+	g_free (classid);
 
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format)) {
@@ -2275,6 +2279,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
         		camel_stream_printf (t->stream, 
 				"<object classid=%s></object></td></tr></table></div>\n",
 				classid);
+			g_free (classid);
 			goto out;
 		}
 #endif
@@ -2332,7 +2337,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				text_colour & 0xffffff,
                                 buff);
 
-		g_free(subject);
 		g_string_free(content, 1);
 	} else {
 		d(g_print("normal html rendering\n"));
@@ -2385,7 +2389,7 @@ pixdone:			g_free(url);
 				xmlDocDumpMemory(src, &buff, (int*)&size);
 				xmlFree(src);
 			}
-			xmlFree(wids);
+			g_free(wids);
 		} else
 			buff=(xmlChar *)tmp;
 
@@ -2397,6 +2401,7 @@ pixdone:			g_free(url);
 
 		gchar *feed_dir = rss_component_peek_base_directory();
 		gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, feedid);
+		g_free(feed_dir);
 
 		camel_stream_printf (fstream,
                         "<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
@@ -2413,6 +2418,7 @@ pixdone:			g_free(url);
 					website,
 					subject);
 				g_object_unref(pixbuf);
+				g_free(feed_file);
 				goto render_body;
 			}
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
@@ -2425,7 +2431,9 @@ pixdone:			g_free(url);
 			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
                        	iconfile, website, subject);
 		g_free(iconfile);
-render_body:    if (category)
+		g_free(feed_file);
+
+render_body:	if (category)
                         camel_stream_printf(fstream,
                                 "<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
                                 "<b><font size=-1>Posted under: %s</font></b></div>",
@@ -2474,6 +2482,7 @@ render_body:    if (category)
 						result);
 					g_free(result);
 				}
+				g_free(rfrclsid);
 				commstream = NULL;
 			} else {
 				fetch_comments(comments, (EMFormatHTML *)t->format);
@@ -2493,6 +2502,7 @@ render_body:    if (category)
 	camel_object_unref(part);
 	camel_object_unref(fstream);
 	g_free(buff);
+	g_free(subject);
 
 out:	if (addr)
 		g_free(addr);
@@ -2583,6 +2593,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	gchar *ofolder = g_hash_table_lookup(rf->feed_folders, rss_folder);
 	gchar *key = g_hash_table_lookup(rf->hrname,
 				ofolder ? ofolder : rss_folder);
+	g_free(rss_folder);
 	if (!key)
 		goto normal;
 
@@ -2978,6 +2989,8 @@ add:
                 	xmlFreeDoc(r->cache);
         	if (r->type)
                 	g_free(r->type);
+		if (r->uids)
+			g_array_free(r->uids, TRUE);
 		if (r)
 			g_free(r);
 		if (content)
@@ -3218,6 +3231,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 								g_strdup(chn_name));
 				save_gconf_feed();
 				update_ttl(md5, r->ttl);
+				//save_data = user_data;
 				user_data = chn_name;
 			}
 		if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
@@ -3229,6 +3243,8 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			g_free(r->type);
 		if (r->version)
 			g_free(r->version);
+		if (r->uids)
+			g_array_free(r->uids, TRUE);
 	}
 	//ftotal+=r->total;
 	update_sr_message();
@@ -3268,10 +3284,10 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	}
 #endif
 out:	
-	if (user_data) {
+	if (chn_name) { //user_data
 		//not sure why it dies here
 		if (!rf->cancel && !rf->cancel_all)
-			g_free(user_data);
+			g_free(chn_name); //user_data
 	}
 	return;
 }
@@ -3754,6 +3770,7 @@ void
 update_feed_image(RDF *r)
 {
         GError *err = NULL;
+	gchar *feed_file = NULL;
 	gchar *key = gen_md5(r->uri);
 	FEED_IMAGE *fi = g_new0(FEED_IMAGE, 1);
 	gchar *image = r->image;
@@ -3762,7 +3779,7 @@ update_feed_image(RDF *r)
 	gchar *feed_dir = rss_component_peek_base_directory();
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
-        gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+        feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
 	d(g_print("feed_image() tmpurl:%s\n", feed_file));
         g_free(feed_dir);
         if (!g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
@@ -3781,7 +3798,6 @@ update_feed_image(RDF *r)
                                 &err);
                 if (err) {
 			g_print("ERR:%s\n", err->message);
-                	g_free(feed_file);
 			goto out;
 		}
 	} else {
@@ -3796,10 +3812,12 @@ update_feed_image(RDF *r)
 			g_strdup(r->uri),	// we need to dupe key here
 			0,
 			&err);			// because we might loose it if
+		g_free(server);
 						// feeds get deleted
         }
 	}
-out:	g_free(key);
+out:	g_free(feed_file);
+	g_free(key);
 }
 
 void
@@ -4948,7 +4966,7 @@ create_mail(create_feed *CF)
 				g_string_append_printf(cats, "%s", (char *)p->data); 
 		}
 		camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-category", cats->str);
-		g_string_free(cats, FALSE);
+		g_string_free(cats, TRUE);
 	}
 	rtext = camel_data_wrapper_new ();
         type = camel_content_type_new ("x-evolution", "evolution-rss-feed");
@@ -5085,8 +5103,12 @@ free_cf(create_feed *CF)
 	g_free(CF->encl);
 	g_free(CF->feed_fname);
 	g_free(CF->feed_uri);
-	if (CF->category)
+	if (CF->comments)
+		g_free(CF->comments);
+	if (CF->category) {
+		g_list_foreach(CF->category, (GFunc)g_free, NULL);
 		g_list_free(CF->category);
+	}
 	g_free(CF);
 }
 
@@ -5221,6 +5243,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
         	rss_folder = camel_store_get_folder (store, full_name, 0, NULL);
 		if (!rss_folder) {
 			g_free(full_name);
+			camel_object_unref(rss_folder);
 			result = FALSE; 
 			goto out;
 		}
@@ -5301,10 +5324,12 @@ fetch_image(gchar *url, gchar *link)
 		tmpurl = g_strdup(url);
 	}
 	d(g_print("fetch_image() tmpurl:%s\n", tmpurl));
+	gchar *base_dir = rss_component_peek_base_directory();
 	gchar *feed_dir = g_build_path("/", 
-				rss_component_peek_base_directory(),
+				base_dir,
 				"static",
 				NULL);
+	g_free(base_dir);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
