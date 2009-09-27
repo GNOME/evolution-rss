@@ -162,6 +162,7 @@ GtkStatusIcon *status_icon = NULL;
 GQueue *status_msg;
 gchar *flat_status_msg;
 GPtrArray *filter_uids;
+gpointer current_pobject = NULL;
 
 static CamelDataCache *http_cache = NULL;
 
@@ -266,6 +267,7 @@ typedef struct _FEED_IMAGE {
 	gchar *img_file;
 	CamelStream *feed_fs;
 	gchar *key;
+	gpointer data;
 } FEED_IMAGE;
 
 static void
@@ -282,6 +284,7 @@ finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE 
 #endif
 gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
+gchar *fetch_image_redraw(gchar *url, gchar *link, gpointer data);
 
 GtkTreeStore *evolution_store = NULL;
 #if EVOLUTION_VERSION >= 22900
@@ -2170,6 +2173,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
 	CamelStream *fstream = camel_stream_mem_new();
+	current_pobject = t->format;
         d(g_print("Formatting...\n"));
 
 	CamelMimePart *message = CAMEL_IS_MIME_MESSAGE(t->part) ? 
@@ -2370,6 +2374,26 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				while ((doc = html_find(doc, "img"))) {
 					int real_width = 0;
 					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
+        	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
+			camel_url_decode((char *)url);
+			//FIXME lame method of extracting data cache path
+			//there must be a function in camel for getting data cache path
+			gchar *base_dir = rss_component_peek_base_directory();
+			gchar *feed_dir = g_build_path("/",
+				base_dir,
+				"static",
+				"http",
+				NULL);
+			gchar *nurl = strextr(url, feed_dir);
+			gchar *rurl = nurl + 4;
+			gchar *name = fetch_image_redraw(rurl, link, t->format);
+g_print("new name:%s\n", name);
+			xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)name);
+                        g_free(name);
+			g_free(nurl);
+			g_free(feed_dir);
+			g_free(base_dir);
+		}
 					GdkPixbuf *pix = gdk_pixbuf_new_from_file((const char *)url,
                                                          (GError **)NULL);
 					if (pix)
@@ -5151,6 +5175,20 @@ finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_da
 
 static void
 #if LIBSOUP_VERSION < 2003000
+finish_image_feedback (SoupMessage *msg, FEED_IMAGE *user_data)
+#else
+finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
+#endif
+{
+	finish_image(soup_sess, msg, user_data->feed_fs);
+	if (user_data->data == current_pobject)
+		em_format_redraw((EMFormat *)user_data->data);
+	g_free(user_data);
+	
+}
+
+static void
+#if LIBSOUP_VERSION < 2003000
 finish_image (SoupMessage *msg, CamelStream *user_data)
 #else
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
@@ -5301,6 +5339,69 @@ data_cache_path(CamelDataCache *cdc, int create, const char *path, const char *k
 
         return real;
 }
+
+// constructs url from @base in case url is relative
+gchar *
+fetch_image_redraw(gchar *url, gchar *link, gpointer data)
+{
+        GError *err = NULL;
+	CamelStream *stream = NULL;
+	gchar *tmpurl = NULL;
+	FEED_IMAGE *fi = NULL;
+	if (!url)
+		return NULL;
+	if (strstr(url, "://") == NULL) {
+		if (*url == '.') //test case when url begins with ".."
+			tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
+		else {
+			if (*url == '/')
+				tmpurl = g_strconcat(get_server_from_uri(link), "/", url, NULL);
+			else	//url is relative (does not begin with / or .)
+				tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
+		}
+	} else {
+		tmpurl = g_strdup(url);
+	}
+	d(g_print("fetch_image() tmpurl:%s\n", tmpurl));
+	gchar *base_dir = rss_component_peek_base_directory();
+	gchar *feed_dir = g_build_path("/", 
+				base_dir,
+				"static",
+				NULL);
+	g_free(base_dir);
+	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
+	    g_mkdir_with_parents (feed_dir, 0755);
+	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
+	if (!http_cache)
+		return NULL;
+	// expire in a month max
+	// and one week if not accessed sooner
+	camel_data_cache_set_expire_age(http_cache, 24*60*60*30);
+	camel_data_cache_set_expire_access(http_cache, 24*60*60*7);
+	g_free(feed_dir);
+	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
+	if (!stream) {
+		d(g_print("image cache MISS\n"));
+		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
+	} else 
+		d(g_print("image cache HIT\n"));
+
+	fi = g_new0(FEED_IMAGE, 1);
+	fi->feed_fs = stream;
+	fi->data = data;
+	fetch_unblocking(tmpurl,
+                       	        textcb,
+                               	NULL,
+                               	(gpointer)finish_image_feedback,
+                               	fi,
+				0,
+                               	&err);
+	if (err) return NULL;
+	gchar *result = data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, tmpurl);
+	g_free(tmpurl);
+	return result;
+}
+
 
 // constructs url from @base in case url is relative
 gchar *

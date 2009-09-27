@@ -15,7 +15,6 @@
 	* fix annoying cursor jump when browsing through evo-rss folders
 	* provide predefined groups of feeds (OSS & co)
 	* evolution import rss add no. of retries
-	* provide expire option for images
 	* slow delete operation on large folders
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* handle slash categories
@@ -23,7 +22,6 @@
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
 	* perhaps make quoted text fancier
-	* if immage cannot be served from cache try to fetch it ( add 3 times retry for fetching an image)
 	* disable filters on setup_feed()
 	* migrate fetch_blocking -> fetch_unblocking
 	* grey out disabled folders (feeds)
