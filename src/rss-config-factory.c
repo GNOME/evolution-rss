@@ -1057,11 +1057,10 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
         feed->feed_url = sanitize_url(feed->feed_url);
         g_free(text);
         if (feed->feed_url) {
-			feed->edit=1;
-			feed->feed_name = g_path_get_basename(lookup_feed_folder(feed_name));
-			prefix = g_path_get_dirname(lookup_feed_folder(feed_name));
-			if (*prefix != '.')
-				feed->prefix = prefix;
+		feed->edit=1;
+		prefix = g_path_get_dirname(lookup_feed_folder(feed_name));
+		if (*prefix != '.')
+			feed->prefix = prefix;
 		if (strcmp(url, feed->feed_url)) {
 			//prevent adding of an existing feed (url)
 			//which might screw things
