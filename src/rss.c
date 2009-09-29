@@ -2374,7 +2374,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				while ((doc = html_find(doc, "img"))) {
 					int real_width = 0;
 					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
-        	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
+        	if (!g_file_test(url, G_FILE_TEST_EXISTS) && url) {
 			camel_url_decode((char *)url);
 			//FIXME lame method of extracting data cache path
 			//there must be a function in camel for getting data cache path
