@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: evolution-rss.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2009-06-09 20:25+0000\n"
-"PO-Revision-Date: 2009-06-13 16:06+0200\n"
+"POT-Creation-Date: 2009-09-20 20:43+0000\n"
+"PO-Revision-Date: 2009-10-05 18:03+0200\n"
 "Last-Translator: Claude Paroz <claude@2xlibre.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,13 +20,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
-#: ../src/dbus.c:120 ../src/rss-config-factory.c:665
-#: ../src/rss-config-factory.c:970 ../src/rss-config-factory.c:1100
+#: ../src/dbus.c:120 ../src/rss.c:3005 ../src/rss-config-factory.c:736
+#: ../src/rss-config-factory.c:1071 ../src/rss-config-factory.c:1209
 msgid "Error adding feed."
 msgstr "Erreur pendant l'ajout du flux."
 
-#: ../src/dbus.c:121 ../src/rss-config-factory.c:666
-#: ../src/rss-config-factory.c:971 ../src/rss-config-factory.c:1101
+#: ../src/dbus.c:121 ../src/rss.c:3006 ../src/rss-config-factory.c:737
+#: ../src/rss-config-factory.c:1072 ../src/rss-config-factory.c:1210
 msgid "Feed already exists!"
 msgstr "Ce flux existe déjà !"
 
@@ -36,167 +36,186 @@ msgid "New feed imported: %s"
 msgstr "Nouveau flux importé : %s"
 
 #: ../src/evolution-rss.schemas.in.h:1
+msgid "Accepts Cookies"
+msgstr "Accepter les cookies"
+
+#: ../src/evolution-rss.schemas.in.h:2
 msgid "Auto check for new articles."
 msgstr "Vérifier automatiquement l'arrivée de nouveaux articles."
 
-#: ../src/evolution-rss.schemas.in.h:2
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Automaticaly Resize Images"
+msgstr "Redimensionner automatiquement les images"
+
+#: ../src/evolution-rss.schemas.in.h:4
 msgid "Blink Status Icon"
 msgstr "Faire clignoter l'icône de notification"
 
-#: ../src/evolution-rss.schemas.in.h:3
+#: ../src/evolution-rss.schemas.in.h:5
 msgid "Blink status icon when new article received"
 msgstr ""
 "L'icône de notification clignote lors de la réception d'un nouvel article"
 
-#: ../src/evolution-rss.schemas.in.h:4
+#: ../src/evolution-rss.schemas.in.h:6
 msgid "Check New articles"
 msgstr "Vérifier la présence de nouveaux articles"
 
-#: ../src/evolution-rss.schemas.in.h:5
+#: ../src/evolution-rss.schemas.in.h:7
 msgid "Check for new articles everytime Evolution is started."
 msgstr ""
 "Vérifier la présence de nouveaux articles à chaque démarrage d'Evolution."
 
-#: ../src/evolution-rss.schemas.in.h:6
+#: ../src/evolution-rss.schemas.in.h:8
 msgid "Checks articles on startup"
 msgstr "Vérifie la présence de nouveaux articles au démarrage"
 
-#: ../src/evolution-rss.schemas.in.h:7
+#: ../src/evolution-rss.schemas.in.h:9
 msgid "Contains list of the currently setup feeds."
 msgstr "Contient la liste des flux actuellement configurés."
 
-#: ../src/evolution-rss.schemas.in.h:8
+#: ../src/evolution-rss.schemas.in.h:10
 msgid "Deleting feed entry will also remove feed folder."
 msgstr ""
 "La suppression d'une entrée de flux supprime également le dossier du flux."
 
-#: ../src/evolution-rss.schemas.in.h:9
+#: ../src/evolution-rss.schemas.in.h:11
 msgid "Display article's summary"
 msgstr "Afficher le résumé de l'article"
 
-#: ../src/evolution-rss.schemas.in.h:10
+#: ../src/evolution-rss.schemas.in.h:12
 msgid "Display feed icon on feed folder"
 msgstr "Afficher l'icône de flux sur le répertoire de flux"
 
-#: ../src/evolution-rss.schemas.in.h:11
+#: ../src/evolution-rss.schemas.in.h:13
 msgid "Enable Feed Icon"
 msgstr "Activer l'icône de flux"
 
-#: ../src/evolution-rss.schemas.in.h:12
+#: ../src/evolution-rss.schemas.in.h:14
 msgid "Enable Status Icon"
 msgstr "Activer l'icône d'état"
 
-#: ../src/evolution-rss.schemas.in.h:13
+#: ../src/evolution-rss.schemas.in.h:15
 msgid "Enable status icon in notification area"
 msgstr "Activer l'icône d'état dans la zone de notification"
 
-#: ../src/evolution-rss.schemas.in.h:14
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Evolution RSS accepte les cookies des articles que vous consultez."
+
+#: ../src/evolution-rss.schemas.in.h:17
 msgid ""
-"Evolution will show artile's summary instead of article's webpage. Sumarry "
+"Evolution RSS will automatically resize images lager than displayed area."
+msgstr ""
+"Evolution RSS redimensionne automatiquement les images plus grandes que la zone "
+"d'affichage."
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid ""
+"Evolution will show article's summary instead of article's webpage. Summary "
 "can also be html."
 msgstr ""
 "Evolution affiche le résumé de l'article au lieu de sa page Web. Le résumé "
 "peut aussi être en html."
 
-#: ../src/evolution-rss.schemas.in.h:15
+#: ../src/evolution-rss.schemas.in.h:19
 msgid "Feeds list"
 msgstr "Liste des flux"
 
-#: ../src/evolution-rss.schemas.in.h:16
+#: ../src/evolution-rss.schemas.in.h:20
 msgid "Frequency to check for new articles (in minutes)."
 msgstr ""
 "Fréquence à laquelle vérifier la présence de nouveaux articles (en minutes)."
 
-#: ../src/evolution-rss.schemas.in.h:17
+#: ../src/evolution-rss.schemas.in.h:21
 msgid "Hostname of the proxy server"
 msgstr "Nom du serveur mandataire"
 
-#: ../src/evolution-rss.schemas.in.h:18
-msgid "Hostname of the proxy server."
-msgstr "Nom du serveur mandataire."
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "Nom du serveur mandataire utilisé pour les flux et le contenu."
 
-#: ../src/evolution-rss.schemas.in.h:19
+#: ../src/evolution-rss.schemas.in.h:23
 msgid "Html render"
 msgstr "Rendu HTML"
 
-#: ../src/evolution-rss.schemas.in.h:20
+#: ../src/evolution-rss.schemas.in.h:24
 msgid ""
 "If the proxy server requires authentication. This is the password field."
 msgstr ""
 "Indique si le serveur mandataire requiert une authentification. Ceci est le "
 "champ du mot de passe."
 
-#: ../src/evolution-rss.schemas.in.h:21
+#: ../src/evolution-rss.schemas.in.h:25
 msgid "Interval in seconds before a conection is dropped."
 msgstr "Intervalle en secondes avant qu'une connexion ne soit abandonnée."
 
-#: ../src/evolution-rss.schemas.in.h:22
+#: ../src/evolution-rss.schemas.in.h:26
 msgid "It will display article's comments by default if present."
 msgstr "Par défaut, il affiche les commentaires des articles s'il y en a."
 
-#: ../src/evolution-rss.schemas.in.h:23
+#: ../src/evolution-rss.schemas.in.h:27
 msgid "Java Enabled"
 msgstr "Java activé"
 
-#: ../src/evolution-rss.schemas.in.h:24
+#: ../src/evolution-rss.schemas.in.h:28
 msgid "JavaScript Enabled"
 msgstr "JavaScript activé"
 
-#: ../src/evolution-rss.schemas.in.h:25
+#: ../src/evolution-rss.schemas.in.h:29
 msgid "Network proxy requires authentication."
 msgstr "Le serveur mandataire requiert une authentification."
 
-#: ../src/evolution-rss.schemas.in.h:26
+#: ../src/evolution-rss.schemas.in.h:30
 msgid "Network timeout"
 msgstr "Délai d'attente du réseau"
 
-#: ../src/evolution-rss.schemas.in.h:27
+#: ../src/evolution-rss.schemas.in.h:31
 msgid "New articles timeout"
 msgstr "Date d'expiration des nouveaux articles"
 
-#: ../src/evolution-rss.schemas.in.h:28
+#: ../src/evolution-rss.schemas.in.h:32
 msgid "Password for proxy server"
 msgstr "Mot de Passe pour le serveur mandataire"
 
-#: ../src/evolution-rss.schemas.in.h:29
+#: ../src/evolution-rss.schemas.in.h:33
 msgid "Proxy requires authentication"
 msgstr "Le serveur mandataire requiert une authentification"
 
-#: ../src/evolution-rss.schemas.in.h:30
+#: ../src/evolution-rss.schemas.in.h:34
 msgid "Proxy server port"
 msgstr "Port du serveur mandataire"
 
-#: ../src/evolution-rss.schemas.in.h:31
+#: ../src/evolution-rss.schemas.in.h:35
 msgid "Proxy server user"
 msgstr "Nom d'utilisateur du serveur mandataire"
 
-#: ../src/evolution-rss.schemas.in.h:32
+#: ../src/evolution-rss.schemas.in.h:36
 msgid "Remove feed folder"
 msgstr "Supprimer le dossier du flux"
 
-#: ../src/evolution-rss.schemas.in.h:33
+#: ../src/evolution-rss.schemas.in.h:37
 msgid "Show articles comments"
 msgstr "Afficher les commentaires de l'article"
 
-#: ../src/evolution-rss.schemas.in.h:34
-msgid "The port number for proxy server."
-msgstr "Le numéro de port du serveur mandataire."
+#: ../src/evolution-rss.schemas.in.h:38
+msgid "The port number for proxy server used for feeds and content."
+msgstr "Le numéro de port du serveur mandataire utilisé pour les flux et le contenu."
 
-#: ../src/evolution-rss.schemas.in.h:35
+#: ../src/evolution-rss.schemas.in.h:39
 msgid "The username to use for proxy server authentication."
 msgstr ""
 "Le nom d'utilisateur à utiliser pour l'authentification au serveur "
 "mandataire."
 
-#: ../src/evolution-rss.schemas.in.h:36
+#: ../src/evolution-rss.schemas.in.h:40
 msgid "Type HTML Render used to display html pages."
 msgstr "Moteur de rendu HTML utilisé pour l'affichage de pages html."
 
-#: ../src/evolution-rss.schemas.in.h:37
-msgid "Use a proxy server to fetch articles"
-msgstr "Utiliser un serveur de mandataire pour récupérer les articles"
+#: ../src/evolution-rss.schemas.in.h:41
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Utiliser un serveur de mandataire pour récupérer les articles et leur contenu."
 
-#: ../src/evolution-rss.schemas.in.h:38
+#: ../src/evolution-rss.schemas.in.h:42
 msgid "Use proxy server"
 msgstr "Utiliser un serveur mandataire"
 
@@ -273,26 +292,27 @@ msgstr "Mettre à jour les flux RSS"
 msgid "_Read RSS"
 msgstr "Li_re les flux RSS"
 
-#: ../src/rss.c:419 ../src/rss.c:2593
+#: ../src/rss.c:571 ../src/rss.c:3091
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Récupération des flux (%d activé)"
 
-#: ../src/rss.c:455 ../src/rss-config-factory.c:1246
-#: ../src/rss-config-factory.c:1483
+#: ../src/rss.c:611 ../src/rss-config-factory.c:1419
+#: ../src/rss-config-factory.c:1456 ../src/rss-config-factory.c:1745
+#: ../src/rss-config-factory.c:1872
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% effectué"
 
-#: ../src/rss.c:465 ../src/rss.c:2743
+#: ../src/rss.c:621 ../src/rss.c:3242
 msgid "Feed"
 msgstr "Flux"
 
-#: ../src/rss.c:575
+#: ../src/rss.c:774
 msgid "Enter User/Pass for feed"
 msgstr "Saisissez le nom d'utilisateur/mot de passe pour le flux"
 
-#: ../src/rss.c:622
+#: ../src/rss.c:826
 #, c-format
 msgid ""
 "Enter your username and password for:\n"
@@ -301,250 +321,275 @@ msgstr ""
 "Saisissez votre nom d'utilisateur et votre mot de passe pour :\n"
 " « %s »"
 
-#: ../src/rss.c:639
+#: ../src/rss.c:843
 msgid "Username: "
 msgstr "Nom d'utilisateur : "
 
-#: ../src/rss.c:659 ../src/rss-ui.glade.h:36
+#: ../src/rss.c:865 ../src/rss-ui.glade.h:36
 msgid "Password: "
 msgstr "Mot de passe : "
 
-#: ../src/rss.c:696
+#: ../src/rss.c:903
 msgid "_Remember this password"
 msgstr "_Mémoriser ce mot de passe"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:815
+#: ../src/rss.c:1005
 msgid "Canceling..."
 msgstr "Annulation..."
 
-#: ../src/rss.c:1338
-msgid "Formatting..."
-msgstr "Formatage..."
+#: ../src/rss.c:1534
+msgid "Formatting Message..."
+msgstr "Formatage du message..."
 
-#: ../src/rss.c:1452
+#: ../src/rss.c:1702
 msgid "_Copy"
 msgstr "_Copier"
 
-#: ../src/rss.c:1454
+#: ../src/rss.c:1703
+msgid "Select _All"
+msgstr "_Tout sélectionner"
+
+#: ../src/rss.c:1705 ../src/rss.c:1716
 msgid "Zoom _In"
 msgstr "Zoom a_vant"
 
-#: ../src/rss.c:1455
+#: ../src/rss.c:1706 ../src/rss.c:1717
 msgid "Zoom _Out"
 msgstr "Zoom a_rrière"
 
-#: ../src/rss.c:1456
+#: ../src/rss.c:1707 ../src/rss.c:1718
 msgid "_Normal Size"
 msgstr "Taille _normale"
 
-#: ../src/rss.c:1458
-msgid "_Print..."
-msgstr "_Imprimer..."
+#: ../src/rss.c:1709
+msgid "_Open Link"
+msgstr "_Ouvrir le lien"
 
-#: ../src/rss.c:1459
-msgid "Save _As"
-msgstr "Enregistrer _sous"
-
-#: ../src/rss.c:1461
-msgid "_Open Link in Browser"
-msgstr "_Ouvrir le lien dans le navigateur"
-
-#: ../src/rss.c:1462
+#: ../src/rss.c:1710 ../src/rss.c:1724
 msgid "_Copy Link Location"
 msgstr "_Copier l'emplacement du lien"
 
-#: ../src/rss.c:1480 ../src/rss.c:1512
+#: ../src/rss.c:1720
+msgid "_Print..."
+msgstr "_Imprimer..."
+
+#: ../src/rss.c:1721
+msgid "Save _As"
+msgstr "Enregistrer _sous"
+
+#: ../src/rss.c:1723
+msgid "_Open Link in Browser"
+msgstr "_Ouvrir le lien dans le navigateur"
+
+#: ../src/rss.c:1761 ../src/rss.c:1805
 msgid "Click to open"
 msgstr "Cliquer pour ouvrir"
 
-#: ../src/rss.c:1658
+#: ../src/rss.c:1974
 msgid "Comments"
 msgstr "Commentaires"
 
-#: ../src/rss.c:1663
+#: ../src/rss.c:1979
 msgid "Refresh"
 msgstr "Actualiser"
 
-#: ../src/rss.c:1682
+#: ../src/rss.c:1998
 msgid "Feed view"
 msgstr "Vue des flux"
 
-#: ../src/rss.c:1688
+#: ../src/rss.c:2004
 msgid "Show Summary"
 msgstr "Afficher le résumé"
 
-#: ../src/rss.c:1688
+#: ../src/rss.c:2005
 msgid "Show Full Text"
 msgstr "Afficher le texte complet"
 
-#: ../src/rss.c:2111
+#: ../src/rss.c:2326
+msgid "Posted under"
+msgstr "Publié sous "
+
+#: ../src/rss.c:2545
 msgid "Fetching feed"
 msgstr "Récupération du flux"
 
-#: ../src/rss.c:2412
+#: ../src/rss.c:2856
 msgid "Unamed feed"
 msgstr "Flux sans nom"
 
-#: ../src/rss.c:2412 ../src/rss.c:2520
+#: ../src/rss.c:2857 ../src/rss.c:3013
 msgid "Error while fetching feed."
 msgstr "Erreur lors de la récupération du flux."
 
-#: ../src/rss.c:2520
+#: ../src/rss.c:3014
 msgid "Invalid Feed"
 msgstr "Flux non valide"
 
-#: ../src/rss.c:2531
+#: ../src/rss.c:3025
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Récupération du message %d sur %d"
 
-#: ../src/rss.c:2611
+#: ../src/rss.c:3110
 msgid "Complete."
 msgstr "Terminé."
 
-#: ../src/rss.c:2642 ../src/rss.c:2805 ../src/rss.c:2937 ../src/rss.c:3424
+#: ../src/rss.c:3141 ../src/rss.c:3304 ../src/rss.c:3439 ../src/rss.c:4100
 msgid "Error fetching feed."
 msgstr "Erreur lors de la récupération du flux."
 
-#: ../src/rss.c:2652
+#: ../src/rss.c:3151
 msgid "Canceled."
 msgstr "Annulé."
 
-#: ../src/rss.c:2696
+#: ../src/rss.c:3195
 msgid "Error while parsing feed."
 msgstr "Erreur pendant l'analyse du flux."
 
-#: ../src/rss.c:2751
+#: ../src/rss.c:3250
 msgid "Complete"
 msgstr "Terminé"
 
-#: ../src/rss.c:2838
+#: ../src/rss.c:3338
 msgid "Formatting error."
 msgstr "Erreur de mise en forme."
 
-#: ../src/rss.c:3732 ../src/rss.c:3846
+#: ../src/rss.c:4442 ../src/rss.c:4557
 msgid "No RSS feeds configured!"
 msgstr "Aucun flux RSS n'est configuré !"
 
-#: ../src/rss.c:3738 ../src/rss.c:3935
+#: ../src/rss.c:4448 ../src/rss.c:4646
 msgid "Reading RSS feeds..."
 msgstr "Lecture des flux RSS..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:3752 ../src/rss.c:3939 ../src/rss-config-factory.c:1157
-#: ../src/rss-config-factory.c:1505
+#: ../src/rss.c:4462 ../src/rss.c:4650 ../src/rss-config-factory.c:1289
+#: ../src/rss-config-factory.c:1770 ../src/rss-config-factory.c:1900
 msgid "Please wait"
 msgstr "Veuillez patienter"
 
-#: ../src/rss.c:3760 ../src/rss.c:3947 ../src/rss-config-factory.c:651
-#: ../src/rss-config-factory.c:951
+#: ../src/rss.c:4470 ../src/rss.c:4658 ../src/rss-config-factory.c:718
+#: ../src/rss-config-factory.c:1047
 #, no-c-format
 msgid "0% done"
 msgstr "0% complété"
 
-#: ../src/rss.c:3894
+#: ../src/rss.c:4605
 msgid "Waiting..."
 msgstr "En attente..."
 
-#: ../src/rss.h:37 ../src/GNOME_Evolution_RSS.server.in.in.h:4
+#: ../src/rss.h:44 ../src/GNOME_Evolution_RSS.server.in.in.h:4
 msgid "News and Blogs"
 msgstr "Informations et blogs"
 
-#: ../src/rss.h:38
+#: ../src/rss.h:46
 msgid "Untitled channel"
 msgstr "Canal sans titre"
 
-#: ../src/rss-config-factory.c:137
+#: ../src/rss-config-factory.c:154
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:138
+#: ../src/rss-config-factory.c:155
 msgid "WebKit"
 msgstr "Webkit"
 
-#: ../src/rss-config-factory.c:139
+#: ../src/rss-config-factory.c:156
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:356
+#: ../src/rss-config-factory.c:398
 msgid "Edit Feed"
 msgstr "Modifier le flux"
 
-#: ../src/rss-config-factory.c:358
+#: ../src/rss-config-factory.c:400
 msgid "Add Feed"
 msgstr "Ajouter un flux"
 
-#: ../src/rss-config-factory.c:875
+#: ../src/rss-config-factory.c:948
 msgid "Disable"
 msgstr "Désactiver"
 
-#: ../src/rss-config-factory.c:875
+#: ../src/rss-config-factory.c:948
 msgid "Enable"
 msgstr "Activer"
 
-#: ../src/rss-config-factory.c:902 ../src/rss-ui.glade.h:38
+#: ../src/rss-config-factory.c:979 ../src/rss-ui.glade.h:38
 msgid "Remove folder contents"
 msgstr "Supprimer le contenu du dossier"
 
-#: ../src/rss-config-factory.c:1153
+#: ../src/rss-config-factory.c:1272
+msgid "Import error."
+msgstr "Erreur d'importation."
+
+#: ../src/rss-config-factory.c:1273
+msgid "Invalid file or this is not an import file."
+msgstr "Fichier non valide ou ce n'est pas un fichier d'importation."
+
+#: ../src/rss-config-factory.c:1277
 msgid "Importing feeds..."
 msgstr "Importation des flux..."
 
-#: ../src/rss-config-factory.c:1307 ../src/rss-config-factory.c:1585
+#: ../src/rss-config-factory.c:1514 ../src/rss-config-factory.c:1993
+#: ../src/rss-config-factory.c:2039
 msgid "All Files"
 msgstr "Tous les fichiers"
 
-#: ../src/rss-config-factory.c:1313 ../src/rss-config-factory.c:1591
+#: ../src/rss-config-factory.c:1520 ../src/rss-config-factory.c:2045
 msgid "OPML Files"
 msgstr "Fichiers OPML"
 
-#: ../src/rss-config-factory.c:1319 ../src/rss-config-factory.c:1597
+#: ../src/rss-config-factory.c:1526 ../src/rss-config-factory.c:2051
 msgid "XML Files"
 msgstr "Fichiers XML"
 
-#: ../src/rss-config-factory.c:1339
+#: ../src/rss-config-factory.c:1546
 msgid "Show article's summary"
 msgstr "Afficher le résumé de l'article"
 
-#: ../src/rss-config-factory.c:1345
+#: ../src/rss-config-factory.c:1552
 msgid "Feed Enabled"
 msgstr "Flux activé"
 
-#: ../src/rss-config-factory.c:1351
+#: ../src/rss-config-factory.c:1558
 msgid "Validate feed"
 msgstr "Valider le flux"
 
-#: ../src/rss-config-factory.c:1386 ../src/rss-ui.glade.h:40
+#: ../src/rss-config-factory.c:1593 ../src/rss-ui.glade.h:40
 msgid "Select import file"
 msgstr "Sélectionner le fichier à importer"
 
-#: ../src/rss-config-factory.c:1423 ../src/rss-ui.glade.h:39
+#: ../src/rss-config-factory.c:1630 ../src/rss-ui.glade.h:39
 msgid "Select file to export"
 msgstr "Sélectionner le fichier à exporter"
 
-#: ../src/rss-config-factory.c:1501
+#: ../src/rss-config-factory.c:1762
 msgid "Exporting feeds..."
 msgstr "Exportation des flux..."
 
-#: ../src/rss-config-factory.c:1530
-msgid ""
-"A file by that name already exists.\n"
-"Overwrite it?"
-msgstr ""
-"Un fichier utilisant ce nom existe déjà.\n"
-"Voulez-vous l'écraser ?"
-
-#: ../src/rss-config-factory.c:1532
-msgid "Overwrite file?"
-msgstr "Écraser le fichier ?"
-
-#: ../src/rss-config-factory.c:1551
+#: ../src/rss-config-factory.c:1809
 msgid "Error exporting feeds!"
 msgstr "Erreur au cours de l'exportation des flux !"
 
-#: ../src/rss-config-factory.c:1623
+#: ../src/rss-config-factory.c:1888
+msgid "Importing cookies..."
+msgstr "Importation des cookies..."
+
+#: ../src/rss-config-factory.c:1953
+msgid "Select file to import"
+msgstr "Sélectionner le fichier à importer"
+
+#: ../src/rss-config-factory.c:1999
+msgid "Mozilla/Netscape Format"
+msgstr "Format Mozilla/Netscape"
+
+#: ../src/rss-config-factory.c:2005
+msgid "Firefox new Format"
+msgstr "Nouveau format Firefox"
+
+#: ../src/rss-config-factory.c:2077
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -552,7 +597,7 @@ msgstr ""
 "Pas de flux RSS configuré !\n"
 "Impossible d'exporter."
 
-#: ../src/rss-config-factory.c:1718 ../src/rss-config-factory.c:2118
+#: ../src/rss-config-factory.c:2172 ../src/rss-config-factory.c:2651
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -563,17 +608,21 @@ msgstr ""
 "développement \n"
 "Firefox ou Webkit et de recompiler evolution-rss pour inclure ces paquets."
 
-#: ../src/rss-config-factory.c:1960 ../src/rss-ui.glade.h:25
+#: ../src/rss-config-factory.c:2493 ../src/rss-ui.glade.h:25
 msgid "Enabled"
 msgstr "Activé"
 
-#: ../src/rss-config-factory.c:1976
+#: ../src/rss-config-factory.c:2509
 msgid "Feed Name"
 msgstr "Nom du flux"
 
-#: ../src/rss-config-factory.c:1986
+#: ../src/rss-config-factory.c:2519
 msgid "Type"
 msgstr "Type"
+
+#: ../src/rss-config-factory.c:2736
+msgid "News And Blogs"
+msgstr "Informations et blogs"
 
 #: ../src/rss-html-rendering.glade.h:1
 msgid "<b>Article Notification</b>"
@@ -596,34 +645,38 @@ msgid "Accept cookies from sites"
 msgstr "Accepter les cookies des sites"
 
 #: ../src/rss-html-rendering.glade.h:6
+msgid "Automatically resize images"
+msgstr "Redimensionner automatiquement les images"
+
+#: ../src/rss-html-rendering.glade.h:7
 msgid "Blink icon in notification area"
 msgstr "Faire clignoter l'icône dans la zone de notification"
 
-#: ../src/rss-html-rendering.glade.h:7
+#: ../src/rss-html-rendering.glade.h:8
 msgid "Block pop-up windows"
 msgstr "Bloquer les fenêtres surgissantes"
 
-#: ../src/rss-html-rendering.glade.h:8
+#: ../src/rss-html-rendering.glade.h:9
 msgid "Enable Java"
 msgstr "Activer Java"
 
-#: ../src/rss-html-rendering.glade.h:9 ../src/rss-ui.glade.h:23
+#: ../src/rss-html-rendering.glade.h:10 ../src/rss-ui.glade.h:23
 msgid "Enable JavaScript"
 msgstr "Activer JavaScript"
 
-#: ../src/rss-html-rendering.glade.h:10
+#: ../src/rss-html-rendering.glade.h:11
 msgid "Import Cookies"
 msgstr "Importer les cookies"
 
-#: ../src/rss-html-rendering.glade.h:11
+#: ../src/rss-html-rendering.glade.h:12
 msgid "Show feed icon"
 msgstr "Afficher l'icône de flux"
 
-#: ../src/rss-html-rendering.glade.h:12
+#: ../src/rss-html-rendering.glade.h:13
 msgid "Show icon in notification area"
 msgstr "Afficher l'icône dans la zone de notification"
 
-#: ../src/rss-html-rendering.glade.h:13
+#: ../src/rss-html-rendering.glade.h:14
 msgid "seconds"
 msgstr "secondes"
 
@@ -830,7 +883,11 @@ msgstr ""
 "heures\n"
 "jours"
 
-#: ../src/parser.c:918
+#: ../src/parser.c:906
+msgid "No information"
+msgstr "Aucune information"
+
+#: ../src/parser.c:930
 msgid "No Information"
 msgstr "Aucune information"
 
