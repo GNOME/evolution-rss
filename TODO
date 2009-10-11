@@ -1,7 +1,6 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
 	* check webkit area sizing when using zoom in/out
-	* jump to folder when adding through d-bus
 	* implement other engines besides soup
 	* implement USM (universal subscription mechanism)
 	* implement notify back of imported feed perhaps libnotify
@@ -37,9 +36,8 @@
 	* make gtkhtml rendering non-blocking
 	* use ellipsize in web auth dialog
 	* check feed_folders for errors
-	* check rss_delete_feed for race condition when deletion of camel folder
-	* folder delete should delete feed_folders allocation
 	* fix comment cancellation
 	* fix wrong SSL browser dialog
 	* check custom interval fetching right after it was setup
-
+	* search for threaded implmentation options
+	* config option to sort comments ascending/descending

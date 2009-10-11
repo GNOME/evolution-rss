@@ -1107,6 +1107,20 @@ save_gconf_feed(void)
 void
 rss_select_folder(gchar *folder_name)
 {
+#if EVOLUTION_VERSION < 22900
+	EMFolderTree *folder_tree;
+	gchar *uri;
+	CamelStore *store;
+	CamelFolder *fold;
+	EShellSidebar *shell_sidebar;
+
+	shell_sidebar  = e_shell_view_get_shell_sidebar(rss_shell_view);
+	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
+	store = rss_component_peek_local_store();
+	fold = camel_store_get_folder (store, folder_name, 0, NULL);
+        uri = mail_tools_folder_to_url (fold);
+	em_folder_tree_set_selected(folder_tree, uri, 0);
+#endif
 #if 0 //kb//
 	CamelStore *store = rss_component_peek_local_store();
 	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
@@ -2374,8 +2388,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				while ((doc = html_find(doc, "img"))) {
 					int real_width = 0;
 					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
-        	if (!g_file_test(url, G_FILE_TEST_EXISTS) && url) {
-			camel_url_decode((char *)url);
+        	if (!g_file_test((gchar *)url, G_FILE_TEST_EXISTS) && url) {
+			camel_url_decode((gchar *)url);
 			//FIXME lame method of extracting data cache path
 			//there must be a function in camel for getting data cache path
 			gchar *base_dir = rss_component_peek_base_directory();
@@ -2384,10 +2398,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				"static",
 				"http",
 				NULL);
-			gchar *nurl = strextr(url, feed_dir);
+			gchar *nurl = strextr((gchar *)url, feed_dir);
 			gchar *rurl = nurl + 4;
 			gchar *name = fetch_image_redraw(rurl, link, t->format);
-g_print("new name:%s\n", name);
 			xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)name);
                         g_free(name);
 			g_free(nurl);
@@ -2869,6 +2882,7 @@ setup_feed(add_feed *feed)
         GString *post = NULL, *content = NULL;
         GError *err = NULL;
 	gchar *chn_name = NULL, *tmp_chn_name = NULL, *tmp = NULL;
+	gchar *real_name;
 
 	check_folders();
 
@@ -3004,6 +3018,10 @@ add:
 
 		if (feed->validate)
 			display_feed(r);
+
+		real_name = g_strdup_printf("%s/%s", lookup_main_folder(), chn_name);
+		rss_select_folder(real_name);
+		g_free(real_name);
 
 		g_free(tmp_chn_name);
 		g_free(tmp);
@@ -4036,12 +4054,12 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	if (!real_name)
 		real_name = name;
         camel_exception_init (&ex);
-        rss_delete_folders (store, full_path, &ex);
-        if (camel_exception_is_set (&ex)) {
-                e_error_run(NULL,
-                "mail:no-delete-folder", full_path, ex.desc, NULL);
-                camel_exception_clear (&ex);
-        }
+	rss_delete_folders (store, full_path, &ex);
+	if (camel_exception_is_set (&ex)) {
+               	e_error_run(NULL,
+               		"mail:no-delete-folder", full_path, ex.desc, NULL);
+               	camel_exception_clear (&ex);
+       	}
         //also remove status file
         gchar *tkey = g_hash_table_lookup(rf->hrname, real_name);
 	if (!tkey)
@@ -5194,12 +5212,17 @@ finish_image (SoupMessage *msg, CamelStream *user_data)
 finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
-	d(g_print("finish_image:%d\n", msg->status_code));
+	d(g_print("finish_image() CODE:%d\n", msg->status_code));
 	// we might need to handle more error codes here
 	if (503 != msg->status_code && //handle this timedly fasion
 	    404 != msg->status_code &&
 	      2 != msg->status_code && //STATUS_CANT_RESOLVE
-	      7 != msg->status_code) { //STATUS_IO_ERROR
+	      7 != msg->status_code &&  // STATUS_IO_ERROR
+#if LIBSOUP_VERSION < 2003000
+		msg->response.length) {	//ZERO SIZE
+#else
+		msg->response_body->length) { //ZERO SIZE
+#endif
 #if LIBSOUP_VERSION < 2003000
 		if (msg->response.body) {
 			camel_stream_write(user_data,
