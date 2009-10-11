@@ -83,11 +83,6 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
 
 <hook class="org.gnome.evolution.ui:1.0">
       <ui-manager id="org.gnome.evolution.mail">
-<!--              <popup name="mail-folder-popup">
-                 <placeholder name="mail-folder-popup-actions">
-                         <menuitem action="mail-mark-read-recursive"/>
-                 </placeholder>
-              </popup>-->
        </ui-manager>
 </hook>
 
