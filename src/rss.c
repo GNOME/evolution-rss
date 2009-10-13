@@ -285,6 +285,7 @@ finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE 
 gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
 gchar *fetch_image_redraw(gchar *url, gchar *link, gpointer data);
+gchar *verify_image(gchar *uri, EMFormatHTML *format);
 
 GtkTreeStore *evolution_store = NULL;
 #if EVOLUTION_VERSION >= 22900
@@ -2166,9 +2167,6 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 #endif
 }
 
-EMFormat *fom;
-CamelStream *som;
-
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t);
 
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
@@ -2388,25 +2386,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				while ((doc = html_find(doc, "img"))) {
 					int real_width = 0;
 					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
-        	if (!g_file_test((gchar *)url, G_FILE_TEST_EXISTS) && url) {
-			camel_url_decode((gchar *)url);
-			//FIXME lame method of extracting data cache path
-			//there must be a function in camel for getting data cache path
-			gchar *base_dir = rss_component_peek_base_directory();
-			gchar *feed_dir = g_build_path("/",
-				base_dir,
-				"static",
-				"http",
-				NULL);
-			gchar *nurl = strextr((gchar *)url, feed_dir);
-			gchar *rurl = nurl + 4;
-			gchar *name = fetch_image_redraw(rurl, link, t->format);
-			xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)name);
-                        g_free(name);
-			g_free(nurl);
-			g_free(feed_dir);
-			g_free(base_dir);
-		}
+					//FIXME: this should run even if image_resize is not on
+					gchar *real_image = verify_image((gchar *)url, emfh);
+					if (real_image) {
+						xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)real_image);
+						g_free(real_image);
+					}
 					GdkPixbuf *pix = gdk_pixbuf_new_from_file((const char *)url,
                                                          (GError **)NULL);
 					if (pix)
@@ -2679,7 +2664,10 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	}
 
 normal:	if (!initialised) { //move this to startup
-defico:		iconfile = g_build_filename (EVOLUTION_ICONDIR,
+#if (EVOLUTION_VERSION < 22703)
+defico:		
+#endif
+		iconfile = g_build_filename (EVOLUTION_ICONDIR,
 	                                    "rss-16.png",
 						NULL);
 #if (EVOLUTION_VERSION >= 22703)
@@ -4420,7 +4408,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 	custom_feed_timeout();
 
 	/* load transparency */
-	gchar *pixfile = g_build_filename (EVOLUTION_ICONDIR,
+	pixfile = g_build_filename (EVOLUTION_ICONDIR,
                                             "pix.png",
                                                 NULL);
 	g_file_load_contents (g_file_parse_name(pixfile),
@@ -4429,8 +4417,6 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
                                                          &pixfilelen,
                                                          NULL,
                                                          NULL);
-	g_free(pixfile);
-
 
         /* hook in rename event to catch feeds folder rename */
 	CamelStore *store = rss_component_peek_local_store();
@@ -5215,9 +5201,10 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 	d(g_print("finish_image() CODE:%d\n", msg->status_code));
 	// we might need to handle more error codes here
 	if (503 != msg->status_code && //handle this timedly fasion
-	    404 != msg->status_code &&
+	    404 != msg->status_code && //NOT FOUND
+	    400 != msg->status_code && //bad request
 	      2 != msg->status_code && //STATUS_CANT_RESOLVE
-	      7 != msg->status_code &&  // STATUS_IO_ERROR
+	      7 != msg->status_code && // STATUS_IO_ERROR
 #if LIBSOUP_VERSION < 2003000
 		msg->response.length) {	//ZERO SIZE
 #else
@@ -5363,6 +5350,58 @@ data_cache_path(CamelDataCache *cdc, int create, const char *path, const char *k
         return real;
 }
 
+/* validates if image is indeed an image file
+ * if image file is not found it tries to fetch it
+ * we need to check mime time against content
+ * because we could end up with wrong file as image
+ */
+gchar *
+verify_image(gchar *uri, EMFormatHTML *format) 
+{
+	gchar *mime_type, *contents;
+	gsize length;
+
+	g_return_val_if_fail(uri != NULL, NULL);
+
+       	if (!g_file_test((gchar *)uri, G_FILE_TEST_EXISTS)) {
+			camel_url_decode((gchar *)uri);
+			//FIXME lame method of extracting data cache path
+			//there must be a function in camel for getting data cache path
+			gchar *base_dir = rss_component_peek_base_directory();
+			gchar *feed_dir = g_build_path("/",
+				base_dir,
+				"static",
+				"http",
+				NULL);
+			gchar *nurl = strextr((gchar *)uri, feed_dir);
+			g_free(feed_dir);
+			gchar *rurl = nurl + 4;
+			/* calling with link NULL as we do not have base link here
+			 * and not able to get it either
+			 */
+			gchar *name = fetch_image_redraw(rurl, NULL, format);
+			g_free(nurl);
+			g_free(feed_dir);
+			g_free(base_dir);
+			return name;
+	} else {
+		/*need to get mime type via file contents or else mime type is
+		  bound to be wrong, especially on files fetched from the web
+		  this is very important as we might get quite a few images
+		  missing otherwise */
+		g_file_get_contents (uri,
+			&contents,
+			&length,
+			NULL);
+		mime_type = g_content_type_guess(NULL, (guchar *)contents, length, NULL);
+		if (g_ascii_strncasecmp (mime_type, "image/", 6))
+			return g_strdup(pixfile);
+		g_free(mime_type);
+		g_free(contents);
+		return NULL;
+	}
+}
+
 // constructs url from @base in case url is relative
 gchar *
 fetch_image_redraw(gchar *url, gchar *link, gpointer data)
@@ -5371,8 +5410,8 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	CamelStream *stream = NULL;
 	gchar *tmpurl = NULL;
 	FEED_IMAGE *fi = NULL;
-	if (!url)
-		return NULL;
+
+	g_return_val_if_fail(url != NULL, NULL);
 	if (strstr(url, "://") == NULL) {
 		if (*url == '.') //test case when url begins with ".."
 			tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
@@ -5385,7 +5424,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	} else {
 		tmpurl = g_strdup(url);
 	}
-	d(g_print("fetch_image() tmpurl:%s\n", tmpurl));
+	d(g_print("fetch_image_redraw() tmpurl:%s\n", tmpurl));
 	gchar *base_dir = rss_component_peek_base_directory();
 	gchar *feed_dir = g_build_path("/", 
 				base_dir,
