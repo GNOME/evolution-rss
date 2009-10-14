@@ -1,6 +1,5 @@
 
 INCLUDES =							\
-	-I$(EVOLUTION_SOURCE)					\
 	-I$(top_srcdir)						\
 	$(RENDER_CFLAGS)					\
 	$(DBUS_CFLAGS)						\
@@ -11,18 +10,18 @@ INCLUDES =							\
 	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\"\
 	-DEVOLUTION_VERSION=$(evolution_exec_int)		\
 	-DDATASERVER_VERSION=$(DATASERVER_VERSION)		\
-	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"            	\
-	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"            	\
-	-DGTK_VERSION="$(GTK_VERSION)"	          	  	\
-	-DLIBSOUP_VERSION="$(SOUP_VERSION)"	            	\
-	-DWEBKIT_VERSION="$(WEBKIT_VERSION)"	            	\
+	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"			\
+	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"			\
+	-DGTK_VERSION="$(GTK_VERSION)"				\
+	-DLIBSOUP_VERSION="$(SOUP_VERSION)"			\
+	-DWEBKIT_VERSION="$(WEBKIT_VERSION)"			\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
 	-DHAVE_DBUS=$(DBD)					\
 	-DDBUS_API_SUBJECT_TO_CHANGE				\
-	$(EVOLUTION_RSS_EPLUGIN_CFLAGS) -Wall
+	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
+#	$(WARNING_FLAGS)
 
- 
 if ! HAVE_XPCOM_GLUE
 INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
 endif
@@ -73,16 +72,16 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 
-SOURCES = 	fetch.c			\
+SOURCES =	fetch.c			\
 		file-gio.c		\
-	  	misc.c			\
+		misc.c			\
 		network-soup.c		\
 		parser.c		\
 		rss.c			\
 		rss-config-factory.c	\
 		rss-icon-factory.c
 if HAVE_GECKO
-SOURCES+= 	gecko-utils.cpp
+SOURCES+=	gecko-utils.cpp
 endif
 if HAVE_DBUS
 SOURCES+=	dbus.c

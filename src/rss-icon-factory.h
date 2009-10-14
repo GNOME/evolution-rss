@@ -26,3 +26,5 @@
 #define RSS_MAIN_FILE "rss-24.png"
 
 void rss_build_stock_images(void);
+void init_rss_builtin_images(void);
+

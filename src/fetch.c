@@ -33,18 +33,19 @@ fetch_blocking(gchar *url, GSList *headers, GString *post,
                   GError **err) {
 
 	gchar *scheme = NULL;
+	gchar *buf, *fname;
 	GString *result = NULL;
 	FILE *f = NULL;
 	
 	scheme = g_uri_parse_scheme(url);
 	if (scheme && !g_ascii_strcasecmp(scheme, "file")) {
-		gchar *fname = g_filename_from_uri(url, NULL, NULL);
+		fname = g_filename_from_uri(url, NULL, NULL);
 		f = fopen(fname, "rb");
 		g_free(fname);
 		g_free(scheme);
 	 	if (f == NULL)
                 	goto error;	
-		gchar *buf = g_new0 (gchar, 4096);
+		buf = g_new0 (gchar, 4096);
 		result = g_string_new(NULL);
 		while (fgets(buf, 4096, f) != NULL) {
 			g_string_append_len(result, buf, strlen(buf));
@@ -57,7 +58,7 @@ fetch_blocking(gchar *url, GSList *headers, GString *post,
 	}
 error:
 	g_print("error\n");
-	g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+	g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
                                 g_strerror(errno));
 	return result;
 }

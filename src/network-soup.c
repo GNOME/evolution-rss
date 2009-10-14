@@ -140,11 +140,15 @@ int net_error_quark(void)
 	return 0;
 }
 
+void unblocking_error (SoupMessage *msg, gpointer user_data);
+
 void
 unblocking_error (SoupMessage *msg, gpointer user_data)
 {
 	g_print("data:%p\n", user_data);
 }
+
+void recv_msg (SoupMessage *msg, gpointer user_data);
 
 void
 recv_msg (SoupMessage *msg, gpointer user_data)
@@ -170,6 +174,8 @@ remove_if_match (gpointer key, gpointer value, gpointer user_data)
 	else
 		return FALSE;
 }
+
+void construct_abort(gpointer key, gpointer value, gpointer user_data);
 
 void
 construct_abort(gpointer key, gpointer value, gpointer user_data)
@@ -224,8 +230,9 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
 			return;
 #endif
-		} else 
+		} else  {
 			d(g_print("webkit no PROXY-%s\n", uri));
+		}
 		break;
 		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 #ifdef HAVE_LIBSOUP_GNOME
@@ -256,10 +263,12 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
 			return;
 #endif
-			if (proxy_uri)
+			if (proxy_uri) {
 				d(g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port));
-		} else 
+			}
+		} else {
 			d(g_print("no PROXY-%s\n", uri));
+		}
 		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 		break;
 
@@ -276,24 +285,25 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 guint
 read_up(gpointer data)
 {
+	FILE *fr;
 	char rfeed[512];
 	guint res = 0;
+	gchar *tmp, *buf, *feed_dir, *feed_name;
 	
 	if (NULL != g_hash_table_lookup(rf->hruser, data))
 		return 1;
 
-	gchar *tmp = gen_md5(data);
-	gchar *buf = g_strconcat(tmp, ".rec", NULL);
+	tmp = gen_md5(data);
+	buf = g_strconcat(tmp, ".rec", NULL);
 	g_free(tmp);
 
-	gchar *feed_dir = rss_component_peek_base_directory();
+	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
-
-	gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
 
-	FILE *fr = fopen(feed_name, "r");
+	fr = fopen(feed_name, "r");
 	if (fr) {
         	fgets(rfeed, 511, fr);
         	g_hash_table_insert(rf->hruser, data, g_strstrip(g_strdup(rfeed)));
@@ -310,24 +320,25 @@ read_up(gpointer data)
 guint
 save_up(gpointer data)
 {
+	FILE *fr;
+	guint res = 0;
+	gchar *feed_dir, *feed_name, *user, *pass;
 	gchar *tmp = gen_md5(data);
 	gchar *buf = g_strconcat(tmp, ".rec", NULL);
 	g_free(tmp);
-	guint res = 0;
 
-	gchar *feed_dir = rss_component_peek_base_directory();
+	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
-
-	gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
 
-	FILE *fr = fopen(feed_name, "w+");
+	fr = fopen(feed_name, "w+");
 	if (fr) {
-        	gchar *user = g_hash_table_lookup(rf->hruser, data);
+		user = g_hash_table_lookup(rf->hruser, data);
 			fputs(user, fr);
 	        fputs("\n", fr);
-        	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
+		pass = g_hash_table_lookup(rf->hrpass, data);
         	fputs(pass, fr);
         	fclose(fr);
         	res = 1;
@@ -340,14 +351,14 @@ save_up(gpointer data)
 guint
 del_up(gpointer data)
 {
+	gchar *feed_dir, *feed_name;
 	gchar *tmp = gen_md5(data);
 	gchar *buf = g_strconcat(tmp, ".rec", NULL);
 	g_free(tmp);
-	gchar *feed_dir = rss_component_peek_base_directory();
+	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
-
-	gchar *feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
 	unlink(feed_name);
 	g_free(feed_name);
@@ -372,9 +383,12 @@ authenticate (SoupSession *session,
 	gpointer data)
 #endif
 {
+	SoupURI *proxy_uri;
+	gchar *user, *pass;
+	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
+
 	if (msg->status_code == SOUP_STATUS_PROXY_UNAUTHORIZED) {
 		g_print("proxy:%d\n", soup_auth_is_for_proxy(auth));
-	SoupURI *proxy_uri;
 	g_object_get (G_OBJECT(session),
 				"proxy-uri", &proxy_uri,
 				NULL);
@@ -383,8 +397,8 @@ authenticate (SoupSession *session,
 	return;
 	}
 
-	gchar *user = g_hash_table_lookup(rf->hruser, data);
-	gchar *pass = g_hash_table_lookup(rf->hrpass, data);
+	user = g_hash_table_lookup(rf->hruser, data);
+	pass = g_hash_table_lookup(rf->hrpass, data);
 	
 	if (user && pass) {
 #if LIBSOUP_VERSION < 2003000
@@ -409,7 +423,6 @@ authenticate (SoupSession *session,
 authpop:		if (G_OBJECT_TYPE(session) == SOUP_TYPE_SESSION_ASYNC) {
 				soup_session_pause_message(session, msg);
 			}
-			RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
 			auth_info->url = data;
 			auth_info->soup_auth = auth;
 			auth_info->retrying = retrying;
@@ -445,6 +458,8 @@ reauthenticate (SoupSession *session,
 }
 #endif
 
+guint net_get_status(const char *url, GError **err);
+
 guint
 net_get_status(const char *url, GError **err)
 {
@@ -457,6 +472,7 @@ net_get_status(const char *url, GError **err)
 	guint response = 0;
 	SoupSession *soup_sess = NULL;
 	GSList *headers = NULL;
+	gchar *agstr;
 
 	if (!rf->b_session)
 		rf->b_session = soup_sess = 
@@ -466,7 +482,7 @@ net_get_status(const char *url, GError **err)
 
 	req = soup_message_new(SOUP_METHOD_GET, url);
 	if (!req) {
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
 				soup_status_get_phrase(2));			//invalid url
 		goto out;
 	}
@@ -483,7 +499,7 @@ net_get_status(const char *url, GError **err)
 #endif
 		*colonpos = ':';
 	}
-	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
+	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 #if LIBSOUP_VERSION < 2003000
 	soup_message_add_header (req->request_headers, "User-Agent",
@@ -503,7 +519,7 @@ net_get_status(const char *url, GError **err)
 		soup_session_abort(soup_sess);
 		g_object_unref(soup_sess);
 		rf->b_session = NULL;
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
 				soup_status_get_phrase(req->status_code));
 		goto out;
 	}
@@ -525,6 +541,7 @@ net_get_unblocking(gchar *url,
 {
 	SoupMessage *msg;
 	CallbackInfo *info = NULL;
+	gchar *agstr;
 
 	SoupSession *soup_sess = 
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
@@ -566,7 +583,7 @@ net_get_unblocking(gchar *url,
 	/* Queue an async HTTP request */
 	msg = soup_message_new ("GET", url);
 	if (!msg) {
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
 				soup_status_get_phrase(2));			//invalid url
 		return FALSE;
 	}
@@ -579,7 +596,7 @@ net_get_unblocking(gchar *url,
 		g_hash_table_insert(rf->key_session, data, soup_sess);
 	}
 
-	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
+	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 #if LIBSOUP_VERSION < 2003000
 	soup_message_add_header (msg->request_headers, "User-Agent",
@@ -619,6 +636,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 	GString *response = NULL;
 	CallbackInfo info = { cb, data, 0, 0 };
 	SoupSession *soup_sess = NULL;
+	gchar *agstr;
 
 	if (!rf->b_session)
 		rf->b_session = soup_sess = 
@@ -636,7 +654,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 
 	req = soup_message_new(SOUP_METHOD_GET, url);
 	if (!req) {
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(2));			//invalid url
 		goto out;
 	}
@@ -656,7 +674,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 #endif
 		*colonpos = ':';
 	}
-	gchar *agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
+	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 #if LIBSOUP_VERSION < 2003000
 	soup_message_add_header (req->request_headers, "User-Agent",
@@ -679,7 +697,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 		soup_session_abort(soup_sess);
 		g_object_unref(soup_sess);
 		rf->b_session = NULL;
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC,
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
 				soup_status_get_phrase(req->status_code));
 		goto out;
 	}
@@ -708,6 +726,8 @@ cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
         }
         return TRUE;
 }
+
+void remove_weak(gpointer key, gpointer value, gpointer user_data);
 
 void
 remove_weak(gpointer key, gpointer value, gpointer user_data)

@@ -21,8 +21,8 @@
 #include <rss.h>
 
 typedef struct {
-        char *stock_id;
-        char *icon;
+        const char *stock_id;
+        const char *icon;
 } RssStockIcon;
 
 static RssStockIcon stock_icons [] = {

@@ -115,7 +115,7 @@ gecko_set_zoom (GtkWidget *moz, gfloat zoom)
 	nsCOMPtr<nsIWebBrowser>         mWebBrowser;
         nsCOMPtr<nsIDOMWindow>          mDOMWindow;
 
-        gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED (moz), getter_AddRefs (mWebBrowser));
+        gtk_moz_embed_get_nsIWebBrowser ((GtkMozEmbed *)moz, getter_AddRefs (mWebBrowser));
         if (NULL == mWebBrowser) {
                 g_warning ("gecko_set_zoom(): Could not retrieve browser...");
                 return;
@@ -135,7 +135,7 @@ gecko_get_zoom (GtkWidget *embed)
         nsCOMPtr<nsIDOMWindow>          mDOMWindow;
         float zoom;
 
-        gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED (embed), getter_AddRefs (mWebBrowser));
+        gtk_moz_embed_get_nsIWebBrowser ((GtkMozEmbed *)embed, getter_AddRefs (mWebBrowser));
         if (NULL == mWebBrowser) {
                 g_warning ("gecko_get_zoom(): Could not retrieve browser...");
                 return 1.0;

@@ -32,12 +32,16 @@
 #include "parser.h"
 #include "misc.h"
 
+int getNumericConfValue(gpointer a);
+
 int
 getNumericConfValue(gpointer a)
 {
  	return 1;
 }
  
+int on_next_unread_item_activate(gpointer a);
+
 int
 on_next_unread_item_activate(gpointer a)
 {
@@ -56,6 +60,8 @@ print_hash_int(gpointer key, gpointer value, gpointer user_data)
  	g_print("key:%s, value:%d\n", (gchar *)key, GPOINTER_TO_INT(value));
 }
  
+void free_hash(gpointer key, gpointer value, gpointer user_data);
+
 void
 free_hash(gpointer key, gpointer value, gpointer user_data)
 {
@@ -78,20 +84,24 @@ check_if_match (gpointer key, gpointer value, gpointer user_data)
 }
 
 gchar *
-strextr(gchar *text, gchar *substr)
+strextr(gchar *text, const gchar *substr)
 {
+	gchar *tmp, *string;
+	GString *str;
+
  	g_return_val_if_fail( text != NULL, NULL);
+
  	if (substr == NULL)
 		return g_strdup(text);
 	//first check if string contains the substring
 	if (!strstr(text, substr))
 		return g_strdup(text);
 
-	char *tmp = g_strdup(text);
-	GString *str = g_string_new(NULL);
+	tmp = g_strdup(text);
+	str = g_string_new(NULL);
 	g_string_append(str, tmp);
 	str = g_string_erase(str, strlen(tmp) - strlen(strstr(tmp, substr)), strlen(substr));
-	gchar *string = str->str;	
+	string = str->str;
 	g_string_free(str, 0);
 	g_free(tmp);
 	return string;
@@ -103,7 +113,9 @@ gchar *
 sanitize_url(gchar *text)
 {
 	gchar *out;
+	gchar *scheme;
 	gchar *tmptext = g_strdup(text);
+
 	if (strcasestr(text, "file://"))
 		return tmptext;
 
@@ -119,7 +131,7 @@ sanitize_url(gchar *text)
 		tmptext=safetext;
 	}
 
-	gchar *scheme = g_uri_parse_scheme(tmptext);
+	scheme = g_uri_parse_scheme(tmptext);
 	d(g_print("parsed scheme:%s\n", scheme));
  	if (!scheme && !strstr (tmptext, "http://") 
 	&& !strstr (tmptext, "https://")) {
@@ -138,12 +150,15 @@ sanitize_url(gchar *text)
 gchar *
 sanitize_folder(gchar *text)
 {
+	gchar *tmp, *tmp2;
+
  	g_return_val_if_fail( text != NULL, NULL);
+
 	//first convert "/" character
-	char *tmp = g_strdup(text);
+	tmp = g_strdup(text);
 	g_strdelimit(tmp, "/", '|');
 	// Strip leading dots
-	char *tmp2 = tmp;
+	tmp2 = tmp;
 	while (*tmp2 == '.') tmp2++;
 	tmp2 = g_strdup (tmp2);
 	g_free (tmp);
@@ -164,14 +179,16 @@ get_url_basename(gchar *url)
 gchar *
 get_port_from_uri(gchar *uri)
 {
+	gchar **str, **str2, **str3, *port;
+
  	g_return_val_if_fail( uri != NULL, NULL);
  
 	if (strstr(uri, "://") == NULL)
 		return NULL;
- 	gchar **str = g_strsplit(uri, "://", 2);
-        gchar **str2 = g_strsplit(str[1], "/", 2);
-        gchar **str3 = g_strsplit(str2[0], ":", 2);
-        gchar *port = g_strdup(str3[1]);
+ 	str = g_strsplit(uri, "://", 2);
+        str2 = g_strsplit(str[1], "/", 2);
+        str3 = g_strsplit(str2[0], ":", 2);
+        port = g_strdup(str3[1]);
  	g_strfreev(str);
  	g_strfreev(str2);
  	g_strfreev(str3);
@@ -181,13 +198,15 @@ get_port_from_uri(gchar *uri)
 gchar *
 get_server_from_uri(gchar *uri)
 {
+	gchar **str, **str2, *server;
+
  	g_return_val_if_fail( uri != NULL, NULL);
  
 	if (strstr(uri, "://") == NULL)
 		return NULL;
- 	gchar **str = g_strsplit(uri, "://", 2);
-        gchar **str2 = g_strsplit(str[1], "/", 2);
-        gchar *server = g_strdup_printf("%s://%s", str[0], str2[0]);
+ 	str = g_strsplit(uri, "://", 2);
+        str2 = g_strsplit(str[1], "/", 2);
+        server = g_strdup_printf("%s://%s", str[0], str2[0]);
  	g_strfreev(str);
  	g_strfreev(str2);
  	return server;
@@ -367,7 +386,7 @@ gchar *extract_main_folder(gchar *folder)
 
 /* hrm, is there a library for this shit? */
 struct {
-        char *name;
+        const char *name;
         int offset;
 } tz_offsets [] = {
         { "UT", 0 },
@@ -402,9 +421,11 @@ is_rfc822(char *in)
 	const char *inptr = in;
 	struct tm tm;
 	guint i;
+	gchar *day, *monthname;
+	gboolean foundmonth;
 
         header_decode_lwsp (&inptr);
-        char *day =  decode_token(&inptr);
+	day =  decode_token(&inptr);
         if (day)
         {
 		g_free (day);
@@ -418,8 +439,8 @@ is_rfc822(char *in)
         if (tm.tm_mday == 0)
                 goto notrfc;
 
-        char *monthname = decode_token(&inptr);
-        gboolean foundmonth = FALSE;
+	monthname = decode_token(&inptr);
+        foundmonth = FALSE;
         if (monthname) {
                 for (i=0;i<sizeof(tz_months)/sizeof(tz_months[0]);i++) {
                 if (!g_ascii_strcasecmp(tz_months[i], monthname)) {
@@ -453,13 +474,17 @@ gboolean
 feed_is_new(gchar *file_name, gchar *needle)
 {
         gchar rfeed[513];
+	FILE *fr;
+	int occ;
+	gchar *tmpneedle, *port, *tp;
+
         memset(rfeed, 0, 512);
-        FILE *fr = fopen(file_name, "r");
-        int occ = 0;
-        gchar *tmpneedle = NULL;
-        gchar *port =  get_port_from_uri(needle);
+	fr = fopen(file_name, "r");
+	occ = 0;
+	tmpneedle = NULL;
+	port =  get_port_from_uri(needle);
         if (port && atoi(port) == 80) {
-                gchar *tp = g_strconcat(":", port, NULL);
+		tp = g_strconcat(":", port, NULL);
                 g_free(port);
                 tmpneedle = strextr(needle, tp);
                 g_free(tp);

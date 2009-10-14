@@ -1,16 +1,16 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org> 
- *  
+ *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org>
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or 
+ *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -33,6 +33,10 @@
 #include <libsoup/soup.h>
 #if EVOLUTION_VERSION < 22900 //kb//
 #include <mail/mail-component.h>
+#else
+#include <shell/e-shell.h>
+#include <shell/e-shell-view.h>
+#include <shell/es-event.h>
 #endif
 
 #include <glade/glade.h>
@@ -57,14 +61,14 @@
 #define HTTP_CACHE_PATH "http"
 
 typedef struct _RDF {
-        char 		*uri;
-        char 		*html;
-        xmlDocPtr 	cache;
-        gboolean 	shown;
-        gchar 		*type;    	//char type
-        guint 		type_id; 	//num type
+        char		*uri;
+        char		*html;
+        xmlDocPtr	cache;
+        gboolean	shown;
+        gchar		*type;		//char type
+        guint		type_id;	//num type
 	gchar		*version;	//feed version
-        gchar		*feedid;  	//md5 string id of feed
+        gchar		*feedid;	//md5 string id of feed
 	gchar		*title;		//title of the feed
 	gchar		*prefix;	//directory path
 	gchar		*maindate;	//channel date
@@ -100,24 +104,24 @@ typedef struct _hrfeed {
 } hrfeed;
 
 typedef struct _rssfeed {
-        GHashTable      *hrname;            	//bind feed name to key
-        GHashTable      *hrname_r;            	//and mirrored structure for faster lookups
-        GHashTable      *hrcrc;            	//crc32 to key binding
-        GHashTable      *hr;            	//feeds hash
-        GHashTable      *hn;            	//feeds hash
-        GHashTable      *hre;   		//enabled feeds hash
-        GHashTable      *hrt;   		//feeds name hash
-        GHashTable      *hrh;   		//fetch html flag
-        GHashTable      *hruser;   		//auth user hash
-        GHashTable      *hrpass;   		//auth pass hash
+        GHashTable      *hrname;		//bind feed name to key
+        GHashTable      *hrname_r;		//and mirrored structure for faster lookups
+        GHashTable      *hrcrc;			//crc32 to key binding
+        GHashTable      *hr;			//feeds hash
+        GHashTable      *hn;			//feeds hash
+        GHashTable      *hre;			//enabled feeds hash
+        GHashTable      *hrt;			//feeds name hash
+        GHashTable      *hrh;			//fetch html flag
+        GHashTable      *hruser;		//auth user hash
+        GHashTable      *hrpass;		//auth pass hash
 	gboolean	soup_auth_retry;	//wether to retry auth after an unsucessful auth
-        GHashTable      *hrdel_feed;   		//option to delete messages in current feed
-        GHashTable      *hrdel_days;   		//option to delete messages older then days
-        GHashTable      *hrdel_messages; 	//option to keep last messages
-        GHashTable      *hrdel_unread; 		//option to delete unread messages too
-        GHashTable      *hrttl;   		
-        GHashTable      *hrttl_multiply;	
-        GHashTable      *hrupdate;   		//feeds update method
+        GHashTable      *hrdel_feed;		//option to delete messages in current feed
+        GHashTable      *hrdel_days;		//option to delete messages older then days
+        GHashTable      *hrdel_messages;	//option to keep last messages
+        GHashTable      *hrdel_unread;		//option to delete unread messages too
+        GHashTable      *hrttl;
+        GHashTable      *hrttl_multiply;
+        GHashTable      *hrupdate;		//feeds update method
         GtkWidget       *feed_dialog;
         GtkWidget       *progress_dialog;
         GtkWidget       *progress_bar;
@@ -129,7 +133,7 @@ typedef struct _rssfeed {
 	GtkWidget	*preferences;
 	gchar		*err;			//if using soup _unblocking error goes here
 	gchar		*err_feed;		//name of the feed that caused above err
-        gchar           *cfeed; 		//current feed name
+        gchar           *cfeed;			//current feed name
 	gboolean	online;			//networkmanager dependant
 	gboolean	fe;			//feed enabled (at least one)
 #ifdef EVOLUTION_2_12
@@ -140,10 +144,10 @@ typedef struct _rssfeed {
         gboolean        setup;
         gboolean        pending;
         gboolean        import;			//import going on
-	gboolean 	autoupdate;		//feed is currently auto fetched
+	gboolean	autoupdate;		//feed is currently auto fetched
 	guint		feed_queue;
-        gboolean        cancel; 		//cancelation signal
-        gboolean        cancel_all; 		//cancelation signal
+        gboolean        cancel;			//cancelation signal
+        gboolean        cancel_all;		//cancelation signal
         GHashTable      *session;		//queue of active unblocking sessions
         GHashTable      *abort_session;		//this is a hack to be able to iterate when
 						//we remove keys from seesion with weak_ref
@@ -164,7 +168,7 @@ typedef struct _rssfeed {
 	GHashTable	*activity;
 	GHashTable	*error_hash;
 	guint		test;
-	char 		*current_uid;		// currently read article	
+	char		*current_uid;		// currently read article
 #if HAVE_DBUS
 	DBusConnection	*bus;			// DBUS
 #endif
@@ -198,7 +202,7 @@ typedef struct ADD_FEED {
 	GladeXML	*gui;
         gchar           *feed_url;
 	gchar		*feed_name;
-	gchar 		*prefix;
+	gchar		*prefix;
         gboolean        fetch_html;	//show webpage instead of summary
         gboolean        add;		//ok button
 	gboolean	changed;
@@ -308,6 +312,30 @@ typedef struct _rfMessage rfMessage;
 guint ftotal;
 guint farticle;
 
+void compare_enabled(gpointer key, gpointer value, guint *data);
+guint rss_find_enabled(void);
+void error_destroy(GtkObject *o, void *data);
+void error_response(GtkObject *o, int button, void *data);
+void cancel_active_op(gpointer key);
+void taskbar_op_message(gchar *msg);
+void taskbar_op_abort(gpointer key);
+void browser_write(gchar *string, gint length, gchar *base);
+void user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog);
+gboolean proxy_auth_dialog(gchar *title, gchar *user, gchar *pass);
+gboolean timeout_soup(void);
+void network_timeout(void);
+gchar *feed_to_xml(gchar *key);
+void prepare_feed(gpointer key, gpointer value, gpointer user_data);
+gboolean feed_new_from_xml(char *xml);
+char *feeds_uid_from_xml (const char *xml);
+void load_gconf_feed(void);
+void migrate_old_config(gchar *feed_file);
+guint read_feeds(rssfeed *rf);
+void reload_cb (GtkWidget *button, gpointer data);
+void gecko_set_preferences(void);
+void browser_copy_selection(GtkWidget *widget, gpointer data);
+void browser_select_all(GtkWidget *widget, gpointer data);
+void webkit_set_preferences(void);
 GtkDialog* create_user_pass_dialog(RSS_AUTH *auth);
 void err_destroy (GtkWidget *widget, guint response, gpointer data);
 void save_gconf_feed(void);
@@ -315,7 +343,6 @@ void rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg);
 void rss_select_folder(gchar *folder_name);
 gchar *lookup_chn_name_by_url(gchar *url);
 gboolean update_articles(gboolean disabler);
-xmlNode *html_find (xmlNode *node, char *match);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
 gchar *lookup_original_folder(gchar *folder);
@@ -330,6 +357,12 @@ gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
 void update_feed_image(RDF *r);
 void update_status_icon(const char *channel, gchar *title);
+void cancel_comments_session(SoupSession *sess);
+gboolean flicker_stop(gpointer user_data);
+gchar *search_rss(char *buffer, int len);
+void prepare_hashes(void);
+void update_ttl(gpointer key, guint value);
+gboolean check_chn_name(gchar *chn_name);
 void
 #if LIBSOUP_VERSION < 2003000
 finish_website (SoupMessage *msg, gpointer user_data);
@@ -342,13 +375,19 @@ finish_enclosure (SoupMessage *msg, create_feed *user_data);
 #else
 finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data);
 #endif
+void
+#if LIBSOUP_VERSION < 2003000
+finish_feed (SoupMessage *msg, gpointer user_data);
+#else
+finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
+#endif
 void generic_finish_feed(rfMessage *msg, gpointer user_data);
 void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif
-void taskbar_op_set_progress(gpointer key, gchar *msg, gdouble progress);
-void taskbar_op_finish(gpointer key);
+void taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress);
+void taskbar_op_finish(gchar *key);
 void taskbar_push_message(gchar *message);
 void taskbar_pop_message(void);
 void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
@@ -363,6 +402,26 @@ gchar *get_main_folder(void);
 gpointer lookup_key(gpointer key);
 void rss_delete_feed(gchar *name, gboolean folder);
 gint update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder);
+void
+#if LIBSOUP_VERSION < 2003000
+finish_update_feed_image (SoupMessage *msg, gpointer user_data);
+#else
+finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
+#endif
+void get_shell(void *ep, ESEventTargetShell *t);
+void rss_finalize(void);
+gboolean check_update_feed_image(gchar *key);
+void get_feed_folders(void);
+void update_main_folder(gchar *new_name);
+void search_rebase(gpointer key, gpointer value, gchar *oname);
+void gtkut_window_popup(GtkWidget *window);
+void flaten_status(gpointer msg, gpointer user_data);
+gboolean check_if_enabled (gpointer key, gpointer value, gpointer user_data);
+void free_filter_uids (gpointer user_data, GObject *ex_msg);
+#if EVOLUTION_VERSION >= 22900
+void quit_cb(void *ep, EShellView *shell_view);
+#endif
+void rebase_feeds(gchar *old_name, gchar *new_name);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);

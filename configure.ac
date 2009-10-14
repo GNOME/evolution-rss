@@ -6,6 +6,32 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_MACRO_DIR([m4])
 
+dnl ******************************
+dnl Compiler Warning Flags
+dnl ******************************
+AS_COMPILER_FLAGS(WARNING_FLAGS,
+        "-DG_DISABLE_DEPRECATED
+        -DPANGO_DISABLE_DEPRECATED
+        -DGDK_PIXBUF_DISABLE_DEPRECATED
+        -DGDK_DISABLE_DEPRECATED
+        -DGTK_DISABLE_DEPRECATED
+        -DG_DISABLE_SINGLE_INCLUDES
+        -DGTK_DISABLE_SINGLE_INCLUDES
+        -Wall -Wextra
+        -Wno-missing-field-initializers
+        -Wno-sign-compare
+        -Wno-unused-parameter
+        -Wdeclaration-after-statement
+        -Werror-implicit-function-declaration
+        -Wformat-security -Winit-self
+        -Wmissing-declarations -Wmissing-include-dirs
+        -Wmissing-noreturn -Wnested-externs -Wpointer-arith
+        -Wredundant-decls -Wundef -Wwrite-strings")
+AC_SUBST(WARNING_FLAGS)
+
+CFLAGS="$CFLAGS $WARNING_FLAGS"
+#LDFLAGS="$LDFLAGS -Wl,--no-undefined"
+
 AC_CANONICAL_HOST
 
 AM_MAINTAINER_MODE

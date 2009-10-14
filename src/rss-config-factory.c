@@ -189,7 +189,6 @@ accept_cookies_cb(GtkWidget *widget, GtkWidget *data)
 	/* Save the new setting to gconf */
 	gconf_client_set_bool (rss_gconf, GCONF_KEY_ACCEPT_COOKIES, active, NULL);
 	gtk_widget_set_sensitive(data, active);
-	
 }
 
 static void
@@ -314,11 +313,12 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 {
         GtkListStore  *store = user_data;
         GtkTreeIter    iter;
+	gchar *full_name, *name, *full_path;
 
         gtk_list_store_append (store, &iter);
-	gchar *full_name = lookup_feed_folder(key);
-	gchar *name = g_path_get_basename(full_name);
-	gchar *full_path = g_strconcat(lookup_main_folder(), "/", full_name, NULL);
+	full_name = lookup_feed_folder(key);
+	name = g_path_get_basename(full_name);
+	full_path = g_strconcat(lookup_main_folder(), "/", full_name, NULL);
         gtk_list_store_set (store, &iter,
                 0, g_hash_table_lookup(rf->hre, lookup_key(key)),
                 1, name,
@@ -374,24 +374,39 @@ add_feed *
 build_dialog_add(gchar *url, gchar *feed_text)
 {
         char *gladefile;
-  	add_feed *feed = g_new0(add_feed, 1);
-  	feed->enabled = TRUE;
+	add_feed *feed = g_new0(add_feed, 1);
 	GladeXML  *gui;
 	gchar *flabel = NULL;
-  	gboolean fhtml = FALSE;
-  	gboolean del_unread = FALSE;
-  	guint del_feed = 0;
+	gchar *fname;
+	gboolean fhtml = FALSE;
+	gboolean del_unread = FALSE;
+	gboolean auth_enabled;
+	guint del_feed = 0;
 	gpointer key = NULL;
 	GtkAccelGroup *accel_group = gtk_accel_group_new ();
+	GtkWidget *ok, *cancel;
+	GtkWidget *dialog1, *child;
+	GtkWidget *authuser, *authpass;
+	GtkWidget *adv_options, *entry1, *entry2, *feed_name;
+	GtkToggleButton *useauth;
+	GtkWidget *feed_name_label, *location_button, *location_label;
+	GtkWidget *combobox1, *checkbutton1, *checkbutton2, *checkbutton3;
+	GtkWidget *radiobutton1, *radiobutton2, *radiobutton3;
+	GtkWidget *radiobutton4, *radiobutton5, *radiobutton6, *radiobutton7;
+	GtkWidget *ttl_value;
+	GtkWidget *spinbutton1, *spinbutton2;
+	GtkWidget *checkbutton4;
+        GtkImage *image;
 
+  	feed->enabled = TRUE;
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                                       "rss-ui.glade",
                                       NULL);
         gui = glade_xml_new (gladefile, NULL, GETTEXT_PACKAGE);
         g_free (gladefile);
 
-        GtkWidget *dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "feed_dialog");
-        GtkWidget *child = (GtkWidget *)glade_xml_get_widget (gui, "dialog-vbox9");
+	dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "feed_dialog");
+	child = (GtkWidget *)glade_xml_get_widget (gui, "dialog-vbox9");
 //	gtk_widget_show(dialog1);
 //  	gtk_window_set_keep_above(GTK_WINDOW(dialog1), FALSE);
  	if (url != NULL)
@@ -401,9 +416,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
 //  	gtk_window_set_modal (GTK_WINDOW (dialog1), FALSE);
 
 	
-        GtkWidget *adv_options = (GtkWidget *)glade_xml_get_widget (gui, "adv_options");
-
-        GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (gui, "url_entry");
+        adv_options = (GtkWidget *)glade_xml_get_widget (gui, "adv_options");
+        entry1 = (GtkWidget *)glade_xml_get_widget (gui, "url_entry");
   	//editing
   	if (url != NULL) {
   		key = lookup_key(feed_text);
@@ -430,57 +444,57 @@ build_dialog_add(gchar *url, gchar *feed_text)
   	}
   	feed->validate = 1;
 
-        GtkWidget *entry2 = (GtkWidget *)glade_xml_get_widget (gui, "entry2");
-        GtkWidget *feed_name = (GtkWidget *)glade_xml_get_widget (gui, "feed_name");
+        entry2 = (GtkWidget *)glade_xml_get_widget (gui, "entry2");
+        feed_name = (GtkWidget *)glade_xml_get_widget (gui, "feed_name");
 	if (url != NULL) {
 		flabel = g_build_path("/", 
 				lookup_main_folder(),
 				lookup_feed_folder(feed_text),
 				NULL);
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
-		gchar *fname = g_path_get_basename(lookup_feed_folder(feed_text));
+		fname = g_path_get_basename(lookup_feed_folder(feed_text));
 		gtk_entry_set_text(GTK_ENTRY(feed_name), fname);
 		g_free(fname);
 		gtk_widget_show(feed_name);
-        	GtkWidget *feed_name_label = (GtkWidget *)glade_xml_get_widget (gui, "feed_name_label");
+        	feed_name_label = (GtkWidget *)glade_xml_get_widget (gui, "feed_name_label");
 		gtk_widget_show(feed_name_label);
-        	GtkWidget *location_button = (GtkWidget *)glade_xml_get_widget (gui, "location_button");
+        	location_button = (GtkWidget *)glade_xml_get_widget (gui, "location_button");
 		gtk_widget_show(location_button);
-        	GtkWidget *location_label = (GtkWidget *)glade_xml_get_widget (gui, "location_label");
+        	location_label = (GtkWidget *)glade_xml_get_widget (gui, "location_label");
 		gtk_widget_show(location_label);
         	gtk_label_set_use_markup(GTK_LABEL(entry2), 1);
   	} else
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
 
-	GtkWidget *combobox1 = (GtkWidget *)glade_xml_get_widget (gui, "combobox1");
+	combobox1 = (GtkWidget *)glade_xml_get_widget (gui, "combobox1");
 	gtk_combo_box_set_active(GTK_COMBO_BOX(combobox1), 0);
 
-	GtkWidget *checkbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "html_check");
+	checkbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "html_check");
   	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1-fhtml);
 
-	GtkWidget *checkbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "enabled_check");
+	checkbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "enabled_check");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton2), feed->enabled);
 
-	GtkWidget *checkbutton3 = (GtkWidget *)glade_xml_get_widget (gui, "validate_check");
+	checkbutton3 = (GtkWidget *)glade_xml_get_widget (gui, "validate_check");
 	if (url)
         	gtk_widget_set_sensitive(checkbutton3, FALSE);
   	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton3), feed->validate);
 
-	GtkWidget *spinbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb1");
-	GtkWidget *spinbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb2");
+	spinbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb1");
+	spinbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb2");
   	if (feed->del_messages)
         	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1), feed->del_messages);
 	g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
 
-	GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb1");
-	GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb2");
-	GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb3");
-	GtkWidget *radiobutton7 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb4");
-	GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_global");
-	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
-	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
-	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
-        GtkImage *image = (GtkImage *)glade_xml_get_widget (gui, "image1");
+	radiobutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb1");
+	radiobutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb2");
+	radiobutton3 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb3");
+	radiobutton7 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb4");
+	radiobutton4 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_global");
+	radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
+	radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
+	ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
+        image = (GtkImage *)glade_xml_get_widget (gui, "image1");
 	gtk_spin_button_set_range((GtkSpinButton *)ttl_value, 0, (guint)MAX_TTL);
 
 	/*set feed icon*/
@@ -513,7 +527,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
         	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton2), feed->del_days);
 	g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_days_cb), feed);
 
-	GtkWidget *checkbutton4 = (GtkWidget *)glade_xml_get_widget (gui, "storage_unread");
+	checkbutton4 = (GtkWidget *)glade_xml_get_widget (gui, "storage_unread");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
 
        	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ttl_value), feed->ttl);
@@ -534,26 +548,26 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		break;
 	}
 
-	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (gui, "auth_user");
-	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (gui, "auth_pass");
-	GtkToggleButton *useauth = (GtkToggleButton *)glade_xml_get_widget (gui, "use_auth");
+	authuser = (GtkWidget *)glade_xml_get_widget (gui, "auth_user");
+	authpass = (GtkWidget *)glade_xml_get_widget (gui, "auth_pass");
+	useauth = (GtkToggleButton *)glade_xml_get_widget (gui, "use_auth");
 
 	if (url && read_up(url)) {
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (useauth), 1);
 		gtk_entry_set_text(GTK_ENTRY(authuser), g_hash_table_lookup(rf->hruser, url));
 		gtk_entry_set_text(GTK_ENTRY(authpass), g_hash_table_lookup(rf->hrpass, url));
 	}
-	gboolean auth_enabled = gtk_toggle_button_get_active(useauth);
+	auth_enabled = gtk_toggle_button_get_active(useauth);
 	gtk_widget_set_sensitive(authuser, auth_enabled);
 	gtk_widget_set_sensitive(authpass, auth_enabled);
 	g_signal_connect(useauth, "toggled", G_CALLBACK(disable_widget_cb), gui);
 
-	GtkWidget *ok = (GtkWidget *)glade_xml_get_widget (gui, "ok_button");
+	ok = (GtkWidget *)glade_xml_get_widget (gui, "ok_button");
 	/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
 	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
 
-	GtkWidget *cancel = (GtkWidget *)glade_xml_get_widget (gui, "cancel_button");
+	cancel = (GtkWidget *)glade_xml_get_widget (gui, "cancel_button");
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancel, GTK_RESPONSE_CANCEL);
 	GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
 
@@ -565,13 +579,13 @@ build_dialog_add(gchar *url, gchar *feed_text)
                               GTK_ACCEL_VISIBLE);
 	gtk_window_add_accel_group (GTK_WINDOW (dialog1), accel_group);
 
-  	feed->fetch_html = fhtml;
+	feed->fetch_html = fhtml;
         feed->dialog = dialog1;
         feed->child = child;
 	feed->gui = gui;
 	if (flabel)
 		g_free(flabel);
-  	return feed;
+	return feed;
 }
 
 void
@@ -592,12 +606,13 @@ actions_dialog_add(add_feed *feed, gchar *url)
 	GtkWidget *spinbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb1");
 	GtkWidget *spinbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb2");
 	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_value");
-  	gboolean fhtml = feed->fetch_html;
+	gboolean fhtml = feed->fetch_html;
+	guint i=0;
 
-  	gint result = gtk_dialog_run(GTK_DIALOG(feed->dialog));
-  	switch (result) {
-    	case GTK_RESPONSE_OK:
-        	feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
+	gint result = gtk_dialog_run(GTK_DIALOG(feed->dialog));
+	switch (result) {
+	case GTK_RESPONSE_OK:
+		feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
         	fhtml = gtk_toggle_button_get_active (
         	        GTK_TOGGLE_BUTTON (checkbutton1));
         	fhtml ^= 1;
@@ -606,7 +621,6 @@ actions_dialog_add(add_feed *feed, gchar *url)
                 	GTK_TOGGLE_BUTTON(checkbutton2));
         	feed->validate = gtk_toggle_button_get_active(
                 	GTK_TOGGLE_BUTTON(checkbutton3));
-        	guint i=0;
         	while (i<4) {
                 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
                         	break;
@@ -667,12 +681,13 @@ create_dialog_add(gchar *url, gchar *feed_text)
 gboolean
 store_redraw(GtkTreeView *data)
 {
+	GtkTreeModel *model;
 	g_return_val_if_fail(data, FALSE);
 	g_return_val_if_fail(GTK_WIDGET_REALIZED(data), FALSE);
 
 	if (!store_redrawing) {
 		store_redrawing = 1;
-        	GtkTreeModel *model = gtk_tree_view_get_model (data);
+        	model = gtk_tree_view_get_model (data);
 		gtk_list_store_clear(GTK_LIST_STORE(model));
         	g_hash_table_foreach(rf->hrname, construct_list, model);
 		store_redrawing = 0;
@@ -699,14 +714,16 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 {
         gchar *text;
         add_feed *feed = create_dialog_add(NULL, NULL);
+	GtkWidget *msg_feeds, *progress;
+
 	if (feed->dialog)
                 gtk_widget_destroy(feed->dialog);
-        GtkWidget *msg_feeds = e_error_new(
+	msg_feeds = e_error_new(
 				GTK_WINDOW(rf->preferences),
 				"org-gnome-evolution-rss:rssmsg",
 				"",
 				NULL);
-	GtkWidget *progress = gtk_progress_bar_new();
+	progress = gtk_progress_bar_new();
         gtk_box_pack_start(
 		GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
 	 	progress,
@@ -757,6 +774,9 @@ destroy_delete(GtkWidget *selector, gpointer user_data)
 static void
 rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
 {
+	int i;
+	GPtrArray *uids;
+
         while (fi) {
                 CamelFolder *folder;
 
@@ -765,8 +785,7 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
                 if (!(folder = camel_store_get_folder (store, fi->full_name, 0, ex)))
                         return;
 
-                        GPtrArray *uids = camel_folder_get_uids (folder);
-                        int i;
+                        uids = camel_folder_get_uids (folder);
 
                         camel_folder_freeze (folder);
                         for (i = 0; i < uids->len; i++)
@@ -881,15 +900,17 @@ delete_feed_folder_alloc(gchar *old_name)
 {
         FILE *f;
 	gchar *feed_dir = rss_component_peek_base_directory();
+	gchar *feed_file, *orig_name;
+
         if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
             g_mkdir_with_parents (feed_dir, 0755);
-        gchar *feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
+        feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
         g_free(feed_dir);
         f = fopen(feed_file, "wb");
         if (!f)
 		return;
 
-        gchar *orig_name = g_hash_table_lookup(rf->feed_folders, old_name);
+        orig_name = g_hash_table_lookup(rf->feed_folders, old_name);
         if (orig_name)
                 g_hash_table_remove(rf->feed_folders, old_name);
 
@@ -936,11 +957,12 @@ feeds_dialog_disable(GtkDialog *d, gpointer data)
         GtkTreeModel     *model;
         GtkTreeIter       iter;
         gchar *name;
+	gpointer key;
 
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(rf->treeview));
         if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
                 gtk_tree_model_get (model, &iter, 3, &name, -1);
-                gpointer key = lookup_key(name);
+                key = lookup_key(name);
                 g_free(name);
                 g_hash_table_replace(rf->hre, g_strdup(key),
                         GINT_TO_POINTER(!g_hash_table_lookup(rf->hre, key)));
@@ -985,7 +1007,7 @@ remove_feed_dialog(gchar *msg)
 		checkbutton1,
                 "clicked",
                 G_CALLBACK(start_check_cb),
-                GCONF_KEY_REMOVE_FOLDER);
+                (gpointer)GCONF_KEY_REMOVE_FOLDER);
   gtk_box_pack_start (
 		GTK_BOX (vbox1),
 		checkbutton1,
@@ -1008,6 +1030,7 @@ feeds_dialog_delete(GtkDialog *d, gpointer data)
         GtkTreeSelection *selection;
         GtkTreeModel     *model;
         GtkTreeIter       iter;
+	GtkWidget *rfd;
         gchar *name;
 
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
@@ -1015,7 +1038,7 @@ feeds_dialog_delete(GtkDialog *d, gpointer data)
                 && !rf->import) {
                 rf->import = 1;
                 gtk_tree_model_get (model, &iter, 3, &name, -1);
-                GtkWidget *rfd = remove_feed_dialog(name);
+                rfd = remove_feed_dialog(name);
                 gtk_widget_show(rfd);
                 g_signal_connect(rfd, "response", G_CALLBACK(delete_response), data);
                 g_signal_connect(rfd, "destroy", G_CALLBACK(destroy_delete), rfd);
@@ -1029,6 +1052,10 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 	gchar *text = NULL;
 	gpointer key = lookup_key(feed_name);
 	gchar *prefix = NULL;
+	hrfeed *saved_feed;
+	gpointer md5;
+	CamelException ex;
+	CamelStore *store = rss_component_peek_local_store();
 
 	GtkWidget *msg_feeds = e_error_new(
 			GTK_WINDOW(rf->preferences),
@@ -1071,9 +1098,9 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
                                                         _("Feed already exists!"));
                                                 goto out;
 			}
-			hrfeed *saved_feed = save_feed_hash(feed_name);
+			saved_feed = save_feed_hash(feed_name);
                        	remove_feed_hash(feed_name);
-                        gpointer md5 = gen_md5(feed->feed_url);
+                        md5 = gen_md5(feed->feed_url);
 			if (!setup_feed(feed)) {
 				//editing might loose a corectly setup feed
 				//so re-add previous deleted feed
@@ -1112,9 +1139,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 					NULL);
 				gchar *dir = g_path_get_dirname(a);
 				gchar *b = g_build_path("/", dir, feed->feed_name, NULL);
-				CamelException ex;
 				camel_exception_init (&ex);
-				CamelStore *store = rss_component_peek_local_store();
                                 camel_store_rename_folder (store, a, b, &ex);
                                 if (camel_exception_is_set (&ex)) {
                                         e_error_run(NULL,
@@ -1171,11 +1196,11 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
                 name = g_hash_table_lookup(rf->hr, key);
                 if (name) {
                         feed = create_dialog_add(name, feed_name);
-                    	if (feed->dialog)
+			if (feed->dialog)
                                 gtk_widget_destroy(feed->dialog);
 			process_dialog_edit(feed, name, feed_name);
 		}
-        	if (feed->feed_url)
+		if (feed->feed_url)
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
 	}
 }
@@ -1192,6 +1217,7 @@ import_dialog_response(GtkWidget *selector, guint response, gpointer user_data)
 gboolean
 import_one_feed(gchar *url, gchar *title, gchar *prefix)
 {
+	guint res;
         add_feed *feed = g_new0(add_feed, 1);
         feed->changed=0;
         feed->add=1;
@@ -1209,7 +1235,7 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
                                 _("Feed already exists!"));
                return FALSE;
         }
-        guint res = setup_feed(feed);
+	res = setup_feed(feed);
         d(g_print("feed imported:%d\n", res));
         g_free(feed->feed_url);
         g_free(feed->feed_name);
@@ -1228,26 +1254,28 @@ iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type)
 	*title = NULL;
 
 	if (type == 0) {
-        	src = html_find(src, "outline");
-        	*url = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
+		src = html_find(src, (gchar *)"outline");
+		*url = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
 		*title = xmlGetProp(src, (xmlChar *)"title");
 		if (!(*title = xmlGetProp(src, (xmlChar *)"title")))
 			*title = xmlGetProp(src, (xmlChar *)"text");
 	} else if (type == 1) {
 		xmlNode *my;
-		src = html_find(src, "member");
+		src = html_find(src, (gchar *)"member");
 		my = layer_find_pos(src, "member", "Agent");
 		*title = xmlCharStrdup(layer_find(my, "name", NULL));
-		my =  html_find(my, "Document");
+		my =  html_find(my, (gchar *)"Document");
 		*url =  (gchar *)xmlGetProp(my, (xmlChar *)"about");
 		if (!*url) {
-			my =  html_find(my, "channel");
+			my =  html_find(my, (gchar *)"channel");
 			*url =  (gchar *)xmlGetProp(my, (xmlChar *)"about");
 		}
 	}
 	return src;
 	
 }
+
+void import_opml(gchar *file);
 
 void
 import_opml(gchar *file)
@@ -1258,9 +1286,11 @@ import_opml(gchar *file)
         guint current = 0;
 	guint type = 0; //file type
         gchar *what = NULL;
+	gchar *msg, *tmp;
         GtkWidget *import_dialog = NULL;
         GtkWidget *import_label;
         GtkWidget *import_progress;
+	float fr;
 
         xmlNode *src = (xmlNode *)xmlParseFile (file);
 	xmlNode *doc = NULL;
@@ -1273,7 +1303,7 @@ import_opml(gchar *file)
 		goto out;
 	}
         doc = src;
-        gchar *msg = g_strdup(_("Importing feeds..."));
+        msg = g_strdup(_("Importing feeds..."));
         import_dialog = e_error_new(
 		GTK_WINDOW(rf->preferences),
 		"shell:importing",
@@ -1370,7 +1400,7 @@ import_opml(gchar *file)
 				if (last && strcmp(last, ".")) {
 					g_print("retract:%s\n", last);
 					size = strstr(root, last)-root-1;
-					gchar *tmp = root;
+					tmp = root;
 					if (size > 0)
 						root = g_strndup(root, size);
 					else
@@ -1413,7 +1443,7 @@ import_opml(gchar *file)
                         		while (gtk_events_pending ())
                                 		gtk_main_iteration ();
 					current++;
-					float fr = ((current*100)/total);
+					fr = ((current*100)/total);
 					gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
 					what = g_strdup_printf(_("%2.0f%% done"), fr);
 					gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
@@ -1450,7 +1480,7 @@ import_opml(gchar *file)
                         while (gtk_events_pending ())
                                 gtk_main_iteration ();
                         current++;
-                        float fr = ((current*100)/total);
+                        fr = ((current*100)/total);
                         gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
                         what = g_strdup_printf(_("%2.0f%% done"), fr);
                         gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
@@ -1504,11 +1534,17 @@ import_toggle_cb_ena (GtkWidget *widget, gpointer data)
 static void
 decorate_import_fs (gpointer data)
 {
+	GtkFileFilter *file_filter = gtk_file_filter_new ();
+        GtkFileFilter *filter = gtk_file_filter_new ();
+        GtkWidget *vbox1;
+        GtkWidget *checkbutton1;
+        GtkWidget *checkbutton2;
+        GtkWidget *checkbutton3;
+
         gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (data), TRUE);
         gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
         gtk_file_chooser_set_local_only (data, FALSE);
 
-        GtkFileFilter *file_filter = gtk_file_filter_new ();
         gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*");
         gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("All Files"));
         gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
@@ -1529,16 +1565,9 @@ decorate_import_fs (gpointer data)
         gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (data),
                                         GTK_FILE_FILTER(file_filter));
 
-
-        GtkFileFilter *filter = gtk_file_filter_new ();
         gtk_file_filter_add_pattern (filter, "*.opml");
         gtk_file_filter_add_pattern (filter, "*.xml");
         gtk_file_chooser_set_filter(data, filter);
-
-        GtkWidget *vbox1;
-        GtkWidget *checkbutton1;
-        GtkWidget *checkbutton2;
-        GtkWidget *checkbutton3;
 
         vbox1 = gtk_vbox_new (FALSE, 0);
         checkbutton1 = gtk_check_button_new_with_mnemonic (
@@ -1580,6 +1609,8 @@ decorate_import_fs (gpointer data)
         g_signal_connect(data, "destroy", G_CALLBACK(gtk_widget_destroy), data);
 }
 
+GtkWidget* create_import_dialog (void);
+
 GtkWidget*
 create_import_dialog (void)
 {
@@ -1616,6 +1647,8 @@ create_import_dialog (void)
   gtk_widget_grab_default (button2);
   return import_file_select;
 }
+
+GtkWidget* create_export_dialog (void);
 
 GtkWidget*
 create_export_dialog (void)
@@ -1706,6 +1739,8 @@ while (info) {
 static void
 construct_opml_line(gpointer key, gpointer value, gpointer user_data)
 {
+	gchar *tmp, *what;
+	float fr;
         gchar *url = g_hash_table_lookup(rf->hr, value);
         gchar *url_esc = g_markup_escape_text(url, strlen(url));
         gchar *key_esc = g_markup_escape_text(key, strlen(key));
@@ -1731,7 +1766,7 @@ out:
 #endif
 
         //gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"%s\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
-        gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
+	tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
                 key_esc, key_esc, url_esc, url_esc);
         if (buffer != NULL)
                 buffer = g_strconcat(buffer, tmp, NULL);
@@ -1739,12 +1774,14 @@ out:
                 buffer = g_strdup(tmp);
         g_free(tmp);
         count++;
-        float fr = ((count*100)/g_hash_table_size(rf->hr));
+	fr = ((count*100)/g_hash_table_size(rf->hr));
         gtk_progress_bar_set_fraction((GtkProgressBar *)user_data, fr/100);
-        gchar *what = g_strdup_printf(_("%2.0f%% done"), fr);
+        what = g_strdup_printf(_("%2.0f%% done"), fr);
         gtk_progress_bar_set_text((GtkProgressBar *)user_data, what);
         g_free(what);
 }
+
+void export_opml(gchar *file);
 
 void
 export_opml(gchar *file)
@@ -1753,6 +1790,7 @@ export_opml(gchar *file)
         GtkWidget *import_label;
         GtkWidget *import_progress;
         char outstr[200];
+	gchar *opml;
         time_t t;
         struct tm *tmp;
         FILE *f;
@@ -1791,7 +1829,7 @@ export_opml(gchar *file)
         t = time(NULL);
         tmp = localtime(&t);
         strftime(outstr, sizeof(outstr), "%a, %d %b %Y %H:%M:%S %z", tmp);
-        gchar *opml = g_strdup_printf("<opml version=\"1.1\">\n<head>\n"
+        opml = g_strdup_printf("<opml version=\"1.1\">\n<head>\n"
                 "<title>Evolution-RSS Exported Feeds</title>\n"
                 "<dateModified>%s</dateModified>\n</head>\n<body>%s</body>\n</opml>\n",
                 outstr,
@@ -1840,11 +1878,13 @@ select_export_response(GtkWidget *selector, guint response, gpointer user_data)
 SoupCookieJar *
 import_cookies(gchar *file)
 {
+	FILE *f;
 	SoupCookieJar *jar = NULL;
 	gchar header[16];
+
 	memset(header, 0, 16);
 	d(g_print("import cookies from %s\n", file));
-	FILE *f = fopen(file, "r");
+	f = fopen(file, "r");
 	if (f) {
 		fgets(header, 16, f);
 		fclose(f);
@@ -1859,6 +1899,8 @@ import_cookies(gchar *file)
 	}
 	return jar;
 }
+
+void inject_cookie(SoupCookie *cookie, GtkProgressBar *progress);
 
 void
 inject_cookie(SoupCookie *cookie, GtkProgressBar *progress)
@@ -1880,12 +1922,14 @@ inject_cookie(SoupCookie *cookie, GtkProgressBar *progress)
 void
 process_cookies(SoupCookieJar *jar)
 {
+	GSList *list = NULL;
+        gchar *msg = g_strdup(_("Importing cookies..."));
+	GtkWidget *import_dialog, *import_label, *import_progress;
+
 	ccurrent = 0;
 	ctotal = 0;
-	GSList *list = NULL;
 	list = soup_cookie_jar_all_cookies(jar);
-        gchar *msg = g_strdup(_("Importing cookies..."));
-        GtkWidget *import_dialog = e_error_new(
+	import_dialog = e_error_new(
 			GTK_WINDOW(rf->preferences),
 			"shell:importing",
 			msg,
@@ -1896,8 +1940,8 @@ process_cookies(SoupCookieJar *jar)
 		"response",
 		G_CALLBACK(import_dialog_response),
 		NULL);
-        GtkWidget *import_label = gtk_label_new(_("Please wait"));
-        GtkWidget *import_progress = gtk_progress_bar_new();
+	import_label = gtk_label_new(_("Please wait"));
+	import_progress = gtk_progress_bar_new();
         gtk_box_pack_start(
 		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
                 import_label,
@@ -1984,10 +2028,11 @@ create_import_cookies_dialog (void)
 void
 decorate_import_cookies_fs (gpointer data)
 {
+        GtkFileFilter *file_filter = gtk_file_filter_new ();
+        GtkFileFilter *filter = gtk_file_filter_new ();
         gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
         gtk_file_chooser_set_local_only (data, FALSE);
 
-        GtkFileFilter *file_filter = gtk_file_filter_new ();
         gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*");
         gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("All Files"));
         gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
@@ -2009,7 +2054,6 @@ decorate_import_cookies_fs (gpointer data)
                                         GTK_FILE_FILTER(file_filter));
 
 
-        GtkFileFilter *filter = gtk_file_filter_new ();
         gtk_file_filter_add_pattern (filter, "*.txt");
         gtk_file_filter_add_pattern (filter, "*.sqlite");
         gtk_file_chooser_set_filter(data, filter);
@@ -2029,11 +2073,13 @@ import_cookies_cb (GtkWidget *widget, gpointer data)
 static void
 decorate_export_fs (gpointer data)
 {
+        GtkFileFilter *file_filter = gtk_file_filter_new ();
+        GtkFileFilter *filter = gtk_file_filter_new ();
+
         gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (data), TRUE);
         gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
         gtk_file_chooser_set_local_only (data, FALSE);
 
-        GtkFileFilter *file_filter = gtk_file_filter_new ();
         gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*");
         gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("All Files"));
         gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
@@ -2055,7 +2101,6 @@ decorate_export_fs (gpointer data)
                                         GTK_FILE_FILTER(file_filter));
 
 
-        GtkFileFilter *filter = gtk_file_filter_new ();
         gtk_file_filter_add_pattern (filter, "*.opml");
         gtk_file_filter_add_pattern (filter, "*.xml");
         gtk_file_chooser_set_filter(data, filter);
@@ -2098,25 +2143,26 @@ destroy_ui_data (gpointer data)
 {
         UIData *ui = (UIData *) data;
 
-        if (!ui)
-                return;
+	g_return_if_fail(ui != NULL);
 
         g_object_unref (ui->xml);
         g_object_unref (ui->gconf);
         g_free (ui);
 }
 
+GtkWidget *e_plugin_lib_get_configure_widget (EPlugin *epl);
+
 GtkWidget *
 e_plugin_lib_get_configure_widget (EPlugin *epl)
 {
 	GtkListStore  *store;
         GtkTreeIter iter;
-        GtkWidget *hbox;
-	guint i;
-
+        GtkWidget *hbox, *combo;
+	GtkCellRenderer *renderer;
+	guint i, render;
         UIData *ui = g_new0 (UIData, 1);
-
         char *gladefile;
+	gdouble adj;
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                         "rss-html-rendering.glade",
@@ -2126,9 +2172,9 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 
 
 	ui->combobox = glade_xml_get_widget(ui->xml, "hbox1");
-        GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+	renderer = gtk_cell_renderer_text_new ();
         store = gtk_list_store_new(1, G_TYPE_STRING);
-        GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
+	combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
         for (i=0;i<3;i++) {
                 gtk_list_store_append(store, &iter);
                 gtk_list_store_set(store, &iter, 0, _(engines[i].label), -1);
@@ -2137,7 +2183,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
                                     "text", 0,
                                     NULL);
-        guint render = GPOINTER_TO_INT(gconf_client_get_int(rss_gconf,
+        render = GPOINTER_TO_INT(gconf_client_get_int(rss_gconf,
                                     GCONF_KEY_HTML_RENDER,
                                     NULL));
 
@@ -2178,33 +2224,33 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	ui->check = glade_xml_get_widget(ui->xml, "enable_java");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL));
-	g_signal_connect(ui->check, 
-		"clicked", 
-		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_HTML_JAVA);
+	g_signal_connect(ui->check,
+		"clicked",
+		G_CALLBACK(start_check_cb),
+		(gpointer)GCONF_KEY_HTML_JAVA);
 
 	ui->check = glade_xml_get_widget(ui->xml, "image_resize");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_IMAGE_RESIZE, NULL));
-	g_signal_connect(ui->check, 
-		"clicked", 
-		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_IMAGE_RESIZE);
+	g_signal_connect(ui->check,
+		"clicked",
+		G_CALLBACK(start_check_cb),
+		(gpointer)GCONF_KEY_IMAGE_RESIZE);
 
 	ui->check = glade_xml_get_widget(ui->xml, "enable_js");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL));
-	g_signal_connect(ui->check, 
-		"clicked", 
-		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_HTML_JS);
+	g_signal_connect(ui->check,
+		"clicked",
+		G_CALLBACK(start_check_cb),
+		(gpointer)GCONF_KEY_HTML_JS);
 
 	ui->check = glade_xml_get_widget(ui->xml, "accept_cookies");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL));
-	g_signal_connect(ui->check, 
-		"clicked", 
-		G_CALLBACK(accept_cookies_cb), 
+	g_signal_connect(ui->check,
+		"clicked",
+		G_CALLBACK(accept_cookies_cb),
 		ui->import);
 	ui->import = glade_xml_get_widget(ui->xml, "import_cookies");
 	//we have to have ui->import looked up
@@ -2217,12 +2263,12 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 #endif
 
 	ui->nettimeout = glade_xml_get_widget(ui->xml, "nettimeout");
-  	gdouble adj = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
+	adj = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
 	if (adj < NETWORK_MIN_TIMEOUT) {
 		adj = 60;
-    		gconf_client_set_float (rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, adj, NULL);
+		gconf_client_set_float (rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, adj, NULL);
 	}
-  	if (adj)
+	if (adj)
 		gtk_spin_button_set_value((GtkSpinButton *)ui->nettimeout, adj);
 	g_signal_connect(ui->nettimeout, "changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);
 	g_signal_connect(ui->nettimeout, "value-changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);
@@ -2235,22 +2281,21 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_STATUS_ICON);
+		(gpointer)GCONF_KEY_STATUS_ICON);
 	ui->check = glade_xml_get_widget(ui->xml, "blink_icon");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_BLINK_ICON, NULL));
 	g_signal_connect(ui->check, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_BLINK_ICON);
+		(gpointer)GCONF_KEY_BLINK_ICON);
 	ui->check = glade_xml_get_widget(ui->xml, "feed_icon");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_FEED_ICON, NULL));
-	g_signal_connect(ui->check, 
-		"clicked", 
-		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_FEED_ICON);
-	
+	g_signal_connect(ui->check,
+		"clicked",
+		G_CALLBACK(start_check_cb),
+		(gpointer)GCONF_KEY_FEED_ICON);
 
         ui->gconf = gconf_client_get_default ();
 	hbox = gtk_vbox_new (FALSE, 0);
@@ -2268,46 +2313,63 @@ struct _EConfigTargetRSS
 	gchar *label;
 } ER;
 
+void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target);
+
 void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target)
 {
 	d(g_print("abort"));
 }
 
+void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target);
+
 void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 {
 	const gchar *user = NULL, *pass = NULL;
+	GtkWidget *entry1, *checkbutton1, *checkbutton2;
+	GtkWidget *checkbutton3, *checkbutton4;
+	GtkWidget *radiobutton1, *radiobutton2, *radiobutton3;
+	GtkWidget *radiobutton4, *radiobutton5, *radiobutton6;
+	GtkWidget *radiobutton7;
+	GtkWidget *spinbutton1, *spinbutton2;
+	GtkWidget *ttl_value, *feed_name_entry;
+	GtkWidget *authuser, *authpass, *useauth;
+	gchar *feed_name;
+	gboolean fhtml, auth_enabled;
+	guint i=0;
+
 	add_feed *feed = (add_feed *)g_object_get_data((GObject *)epl, "add-feed");
 	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
 	gchar *ofolder = (gchar *)g_object_get_data((GObject *)epl, "ofolder");
-	
+
 	EMConfigTargetFolder *targetfolder = (EMConfigTargetFolder *)target->config->target;
 	gchar *main_folder = lookup_main_folder();
 	gchar *folder = targetfolder->folder->full_name;
- 	
+
 	if (folder == NULL
 	|| g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
 	|| !g_ascii_strcasecmp(folder, main_folder))
 		return;
 
-	GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "url_entry");
-        GtkWidget *checkbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "html_check");
-        GtkWidget *checkbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "enabled_check");
-        GtkWidget *checkbutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "validate_check");
-        GtkWidget *checkbutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_unread");
-        GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb1");
-        GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb2");
-        GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb3");
-        GtkWidget *radiobutton7 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb4");
-        GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_global");
-        GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl");
-        GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_disabled");
-        GtkWidget *spinbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb1");
-        GtkWidget *spinbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb2");
-        GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_value");
-        GtkWidget *feed_name_entry = (GtkWidget *)glade_xml_get_widget (feed->gui, "feed_name");
-	gchar *feed_name = g_strdup(gtk_entry_get_text(GTK_ENTRY(feed_name_entry)));
+	entry1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "url_entry");
+	checkbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "html_check");
+	checkbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "enabled_check");
+	checkbutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "validate_check");
+	checkbutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_unread");
+	radiobutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb1");
+	radiobutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb2");
+	radiobutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb3");
+        radiobutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_global");
+        radiobutton5 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl");
+        radiobutton6 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_disabled");
+	radiobutton7 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb4");
+	spinbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb1");
+	spinbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb2");
+        ttl_value = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_value");
+        feed_name_entry = (GtkWidget *)glade_xml_get_widget (feed->gui, "feed_name");
+	feed_name = g_strdup(gtk_entry_get_text(GTK_ENTRY(feed_name_entry)));
 
-        gboolean fhtml = feed->fetch_html;
+
+	fhtml = feed->fetch_html;
 	feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
         fhtml = gtk_toggle_button_get_active (
                         GTK_TOGGLE_BUTTON (checkbutton1));
@@ -2315,10 +2377,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
         feed->fetch_html = fhtml;
 	feed->enabled = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(checkbutton2));
-                feed->validate = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(checkbutton3));
-                guint i=0;
-                while (i<4) {
+	feed->validate = gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(checkbutton3));
+	while (i<4) {
                         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
                                 break;
                         i++;
@@ -2330,7 +2391,7 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
                         i++;
                         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton7)))
                                 break;
-                }
+	}
                 feed->del_feed=i;
                 feed->del_unread = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON(checkbutton4));
@@ -2364,13 +2425,13 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 			feed->renamed = 1;
 		process_dialog_edit(feed, url, ofolder);
 	   
-	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_user");
-	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_pass");
-	GtkWidget *useauth = (GtkWidget *)glade_xml_get_widget (feed->gui, "use_auth");
-	
+	authuser = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_user");
+	authpass = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_pass");
+	useauth = (GtkWidget *)glade_xml_get_widget (feed->gui, "use_auth");
+
 	user = gtk_entry_get_text(GTK_ENTRY(authuser));
 	pass = gtk_entry_get_text(GTK_ENTRY(authpass));
-	gboolean auth_enabled = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (useauth));
+	auth_enabled = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (useauth));
 
 	if (user)
 		g_hash_table_remove(rf->hruser, url);
@@ -2388,6 +2449,8 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 		del_up(url);
 }
 
+GtkWidget *rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data);
+
 GtkWidget *
 rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 {
@@ -2396,7 +2459,9 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	gchar *main_folder = lookup_main_folder();
 	gchar *folder = target->folder->full_name;
 	add_feed *feed = NULL;
-	GtkWidget *action_area;
+	GtkWidget *action_area, *ok;
+	GtkAccelGroup *accel_group = gtk_accel_group_new ();
+	gpointer key;
 
 	//filter only rss folders
 	if (folder == NULL
@@ -2405,7 +2470,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
                 goto out;
 
 	ofolder = lookup_original_folder(folder);
-	gpointer key = lookup_key(ofolder);
+	key = lookup_key(ofolder);
 	if (!key) {
 		g_free(ofolder);
 		goto out;
@@ -2422,16 +2487,15 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 		action_area = GTK_DIALOG (feed->dialog)->action_area;
 #endif
 		gtk_widget_hide(action_area);
-		gtk_widget_ref(feed->child);
+		g_object_ref(feed->child);
 		gtk_container_remove (GTK_CONTAINER (feed->child->parent), feed->child);
 		gtk_notebook_remove_page((GtkNotebook *) data->parent, 0);
 		gtk_notebook_insert_page((GtkNotebook *) data->parent, (GtkWidget *) feed->child, NULL, 0);
 		g_object_set_data_full (G_OBJECT (epl), "add-feed", feed, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "url", url, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "ofolder", ofolder, NULL);
-		GtkWidget *ok = (GtkWidget *)glade_xml_get_widget (feed->gui, "ok_button");
+		ok = (GtkWidget *)glade_xml_get_widget (feed->gui, "ok_button");
 
-		GtkAccelGroup *accel_group = gtk_accel_group_new ();
 		gtk_widget_add_accelerator (ok, "activate", accel_group,
                               GDK_Return, (GdkModifierType) 0,
                               GTK_ACCEL_VISIBLE);
@@ -2449,6 +2513,13 @@ out:	return NULL;
  * BONOBO part *
  *=============*/
 
+#if EVOLUTION_VERSION < 22900
+EvolutionConfigControl *
+#else
+GtkWidget *
+#endif
+rss_config_control_new (void);
+
 //kb//
 #if EVOLUTION_VERSION < 22900
 EvolutionConfigControl *
@@ -2458,14 +2529,16 @@ GtkWidget *
 rss_config_control_new (void)
 {
         GtkWidget *control_widget;
+	GtkWidget *button1, *button2, *button3;
         char *gladefile;
 	setupfeed *sf;
-	
 	GtkListStore  *store;
 	GtkTreeIter    iter;
 	GtkCellRenderer *cell;
+	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
 	GtkTreeViewColumn *column;
+	gdouble adj;
 
 	d(g_print("rf->%p\n", rf));
 	sf = g_new0(setupfeed, 1);
@@ -2476,7 +2549,7 @@ rss_config_control_new (void)
         sf->gui = glade_xml_new (gladefile, NULL, GETTEXT_PACKAGE);
         g_free (gladefile);
 
-        GtkTreeView *treeview = (GtkTreeView *)glade_xml_get_widget (sf->gui, "feeds-treeview");
+	treeview = (GtkTreeView *)glade_xml_get_widget (sf->gui, "feeds-treeview");
 	rf->treeview = (GtkWidget *)treeview;
 	sf->treeview = (GtkWidget *)treeview;
 
@@ -2547,13 +2620,13 @@ rss_config_control_new (void)
 			G_CALLBACK(treeview_row_activated), 
 			treeview);
 
-       GtkWidget *button1 = glade_xml_get_widget (sf->gui, "feed-add-button");
+       button1 = glade_xml_get_widget (sf->gui, "feed-add-button");
        g_signal_connect(button1, "clicked", G_CALLBACK(feeds_dialog_add), treeview);
 
-       GtkWidget *button2 = glade_xml_get_widget (sf->gui, "feed-edit-button");
+       button2 = glade_xml_get_widget (sf->gui, "feed-edit-button");
        g_signal_connect(button2, "clicked", G_CALLBACK(feeds_dialog_edit), treeview);
 
-       GtkWidget *button3 = glade_xml_get_widget (sf->gui, "feed-delete-button");
+       button3 = glade_xml_get_widget (sf->gui, "feed-delete-button");
        g_signal_connect(button3, "clicked", G_CALLBACK(feeds_dialog_delete), treeview);
 
 
@@ -2568,7 +2641,7 @@ rss_config_control_new (void)
  	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check1), 
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_REP_CHECK, NULL));
 
-  	gdouble adj = gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL);
+  	adj = gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL);
   	if (adj)
 		gtk_spin_button_set_value((GtkSpinButton *)sf->spin, adj);
 	g_signal_connect(sf->check1, "clicked", G_CALLBACK(rep_check_cb), sf->spin);
@@ -2579,19 +2652,19 @@ rss_config_control_new (void)
 	g_signal_connect(sf->check2, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_START_CHECK);
+		(gpointer)GCONF_KEY_START_CHECK);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check3),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_DISPLAY_SUMMARY, NULL));
 	g_signal_connect(sf->check3, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_DISPLAY_SUMMARY);
+		(gpointer)GCONF_KEY_DISPLAY_SUMMARY);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check4),
         	gconf_client_get_bool(rss_gconf, GCONF_KEY_SHOW_COMMENTS, NULL));
 	g_signal_connect(sf->check4, 
 		"clicked", 
 		G_CALLBACK(start_check_cb), 
-		GCONF_KEY_SHOW_COMMENTS);
+		(gpointer)GCONF_KEY_SHOW_COMMENTS);
 
 
 #if (EVOLUTION_VERSION < 21900)		// include devel too
@@ -2684,7 +2757,7 @@ rss_config_control_new (void)
 	g_signal_connect(sf->export, "clicked", G_CALLBACK(export_cb), sf->export);
 
         control_widget = glade_xml_get_widget (sf->gui, "feeds-notebook");
-        gtk_widget_ref (control_widget);
+	g_object_ref (control_widget);
 
         gtk_container_remove (GTK_CONTAINER (control_widget->parent), control_widget);
 

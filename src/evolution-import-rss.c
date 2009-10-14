@@ -50,11 +50,12 @@ static void
 send_dbus_ping (void)
 {
 	DBusMessage *message;
-	DBusPendingCall *pending;
+	int ret;
+
 	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, "ping")))
 		return;
 	printf("ping evolution...\n");
-	int ret = dbus_connection_send (bus, message, NULL);
+	ret = dbus_connection_send (bus, message, NULL);
 	if (ret == FALSE)
     	{
      		printf("Could not send method call\n");
@@ -66,7 +67,6 @@ static void
 send_dbus_message (const char *name, const char *data)
 {
 	DBusMessage *message;
-	int serial= 123;
 	
 	/* Create a new message on the DBUS_INTERFACE */
 	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, name)))
@@ -165,12 +165,14 @@ int
 main (int argc, char *argv[])
 {
 	guint i=0;
+	char *s;
+
 	loop = g_main_loop_new (NULL, FALSE);
 
 	if (!init_dbus ())
 		return -1;
 
-	char *s = argv[1];
+	s = argv[1];
 
 	if (bus != NULL)
                 send_dbus_ping ();
