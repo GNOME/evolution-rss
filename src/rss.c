@@ -5506,7 +5506,6 @@ verify_image(gchar *uri, EMFormatHTML *format)
 			 */
 			name = fetch_image_redraw(rurl, NULL, format);
 			g_free(nurl);
-			g_free(feed_dir);
 			g_free(base_dir);
 			return name;
 	} else {

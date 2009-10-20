@@ -41,3 +41,4 @@
 	* check custom interval fetching right after it was setup
 	* search for threaded implmentation options
 	* config option to sort comments ascending/descending
+	* hook all rss config options in RSS top folder properties in right click menu
