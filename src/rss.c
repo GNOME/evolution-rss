@@ -2018,7 +2018,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 static gboolean
 org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
-        struct _org_gnome_rss_controls_pobject *po = 
+        struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 	GtkWidget *button;
