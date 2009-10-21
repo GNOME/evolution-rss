@@ -12,7 +12,7 @@
 
 This plugin adds RSS Feeds support for evolution mail. RSS support was built upon the somewhat existing RSS support in evolution-1.4 branch. The motivation behind this was to have RSS in same place as mails, at this moment I do not see the point having a separate RSS reader since a RSS Article is like an email message.
 
-Evolution RSS can display article using summary view or HTML view. 
+Evolution RSS can display article using summary view or HTML view.
 
 HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Firefox/Gecko.
 
@@ -36,14 +36,14 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
 	+RSS_MENU+
 
 	<hook class="org.gnome.evolution.mail.events:1.0">
-        	<event type="pass" target="message" id="message.reading" handle="org_gnome_cooly_article_show"/>
+		<event type="pass" target="message" id="message.reading" handle="org_gnome_cooly_article_show"/>
 	</hook>
 	<hook class="org.gnome.evolution.mail.events:1.0">
-        	<event type="pass" target="folder" id="folder.customicon" handle="org_gnome_cooly_folder_icon"/>
+		<event type="pass" target="folder" id="folder.customicon" handle="org_gnome_cooly_folder_icon"/>
 	</hook>
 
 	<hook class="org.gnome.evolution.mail.events:1.0">
-        	<event type="pass" target="folder" id="folder.refresh" handle="org_gnome_cooly_folder_refresh"/>
+		<event type="pass" target="folder" id="folder.refresh" handle="org_gnome_cooly_folder_refresh"/>
 	</hook>
 
 	<hook class="org.gnome.evolution.mail.events:1.0">
@@ -69,14 +69,14 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
       </group>
     </hook>
 	<hook class="org.gnome.evolution.mail.config:1.0">
-                <group id="org.gnome.evolution.mail.folderConfig" 
+                <group id="org.gnome.evolution.mail.folderConfig"
                         target="folder"
                         abort="rss_folder_factory_abort"
                         commit="rss_folder_factory_commit">
-                <item 
-                        type="page" 
-                        path="10.size" 
-                        _label="Size" 
+                <item
+                        type="page"
+                        path="10.size"
+                        _label="Size"
                         factory="rss_folder_factory"/>
                 </group>
         </hook>
@@ -88,7 +88,7 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
 
 
 <hook class="org.gnome.evolution.mail.events:1.0">
-    <event id="mail.sendreceive" 
+    <event id="mail.sendreceive"
 	enable="sendreceive"
 	handle="org_gnome_cooly_rss"
 	target="sendreceive"/>

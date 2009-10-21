@@ -447,9 +447,9 @@ build_dialog_add(gchar *url, gchar *feed_text)
         feed_name = (GtkWidget *)glade_xml_get_widget (gui, "feed_name");
 	if (url != NULL) {
 		flabel = g_build_path("/",
-				lookup_main_folder(),
-				lookup_feed_folder(feed_text),
-				NULL);
+			lookup_main_folder(),
+			lookup_feed_folder(feed_text),
+			NULL);
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
 		fname = g_path_get_basename(lookup_feed_folder(feed_text));
 		gtk_entry_set_text(GTK_ENTRY(feed_name), fname);
@@ -612,6 +612,8 @@ actions_dialog_add(add_feed *feed, gchar *url)
 	gint result = gtk_dialog_run(GTK_DIALOG(feed->dialog));
 	switch (result) {
 	case GTK_RESPONSE_OK:
+		//grey out while were processing
+		gtk_widget_set_sensitive(feed->dialog, FALSE);
 		feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
 		fhtml = gtk_toggle_button_get_active (
 		        GTK_TOGGLE_BUTTON (checkbutton1));
@@ -1092,11 +1094,11 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 			//prevent adding of an existing feed (url)
 			//which might screw things
                         if (g_hash_table_find(rf->hr,
-                                                check_if_match,
-						feed->feed_url)) {
+				check_if_match,
+				feed->feed_url)) {
 				rss_error(NULL, NULL, _("Error adding feed."),
-                                                        _("Feed already exists!"));
-                                                goto out;
+					_("Feed already exists!"));
+				goto out;
 			}
 			saved_feed = save_feed_hash(feed_name);
 			remove_feed_hash(feed_name);
@@ -2347,6 +2349,8 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	|| !g_ascii_strcasecmp(folder, main_folder))
 		return;
 
+	gtk_widget_set_sensitive(target->config->widget, FALSE);
+
 	entry1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "url_entry");
 	checkbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "html_check");
 	checkbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "enabled_check");
@@ -2373,54 +2377,55 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	fhtml ^= 1;
         feed->fetch_html = fhtml;
 	feed->enabled = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(checkbutton2));
+		GTK_TOGGLE_BUTTON(checkbutton2));
 	feed->validate = gtk_toggle_button_get_active(
-			GTK_TOGGLE_BUTTON(checkbutton3));
+		GTK_TOGGLE_BUTTON(checkbutton3));
 	while (i<4) {
-                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
-                                break;
-                        i++;
-                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton2)))
-                                break;
-                        i++;
-                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
-                                break;
-                        i++;
-                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton7)))
-                                break;
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton1)))
+			break;
+		i++;
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton2)))
+			break;
+		i++;
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton3)))
+			break;
+		i++;
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton7)))
+			break;
 	}
         feed->del_feed=i;
-                feed->del_unread = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON(checkbutton4));
-                gtk_spin_button_update((GtkSpinButton *)spinbutton1);
-                feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
-                gtk_spin_button_update((GtkSpinButton *)spinbutton2);
-                feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
-                i=1;
-                while (i<3) {
-                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton4)))
-                                break;
+	feed->del_unread = gtk_toggle_button_get_active(
+				GTK_TOGGLE_BUTTON(checkbutton4));
+	gtk_spin_button_update((GtkSpinButton *)spinbutton1);
+	feed->del_messages = gtk_spin_button_get_value((GtkSpinButton *)spinbutton1);
+	gtk_spin_button_update((GtkSpinButton *)spinbutton2);
+	feed->del_days = gtk_spin_button_get_value((GtkSpinButton *)spinbutton2);
+	i=1;
+	while (i<3) {
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton4)))
+			break;
+		i++;
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton5)))
+			break;
                         i++;
-                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton5)))
-                                break;
-                        i++;
-                        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton6)))
-                                break;
-                }
-                feed->update=i;
-                feed->ttl = gtk_spin_button_get_value((GtkSpinButton *)ttl_value);
-                feed->add = 1;
-		feed->feed_name = feed_name;
-                // there's no reason to feetch feed if url isn't changed
-		if (url && !strncmp(url, feed->feed_url, strlen(url)))
-			feed->changed = 0;
-		else
-			feed->changed = 1;
-		if (feed_name && !g_ascii_strncasecmp(feed_name, ofolder, strlen(feed_name)))
-			feed->renamed = 0;
-		else
-			feed->renamed = 1;
-		process_dialog_edit(feed, url, ofolder);
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radiobutton6)))
+			break;
+	}
+	feed->update=i;
+	feed->ttl = gtk_spin_button_get_value((GtkSpinButton *)ttl_value);
+	feed->add = 1;
+	feed->feed_name = feed_name;
+	// there's no reason to feetch feed if url isn't changed
+	if (url && !strncmp(url, feed->feed_url, strlen(url)))
+		feed->changed = 0;
+	else
+		feed->changed = 1;
+	if (feed_name && !g_ascii_strncasecmp(feed_name, ofolder, strlen(feed_name)))
+		feed->renamed = 0;
+	else
+		feed->renamed = 1;
+
+	process_dialog_edit(feed, url, ofolder);
 
 	authuser = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_user");
 	authpass = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_pass");

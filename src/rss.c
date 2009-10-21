@@ -761,7 +761,7 @@ user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
 		auth_info->user = g_hash_table_lookup(rf->hruser, auth_info->url);
 		auth_info->pass = g_hash_table_lookup(rf->hrpass, auth_info->url);
 		if (!auth_info->retrying)
-			soup_auth_authenticate (auth_info->soup_auth, 
+			soup_auth_authenticate (auth_info->soup_auth,
 					auth_info->user,
 					auth_info->pass);
                 break;

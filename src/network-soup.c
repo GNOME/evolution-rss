@@ -1,16 +1,16 @@
 /*  Evolution RSS Reader Plugin
  *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org>
- *         
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or 
+ *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- *                     
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *                                             
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -104,14 +104,14 @@ got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 
 	NetStatusProgress *progress = NULL;
 	const char* clen;
-	
+
 	if (info->total == 0) {
 #if LIBSOUP_VERSION < 2003000
 		clen = soup_message_get_header(msg->response_headers,
 				"Content-length");
 			return;
 #else
-        	clen = soup_message_headers_get(msg->response_headers,
+		clen = soup_message_headers_get(msg->response_headers,
 				"Content-length");
 #endif
 		if (!clen)
@@ -289,7 +289,7 @@ read_up(gpointer data)
 	char rfeed[512];
 	guint res = 0;
 	gchar *tmp, *buf, *feed_dir, *feed_name;
-	
+
 	if (NULL != g_hash_table_lookup(rf->hruser, data))
 		return 1;
 
@@ -305,11 +305,11 @@ read_up(gpointer data)
 
 	fr = fopen(feed_name, "r");
 	if (fr) {
-        	fgets(rfeed, 511, fr);
-        	g_hash_table_insert(rf->hruser, data, g_strstrip(g_strdup(rfeed)));
-        	fgets(rfeed, 511, fr);
-        	g_hash_table_insert(rf->hrpass, data, g_strstrip(g_strdup(rfeed)));
-        	fclose(fr);
+		fgets(rfeed, 511, fr);
+		g_hash_table_insert(rf->hruser, data, g_strstrip(g_strdup(rfeed)));
+		fgets(rfeed, 511, fr);
+		g_hash_table_insert(rf->hrpass, data, g_strstrip(g_strdup(rfeed)));
+		fclose(fr);
 		res = 1;
 	}
 	g_free(feed_name);
@@ -339,9 +339,9 @@ save_up(gpointer data)
 			fputs(user, fr);
 	        fputs("\n", fr);
 		pass = g_hash_table_lookup(rf->hrpass, data);
-        	fputs(pass, fr);
-        	fclose(fr);
-        	res = 1;
+		fputs(pass, fr);
+		fclose(fr);
+		res = 1;
 	}
 	g_free(feed_name);
 	g_free(buf);
