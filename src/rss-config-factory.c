@@ -500,7 +500,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	/*set feed icon*/
 	if (key) {
 		gtk_image_set_from_icon_name(image,
-			g_hash_table_lookup(icons, key) ? key : "evolution-rss-main",
+			g_hash_table_lookup(icons, key) ? key : "rss",
 			GTK_ICON_SIZE_SMALL_TOOLBAR);
 		gtk_widget_show(GTK_WIDGET(image));
 	}

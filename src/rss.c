@@ -2654,8 +2654,6 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t);
 
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
-	static gboolean initialised = FALSE;
-	gchar *iconfile;
 	gchar *rss_folder, *ofolder, *key;
 	gchar *main_folder = get_main_folder();
 #if (EVOLUTION_VERSION < 22703)
@@ -2707,7 +2705,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 				g_hash_table_insert(icons, g_strdup(key), icon);
 				g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
 			} else
-				goto defico; //failed to load the icon so just throw the default
+				goto normal; //failed to load the icon so just throw the default
 
 			g_free(feed_file);
 #endif
@@ -2724,30 +2722,20 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 		goto out;
 	}
 
-normal:	if (!initialised) { //move this to startup
-#if (EVOLUTION_VERSION < 22703)
-defico:
-#endif
-		iconfile = g_build_filename (EVOLUTION_ICONDIR,
-	                                    "rss-16.png",
-						NULL);
 #if (EVOLUTION_VERSION >= 22703)
-		folder_icon = e_icon_factory_get_icon (iconfile, GTK_ICON_SIZE_MENU);
-		gtk_icon_theme_add_builtin_icon     ("evolution-rss-main",
-				GTK_ICON_SIZE_INVALID,
-				folder_icon);
+normal:	gtk_tree_store_set (
+                t->store, t->iter,
+                COL_STRING_ICON_NAME, "rss-16",
+                -1);
 #else
+normal:	if (!initialised) { //move this to startup
+		iconfile = g_build_filename (EVOLUTION_ICONDIR,
+			"rss-16.png",
+			NULL);
 		folder_icon = e_icon_factory_get_icon (iconfile, E_ICON_SIZE_MENU);
-#endif
 		g_free(iconfile);
 		initialised = TRUE;
 	}
-#if (EVOLUTION_VERSION >= 22703)
-	gtk_tree_store_set (
-                t->store, t->iter,
-                COL_STRING_ICON_NAME, "evolution-rss-main",
-                -1);
-#else
 	g_object_set (t->renderer, "pixbuf", folder_icon, "visible", 1, NULL);
 #endif
 out:	g_free(main_folder);
@@ -5404,6 +5392,8 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	struct _EMFolderTreeModelStoreInfo *si;
 	CamelStore *store = rss_component_peek_local_store();
 	CamelFolder *rss_folder;
+	gint i=0, size;
+	gint *sizes;
 
 	pixbuf = gdk_pixbuf_new_from_file(img_file, NULL);
 
@@ -5418,11 +5408,15 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 			result = FALSE;
 			goto out;
 		}
-		icon = e_icon_factory_get_icon (img_file, GTK_ICON_SIZE_DIALOG);
+		icon = e_icon_factory_get_icon (img_file, GTK_ICON_SIZE_MENU);
 		g_hash_table_insert(icons, g_strdup(key), GINT_TO_POINTER(1));
-		gtk_icon_theme_add_builtin_icon(key,
-						GTK_ICON_SIZE_INVALID,
-						icon);
+		sizes = gtk_icon_theme_get_icon_sizes(gtk_icon_theme_get_default(),
+				"mail-read"); //will mail-read always be there?
+		for (i=0; -1 != (size = sizes[i]); i++)
+			gtk_icon_theme_add_builtin_icon(key,
+				size,
+				icon);
+		g_free(sizes);
 
 #if EVOLUTION_VERSION < 22900 //kb//
 		si = g_hash_table_lookup (mod->store_hash, store);
