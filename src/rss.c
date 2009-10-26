@@ -108,8 +108,8 @@ int rss_verbose_debug = 0;
 #else
 #include <gtkembedmoz/gtkmozembed.h>
 #endif
-#endif
 #include "gecko-utils.h"
+#endif
 
 #ifdef HAVE_OLD_WEBKIT
 #include "webkitgtkglobal.h"
@@ -1122,7 +1122,7 @@ save_gconf_feed(void)
 void
 rss_select_folder(gchar *folder_name)
 {
-#if EVOLUTION_VERSION < 22900
+#if EVOLUTION_VERSION >= 22900
 	EMFolderTree *folder_tree;
 	gchar *uri;
 	CamelStore *store;
@@ -1704,7 +1704,6 @@ rss_popup_zoom_orig(GtkWidget *widget, gpointer data)
 {
 	gecko_set_zoom(rf->mozembed, 1);
 }
-#endif
 
 static void
 #if EVOLUTION_VERSION < 22900
@@ -1773,6 +1772,7 @@ rss_menu_items_free(EPopup *ep, GSList *items, void *data)
 {
         g_slist_free(items);
 }
+#endif
 #endif
 
 #ifdef HAVE_WEBKIT
@@ -2603,12 +2603,12 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 #endif
 {
 	gchar *folder_name;
+	gchar *main_folder = get_main_folder();
+        CamelFolder *folder;
+	gchar *ofolder, *name, *fname, *key, *rss_folder;
 #if EVOLUTION_VERSION > 22900 //kb//
 	EMFolderTree *folder_tree;
-        CamelFolder *folder;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(shell_view);
-	gchar *main_folder = get_main_folder();
-	gchar *ofolder, *name, *fname, *key, *rss_folder;
 
 
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
@@ -3156,7 +3156,11 @@ struct _MailComponentPrivate {
         GMutex *lock;
 
         /* states/data used during shutdown */
+#if EVOLUTION_VERSION >= 22800
+	enum { MC_QUIT_NOT_START, MC_QUIT_START, MC_QUIT_SYNC, MC_QUIT_THREADS } quit_state;
+#else
         enum { MC_QUIT_START, MC_QUIT_SYNC, MC_QUIT_THREADS } quit_state;
+#endif
 };
 #endif
 
@@ -3179,7 +3183,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 #if EVOLUTION_VERSION < 22900 //kb//
 	MailComponent *mc = mail_component_peek ();
-        if (mc->priv->quit_state != -1)
+        if (mc->priv->quit_state != MC_QUIT_NOT_START)
 		rf->cancel_all=1;
 #endif
 
@@ -3228,8 +3232,12 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 #endif
 	}
 
+g_print("pre finish\n");
 	if (rf->cancel_all)
 		goto out;
+g_print("finish\n");
+
+	g_print("err:%s\n", soup_status_get_phrase(msg->status_code));
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {

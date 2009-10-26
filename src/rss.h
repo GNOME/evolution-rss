@@ -408,7 +408,9 @@ finish_update_feed_image (SoupMessage *msg, gpointer user_data);
 #else
 finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
 #endif
+#if EVOLUTION_VERSION >= 22900
 void get_shell(void *ep, ESEventTargetShell *t);
+#endif
 void rss_finalize(void);
 gboolean check_update_feed_image(gchar *key);
 void get_feed_folders(void);
