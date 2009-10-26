@@ -36,13 +36,17 @@
 #else
 #include <shell/e-shell.h>
 #include <shell/e-shell-view.h>
-#include <shell/es-event.h>
 #endif
+#include <shell/es-event.h>
 
 #include <glade/glade.h>
 #include <camel/camel-folder.h>
 #include <camel/camel-operation.h>
 #include <mail/em-event.h>
+
+#ifdef HAVE_WEBKIT
+#include <webkit/webkitwebview.h>
+#endif
 
 #define PLUGIN_INSTALL_DIR @PLUGIN_INSTALL_DIR@
 #define DEFAULT_FEEDS_FOLDER N_("News and Blogs")
@@ -336,6 +340,16 @@ void gecko_set_preferences(void);
 void browser_copy_selection(GtkWidget *widget, gpointer data);
 void browser_select_all(GtkWidget *widget, gpointer data);
 void webkit_set_preferences(void);
+#ifdef HAVE_WEBKIT
+gboolean webkit_over_link(WebKitWebView *web_view,
+                                 gchar         *title,
+                                 gchar         *uri,
+                                 gpointer       user_data);
+gboolean
+webkit_click (GtkEntry *entry,
+                         GtkMenu *menu,
+                         gpointer user_data);
+#endif
 GtkDialog* create_user_pass_dialog(RSS_AUTH *auth);
 void err_destroy (GtkWidget *widget, guint response, gpointer data);
 void save_gconf_feed(void);
@@ -408,9 +422,9 @@ finish_update_feed_image (SoupMessage *msg, gpointer user_data);
 #else
 finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
 #endif
-#if EVOLUTION_VERSION >= 22900
+//#if EVOLUTION_VERSION >= 22900
 void get_shell(void *ep, ESEventTargetShell *t);
-#endif
+//#endif
 void rss_finalize(void);
 gboolean check_update_feed_image(gchar *key);
 void get_feed_folders(void);

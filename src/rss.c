@@ -186,7 +186,9 @@ struct _org_gnome_rss_controls_pobject {
 };
 
 GtkWidget *evo_window;
+#if (EVOLUTION_VERSION < 22703)
 static GdkPixbuf *folder_icon;
+#endif
 GHashTable *icons = NULL;
 gchar *pixfile;
 char *pixfilebuf;
@@ -332,6 +334,10 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 	GtkWidget *ed;
 	gchar *msg;
 	gpointer newkey;
+#if (EVOLUTION_VERSION < 22900)
+	EActivityHandler *activity_handler;
+	guint id;
+#endif
 
 	if (name)
 		msg = g_strdup_printf("\n%s\n%s", name, emsg);
@@ -377,11 +383,11 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 	g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(1));
 
 #else
-			EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek());
+			activity_handler = mail_component_peek_activity_handler (mail_component_peek());
 #if (EVOLUTION_VERSION >= 22300)
-			guint id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), E_LOG_ERROR, ed);
+			id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), E_LOG_ERROR, ed);
 #else
-			guint id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), msg, ed);
+			id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), msg, ed);
 #endif
 			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
 #endif
@@ -488,6 +494,16 @@ taskbar_op_new(gchar *message)
 	EShell *shell;
         EShellBackend *shell_backend;
 	EActivity *activity;
+#else
+	EActivityHandler *activity_handler;
+	char *mcp;
+	guint activity_id; 
+#endif
+#if EVOLUTION_VERSION < 22306
+	GdkPixbuf *progress_icon;
+#endif
+
+#if EVOLUTION_VERSION >= 22900 //kb//
 
 	shell = e_shell_get_default ();
         shell_backend = e_shell_get_backend_by_name (shell, "mail");
@@ -503,10 +519,9 @@ taskbar_op_new(gchar *message)
 		key);
 	return activity;
 #else
-	GdkPixbuf *progress_icon;
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	char *mcp = g_strdup_printf("%p", mail_component_peek());
-	guint activity_id = 
+	activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	mcp = g_strdup_printf("%p", mail_component_peek());
+	activity_id = 
 #if (EVOLUTION_VERSION >= 22306)
 		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						message, TRUE,
@@ -515,16 +530,15 @@ taskbar_op_new(gchar *message)
 #else 
 	progress_icon = e_icon_factory_get_icon ("mail-unread", E_ICON_SIZE_MENU);
 #if (EVOLUTION_VERSION >= 22200)
-		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
+	e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						progress_icon, message, TRUE,
 						(void (*) (gpointer))taskbar_op_abort,
 						 key);
 #else
-		e_activity_handler_operation_started(activity_handler, mcp,
+	e_activity_handler_operation_started(activity_handler, mcp,
 						progress_icon, message, FALSE);
 #endif
 #endif
-
 	g_free(mcp);
 	return activity_id;
 #endif //kb//
@@ -2218,7 +2232,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *comments = NULL;
 	gchar *category = NULL;
 	GdkPixbuf *pixbuf = NULL;
-	GdkColor color;
 	guint engine = 0;
 	int size;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
@@ -2239,6 +2252,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	GByteArray *buffer;
 	GdkPixbuf *pix;
 	gchar *feed_dir, *feed_file, *iconfile;
+#if EVOLUTION_VERSION >= 22900 //kb//
+	GdkColor color;
+#endif
 
 	current_pobject = t->format;
         d(g_print("Formatting...\n"));
@@ -2604,9 +2620,9 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 {
 	gchar *folder_name;
 	gchar *main_folder = get_main_folder();
-        CamelFolder *folder;
 	gchar *ofolder, *name, *fname, *key, *rss_folder;
 #if EVOLUTION_VERSION > 22900 //kb//
+        CamelFolder *folder;
 	EMFolderTree *folder_tree;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(shell_view);
 
@@ -3175,6 +3191,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	gboolean deleted = 0;
 	GString *response;
 	RDF *r;
+#if EVOLUTION_VERSION < 22900
+	MailComponent *mc = mail_component_peek ();
+#endif
 
 	//feed might get deleted while fetching
 	//so we need to test for the presence of key
@@ -3182,7 +3201,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		deleted = 1;
 
 #if EVOLUTION_VERSION < 22900 //kb//
-	MailComponent *mc = mail_component_peek ();
         if (mc->priv->quit_state != MC_QUIT_NOT_START)
 		rf->cancel_all=1;
 #endif
@@ -4414,53 +4432,16 @@ rss_online(CamelSession *o, void *event_data, void *data)
 	rf->online =  camel_session_is_online (o);
 }
 
-#if 0
+#if EVOLUTION_VERSION < 22900 //KB//
 struct __EShellPrivate {
         /* IID for registering the object on OAF.  */
         char *iid;
 
         GList *windows;
 
-        /* EUriSchemaRegistry *uri_schema_registry; FIXME */
-//        EComponentRegistry *component_registry;
-
-        /* Names for the types of the folders that have maybe crashed.  */
-        /* FIXME TODO */
-        GList *crash_type_names; /* char * */
-
-        /* Line status and controllers  */
-//        EShellLineStatus line_status;
-        int line_status_pending;
-//        EShellLineStatus line_status_working;
-  //      EvolutionListener *line_status_listener;
-
-        /* Settings Dialog */
-        union {
-                GtkWidget *widget;
-                gpointer pointer;
-        } settings_dialog;
-
-        /* If we're quitting and things are still busy, a timeout handler */
-        guint quit_timeout;
-
-        /* Whether the shell is succesfully initialized.  This is needed during
- *            the start-up sequence, to avoid CORBA calls to do make wrong things
- *                       to happen while the shell is initializing.  */
-        unsigned int is_initialized : 1;
-
-        /* Wether the shell is working in "interactive" mode or not.
- *            (Currently, it's interactive IIF there is at least one active
- *                       view.)  */
-        unsigned int is_interactive : 1;
-
-        /* Whether quit has been requested, and the shell is now waiting for
- *            permissions from all the components to quit.  */
-        unsigned int preparing_to_quit : 1;
+	//we do not care about the rest
 };
-#endif
 
-
-#if EVOLUTION_VERSION < 22900 //KB//
 typedef struct __EShellPrivate EShellPrivate;
 
 struct _EShell {
@@ -4473,13 +4454,10 @@ typedef struct _EShell EShell;
 
 void get_shell(void *ep, ESEventTargetShell *t)
 {
-#if 0 //kb//
-// disabled for the time being
 #if EVOLUTION_VERSION < 22900 //KB//
 	EShell *shell = t->shell;
 	EShellPrivate *priv = (EShellPrivate *)shell->priv;
 	evo_window = (GtkWidget *)priv->windows;
-#endif
 #endif
 }
 
