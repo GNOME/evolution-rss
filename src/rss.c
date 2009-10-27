@@ -3405,16 +3405,19 @@ fetch_one_feed(gpointer key, gpointer value, gpointer user_data)
 {
 	GError *err = NULL;
 	gchar *msg;
+	gchar *url = g_hash_table_lookup(rf->hr, lookup_key(key));
 
 	// check if we're enabled and no cancelation signal pending
 	// and no imports pending
-	if (g_hash_table_lookup(rf->hre, lookup_key(key)) && !rf->cancel && !rf->import) {
-		d(g_print("\nFetching: %s..%s\n",
-			(gchar *)g_hash_table_lookup(rf->hr, lookup_key(key)), (gchar *)key));
+	// reject empty urls as we react kinda weird to them
+	if (g_hash_table_lookup(rf->hre, lookup_key(key))
+		&& strlen(url)
+		&& !rf->cancel && !rf->import) {
+		g_print("\nFetching: %s..%s\n", url, (gchar *)key);
 		rf->feed_queue++;
 
 		fetch_unblocking(
-				g_hash_table_lookup(rf->hr, lookup_key(key)),
+				url,
 				user_data,
 				key,
 				(gpointer)finish_feed,

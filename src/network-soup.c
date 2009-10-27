@@ -541,9 +541,10 @@ net_get_unblocking(gchar *url,
 {
 	SoupMessage *msg;
 	CallbackInfo *info = NULL;
+	SoupSession *soup_sess;
 	gchar *agstr;
 
-	SoupSession *soup_sess =
+	soup_sess =
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
 
@@ -697,7 +698,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 		soup_session_abort(soup_sess);
 		g_object_unref(soup_sess);
 		rf->b_session = NULL;
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(req->status_code));
 		goto out;
 	}
@@ -711,7 +712,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 out:
 	if (suri) soup_uri_free(suri);
 	if (req) g_object_unref(G_OBJECT(req));
-	
+
 	return response;
 }
 
@@ -776,7 +777,7 @@ sync_gecko_cookies(void)
 
 	cookie_file = g_file_new_for_path (cookie_path);
 	moz_cookie_file = g_file_new_for_path (moz_cookie_path);
-	g_file_copy(cookie_file, moz_cookie_file, 
+	g_file_copy(cookie_file, moz_cookie_file,
 			G_FILE_COPY_OVERWRITE,
 			NULL, NULL, NULL, NULL);
 	g_free(cookie_path);
