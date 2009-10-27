@@ -1066,7 +1066,7 @@ update_channel(RDF *r)
 		else
 			CF->full_path	= g_strdup(chn_name);
 
-		subj = CF->subj;
+		subj = g_strdup(CF->subj);
 
 		while (gtk_events_pending())
 		  gtk_main_iteration ();
@@ -1090,8 +1090,8 @@ update_channel(RDF *r)
 			}
 			farticle++;
 			d(g_print("put success()\n"));
-//g_print("subj:%s\n", subj);
 			update_status_icon(chn_name, subj);
+			g_free(subj);
 		} else
 			free_cf(CF);
 	}
