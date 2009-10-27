@@ -1037,10 +1037,10 @@ update_channel(RDF *r)
 	    g_mkdir_with_parents (feed_dir, 0755);
 	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
-	
+
 	fr = fopen(feed_name, "r");
 	fw = fopen(feed_name, "a+");
-	
+
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++) {
 		update_sr_message();
 		if (rf->cancel) goto out;
@@ -1059,12 +1059,12 @@ update_channel(RDF *r)
 		}
 		uid = g_strdup(CF->feed_uri);
 		g_array_append_val(r->uids, uid);
-		CF->feedid 	= g_strdup(buf);
-		CF->sender 	= g_strdup(sender);
+		CF->feedid	= g_strdup(buf);
+		CF->sender	= g_strdup(sender);
 		if (r->prefix)
 			CF->full_path	= g_strconcat(r->prefix, "/", chn_name, NULL);
 		else
-			CF->full_path 	= g_strdup(chn_name);
+			CF->full_path	= g_strdup(chn_name);
 
 		subj = CF->subj;
 
@@ -1098,7 +1098,7 @@ out:	g_free(sender);
 
 	if (fr) fclose(fr);
 	if (fw) fclose(fw);
-	
+
 	g_free(feed_name);
 	return buf;
 }

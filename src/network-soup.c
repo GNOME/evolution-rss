@@ -519,7 +519,7 @@ net_get_status(const char *url, GError **err)
 		soup_session_abort(soup_sess);
 		g_object_unref(soup_sess);
 		rf->b_session = NULL;
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(req->status_code));
 		goto out;
 	}
@@ -528,13 +528,13 @@ out:
 	if (suri) soup_uri_free(suri);
 	response = req->status_code;
 	if (req) g_object_unref(G_OBJECT(req));
-	
+
 	return response;
 }
 
 gboolean
-net_get_unblocking(gchar *url, 
-				NetStatusCallback cb, gpointer data, 
+net_get_unblocking(gchar *url,
+				NetStatusCallback cb, gpointer data,
 				gpointer cb2, gpointer cbdata2,
 				guint track,
 				GError **err)
@@ -543,10 +543,10 @@ net_get_unblocking(gchar *url,
 	CallbackInfo *info = NULL;
 	gchar *agstr;
 
-	SoupSession *soup_sess = 
+	SoupSession *soup_sess =
 //		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 		soup_session_async_new();
-			
+
 
 #if LIBSOUP_VERSION > 2024000
 	if (rss_soup_jar) {
@@ -583,7 +583,7 @@ net_get_unblocking(gchar *url,
 	/* Queue an async HTTP request */
 	msg = soup_message_new ("GET", url);
 	if (!msg) {
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(2));			//invalid url
 		return FALSE;
 	}

@@ -3250,12 +3250,8 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 #endif
 	}
 
-g_print("pre finish\n");
 	if (rf->cancel_all)
 		goto out;
-g_print("finish\n");
-
-	g_print("err:%s\n", soup_status_get_phrase(msg->status_code));
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
