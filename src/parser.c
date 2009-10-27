@@ -1090,6 +1090,7 @@ update_channel(RDF *r)
 			}
 			farticle++;
 			d(g_print("put success()\n"));
+g_print("subj:%s\n", subj);
 			update_status_icon(chn_name, subj);
 		} else
 			free_cf(CF);
