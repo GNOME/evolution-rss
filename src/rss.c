@@ -2344,10 +2344,10 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			org_gnome_rss_controls_counter_id++;
 			pobj = (struct _org_gnome_rss_controls_pobject *)
 				em_format_html_add_pobject ((EMFormatHTML *) t->format,
-									sizeof(*pobj),
-									classid,
-									message,
-									(EMFormatHTMLPObjectFunc)org_gnome_rss_browser);
+					sizeof(*pobj),
+					classid,
+					message,
+					(EMFormatHTMLPObjectFunc)org_gnome_rss_browser);
 			pobj->website = g_strstrip(g_strdup((gchar *)website));
 			pobj->is_html = GPOINTER_TO_INT(is_html);
 			pobj->format = (EMFormatHTML *)t->format;
@@ -3413,7 +3413,7 @@ fetch_one_feed(gpointer key, gpointer value, gpointer user_data)
 	if (g_hash_table_lookup(rf->hre, lookup_key(key))
 		&& strlen(url)
 		&& !rf->cancel && !rf->import) {
-		g_print("\nFetching: %s..%s\n", url, (gchar *)key);
+		d(g_print("\nFetching: %s..%s\n", url, (gchar *)key));
 		rf->feed_queue++;
 
 		fetch_unblocking(
@@ -4402,7 +4402,6 @@ update_status_icon(const char *channel, gchar *title)
 	gchar *total;
 	gchar *stext;
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL)) {
-g_print("title:%s\n", title);
 		total = g_strdup_printf("%s: %s\n\n", channel, title);
 		create_status_icon();
 		g_queue_push_tail(status_msg, total);
@@ -4410,10 +4409,8 @@ g_print("title:%s\n", title);
 		if (g_queue_get_length(status_msg) == 6)
 			g_queue_pop_head(status_msg);
 		g_queue_foreach(status_msg, flaten_status, flat_status_msg);
-g_print("text:%s\n", flat_status_msg);
 		stext = g_markup_escape_text(flat_status_msg, strlen(flat_status_msg));
 		gtk_status_icon_set_tooltip_text (status_icon, stext);
-g_print("stext:%s\n", stext);
 		g_free(stext);
 		gtk_status_icon_set_visible (status_icon, TRUE);
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
@@ -5469,8 +5466,9 @@ verify_image(gchar *uri, EMFormatHTML *format)
 {
 	gchar *mime_type, *contents;
 	gsize length;
-	gchar *nurl;
+	gchar *nurl, *turl;
 	gchar *base_dir, *feed_dir, *name;
+	gchar *scheme;
 
 	g_return_val_if_fail(uri != NULL, NULL);
 
@@ -5484,13 +5482,22 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				"static",
 				"http",
 				NULL);
-			nurl = strextr((gchar *)uri, feed_dir);
-			g_free(feed_dir);
-			/* calling with link NULL as we do not have base link here
+			scheme = g_uri_parse_scheme(uri);
+			/* calling fetch_image_redraw with link NULL
+			 * as we do not have base link here
 			 * and not able to get it either
 			 */
-			name = fetch_image_redraw(nurl, NULL, format);
-			g_free(nurl);
+			if (!scheme) {
+				nurl = strextr((gchar *)uri, feed_dir);
+				g_free(feed_dir);
+				turl = nurl + 4;
+				name = fetch_image_redraw(turl, NULL, format);
+				g_free(nurl);
+			} else {
+				turl = uri;
+				name = fetch_image_redraw(uri, NULL, format);
+				g_free(scheme);
+			}
 			g_free(base_dir);
 			return name;
 	} else {
@@ -5521,21 +5528,19 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	gchar *tmpurl = NULL;
 	FEED_IMAGE *fi = NULL;
 	gchar *result, *base_dir, *feed_dir;
-	gchar *nurl;
 
 	g_return_val_if_fail(url != NULL, NULL);
 
 	if (strstr(url, "://") == NULL) {
 		if (strstr(url, "http:") == NULL)
 			return NULL;
-		nurl = url + 4;	// skip http: part
-		if (*nurl == '.') //test case when url begins with ".."
-			tmpurl = g_strconcat(g_path_get_dirname(link), "/", nurl, NULL);
+		if (*url == '.') //test case when url begins with ".."
+			tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
 		else {
-			if (*nurl == '/')
-				tmpurl = g_strconcat(get_server_from_uri(link), "/", nurl, NULL);
+			if (*url == '/')
+				tmpurl = g_strconcat(get_server_from_uri(link), "/", url, NULL);
 			else	//url is relative (does not begin with / or .)
-				tmpurl = g_strconcat(g_path_get_dirname(link), "/", nurl, NULL);
+				tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
 		}
 	} else {
 		tmpurl = g_strdup(url);
@@ -5560,20 +5565,21 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	if (!stream) {
 		d(g_print("image cache MISS\n"));
 		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
-	} else
-		d(g_print("image cache HIT\n"));
-
-	fi = g_new0(FEED_IMAGE, 1);
-	fi->feed_fs = stream;
-	fi->data = data;
-	fetch_unblocking(tmpurl,
+		fi = g_new0(FEED_IMAGE, 1);
+		fi->feed_fs = stream;
+		fi->data = data;
+		fetch_unblocking(tmpurl,
 			        textcb,
 				NULL,
 				(gpointer)finish_image_feedback,
 				fi,
 				0,
 				&err);
-	if (err) return NULL;
+		if (err) return NULL;
+	} else {
+		d(g_print("image cache HIT\n"));
+	}
+
 	result = data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, tmpurl);
 	g_free(feed_dir);
 	g_free(tmpurl);
