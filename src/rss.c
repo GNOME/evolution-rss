@@ -264,6 +264,8 @@ gboolean display_folder_icon(GtkTreeStore *store, gchar *key);
 typedef struct _FEED_IMAGE {
 	gchar *img_file;
 	CamelStream *feed_fs;
+	gchar *http_cache;
+	gchar *url;
 	gchar *key;
 	gpointer data;
 } FEED_IMAGE;
@@ -2760,19 +2762,20 @@ out:	g_free(main_folder);
 #endif
 
 #ifdef EVOLUTION_2_12
-void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t);
+void org_gnome_evolution_rss_article_show(void *ep, EMEventTargetMessage *t);
 #else
-void org_gnome_cooly_article_show(void *ep, void *t);
+void org_gnome_evolution_rss_article_show(void *ep, void *t);
 #endif
 
 #ifdef EVOLUTION_2_12
-void org_gnome_cooly_article_show(void *ep, EMEventTargetMessage *t)
+void org_gnome_evolution_rss_article_show(void *ep, EMEventTargetMessage *t)
 {
+g_print("show\n");
 	if (rf && (!inhibit_read || !delete_op))
 		rf->current_uid = g_strdup(t->uid);
 }
 #else
-void org_gnome_cooly_article_show(void *ep, void *t)
+void org_gnome_evolution_rss_article_show(void *ep, void *t)
 {
 }
 #endif
@@ -5285,9 +5288,12 @@ finish_image_feedback (SoupMessage *msg, FEED_IMAGE *user_data)
 finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
 #endif
 {
-	finish_image(soup_sess, msg, user_data->feed_fs);
+	CamelStream *stream = NULL;
+	stream = camel_data_cache_add(user_data->http_cache, HTTP_CACHE_PATH, user_data->url, NULL);
+	finish_image(soup_sess, msg, stream);
 	if (user_data->data == current_pobject)
 		em_format_redraw((EMFormat *)user_data->data);
+	g_free(user_data->url);
 	g_free(user_data);
 }
 
@@ -5304,6 +5310,7 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 	    404 != msg->status_code && //NOT FOUND
 	    400 != msg->status_code && //bad request
 	      2 != msg->status_code && //STATUS_CANT_RESOLVE
+	      1 != msg->status_code && //TIMEOUT (CANCELLED) ?
 	      7 != msg->status_code && // STATUS_IO_ERROR
 #if LIBSOUP_VERSION < 2003000
 		msg->response.length) {	//ZERO SIZE
@@ -5545,7 +5552,12 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	} else {
 		tmpurl = g_strdup(url);
 	}
-	d(g_print("fetch_image_redraw() tmpurl:%s\n", tmpurl));
+	if (g_hash_table_find(rf->key_session,
+			check_key_match,
+			tmpurl)) {
+		goto working;
+	}
+	g_print("fetch_image_redraw() tmpurl:%s\n", tmpurl);
 	base_dir = rss_component_peek_base_directory();
 	feed_dir = g_build_path("/",
 				base_dir,
@@ -5555,34 +5567,39 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 	    g_mkdir_with_parents (feed_dir, 0755);
 	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
-	if (!http_cache)
-		return NULL;
+	g_free(feed_dir);
+	if (!http_cache) {
+		result = NULL;
+		goto error;
+	}
 	// expire in a month max
 	// and one week if not accessed sooner
 	camel_data_cache_set_expire_age(http_cache, 24*60*60*30);
 	camel_data_cache_set_expire_access(http_cache, 24*60*60*7);
 	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
 	if (!stream) {
-		d(g_print("image cache MISS\n"));
-		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
+		g_print("image cache MISS\n");
 		fi = g_new0(FEED_IMAGE, 1);
-		fi->feed_fs = stream;
+		fi->http_cache = http_cache;
+		fi->url = g_strdup(tmpurl);
 		fi->data = data;
 		fetch_unblocking(tmpurl,
 			        textcb,
-				NULL,
+				g_strdup(tmpurl),
 				(gpointer)finish_image_feedback,
 				fi,
-				0,
+				1,
 				&err);
-		if (err) return NULL;
+		if (err) {
+			result = NULL;
+			goto error;
+		}
 	} else {
 		d(g_print("image cache HIT\n"));
 	}
 
-	result = data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, tmpurl);
-	g_free(feed_dir);
-	g_free(tmpurl);
+working:result = data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, tmpurl);
+error:	g_free(tmpurl);
 	return result;
 }
 

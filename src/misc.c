@@ -70,12 +70,26 @@ free_hash(gpointer key, gpointer value, gpointer user_data)
 }
 
 gboolean
+check_key_match (gpointer key, gpointer value, gpointer user_data)
+{
+        char *sf_href = (char *)key;
+        char *int_uri = (char *)user_data;
+
+	d(g_print("checking hay:%s for neddle:%s\n", sf_href, int_uri));
+
+        if (!strcmp (sf_href, int_uri))
+                return TRUE; /* Quit calling the callback */
+
+        return FALSE; /* Continue calling the callback till end of table */
+}
+
+gboolean
 check_if_match (gpointer key, gpointer value, gpointer user_data)
 {
         char *sf_href = (char *)value;
         char *int_uri = (char *)user_data;
 
-        d(g_print("checking hay:%s for neddle:%s\n", sf_href, int_uri));
+	d(g_print("checking hay:%s for neddle:%s\n", sf_href, int_uri));
 
         if (!strcmp (sf_href, int_uri))
                 return TRUE; /* Quit calling the callback */
@@ -89,9 +103,9 @@ strextr(gchar *text, const gchar *substr)
 	gchar *tmp, *string;
 	GString *str;
 
- 	g_return_val_if_fail( text != NULL, NULL);
+	g_return_val_if_fail( text != NULL, NULL);
 
- 	if (substr == NULL)
+	if (substr == NULL)
 		return g_strdup(text);
 	//first check if string contains the substring
 	if (!strstr(text, substr))
@@ -106,7 +120,7 @@ strextr(gchar *text, const gchar *substr)
 	g_free(tmp);
 	return string;
 }
- 
+
 //prefixes uri with http:// if it's misssing
 //resulting text should be freed when no longer needed
 gchar *

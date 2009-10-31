@@ -36,8 +36,12 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
 	+RSS_MENU+
 
 	<hook class="org.gnome.evolution.mail.events:1.0">
-		<event type="pass" target="message" id="message.reading" handle="org_gnome_cooly_article_show"/>
+		<event type="pass"
+			target="message"
+			id="message.reading"
+			handle="org_gnome_evolution_rss_article_show"/>
 	</hook>
+
 	<hook class="org.gnome.evolution.mail.events:1.0">
 		<event type="pass" target="folder" id="folder.customicon" handle="org_gnome_cooly_folder_icon"/>
 	</hook>

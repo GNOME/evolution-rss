@@ -475,14 +475,14 @@ net_get_status(const char *url, GError **err)
 	gchar *agstr;
 
 	if (!rf->b_session)
-		rf->b_session = soup_sess = 
-			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);		
+		rf->b_session = soup_sess =
+			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 	else
 		soup_sess = rf->b_session;
 
 	req = soup_message_new(SOUP_METHOD_GET, url);
 	if (!req) {
-		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s", 
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(2));			//invalid url
 		goto out;
 	}
@@ -545,8 +545,9 @@ net_get_unblocking(gchar *url,
 	gchar *agstr;
 
 	soup_sess =
-//		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
-		soup_session_async_new();
+		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT,
+						SOUP_SESSION_IDLE_TIMEOUT, SS_TIMEOUT, NULL);
+//		soup_session_async_new();
 
 
 #if LIBSOUP_VERSION > 2024000
@@ -640,8 +641,8 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 	gchar *agstr;
 
 	if (!rf->b_session)
-		rf->b_session = soup_sess = 
-			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);		
+		rf->b_session = soup_sess =
+			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 	else
 		soup_sess = rf->b_session;
 
