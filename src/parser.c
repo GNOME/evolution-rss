@@ -351,8 +351,8 @@ html_find (xmlNode *node,
 /* returns node disregarding type
  */
 const char *
-layer_find (xmlNodePtr node, 
-	    const char *match, 
+layer_find (xmlNodePtr node,
+	    const char *match,
 	    const char *fail)
 {
 	while (node!=NULL) {
@@ -376,8 +376,8 @@ layer_find (xmlNodePtr node,
  */
 
 GList *
-layer_find_all (xmlNodePtr node, 
-		const char *match, 
+layer_find_all (xmlNodePtr node,
+		const char *match,
 		const char *fail)
 {
 	GList *category = NULL;
@@ -628,8 +628,9 @@ layer_find_pos (xmlNodePtr node,
 		if (strcasecmp ((char *)node->name, match)==0 && node->children) {
 			subnode = node->children;
 			while (subnode!=NULL) {
-				if (strcasecmp ((char *)subnode->name, submatch)==0 && subnode->children)
-				{
+				if (subnode->name
+				&& strcasecmp ((char *)subnode->name, submatch) == 0
+				&& subnode->children) {
 						return subnode->children->next;
 				}
 				subnode = subnode->next;
@@ -641,25 +642,25 @@ layer_find_pos (xmlNodePtr node,
 }
 
 char *
-layer_find_url (xmlNodePtr node, 
-		char *match, 
+layer_find_url (xmlNodePtr node,
+		char *match,
 		char *fail)
 {
 	char *p = (char *)layer_find (node, match, fail);
 	char *r = p;
 	static char *wb = NULL;
 	char *w;
-	
+
 	if (wb) {
 		g_free (wb);
 	}
-	
+
 	wb = w = g_malloc (3 * strlen (p));
 
 	if (w == NULL) {
 		return fail;
 	}
-	
+
 	if (*r == ' ') r++;	/* Fix UF bug */
 
 	while (*r) {
@@ -715,7 +716,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	do {
 		walk = rewalk;
 		rewalk = NULL;
-		
+
 		while (walk!=NULL){
 #ifdef RDF_DEBUG
 			printf ("%p, %s\n", walk, walk->name);
@@ -727,7 +728,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 				if (!r->type)
 					r->type = g_strdup("RDF");
 				r->type_id = RDF_FEED;
-//                		gchar *ver = xmlGetProp(node, "version");
+//				gchar *ver = xmlGetProp(node, "version");
 				if (r->version)
 					g_free(r->version);
 				r->version = g_strdup("(RSS 1.0)");
@@ -813,13 +814,13 @@ tree_walk (xmlNodePtr root, RDF *r)
 	//so it could be named Untitled channel
 	//till validation process
 	if (t == NULL || !g_ascii_strncasecmp(t,
-			DEFAULT_NO_CHANNEL, 
+			DEFAULT_NO_CHANNEL,
 			strlen(DEFAULT_NO_CHANNEL))) {
-		
-		t = (gchar *)layer_find(channel->children, 
-				"title", 
+
+		t = (gchar *)layer_find(channel->children,
+				"title",
 				DEFAULT_NO_CHANNEL);
-		t = decode_html_entities(t);	
+		t = decode_html_entities(t);
 		tmp = sanitize_folder(t);
 		g_free(t);
 		t = tmp;
@@ -833,8 +834,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 
 	//items might not have a date
 	// so try to grab channel/feed date
-	md2 = g_strdup(layer_find(channel->children, "date", 
-		layer_find(channel->children, "pubDate", 
+	md2 = g_strdup(layer_find(channel->children, "date",
+		layer_find(channel->children, "pubDate",
 		layer_find(channel->children, "updated", NULL))));
 	r->maindate = md2;
 	r->total = item->len;
@@ -878,7 +879,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 			} else {
 				if (q2)
 					q2 = g_strdelimit(q2, "><", ' ');
-				else 
+				else
 					q2 = g_strdup(q1);
 				q = g_strdup_printf("%s <%s>", qsafe, q2);
 				g_free(q1);
@@ -892,9 +893,21 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 			//source = layer_find_pos(el->children, "source", "contributor");
 			if (source != NULL)
 				q = g_strdup(layer_find(source, "name", NULL));
-			else
-				q = g_strdup(layer_find (top, "author", 
-				layer_find (top, "creator", NULL)));
+			else {
+				q = g_strdup(layer_find (top, "author",
+					layer_find (top, "creator", NULL)));	//this catches dc:creator too. wrong!
+			}
+			//we might end with a subject containing nothing but spaces
+			g_strstrip (q);
+
+			/* empty creator? is this even legal
+			 * search for the source then
+			 * anything else might worth searching for
+			 */
+			if (!q || !strlen(q))
+				q = g_strdup(layer_find_ns_tag(top, "dc", "source", NULL));
+
+
 			if (q) {
 				//evo will go crazy when it'll encounter ":" character
 				//it probably enforces strict rfc2047 compliance
@@ -910,10 +923,10 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		}
 		//FIXME this might need xmlFree when namespacing
 		b = (gchar *)layer_find_tag (top, "content",		//we prefer content first		  <--
-				layer_find_tag (top, "description", 	//it seems description is rather shorten version of the content, so |
-				layer_find_tag (top, "summary", 
+				layer_find_tag (top, "description",	//it seems description is rather shorten version of the content, so |
+				layer_find_tag (top, "summary",
 				NULL)));
-		if (b && strlen(b)) 
+		if (b && strlen(b))
 			b = g_strstrip(b);
 		else
 			b = g_strdup(layer_find (top, "description",
@@ -928,7 +941,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		if (!d) {
 			d2 = (gchar *)layer_find (top, "date", NULL);					//RSS2
 			if (!d2) {
-				d2 = (gchar *)layer_find(top, "updated", NULL); 			//ATOM
+				d2 = (gchar *)layer_find(top, "updated", NULL);				//ATOM
 				if (!d2) //take channel date if exists
 					d2 = g_strdup(main_date);
 			}
@@ -937,14 +950,14 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		//<enclosure url=>
 		//handle multiple enclosures
 		encl = (gchar *)layer_find_innerelement(top, "enclosure", "url",	// RSS 2.0 Enclosure
-			layer_find_innerelement(top, "link", "enclosure", NULL)); 		// ATOM Enclosure
+			layer_find_innerelement(top, "link", "enclosure", NULL));		// ATOM Enclosure
 //		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
-//							NULL); 		// ATOM Enclosure
+//							NULL);		// ATOM Enclosure
 		//we have to free this somehow
 		//<link></link>
 		link = g_strdup(layer_find (top, "link", NULL));		//RSS,
-		if (!link) 								// <link href=>
-			link = (gchar *)layer_find_innerelement(top, "link", "href", 
+		if (!link)								// <link href=>
+			link = (gchar *)layer_find_innerelement(top, "link", "href",
 							g_strdup(_("No Information")));	//ATOM
 
 //                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
@@ -998,15 +1011,15 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 				b = tmp;
 		}
 
-		CF = g_new0(create_feed, 1);	
+		CF = g_new0(create_feed, 1);
 		/* pack all data */
-		CF->q 		= g_strdup(q);
-		CF->subj 	= g_strdup(sp);
-		CF->body 	= g_strdup(b);
-		CF->date 	= g_strdup(d);
-		CF->dcdate 	= g_strdup(d2);
-		CF->website 	= g_strdup(link);
-		CF->encl 	= g_strdup(encl);
+		CF->q		= g_strdup(q);
+		CF->subj	= g_strdup(sp);
+		CF->body	= g_strdup(b);
+		CF->date	= g_strdup(d);
+		CF->dcdate	= g_strdup(d2);
+		CF->website	= g_strdup(link);
+		CF->encl	= g_strdup(encl);
 		CF->comments 	= g_strdup(comments);
 		CF->feed_fname  = g_strdup(feed_name);	//feed file name
 		CF->feed_uri	= g_strdup(feed);	//feed uri (uid!)
