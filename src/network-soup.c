@@ -399,7 +399,7 @@ authenticate (SoupSession *session,
 
 	user = g_hash_table_lookup(rf->hruser, data);
 	pass = g_hash_table_lookup(rf->hrpass, data);
-	
+
 	if (user && pass) {
 #if LIBSOUP_VERSION < 2003000
 		*username = g_strdup(user);
@@ -417,7 +417,7 @@ authenticate (SoupSession *session,
 		//preety annoying to pop the authentication popup in front
 		//of the user every time feeds are automatically fetched
 		if (!read_up(data) && !rf->autoupdate) {
-			//we will continue after user has made a decision on 
+			//we will continue after user has made a decision on
 			//web auth dialog
 			//Bug 522147 – need to be able to pause synchronous I/O
 authpop:		if (G_OBJECT_TYPE(session) == SOUP_TYPE_SESSION_ASYNC) {
@@ -452,8 +452,8 @@ reauthenticate (SoupSession *session,
 		} else {
 			rf->soup_auth_retry = TRUE;
 		}
-        	*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
-        	*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
+		*username = g_strdup(g_hash_table_lookup(rf->hruser, data));
+		*password = g_strdup(g_hash_table_lookup(rf->hrpass, data));
 	}
 }
 #endif
@@ -544,10 +544,7 @@ net_get_unblocking(gchar *url,
 	SoupSession *soup_sess;
 	gchar *agstr;
 
-	soup_sess =
-		soup_session_async_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT,
-						SOUP_SESSION_IDLE_TIMEOUT, SS_TIMEOUT, NULL);
-//		soup_session_async_new();
+	soup_sess = soup_session_async_new();
 
 
 #if LIBSOUP_VERSION > 2024000
@@ -573,7 +570,6 @@ net_get_unblocking(gchar *url,
 		rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
 	if (!rf->key_session)
 		rf->key_session = g_hash_table_new(g_direct_hash, g_direct_equal);
-
 
 	g_signal_connect (soup_sess, "authenticate",
             G_CALLBACK (authenticate), (gpointer)url);
@@ -788,14 +784,14 @@ sync_gecko_cookies(void)
 void
 rss_soup_init(void)
 {
-#if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME) 
+#if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME)
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL)) {
 		gchar *feed_dir = rss_component_peek_base_directory();
 		gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
 		gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
 		g_free(feed_dir);
 
-		rss_soup_jar = 
+		rss_soup_jar =
 			soup_cookie_jar_sqlite_new (cookie_path, FALSE);
 
 		if (!g_file_test(moz_cookie_path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_SYMLINK)) {

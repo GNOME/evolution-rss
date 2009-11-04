@@ -2770,7 +2770,6 @@ void org_gnome_evolution_rss_article_show(void *ep, void *t);
 #ifdef EVOLUTION_2_12
 void org_gnome_evolution_rss_article_show(void *ep, EMEventTargetMessage *t)
 {
-g_print("show\n");
 	if (rf && (!inhibit_read || !delete_op))
 		rf->current_uid = g_strdup(t->uid);
 }
@@ -4279,7 +4278,7 @@ custom_update_articles(CDATA *cdata)
 
 gboolean
 custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
-{ 
+{
 	guint time_id = 0;
 	guint ttl, ttl_multiply;
 	if (!custom_timeout)
@@ -4666,16 +4665,16 @@ dialog_response(GtkDialog *gd, int button, struct _send_data *data)
 
 void
 #ifdef EVOLUTION_2_12
-org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t);
+org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t);
 #else
-org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t);
+org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t);
 #endif
 
 void
 #ifdef EVOLUTION_2_12
-org_gnome_cooly_rss(void *ep, EMEventTargetSendReceive *t)
+org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 #else
-org_gnome_cooly_rss(void *ep, EMPopupTargetSelect *t)
+org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 #endif
 {
 #ifdef EVOLUTION_2_12
