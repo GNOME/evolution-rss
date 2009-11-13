@@ -264,7 +264,7 @@ gboolean display_folder_icon(GtkTreeStore *store, gchar *key);
 typedef struct _FEED_IMAGE {
 	gchar *img_file;
 	CamelStream *feed_fs;
-	gchar *http_cache;
+	CamelDataCache *http_cache;
 	gchar *url;
 	gchar *key;
 	gpointer data;
@@ -741,7 +741,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
         progress = (NetStatusProgress*)statusdata;
         if (progress->current > 0 && progress->total > 0) {
 	fraction = (float)progress->current / progress->total;
-	d(g_print("%f.", fraction*100));
+	g_print("%f%%\n", fraction*100);
 	}
 	while (gtk_events_pending())
 		gtk_main_iteration ();
@@ -5265,6 +5265,7 @@ finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_da
 #else
 		fwrite(msg->response_body->data, msg->response_body->length, 1, f);
 #endif
+g_print("siz:%d\n", sizeof(msg));
 		fclose(f);
 		//replace encl with filename generated
 		g_free(user_data->encl);
@@ -5278,6 +5279,8 @@ finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_da
 		write_feed_status_line(user_data->feed_fname, user_data->feed_uri);
 	}
 	free_cf(user_data);
+	g_object_unref(msg);
+	g_object_unref(session);
 }
 
 static void

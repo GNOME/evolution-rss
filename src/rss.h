@@ -203,7 +203,7 @@ typedef struct ADD_FEED {
 	GtkWidget	*dialog;
 	GtkWidget	*progress;
 	GtkWidget	*child;		//the dialog child
-	GladeXML	*gui;
+	GtkBuilder	*gui;
         gchar           *feed_url;
 	gchar		*feed_name;
 	gchar		*prefix;

@@ -30,7 +30,7 @@ void remove_feed_hash(gpointer name);
 void init_rss_prefs(void);
 void accept_cookies_cb(GtkWidget *widget, GtkWidget *data);
 void del_messages_cb (GtkWidget *widget, add_feed *data);
-void disable_widget_cb(GtkWidget *widget, GladeXML *data);
+void disable_widget_cb(GtkWidget *widget, GtkBuilder *data);
 add_feed *build_dialog_add(gchar *url, gchar *feed_text);
 void actions_dialog_add(add_feed *feed, gchar *url);
 add_feed *create_dialog_add(gchar *url, gchar *feed_text);

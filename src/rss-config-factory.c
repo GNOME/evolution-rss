@@ -80,7 +80,7 @@ extern SoupCookieJar *rss_soup_jar;
 #define MAX_TTL		10000
 
 typedef struct {
-        GladeXML *xml;
+        GtkBuilder  *xml;
         GConfClient *gconf;
         GtkWidget   *combobox;
         GtkWidget   *check;
@@ -89,7 +89,7 @@ typedef struct {
 } UIData;
 
 typedef struct _setupfeed {
-        GladeXML  *gui;
+        GtkBuilder *gui;
         GtkWidget *treeview;
         GtkWidget *add_feed;
         GtkWidget *check1;
@@ -283,11 +283,11 @@ set_string_cb (GtkWidget *widget, gpointer data)
 static void
 details_cb (GtkWidget *widget, gpointer data)
 {
-        GtkWidget *details = glade_xml_get_widget(data, "http-proxy-details");
-        GtkWidget *close = glade_xml_get_widget(data, "closebutton2");
-        GtkWidget *proxy_auth = glade_xml_get_widget(data, "proxy_auth");
-        GtkWidget *proxy_user = glade_xml_get_widget(data, "proxy_user");
-        GtkWidget *proxy_pass = glade_xml_get_widget(data, "proxy_pass");
+        GtkWidget *details = GTK_WIDGET (gtk_builder_get_object(data, "http-proxy-details"));
+        GtkWidget *close = GTK_WIDGET (gtk_builder_get_object(data, "closebutton2"));
+        GtkWidget *proxy_auth = GTK_WIDGET (gtk_builder_get_object(data, "proxy_auth"));
+        GtkWidget *proxy_user = GTK_WIDGET (gtk_builder_get_object(data, "proxy_user"));
+        GtkWidget *proxy_pass = GTK_WIDGET (gtk_builder_get_object(data, "proxy_pass"));
         g_signal_connect(close, "clicked", G_CALLBACK(close_details_cb), details);
 
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (proxy_auth),
@@ -359,11 +359,11 @@ del_messages_cb (GtkWidget *widget, add_feed *data)
 }
 
 void
-disable_widget_cb(GtkWidget *widget, GladeXML *data)
+disable_widget_cb(GtkWidget *widget, GtkBuilder *data)
 {
-	GtkWidget *authuser = (GtkWidget *)glade_xml_get_widget (data, "auth_user");
-	GtkWidget *authpass = (GtkWidget *)glade_xml_get_widget (data, "auth_pass");
-	GtkToggleButton *useauth = (GtkToggleButton *)glade_xml_get_widget (data, "use_auth");
+	GtkWidget *authuser = GTK_WIDGET (gtk_builder_get_object(data, "auth_user"));
+	GtkWidget *authpass = GTK_WIDGET (gtk_builder_get_object(data, "auth_pass"));
+	GtkToggleButton *useauth = (GtkToggleButton*)gtk_builder_get_object(data, "use_auth");
 	gboolean auth_enabled = gtk_toggle_button_get_active(useauth);
 
 	gtk_widget_set_sensitive(authuser, auth_enabled);
@@ -375,7 +375,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 {
         char *gladefile;
 	add_feed *feed = g_new0(add_feed, 1);
-	GladeXML  *gui;
+	GtkBuilder  *gui;
 	gchar *flabel = NULL;
 	gchar *fname;
 	gboolean fhtml = FALSE;
@@ -397,16 +397,21 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	GtkWidget *spinbutton1, *spinbutton2;
 	GtkWidget *checkbutton4;
         GtkImage *image;
+	GError* error = NULL;
 
 	feed->enabled = TRUE;
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                                       "rss-ui.glade",
                                       NULL);
-        gui = glade_xml_new (gladefile, NULL, GETTEXT_PACKAGE);
+	gui = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (gui, gladefile, &error)) {
+		g_warning ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
         g_free (gladefile);
 
-	dialog1 = (GtkWidget *)glade_xml_get_widget (gui, "feed_dialog");
-	child = (GtkWidget *)glade_xml_get_widget (gui, "dialog-vbox9");
+	dialog1 = GTK_WIDGET (gtk_builder_get_object(gui, "feed_dialog"));
+	child = GTK_WIDGET (gtk_builder_get_object(gui, "dialog-vbox9"));
 //	gtk_widget_show(dialog1);
 //	gtk_window_set_keep_above(GTK_WINDOW(dialog1), FALSE);
 	if (url != NULL)
@@ -415,8 +420,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		gtk_window_set_title (GTK_WINDOW (dialog1), _("Add Feed"));
 //	gtk_window_set_modal (GTK_WINDOW (dialog1), FALSE);
 
-        adv_options = (GtkWidget *)glade_xml_get_widget (gui, "adv_options");
-        entry1 = (GtkWidget *)glade_xml_get_widget (gui, "url_entry");
+        adv_options = GTK_WIDGET (gtk_builder_get_object(gui, "adv_options"));
+        entry1 = GTK_WIDGET (gtk_builder_get_object(gui, "url_entry"));
 	//editing
 	if (url != NULL) {
 		key = lookup_key(feed_text);
@@ -443,8 +448,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	}
 	feed->validate = 1;
 
-        entry2 = (GtkWidget *)glade_xml_get_widget (gui, "entry2");
-        feed_name = (GtkWidget *)glade_xml_get_widget (gui, "feed_name");
+        entry2 = GTK_WIDGET (gtk_builder_get_object(gui, "entry2"));
+        feed_name = GTK_WIDGET (gtk_builder_get_object(gui, "feed_name"));
 	if (url != NULL) {
 		flabel = g_build_path("/",
 			lookup_main_folder(),
@@ -455,46 +460,46 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		gtk_entry_set_text(GTK_ENTRY(feed_name), fname);
 		g_free(fname);
 		gtk_widget_show(feed_name);
-		feed_name_label = (GtkWidget *)glade_xml_get_widget (gui, "feed_name_label");
+		feed_name_label = GTK_WIDGET (gtk_builder_get_object(gui, "feed_name_label"));
 		gtk_widget_show(feed_name_label);
-		location_button = (GtkWidget *)glade_xml_get_widget (gui, "location_button");
+		location_button = GTK_WIDGET (gtk_builder_get_object(gui, "location_button"));
 
 		gtk_widget_show(location_button);
-		location_label = (GtkWidget *)glade_xml_get_widget (gui, "location_label");
+		location_label = GTK_WIDGET (gtk_builder_get_object(gui, "location_label"));
 		gtk_widget_show(location_label);
 		gtk_label_set_use_markup(GTK_LABEL(entry2), 1);
 	} else
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
 
-	combobox1 = (GtkWidget *)glade_xml_get_widget (gui, "combobox1");
+	combobox1 = GTK_WIDGET (gtk_builder_get_object(gui, "combobox1"));
 	gtk_combo_box_set_active(GTK_COMBO_BOX(combobox1), 0);
 
-	checkbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "html_check");
+	checkbutton1 = GTK_WIDGET (gtk_builder_get_object(gui, "html_check"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton1), 1-fhtml);
 
-	checkbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "enabled_check");
+	checkbutton2 = GTK_WIDGET (gtk_builder_get_object(gui, "enabled_check"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton2), feed->enabled);
 
-	checkbutton3 = (GtkWidget *)glade_xml_get_widget (gui, "validate_check");
+	checkbutton3 = GTK_WIDGET (gtk_builder_get_object(gui, "validate_check"));
 	if (url)
 		gtk_widget_set_sensitive(checkbutton3, FALSE);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton3), feed->validate);
 
-	spinbutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb1");
-	spinbutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_sb2");
+	spinbutton1 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_sb1"));
+	spinbutton2 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_sb2"));
 	if (feed->del_messages)
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1), feed->del_messages);
 	g_signal_connect(spinbutton1, "changed", G_CALLBACK(del_messages_cb), feed);
 
-	radiobutton1 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb1");
-	radiobutton2 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb2");
-	radiobutton3 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb3");
-	radiobutton7 = (GtkWidget *)glade_xml_get_widget (gui, "storage_rb4");
-	radiobutton4 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_global");
-	radiobutton5 = (GtkWidget *)glade_xml_get_widget (gui, "ttl");
-	radiobutton6 = (GtkWidget *)glade_xml_get_widget (gui, "ttl_disabled");
-	ttl_value = (GtkWidget *)glade_xml_get_widget (gui, "ttl_value");
-        image = (GtkImage *)glade_xml_get_widget (gui, "image1");
+	radiobutton1 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_rb1"));
+	radiobutton2 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_rb2"));
+	radiobutton3 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_rb3"));
+	radiobutton7 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_rb4"));
+	radiobutton4 = GTK_WIDGET (gtk_builder_get_object(gui, "ttl_global"));
+	radiobutton5 = GTK_WIDGET (gtk_builder_get_object(gui, "ttl"));
+	radiobutton6 = GTK_WIDGET (gtk_builder_get_object(gui, "ttl_disabled"));
+	ttl_value = GTK_WIDGET (gtk_builder_get_object(gui, "ttl_value"));
+        image = (GtkImage *)gtk_builder_get_object (gui, "image1");
 	gtk_spin_button_set_range((GtkSpinButton *)ttl_value, 0, (guint)MAX_TTL);
 
 	/*set feed icon*/
@@ -527,7 +532,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton2), feed->del_days);
 	g_signal_connect(spinbutton2, "changed", G_CALLBACK(del_days_cb), feed);
 
-	checkbutton4 = (GtkWidget *)glade_xml_get_widget (gui, "storage_unread");
+	checkbutton4 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_unread"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton4), del_unread);
 
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ttl_value), feed->ttl);
@@ -548,9 +553,9 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		break;
 	}
 
-	authuser = (GtkWidget *)glade_xml_get_widget (gui, "auth_user");
-	authpass = (GtkWidget *)glade_xml_get_widget (gui, "auth_pass");
-	useauth = (GtkToggleButton *)glade_xml_get_widget (gui, "use_auth");
+	authuser = GTK_WIDGET (gtk_builder_get_object(gui, "auth_user"));
+	authpass = GTK_WIDGET (gtk_builder_get_object(gui, "auth_pass"));
+	useauth = (GtkToggleButton*)gtk_builder_get_object(gui, "use_auth");
 
 	if (url && read_up(url)) {
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (useauth), 1);
@@ -562,12 +567,12 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	gtk_widget_set_sensitive(authpass, auth_enabled);
 	g_signal_connect(useauth, "toggled", G_CALLBACK(disable_widget_cb), gui);
 
-	ok = (GtkWidget *)glade_xml_get_widget (gui, "ok_button");
+	ok = GTK_WIDGET (gtk_builder_get_object(gui, "ok_button"));
 	/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
 	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
 
-	cancel = (GtkWidget *)glade_xml_get_widget (gui, "cancel_button");
+	cancel = GTK_WIDGET (gtk_builder_get_object(gui, "cancel_button"));
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancel, GTK_RESPONSE_CANCEL);
 	GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
 
@@ -591,21 +596,21 @@ build_dialog_add(gchar *url, gchar *feed_text)
 void
 actions_dialog_add(add_feed *feed, gchar *url)
 {
-        GtkWidget *entry1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "url_entry");
-	GtkWidget *checkbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "html_check");
-	GtkWidget *checkbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "enabled_check");
-	GtkWidget *checkbutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "validate_check");
-	GtkWidget *checkbutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_unread");
-	GtkWidget *radiobutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb1");
-	GtkWidget *radiobutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb2");
-	GtkWidget *radiobutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb3");
-	GtkWidget *radiobutton7 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb4");
-	GtkWidget *radiobutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_global");
-	GtkWidget *radiobutton5 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl");
-	GtkWidget *radiobutton6 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_disabled");
-	GtkWidget *spinbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb1");
-	GtkWidget *spinbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb2");
-	GtkWidget *ttl_value = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_value");
+        GtkWidget *entry1 = GTK_WIDGET (gtk_builder_get_object(feed->gui, "url_entry"));
+	GtkWidget *checkbutton1 = GTK_WIDGET (gtk_builder_get_object(feed->gui, "html_check"));
+	GtkWidget *checkbutton2 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "enabled_check"));
+	GtkWidget *checkbutton3 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "validate_check"));
+	GtkWidget *checkbutton4 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_unread"));
+	GtkWidget *radiobutton1 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb1"));
+	GtkWidget *radiobutton2 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb2"));
+	GtkWidget *radiobutton3 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb3"));
+	GtkWidget *radiobutton7 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb4"));
+	GtkWidget *radiobutton4 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl_global"));
+	GtkWidget *radiobutton5 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl"));
+	GtkWidget *radiobutton6 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl_disabled"));
+	GtkWidget *spinbutton1 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_sb1"));
+	GtkWidget *spinbutton2 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_sb2"));
+	GtkWidget *ttl_value = GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl_value"));
 	gboolean fhtml = feed->fetch_html;
 	guint i=0;
 
@@ -2163,15 +2168,22 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         UIData *ui = g_new0 (UIData, 1);
         char *gladefile;
 	gdouble adj;
+	GError* error = NULL;
+	gchar *toplevel[] = {(gchar *)"settingsbox", NULL};
+
+
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                         "rss-html-rendering.glade",
                         NULL);
-        ui->xml = glade_xml_new (gladefile, "settingsbox", GETTEXT_PACKAGE);
+	ui->xml = gtk_builder_new ();
+	if (!gtk_builder_add_objects_from_file (ui->xml, gladefile, toplevel, &error)) {
+		g_warning ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
         g_free (gladefile);
 
-
-	ui->combobox = glade_xml_get_widget(ui->xml, "hbox1");
+	ui->combobox = GTK_WIDGET (gtk_builder_get_object(ui->xml, "hbox1"));
 	renderer = gtk_cell_renderer_text_new ();
         store = gtk_list_store_new(1, G_TYPE_STRING);
 	combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
@@ -2213,7 +2225,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
                                         NULL, NULL);
 
 #if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
-        GtkWidget *label_webkit = glade_xml_get_widget(ui->xml, "label_webkits");
+        GtkWidget *label_webkit = GTK_WIDGET (gtk_builder_get_object(ui->xml, "label_webkits"));
         gtk_label_set_text(GTK_LABEL(label_webkit), _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
         gtk_widget_show(label_webkit);
 #endif
@@ -2221,7 +2233,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         gtk_widget_show(combo);
         gtk_box_pack_start(GTK_BOX(ui->combobox), combo, FALSE, FALSE, 0);
 
-	ui->check = glade_xml_get_widget(ui->xml, "enable_java");
+	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "enable_java"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL));
 	g_signal_connect(ui->check,
@@ -2229,7 +2241,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_HTML_JAVA);
 
-	ui->check = glade_xml_get_widget(ui->xml, "image_resize");
+	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "image_resize"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_IMAGE_RESIZE, NULL));
 	g_signal_connect(ui->check,
@@ -2237,7 +2249,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_IMAGE_RESIZE);
 
-	ui->check = glade_xml_get_widget(ui->xml, "enable_js");
+	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "enable_js"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL));
 	g_signal_connect(ui->check,
@@ -2245,14 +2257,14 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_HTML_JS);
 
-	ui->check = glade_xml_get_widget(ui->xml, "accept_cookies");
+	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "accept_cookies"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(accept_cookies_cb),
 		ui->import);
-	ui->import = glade_xml_get_widget(ui->xml, "import_cookies");
+	ui->import = GTK_WIDGET (gtk_builder_get_object(ui->xml, "import_cookies"));
 	//we have to have ui->import looked up
 
 #if LIBSOUP_VERSION >= 2026000
@@ -2262,7 +2274,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	gtk_widget_set_sensitive(ui->check, FALSE);
 #endif
 
-	ui->nettimeout = glade_xml_get_widget(ui->xml, "nettimeout");
+	ui->nettimeout = GTK_WIDGET (gtk_builder_get_object(ui->xml, "nettimeout"));
 	adj = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
 	if (adj < NETWORK_MIN_TIMEOUT) {
 		adj = 60;
@@ -2274,21 +2286,21 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	g_signal_connect(ui->nettimeout, "value-changed", G_CALLBACK(network_timeout_cb), ui->nettimeout);
 
 	//feed notification
-	ui->check = glade_xml_get_widget(ui->xml, "status_icon");
+	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "status_icon"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_STATUS_ICON, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_STATUS_ICON);
-	ui->check = glade_xml_get_widget(ui->xml, "blink_icon");
+	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "blink_icon"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_BLINK_ICON, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_BLINK_ICON);
-	ui->check = glade_xml_get_widget(ui->xml, "feed_icon");
+	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "feed_icon"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_FEED_ICON, NULL));
 	g_signal_connect(ui->check,
@@ -2299,7 +2311,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
         ui->gconf = gconf_client_get_default ();
 	hbox = gtk_vbox_new (FALSE, 0);
 
-        gtk_box_pack_start (GTK_BOX (hbox), glade_xml_get_widget (ui->xml, "settingsbox"), FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (gtk_builder_get_object(ui->xml, "settingsbox")), FALSE, FALSE, 0);
 
 	g_object_set_data_full (G_OBJECT (hbox), "ui-data", ui, destroy_ui_data);
 
@@ -2351,22 +2363,22 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 
 	gtk_widget_set_sensitive(target->config->widget, FALSE);
 
-	entry1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "url_entry");
-	checkbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "html_check");
-	checkbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "enabled_check");
-	checkbutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "validate_check");
-	checkbutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_unread");
-	radiobutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb1");
-	radiobutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb2");
-	radiobutton3 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb3");
-        radiobutton4 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_global");
-        radiobutton5 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl");
-        radiobutton6 = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_disabled");
-	radiobutton7 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_rb4");
-	spinbutton1 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb1");
-	spinbutton2 = (GtkWidget *)glade_xml_get_widget (feed->gui, "storage_sb2");
-        ttl_value = (GtkWidget *)glade_xml_get_widget (feed->gui, "ttl_value");
-        feed_name_entry = (GtkWidget *)glade_xml_get_widget (feed->gui, "feed_name");
+	entry1 = GTK_WIDGET (gtk_builder_get_object(feed->gui, "url_entry"));
+	checkbutton1 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "html_check"));
+	checkbutton2 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "enabled_check"));
+	checkbutton3 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "validate_check"));
+	checkbutton4 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_unread"));
+	radiobutton1 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb1"));
+	radiobutton2 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb2"));
+	radiobutton3 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb3"));
+        radiobutton4 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl_global"));
+        radiobutton5 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl"));
+        radiobutton6 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl_disabled"));
+	radiobutton7 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb4"));
+	spinbutton1 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_sb1"));
+	spinbutton2 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_sb2"));
+        ttl_value = (GtkWidget *)GTK_WIDGET (gtk_builder_get_object (feed->gui, "ttl_value"));
+        feed_name_entry = (GtkWidget *)GTK_WIDGET (gtk_builder_get_object (feed->gui, "feed_name"));
 	feed_name = g_strdup(gtk_entry_get_text(GTK_ENTRY(feed_name_entry)));
 
 
@@ -2427,9 +2439,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 
 	process_dialog_edit(feed, url, ofolder);
 
-	authuser = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_user");
-	authpass = (GtkWidget *)glade_xml_get_widget (feed->gui, "auth_pass");
-	useauth = (GtkWidget *)glade_xml_get_widget (feed->gui, "use_auth");
+	authuser = GTK_WIDGET (gtk_builder_get_object(feed->gui, "auth_user"));
+	authpass = GTK_WIDGET (gtk_builder_get_object(feed->gui, "auth_pass"));
+	useauth = GTK_WIDGET (gtk_builder_get_object(feed->gui, "use_auth"));
 
 	user = gtk_entry_get_text(GTK_ENTRY(authuser));
 	pass = gtk_entry_get_text(GTK_ENTRY(authpass));
@@ -2496,7 +2508,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 		g_object_set_data_full (G_OBJECT (epl), "add-feed", feed, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "url", url, NULL);
 		g_object_set_data_full (G_OBJECT (epl), "ofolder", ofolder, NULL);
-		ok = (GtkWidget *)glade_xml_get_widget (feed->gui, "ok_button");
+		ok = GTK_WIDGET (gtk_builder_get_object(feed->gui, "ok_button"));
 
 		gtk_widget_add_accelerator (ok, "activate", accel_group,
                               GDK_Return, (GdkModifierType) 0,
@@ -2541,6 +2553,7 @@ rss_config_control_new (void)
 	GtkTreeSelection *selection;
 	GtkTreeViewColumn *column;
 	gdouble adj;
+	GError* error = NULL;
 
 	d(g_print("rf->%p\n", rf));
 	sf = g_new0(setupfeed, 1);
@@ -2548,10 +2561,14 @@ rss_config_control_new (void)
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,
                                       "rss-ui.glade",
                                       NULL);
-        sf->gui = glade_xml_new (gladefile, NULL, GETTEXT_PACKAGE);
+	sf->gui = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (sf->gui, gladefile, &error)) {
+		g_warning ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
         g_free (gladefile);
 
-	treeview = (GtkTreeView *)glade_xml_get_widget (sf->gui, "feeds-treeview");
+	treeview = (GtkTreeView *)gtk_builder_get_object(sf->gui, "feeds-treeview");
 	rf->treeview = (GtkWidget *)treeview;
 	sf->treeview = (GtkWidget *)treeview;
 
@@ -2622,23 +2639,23 @@ rss_config_control_new (void)
 			G_CALLBACK(treeview_row_activated),
 			treeview);
 
-       button1 = glade_xml_get_widget (sf->gui, "feed-add-button");
+       button1 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "feed-add-button"));
        g_signal_connect(button1, "clicked", G_CALLBACK(feeds_dialog_add), treeview);
 
-       button2 = glade_xml_get_widget (sf->gui, "feed-edit-button");
+       button2 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "feed-edit-button"));
        g_signal_connect(button2, "clicked", G_CALLBACK(feeds_dialog_edit), treeview);
 
-       button3 = glade_xml_get_widget (sf->gui, "feed-delete-button");
+       button3 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "feed-delete-button"));
        g_signal_connect(button3, "clicked", G_CALLBACK(feeds_dialog_delete), treeview);
 
 
-	rf->preferences = glade_xml_get_widget (sf->gui, "rss-config-control");
-	sf->add_feed = glade_xml_get_widget (sf->gui, "add-feed-dialog");
-	sf->check1 = glade_xml_get_widget(sf->gui, "checkbutton1");
-	sf->check2 = glade_xml_get_widget(sf->gui, "checkbutton2");
-	sf->check3 = glade_xml_get_widget(sf->gui, "checkbutton3");
-	sf->check4 = glade_xml_get_widget(sf->gui, "checkbutton4");
-	sf->spin = glade_xml_get_widget(sf->gui, "spinbutton1");
+	rf->preferences = GTK_WIDGET (gtk_builder_get_object(sf->gui, "rss-config-control"));
+	sf->add_feed = GTK_WIDGET (gtk_builder_get_object(sf->gui, "add-feed-dialog"));
+	sf->check1 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "checkbutton1"));
+	sf->check2 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "checkbutton2"));
+	sf->check3 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "checkbutton3"));
+	sf->check4 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "checkbutton4"));
+	sf->spin = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton1"));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check1),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_REP_CHECK, NULL));
@@ -2672,14 +2689,14 @@ rss_config_control_new (void)
 #if (EVOLUTION_VERSION < 21900)		// include devel too
 
 	/*first make the tab visible */
-	g_object_set(glade_xml_get_widget(sf->gui, "label_HTML"),
+	g_object_set(GTK_WIDGET (gtk_builder_get_object(sf->gui, "label_HTML")),
 					"visible", TRUE,
 					NULL);
-	g_object_set(glade_xml_get_widget(sf->gui, "vbox_HTML"),
+	g_object_set(GTK_WIDGET (gtk_builder_get_object(sf->gui, "vbox_HTML")),
 					"visible", TRUE,
 					NULL);
 	/* HTML tab */
-	sf->combo_hbox = glade_xml_get_widget(sf->gui, "hbox17");
+	sf->combo_hbox = GTK_WIDGET (gtk_builder_get_object(sf->gui, "hbox17"));
 	GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
         store = gtk_list_store_new(1, G_TYPE_STRING);
 	GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
@@ -2721,7 +2738,7 @@ rss_config_control_new (void)
 					NULL, NULL);
 
 #if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
-	GtkWidget *label_webkit = glade_xml_get_widget(sf->gui, "label_webkits");
+	GtkWidget *label_webkit = GTK_WIDGET (gtk_builder_get_object(sf->gui, "label_webkits"));
 	gtk_label_set_text(GTK_LABEL(label_webkit), _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
 	gtk_widget_show(label_webkit);
 #endif
@@ -2732,18 +2749,18 @@ rss_config_control_new (void)
 
 #if (EVOLUTION_VERSION < 22200)		// include devel too
 	/*first make the tab visible */
-	g_object_set(glade_xml_get_widget(sf->gui, "label_HTML"),
+	g_object_set(GTK_WIDGET (gtk_builder_get_object(sf->gui, "label_HTML")),
 					"visible", TRUE,
 					NULL);
-	g_object_set(glade_xml_get_widget(sf->gui, "vbox_HTML"),
+	g_object_set(GTK_WIDGET (gtk_builder_get_object(sf->gui, "vbox_HTML")),
 					"visible", TRUE,
 					NULL);
 	/* Network tab */
-	sf->use_proxy = glade_xml_get_widget(sf->gui, "use_proxy");
-	sf->host_proxy = glade_xml_get_widget(sf->gui, "host_proxy");
-	sf->port_proxy = glade_xml_get_widget(sf->gui, "port_proxy");
-	sf->details = glade_xml_get_widget(sf->gui, "details");
-	sf->proxy_details = glade_xml_get_widget(sf->gui, "http-proxy-details");
+	sf->use_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "use_proxy"));
+	sf->host_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "host_proxy"));
+	sf->port_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "port_proxy"));
+	sf->details = GTK_WIDGET (gtk_builder_get_object(sf->gui, "details"));
+	sf->proxy_details = GTK_WIDGET (gtk_builder_get_object(sf->gui, "http-proxy-details"));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->use_proxy),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL));
@@ -2753,12 +2770,12 @@ rss_config_control_new (void)
 
 
 
-	sf->import = glade_xml_get_widget(sf->gui, "import");
-	sf->export = glade_xml_get_widget(sf->gui, "export");
+	sf->import = GTK_WIDGET (gtk_builder_get_object(sf->gui, "import"));
+	sf->export = GTK_WIDGET (gtk_builder_get_object(sf->gui, "export"));
 	g_signal_connect(sf->import, "clicked", G_CALLBACK(import_cb), sf->import);
 	g_signal_connect(sf->export, "clicked", G_CALLBACK(export_cb), sf->export);
 
-        control_widget = glade_xml_get_widget (sf->gui, "feeds-notebook");
+        control_widget = GTK_WIDGET (gtk_builder_get_object(sf->gui, "feeds-notebook"));
 	g_object_ref (control_widget);
 
         gtk_container_remove (GTK_CONTAINER (control_widget->parent), control_widget);
