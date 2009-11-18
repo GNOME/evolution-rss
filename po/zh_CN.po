@@ -8,173 +8,198 @@ msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2009-04-17 08:22+0000\n"
-"PO-Revision-Date: 2009-04-18 13:18+0800\n"
-"Last-Translator: Kuo Yang <darasion@gmail.com>\n"
+"POT-Creation-Date: 2009-11-14 12:34+0000\n"
+"PO-Revision-Date: 2009-11-18 15:06+0800\n"
+"Last-Translator: Tao Wei <weitao1979@gmail.com>\n"
 "Language-Team: Chinese/Simplified <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/dbus.c:111 ../src/rss-config-factory.c:568
-#: ../src/rss-config-factory.c:933 ../src/rss-config-factory.c:1029
+#: ../src/dbus.c:120 ../src/rss.c:3118 ../src/rss-config-factory.c:760
+#: ../src/rss-config-factory.c:1104 ../src/rss-config-factory.c:1241
 msgid "Error adding feed."
 msgstr "添加 feed 错误。"
 
-#: ../src/dbus.c:112 ../src/rss-config-factory.c:569
-#: ../src/rss-config-factory.c:934 ../src/rss-config-factory.c:1030
+#: ../src/dbus.c:121 ../src/rss.c:3119 ../src/rss-config-factory.c:761
+#: ../src/rss-config-factory.c:1105 ../src/rss-config-factory.c:1242
 msgid "Feed already exists!"
 msgstr "Feed 已经存在！"
 
-#: ../src/dbus.c:117
+#: ../src/dbus.c:126
 #, c-format
 msgid "New feed imported: %s"
 msgstr "新的 feed 被导入： %s"
 
 #: ../src/evolution-rss.schemas.in.h:1
+msgid "Accepts Cookies"
+msgstr "接受 Cookies"
+
+#: ../src/evolution-rss.schemas.in.h:2
 msgid "Auto check for new articles."
 msgstr "自动检查新文章。"
 
-#: ../src/evolution-rss.schemas.in.h:2
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Automaticaly Resize Images"
+msgstr "自动调整图像"
+
+#: ../src/evolution-rss.schemas.in.h:4
 msgid "Blink Status Icon"
 msgstr "闪烁状态图标"
 
-#: ../src/evolution-rss.schemas.in.h:3
+#: ../src/evolution-rss.schemas.in.h:5
 msgid "Blink status icon when new article received"
 msgstr "接收到新文章时闪烁状态图标"
 
-#: ../src/evolution-rss.schemas.in.h:4
+#: ../src/evolution-rss.schemas.in.h:6
 msgid "Check New articles"
 msgstr "检查新文章"
 
-#: ../src/evolution-rss.schemas.in.h:5
+#: ../src/evolution-rss.schemas.in.h:7
 msgid "Check for new articles everytime Evolution is started."
 msgstr "每次启动 Evolution 时检查新文章。"
 
-#: ../src/evolution-rss.schemas.in.h:6
+#: ../src/evolution-rss.schemas.in.h:8
 msgid "Checks articles on startup"
 msgstr "启动时检查新文章"
 
-#: ../src/evolution-rss.schemas.in.h:7
-msgid "Contains list of the currently setup feeds."
-msgstr "包含当前设置的 feed 列表。"
-
-#: ../src/evolution-rss.schemas.in.h:8
-msgid "Deleting feed entry will also remove feed folder."
-msgstr "删除 feed 条目将同时删除 feed 文件夹。"
-
 #: ../src/evolution-rss.schemas.in.h:9
+msgid "Contains list of the currently setup feeds."
+msgstr "包含当前设置的 Feed 列表。"
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "删除 Feed 条目将同时删除 Feed 文件夹。"
+
+#: ../src/evolution-rss.schemas.in.h:11
 msgid "Display article's summary"
 msgstr "显示文章摘要"
 
-#: ../src/evolution-rss.schemas.in.h:10
+#: ../src/evolution-rss.schemas.in.h:12
 msgid "Display feed icon on feed folder"
 msgstr "在 feed 文件夹上显示 feed 图标"
 
-#: ../src/evolution-rss.schemas.in.h:11
+#: ../src/evolution-rss.schemas.in.h:13
 msgid "Enable Feed Icon"
 msgstr "启用 Feed 图标"
 
-#: ../src/evolution-rss.schemas.in.h:12
+#: ../src/evolution-rss.schemas.in.h:14
 msgid "Enable Status Icon"
 msgstr "启用状态图标"
 
-#: ../src/evolution-rss.schemas.in.h:13
+#: ../src/evolution-rss.schemas.in.h:15
 msgid "Enable status icon in notification area"
 msgstr "在通知区域启用状态图标"
 
-#: ../src/evolution-rss.schemas.in.h:14
-msgid ""
-"Evolution will show artile's summary instead of article's webpage. Sumarry "
-"can also be html."
-msgstr "Evolution 将会使用文章摘要代替 web 页面显示。摘要也可以是 html。"
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Evolution RSS 将接受您浏览的文章的 cookies。"
 
-#: ../src/evolution-rss.schemas.in.h:15
+#: ../src/evolution-rss.schemas.in.h:17
+msgid ""
+"Evolution RSS will automatically resize images lager than displayed area."
+msgstr "Evolution RSS 将自动调整比显示区域大的图像。"
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid ""
+"Evolution will show article's summary instead of article's webpage. Summary "
+"can also be html."
+msgstr "Evolution 将会使用文章摘要代替网页。摘要也可以是 html。"
+
+#: ../src/evolution-rss.schemas.in.h:19
 msgid "Feeds list"
 msgstr "Feed 列表"
 
-#: ../src/evolution-rss.schemas.in.h:16
+#: ../src/evolution-rss.schemas.in.h:20
 msgid "Frequency to check for new articles (in minutes)."
 msgstr "文章更新频率(分钟)。"
 
-#: ../src/evolution-rss.schemas.in.h:17
+#: ../src/evolution-rss.schemas.in.h:21
 msgid "Hostname of the proxy server"
 msgstr "代理服务器主机名"
 
-#: ../src/evolution-rss.schemas.in.h:18
-msgid "Hostname of the proxy server."
-msgstr "代理服务器主机名。"
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "用于 Feed 和内容的代理服务器主机名。"
 
-#: ../src/evolution-rss.schemas.in.h:19
+#: ../src/evolution-rss.schemas.in.h:23
 msgid "Html render"
 msgstr "Html 渲染"
 
-#: ../src/evolution-rss.schemas.in.h:20
+#: ../src/evolution-rss.schemas.in.h:24
 msgid ""
 "If the proxy server requires authentication. This is the password field."
 msgstr "如果代理服务器需要验证。从这里填写密码。"
 
-#: ../src/evolution-rss.schemas.in.h:21
+#: ../src/evolution-rss.schemas.in.h:25
 msgid "Interval in seconds before a conection is dropped."
 msgstr "相隔多少秒后放弃连接。"
 
-#: ../src/evolution-rss.schemas.in.h:22
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "It will display article's comments by default if present."
+msgstr "如果表现出来它将默认显示文章的评论。"
+
+#: ../src/evolution-rss.schemas.in.h:27
 msgid "Java Enabled"
 msgstr "Java 已启用"
 
-#: ../src/evolution-rss.schemas.in.h:23
+#: ../src/evolution-rss.schemas.in.h:28
 msgid "JavaScript Enabled"
 msgstr "JavaScript 已启用"
 
-#: ../src/evolution-rss.schemas.in.h:24
+#: ../src/evolution-rss.schemas.in.h:29
 msgid "Network proxy requires authentication."
 msgstr "网络代理需要验证。"
 
-#: ../src/evolution-rss.schemas.in.h:25
+#: ../src/evolution-rss.schemas.in.h:30
 msgid "Network timeout"
 msgstr "网络超时。"
 
-#: ../src/evolution-rss.schemas.in.h:26
+#: ../src/evolution-rss.schemas.in.h:31
 msgid "New articles timeout"
 msgstr "新文章超时"
 
-#: ../src/evolution-rss.schemas.in.h:27
+#: ../src/evolution-rss.schemas.in.h:32
 msgid "Password for proxy server"
 msgstr "代理服务器密码"
 
-#: ../src/evolution-rss.schemas.in.h:28
+#: ../src/evolution-rss.schemas.in.h:33
 msgid "Proxy requires authentication"
 msgstr "代理需要验证"
 
-#: ../src/evolution-rss.schemas.in.h:29
+#: ../src/evolution-rss.schemas.in.h:34
 msgid "Proxy server port"
 msgstr "代理服务器端口"
 
-#: ../src/evolution-rss.schemas.in.h:30
+#: ../src/evolution-rss.schemas.in.h:35
 msgid "Proxy server user"
 msgstr "代理服务器用户名"
 
-#: ../src/evolution-rss.schemas.in.h:31
+#: ../src/evolution-rss.schemas.in.h:36
 msgid "Remove feed folder"
-msgstr "删除 feed 文件夹"
+msgstr "删除 Feed 文件夹"
 
-#: ../src/evolution-rss.schemas.in.h:32
-msgid "The port number for proxy server."
-msgstr "代理服务器端口号。"
+#: ../src/evolution-rss.schemas.in.h:37
+msgid "Show articles comments"
+msgstr "显示文章评论"
 
-#: ../src/evolution-rss.schemas.in.h:33
+#: ../src/evolution-rss.schemas.in.h:38
+msgid "The port number for proxy server used for feeds and content."
+msgstr "用于 Feed 和内容的代理服务器端口号。"
+
+#: ../src/evolution-rss.schemas.in.h:39
 msgid "The username to use for proxy server authentication."
 msgstr "用于代理服务器验证的用户名。"
 
-#: ../src/evolution-rss.schemas.in.h:34
+#: ../src/evolution-rss.schemas.in.h:40
 msgid "Type HTML Render used to display html pages."
-msgstr "输入用于显示 html 页面的 HTML 渲染器。"
+msgstr "输入用于显示 HTML 页面的 HTML 渲染器。"
 
-#: ../src/evolution-rss.schemas.in.h:35
-msgid "Use a proxy server to fetch articles"
-msgstr "用代理服务器获取文章。"
+#: ../src/evolution-rss.schemas.in.h:41
+msgid "Use a proxy server to fetch articles and content."
+msgstr "使用一个代理服务器来获取文章和内容。"
 
-#: ../src/evolution-rss.schemas.in.h:36
+#: ../src/evolution-rss.schemas.in.h:42
 msgid "Use proxy server"
 msgstr "使用代理服务器"
 
@@ -188,7 +213,7 @@ msgid ""
 "moment I do not see the point having a separate RSS reader since a RSS "
 "Article is like an email message.\n"
 "\n"
-"Evolution RSS can display article using summary view or HTML view. \n"
+"Evolution RSS can display article using summary view or HTML view.\n"
 "\n"
 "HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
 "or Firefox/Gecko.\n"
@@ -203,14 +228,18 @@ msgstr ""
 "分支中某些已存在的的 RSS 支持所构建。 想法是把 RSS 放在与邮件相同的位置，因"
 "为 RSS 文章与电子邮件相似，所以目前没有理由把它们分开来实现。\n"
 "\n"
-"Evolution RSS 可以使用摘要视图或 html 视图来显示文章。 \n"
+"Evolution RSS 可以使用摘要视图或 HTML 视图来显示文章。 \n"
 "\n"
-"可以选择使用这些引擎来显示 HTML： gtkHTML， Apple's Webkit 或 Firefox/"
+"可以选择使用这些引擎来显示 HTML： gtkHTML， Apple 的 Webkit 或 Firefox/"
 "Gecko。\n"
 "\n"
 "<b>版本： evolution-rss +VERSION+</b>\n"
 "\n"
 "+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "大小"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
 msgid "Delete \"{0}\"?"
@@ -234,275 +263,344 @@ msgstr "设置 RSS"
 
 #: ../src/org-gnome-evolution-rss.xml.h:2
 msgid "Setup RSS feeds"
-msgstr "设置 RSS feed"
+msgstr "设置 RSS Feed"
 
 #: ../src/org-gnome-evolution-rss.xml.h:3
 msgid "Update RSS feeds"
-msgstr "更新 RSS feed"
+msgstr "更新 RSS Feed"
 
 #: ../src/org-gnome-evolution-rss.xml.h:4
 msgid "_Read RSS"
-msgstr "读取 RSS(_R)"
+msgstr "读取 _RSS"
 
-#: ../src/rss.c:427 ../src/rss.c:2513
+#: ../src/rss.c:606 ../src/rss.c:3214
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "正在获取 Feed (%d 可用)"
 
-#: ../src/rss.c:461 ../src/rss-config-factory.c:1179
-#: ../src/rss-config-factory.c:1420
+#: ../src/rss.c:646 ../src/rss-config-factory.c:1453
+#: ../src/rss-config-factory.c:1490 ../src/rss-config-factory.c:1784
+#: ../src/rss-config-factory.c:1918
 #, c-format
 msgid "%2.0f%% done"
 msgstr "已完成 %2.0f%%"
 
-#: ../src/rss.c:471 ../src/rss.c:2673
+#: ../src/rss.c:656 ../src/rss.c:3368
 msgid "Feed"
 msgstr "Feed"
 
-#: ../src/rss.c:582
+#: ../src/rss.c:808
 msgid "Enter User/Pass for feed"
-msgstr "输入 feed 用户名/密码"
+msgstr "输入 Feed 用户名/密码"
 
-#: ../src/rss.c:629
+#: ../src/rss.c:859
 #, c-format
 msgid ""
 "Enter your username and password for:\n"
 " '%s'"
 msgstr "为‘%s’输入你的用户名和密码。"
 
-#: ../src/rss.c:646
+#: ../src/rss.c:876
 msgid "Username: "
 msgstr "用户名："
 
-#: ../src/rss.c:667 ../src/rss-ui.glade.h:32
+#: ../src/rss.c:898 ../src/rss-ui.glade.h:36
 msgid "Password: "
 msgstr "密码："
 
-#: ../src/rss.c:705
+#: ../src/rss.c:936
 msgid "_Remember this password"
 msgstr "记住密码(_R)"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:862
+#: ../src/rss.c:1039
 msgid "Canceling..."
 msgstr "正在取消..."
 
-#: ../src/rss.c:1655
+#: ../src/rss.c:1589
+msgid "Formatting Message..."
+msgstr "格式化信息..."
+
+#: ../src/rss.c:1761
+msgid "_Copy"
+msgstr "复制(_C)"
+
+#: ../src/rss.c:1762
+msgid "Select _All"
+msgstr "全部选择(_A)"
+
+#: ../src/rss.c:1764 ../src/rss.c:1775
+msgid "Zoom _In"
+msgstr "放大(_I)"
+
+#: ../src/rss.c:1765 ../src/rss.c:1776
+msgid "Zoom _Out"
+msgstr "缩小(_O)"
+
+#: ../src/rss.c:1766 ../src/rss.c:1777
+msgid "_Normal Size"
+msgstr "正常大小(_N)"
+
+#: ../src/rss.c:1768
+msgid "_Open Link"
+msgstr "打开链接(_O)"
+
+#: ../src/rss.c:1769 ../src/rss.c:1783
+msgid "_Copy Link Location"
+msgstr "复制链接位置(_C)"
+
+#: ../src/rss.c:1779
+msgid "_Print..."
+msgstr "打印(_P)..."
+
+#: ../src/rss.c:1780
+msgid "Save _As"
+msgstr "另存为(_A)"
+
+#: ../src/rss.c:1782
+msgid "_Open Link in Browser"
+msgstr "在浏览器中打开链接(_O)"
+
+#: ../src/rss.c:1821 ../src/rss.c:1871
+msgid "Click to open"
+msgstr "点击来打开"
+
+#: ../src/rss.c:2042
 msgid "Comments"
 msgstr "评论"
 
-#: ../src/rss.c:1660
+#: ../src/rss.c:2047
 msgid "Refresh"
 msgstr "刷新"
 
-#: ../src/rss.c:1678
+#: ../src/rss.c:2067
 msgid "Feed view"
 msgstr "Feed 视图"
 
-#: ../src/rss.c:1684
+#: ../src/rss.c:2073
 msgid "Show Summary"
 msgstr "显示摘要"
 
-#: ../src/rss.c:1684
+#: ../src/rss.c:2074
 msgid "Show Full Text"
 msgstr "显示完整内容"
 
-#: ../src/rss.c:2314
+#: ../src/rss.c:2418
+msgid "Posted under"
+msgstr "张贴在"
+
+#: ../src/rss.c:2652
+msgid "Fetching feed"
+msgstr "获取 feed"
+
+#: ../src/rss.c:2963
 msgid "Unamed feed"
 msgstr "未命名 feed"
 
-#: ../src/rss.c:2314 ../src/rss.c:2422
+#: ../src/rss.c:2964 ../src/rss.c:3126
 msgid "Error while fetching feed."
 msgstr "获取 feed 时出错。"
 
-#: ../src/rss.c:2422
+#: ../src/rss.c:3127
 msgid "Invalid Feed"
 msgstr "Feed 不合法"
 
-#: ../src/rss.c:2434
+#: ../src/rss.c:3138
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "获取消息 (%d/%d)"
 
-#: ../src/rss.c:2534
+#: ../src/rss.c:3233
 msgid "Complete."
 msgstr "完成。"
 
-#: ../src/rss.c:2563 ../src/rss.c:2750 ../src/rss.c:2865 ../src/rss.c:3296
+#: ../src/rss.c:3264 ../src/rss.c:3434 ../src/rss.c:3586 ../src/rss.c:4269
 msgid "Error fetching feed."
 msgstr "获取 feed 时出错。"
 
-#: ../src/rss.c:2575
+#: ../src/rss.c:3274
 msgid "Canceled."
 msgstr "已取消。"
 
-#: ../src/rss.c:2619
+#: ../src/rss.c:3318
 msgid "Error while parsing feed."
 msgstr "解析 feed 时出错。"
 
-#: ../src/rss.c:2682
+#: ../src/rss.c:3376
 msgid "Complete"
 msgstr "完成"
 
-#: ../src/rss.c:3617 ../src/rss.c:3737
-msgid "No RSS feeds configured!"
-msgstr "没有 RSS feed 被配置！"
+#: ../src/rss.c:3473
+msgid "Formatting error."
+msgstr "格式错误。"
 
-#: ../src/rss.c:3623 ../src/rss.c:3826
+#: ../src/rss.c:4575 ../src/rss.c:4697
+msgid "No RSS feeds configured!"
+msgstr "没有 RSS Feed 被配置！"
+
+#: ../src/rss.c:4581 ../src/rss.c:4782
 msgid "Reading RSS feeds..."
-msgstr "正在读取 RSS feed ..."
+msgstr "正在读取 RSS Feed..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:3637 ../src/rss.c:3830 ../src/rss-config-factory.c:1088
-#: ../src/rss-config-factory.c:1442
+#: ../src/rss.c:4595 ../src/rss.c:4786 ../src/rss-config-factory.c:1324
+#: ../src/rss-config-factory.c:1812 ../src/rss-config-factory.c:1948
 msgid "Please wait"
 msgstr "请稍等"
 
-#: ../src/rss.c:3646 ../src/rss.c:3839 ../src/rss-config-factory.c:552
-#: ../src/rss-config-factory.c:908
+#: ../src/rss.c:4603 ../src/rss.c:4794 ../src/rss-config-factory.c:742
+#: ../src/rss-config-factory.c:1081
 #, no-c-format
 msgid "0% done"
 msgstr "已完成 0%"
 
-#: ../src/rss.c:3785
+#: ../src/rss.c:4741
 msgid "Waiting..."
 msgstr "等待中..."
 
-#: ../src/rss-config-factory.c:90
+#: ../src/rss.h:52 ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "新闻与博客"
+
+#: ../src/rss.h:54
+msgid "Untitled channel"
+msgstr "未命名的频道"
+
+#: ../src/rss-config-factory.c:154
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:91
+#: ../src/rss-config-factory.c:155
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:92
+#: ../src/rss-config-factory.c:156
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:313
+#: ../src/rss-config-factory.c:418
 msgid "Edit Feed"
 msgstr "编辑 Feed"
 
-#: ../src/rss-config-factory.c:315
+#: ../src/rss-config-factory.c:420
 msgid "Add Feed"
 msgstr "添加 Feed"
 
-#: ../src/rss-config-factory.c:360
-msgid "Folder"
-msgstr "文件夹"
-
-#: ../src/rss-config-factory.c:813
+#: ../src/rss-config-factory.c:977
 msgid "Disable"
 msgstr "关闭"
 
-#: ../src/rss-config-factory.c:813
+#: ../src/rss-config-factory.c:977
 msgid "Enable"
 msgstr "启用"
 
-#: ../src/rss-config-factory.c:844 ../src/rss-ui.glade.h:34
+#: ../src/rss-config-factory.c:1008 ../src/rss-ui.glade.h:38
 msgid "Remove folder contents"
 msgstr "删除文件夹内容"
 
-#: ../src/rss-config-factory.c:1084
-msgid "Importing feeds..."
-msgstr "正在导入 feed ..."
+#: ../src/rss-config-factory.c:1307
+msgid "Import error."
+msgstr "导入错误。"
 
-#: ../src/rss-config-factory.c:1245 ../src/rss-config-factory.c:1528
+#: ../src/rss-config-factory.c:1308
+msgid "Invalid file or this is not an import file."
+msgstr "无效的文件或者这不是一个导入文件。"
+
+#: ../src/rss-config-factory.c:1312
+msgid "Importing feeds..."
+msgstr "正在导入 Feed ..."
+
+#: ../src/rss-config-factory.c:1554 ../src/rss-config-factory.c:2042
+#: ../src/rss-config-factory.c:2089
 msgid "All Files"
 msgstr "所有文件"
 
-#: ../src/rss-config-factory.c:1251 ../src/rss-config-factory.c:1534
+#: ../src/rss-config-factory.c:1560 ../src/rss-config-factory.c:2095
 msgid "OPML Files"
 msgstr "OPML 文件"
 
-#: ../src/rss-config-factory.c:1257 ../src/rss-config-factory.c:1540
+#: ../src/rss-config-factory.c:1566 ../src/rss-config-factory.c:2101
 msgid "XML Files"
 msgstr "XML 文件"
 
-#: ../src/rss-config-factory.c:1277
+#: ../src/rss-config-factory.c:1579
 msgid "Show article's summary"
 msgstr "显示文章摘要"
 
-#: ../src/rss-config-factory.c:1283
+#: ../src/rss-config-factory.c:1585
 msgid "Feed Enabled"
 msgstr "Feed 已启用"
 
-#: ../src/rss-config-factory.c:1289
+#: ../src/rss-config-factory.c:1591
 msgid "Validate feed"
-msgstr "验证 feed"
+msgstr "验证 Feed"
 
-#: ../src/rss-config-factory.c:1324 ../src/rss-ui.glade.h:36
+#: ../src/rss-config-factory.c:1628 ../src/rss-ui.glade.h:40
 msgid "Select import file"
 msgstr "选择要导入的文件"
 
-#: ../src/rss-config-factory.c:1360 ../src/rss-ui.glade.h:35
+#: ../src/rss-config-factory.c:1667 ../src/rss-ui.glade.h:39
 msgid "Select file to export"
 msgstr "选择导出文件"
 
-#: ../src/rss-config-factory.c:1438
+#: ../src/rss-config-factory.c:1804
 msgid "Exporting feeds..."
-msgstr "正在导出 feed ..."
+msgstr "正在导出 Feed..."
 
-#: ../src/rss-config-factory.c:1467
-msgid ""
-"A file by that name already exists.\n"
-"Overwrite it?"
-msgstr ""
-"这个名字的文件已经存在。\n"
-"要覆盖吗？"
-
-#: ../src/rss-config-factory.c:1469
-msgid "Overwrite file?"
-msgstr "覆盖文件吗？"
-
-#: ../src/rss-config-factory.c:1491
+#: ../src/rss-config-factory.c:1851
 msgid "Error exporting feeds!"
-msgstr "导出 feed 时出错！"
+msgstr "导出 Feed 时出错！"
 
-#: ../src/rss-config-factory.c:1568
+#: ../src/rss-config-factory.c:1931
+msgid "Importing cookies..."
+msgstr "导入 cookies..."
+
+#: ../src/rss-config-factory.c:2001
+msgid "Select file to import"
+msgstr "选择文件来导入"
+
+#: ../src/rss-config-factory.c:2048
+msgid "Mozilla/Netscape Format"
+msgstr "Mozilla/Netscape 格式"
+
+#: ../src/rss-config-factory.c:2054
+msgid "Firefox new Format"
+msgstr "Firefox 新格式"
+
+#: ../src/rss-config-factory.c:2126
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
 msgstr ""
-"没有 RSS feed 被配置！\n"
+"没有 RSS Feed 被配置！\n"
 "不能导出。"
 
-#: ../src/rss-config-factory.c:1665 ../src/rss-config-factory.c:1976
+#: ../src/rss-config-factory.c:2229 ../src/rss-config-factory.c:2742
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
 "installed and evolution-rss should be recompiled to see those packages."
 msgstr ""
 "注意：为了能够使用 Mozilla (Firefox) 或 Apple Webkit 作为渲染器，\n"
-"你需要安装 firefox 或 webkit 的 devel 包。\n"
+"你需要安装 Firefox 或 Webkit 的 devel 包。\n"
 "而 evolution-rss 也许要重新编译才能识别这些包。"
 
-#. gtk_widget_show(dialog1);
-#. model = exchange_account_folder_size_get_model (account);
-#. if (model)
-#. folder_size = g_strdup_printf (_("%s KB"), exchange_folder_size_get_val (model, folder_name));
-#. else
-#: ../src/rss-config-factory.c:1763
-msgid "0 KB"
-msgstr "0 KB"
-
-#: ../src/rss-config-factory.c:1768
-msgid "Size:"
-msgstr "大小："
-
-#: ../src/rss-config-factory.c:1824 ../src/rss-ui.glade.h:21
+#: ../src/rss-config-factory.c:2584 ../src/rss-ui.glade.h:25
 msgid "Enabled"
 msgstr "启用"
 
-#: ../src/rss-config-factory.c:1840
+#: ../src/rss-config-factory.c:2600
 msgid "Feed Name"
 msgstr "Feed 名称"
 
-#: ../src/rss-config-factory.c:1850
+#: ../src/rss-config-factory.c:2610
 msgid "Type"
 msgstr "类型"
+
+#: ../src/rss-config-factory.c:2827
+msgid "News And Blogs"
+msgstr "新闻和博客"
 
 #: ../src/rss-html-rendering.glade.h:1
 msgid "<b>Article Notification</b>"
@@ -512,7 +610,7 @@ msgstr "<b>文章通知</b>"
 msgid "<b>Engine: </b>"
 msgstr "<b>引擎： </b>"
 
-#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:3
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:4
 msgid "<b>HTML Rendering</b>"
 msgstr "<b>HTML 渲染</b>"
 
@@ -521,30 +619,42 @@ msgid "<b>Network timeout:</b>"
 msgstr "<b>网络超时：</b>"
 
 #: ../src/rss-html-rendering.glade.h:5
+msgid "Accept cookies from sites"
+msgstr "接受来自站点的 cookies"
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Automatically resize images"
+msgstr "自动调整图像"
+
+#: ../src/rss-html-rendering.glade.h:7
 msgid "Blink icon in notification area"
 msgstr "在通知区域闪烁图标"
 
-#: ../src/rss-html-rendering.glade.h:6
+#: ../src/rss-html-rendering.glade.h:8
 msgid "Block pop-up windows"
 msgstr "阻止弹出窗口"
 
-#: ../src/rss-html-rendering.glade.h:7
+#: ../src/rss-html-rendering.glade.h:9
 msgid "Enable Java"
 msgstr "启用 Java"
 
-#: ../src/rss-html-rendering.glade.h:8 ../src/rss-ui.glade.h:19
+#: ../src/rss-html-rendering.glade.h:10 ../src/rss-ui.glade.h:23
 msgid "Enable JavaScript"
 msgstr "启用 JavaScript"
 
-#: ../src/rss-html-rendering.glade.h:9
+#: ../src/rss-html-rendering.glade.h:11
+msgid "Import Cookies"
+msgstr "导入 Cookies"
+
+#: ../src/rss-html-rendering.glade.h:12
 msgid "Show feed icon"
 msgstr "显示 feed 图标"
 
-#: ../src/rss-html-rendering.glade.h:10
+#: ../src/rss-html-rendering.glade.h:13
 msgid "Show icon in notification area"
 msgstr "在通知区域显示图标"
 
-#: ../src/rss-html-rendering.glade.h:11
+#: ../src/rss-html-rendering.glade.h:14
 msgid "seconds"
 msgstr "秒"
 
@@ -553,184 +663,201 @@ msgid "<b>Advanced options</b>"
 msgstr "<b>高级选项</b>"
 
 #: ../src/rss-ui.glade.h:2
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Feed 名称：</b>"
+
+#: ../src/rss-ui.glade.h:3
 msgid "<b>Feed URL:</b>"
 msgstr "<b>Feed URL:</b>"
 
-#: ../src/rss-ui.glade.h:4
+#: ../src/rss-ui.glade.h:5
+msgid "<b>Location:</b>"
+msgstr "<b>位置：</b>"
+
+#: ../src/rss-ui.glade.h:6
 msgid "<span weight=\"bold\">Settings</span>"
 msgstr "<span weight=\"bold\">设置</span>"
 
-#: ../src/rss-ui.glade.h:5
+#: ../src/rss-ui.glade.h:7
 msgid "Add"
 msgstr "添加"
 
-#: ../src/rss-ui.glade.h:6
+#: ../src/rss-ui.glade.h:8
 msgid "Always delete unread articles"
 msgstr "总是删除未读文章"
 
-#: ../src/rss-ui.glade.h:7
+#: ../src/rss-ui.glade.h:9
+msgid "Authentication"
+msgstr "认证"
+
+#: ../src/rss-ui.glade.h:10
 msgid "By default show article summary instead of webpage"
 msgstr "默认情况下用文章摘要代替web页面显示"
 
-#: ../src/rss-ui.glade.h:8
+#: ../src/rss-ui.glade.h:11
 msgid "Certificates Table"
 msgstr "证书目录"
 
-#: ../src/rss-ui.glade.h:9
+#: ../src/rss-ui.glade.h:12
 msgid "Check for new articles at startup"
 msgstr "启动时检查新文章"
 
-#: ../src/rss-ui.glade.h:10
+#: ../src/rss-ui.glade.h:13
 msgid "Check for new articles every"
 msgstr "每隔"
 
-#: ../src/rss-ui.glade.h:11
+#: ../src/rss-ui.glade.h:14
 msgid "Delete all but the last"
 msgstr "删掉除最近"
 
-#: ../src/rss-ui.glade.h:12
+#: ../src/rss-ui.glade.h:15
 msgid "Delete articles older than"
 msgstr "删除"
 
-#: ../src/rss-ui.glade.h:13
+#: ../src/rss-ui.glade.h:16
+msgid "Delete articles that are no longer in the feed"
+msgstr "删除不在这个 feed 里的文章"
+
+#: ../src/rss-ui.glade.h:17
 msgid "Delete feed?"
 msgstr "删除 feed ？"
 
-#: ../src/rss-ui.glade.h:14
+#: ../src/rss-ui.glade.h:18
 msgid "Details"
 msgstr "详细"
 
-#: ../src/rss-ui.glade.h:15
+#: ../src/rss-ui.glade.h:19
 msgid "Display only feed summary"
-msgstr "仅显示 feed 摘要"
+msgstr "仅显示 Feed 摘要"
 
-#: ../src/rss-ui.glade.h:16
+#: ../src/rss-ui.glade.h:20
 msgid "Do no update feed"
-msgstr "不要更新这个 feed"
+msgstr "不要更新这个 Feed"
 
-#: ../src/rss-ui.glade.h:17
+#: ../src/rss-ui.glade.h:21
 msgid "Do not delete feeds"
-msgstr "不要删除 feed"
+msgstr "不要删除 Feed"
 
-#: ../src/rss-ui.glade.h:18
+#: ../src/rss-ui.glade.h:22
 msgid "Edit"
 msgstr "编辑"
 
-#: ../src/rss-ui.glade.h:20
+#: ../src/rss-ui.glade.h:24
 msgid "Enable Plugins"
 msgstr "启用插件"
 
-#: ../src/rss-ui.glade.h:22
+#: ../src/rss-ui.glade.h:26
 msgid "Engine: "
 msgstr "引擎："
 
-#: ../src/rss-ui.glade.h:23
+#: ../src/rss-ui.glade.h:27
 msgid "Export"
 msgstr "导出"
 
-#: ../src/rss-ui.glade.h:24
+#: ../src/rss-ui.glade.h:28
 msgid "Feeds"
-msgstr "Feeds"
+msgstr "Feed"
 
-#: ../src/rss-ui.glade.h:25
+#: ../src/rss-ui.glade.h:29
 msgid "General"
 msgstr "常规"
 
-#: ../src/rss-ui.glade.h:26
+#: ../src/rss-ui.glade.h:30
 msgid "HTML"
 msgstr "HTML"
 
-#: ../src/rss-ui.glade.h:27
+#: ../src/rss-ui.glade.h:31
 msgid "HTTP Proxy Details"
 msgstr "HTTP 代理详细"
 
-#: ../src/rss-ui.glade.h:28
+#: ../src/rss-ui.glade.h:32
 msgid "HTTP proxy:"
 msgstr "HTTP 代理："
 
-#: ../src/rss-ui.glade.h:29
+#: ../src/rss-ui.glade.h:33
 msgid "Import"
 msgstr "导入"
 
-#: ../src/rss-ui.glade.h:30
+#: ../src/rss-ui.glade.h:34
 msgid "Network"
 msgstr "网络"
 
-#: ../src/rss-ui.glade.h:31
+#: ../src/rss-ui.glade.h:35
 msgid "No proxy for:"
 msgstr "没有代理："
 
-#: ../src/rss-ui.glade.h:33
+#: ../src/rss-ui.glade.h:37
 msgid "Port:"
 msgstr "端口："
 
-#: ../src/rss-ui.glade.h:37
+#: ../src/rss-ui.glade.h:41
 msgid "Setup"
 msgstr "设置"
 
-#: ../src/rss-ui.glade.h:38
+#: ../src/rss-ui.glade.h:42
+msgid "Show article comments"
+msgstr "显示文章评论"
+
+#: ../src/rss-ui.glade.h:43
 msgid "Storage"
 msgstr "存储"
 
-#: ../src/rss-ui.glade.h:39
+#: ../src/rss-ui.glade.h:44
 msgid "Update"
 msgstr "更新"
 
-#: ../src/rss-ui.glade.h:40
+#: ../src/rss-ui.glade.h:45
 msgid "Update in"
 msgstr "在"
 
-#: ../src/rss-ui.glade.h:41
+#: ../src/rss-ui.glade.h:46
 msgid "Use Proxy"
 msgstr "使用代理"
 
-#: ../src/rss-ui.glade.h:42
+#: ../src/rss-ui.glade.h:47
 msgid "Use authentication"
 msgstr "使用验证"
 
-#: ../src/rss-ui.glade.h:43
+#: ../src/rss-ui.glade.h:48
 msgid "Use global update interval"
 msgstr "使用全局更新间隔"
 
-#: ../src/rss-ui.glade.h:44
+#: ../src/rss-ui.glade.h:49
 msgid "Username:"
 msgstr "用户名："
 
-#: ../src/rss-ui.glade.h:45
+#: ../src/rss-ui.glade.h:50
 msgid "Validate"
 msgstr "验证"
 
 #. for translators: this label is part of the "Delete articles older than X days" message.
-#: ../src/rss-ui.glade.h:47
+#: ../src/rss-ui.glade.h:52
 msgid "days"
 msgstr "天前的文章"
 
-#: ../src/rss-ui.glade.h:48
+#: ../src/rss-ui.glade.h:53
+msgid "hours"
+msgstr "小时"
+
+#: ../src/rss-ui.glade.h:54
 msgid "label"
 msgstr "标签"
 
 #. To translators: this label is part of the following message: "Delete all but the last X messages.
-#: ../src/rss-ui.glade.h:50
+#: ../src/rss-ui.glade.h:56
 msgid "messages"
 msgstr "条外的所有消息"
 
 #. to translators: label part of Check for new articles every X minutes" message
-#: ../src/rss-ui.glade.h:52
+#: ../src/rss-ui.glade.h:58
 msgid "minutes"
 msgstr "分钟检查新文章"
 
-#. to translators: message is part of "Update in X minutes"
-#: ../src/rss-ui.glade.h:54
-msgid ""
-"minutes\n"
-"hours\n"
-"days"
-msgstr ""
-"分钟内更新\n"
-"小时内更新\n"
-"天内更新"
+#: ../src/parser.c:937
+msgid "No information"
+msgstr "没有信息"
 
-#: ../src/parser.c:960
+#: ../src/parser.c:961
 msgid "No Information"
 msgstr "没有信息"
 
@@ -744,8 +871,29 @@ msgstr "Evolution RSS 阅读器"
 
 #: ../src/GNOME_Evolution_RSS.server.in.in.h:3
 msgid "Manage your RDF,RSS,ATOM feeds here"
-msgstr "在这里管理您的 RDF,RSS,ATOM feed"
+msgstr "在这里管理您的 RDF,RSS,ATOM Feed"
 
-#: ../src/GNOME_Evolution_RSS.server.in.in.h:4
-msgid "News and Blogs"
-msgstr "新闻与博客"
+#~ msgid "Folder"
+#~ msgstr "文件夹"
+
+#~ msgid ""
+#~ "A file by that name already exists.\n"
+#~ "Overwrite it?"
+#~ msgstr ""
+#~ "这个名字的文件已经存在。\n"
+#~ "要覆盖吗？"
+
+#~ msgid "Overwrite file?"
+#~ msgstr "覆盖文件吗？"
+
+#~ msgid "0 KB"
+#~ msgstr "0 KB"
+
+#~ msgid ""
+#~ "minutes\n"
+#~ "hours\n"
+#~ "days"
+#~ msgstr ""
+#~ "分钟内更新\n"
+#~ "小时内更新\n"
+#~ "天内更新"
