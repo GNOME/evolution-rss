@@ -3174,7 +3174,7 @@ struct _MailComponentPrivate {
         GMutex *lock;
 
         /* states/data used during shutdown */
-#if EVOLUTION_VERSION >= 22800
+#if EVOLUTION_VERSION >= 22801
 	enum { MC_QUIT_NOT_START, MC_QUIT_START, MC_QUIT_SYNC, MC_QUIT_THREADS } quit_state;
 #else
         enum { MC_QUIT_START, MC_QUIT_SYNC, MC_QUIT_THREADS } quit_state;
@@ -3203,7 +3203,11 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		deleted = 1;
 
 #if EVOLUTION_VERSION < 22900 //kb//
+#if EVOLUTION_VERSION > 22801
         if (mc->priv->quit_state != MC_QUIT_NOT_START)
+#else
+        if (mc->priv->quit_state != -1)
+#endif
 		rf->cancel_all=1;
 #endif
 
@@ -3593,7 +3597,11 @@ update_articles(gboolean disabler)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
 	MailComponent *mc = mail_component_peek ();
+#if EVOLUTION_VERSION > 22801
+        if (mc->priv->quit_state != MC_QUIT_NOT_START)
+#else
         if (mc->priv->quit_state != -1)
+#endif
 		rf->cancel=1;
 #endif
 
@@ -5279,6 +5287,7 @@ g_print("siz:%d\n", sizeof(msg));
 		write_feed_status_line(user_data->feed_fname, user_data->feed_uri);
 	}
 	free_cf(user_data);
+	//g_free(msg->response_body->data);
 	g_object_unref(msg);
 	g_object_unref(session);
 }
