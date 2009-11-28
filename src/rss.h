@@ -39,7 +39,6 @@
 #endif
 #include <shell/es-event.h>
 
-#include <glade/glade.h>
 #include <camel/camel-folder.h>
 #include <camel/camel-operation.h>
 #include <mail/em-event.h>
