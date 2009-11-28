@@ -66,7 +66,7 @@ if test "x$SOUP" != "x2.4" -a "$evolution_exec_int" -ge "22190"; then
 	AC_MSG_ERROR([libsoup-2.4 devel headers required])
 else
 if test "x$SOUP" != "x2.4"; then
-	PKG_CHECK_MODULES([LIBSOUP_22], libsoup-2.2, [SOUP=2.2], [SOUP=]) 
+	PKG_CHECK_MODULES([LIBSOUP_22], libsoup-2.2, [SOUP=2.2], [SOUP=])
 fi
 if test "x$SOUP" == "x"; then
 	PKG_CHECK_MODULES(LIBSOUP, libsoup, [SOUP=], [])
@@ -104,7 +104,7 @@ if test "x$GTKHTMLEDITOR" == "xYES"; then
         AC_SUBST(GTKHTML_EDITOR_LIBS)
 fi
 
-DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2` 
+DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2`
 DATASERVER_VERSION=`echo $DATASERVER_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(DATASERVER_VERSION)
 
@@ -152,13 +152,13 @@ if test "x$have_gecko" != "xno"; then
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags nspr)"
 	elif test $GECKO = firefox; then
 		GECKO_CFLAGS="$GECKO_CFLAGS $(pkg-config --cflags firefox-xpcom)"
-    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
+		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
 		AC_DEFINE_UNQUOTED(HAVE_BUGGY_GECKO, 1, [workarund for a bug in shutdown gecko])
 		AC_SUBST(HAVE_BUGGY_GECKO)
 	elif test $GECKO = libxul; then
-    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
+		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO >= $gecko_min_version])
 	else
-    		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
+		PKG_CHECK_MODULES([GECKO],[$GECKO_EXTRA_PKG_DEPENDENCIES $GECKO-xpcom >= $gecko_min_version])
 	fi
 	AC_SUBST([GECKO_CFLAGS])
 	AC_SUBST([GECKO_LIBS])
@@ -166,8 +166,8 @@ if test "x$have_gecko" != "xno"; then
 	AC_DEFINE_UNQUOTED(HAVE_GECKO,1, [gecko render engine present])
 	AC_SUBST(HAVE_RENDERKIT)
 	AC_SUBST(HAVE_GECKO)
-#		RENDER_CFLAGS="$GECKO_CFLAGS -I$GECKO_INCLUDE_ROOT" 
-		RENDER_CFLAGS=$GECKO_CFLAGS 
+#		RENDER_CFLAGS="$GECKO_CFLAGS -I$GECKO_INCLUDE_ROOT"
+		RENDER_CFLAGS=$GECKO_CFLAGS
 		GECKO_RPATH="-Wl,--rpath -Wl,"$GECKO_LIBDIR
 		GECKO_HOME=$GECKO_LIBDIR
 		AC_SUBST([GECKO_RPATH])
@@ -180,7 +180,7 @@ if test "x$have_gecko" != "xno"; then
 		AC_SUBST(HAVE_GECKO_1_9)
 	fi
 #		_SAVE_CPPFLAGS="$CPPFLAGS"
-#               	CPPFLAGS="$CPPFLAGS $GECKO_CFLAGS"
+#		CPPFLAGS="$CPPFLAGS $GECKO_CFLAGS"
         AC_MSG_CHECKING([[whether we have a xpcom glue]])
         AC_COMPILE_IFELSE(
                  [AC_LANG_SOURCE(
@@ -192,11 +192,11 @@ if test "x$have_gecko" != "xno"; then
                        [gecko_cv_have_xpcom_glue=yes],
                        [gecko_cv_have_xpcom_glue=no])
         AC_MSG_RESULT([$gecko_cv_have_xpcom_glue])
-#               	CPPFLAGS="$_SAVE_CPPFLAGS"
+#			CPPFLAGS="$_SAVE_CPPFLAGS"
 		AC_ARG_WITH([primary-render],
-        	[AS_HELP_STRING([--with-primary-render],
+		[AS_HELP_STRING([--with-primary-render],
 		[Forces Gecko or Webkit to be the primary html renderer [default:gtkHTML]])],
-       		[RENDER=$with_primary_render], [RENDER=gtkhtml])
+		[RENDER=$with_primary_render], [RENDER=gtkhtml])
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xgecko"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
 			RENDER_N=2
@@ -227,12 +227,11 @@ if test "x$have_webkit" == "xno"; then
 	AC_DEFINE_UNQUOTED(WEBKIT_UNSTD, 1, [unstandard webkit installation])
 	WEBKIT_CFLAGS=$WebKitGtk_CFLAGS
 	WEBKIT_LIBS=$WebKitGtk_LIBS
-	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion WebKitGtk` 
+	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion WebKitGtk`
 	WEBKIT_VERSION=`echo $WEBKIT_S_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 else
-	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion webkit-1.0` 
+	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion webkit-1.0`
 	WEBKIT_VERSION=`echo $WEBKIT_S_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
-	
 fi
 AC_SUBST([WEBKIT_VERSION])
 AC_SUBST([WEBKIT_CFLAGS])
@@ -244,12 +243,12 @@ if test "x$have_webkit" != "xno"; then
 	AC_DEFINE_UNQUOTED(HAVE_WEBKIT,1, [webkit render engine present])
 	AC_SUBST(HAVE_RENDERKIT)
 	AC_SUBST(HAVE_WEBKIT)
-	RENDER_CFLAGS="$RENDER_CFLAGS $WEBKIT_CFLAGS" 
+	RENDER_CFLAGS="$RENDER_CFLAGS $WEBKIT_CFLAGS"
 	if test "x$RENDER" != "xgecko"; then
 		AC_ARG_WITH([primary-render],
-        	[AS_HELP_STRING([--with-primary-render=@<:@gecko/webkit/gtkhtml@:>@],
+		[AS_HELP_STRING([--with-primary-render=@<:@gecko/webkit/gtkhtml@:>@],
 		[Forces Gecko or Webkit to be the primary html renderer [default:gtkhtml]])],
-       		[RENDER=$with_primary_render], [RENDER=gtkhtml])
+		[RENDER=$with_primary_render], [RENDER=gtkhtml])
 		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xwebkit"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
 			RENDER_N=1
@@ -267,7 +266,7 @@ AC_SUBST(RENDER)
 AC_SUBST(RENDER_N)
 
 # check for ellipsize
-GTK_VERSION=`$PKG_CONFIG --modversion gtk+-2.0` 
+GTK_VERSION=`$PKG_CONFIG --modversion gtk+-2.0`
 GTK_VERSION=`echo $GTK_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(GTK_VERSION)
 
@@ -280,7 +279,7 @@ AM_GCONF_SOURCE_2
 dnl ********************
 dnl extract soup version
 dnl ********************
-SOUP_VERSION=`$PKG_CONFIG --modversion libsoup$SOUP` 
+SOUP_VERSION=`$PKG_CONFIG --modversion libsoup$SOUP`
 SOUP_VERSION=`echo $SOUP_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(SOUP_VERSION)
 PKG_CHECK_MODULES([LIBSOUP_GNOME], libsoup-gnome$SOUP, [have_libsoup_gnome=yes], [have_libsoup_gnome=no])
