@@ -17,6 +17,7 @@
  */
 
 #include <rss-icon-factory.h>
+#include <e-util/e-icon-factory.h>
 
 #include <rss.h>
 
@@ -30,6 +31,29 @@ static RssStockIcon stock_icons [] = {
         { RSS_TEXT_GENERIC, RSS_TEXT_GENERIC_FILE },
         { RSS_MAIN, RSS_MAIN_FILE }
 };
+
+//behaviour of e_icon_factory_get_icon() has changed
+//so we now have to reimplement it
+GdkPixbuf *
+rss_build_icon(const gchar *icon_name,
+		GtkIconSize icon_size)
+{
+	GdkPixbuf *pixbuf, *unscaled;
+	gint size, width, height;
+        g_return_val_if_fail (icon_name != NULL, NULL);
+	if (!gtk_icon_size_lookup (icon_size, &width, &height))
+		return NULL;
+	size = height;
+
+	unscaled = gdk_pixbuf_new_from_file(icon_name, NULL);
+	if (gdk_pixbuf_get_width(unscaled) != size || gdk_pixbuf_get_height(unscaled) != size) {
+		pixbuf = e_icon_factory_pixbuf_scale (unscaled, size, size);
+		g_object_unref (unscaled);
+	} else
+		pixbuf = unscaled;
+
+	return pixbuf;
+}
 
 void
 rss_build_stock_images(void)

@@ -5415,7 +5415,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 			result = FALSE;
 			goto out;
 		}
-		icon = e_icon_factory_get_icon (img_file, GTK_ICON_SIZE_MENU);
+		icon = rss_build_icon (img_file, GTK_ICON_SIZE_MENU);
 		g_hash_table_insert(icons, g_strdup(key), GINT_TO_POINTER(1));
 		sizes = gtk_icon_theme_get_icon_sizes(gtk_icon_theme_get_default(),
 				"mail-read"); //will mail-read always be there?
