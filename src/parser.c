@@ -1052,6 +1052,7 @@ update_channel(RDF *r)
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
 	gchar *uid, *msg;
+	GError *err = NULL;
 
 	safes = encode_rfc2047(chn_name);
 	sender = g_strdup_printf("%s <%s>", safes, chn_name);
@@ -1101,11 +1102,10 @@ update_channel(RDF *r)
 		if (!feed_is_new(feed_name, CF->feed_uri)) {
 			ftotal++;
 			if (CF->encl) {
-				GError *err = NULL;
 				fetch_unblocking(
 					CF->encl,
 					textcb,
-					1,
+					GINT_TO_POINTER(1),
 					(gpointer)finish_enclosure,
 					CF,
 					0,

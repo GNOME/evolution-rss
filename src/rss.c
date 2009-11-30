@@ -1785,6 +1785,9 @@ EPopupItem rss_menu_items[] = {
 };
 
 void
+rss_menu_items_free(EPopup *ep, GSList *items, void *data);
+
+void
 rss_menu_items_free(EPopup *ep, GSList *items, void *data)
 {
         g_slist_free(items);
@@ -1889,7 +1892,7 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
         GSList *menus = NULL;
 	gint i=0, menu_size;
 #if EVOLUTION_VERSION < 22900
-        EPopup *emp;
+        EMPopup *emp = NULL;
 #endif
 
 	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
@@ -5275,7 +5278,7 @@ finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_da
 #else
 		fwrite(msg->response_body->data, msg->response_body->length, 1, f);
 #endif
-g_print("siz:%d\n", sizeof(msg));
+g_print("siz:%d\n", (int)(sizeof(msg)));
 		fclose(f);
 		//replace encl with filename generated
 		g_free(user_data->encl);
