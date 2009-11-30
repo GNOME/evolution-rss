@@ -1,16 +1,16 @@
 #  Evoution RSS Reader Plugin
-#  Copyright (C) 2007-2008 Lucian Langa <cooly@gnome.eu.org> 
-#  
+#  Copyright (C) 2007-2008 Lucian Langa <cooly@gnome.eu.org>
+#
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or 
+#  the Free Software Foundation; either version 2 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -62,17 +62,16 @@ else
 fi
 AC_SUBST(EVOLUTION_VERSION)
 AC_MSG_RESULT($EVOLUTION_VERSION)
-AC_SUBST(EVOLUTION_BASE_VERSION)
 AC_SUBST(EVOLUTION_EXEC_VERSION)
 
-evolution_exec_int="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
-if test "$evolution_exec_int" -ge "21100"; then
+evolution_version_int="$(echo "$EVOLUTION_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
+if test "$evolution_version_int" -ge "21100"; then
         AC_DEFINE_UNQUOTED(EVOLUTION_2_12,1, [evolution mail 2.12 present])
         AC_SUBST(EVOLUTION_2_12)
 fi
-AC_SUBST(evolution_exec_int)
+AC_SUBST(evolution_version_int)
 
-MINOR_VERSION="$(echo $EVOLUTION_EXEC_VERSION|cut -d. -f2|$AWK -F . '{print 1000 * [$]1}')"
+MINOR_VERSION="$(echo $EVOLUTION_VERSION|cut -d. -f2|$AWK -F . '{print 1000 * [$]1}')"
 AC_SUBST(MINOR_VERSION)
 
 dnl Evolution plugin install directory

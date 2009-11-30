@@ -1886,6 +1886,11 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	gint button;
 	GtkMenu *menu;
 	gchar *link = NULL;
+        GSList *menus = NULL;
+	gint i=0, menu_size;
+#if EVOLUTION_VERSION < 22900
+        EPopup *emp;
+#endif
 
 	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
                 g_warning ("Cannot determine mouse button!\n");
@@ -1902,11 +1907,6 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	if (button == 2)
 		e_popup_menu (menu, NULL);
 #else
-
-        EPopup *emp;
-        GSList *menus = NULL;
-	gint i=0, menu_size;
-
 	emp = em_popup_new("org.gnome.evolution.mail.formathtmldisplay.popup");
 	menu_size=sizeof(rss_menu_items)/sizeof(rss_menu_items[0]);
 	if (strlen(link))
@@ -2675,9 +2675,9 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	gchar *rss_folder, *ofolder, *key;
 	gchar *main_folder = get_main_folder();
-	gchar *icon_file;
 #if (EVOLUTION_VERSION < 22703)
 	GdkPixbuf *icon, *pixbuf;
+	gchar *iconfile;
 #endif
 
 	main_folder = get_main_folder();

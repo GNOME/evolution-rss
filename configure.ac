@@ -62,7 +62,7 @@ EVOLUTION_INIT
 dnl locate libsoup flavour
 SOUP=
 PKG_CHECK_MODULES([LIBSOUP_24], libsoup-2.4, [SOUP=2.4], [SOUP=])
-if test "x$SOUP" != "x2.4" -a "$evolution_exec_int" -ge "22190"; then
+if test "x$SOUP" != "x2.4" -a "$evolution_version_int" -ge "22190"; then
 	AC_MSG_ERROR([libsoup-2.4 devel headers required])
 else
 if test "x$SOUP" != "x2.4"; then

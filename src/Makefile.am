@@ -8,7 +8,7 @@ INCLUDES =							\
 	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
 	-DLOCALEDIR="\"$(LOCALEDIR)\""				\
 	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\"\
-	-DEVOLUTION_VERSION=$(evolution_exec_int)		\
+	-DEVOLUTION_VERSION=$(evolution_version_int)		\
 	-DDATASERVER_VERSION=$(DATASERVER_VERSION)		\
 	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"			\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"			\
@@ -28,7 +28,7 @@ endif
 
 RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
-      		<menu target=\"select\" id=\"org.gnome.evolution.mail.browser\">\n	\
+		<menu target=\"select\" id=\"org.gnome.evolution.mail.browser\">\n	\
 	\n								\
       <ui file=\"+PLUGIN_INSTALL_DIR+/org-gnome-evolution-rss.xml\"/>\n	\
           <item verb=\"RSSTask\" type=\"item\" path=\"/commands/RSSTask\" activate=\"org_gnome_cooly_rss_refresh\"/>\n		\
