@@ -188,6 +188,7 @@ struct _org_gnome_rss_controls_pobject {
 GtkWidget *evo_window;
 #if (EVOLUTION_VERSION < 22703)
 static GdkPixbuf *folder_icon;
+static initialised = FALSE;
 #endif
 GHashTable *icons = NULL;
 gchar *pixfile;
@@ -2674,6 +2675,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	gchar *rss_folder, *ofolder, *key;
 	gchar *main_folder = get_main_folder();
+	gchar *icon_file;
 #if (EVOLUTION_VERSION < 22703)
 	GdkPixbuf *icon, *pixbuf;
 #endif
@@ -5289,7 +5291,6 @@ g_print("siz:%d\n", sizeof(msg));
 	free_cf(user_data);
 	//g_free(msg->response_body->data);
 	g_object_unref(msg);
-	g_object_unref(session);
 }
 
 static void
