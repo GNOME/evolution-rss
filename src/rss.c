@@ -364,10 +364,11 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			windows = e_shell_get_watched_windows (shell);
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
-			ed  = e_error_new(parent, "org-gnome-evolution-rss:feederr",
-			             error, msg, NULL);
+			ed = e_alert_new_dialog_for_args(parent,
+					 "org-gnome-evolution-rss:feederr",
+					error, msg, NULL);
 #else
-			ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
+			ed = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
 			             error, msg, NULL);
 #endif
 			newkey = g_strdup(key);
@@ -409,8 +410,9 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		windows = e_shell_get_watched_windows (shell);
 		parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
-                ed  = e_error_new(parent, "org-gnome-evolution-rss:feederr",
-                             error, msg, NULL);
+                ed  = e_alert_new_dialog_for_args(parent,
+				"org-gnome-evolution-rss:feederr",
+				error, msg, NULL);
 #else
                 ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
                              error, msg, NULL);
@@ -4175,7 +4177,12 @@ rss_delete_feed(gchar *full_path, gboolean folder)
         camel_exception_init (&ex);
 	rss_delete_folders (store, full_path, &ex);
 	if (camel_exception_is_set (&ex)) {
-		e_error_run(NULL,
+#if EVOLUTION_VERSION < 22904
+		e_error_run(e_shell_get_active_window (NULL),
+#else
+		e_alert_run_dialog_for_args(
+			e_shell_get_active_window (NULL),
+#endif
 			"mail:no-delete-folder", full_path, ex.desc, NULL);
 		camel_exception_clear (&ex);
 	}
@@ -4425,7 +4432,11 @@ update_status_icon(const char *channel, gchar *title)
 			g_queue_pop_head(status_msg);
 		g_queue_foreach(status_msg, flaten_status, flat_status_msg);
 		stext = g_markup_escape_text(flat_status_msg, strlen(flat_status_msg));
+#if GTK_VERSION >= 2016000
 		gtk_status_icon_set_tooltip_text (status_icon, stext);
+#else
+		gtk_status_icon_set_tooltip (status_icon, stext);
+#endif
 		g_free(stext);
 		gtk_status_icon_set_visible (status_icon, TRUE);
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
@@ -4791,7 +4802,20 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 	flabel		= status_label;
 #else
 
-	readrss_dialog = e_error_new(NULL, "org-gnome-evolution-rss:readrss",
+#if (EVOLUTION_VERSION >= 22900) //kb//
+	EShell *shell;
+	GtkWindow *parent;
+	GList *windows;
+
+	shell = e_shell_get_default ();
+	windows = e_shell_get_watched_windows (shell);
+	parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
+
+	readrss_dialog = e_alert_new_dialog_for_args(parent,
+#else
+	readrss_dialog = e_error_new(NULL,
+#endif
+		"org-gnome-evolution-rss:readrss",
 		_("Reading RSS feeds..."), NULL);
 
 	g_signal_connect(readrss_dialog, "response", G_CALLBACK(readrss_dialog_cb), NULL);

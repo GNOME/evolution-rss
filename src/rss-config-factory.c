@@ -725,7 +725,11 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 
 	if (feed->dialog)
                 gtk_widget_destroy(feed->dialog);
+#if EVOLUTION_VERSION < 22904
 	msg_feeds = e_error_new(
+#else
+	msg_feeds = e_alert_new_dialog_for_args(
+#endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:rssmsg",
 		"",
@@ -990,7 +994,11 @@ remove_feed_dialog(gchar *msg)
   GtkWidget *checkbutton1;
   GtkWidget *dialog_action_area1;
 
+#if EVOLUTION_VERSION < 22904
   dialog1 = e_error_new(
+#else
+  dialog1 = e_alert_new_dialog_for_args(
+#endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:ask-delete-feed",
 		msg,
@@ -1063,8 +1071,13 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 	gpointer md5;
 	CamelException ex;
 	CamelStore *store = rss_component_peek_local_store();
+	GtkWidget *msg_feeds;
 
-	GtkWidget *msg_feeds = e_error_new(
+#if EVOLUTION_VERSION < 22904
+	msg_feeds = e_error_new(
+#else
+	msg_feeds = e_alert_new_dialog_for_args(
+#endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:rssmsg",
 		"",
@@ -1149,7 +1162,11 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 				camel_exception_init (&ex);
                                 camel_store_rename_folder (store, a, b, &ex);
                                 if (camel_exception_is_set (&ex)) {
-                                        e_error_run(NULL,
+#if EVOLUTION_VERSION < 22904
+                                        e_error_run(GTK_WINDOW(rf->preferences),
+#else
+                                        e_alert_run_dialog_for_args(GTK_WINDOW(rf->preferences),
+#endif
 						"mail:no-rename-folder",
 						a,
 						b,
@@ -1310,7 +1327,11 @@ import_opml(gchar *file)
 	}
         doc = src;
         msg = g_strdup(_("Importing feeds..."));
+#if EVOLUTION_VERSION < 22904
         import_dialog = e_error_new(
+#else
+        import_dialog = e_alert_new_dialog_for_args(
+#endif
 		GTK_WINDOW(rf->preferences),
 		"shell:importing",
 		msg,
@@ -1802,7 +1823,11 @@ export_opml(gchar *file)
 
 
         gchar *msg = g_strdup(_("Exporting feeds..."));
+#if EVOLUTION_VERSION < 22904
         import_dialog = e_error_new(
+#else
+        import_dialog = e_alert_new_dialog_for_args(
+#endif
 			GTK_WINDOW(rf->preferences),
 			"shell:importing",
 			msg,
@@ -1846,7 +1871,11 @@ export_opml(gchar *file)
                 fwrite(opml, strlen(opml), 1, f);
                 fclose(f);
         } else {
-                e_error_run(NULL,
+#if EVOLUTION_VERSION < 22904
+                e_error_run(GTK_WINDOW(rf->preferences),
+#else
+                e_alert_run_dialog_for_args(GTK_WINDOW(rf->preferences),
+#endif
                         "org-gnome-evolution-rss:feederr",
                         _("Error exporting feeds!"),
                         g_strerror(errno),
@@ -1934,7 +1963,11 @@ process_cookies(SoupCookieJar *jar)
 	ccurrent = 0;
 	ctotal = 0;
 	list = soup_cookie_jar_all_cookies(jar);
+#if EVOLUTION_VERSION < 22904
 	import_dialog = e_error_new(
+#else
+	import_dialog = e_alert_new_dialog_for_args(
+#endif
 			GTK_WINDOW(rf->preferences),
 			"shell:importing",
 			msg,
@@ -2121,7 +2154,11 @@ export_cb (GtkWidget *widget, gpointer data)
                 decorate_export_fs(export);
                 gtk_dialog_set_default_response (GTK_DIALOG (export), GTK_RESPONSE_OK);
                 if (g_hash_table_size(rf->hrname)<1) {
-                        e_error_run(NULL,
+#if EVOLUTION_VERSION < 22904
+                        e_error_run(GTK_WINDOW(export),
+#else
+                        e_alert_run_dialog_for_args(GTK_WINDOW(export),
+#endif
                                 "org-gnome-evolution-rss:generr",
                                 _("No RSS feeds configured!\nUnable to export."),
                                 NULL);
