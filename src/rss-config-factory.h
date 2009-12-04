@@ -45,8 +45,8 @@ gboolean import_one_feed(gchar *url, gchar *title, gchar *prefix);
 xmlNode *iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type);
 #if LIBSOUP_VERSION >= 2026000
 SoupCookieJar *import_cookies(gchar *file);
-#endif
 void process_cookies(SoupCookieJar *jar);
+#endif
 GtkWidget *create_import_cookies_dialog (void);
 
 #endif /*__RSS_CONFIG_FACTORY_H_*/

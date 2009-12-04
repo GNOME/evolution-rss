@@ -188,7 +188,7 @@ struct _org_gnome_rss_controls_pobject {
 GtkWidget *evo_window;
 #if (EVOLUTION_VERSION < 22703)
 static GdkPixbuf *folder_icon;
-static initialised = FALSE;
+static gboolean initialised = FALSE;
 #endif
 GHashTable *icons = NULL;
 gchar *pixfile;
@@ -392,10 +392,10 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 
 #else
 			activity_handler = mail_component_peek_activity_handler (mail_component_peek());
-#if (EVOLUTION_VERSION >= 22300)
+#if (EVOLUTION_VERSION >= 22203)
 			id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), E_LOG_ERROR, ed);
 #else
-			id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), msg, ed);
+			id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), (gchar *)msg, ed);
 #endif
 			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
 #endif
@@ -526,16 +526,15 @@ taskbar_op_new(gchar *message)
 #else
 	activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	mcp = g_strdup_printf("%p", mail_component_peek());
-	activity_id = 
 #if (EVOLUTION_VERSION >= 22306)
-		e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
+	activity_id = e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						message, TRUE,
 						(void (*) (gpointer))taskbar_op_abort,
 						 key);
 #else 
 	progress_icon = e_icon_factory_get_icon ("mail-unread", E_ICON_SIZE_MENU);
 #if (EVOLUTION_VERSION >= 22200)
-	e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
+	activity_id = e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
 						progress_icon, message, TRUE,
 						(void (*) (gpointer))taskbar_op_abort,
 						 key);
