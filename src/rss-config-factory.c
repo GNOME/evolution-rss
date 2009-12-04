@@ -1071,7 +1071,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 	gpointer md5;
 	CamelException ex;
 	CamelStore *store = rss_component_peek_local_store();
-	GtkWidget *msg_feeds;
+	GtkWidget *msg_feeds, *progress;
 
 #if EVOLUTION_VERSION < 22904
 	msg_feeds = e_error_new(
@@ -1082,7 +1082,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 		"org-gnome-evolution-rss:rssmsg",
 		"",
 		NULL);
-	GtkWidget *progress = gtk_progress_bar_new();
+	progress = gtk_progress_bar_new();
 	gtk_box_pack_start(
 		GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
 		progress,

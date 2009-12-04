@@ -1083,7 +1083,7 @@ feed_to_xml(gchar *key)
 	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(key))));
         xmlSetProp (src, (xmlChar *)"messages", (xmlChar *)ctmp);
 	g_free(ctmp);
-        xmlSetProp (src, (xmlChar *)"unread", 
+        xmlSetProp (src, (xmlChar *)"unread",
 		(xmlChar *)(g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false"));
 
         src = xmlNewTextChild (root, NULL, (xmlChar *)"ttl", NULL);
@@ -1891,10 +1891,10 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	gint button;
 	GtkMenu *menu;
 	gchar *link = NULL;
-        GSList *menus = NULL;
-	gint i=0, menu_size;
 #if EVOLUTION_VERSION < 22900
         EMPopup *emp = NULL;
+        GSList *menus = NULL;
+	gint i=0, menu_size;
 #endif
 
 	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
@@ -4178,7 +4178,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	rss_delete_folders (store, full_path, &ex);
 	if (camel_exception_is_set (&ex)) {
 #if EVOLUTION_VERSION < 22904
-		e_error_run(e_shell_get_active_window (NULL),
+		e_error_run(NULL,
 #else
 		e_alert_run_dialog_for_args(
 			e_shell_get_active_window (NULL),
