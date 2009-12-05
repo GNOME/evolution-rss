@@ -2207,6 +2207,9 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	GtkListStore  *store;
         GtkTreeIter iter;
         GtkWidget *hbox, *combo;
+#if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
+	GtkWidget *label_webkit;
+#endif
 	GtkCellRenderer *renderer;
 	guint i, render;
         UIData *ui = g_new0 (UIData, 1);
@@ -2269,7 +2272,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
                                         NULL, NULL);
 
 #if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
-        GtkWidget *label_webkit = GTK_WIDGET (gtk_builder_get_object(ui->xml, "label_webkits"));
+        label_webkit = GTK_WIDGET (gtk_builder_get_object(ui->xml, "label_webkits"));
         gtk_label_set_text(GTK_LABEL(label_webkit), _("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
         gtk_widget_show(label_webkit);
 #endif

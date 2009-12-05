@@ -1164,6 +1164,7 @@ rss_select_folder(gchar *folder_name)
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
 	store = rss_component_peek_local_store();
 	fold = camel_store_get_folder (store, folder_name, 0, NULL);
+	if (!fold) return;
         uri = mail_tools_folder_to_url (fold);
 	em_folder_tree_set_selected(folder_tree, uri, 0);
 #endif
@@ -3108,6 +3109,7 @@ add:
 
 		if (feed->validate)
 			display_feed(r);
+
 
 		real_name = g_strdup_printf(
 					"%s/%s",

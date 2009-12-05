@@ -304,7 +304,7 @@ parse_html(char *url, const char *html, int len)
 }
 
 const char *
-layer_find_innerelement (xmlNodePtr node, 
+layer_find_innerelement (xmlNodePtr node,
 	    const char *match, const char *el,
 	    const char *fail)
 {
@@ -951,6 +951,11 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		//handle multiple enclosures
 		encl = (gchar *)layer_find_innerelement(top, "enclosure", "url",	// RSS 2.0 Enclosure
 			layer_find_innerelement(top, "link", "enclosure", NULL));		// ATOM Enclosure
+		//handle screwed feeds that set url to "" (feed does not validate!)
+		if (encl && !strlen(encl)) {
+			g_free(encl);
+			encl = NULL;
+		}
 //		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
 //							NULL);		// ATOM Enclosure
 		//we have to free this somehow
