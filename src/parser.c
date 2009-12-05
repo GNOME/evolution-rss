@@ -1020,7 +1020,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		CF->dcdate	= g_strdup(d2);
 		CF->website	= g_strdup(link);
 		CF->encl	= g_strdup(encl);
-		CF->comments 	= g_strdup(comments);
+		CF->comments	= g_strdup(comments);
 		CF->feed_fname  = g_strdup(feed_name);	//feed file name
 		CF->feed_uri	= g_strdup(feed);	//feed uri (uid!)
 		CF->category	= category;		//list of category feed is posted under
@@ -1075,9 +1075,13 @@ update_channel(RDF *r)
 
 		if (progress) {
 			gdouble fraction = (gdouble)i/item->len;
-			gtk_progress_bar_set_fraction((GtkProgressBar *)progress, fraction);
+			gtk_progress_bar_set_fraction(
+					(GtkProgressBar *)progress,
+					fraction);
 			msg = g_strdup_printf("%2.0f%% done", fraction*100);
-			gtk_progress_bar_set_text((GtkProgressBar *)progress, msg);
+			gtk_progress_bar_set_text(
+					(GtkProgressBar *)progress,
+					msg);
 			g_free(msg);
 		}
 

@@ -387,15 +387,26 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			g_timeout_add_seconds(60, (GSourceFunc)gtk_widget_destroy, ed);
 
 #if (EVOLUTION_VERSION >= 22900) //kb//
-	em_utils_show_error_silent(ed);
-	g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(1));
+		em_utils_show_error_silent(ed);
+		g_hash_table_insert(
+				rf->error_hash,
+				newkey,
+				GINT_TO_POINTER(1));
 
 #else
 			activity_handler = mail_component_peek_activity_handler (mail_component_peek());
 #if (EVOLUTION_VERSION >= 22203)
-			id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), E_LOG_ERROR, ed);
+			id = e_activity_handler_make_error (
+							activity_handler,
+							(char *)mail_component_peek(),
+							E_LOG_ERROR,
+							ed);
 #else
-			id = e_activity_handler_make_error (activity_handler, (char *)mail_component_peek(), (gchar *)msg, ed);
+			id = e_activity_handler_make_error (
+							activity_handler,
+							(char *)mail_component_peek(),
+							(gchar *)msg,
+							ed);
 #endif
 			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
 #endif
@@ -1141,11 +1152,13 @@ void
 rss_select_folder(gchar *folder_name)
 {
 #if EVOLUTION_VERSION >= 22900
-	EMFolderTree *folder_tree;
+	EMFolderTree *folder_tree = NULL;
 	gchar *uri;
 	CamelStore *store;
 	CamelFolder *fold;
 	EShellSidebar *shell_sidebar;
+
+	g_return_if_fail(folder_name != NULL);
 
 	shell_sidebar  = e_shell_view_get_shell_sidebar(rss_shell_view);
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
@@ -2961,7 +2974,13 @@ setup_feed(add_feed *feed)
 		goto add;
 
 top:	d(g_print("adding feed->feed_url:%s\n", feed->feed_url));
-        content = fetch_blocking(feed->feed_url, NULL, post, textcb, rf, &err);
+        content = fetch_blocking(
+				feed->feed_url,
+				NULL,
+				post,
+				textcb,
+				rf,
+				&err);
         if (err) {
 		g_print("setup_feed() -> err:%s\n", err->message);
 		tmpkey = gen_md5(feed->feed_url);
@@ -3064,7 +3083,11 @@ add:
 			GINT_TO_POINTER(feed->fetch_html));
 
 		if (feed->edit) {
-			gchar *a = g_build_path("/", feed->prefix ? feed->prefix : "", feed->feed_name, NULL);
+			gchar *a = g_build_path(
+					"/",
+					feed->prefix ? feed->prefix : "",
+					feed->feed_name,
+					NULL);
 			gchar *b = g_build_path("/", r->title, NULL);
 			update_feed_folder(b, a, 0);
 			//r->title = feed->feed_name;
@@ -3073,7 +3096,10 @@ add:
 		}
 
 		if (rf->import && feed->prefix) {
-			gchar *a = g_build_path("/", feed->prefix ? feed->prefix : "", feed->feed_name, NULL);
+			gchar *a = g_build_path(
+					"/", feed->prefix ? feed->prefix : "",
+					feed->feed_name,
+					NULL);
 			gchar *b = g_build_path("/", r->title, NULL);
 			update_feed_folder(b, a, 0);
 			g_free(a);
@@ -3083,7 +3109,10 @@ add:
 		if (feed->validate)
 			display_feed(r);
 
-		real_name = g_strdup_printf("%s/%s", lookup_main_folder(), chn_name);
+		real_name = g_strdup_printf(
+					"%s/%s",
+					lookup_main_folder(),
+					lookup_feed_folder(chn_name));
 		rss_select_folder(real_name);
 		g_free(real_name);
 
@@ -3118,9 +3147,10 @@ add:
 			g_string_free(content, 1);
 		feed->feed_url = rssurl;
 
-                if (g_hash_table_find(rf->hr,
-                                        check_if_match,
-                                        feed->feed_url)) {
+                if (g_hash_table_find(
+				rf->hr,
+                                check_if_match,
+                                feed->feed_url)) {
                            rss_error(NULL, NULL, _("Error adding feed."),
                                            _("Feed already exists!"));
                            goto out;
@@ -3141,7 +3171,10 @@ void
 update_sr_message(void)
 {
 	if (flabel && farticle) {
-		gchar *fmsg = g_strdup_printf(_("Getting message %d of %d"), farticle, ftotal);
+		gchar *fmsg = g_strdup_printf(
+				_("Getting message %d of %d"),
+				farticle,
+				ftotal);
 		gtk_label_set_text (GTK_LABEL (flabel), fmsg);
 		g_free(fmsg);
 	}
@@ -4559,6 +4592,7 @@ check_folders(void)
 		camel_store_rename_folder(store, OLD_FEEDS_FOLDER, lookup_main_folder(), NULL);
 	} else if (mail_folder == NULL) {
 		camel_store_create_folder (store, NULL, lookup_main_folder(), &ex);
+		return;
 	}
 	camel_object_unref (mail_folder);
 }
@@ -5111,13 +5145,24 @@ create_mail(create_feed *CF)
 	}
 	time = camel_mime_message_get_date (new, NULL) ;
 	time_str = asctime(gmtime(&time));
-	buf = g_strdup_printf("from %s by localhost via evolution-rss-%s with libsoup-%d; %s\r\n", "RSS", VERSION, LIBSOUP_VERSION, time_str);
+	buf = g_strdup_printf(
+			"from %s by localhost via evolution-rss-%s with libsoup-%d; %s\r\n",
+			"RSS",
+			VERSION,
+			LIBSOUP_VERSION,
+			time_str);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Received", buf);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "Website", CF->website);
 	camel_medium_set_header(CAMEL_MEDIUM(new), "RSS-ID", CF->feedid);
-	camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-feed-ID", g_strstrip(CF->feed_uri));
+	camel_medium_set_header(
+			CAMEL_MEDIUM(new),
+			"X-evolution-rss-feed-ID",
+			g_strstrip(CF->feed_uri));
 	if (CF->comments)
-		camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-comments", CF->comments);
+		camel_medium_set_header(
+			CAMEL_MEDIUM(new),
+			"X-evolution-rss-comments",
+			CF->comments);
 	if (CF->category) {
 		cats = g_string_new(NULL);
 		for (p = (GList *)CF->category; p != NULL; p=p->next) {
@@ -5126,7 +5171,10 @@ create_mail(create_feed *CF)
 			else
 				g_string_append_printf(cats, "%s", (char *)p->data);
 		}
-		camel_medium_set_header(CAMEL_MEDIUM(new), "X-evolution-rss-category", cats->str);
+		camel_medium_set_header(
+			CAMEL_MEDIUM(new),
+			"X-evolution-rss-category",
+			cats->str);
 		g_string_free(cats, TRUE);
 	}
 	rtext = camel_data_wrapper_new ();
@@ -5316,7 +5364,7 @@ g_print("siz:%d\n", (int)(sizeof(msg)));
 	}
 	free_cf(user_data);
 	//g_free(msg->response_body->data);
-	g_object_unref(msg);
+	//g_object_unref(msg);
 }
 
 static void

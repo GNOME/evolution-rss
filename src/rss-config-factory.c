@@ -689,6 +689,7 @@ gboolean
 store_redraw(GtkTreeView *data)
 {
 	GtkTreeModel *model;
+
 	g_return_val_if_fail(data, FALSE);
 	g_return_val_if_fail(GTK_WIDGET_REALIZED(data), FALSE);
 
@@ -1409,8 +1410,9 @@ import_opml(gchar *file)
 	if (type == 0) {
 	gint size = 0;
 	gchar *base = NULL, *root = NULL, *last = NULL;
-	gchar *rssprefix = NULL, *rssurl = NULL, *rsstitle = NULL;
+	gchar *rssprefix = NULL;
 	while (src) {
+		gchar *rssurl = NULL, *rsstitle = NULL;
 		if (rf->cancel) {
 			if (src) xmlFree(src);
 			rf->cancel = 0;
@@ -1422,8 +1424,9 @@ import_opml(gchar *file)
                         while (src && !src->next) {
                                 src = src->parent;
 				g_print("<-");
-				last =  g_path_get_basename(root);
-				if (last && strcmp(last, ".")) {
+				if (root
+				&& (last = g_path_get_basename(root))
+				&& strcmp(last, ".")) {
 					g_print("retract:%s\n", last);
 					size = strstr(root, last)-root-1;
 					tmp = root;
@@ -1455,8 +1458,11 @@ import_opml(gchar *file)
 				// we're insterested in rss/pie only
 				// we might just handle all variations of type= property
 				} else if (strcmp(prop, "link")) {
+				//	&& strcmp(prop, "vfolder")) {
 					rssprefix = root;
 					rssurl = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
+					if (!rssurl)
+						goto fail;
 					rsstitle = (gchar *)xmlGetProp(src, (xmlChar *)"title");
 					gtk_label_set_text(GTK_LABEL(import_label), (gchar *)rsstitle);
 #if GTK_VERSION >= 2006000
@@ -1466,11 +1472,12 @@ import_opml(gchar *file)
 					import_one_feed(rssurl, rsstitle, rssprefix);
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
-					while (gtk_events_pending ())
+fail:					while (gtk_events_pending ())
 						gtk_main_iteration ();
 					current++;
 					fr = ((current*100)/total);
-					gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
+					if (fr < 100)
+						gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
 					what = g_strdup_printf(_("%2.0f%% done"), fr);
 					gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
 					g_free(what);
