@@ -65,7 +65,7 @@ void free_hash(gpointer key, gpointer value, gpointer user_data);
 void
 free_hash(gpointer key, gpointer value, gpointer user_data)
 {
- 	g_print("FREE - key:%p, value:%p\n", (gchar *)key, (gchar *)value);
+	g_print("FREE - key:%p, value:%p\n", (gchar *)key, (gchar *)value);
  //	xmlFreeDoc(key);
 }
 
@@ -129,16 +129,23 @@ sanitize_url(gchar *text)
 	gchar *out;
 	gchar *scheme;
 	gchar *tmptext = g_strdup(text);
+	gchar *tmp = NULL;
 
 	if (strcasestr(text, "file://"))
 		return tmptext;
 
+	/* extract feed component (usually first) */
 	if (strcasestr(text, "feed://"))
 		tmptext = strextr(text, "feed://");
 	else if (strcasestr(text, "feed//"))
 		tmptext = strextr(text, "feed//");
 	else if (strcasestr(text, "feed:"))
 		tmptext = strextr(text, "feed:");
+
+	if (strcasestr(text, "http//")) {
+		tmp = tmptext;
+		tmptext = strextr(tmp, "http//");
+	}
 	if (!strcasestr(tmptext, "http://") && !strcasestr(tmptext, "https://")) {
 		gchar *safetext = g_strconcat("http://", tmptext, NULL);
 		g_free(tmptext);
@@ -147,15 +154,16 @@ sanitize_url(gchar *text)
 
 	scheme = g_uri_parse_scheme(tmptext);
 	d(g_print("parsed scheme:%s\n", scheme));
- 	if (!scheme && !strstr (tmptext, "http://") 
+	if (!scheme && !strstr (tmptext, "http://")
 	&& !strstr (tmptext, "https://")) {
 		out = g_filename_to_uri(tmptext, NULL, NULL);
- 	} else
+	} else
 		out = g_strdup(tmptext);
 
 	g_free(tmptext);
 	g_free(scheme);
- 	return out;
+	if (tmp) g_free(tmp);
+	return out;
 }
 
 //evolution folder must not contain certain chars
@@ -166,7 +174,7 @@ sanitize_folder(gchar *text)
 {
 	gchar *tmp, *tmp2;
 
- 	g_return_val_if_fail( text != NULL, NULL);
+	g_return_val_if_fail( text != NULL, NULL);
 
 	//first convert "/" character
 	tmp = g_strdup(text);
@@ -178,16 +186,16 @@ sanitize_folder(gchar *text)
 	g_free (tmp);
 	return tmp2;
 }
- 
+
 gchar *
 get_url_basename(gchar *url)
 {
 	gchar *p;
- 	p = strrchr(url, '/');
- 	if (p)
- 		return p+1;
- 	else
- 		return url;
+	p = strrchr(url, '/');
+	if (p)
+		return p+1;
+	else
+		return url;
 }
 
 gchar *
@@ -195,18 +203,18 @@ get_port_from_uri(gchar *uri)
 {
 	gchar **str, **str2, **str3, *port;
 
- 	g_return_val_if_fail( uri != NULL, NULL);
- 
+	g_return_val_if_fail( uri != NULL, NULL);
+
 	if (strstr(uri, "://") == NULL)
 		return NULL;
- 	str = g_strsplit(uri, "://", 2);
+	str = g_strsplit(uri, "://", 2);
         str2 = g_strsplit(str[1], "/", 2);
         str3 = g_strsplit(str2[0], ":", 2);
         port = g_strdup(str3[1]);
- 	g_strfreev(str);
- 	g_strfreev(str2);
- 	g_strfreev(str3);
- 	return port;
+	g_strfreev(str);
+	g_strfreev(str2);
+	g_strfreev(str3);
+	return port;
 }
 
 gchar *
@@ -214,23 +222,23 @@ get_server_from_uri(gchar *uri)
 {
 	gchar **str, **str2, *server;
 
- 	g_return_val_if_fail( uri != NULL, NULL);
- 
+	g_return_val_if_fail( uri != NULL, NULL);
+
 	if (strstr(uri, "://") == NULL)
 		return NULL;
- 	str = g_strsplit(uri, "://", 2);
+	str = g_strsplit(uri, "://", 2);
         str2 = g_strsplit(str[1], "/", 2);
         server = g_strdup_printf("%s://%s", str[0], str2[0]);
- 	g_strfreev(str);
- 	g_strfreev(str2);
- 	return server;
+	g_strfreev(str);
+	g_strfreev(str2);
+	return server;
 }
- 
+
 gchar *
 strplchr(gchar *source)
 {
- 	GString *str = g_string_new(NULL);
- 	gchar *string;
+	GString *str = g_string_new(NULL);
+	gchar *string;
         const unsigned char *s = (const unsigned char *)source;
         guint len = strlen(source);
         while (*s != 0 || len) {
@@ -242,10 +250,10 @@ strplchr(gchar *source)
              len--;
         }
         g_string_append_c(str, 0);
- 	string = str->str;
- 	g_string_free(str, 0);	
- 	return string;
-} 
+	string = str->str;
+	g_string_free(str, 0);
+	return string;
+}
 
 gchar *
 markup_decode (gchar *str)
@@ -298,7 +306,7 @@ gen_crc(const char *msg)
          register unsigned long crc, poly;
          uint32_t crc_tab[256];
          int i,j;
- 
+
          poly = 0xEDB88320L;
          for (i = 0; i < 256; i++) {
                  crc = i;
@@ -310,26 +318,26 @@ gen_crc(const char *msg)
                  }
                  crc_tab[i] = crc;
          }
- 
+
          crc = 0xFFFFFFFF;
          for (i = 0; i < strlen(msg); i++)
                  crc = ((crc >> 8) & 0x00FFFFFF) ^ crc_tab[(crc ^ *msg++) & 0xFF];
     return g_strdup_printf("%x", (unsigned int)(crc ^ 0xFFFFFFFF));
 }
- 
+
 gchar *
 gen_md5(gchar *buffer)
 {
         unsigned char md5sum[16], res[17], *f;
         int i;
         const char tohex[16] = "0123456789abcdef";
- 
+
         md5_get_digest (buffer, strlen(buffer), md5sum);
-  	for (i=0, f = res; i<16;i++) {
+	for (i=0, f = res; i<16;i++) {
                 unsigned int c = md5sum[i];
                 *f++ = tohex[c & 0xf];
          }
- 	*f++ = 0;
+	*f++ = 0;
         return g_strdup((gchar *)res);
 }
 
@@ -462,7 +470,7 @@ is_rfc822(char *in)
                                foundmonth = TRUE;
                                break;
                          }
-        	}
+		}
                         g_free(monthname);
 	}
         if (!foundmonth)
