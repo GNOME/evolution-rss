@@ -941,7 +941,8 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		if (!d) {
 			d2 = (gchar *)layer_find (top, "date", NULL);					//RSS2
 			if (!d2) {
-				d2 = (gchar *)layer_find(top, "updated", NULL);				//ATOM
+				d2 = (gchar *)layer_find(top, "published",
+					layer_find(top, "updated", NULL));				//ATOM
 				if (!d2) //take channel date if exists
 					d2 = g_strdup(main_date);
 			}
