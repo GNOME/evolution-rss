@@ -91,7 +91,7 @@
                                 <child>
                                   <object class="GtkLabel" id="label69">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Add</property>
+                                    <property name="label" translatable="yes">_Add</property>
                                     <property name="use_underline">True</property>
                                   </object>
                                   <packing>
@@ -140,7 +140,7 @@
                                 <child>
                                   <object class="GtkLabel" id="label70">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Edit</property>
+                                    <property name="label" translatable="yes">_Edit</property>
                                     <property name="use_underline">True</property>
                                   </object>
                                   <packing>
@@ -177,46 +177,13 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="import">
+                        <property name="label" translatable="yes">I_mport</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="can_default">True</property>
                         <property name="receives_default">False</property>
-                        <child>
-                          <object class="GtkAlignment" id="alignment7">
-                            <property name="visible">True</property>
-                            <property name="xscale">0</property>
-                            <property name="yscale">0</property>
-                            <child>
-                              <object class="GtkHBox" id="hbox16">
-                                <property name="visible">True</property>
-                                <property name="spacing">2</property>
-                                <child>
-                                  <object class="GtkImage" id="image7">
-                                    <property name="visible">True</property>
-                                    <property name="stock">gtk-convert</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="importlabel">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Import</property>
-                                    <property name="use_underline">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
+                        <property name="image">image_imp</property>
+                        <property name="use_underline">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -226,11 +193,12 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="export">
-                        <property name="label" translatable="yes">Export</property>
+                        <property name="label" translatable="yes">E_xport</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="can_default">True</property>
                         <property name="receives_default">False</property>
+                        <property name="image">image_exp</property>
                         <property name="use_underline">True</property>
                       </object>
                       <packing>
@@ -968,9 +936,9 @@
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <property name="action">save</property>
-    <property name="show_hidden">True</property>
     <property name="local_only">False</property>
+    <property name="show_hidden">True</property>
+    <property name="action">save</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="vbox26">
         <property name="visible">True</property>
@@ -1693,5 +1661,13 @@
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
+  </object>
+  <object class="GtkImage" id="image_exp">
+    <property name="visible">True</property>
+    <property name="stock">gtk-save-as</property>
+  </object>
+  <object class="GtkImage" id="image_imp">
+    <property name="visible">True</property>
+    <property name="stock">gtk-convert</property>
   </object>
 </interface>
