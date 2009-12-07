@@ -58,6 +58,7 @@ int rss_verbose_debug = 0;
 #include <misc/e-activity-handler.h>
 #include <bonobo/bonobo-shlib-factory.h>
 #else
+#include <e-util/e-alert-dialog.h>
 #include <glib/gi18n.h>
 #include <mail/e-mail-local.h>
 #include <shell/e-shell.h>
@@ -364,7 +365,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			windows = e_shell_get_watched_windows (shell);
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
-			ed = e_alert_new_dialog_for_args(parent,
+			ed = e_alert_dialog_new_for_args(parent,
 					 "org-gnome-evolution-rss:feederr",
 					error, msg, NULL);
 #else
@@ -421,7 +422,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		windows = e_shell_get_watched_windows (shell);
 		parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
-                ed  = e_alert_new_dialog_for_args(parent,
+                ed  = e_alert_dialog_new_for_args(parent,
 				"org-gnome-evolution-rss:feederr",
 				error, msg, NULL);
 #else
@@ -4846,7 +4847,7 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 	windows = e_shell_get_watched_windows (shell);
 	parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
-	readrss_dialog = e_alert_new_dialog_for_args(parent,
+	readrss_dialog = e_alert_dialog_new_for_args(parent,
 #else
 	readrss_dialog = e_error_new(NULL,
 #endif
@@ -5126,6 +5127,7 @@ create_mail(create_feed *CF)
 	camel_object_unref(addr);
 
 	offset = 0;
+	actual_time = CAMEL_MESSAGE_DATE_CURRENT;
 
 	//handle pubdate
 	if (CF->date) {
@@ -5138,12 +5140,13 @@ create_mail(create_feed *CF)
 		}
 	} else {
 		if (CF->dcdate)	{ //dublin core
-			strptime(CF->dcdate, "%Y-%m-%dT%T%z", &tm);
-			time = mktime(&tm);
-			actual_time = camel_header_decode_date (ctime(&time), &offset);
-			camel_mime_message_set_date(new, actual_time, offset);
-		} else /*use 'now' as time for failsafe*/
-			camel_mime_message_set_date(new, CAMEL_MESSAGE_DATE_CURRENT, 0);
+			if (strptime(CF->dcdate, "%Y-%m-%dT%T%z", &tm)) {
+				time = mktime(&tm);
+				actual_time = camel_header_decode_date (ctime(&time), &offset);
+			}
+		/*use 'now' as time for failsafe*/
+		camel_mime_message_set_date(new, actual_time, offset);
+		}
 	}
 	time = camel_mime_message_get_date (new, NULL) ;
 	time_str = asctime(gmtime(&time));

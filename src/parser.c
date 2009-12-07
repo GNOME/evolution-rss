@@ -791,7 +791,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 			walk = walk->next;
 		}
 	} while (rewalk);
-	
+
 	if (channel == NULL) {
 		fprintf(stderr, "ERROR:No channel definition.\n");
 		return NULL;

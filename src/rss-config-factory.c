@@ -39,6 +39,7 @@
 #include <shell/evolution-config-control.h>
 #include <bonobo/bonobo-shlib-factory.h>
 #else
+#include <e-util/e-alert-dialog.h>
 #include <misc/e-preferences-window.h>
 #include <mail/e-mail-local.h>
 #include <shell/e-shell.h>
@@ -729,7 +730,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 #if EVOLUTION_VERSION < 22904
 	msg_feeds = e_error_new(
 #else
-	msg_feeds = e_alert_new_dialog_for_args(
+	msg_feeds = e_alert_dialog_new_for_args(
 #endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:rssmsg",
@@ -998,7 +999,7 @@ remove_feed_dialog(gchar *msg)
 #if EVOLUTION_VERSION < 22904
   dialog1 = e_error_new(
 #else
-  dialog1 = e_alert_new_dialog_for_args(
+  dialog1 = e_alert_dialog_new_for_args(
 #endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:ask-delete-feed",
@@ -1077,7 +1078,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 #if EVOLUTION_VERSION < 22904
 	msg_feeds = e_error_new(
 #else
-	msg_feeds = e_alert_new_dialog_for_args(
+	msg_feeds = e_alert_dialog_new_for_args(
 #endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:rssmsg",
@@ -1331,7 +1332,7 @@ import_opml(gchar *file)
 #if EVOLUTION_VERSION < 22904
         import_dialog = e_error_new(
 #else
-        import_dialog = e_alert_new_dialog_for_args(
+        import_dialog = e_alert_dialog_new_for_args(
 #endif
 		GTK_WINDOW(rf->preferences),
 		"shell:importing",
@@ -1833,7 +1834,7 @@ export_opml(gchar *file)
 #if EVOLUTION_VERSION < 22904
         import_dialog = e_error_new(
 #else
-        import_dialog = e_alert_new_dialog_for_args(
+        import_dialog = e_alert_dialog_new_for_args(
 #endif
 			GTK_WINDOW(rf->preferences),
 			"shell:importing",
@@ -1973,7 +1974,7 @@ process_cookies(SoupCookieJar *jar)
 #if EVOLUTION_VERSION < 22904
 	import_dialog = e_error_new(
 #else
-	import_dialog = e_alert_new_dialog_for_args(
+	import_dialog = e_alert_dialog_new_for_args(
 #endif
 			GTK_WINDOW(rf->preferences),
 			"shell:importing",
