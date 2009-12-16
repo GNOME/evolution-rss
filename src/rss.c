@@ -61,6 +61,7 @@ int rss_verbose_debug = 0;
 #include <e-util/e-alert-dialog.h>
 #include <glib/gi18n.h>
 #include <mail/e-mail-local.h>
+#include <mail/mail-session.h>
 #include <shell/e-shell.h>
 #include <shell/e-shell-taskbar.h>
 #include <shell/e-shell-view.h>
@@ -3666,7 +3667,8 @@ rss_component_peek_base_directory(void)
 {
 #if (EVOLUTION_VERSION >= 22900) //kb//
 	return g_strdup_printf("%s/rss",
-		em_utils_get_data_dir());
+//		em_utils_get_data_dir());
+		mail_session_get_data_dir ());
 #else
 	MailComponent *component = mail_component_peek();
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
