@@ -27,8 +27,15 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+extern "C" int rss_verbose_debug;
+#if rss_verbose_debug
+#define d(x) x
+#else
+#define d(x)
+#endif
+
 #include <nsStringAPI.h>
- 
+
 #ifdef XPCOM_GLUE
 #include <nsXPCOMGlue.h>
 #include <gtkmozembed_glue.cpp>
@@ -54,6 +61,7 @@
 #include <nsIDocShell.h>
 #include <nsIMarkupDocumentViewer.h>
 #include <nspr.h>
+
 
 static nsIPrefBranch* gPrefBranch;
 
@@ -111,7 +119,7 @@ gint gecko_get_mouse_event_button(gpointer event) {
 
 extern "C" void
 gecko_set_zoom (GtkWidget *moz, gfloat zoom)
-{	
+{
 	nsCOMPtr<nsIWebBrowser>         mWebBrowser;
         nsCOMPtr<nsIDOMWindow>          mDOMWindow;
 
@@ -179,17 +187,19 @@ gecko_select_all (GtkMozEmbed *embed)
 extern "C" gboolean
 gecko_init (void)
 {
-       nsresult rv;
+	d(g_print("gecko_init()\n"));
+	nsresult rv;
 #ifdef HAVE_GECKO_1_9
 	NS_LogInit ();
 #endif
 
 #ifdef XPCOM_GLUE
-       static const GREVersionRange greVersion = {
-         "1.9a", PR_TRUE,
-         "2", PR_TRUE
-       };
-       char xpcomLocation[4096];
+	static const GREVersionRange greVersion = {
+	"1.9a", PR_TRUE,
+	"2", PR_TRUE
+	};
+	char xpcomLocation[4096];
+	d(g_print("init XPCOM_GLUE\n"));
        rv = GRE_GetGREPathWithProperties(&greVersion, 1, nsnull, 0, xpcomLocation, 4096);
        if (NS_FAILED (rv))
        {
@@ -223,15 +233,18 @@ gecko_init (void)
        if (lastSlash)
          *lastSlash = '\0';
 
-       gtk_moz_embed_set_path(xpcomLocation);
+	gtk_moz_embed_set_path(xpcomLocation);
 #else
+	d(g_print("doing old gecko init\n"));
 #ifdef HAVE_GECKO_1_9
 	gtk_moz_embed_set_path (GECKO_HOME);
 #else
 	gtk_moz_embed_set_comp_path (GECKO_HOME);
 #endif
+	d(g_print("end gecko init()\n"));
 #endif /* XPCOM_GLUE */
 
+	d(g_print("load gecko prefs\n"));
 	gchar *profile_dir = g_build_filename (g_get_home_dir (),
 					       ".evolution",
 					       "mail",
@@ -241,6 +254,7 @@ gecko_init (void)
 	gtk_moz_embed_set_profile_path (profile_dir, "mozembed-rss");
 	g_free (profile_dir);
 
+	d(g_print("embed push startup()\n"));
 	gtk_moz_embed_push_startup ();
 
 	nsCOMPtr<nsIPrefService> prefService (do_GetService (NS_PREFSERVICE_CONTRACTID, &rv));
@@ -248,7 +262,8 @@ gecko_init (void)
 
 	rv = CallQueryInterface (prefService, &gPrefBranch);
 	NS_ENSURE_SUCCESS (rv, FALSE);
-	
+	d(g_print("finished all gecko init\n"));
+
 	return TRUE;
 }
 

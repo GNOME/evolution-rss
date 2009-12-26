@@ -575,7 +575,7 @@ taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 #if (EVOLUTION_VERSION < 22900) //kb//
 		e_activity_handler_operation_progressing(activity_handler,
 				activity_id,
-                                g_strdup(msg), 
+                                g_strdup(msg),
                                 progress);
 #else
 	e_activity_set_percent (activity_id, progress);
@@ -1633,6 +1633,7 @@ if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
 void
 rss_mozilla_init(void)
 {
+	d(g_print("rss_mozilla_init() called in %s:%d\n", __FILE__, __LINE__));
 	if (!gecko_ready) {
 		gecko_init();
 		gecko_ready = 1;
@@ -1988,8 +1989,9 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 
 #ifdef HAVE_GECKO
 	if (engine == 2) {
-		rss_mozilla_init();	//in case we this is a failover
+		rss_mozilla_init();	//in case we fail this is a failover
 		rf->mozembed = gtk_moz_embed_new();
+		d(g_print("mozembed=%p at %s:%d\n", rf->mozembed, __FILE__, __LINE__));
 		gecko_set_preferences();
 
 		/* FIXME add all those profile shits */

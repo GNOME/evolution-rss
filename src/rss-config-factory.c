@@ -729,13 +729,17 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
                 gtk_widget_destroy(feed->dialog);
 #if EVOLUTION_VERSION < 22904
 	msg_feeds = e_error_new(
-#else
-	msg_feeds = e_alert_dialog_new_for_args(
-#endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:rssmsg",
 		"",
 		NULL);
+#else
+	msg_feeds = e_alert_dialog_new_for_args(
+		GTK_WINDOW(rf->preferences),
+		"org-gnome-evolution-rss:rssmsg",
+		"",
+		NULL);
+#endif
 	progress = gtk_progress_bar_new();
         gtk_box_pack_start(
 		GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
@@ -824,6 +828,7 @@ rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex
 		| CAMEL_STORE_FOLDER_INFO_FAST
 		| CAMEL_STORE_FOLDER_INFO_SUBSCRIBED;
         CamelFolderInfo *fi;
+	d(g_print("rss_delete_folders() %s:%d\n", __FILE__, __LINE__));
 
         fi = camel_store_get_folder_info (store, full_name, flags, ex);
         if (camel_exception_is_set (ex))
@@ -1331,13 +1336,17 @@ import_opml(gchar *file)
         msg = g_strdup(_("Importing feeds..."));
 #if EVOLUTION_VERSION < 22904
         import_dialog = e_error_new(
-#else
-        import_dialog = e_alert_dialog_new_for_args(
-#endif
 		GTK_WINDOW(rf->preferences),
 		"shell:importing",
 		msg,
 		NULL);
+#else
+        import_dialog = e_alert_dialog_new_for_args(
+		GTK_WINDOW(rf->preferences),
+		"shell:importing",
+		msg,
+		NULL);
+#endif
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
         g_signal_connect(
 		import_dialog,
@@ -1457,7 +1466,6 @@ import_opml(gchar *file)
 						if (tmp) g_free(tmp);
 					}
 				// we're insterested in rss/pie only
-				// we might just handle all variations of type= property
 				} else if (strcmp(prop, "link")) {
 				//	&& strcmp(prop, "vfolder")) {
 					rssprefix = root;
@@ -1833,13 +1841,18 @@ export_opml(gchar *file)
         gchar *msg = g_strdup(_("Exporting feeds..."));
 #if EVOLUTION_VERSION < 22904
         import_dialog = e_error_new(
-#else
-        import_dialog = e_alert_dialog_new_for_args(
-#endif
 			GTK_WINDOW(rf->preferences),
 			"shell:importing",
 			msg,
 			NULL);
+
+#else
+        import_dialog = e_alert_dialog_new_for_args(
+			GTK_WINDOW(rf->preferences),
+			"shell:importing",
+			msg,
+			NULL);
+#endif
         gtk_window_set_keep_above(GTK_WINDOW(import_dialog), TRUE);
 //        g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
         import_label = gtk_label_new(_("Please wait"));
@@ -1881,13 +1894,18 @@ export_opml(gchar *file)
         } else {
 #if EVOLUTION_VERSION < 22904
                 e_error_run(GTK_WINDOW(rf->preferences),
+			"org-gnome-evolution-rss:feederr",
+                        _("Error exporting feeds!"),
+                        g_strerror(errno),
+                        NULL);
+
 #else
                 e_alert_run_dialog_for_args(GTK_WINDOW(rf->preferences),
-#endif
                         "org-gnome-evolution-rss:feederr",
                         _("Error exporting feeds!"),
                         g_strerror(errno),
                         NULL);
+#endif
         }
 	g_free(opml);
 
