@@ -52,13 +52,13 @@
 #include <libsoup/soup-gnome-features.h>
 #endif
 
+extern int rss_verbose_debug;
+
 #include "rss.h"
 #include "misc.h"
 #include "parser.h"
 #include "rss-config-factory.h"
 #include "network-soup.h"
-
-#define d(x)
 
 static guint feed_enabled = 0;
 static guint feed_validate = 0;
@@ -797,7 +797,7 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
         while (fi) {
                 CamelFolder *folder;
 
-                d(printf ("deleting folder '%s'\n", fi->full_name));
+                d("deleting folder '%s'\n", fi->full_name);
 
                 if (!(folder = camel_store_get_folder (store, fi->full_name, 0, ex)))
                         return;
@@ -813,6 +813,8 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
                         camel_folder_sync (folder, TRUE, NULL);
                         camel_folder_thaw (folder);
 
+		d("do camel_store_delete_folder()\n");
+
                 camel_store_delete_folder (store, fi->full_name, ex);
                 if (camel_exception_is_set (ex))
                         return;
@@ -827,15 +829,16 @@ rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex
         guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE
 		| CAMEL_STORE_FOLDER_INFO_FAST
 		| CAMEL_STORE_FOLDER_INFO_SUBSCRIBED;
-        CamelFolderInfo *fi;
-	d(g_print("rss_delete_folders() %s:%d\n", __FILE__, __LINE__));
+        CamelFolderInfo *fi = NULL;
 
+	d("camel_store_get_folder_info() %s\n", full_name);
         fi = camel_store_get_folder_info (store, full_name, flags, ex);
-        if (camel_exception_is_set (ex))
+        if (!fi || camel_exception_is_set (ex))
                 return;
 
-        rss_delete_rec (store, fi, ex);
-        camel_store_free_folder_info (store, fi);
+	d("call rss_delete_rec()\n");
+	rss_delete_rec (store, fi, ex);
+	camel_store_free_folder_info (store, fi);
 }
 
 void
@@ -1267,7 +1270,7 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
                return FALSE;
         }
 	res = setup_feed(feed);
-        d(g_print("feed imported:%d\n", res));
+        d("feed imported:%d\n", res);
         g_free(feed->feed_url);
         g_free(feed->feed_name);
 	g_free(feed);
@@ -1375,7 +1378,7 @@ import_opml(gchar *file)
 				src=src->children;
 				src = src->next;
 				src = src->children;
-				d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
+				d("group name:%s\n", layer_find(src, "name", NULL));
 				src = src->next;
 				while ((src = iterate_import_file(src, &url, &name, 1))) {
 					if (url) {
@@ -1384,7 +1387,7 @@ import_opml(gchar *file)
 					}
 					if (name) xmlFree(name);
 				}
-			d(g_print("total:%d\n", total));
+			d("total:%d\n", total);
 			type = 1;
 			}
 		}
@@ -1397,7 +1400,7 @@ import_opml(gchar *file)
 				if (name) xmlFree(name);
 			}
 			type = 0;
-			d(g_print("total:%d\n", total));
+			d("total:%d\n", total);
 		}
 	}
         src = doc;
@@ -1408,12 +1411,12 @@ import_opml(gchar *file)
                 gtk_main_iteration ();
 	if (type == 1) {
 		src=src->children;
-		d(g_print("my cont:%s\n", src->content));
+		d("my cont:%s\n", src->content);
 		src=src->children;
 		src = src->next;
-		d(g_print("found %s\n", src->name));
+		d("found %s\n", src->name);
 		src = src->children;
-		d(g_print("group name:%s\n", layer_find(src, "name", NULL)));
+		d("group name:%s\n", layer_find(src, "name", NULL));
 		src = src->next;
 	}
 
@@ -1504,7 +1507,7 @@ fail:					while (gtk_events_pending ())
 
 	while ((src = iterate_import_file(src, &url, &name, type))) {
                 if (url && strlen(url)) {
-			d(g_print("url:%s\n", url));
+			d("url:%s\n", url);
                         if (rf->cancel) {
                                 if (src) xmlFree(src);
                                 rf->cancel = 0;
@@ -1943,7 +1946,7 @@ import_cookies(gchar *file)
 	gchar header[16];
 
 	memset(header, 0, 16);
-	d(g_print("import cookies from %s\n", file));
+	d("import cookies from %s\n", file);
 	f = fopen(file, "r");
 	if (f) {
 		fgets(header, 16, f);
@@ -2394,7 +2397,7 @@ void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target);
 
 void rss_folder_factory_abort (EPlugin *epl, EConfigTarget *target)
 {
-	d(g_print("abort"));
+	d("abort");
 }
 
 void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target);
@@ -2621,7 +2624,7 @@ rss_config_control_new (void)
 	gdouble adj;
 	GError* error = NULL;
 
-	d(g_print("rf->%p\n", rf));
+	d("rf->%p\n", rf);
 	sf = g_new0(setupfeed, 1);
 
         gladefile = g_build_filename (EVOLUTION_GLADEDIR,

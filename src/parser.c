@@ -26,12 +26,12 @@
 #include <libxml/debugXML.h>
 #include <camel/camel-url.h>
 
+extern int rss_verbose_debug;
+
 #include "fetch.h"
 #include "rss.h"
 #include "parser.h"
 #include "misc.h"
-
-#define d(x)
 
 /************ RDF Parser *******************/
 
@@ -102,7 +102,7 @@ html_set_base(xmlNode *doc, char *base, const char *tag, const char *prop, char 
 				xmlSetProp(doc, (xmlChar *)prop, (xmlChar *)tmpurl);
 				g_free(tmpurl);
 			}
-			d(g_print("DEBUG: parsing: %s\n", url));
+			d("DEBUG: parsing: %s\n", url);
 			if (url[0] == '/' && url[1] != '/') {
 				gchar *server = get_server_from_uri(base);
 				gchar *tmp = g_strdup_printf("%s/%s", server, url);
@@ -277,7 +277,7 @@ parse_html(char *url, const char *html, int len)
 		return NULL;
 	doc = src;
 	newbase = (gchar *)xmlGetProp(html_find((xmlNode *)doc, (gchar *)"base"), (xmlChar *)"href");
-	d(g_print("newbase:|%s|\n", newbase));
+	d("newbase:|%s|\n", newbase);
 	tmpdoc = (xmlDoc *)html_find((xmlNode *)doc, (gchar *)"base");
 	xmlUnlinkNode((xmlNode *)tmpdoc);
 	html_set_base((xmlNode *)doc, url, "a", "href", newbase);
@@ -770,7 +770,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 			}
 
 			/* This is the channel top level */
-			d(printf ("Top level '%s'.\n", walk->name));
+			d("Top level '%s'.\n", walk->name);
 			if (strcasecmp ((char *)walk->name, "channel") == 0) {
 				channel = walk;
 				rewalk = channel->children;
@@ -978,12 +978,12 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 				layer_find (top, (gchar *)"guid", NULL));		//RSS 2.0
 		feed = g_strdup_printf("%s\n", id ? id : link);
 		if (feed) g_strstrip(feed);
-		d(g_print("link:%s\n", link));
-		d(g_print("author:%s\n", q));
-		d(g_print("title:%s\n", p));
-		d(g_print("date:%s\n", d));
-		d(g_print("date:%s\n", d2));
-		d(g_print("body:%s\n", b));
+		d("link:%s\n", link);
+		d("author:%s\n", q);
+		d("title:%s\n", p);
+		d("date:%s\n", d);
+		d("date:%s\n", d2);
+		d("body:%s\n", b);
 
 		//not very nice but prevents unnecessary long body processing
 		if (!feed_is_new(feed_name, feed)) {
@@ -1126,7 +1126,7 @@ update_channel(RDF *r)
 				free_cf(CF);
 			}
 			farticle++;
-			d(g_print("put success()\n"));
+			d("put success()\n");
 			update_status_icon(chn_name, subj);
 			g_free(subj);
 		} else

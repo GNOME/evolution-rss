@@ -33,17 +33,16 @@
 #include <libedataserver/e-proxy.h>
 #endif
 
+extern int rss_verbose_debug;
+
 #include "network.h"
 #include "network-soup.h"
 #include "rss.h"
 #include "misc.h"
 
-
 #define USE_PROXY FALSE
 
 #define SS_TIMEOUT 30
-
-#define d(x)
 
 #if LIBSOUP_VERSION > 2024000
 SoupCookieJar *rss_soup_jar = NULL;
@@ -159,8 +158,8 @@ recv_msg (SoupMessage *msg, gpointer user_data)
 #else
 	response = g_string_new_len(msg->response_body->data, msg->response_body->length);
 #endif
-	d(g_print("got it!\n"));
-	d(g_print("res:[%s]\n", response->str));
+	d("got it!\n");
+	d("res:[%s]\n", response->str);
 }
 
 static gboolean
@@ -186,7 +185,7 @@ construct_abort(gpointer key, gpointer value, gpointer user_data)
 static void
 unblock_free (gpointer user_data, GObject *ex_msg)
 {
-	d(g_print("weak ref - trying to free object\n"));
+	d("weak ref - trying to free object\n");
 	g_hash_table_remove(rf->session, user_data);
 	g_hash_table_destroy(rf->abort_session);
 	rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
@@ -225,13 +224,13 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
 #if (DATASERVER_VERSION >=2026000)
 			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
-			d(g_print("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port));
+			d("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
 #else
 			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
 			return;
 #endif
 		} else  {
-			d(g_print("webkit no PROXY-%s\n", uri));
+			d("webkit no PROXY-%s\n", uri);
 		}
 		break;
 		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
@@ -264,10 +263,10 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 			return;
 #endif
 			if (proxy_uri) {
-				d(g_print("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port));
+				d("proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
 			}
 		} else {
-			d(g_print("no PROXY-%s\n", uri));
+			d("no PROXY-%s\n", uri);
 		}
 		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 		break;
@@ -656,7 +655,7 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 				soup_status_get_phrase(2));			//invalid url
 		goto out;
 	}
-	d(g_print("request ok :%d\n", req->status_code));
+	d("request ok :%d\n", req->status_code);
 	g_signal_connect(G_OBJECT(req), "got-chunk",
 			G_CALLBACK(got_chunk_blocking_cb), &info);
 	for (; headers; headers = headers->next) {

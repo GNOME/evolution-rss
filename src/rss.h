@@ -19,6 +19,7 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+#include "debug.h"
 
 #if HAVE_DBUS
 #include <dbus/dbus-glib.h>

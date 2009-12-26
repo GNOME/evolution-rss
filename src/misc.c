@@ -19,14 +19,14 @@
 #ifndef __MISC_C_
 #define __MISC_C_
 
-#define d(x)
-
 #define _GNU_SOURCE
 #include <stdint.h>
 #include <string.h>
 #include <glib.h>
 #include <libedataserver/md5-utils.h>
 #include <camel/camel-mime-utils.h>
+
+extern int rss_verbose_debug;
 
 #include "rss.h"
 #include "parser.h"
@@ -75,7 +75,7 @@ check_key_match (gpointer key, gpointer value, gpointer user_data)
         char *sf_href = (char *)key;
         char *int_uri = (char *)user_data;
 
-	d(g_print("checking hay:%s for neddle:%s\n", sf_href, int_uri));
+	d("checking hay:%s for neddle:%s\n", sf_href, int_uri);
 
         if (!strcmp (sf_href, int_uri))
                 return TRUE; /* Quit calling the callback */
@@ -89,7 +89,7 @@ check_if_match (gpointer key, gpointer value, gpointer user_data)
         char *sf_href = (char *)value;
         char *int_uri = (char *)user_data;
 
-	d(g_print("checking hay:%s for neddle:%s\n", sf_href, int_uri));
+	d("checking hay:%s for neddle:%s\n", sf_href, int_uri);
 
         if (!strcmp (sf_href, int_uri))
                 return TRUE; /* Quit calling the callback */
@@ -153,7 +153,7 @@ sanitize_url(gchar *text)
 	}
 
 	scheme = g_uri_parse_scheme(tmptext);
-	d(g_print("parsed scheme:%s\n", scheme));
+	d("parsed scheme:%s\n", scheme);
 	if (!scheme && !strstr (tmptext, "http://")
 	&& !strstr (tmptext, "https://")) {
 		out = g_filename_to_uri(tmptext, NULL, NULL);

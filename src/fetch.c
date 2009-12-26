@@ -21,11 +21,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+
+extern int rss_verbose_debug;
+
 #include "network.h"
 #include "file-gio.h"
 #include "network-soup.h"
 #include "fetch.h"
-#define d(x)
+#include "debug.h"
 
 GString*
 fetch_blocking(gchar *url, GSList *headers, GString *post,
@@ -74,7 +77,7 @@ fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
 {
 	gchar *scheme = NULL;
 	scheme = g_uri_parse_scheme(g_strstrip(url));
-	d(g_print("scheme:%s=>url:%s\n", scheme, url));
+	d("scheme:%s=>url:%s\n", scheme, url);
 
 	if (!scheme)
 		return FALSE;

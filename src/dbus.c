@@ -29,6 +29,8 @@
 #include <dbus/dbus-glib-lowlevel.h>
 #include <gtk/gtk.h>
 
+extern int rss_verbose_debug;
+
 #include "rss.h"
 #include "rss-config-factory.h"
 #include "misc.h"
@@ -37,8 +39,6 @@
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
 #define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
 #define DBUS_REPLY_INTERFACE "org.gnome.evolution.mail.rss.out"
-
-#define d(x)
 
 static DBusConnection *bus = NULL;
 static gboolean enabled = FALSE;
@@ -111,15 +111,15 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 				gchar *text = feed->feed_url;
 				feed->feed_url = sanitize_url(feed->feed_url);
 				g_free(text);
-				d(g_print("sanitized feed URL: %s\n", feed->feed_url));
+				d("sanitized feed URL: %s\n", feed->feed_url);
 				if (g_hash_table_find(rf->hr,
                                         check_if_match,
 					feed->feed_url)) {
-                        	   rss_error(NULL, NULL, _("Error adding feed."),
-                        	                   _("Feed already exists!"));
-    				   return DBUS_HANDLER_RESULT_HANDLED;
-                		}
-                		if (setup_feed(feed)) {
+					rss_error(NULL, NULL, _("Error adding feed."),
+						_("Feed already exists!"));
+					return DBUS_HANDLER_RESULT_HANDLED;
+				}
+				if (setup_feed(feed)) {
 					gchar *msg = g_strdup_printf(_("New feed imported: %s"),
 							lookup_chn_name_by_url(feed->feed_url));
 					taskbar_push_message(msg);
