@@ -44,3 +44,4 @@
 	* hook all rss config options in RSS top folder properties in right click menu
 	* image contained in feeds displayed after the coments ??
 	* accept feeds clicked from mails - add feed option to right click context menu
+	* when delete folder remove any pending filter process

@@ -359,7 +359,7 @@ gchar *lookup_chn_name_by_url(gchar *url);
 gboolean update_articles(gboolean disabler);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
-gchar *lookup_original_folder(gchar *folder);
+gchar *lookup_original_folder(gchar *folder, gboolean *found);
 gchar *decode_utf8_entities(gchar *str);
 gchar *decode_html_entities(gchar *str);
 gchar *get_real_channel_name(gchar *uri, gchar *failed);

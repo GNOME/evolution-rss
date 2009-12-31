@@ -1319,7 +1319,7 @@ import_opml(gchar *file)
         guint current = 0;
 	guint type = 0; //file type
         gchar *what = NULL;
-	gchar *msg, *tmp;
+	gchar *msg, *tmp, *maintitle;
         GtkWidget *import_dialog = NULL;
         GtkWidget *import_label;
         GtkWidget *import_progress;
@@ -1422,8 +1422,14 @@ import_opml(gchar *file)
 
 	if (type == 0) {
 	gint size = 0;
-	gchar *base = NULL, *root = NULL, *last = NULL;
+	gchar *base = NULL, *start = NULL, *root = NULL, *last = NULL;
 	gchar *rssprefix = NULL;
+	/* need to automate this, not just guess title at random */
+	src=src->children;
+	src = src->children;
+	src = src->next;
+	src = src->children;
+	maintitle = layer_find(src, "title", NULL);
 	while (src) {
 		gchar *rssurl = NULL, *rsstitle = NULL;
 		if (rf->cancel) {
@@ -1456,22 +1462,26 @@ import_opml(gchar *file)
                 }
                 if (src->name) {
 			gchar *prop = (gchar *)xmlGetProp(src, (xmlChar *)"type");
-			if (prop) {
-				if (!strcmp(prop, "folder")) {
+//			if (prop) {
+				if ((prop && !strcmp(prop, "folder")) || !prop) {
 					base = (gchar *)xmlGetProp(src, (xmlChar *)"text");
 					if (NULL != src->last) {
 						gchar *tmp = root;
 						if (!root)
 							root = g_build_path("/", base, NULL);
-						else
+						else {
 							root = g_build_path("/", root, base, NULL);
+						}
 						if (base) xmlFree(base);
 						if (tmp) g_free(tmp);
 					}
 				// we're insterested in rss/pie only
 				} else if (strcmp(prop, "link")) {
 				//	&& strcmp(prop, "vfolder")) {
-					rssprefix = root;
+					if (maintitle)
+						rssprefix = g_build_path("/", maintitle, root, NULL);
+					else
+						rssprefix = g_strdup(root);
 					rssurl = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
 					if (!rssurl)
 						goto fail;
@@ -1481,6 +1491,10 @@ import_opml(gchar *file)
 					gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
 					gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
+	
+	g_print("rssprefix:%s\n", rssprefix);
+	g_print("rssurl:%s\n", rssurl);
+	g_print("rsstitle:%s\n", rsstitle);
 					import_one_feed(rssurl, rsstitle, rssprefix);
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
@@ -1493,13 +1507,14 @@ fail:					while (gtk_events_pending ())
 					what = g_strdup_printf(_("%2.0f%% done"), fr);
 					gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
 					g_free(what);
+					g_free(rssprefix);
 					while (gtk_events_pending ())
 						gtk_main_iteration ();
 					store_redraw(GTK_TREE_VIEW(rf->treeview));
 					save_gconf_feed();
 				}
 			xmlFree(prop);
-			}
+//			}
                 }
         }
 		goto out;
@@ -1539,8 +1554,8 @@ fail:					while (gtk_events_pending ())
         while (gtk_events_pending ())
                 gtk_main_iteration ();
 out:    rf->import = 0;
-	if (doc)
-		xmlFree(doc);
+	if (maintitle) xmlFree(maintitle);
+	if (doc) xmlFree(doc);
         gtk_widget_destroy(import_dialog);
 }
 
@@ -2545,6 +2560,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	GtkWidget *action_area, *ok;
 	GtkAccelGroup *accel_group = gtk_accel_group_new ();
 	gpointer key;
+	gboolean found;
 
 	//filter only rss folders
 	if (folder == NULL
@@ -2552,7 +2568,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
           || !g_ascii_strcasecmp(folder, main_folder))
                 goto out;
 
-	ofolder = lookup_original_folder(folder);
+	ofolder = lookup_original_folder(folder, &found);
 	key = lookup_key(ofolder);
 	if (!key) {
 		g_free(ofolder);
@@ -2613,7 +2629,7 @@ rss_config_control_new (void)
 {
         GtkWidget *control_widget;
 	GtkWidget *button1, *button2, *button3;
-        char *gladefile;
+        gchar *gladefile;
 	setupfeed *sf;
 	GtkListStore  *store;
 	GtkTreeIter    iter;

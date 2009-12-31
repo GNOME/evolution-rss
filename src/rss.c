@@ -594,6 +594,7 @@ taskbar_op_finish(gchar *key)
 #else
 		EActivity *activity_key = g_hash_table_lookup(rf->activity, key);
 #endif
+		g_print("activity_key:%p\n", activity_key);
 		if (activity_key)
 #if  EVOLUTION_VERSION < 22900 //kb//
 			e_activity_handler_operation_finished(activity_handler, activity_key);
@@ -3764,18 +3765,22 @@ lookup_main_folder(void)
 //lookup original name based on renamed folder
 //
 gchar *
-lookup_original_folder(gchar *folder)
+lookup_original_folder(gchar *folder, gboolean *found)
 {
 	gchar *tmp = NULL, *ofolder = NULL;
 
 	tmp = extract_main_folder(folder);
 	if (tmp) {
 		ofolder = g_hash_table_lookup(rf->feed_folders, tmp);
+		dp("result ofolder:%s\n", ofolder);
 		if (ofolder) {
 			g_free(tmp);
+			if (found) *found = TRUE;
 			return g_strdup(ofolder);
-		} else
+		} else {
+			if (found) *found = FALSE;
 			return tmp;
+		}
 	}
 	return NULL;
 }
@@ -4147,8 +4152,8 @@ update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder)
 	orig_name = g_hash_table_lookup(rf->feed_folders, oname);
 	if (!orig_name) {
 		if (valid_folder) {
-			ofolder = lookup_original_folder(old_name);
-			if (!ofolder)
+			ofolder = lookup_original_folder(old_name, NULL);	//perhaps supply found variable
+			if (!ofolder)						// to test result
 				return 0;
 			else if (!lookup_key(ofolder))
 				return 0;
@@ -4312,6 +4317,7 @@ custom_update_articles(CDATA *cdata)
 		network_timeout();
 		// check if we're enabled and no cancelation signal pending
 		// and no imports pending
+		dp("cdata->key:%s\n", cdata->key);
 		if (g_hash_table_lookup(rf->hre, lookup_key(cdata->key)) && !rf->cancel && !rf->import) {
 			d("\nFetching: %s..%s\n",
 				(char *)g_hash_table_lookup(rf->hr, lookup_key(cdata->key)), (char *)cdata->key);
