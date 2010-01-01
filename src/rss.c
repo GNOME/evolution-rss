@@ -2488,15 +2488,19 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
                                                          (GError **)NULL);
 					if (pix)
 						real_width = gdk_pixbuf_get_width(pix);
-					if (real_width > width) {
-						xmlSetProp(doc, (xmlChar *)"width", (xmlChar *)wids);
-						goto pixdone;
-					}
+
+					d("url:%s\n", url);
+					d("width:%d\n", width);
+					d("real_width:%d\n", real_width);
+
 					wid = xmlGetProp(doc, (xmlChar *)"width");
 					if (wid) {
 						if (atof((const char *)wid) > width)
 							xmlSetProp(doc, (xmlChar *)"width", (xmlChar *)wids);
 						g_free(wid);
+						goto pixdone;
+					} else if (real_width > width) {
+						xmlSetProp(doc, (xmlChar *)"width", (xmlChar *)wids);
 					}
 pixdone:			g_free(url);
 				}
