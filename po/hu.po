@@ -1,0 +1,865 @@
+# Hungarian translation of evolution-rss.
+# Copyright (C) 2009 evolution-rss's COPYRIGHT HOLDER
+# This file is distributed under the same license as the evolution-rss package.
+#
+# Gergely Szarka <gszarka@invitel.hu>, 2009.
+# Gabor Kelemen <kelemeng at gnome dot hu>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
+"POT-Creation-Date: 2009-12-31 20:23+0000\n"
+"PO-Revision-Date: 2010-01-04 00:39+0100\n"
+"Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
+"Language-Team: Hungarian <gnome at fsf dot hu>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#: ../src/dbus.c:118 ../src/rss.c:3162 ../src/rss-config-factory.c:770
+#: ../src/rss-config-factory.c:1127 ../src/rss-config-factory.c:1268
+msgid "Error adding feed."
+msgstr ""
+
+#: ../src/dbus.c:119 ../src/rss.c:3163 ../src/rss-config-factory.c:771
+#: ../src/rss-config-factory.c:1128 ../src/rss-config-factory.c:1269
+msgid "Feed already exists!"
+msgstr ""
+
+#: ../src/dbus.c:123
+#, c-format
+msgid "New feed imported: %s"
+msgstr "Új hírforrás importálva: %s"
+
+#: ../src/evolution-rss.schemas.in.h:1
+msgid "Accepts Cookies"
+msgstr "Sütik elfogadása"
+
+#: ../src/evolution-rss.schemas.in.h:2
+msgid "Auto check for new articles."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:3
+msgid "Automaticaly Resize Images"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:4
+msgid "Blink Status Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:5
+msgid "Blink status icon when new article received"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:6
+msgid "Check New articles"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:7
+msgid "Check for new articles everytime Evolution is started."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:8
+msgid "Checks articles on startup"
+msgstr "Cikkek ellenőrzése indításkor"
+
+#: ../src/evolution-rss.schemas.in.h:9
+msgid "Contains list of the currently setup feeds."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:10
+msgid "Deleting feed entry will also remove feed folder."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:11
+msgid "Display article's summary"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:12
+msgid "Display feed icon on feed folder"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:13
+msgid "Enable Feed Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:14
+msgid "Enable Status Icon"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:15
+msgid "Enable status icon in notification area"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:16
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:17
+msgid "Evolution RSS will automatically resize images lager than displayed area."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:18
+msgid ""
+"Evolution will show article's summary instead of article's webpage. Summary "
+"can also be html."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:19
+msgid "Feeds list"
+msgstr "Hírforrások listája"
+
+#: ../src/evolution-rss.schemas.in.h:20
+msgid "Frequency to check for new articles (in minutes)."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:21
+msgid "Hostname of the proxy server"
+msgstr "Proxy kiszolgáló neve"
+
+#: ../src/evolution-rss.schemas.in.h:22
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:23
+msgid "Html render"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:24
+msgid "If the proxy server requires authentication. This is the password field."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:25
+msgid "Interval in seconds before a conection is dropped."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:26
+msgid "It will display article's comments by default if present."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:27
+msgid "Java Enabled"
+msgstr "Java engedélyezve"
+
+#: ../src/evolution-rss.schemas.in.h:28
+msgid "JavaScript Enabled"
+msgstr "JavaScript engedélyezve"
+
+#: ../src/evolution-rss.schemas.in.h:29
+msgid "Network proxy requires authentication."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:30
+msgid "Network timeout"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:31
+msgid "New articles timeout"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:32
+msgid "Password for proxy server"
+msgstr "Jelszó a proxy kiszolgálóhoz"
+
+#: ../src/evolution-rss.schemas.in.h:33
+msgid "Proxy requires authentication"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:34
+msgid "Proxy server port"
+msgstr "Proxy kiszolgáló port"
+
+#: ../src/evolution-rss.schemas.in.h:35
+msgid "Proxy server user"
+msgstr "Proxy kiszolgáló felhasználó"
+
+#: ../src/evolution-rss.schemas.in.h:36
+msgid "Remove feed folder"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:37
+msgid "Show articles comments"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:38
+msgid "The port number for proxy server used for feeds and content."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:39
+msgid "The username to use for proxy server authentication."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:40
+msgid "Type HTML Render used to display html pages."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:41
+msgid "Use a proxy server to fetch articles and content."
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.h:42
+msgid "Use proxy server"
+msgstr "Proxy használata"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view.\n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "Méret"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Delete \"{0}\"?"
+msgstr "Törli ezt: „{0}”?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Reading RSS Feeds..."
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "Really delete feed '{0}' ?"
+msgstr "Valóban törli a következő hírforrást: „{0}”?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Updating Feeds..."
+msgstr "Hírforrások frissítése"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Setup RSS"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "Setup RSS feeds"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Update RSS feeds"
+msgstr ""
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "_Read RSS"
+msgstr ""
+
+#: ../src/rss.c:621 ../src/rss.c:3265
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr ""
+
+#: ../src/rss.c:661 ../src/rss-config-factory.c:1507
+#: ../src/rss-config-factory.c:1545 ../src/rss-config-factory.c:1839
+#: ../src/rss-config-factory.c:1991
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% kész"
+
+#: ../src/rss.c:671 ../src/rss.c:3419
+msgid "Feed"
+msgstr "Hírforrás"
+
+#: ../src/rss.c:823
+msgid "Enter User/Pass for feed"
+msgstr ""
+
+#: ../src/rss.c:874
+#, c-format
+msgid ""
+"Enter your username and password for:\n"
+" '%s'"
+msgstr ""
+"Adja meg a felhasználónevet és jelszót ehhez:\n"
+"„%s”"
+
+#: ../src/rss.c:891
+msgid "Username: "
+msgstr "Felhasználónév:"
+
+#: ../src/rss.c:913 ../src/rss-ui.glade.h:34
+msgid "Password: "
+msgstr "Jelszó:"
+
+#: ../src/rss.c:951
+msgid "_Remember this password"
+msgstr "_Emlékezzen erre a jelszóra"
+
+#. e_clipped_label_set_text (
+#. E_CLIPPED_LABEL (info->status_label),
+#: ../src/rss.c:1054
+msgid "Canceling..."
+msgstr "Megszakítás…"
+
+#: ../src/rss.c:1609
+#| msgid "Formatting..."
+msgid "Formatting Message..."
+msgstr "Üzenet formázása…"
+
+#: ../src/rss.c:1782
+msgid "_Copy"
+msgstr "_Másolás"
+
+#: ../src/rss.c:1783
+msgid "Select _All"
+msgstr "_Mindent kijelöl"
+
+#: ../src/rss.c:1785 ../src/rss.c:1796
+msgid "Zoom _In"
+msgstr "N_agyítás"
+
+#: ../src/rss.c:1786 ../src/rss.c:1797
+msgid "Zoom _Out"
+msgstr "K_icsinyítés"
+
+#: ../src/rss.c:1787 ../src/rss.c:1798
+msgid "_Normal Size"
+msgstr "_Eredeti méret"
+
+#: ../src/rss.c:1789
+msgid "_Open Link"
+msgstr "_Hivatkozás megnyitása"
+
+#: ../src/rss.c:1790 ../src/rss.c:1804
+msgid "_Copy Link Location"
+msgstr "Hivatkozás _címének másolása"
+
+#: ../src/rss.c:1800
+msgid "_Print..."
+msgstr "_Nyomtatás…"
+
+#: ../src/rss.c:1801
+msgid "Save _As"
+msgstr "Menté_s másként"
+
+#: ../src/rss.c:1803
+msgid "_Open Link in Browser"
+msgstr "Hivatkozás _megnyitása böngészőben"
+
+#: ../src/rss.c:1845 ../src/rss.c:1895
+msgid "Click to open"
+msgstr "Kattintson a megnyitáshoz"
+
+#: ../src/rss.c:2067
+msgid "Comments"
+msgstr "Hozzászólások"
+
+#: ../src/rss.c:2072
+msgid "Refresh"
+msgstr "Frissítés"
+
+#: ../src/rss.c:2092
+msgid "Feed view"
+msgstr ""
+
+#: ../src/rss.c:2098
+msgid "Show Summary"
+msgstr "Összefoglaló megjelenítése"
+
+#: ../src/rss.c:2099
+msgid "Show Full Text"
+msgstr "Teljes szöveg"
+
+#: ../src/rss.c:2443
+msgid "Posted under"
+msgstr ""
+
+#: ../src/rss.c:2677
+msgid "Fetching feed"
+msgstr ""
+
+#: ../src/rss.c:2995
+msgid "Unamed feed"
+msgstr "Névtelen hírforrás"
+
+#: ../src/rss.c:2996 ../src/rss.c:3170
+msgid "Error while fetching feed."
+msgstr ""
+
+#: ../src/rss.c:3171
+msgid "Invalid Feed"
+msgstr ""
+
+#: ../src/rss.c:3183
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "Levelek letöltése: %d/%d"
+
+#: ../src/rss.c:3284
+msgid "Complete."
+msgstr "Kész."
+
+#: ../src/rss.c:3315 ../src/rss.c:3485 ../src/rss.c:3637 ../src/rss.c:4338
+msgid "Error fetching feed."
+msgstr ""
+
+#: ../src/rss.c:3325
+msgid "Canceled."
+msgstr "Megszakítva"
+
+#: ../src/rss.c:3369
+msgid "Error while parsing feed."
+msgstr ""
+
+#: ../src/rss.c:3427
+msgid "Complete"
+msgstr "Kész"
+
+#: ../src/rss.c:3524
+msgid "Formatting error."
+msgstr "Formázási hiba"
+
+#: ../src/rss.c:4649 ../src/rss.c:4771
+msgid "No RSS feeds configured!"
+msgstr ""
+
+#: ../src/rss.c:4655 ../src/rss.c:4869
+msgid "Reading RSS feeds..."
+msgstr ""
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss.c:4669 ../src/rss.c:4873 ../src/rss-config-factory.c:1359
+#: ../src/rss-config-factory.c:1876 ../src/rss-config-factory.c:2025
+msgid "Please wait"
+msgstr "Kis türelmet"
+
+#: ../src/rss.c:4677 ../src/rss.c:4881 ../src/rss-config-factory.c:752
+#: ../src/rss-config-factory.c:1104
+#, no-c-format
+msgid "0% done"
+msgstr "0% kész"
+
+#: ../src/rss.c:4815
+msgid "Waiting..."
+msgstr "Várakozás…"
+
+#: ../src/rss.h:52 ../src/GNOME_Evolution_RSS.server.in.in.h:4
+msgid "News and Blogs"
+msgstr "Hírek és blogok"
+
+#: ../src/rss.h:54
+msgid "Untitled channel"
+msgstr "Névtelen csatorna"
+
+#: ../src/rss-config-factory.c:155
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:156
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:157
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:419
+msgid "Edit Feed"
+msgstr "Hírforrás szerkesztése"
+
+#: ../src/rss-config-factory.c:421
+msgid "Add Feed"
+msgstr "Hírforrás hozzáadása"
+
+#: ../src/rss-config-factory.c:991
+msgid "Disable"
+msgstr "Letiltás"
+
+#: ../src/rss-config-factory.c:991
+msgid "Enable"
+msgstr "Engedélyezés"
+
+#: ../src/rss-config-factory.c:1026 ../src/rss-ui.glade.h:36
+msgid "Remove folder contents"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1334
+#| msgid "Formatting error."
+msgid "Import error."
+msgstr ""
+
+#: ../src/rss-config-factory.c:1335
+msgid "Invalid file or this is not an import file."
+msgstr ""
+
+#: ../src/rss-config-factory.c:1339
+msgid "Importing feeds..."
+msgstr "Hírforrások importálása"
+
+#: ../src/rss-config-factory.c:1609 ../src/rss-config-factory.c:2119
+#: ../src/rss-config-factory.c:2166
+msgid "All Files"
+msgstr "Minden fájl"
+
+#: ../src/rss-config-factory.c:1615 ../src/rss-config-factory.c:2172
+msgid "OPML Files"
+msgstr "OPML fájlok"
+
+#: ../src/rss-config-factory.c:1621 ../src/rss-config-factory.c:2178
+msgid "XML Files"
+msgstr "XML fájlok"
+
+#: ../src/rss-config-factory.c:1634
+msgid "Show article's summary"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1640
+msgid "Feed Enabled"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1646
+msgid "Validate feed"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1683 ../src/rss-ui.glade.h:38
+msgid "Select import file"
+msgstr ""
+
+#: ../src/rss-config-factory.c:1722 ../src/rss-ui.glade.h:37
+msgid "Select file to export"
+msgstr "Exportálandó fájl kiválasztása"
+
+#: ../src/rss-config-factory.c:1859
+msgid "Exporting feeds..."
+msgstr "Hírforrások exportálása"
+
+#: ../src/rss-config-factory.c:1916 ../src/rss-config-factory.c:1923
+msgid "Error exporting feeds!"
+msgstr "Hiba a hírforrás exportálásakor"
+
+#: ../src/rss-config-factory.c:2004
+msgid "Importing cookies..."
+msgstr "Sütik importálása…"
+
+#: ../src/rss-config-factory.c:2078
+msgid "Select file to import"
+msgstr "Importálandó fájl kiválasztása"
+
+#: ../src/rss-config-factory.c:2125
+msgid "Mozilla/Netscape Format"
+msgstr "Mozilla/Netscape formátum"
+
+#: ../src/rss-config-factory.c:2131
+msgid "Firefox new Format"
+msgstr ""
+
+#: ../src/rss-config-factory.c:2207
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+
+#: ../src/rss-config-factory.c:2313 ../src/rss-config-factory.c:2827
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+
+#: ../src/rss-config-factory.c:2669 ../src/rss-ui.glade.h:24
+msgid "Enabled"
+msgstr "Engedélyezve"
+
+#: ../src/rss-config-factory.c:2685
+msgid "Feed Name"
+msgstr "Hírforrás neve"
+
+#: ../src/rss-config-factory.c:2695
+msgid "Type"
+msgstr "Típus"
+
+#: ../src/rss-config-factory.c:2912
+#| msgid "News and Blogs"
+msgid "News And Blogs"
+msgstr "Hírek és blogok"
+
+#: ../src/rss-html-rendering.glade.h:1
+msgid "<b>Article Notification</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:2
+msgid "<b>Engine: </b>"
+msgstr "<b>Motor: </b>"
+
+#: ../src/rss-html-rendering.glade.h:3 ../src/rss-ui.glade.h:4
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML renderelés</b>"
+
+#: ../src/rss-html-rendering.glade.h:4
+msgid "<b>Network timeout:</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:5
+msgid "Accept cookies from sites"
+msgstr "Sütik elfogadása az oldalról"
+
+#: ../src/rss-html-rendering.glade.h:6
+msgid "Automatically resize images"
+msgstr ""
+
+#: ../src/rss-html-rendering.glade.h:7
+msgid "Blink icon in notification area"
+msgstr "Ikon villogtatása az értesítési területen"
+
+#: ../src/rss-html-rendering.glade.h:8
+msgid "Block pop-up windows"
+msgstr "Felugró ablakok blokkolása"
+
+#: ../src/rss-html-rendering.glade.h:9
+msgid "Enable Java"
+msgstr "Java engedélyezése"
+
+#: ../src/rss-html-rendering.glade.h:10 ../src/rss-ui.glade.h:22
+msgid "Enable JavaScript"
+msgstr "JavaScript engedélyezése"
+
+#: ../src/rss-html-rendering.glade.h:11
+msgid "Import Cookies"
+msgstr "Sütik importálása"
+
+#: ../src/rss-html-rendering.glade.h:12
+msgid "Show feed icon"
+msgstr "Hírforrás ikonjának megjelenítése"
+
+#: ../src/rss-html-rendering.glade.h:13
+msgid "Show icon in notification area"
+msgstr "Ikon megjelenítése az értesítési területen"
+
+#: ../src/rss-html-rendering.glade.h:14
+msgid "seconds"
+msgstr "másodperc"
+
+#: ../src/rss-ui.glade.h:1
+msgid "<b>Advanced options</b>"
+msgstr "<b>Speciális beállítások</b>"
+
+#: ../src/rss-ui.glade.h:2
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Hírforrás neve: </b>"
+
+#: ../src/rss-ui.glade.h:3
+msgid "<b>Feed URL:</b>"
+msgstr "<b>Hírforrás URL címe:</b>"
+
+#: ../src/rss-ui.glade.h:5
+msgid "<b>Location:</b>"
+msgstr "<b>Hely:</b>"
+
+#: ../src/rss-ui.glade.h:6
+msgid "<span weight=\"bold\">Settings</span>"
+msgstr "<span weight=\"bold\">Beállítások</span>"
+
+#: ../src/rss-ui.glade.h:7
+msgid "Always delete unread articles"
+msgstr "Mindig törölje az olvasatlan cikkeket"
+
+#: ../src/rss-ui.glade.h:8
+msgid "Authentication"
+msgstr "Hitelesítés"
+
+#: ../src/rss-ui.glade.h:9
+msgid "By default show article summary instead of webpage"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:10
+msgid "Certificates Table"
+msgstr "Tanúsítványok táblázata"
+
+#: ../src/rss-ui.glade.h:11
+msgid "Check for new articles at startup"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:12
+msgid "Check for new articles every"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:13
+msgid "Delete all but the last"
+msgstr "Minden törlése, kivéve az utolsó"
+
+#: ../src/rss-ui.glade.h:14
+msgid "Delete articles older than"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:15
+msgid "Delete articles that are no longer in the feed"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:16
+msgid "Delete feed?"
+msgstr "Törli a hírforrást?"
+
+#: ../src/rss-ui.glade.h:17
+msgid "Details"
+msgstr "Részletek"
+
+#: ../src/rss-ui.glade.h:18
+msgid "Display only feed summary"
+msgstr "Csak összefoglaló megjelenítése"
+
+#: ../src/rss-ui.glade.h:19
+msgid "Do no update feed"
+msgstr "Ne frissítse a hírforrásokat"
+
+#: ../src/rss-ui.glade.h:20
+msgid "Do not delete feeds"
+msgstr "Ne törölje a hírforrásokat"
+
+#: ../src/rss-ui.glade.h:21
+#| msgid "Export"
+msgid "E_xport"
+msgstr "E_xportálás"
+
+#: ../src/rss-ui.glade.h:23
+msgid "Enable Plugins"
+msgstr "Bővítmények engedélyezése"
+
+#: ../src/rss-ui.glade.h:25
+msgid "Engine: "
+msgstr "Motor:"
+
+#: ../src/rss-ui.glade.h:26
+msgid "Feeds"
+msgstr "Hírforrások"
+
+#: ../src/rss-ui.glade.h:27
+msgid "General"
+msgstr "Általános"
+
+#: ../src/rss-ui.glade.h:28
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-ui.glade.h:29
+msgid "HTTP Proxy Details"
+msgstr "HTTP proxy részletei"
+
+#: ../src/rss-ui.glade.h:30
+msgid "HTTP proxy:"
+msgstr "HTTP proxy:"
+
+#: ../src/rss-ui.glade.h:31
+#| msgid "Import"
+msgid "I_mport"
+msgstr "I_mportálás"
+
+#: ../src/rss-ui.glade.h:32
+msgid "Network"
+msgstr "Hálózat"
+
+#: ../src/rss-ui.glade.h:33
+msgid "No proxy for:"
+msgstr "Nincs proxy ehhez:"
+
+#: ../src/rss-ui.glade.h:35
+msgid "Port:"
+msgstr "Port:"
+
+#: ../src/rss-ui.glade.h:39
+msgid "Setup"
+msgstr "Beállítás"
+
+#: ../src/rss-ui.glade.h:40
+msgid "Show article comments"
+msgstr "Hozzászólások megjelenítése"
+
+#: ../src/rss-ui.glade.h:41
+msgid "Storage"
+msgstr "Tároló"
+
+#: ../src/rss-ui.glade.h:42
+msgid "Update"
+msgstr "Frissítés"
+
+#: ../src/rss-ui.glade.h:43
+msgid "Update in"
+msgstr "Frissítés:"
+
+#: ../src/rss-ui.glade.h:44
+msgid "Use Proxy"
+msgstr "Proxy használata"
+
+#: ../src/rss-ui.glade.h:45
+msgid "Use authentication"
+msgstr "Hitelesítés használata"
+
+#: ../src/rss-ui.glade.h:46
+msgid "Use global update interval"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:47
+msgid "Username:"
+msgstr "Felhasználónév:"
+
+#: ../src/rss-ui.glade.h:48
+msgid "Validate"
+msgstr ""
+
+#: ../src/rss-ui.glade.h:49
+#| msgid "Add"
+msgid "_Add"
+msgstr "Hozzá_adás"
+
+#: ../src/rss-ui.glade.h:50
+#| msgid "Edit"
+msgid "_Edit"
+msgstr "S_zerkesztés"
+
+#. for translators: this label is part of the "Delete articles older than X days" message.
+#: ../src/rss-ui.glade.h:52
+msgid "days"
+msgstr "nap"
+
+#: ../src/rss-ui.glade.h:53
+msgid "hours"
+msgstr "óra"
+
+#: ../src/rss-ui.glade.h:54
+msgid "label"
+msgstr "címke"
+
+#. To translators: this label is part of the following message: "Delete all but the last X messages.
+#: ../src/rss-ui.glade.h:56
+msgid "messages"
+msgstr "üzenet"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-ui.glade.h:58
+msgid "minutes"
+msgstr "perc"
+
+#: ../src/parser.c:937
+msgid "No information"
+msgstr "Nincs információ"
+
+#: ../src/parser.c:967
+msgid "No Information"
+msgstr "Nincs információ"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:1
+msgid "Evolution Feeds Control"
+msgstr ""
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:2
+msgid "Evolution RSS Reader"
+msgstr "Evolution hírolvasó"
+
+#: ../src/GNOME_Evolution_RSS.server.in.in.h:3
+msgid "Manage your RDF,RSS,ATOM feeds here"
+msgstr ""
+
