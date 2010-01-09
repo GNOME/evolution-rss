@@ -100,8 +100,11 @@ schemadir	= $(GCONF_SCHEMA_FILE_DIR)
 schema_in_files = evolution-rss.schemas.in
 schema_DATA	= $(schema_in_files:.schemas.in=.schemas)
 
+if HAVE_BONOBO
 server_in_files = GNOME_Evolution_RSS.server.in.in
 server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
+endif
+
 @EVO_SERVER_RULE@
 @INTLTOOL_SERVER_RULE@
 @INTLTOOL_SCHEMAS_RULE@
@@ -139,7 +142,7 @@ CLEANFILES	= $(BUILT_SOURCES)	\
 	GNOME_Evolution_RSS.server.in	\
 	evolution-rss.schemas
 
-EXTRA_DIST = 					\
+EXTRA_DIST =					\
 	$(glade_DATA)				\
 	$(server_in_files)			\
         $(schema_in_files)			\

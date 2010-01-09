@@ -307,6 +307,13 @@ if test "x$enable_dbus" != "xno"; then
 fi
 AM_CONDITIONAL([HAVE_DBUS], [test x$have_dbus = xyes])
 
+evolution_int_version="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
+if test $evolution_int_version -lt 22900; then
+	have_bonobo=yes
+fi
+
+AM_CONDITIONAL([HAVE_BONOBO], [test "x$have_bonobo" = "xyes"])
+
 dnl I18n stuff
 AC_PATH_PROG(GETTEXT, gettext, no)
 if test "x$GETTEXT" = "xno"; then
@@ -327,8 +334,11 @@ AC_SUBST(SOEXT)
 EVO_SERVER_RULE=$srcdir/server.mk
 AC_SUBST_FILE(EVO_SERVER_RULE)
 
+if test "x$have_bonobo" = "xyes"; then
+
 serverdir="$BONOBO_LIBDIR/bonobo/servers"
 AC_SUBST(serverdir)
+fi
 
 privdatadir='${datadir}'/evolution/$EVOLUTION_EXEC_VERSION
 AC_SUBST(privdatadir)
@@ -345,7 +355,6 @@ case "$host" in
 *-mingw*)
     os_win32=yes
     NO_UNDEFINED='-no-undefined'
-	evolution_int_version="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
 	if test $evolution_int_version -ge 22700; then
 		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail-shared -levolution-mail -lemiscwidgets'
 	else
