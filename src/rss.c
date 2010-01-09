@@ -1928,7 +1928,10 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 						link,
 						GETTEXT_PACKAGE);
 	if (button == 2)
-		e_popup_menu (menu, NULL);
+		gtk_menu_popup (
+			GTK_MENU (menu),
+			NULL, NULL, NULL, NULL,
+			0, GDK_CURRENT_TIME);
 #else
 	emp = em_popup_new("org.gnome.evolution.mail.formathtmldisplay.popup");
 	menu_size=sizeof(rss_menu_items)/sizeof(rss_menu_items[0]);
