@@ -1,4 +1,6 @@
 
+DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install
+
 INCLUDES =							\
 	-I$(top_srcdir)						\
 	$(RENDER_CFLAGS)					\
@@ -76,6 +78,7 @@ SOURCES =	fetch.c			\
 		file-gio.c		\
 		misc.c			\
 		network-soup.c		\
+		notification.c		\
 		parser.c		\
 		rss.c			\
 		rss-config-factory.c	\
