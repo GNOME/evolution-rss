@@ -36,7 +36,6 @@ int rss_verbose_debug = 0;
 #include <camel/camel-stream-fs.h>
 #include <camel/camel-text-index.h>
 
-#include <e-util/e-error.h>
 #include <e-util/e-icon-factory.h>
 #include <e-util/e-mktemp.h>
 #include <e-util/e-util.h>
@@ -50,6 +49,7 @@ int rss_verbose_debug = 0;
 #include <mail/em-folder-tree.h>
 
 #if EVOLUTION_VERSION < 22900 //kb//
+#include <e-util/e-error.h>
 #include <mail/em-popup.h>
 #include <mail/em-folder-view.h>
 #include <mail/em-format.h>
@@ -57,12 +57,11 @@ int rss_verbose_debug = 0;
 #include <misc/e-activity-handler.h>
 #include <bonobo/bonobo-shlib-factory.h>
 #else
-#include <e-util/e-alert-dialog.h>
+#include <e-util/e-alert-dialog.h> //remove//
 #include <glib/gi18n.h>
 #include <mail/e-mail-local.h>
 #include <mail/mail-session.h>
 #include <shell/e-shell.h>
-#include <shell/e-shell-taskbar.h>
 #include <shell/e-shell-view.h>
 #include <misc/e-popup-menu.h>
 #include <misc/e-gui-utils.h>
@@ -143,6 +142,7 @@ int rss_verbose_debug = 0;
 #include "rss.h"
 #include "parser.h"
 #include "network-soup.h"
+#include "notification.h"
 #include "file-gio.h"
 #include "fetch.h"
 #include "misc.h"
@@ -254,8 +254,6 @@ gboolean fetch_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean custom_fetch_feed(gpointer key, gpointer value, gpointer user_data);
 void fetch_comments(gchar *url, EMFormatHTML *stream);
 
-static void
-dialog_key_destroy (GtkWidget *widget, gpointer data);
 guint fallback_engine(void);
 
 gchar *print_comments(gchar *url, gchar *stream);
@@ -332,110 +330,6 @@ void error_response(GtkObject *o, int button, void *data)
         gtk_widget_destroy((GtkWidget *)o);
 }
 
-void
-rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
-{
-	GtkWidget *ed;
-	gchar *msg;
-	gpointer newkey;
-#if (EVOLUTION_VERSION >= 22900) //kb//
-	EShell *shell;
-	GtkWindow *parent;
-	GList *windows;
-#else
-	EActivityHandler *activity_handler;
-	guint id;
-#endif
-
-	if (name)
-		msg = g_strdup_printf("\n%s\n%s", name, emsg);
-	else
-		msg = g_strdup(emsg);
-
-#if (EVOLUTION_VERSION >= 22200)
-	if (key) {
-		if (!g_hash_table_lookup(rf->error_hash, key)) {
-//			guint activity_id = g_hash_table_lookup(rf->activity, key);
-#if (EVOLUTION_VERSION >= 22900) //kb//
-			EShell *shell;
-			GtkWindow *parent;
-			GList *windows;
-
-			shell = e_shell_get_default ();
-			windows = e_shell_get_watched_windows (shell);
-			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
-
-			ed = e_alert_dialog_new_for_args(parent,
-					 "org-gnome-evolution-rss:feederr",
-					error, msg, NULL);
-#else
-			ed = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
-			             error, msg, NULL);
-#endif
-			newkey = g_strdup(key);
-			g_signal_connect(
-				ed, "response",
-				G_CALLBACK(err_destroy),
-				NULL);
-			g_object_set_data (
-				(GObject *)ed, "response-handled",
-				GINT_TO_POINTER (TRUE));
-			g_signal_connect(ed,
-				"destroy",
-				G_CALLBACK(dialog_key_destroy),
-				newkey);
-			//lame widget destruction, seems e_activity timeout does not destroy it
-			g_timeout_add_seconds(60, (GSourceFunc)gtk_widget_destroy, ed);
-
-#if (EVOLUTION_VERSION >= 22900) //kb//
-		em_utils_show_error_silent(ed);
-		g_hash_table_insert(
-				rf->error_hash,
-				newkey,
-				GINT_TO_POINTER(1));
-
-#else
-			activity_handler = mail_component_peek_activity_handler (mail_component_peek());
-#if (EVOLUTION_VERSION >= 22203)
-			id = e_activity_handler_make_error (
-							activity_handler,
-							(char *)mail_component_peek(),
-							E_LOG_ERROR,
-							ed);
-#else
-			id = e_activity_handler_make_error (
-							activity_handler,
-							(char *)mail_component_peek(),
-							(gchar *)msg,
-							ed);
-#endif
-			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
-#endif
-		}
-		goto out;
-	}
-#endif
-
-	if (!rf->errdialog) {
-#if (EVOLUTION_VERSION >= 22900) //kb//
-		shell = e_shell_get_default ();
-		windows = e_shell_get_watched_windows (shell);
-		parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
-
-                ed  = e_alert_dialog_new_for_args(parent,
-				"org-gnome-evolution-rss:feederr",
-				error, msg, NULL);
-#else
-                ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
-                             error, msg, NULL);
-#endif
-                g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
-                gtk_widget_show(ed);
-                rf->errdialog = ed;
-	}
-
-out:    g_free(msg);
-}
 
 void
 cancel_active_op(gpointer key)
@@ -444,195 +338,6 @@ cancel_active_op(gpointer key)
 	gpointer value = g_hash_table_lookup(rf->session, key_session);
 	if (value)
 		cancel_soup_sess(key_session, value, NULL);
-}
-
-void
-taskbar_push_message(gchar *message)
-{
-#if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	e_activity_handler_set_message(activity_handler, message);
-#else
-	EShellTaskbar *shell_taskbar;
-	shell_taskbar = e_shell_view_get_shell_taskbar (rss_shell_view);
-	e_shell_taskbar_set_message (shell_taskbar, message);
-#endif
-}
-
-void
-taskbar_pop_message(void)
-{
-#if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	e_activity_handler_unset_message(activity_handler);
-#else
-	EShellTaskbar *shell_taskbar;
-	shell_taskbar = e_shell_view_get_shell_taskbar (rss_shell_view);
-	e_shell_taskbar_set_message (shell_taskbar, "");
-#endif
-}
-
-void
-taskbar_op_abort(gpointer key)
-{
-#if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
-	if (activity_key)
-		e_activity_handler_operation_finished(activity_handler, activity_key);
-#endif
-	g_hash_table_remove(rf->activity, key);
-	abort_all_soup();
-}
-
-#if EVOLUTION_VERSION >= 22900 //kb//
-EActivity *
-#else
-guint
-#endif
-#if (EVOLUTION_VERSION >= 22200)
-taskbar_op_new(gchar *message, gpointer key);
-#else
-taskbar_op_new(gchar *message);
-#endif
-
-#if EVOLUTION_VERSION >= 22900 //kb//
-EActivity *
-#else
-guint
-#endif
-#if (EVOLUTION_VERSION >= 22200)
-taskbar_op_new(gchar *message, gpointer key)
-#else
-taskbar_op_new(gchar *message)
-#endif
-{
-#if EVOLUTION_VERSION >= 22900 //kb//
-	EShell *shell;
-        EShellBackend *shell_backend;
-	EActivity *activity;
-#else
-	EActivityHandler *activity_handler;
-	char *mcp;
-	guint activity_id; 
-#endif
-#if EVOLUTION_VERSION < 22306
-	GdkPixbuf *progress_icon;
-#endif
-
-#if EVOLUTION_VERSION >= 22900 //kb//
-
-	shell = e_shell_get_default ();
-        shell_backend = e_shell_get_backend_by_name (shell, "mail");
-
-	activity = e_activity_new (message);
-	e_activity_set_allow_cancel (activity, TRUE);
-	e_activity_set_percent (activity, 0.0);
-	e_shell_backend_add_activity (shell_backend, activity);
-
-	g_signal_connect (
-		activity, "cancelled",
-		G_CALLBACK (taskbar_op_abort),
-		key);
-	return activity;
-#else
-	activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	mcp = g_strdup_printf("%p", mail_component_peek());
-#if (EVOLUTION_VERSION >= 22306)
-	activity_id = e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
-						message, TRUE,
-						(void (*) (gpointer))taskbar_op_abort,
-						 key);
-#else 
-	progress_icon = e_icon_factory_get_icon ("mail-unread", E_ICON_SIZE_MENU);
-#if (EVOLUTION_VERSION >= 22200)
-	activity_id = e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
-						progress_icon, message, TRUE,
-						(void (*) (gpointer))taskbar_op_abort,
-						 key);
-#else
-	e_activity_handler_operation_started(activity_handler, mcp,
-						progress_icon, message, FALSE);
-#endif
-#endif
-	g_free(mcp);
-	return activity_id;
-#endif //kb//
-}
-
-void
-taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
-{
-#if (EVOLUTION_VERSION < 22900) //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
-#else
-	EActivity *activity_id = g_hash_table_lookup(rf->activity, key);
-#endif
-
-	if (activity_id) {
-#if (EVOLUTION_VERSION < 22900) //kb//
-		e_activity_handler_operation_progressing(activity_handler,
-				activity_id,
-                                g_strdup(msg),
-                                progress);
-#else
-	e_activity_set_percent (activity_id, progress);
-#endif
-	}
-}
-
-void
-taskbar_op_finish(gchar *key)
-{
-#if  EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-#endif
-	if (rf->activity) {
-#if  EVOLUTION_VERSION < 22900 //kb//
-		guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
-#else
-		EActivity *activity_key = g_hash_table_lookup(rf->activity, key);
-#endif
-		g_print("activity_key:%p\n", activity_key);
-		if (activity_key)
-#if  EVOLUTION_VERSION < 22900 //kb//
-			e_activity_handler_operation_finished(activity_handler, activity_key);
-#else
-			e_activity_complete (activity_key);
-#endif
-		g_hash_table_remove(rf->activity, key);
-	}
-}
-
-void
-taskbar_op_message(gchar *msg)
-{
-		gchar *tmsg;
-#if (EVOLUTION_VERSION >= 22900) //kb//
-		EActivity *activity_id;
-#else
-#if (EVOLUTION_VERSION >= 22200)
-		guint activity_id;
-#endif
-#endif
-
-		if (!msg)
-			tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
-		else
-			tmsg = g_strdup(msg);
-
-#if (EVOLUTION_VERSION >= 22900) //kb//
-		activity_id = (EActivity *)taskbar_op_new(tmsg, (gchar *)"main");
-#else
-#if (EVOLUTION_VERSION >= 22200)
-		activity_id = taskbar_op_new(tmsg, (gchar *)"main");
-#else
-		activity_id = taskbar_op_new(tmsg);
-#endif
-#endif
-		g_hash_table_insert(rf->activity, (gchar *)"main", GUINT_TO_POINTER(activity_id));
-		g_free(tmsg);
 }
 
 static void
@@ -1201,20 +906,6 @@ rss_select_folder(gchar *folder_name)
 	camel_object_unref (folder);
 	g_free(real_name);
 #endif
-}
-
-static void
-dialog_key_destroy (GtkWidget *widget, gpointer data)
-{
-	if (data)
-		g_hash_table_remove(rf->error_hash, data);
-}
-
-void
-err_destroy (GtkWidget *widget, guint response, gpointer data)
-{
-	gtk_widget_destroy(widget);
-	rf->errdialog = NULL;
 }
 
 static gboolean
@@ -2961,21 +2652,27 @@ prepare_hashes(void)
 						 NULL);
 }
 
-gboolean
-setup_feed(add_feed *feed)
+void
+finish_setup_feed(SoupSession *soup_sess,
+		SoupMessage *msg,
+		add_feed *user_data);
+
+void
+finish_setup_feed(SoupSession *soup_sess, SoupMessage *msg, add_feed *user_data)
 {
 	guint ret = 0;
 	guint ttl;
+	add_feed *feed = (add_feed *)user_data;
         RDF *r = NULL;
-        GString *post = NULL, *content = NULL;
-        GError *err = NULL;
+        GString *content = NULL;
 	gchar *chn_name = NULL, *tmp_chn_name = NULL, *tmp = NULL;
 	gchar *real_name, *rssurl, *tmpkey, *ver;
-	xmlDocPtr doc;
-	xmlNodePtr root;
+	xmlDocPtr doc = NULL;
+	xmlNodePtr root = NULL;
 	gpointer crc_feed;
-
-	check_folders();
+	gchar *tmsgkey;
+	GError *err = NULL;
+	gchar *tmsg = feed->tmsg;
 
         r = g_new0 (RDF, 1);
         r->shown = TRUE;
@@ -2983,34 +2680,36 @@ setup_feed(add_feed *feed)
 	prepare_hashes();
 
 	rf->pending = TRUE;
+	tmsgkey = tmsg;
+//	taskbar_op_set_progress(tmsgkey, tmsg, 0.4);
 
-	if (!feed->validate)
-		goto add;
-
-top:	d("adding feed->feed_url:%s\n", feed->feed_url);
-        content = fetch_blocking(
-				feed->feed_url,
-				NULL,
-				post,
-				textcb,
-				rf,
-				&err);
-        if (err) {
-		g_print("setup_feed() -> err:%s\n", err->message);
+	if (msg->status_code != SOUP_STATUS_OK &&
+	    msg->status_code != SOUP_STATUS_CANCELLED) {
+		g_set_error(&err, NET_ERROR, NET_ERROR_GENERIC, "%s",
+			soup_status_get_phrase(msg->status_code));
 		tmpkey = gen_md5(feed->feed_url);
 		rss_error(tmpkey,
 			feed->feed_name ? feed->feed_name: _("Unamed feed"),
-			_("Error while fetching feed."),
+			_("Error while setting up feed."),
 			 err->message);
 		g_free(tmpkey);
 		goto out;
-        }
-        doc = NULL;
-        root = NULL;
+	}
+
+	if (!msg->response_body->length)
+		goto out;
+
+	if (msg->status_code == SOUP_STATUS_CANCELLED)
+		goto out;
+
+	content = g_string_new_len((gchar *)(msg->response_body->data),
+				msg->response_body->length);
+
         xmlSubstituteEntitiesDefaultValue = 0;
         doc = xml_parse_sux (content->str, content->len);
 	d("content:\n%s\n", content->str);
 	root = xmlDocGetRootElement(doc);
+//	taskbar_op_set_progress(tmsgkey, tmsg, 0.5);
 
 	if ((doc != NULL && root != NULL)
 		&& (strcasestr((char *)root->name, "rss")
@@ -3024,6 +2723,8 @@ top:	d("adding feed->feed_url:%s\n", feed->feed_url);
 		//and later display the actual feed (once rf-> structure is
 		//properly populated
 		chn_name = process_feed(r);
+//		taskbar_op_set_progress(tmsgkey, tmsg, 0.6);
+
 add:
 		//feed name can only come from an import so we rather prefer
 		//resulted channel name instead of supplied one
@@ -3040,6 +2741,9 @@ add:
 		chn_name = sanitize_folder(chn_name);
 		tmp = chn_name;
 		chn_name = generate_safe_chn_name(chn_name);
+
+//		tmsg = g_strdup_printf(_("Adding feed %s"), chn_name);
+//		taskbar_op_set_progress(tmsgkey, tmsg, 0.7);
 
 		crc_feed = gen_md5(feed->feed_url);
 		g_hash_table_insert(rf->hrname,
@@ -3081,6 +2785,7 @@ add:
 		g_hash_table_insert(rf->hrupdate,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->update));
+//		taskbar_op_set_progress(tmsgkey, tmsg, 0.8);
 
 		ver = NULL;
 		if (r->type && r->version)
@@ -3115,21 +2820,29 @@ add:
 					feed->feed_name,
 					NULL);
 			gchar *b = g_build_path("/", r->title, NULL);
+			g_print("update_feed_folder\n");
 			update_feed_folder(b, a, 0);
+			g_print("update_feed_folder done\n");
 			g_free(a);
 			g_free(b);
 		}
-
-		if (feed->validate)
-			display_feed(r);
-
+		if (rf->treeview)
+			store_redraw(GTK_TREE_VIEW(rf->treeview));
+		save_gconf_feed();
 
 		real_name = g_strdup_printf(
 					"%s/%s",
 					lookup_main_folder(),
 					lookup_feed_folder(chn_name));
+		d("select folder:%s\n", real_name);
 		rss_select_folder(real_name);
 		g_free(real_name);
+
+		if (feed->validate)
+			display_feed(r);
+
+//		taskbar_op_set_progress(tmsgkey, tmsg, 0.9);
+
 
 		g_free(tmp_chn_name);
 		g_free(tmp);
@@ -3151,8 +2864,9 @@ add:
 		goto out;
 	}
 
+	/* <SEARCH FOR FEED> */
 	//search for a feed entry
-	rssurl = search_rss(content->str, content->len);
+/*	rssurl = search_rss(content->str, content->len);
 	if (rssurl) {
 		if (doc)
 			xmlFreeDoc(doc);
@@ -3171,15 +2885,68 @@ add:
                            goto out;
                 }
 		goto top;
-	}
+	}*/
+	/* <SEARCH FOR FEED> */
 
-	rss_error(NULL, NULL,
+	dp("general error\n");
+	tmpkey = gen_md5(feed->feed_url);
+	rss_error(tmpkey, NULL,
 		_("Error while fetching feed."),
 		_("Invalid Feed"));
-	ret = 0;
+	g_free(tmpkey);
 
 out:	rf->pending = FALSE;
-	return ret;
+//	taskbar_op_finish(tmsgkey);
+        g_free(feed->feed_url);
+        if (feed->feed_name) g_free(feed->feed_name);
+	if (feed->prefix) g_free(feed->prefix);
+	g_free(feed->tmsg);
+	g_free(feed);
+}
+
+gboolean
+setup_feed(add_feed *feed)
+{
+        RDF *r = NULL;
+        GError *err = NULL;
+	gchar *tmsg, *tmpkey;
+
+	tmsg = g_strdup_printf(_("Adding feed %s"),
+		feed->feed_name ? feed->feed_name :"unnamed");
+	feed->tmsg = tmsg;
+//	taskbar_op_message(tmsg);
+
+	check_folders();
+
+        r = g_new0 (RDF, 1);
+        r->shown = TRUE;
+
+	prepare_hashes();
+
+	rf->pending = TRUE;
+
+//	if (!feed->validate)
+//		goto add;
+
+	d("adding feed->feed_url:%s\n", feed->feed_url);
+	fetch_unblocking(
+			feed->feed_url,
+			textcb,
+			NULL,
+			(gpointer)finish_setup_feed,
+			feed,	// we need to dupe key here
+			1,
+			&err);	// because we might lose it if
+        if (err) {
+		g_print("setup_feed() -> err:%s\n", err->message);
+		tmpkey = gen_md5(feed->feed_url);
+		rss_error(tmpkey,
+			feed->feed_name ? feed->feed_name: _("Unamed feed"),
+			_("Error while fetching feed."),
+			 err->message);
+		g_free(tmpkey);
+        }
+	return TRUE;
 }
 
 void
@@ -3269,8 +3036,11 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	if (rf->feed_queue) {
 		rf->feed_queue--;
-		tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), rss_find_enabled());
-		taskbar_op_set_progress((gchar *)"main", tmsg, rf->feed_queue ? 1-(gdouble)((rf->feed_queue*100/rss_find_enabled()))/100: 1);
+		tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"),
+			rss_find_enabled());
+		taskbar_op_set_progress((gchar *)"main",
+			tmsg,
+			rf->feed_queue ? 1-(gdouble)((rf->feed_queue*100/rss_find_enabled()))/100 : 1);
 		g_free(tmsg);
 	}
 
@@ -5235,7 +5005,10 @@ create_mail(create_feed *CF)
 
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
 
-	if (appended_uid != NULL) {
+	/* no point in filtering mails at import time as it just
+	 * wastes time, user can setup his own afterwards
+	 */
+	if (appended_uid != NULL && !rf->import) {
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
@@ -5512,7 +5285,6 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 		rss_folder = camel_store_get_folder (store, full_name, 0, NULL);
 		if (!rss_folder) {
 			g_free(full_name);
-			camel_object_unref(rss_folder);
 			result = FALSE;
 			goto out;
 		}
@@ -5532,6 +5304,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 		si = em_folder_tree_model_lookup_store_info (
 			EM_FOLDER_TREE_MODEL (mod), store);
 #endif
+dp("full_name:%s\n", full_name);
 		row = g_hash_table_lookup (si->full_hash, full_name);
 		path = gtk_tree_row_reference_get_path (row);
 		gtk_tree_model_get_iter ((GtkTreeModel *)tree_store, &iter, path);

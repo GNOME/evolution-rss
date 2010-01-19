@@ -36,8 +36,9 @@
 #include <mail/em-config.h>
 
 #if EVOLUTION_VERSION < 22900 //kb//
-#include <shell/evolution-config-control.h>
 #include <bonobo/bonobo-shlib-factory.h>
+#include <e-util/e-error.h>
+#include <shell/evolution-config-control.h>
 #else
 #include <e-util/e-alert-dialog.h>
 #include <misc/e-preferences-window.h>
@@ -45,7 +46,6 @@
 #include <shell/e-shell.h>
 #endif
 
-#include <e-util/e-error.h>
 
 #ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>
@@ -203,6 +203,7 @@ enable_toggle_cb(GtkCellRendererToggle *cell,
   gchar *name;
   gboolean fixed;
 
+g_print("enable_toggle_cb()\n");
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, 0, &fixed, -1);
   gtk_tree_model_get (model, &iter, 3, &name, -1);
@@ -569,9 +570,9 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	g_signal_connect(useauth, "toggled", G_CALLBACK(disable_widget_cb), gui);
 
 	ok = GTK_WIDGET (gtk_builder_get_object(gui, "ok_button"));
-	/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/
-	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
 	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
+	dp("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
+	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), ok, GTK_RESPONSE_OK);
 
 	cancel = GTK_WIDGET (gtk_builder_get_object(gui, "cancel_button"));
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancel, GTK_RESPONSE_CANCEL);
@@ -750,7 +751,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
         gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
 	/* xgettext:no-c-format */
         gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
-	feed->progress=progress;
+	feed->progress = progress;
         gtk_window_set_keep_above(GTK_WINDOW(msg_feeds), TRUE);
         g_signal_connect(
 		msg_feeds,
@@ -772,11 +773,10 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
                            goto out;
                 }
                 setup_feed(feed);
-		store_redraw((GtkTreeView *)data);
-                save_gconf_feed();
         }
-out:    gtk_widget_destroy(msg_feeds);
-        g_free(feed);
+out:    dp("msg_feeds destroy\n");
+	gtk_widget_destroy(msg_feeds);
+	feed->progress = NULL;
 }
 
 static void
@@ -1248,10 +1248,9 @@ import_dialog_response(GtkWidget *selector, guint response, gpointer user_data)
                 rf->cancel = 1;
 }
 
-gboolean
+void
 import_one_feed(gchar *url, gchar *title, gchar *prefix)
 {
-	guint res;
         add_feed *feed = g_new0(add_feed, 1);
         feed->changed=0;
         feed->add=1;
@@ -1260,7 +1259,7 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 	feed->enabled = feed_enabled;
 	feed->feed_url = g_strdup(url);
 	feed->feed_name = decode_html_entities(title);
-	feed->prefix = prefix;
+	feed->prefix = g_strdup(prefix);
 	/* we'll get rid of this as soon as we fetch unblocking */
         if (g_hash_table_find(rf->hr,
                                      check_if_match,
@@ -1269,12 +1268,7 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
                                 _("Feed already exists!"));
                return FALSE;
         }
-	res = setup_feed(feed);
-        d("feed imported:%d\n", res);
-        g_free(feed->feed_url);
-        g_free(feed->feed_name);
-	g_free(feed);
-	return res;
+	setup_feed(feed);
 }
 
 /*
@@ -1491,11 +1485,10 @@ import_opml(gchar *file)
 					gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
 #endif
 					gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
-	
-	g_print("rssprefix:%s\n", rssprefix);
-	g_print("rssurl:%s\n", rssurl);
-	g_print("rsstitle:%s\n", rsstitle);
+
+					dp("rssprefix:%s rssurl:%s rsstitle:%s\n", rssprefix, rssurl, rsstitle);
 					import_one_feed(rssurl, rsstitle, rssprefix);
+					dp("import done\n");
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
 fail:					while (gtk_events_pending ())
@@ -1508,10 +1501,6 @@ fail:					while (gtk_events_pending ())
 					gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
 					g_free(what);
 					g_free(rssprefix);
-					while (gtk_events_pending ())
-						gtk_main_iteration ();
-					store_redraw(GTK_TREE_VIEW(rf->treeview));
-					save_gconf_feed();
 				}
 			xmlFree(prop);
 //			}
@@ -1547,8 +1536,6 @@ fail:					while (gtk_events_pending ())
                         g_free(what);
                         while (gtk_events_pending ())
                                 gtk_main_iteration ();
-			store_redraw(GTK_TREE_VIEW(rf->treeview));
-                        save_gconf_feed();
 		}
         }
         while (gtk_events_pending ())
@@ -2429,8 +2416,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	GtkWidget *ttl_value, *feed_name_entry;
 	GtkWidget *authuser, *authpass, *useauth;
 	gchar *feed_name;
-	gboolean fhtml, auth_enabled;
+	gboolean fhtml, auth_enabled, found;
 	guint i=0;
+	gchar *key = NULL;
 
 	add_feed *feed = (add_feed *)g_object_get_data((GObject *)epl, "add-feed");
 	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
@@ -2444,6 +2432,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	|| g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
 	|| !g_ascii_strcasecmp(folder, main_folder))
 		return;
+
+	key = lookup_key(ofolder);
+	if (!key) return;
 
 	gtk_widget_set_sensitive(target->config->widget, FALSE);
 

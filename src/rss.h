@@ -207,6 +207,7 @@ typedef struct ADD_FEED {
         gchar           *feed_url;
 	gchar		*feed_name;
 	gchar		*prefix;
+	gchar		*tmsg;		//status bar message
         gboolean        fetch_html;	//show webpage instead of summary
         gboolean        add;		//ok button
 	gboolean	changed;
@@ -321,8 +322,6 @@ guint rss_find_enabled(void);
 void error_destroy(GtkObject *o, void *data);
 void error_response(GtkObject *o, int button, void *data);
 void cancel_active_op(gpointer key);
-void taskbar_op_message(gchar *msg);
-void taskbar_op_abort(gpointer key);
 void browser_write(gchar *string, gint length, gchar *base);
 void user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog);
 gboolean proxy_auth_dialog(gchar *title, gchar *user, gchar *pass);

@@ -41,7 +41,7 @@ void feeds_dialog_disable(GtkDialog *d, gpointer data);
 GtkWidget *remove_feed_dialog(gchar *msg);
 void feeds_dialog_delete(GtkDialog *d, gpointer data);
 void process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name);
-gboolean import_one_feed(gchar *url, gchar *title, gchar *prefix);
+void import_one_feed(gchar *url, gchar *title, gchar *prefix);
 xmlNode *iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type);
 #if LIBSOUP_VERSION >= 2026000
 SoupCookieJar *import_cookies(gchar *file);
