@@ -204,9 +204,9 @@ SoupCookieJar *rss_soup_jar;
 #endif
 extern guint rsserror;
 gboolean single_pending = FALSE;
-#if EVOLUTION_VERSION >= 22900
-extern CamelSession *session;
-#endif
+//#if EVOLUTION_VERSION >= 22900
+//extern CamelSession *session;
+//#endif
 
 rssfeed *rf = NULL;
 guint           upgrade = 0;                // set to 2 when initailization successfull
@@ -2670,7 +2670,7 @@ finish_setup_feed(SoupSession *soup_sess, SoupMessage *msg, add_feed *user_data)
 	gchar *real_name, *rssurl, *tmpkey, *ver;
 	xmlDocPtr doc = NULL;
 	xmlNodePtr root = NULL;
-	gpointer crc_feed;
+	gpointer crc_feed = NULL;
 	gchar *tmsgkey;
 	GError *err = NULL;
 	gchar *tmsg = feed->tmsg;
@@ -4102,7 +4102,7 @@ custom_update_articles(CDATA *cdata)
 		network_timeout();
 		// check if we're enabled and no cancelation signal pending
 		// and no imports pending
-		dp("cdata->key:%s\n", cdata->key);
+		dp("cdata->key:%s\n", (gchar *)cdata->key);
 		if (g_hash_table_lookup(rf->hre, lookup_key(cdata->key)) && !rf->cancel && !rf->import) {
 			d("\nFetching: %s..%s\n",
 				(char *)g_hash_table_lookup(rf->hr, lookup_key(cdata->key)), (char *)cdata->key);
@@ -5312,8 +5312,8 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 		si = em_folder_tree_model_lookup_store_info (
 			EM_FOLDER_TREE_MODEL (mod), store);
 #endif
-dp("full_name:%s\n", full_name);
 		row = g_hash_table_lookup (si->full_hash, full_name);
+		if (!row) goto out;
 		path = gtk_tree_row_reference_get_path (row);
 		gtk_tree_model_get_iter ((GtkTreeModel *)tree_store, &iter, path);
 		gtk_tree_path_free (path);

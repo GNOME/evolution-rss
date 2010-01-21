@@ -1268,7 +1268,6 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
                                      feed->feed_url)) {
                rss_error(NULL, feed->feed_name, _("Error adding feed."),
                                 _("Feed already exists!"));
-               return FALSE;
         }
 	setup_feed(feed);
 }
@@ -1315,7 +1314,7 @@ import_opml(gchar *file)
         guint current = 0;
 	guint type = 0; //file type
         gchar *what = NULL;
-	gchar *msg, *tmp, *maintitle;
+	gchar *msg, *tmp, *maintitle = NULL;
         GtkWidget *import_dialog = NULL;
         GtkWidget *import_label;
         GtkWidget *import_progress;
@@ -1418,14 +1417,14 @@ import_opml(gchar *file)
 
 	if (type == 0) {
 	gint size = 0;
-	gchar *base = NULL, *start = NULL, *root = NULL, *last = NULL;
+	gchar *base = NULL, *root = NULL, *last = NULL;
 	gchar *rssprefix = NULL;
 	/* need to automate this, not just guess title at random */
 	src=src->children;
 	src = src->children;
 	src = src->next;
 	src = src->children;
-	maintitle = layer_find(src, "title", NULL);
+	maintitle = (gchar *)layer_find(src, "title", NULL);
 	while (src) {
 		gchar *rssurl = NULL, *rsstitle = NULL;
 		if (rf->cancel) {
@@ -2418,7 +2417,7 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	GtkWidget *ttl_value, *feed_name_entry;
 	GtkWidget *authuser, *authpass, *useauth;
 	gchar *feed_name;
-	gboolean fhtml, auth_enabled, found;
+	gboolean fhtml, auth_enabled;
 	guint i=0;
 	gchar *key = NULL;
 

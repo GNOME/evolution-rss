@@ -269,17 +269,26 @@ taskbar_op_new(gchar *message)
 void
 taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 {
-return;
 #if (EVOLUTION_VERSION < 22900) //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
+	EActivityHandler *activity_handler;
+	guint activity_id;
 #else
-	EActivity *activity_id = g_hash_table_lookup(rf->activity, key);
+	EActivity *activity_id;
+#endif
+
+#if (EVOLUTION_VERSION < 22900) //kb//
+	activity_handler = mail_component_peek_activity_handler
+				(mail_component_peek ());
+	activity_id = GPOINTER_TO_INT(
+				g_hash_table_lookup(rf->activity, key));
+#else
+	activity_id = g_hash_table_lookup(rf->activity, key);
 #endif
 
 	if (activity_id) {
 #if (EVOLUTION_VERSION < 22900) //kb//
-		e_activity_handler_operation_progressing(activity_handler,
+		e_activity_handler_operation_progressing(
+				activity_handler,
 				activity_id,
                                 g_strdup(msg),
                                 progress);
