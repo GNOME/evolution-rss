@@ -59,6 +59,7 @@ extern int rss_verbose_debug;
 #include "parser.h"
 #include "rss-config-factory.h"
 #include "network-soup.h"
+#include "notification.h"
 
 static guint feed_enabled = 0;
 static guint feed_validate = 0;
@@ -899,7 +900,8 @@ remove_feed_hash(gpointer name)
 {
 	//we need to make sure we won't fetch_feed iterate over those hashes
 	rf->pending = TRUE;
-	taskbar_op_finish(name);
+	g_print("TASKBAR_OP_FINISH(name) FIXME!!!\n");
+//	taskbar_op_finish(name);
         g_hash_table_remove(rf->hre, lookup_key(name));
         g_hash_table_remove(rf->hrt, lookup_key(name));
         g_hash_table_remove(rf->hrh, lookup_key(name));

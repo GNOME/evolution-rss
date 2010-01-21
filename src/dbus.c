@@ -34,6 +34,7 @@ extern int rss_verbose_debug;
 #include "rss.h"
 #include "rss-config-factory.h"
 #include "misc.h"
+#include "notification.h"
 #include "dbus.h"
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"

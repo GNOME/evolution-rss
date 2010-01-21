@@ -461,7 +461,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
         progress = (NetStatusProgress*)statusdata;
         if (progress->current > 0 && progress->total > 0) {
 	fraction = (float)progress->current / progress->total;
-	g_print("%f%%\n", fraction*100);
+	g_print("%.2f%% ", fraction*100);
 	}
 	while (gtk_events_pending())
 		gtk_main_iteration ();
@@ -2350,6 +2350,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
         CamelFolder *folder;
 	EMFolderTree *folder_tree;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(shell_view);
+	EActivity *taskid;
 
 
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
@@ -2380,10 +2381,10 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
                 single_pending = TRUE;
 		check_folders();
 		rf->err = NULL;
-		taskbar_op_message(name);
+		taskid = taskbar_op_message(name, key);
 		network_timeout();
 		if (!fetch_one_feed(fname, key, statuscb))
-			taskbar_op_finish((gchar *)"main");
+			taskbar_op_finish(taskid);
                 single_pending = FALSE;
 	}
 	g_free(name);
@@ -2673,6 +2674,7 @@ finish_setup_feed(SoupSession *soup_sess, SoupMessage *msg, add_feed *user_data)
 	gchar *tmsgkey;
 	GError *err = NULL;
 	gchar *tmsg = feed->tmsg;
+	EActivity *aid;
 
         r = g_new0 (RDF, 1);
         r->shown = TRUE;
@@ -2681,7 +2683,7 @@ finish_setup_feed(SoupSession *soup_sess, SoupMessage *msg, add_feed *user_data)
 
 	rf->pending = TRUE;
 	tmsgkey = tmsg;
-//	taskbar_op_set_progress(tmsgkey, tmsg, 0.4);
+	taskbar_op_set_progress(tmsgkey, tmsg, 0.4);
 
 	if (msg->status_code != SOUP_STATUS_OK &&
 	    msg->status_code != SOUP_STATUS_CANCELLED) {
@@ -2709,7 +2711,7 @@ finish_setup_feed(SoupSession *soup_sess, SoupMessage *msg, add_feed *user_data)
         doc = xml_parse_sux (content->str, content->len);
 	d("content:\n%s\n", content->str);
 	root = xmlDocGetRootElement(doc);
-//	taskbar_op_set_progress(tmsgkey, tmsg, 0.5);
+	taskbar_op_set_progress(tmsgkey, tmsg, 0.5);
 
 	if ((doc != NULL && root != NULL)
 		&& (strcasestr((char *)root->name, "rss")
@@ -2741,9 +2743,6 @@ add:
 		chn_name = sanitize_folder(chn_name);
 		tmp = chn_name;
 		chn_name = generate_safe_chn_name(chn_name);
-
-//		tmsg = g_strdup_printf(_("Adding feed %s"), chn_name);
-//		taskbar_op_set_progress(tmsgkey, tmsg, 0.7);
 
 		crc_feed = gen_md5(feed->feed_url);
 		g_hash_table_insert(rf->hrname,
@@ -2785,7 +2784,7 @@ add:
 		g_hash_table_insert(rf->hrupdate,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->update));
-//		taskbar_op_set_progress(tmsgkey, tmsg, 0.8);
+		taskbar_op_set_progress(tmsgkey, tmsg, 0.8);
 
 		ver = NULL;
 		if (r->type && r->version)
@@ -2841,7 +2840,7 @@ add:
 		if (feed->validate)
 			display_feed(r);
 
-//		taskbar_op_set_progress(tmsgkey, tmsg, 0.9);
+		taskbar_op_set_progress(tmsgkey, tmsg, 0.9);
 
 
 		g_free(tmp_chn_name);
@@ -2896,7 +2895,9 @@ add:
 	g_free(tmpkey);
 
 out:	rf->pending = FALSE;
-//	taskbar_op_finish(tmsgkey);
+	aid = g_hash_table_lookup(rf->activity, crc_feed);
+	taskbar_op_finish(aid);
+	//g_free(crc_feed);
         g_free(feed->feed_url);
         if (feed->feed_name) g_free(feed->feed_name);
 	if (feed->prefix) g_free(feed->prefix);
@@ -2914,7 +2915,7 @@ setup_feed(add_feed *feed)
 	tmsg = g_strdup_printf(_("Adding feed %s"),
 		feed->feed_name ? feed->feed_name :"unnamed");
 	feed->tmsg = tmsg;
-//	taskbar_op_message(tmsg);
+	taskbar_op_message(tmsg, gen_md5(feed->feed_url));
 
 	check_folders();
 
@@ -3014,6 +3015,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	gboolean deleted = 0;
 	GString *response;
 	RDF *r;
+	EActivity *aid;
 #if EVOLUTION_VERSION < 22900
 	MailComponent *mc = mail_component_peek ();
 #endif
@@ -3046,7 +3048,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	if (rf->feed_queue == 0) {
 		d("taskbar_op_finish()\n");
-		taskbar_op_finish((gchar *)"main");
+		aid = g_hash_table_lookup(rf->activity, key);
+		taskbar_op_finish(aid);
+		taskbar_op_finish(NULL);
 		rf->autoupdate = FALSE;
 		farticle=0;
 		ftotal=0;
@@ -3110,7 +3114,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
                         if (rf->info->data->gd)
                                 gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
                 }
-		taskbar_op_finish((gchar *)"main");
+		aid = g_hash_table_lookup(rf->activity, key);
+		taskbar_op_finish(aid);
+		taskbar_op_finish(NULL);
                 //clean data that might hang on rf struct
                 rf->sr_feed = NULL;
                 rf->label = NULL;
@@ -3212,7 +3218,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			if (rf->info->data->gd)
 				gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
 		}
-		taskbar_op_finish((gchar *)"main");
+		aid = g_hash_table_lookup(rf->activity, key);
+		taskbar_op_finish(aid);
+		taskbar_op_finish(NULL);
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
 		rf->label = NULL;
@@ -3435,7 +3443,7 @@ update_articles(gboolean disabler)
 		rf->pending = TRUE;
 		check_folders();
 		rf->err = NULL;
-		taskbar_op_message(NULL);
+		taskbar_op_message(NULL, NULL);
 		network_timeout();
 		g_hash_table_foreach(rf->hrname, (GHFunc)fetch_feed, (GHFunc *)statuscb);
 		rf->pending = FALSE;
@@ -4669,7 +4677,7 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 
 		rf->err = NULL;
 		force_update = 1;
-		taskbar_op_message(NULL);
+		taskbar_op_message(NULL, NULL);
 		network_timeout();
 		g_hash_table_foreach(rf->hrname, (GHFunc)fetch_feed, statuscb);
 		// reset cancelation signal

@@ -16,5 +16,10 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-void taskbar_op_message(gchar *msg);
+EActivity* taskbar_op_message(gchar *msg, gchar *unikey);
 void taskbar_op_abort(gpointer key);
+void taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress);
+void taskbar_op_finish(EActivity *id);
+void taskbar_push_message(gchar *message);
+void taskbar_pop_message(void);
+

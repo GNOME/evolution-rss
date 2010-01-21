@@ -312,8 +312,8 @@ struct _rfMessage {
         gchar   *body;
         goffset  length;
 };
-
 typedef struct _rfMessage rfMessage;
+
 guint ftotal;
 guint farticle;
 
@@ -399,10 +399,6 @@ void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif
-void taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress);
-void taskbar_op_finish(gchar *key);
-void taskbar_push_message(gchar *message);
-void taskbar_pop_message(void);
 void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
 void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
 gchar *rss_component_peek_base_directory(void);

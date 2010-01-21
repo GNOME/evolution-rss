@@ -269,6 +269,7 @@ taskbar_op_new(gchar *message)
 void
 taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 {
+return;
 #if (EVOLUTION_VERSION < 22900) //kb//
 	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
 	guint activity_id = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
@@ -288,7 +289,7 @@ taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 	}
 }
 
-void
+/*void
 taskbar_op_finish(gchar *key)
 {
 #if  EVOLUTION_VERSION < 22900 //kb//
@@ -309,10 +310,27 @@ taskbar_op_finish(gchar *key)
 #endif
 		g_hash_table_remove(rf->activity, key);
 	}
-}
+}*/
+
 
 void
-taskbar_op_message(gchar *msg)
+taskbar_op_finish(EActivity *id)
+{
+	EActivity *activity_key;
+	if (id == NULL) {
+		activity_key = g_hash_table_lookup(rf->activity, "main");
+		if (activity_key) {
+			e_activity_complete (activity_key);
+			g_hash_table_remove(rf->activity, "main");
+		}
+	} else {
+		e_activity_complete (id);
+		g_hash_table_remove(rf->activity, id);
+	}
+}
+
+EActivity*
+taskbar_op_message(gchar *msg, gchar *unikey)
 {
 		gchar *tmsg;
 #if (EVOLUTION_VERSION >= 22900) //kb//
@@ -328,24 +346,25 @@ taskbar_op_message(gchar *msg)
 			tmsg = g_strdup(msg);
 
 #if (EVOLUTION_VERSION >= 22900) //kb//
-//		if (!msg)
+		if (!msg)
 			activity_id = (EActivity *)taskbar_op_new(tmsg, (gchar *)"main");
-//		else
-//			activity_id = (EActivity *)taskbar_op_new(tmsg, msg);
+		else
+			activity_id = (EActivity *)taskbar_op_new(tmsg, msg);
 #else
 #if (EVOLUTION_VERSION >= 22200)
-//		if (!msg)
+		if (!msg)
 			activity_id = taskbar_op_new(tmsg, (gchar *)"main");
-//		else
-//			activity_id = taskbar_op_new(tmsg, msg);
+		else
+			activity_id = taskbar_op_new(tmsg, msg);
 #else
 		activity_id = taskbar_op_new(tmsg);
 #endif
 #endif
-//		if (!tmsg)
+		if (!msg)
 			g_hash_table_insert(rf->activity, (gchar *)"main", GUINT_TO_POINTER(activity_id));
-//		else
-//			g_hash_table_insert(rf->activity, msg, GUINT_TO_POINTER(activity_id));
+		else
+			if (unikey)
+				g_hash_table_insert(rf->activity, GUINT_TO_POINTER(unikey), GUINT_TO_POINTER(activity_id));
 		g_free(tmsg);
 		return activity_id;
 }
