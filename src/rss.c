@@ -64,7 +64,6 @@ int rss_verbose_debug = 0;
 #include <shell/e-shell.h>
 #include <shell/e-shell-view.h>
 #include <misc/e-popup-menu.h>
-#include <misc/e-gui-utils.h>
 #endif
 
 #include <mail/mail-tools.h>
