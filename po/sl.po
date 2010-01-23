@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2010-01-15 19:13+0000\n"
-"PO-Revision-Date: 2010-01-18 12:44+0100\n"
+"POT-Creation-Date: 2010-01-22 21:04+0000\n"
+"PO-Revision-Date: 2010-01-23 11:36+0100\n"
 "Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -20,23 +20,21 @@ msgstr ""
 "X-Poedit-Language: Slovenian\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/dbus.c:118
-#: ../src/rss.c:3169
-#: ../src/rss-config-factory.c:770
-#: ../src/rss-config-factory.c:1127
-#: ../src/rss-config-factory.c:1268
+#: ../src/dbus.c:119
+#: ../src/rss-config-factory.c:772
+#: ../src/rss-config-factory.c:1129
+#: ../src/rss-config-factory.c:1269
 msgid "Error adding feed."
 msgstr "Napaka med dodajanjem vira."
 
-#: ../src/dbus.c:119
-#: ../src/rss.c:3170
-#: ../src/rss-config-factory.c:771
-#: ../src/rss-config-factory.c:1128
-#: ../src/rss-config-factory.c:1269
+#: ../src/dbus.c:120
+#: ../src/rss-config-factory.c:773
+#: ../src/rss-config-factory.c:1130
+#: ../src/rss-config-factory.c:1270
 msgid "Feed already exists!"
 msgstr "Vir že obstaja!"
 
-#: ../src/dbus.c:123
+#: ../src/dbus.c:124
 #, c-format
 msgid "New feed imported: %s"
 msgstr "Nov vir je uvožen: %s"
@@ -130,82 +128,102 @@ msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Ime gostitelja posredniškega strežnika uporabljenega za vire in vsebino."
 
 #: ../src/evolution-rss.schemas.in.h:23
+msgid "How to handle RSS URLs"
+msgstr "Kako upravljati z URL-ji RSS"
+
+#: ../src/evolution-rss.schemas.in.h:24
 msgid "Html render"
 msgstr "Izris html"
 
-#: ../src/evolution-rss.schemas.in.h:24
+#: ../src/evolution-rss.schemas.in.h:25
 msgid "If the proxy server requires authentication. This is the password field."
 msgstr "V primeru, da posredniški strežnik zahteva overitev. To je polje gesla."
 
-#: ../src/evolution-rss.schemas.in.h:25
+#: ../src/evolution-rss.schemas.in.h:26
 msgid "Interval in seconds before a conection is dropped."
 msgstr "Časovni razmik v sekundah pred preklicem povezave."
 
-#: ../src/evolution-rss.schemas.in.h:26
+#: ../src/evolution-rss.schemas.in.h:27
 msgid "It will display article's comments by default if present."
 msgstr "Prikazan bodo opombe članka, če so na voljo."
 
-#: ../src/evolution-rss.schemas.in.h:27
+#: ../src/evolution-rss.schemas.in.h:28
 msgid "Java Enabled"
 msgstr "Java je omogočena"
 
-#: ../src/evolution-rss.schemas.in.h:28
+#: ../src/evolution-rss.schemas.in.h:29
 msgid "JavaScript Enabled"
 msgstr "JavaScript je omogočen"
 
-#: ../src/evolution-rss.schemas.in.h:29
+#: ../src/evolution-rss.schemas.in.h:30
 msgid "Network proxy requires authentication."
 msgstr "Posredniški strežnik omrežja zahteva overitev."
 
-#: ../src/evolution-rss.schemas.in.h:30
+#: ../src/evolution-rss.schemas.in.h:31
 msgid "Network timeout"
 msgstr "Zakasnitev omrežja"
 
-#: ../src/evolution-rss.schemas.in.h:31
+#: ../src/evolution-rss.schemas.in.h:32
 msgid "New articles timeout"
 msgstr "Zakasnitev novih člankov"
 
-#: ../src/evolution-rss.schemas.in.h:32
+#: ../src/evolution-rss.schemas.in.h:33
 msgid "Password for proxy server"
 msgstr "Geslo za posredniški strežnik"
 
-#: ../src/evolution-rss.schemas.in.h:33
+#: ../src/evolution-rss.schemas.in.h:34
 msgid "Proxy requires authentication"
 msgstr "Posredniški strežnik zahteva overitev"
 
-#: ../src/evolution-rss.schemas.in.h:34
+#: ../src/evolution-rss.schemas.in.h:35
 msgid "Proxy server port"
 msgstr "Vrata posredniškega strežnika"
 
-#: ../src/evolution-rss.schemas.in.h:35
+#: ../src/evolution-rss.schemas.in.h:36
 msgid "Proxy server user"
 msgstr "Uporabniško ime posredniškega strežnika"
 
-#: ../src/evolution-rss.schemas.in.h:36
+#: ../src/evolution-rss.schemas.in.h:37
 msgid "Remove feed folder"
 msgstr "Odstranitev mape virov"
 
-#: ../src/evolution-rss.schemas.in.h:37
+#: ../src/evolution-rss.schemas.in.h:38
+msgid "Run program in terminal"
+msgstr "Zagon programa v terminalu"
+
+#: ../src/evolution-rss.schemas.in.h:39
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr "Izbrana možnost določa, da program določen v ukazu upravlja z URI-ji "
+
+#: ../src/evolution-rss.schemas.in.h:40
 msgid "Show articles comments"
 msgstr "Prikaz opomb članka"
 
-#: ../src/evolution-rss.schemas.in.h:38
+#: ../src/evolution-rss.schemas.in.h:41
 msgid "The port number for proxy server used for feeds and content."
 msgstr "Številka vrat posredniškega strežnika, uporabljanega za vire in vsebino."
 
-#: ../src/evolution-rss.schemas.in.h:39
+#: ../src/evolution-rss.schemas.in.h:42
 msgid "The username to use for proxy server authentication."
 msgstr "Uporabniško ime za overitev posredniškega strežnika."
 
-#: ../src/evolution-rss.schemas.in.h:40
+#: ../src/evolution-rss.schemas.in.h:43
+msgid "True if the program to handle this URL should be run in a terminal"
+msgstr "Izbrana možnost določa, da mora biti program, ki upravlja z naslovom URL, izveden v terminalu"
+
+#: ../src/evolution-rss.schemas.in.h:44
 msgid "Type HTML Render used to display html pages."
 msgstr "Vrsta izrisovalnika HTML za prikaz strani html."
 
-#: ../src/evolution-rss.schemas.in.h:41
+#: ../src/evolution-rss.schemas.in.h:45
+msgid "URL handler for rss feed uris"
+msgstr "Upravljalnik URL za uri-je rss virov"
+
+#: ../src/evolution-rss.schemas.in.h:46
 msgid "Use a proxy server to fetch articles and content."
 msgstr "Uporaba posredniškega strežnika za dobivanje člankov in vsebine."
 
-#: ../src/evolution-rss.schemas.in.h:42
+#: ../src/evolution-rss.schemas.in.h:47
 msgid "Use proxy server"
 msgstr "Uporaba posredniškega strežnika"
 
@@ -271,31 +289,25 @@ msgstr "Posodobitev virov RSS"
 msgid "_Read RSS"
 msgstr "_Beri RSS"
 
-#: ../src/rss.c:621
-#: ../src/rss.c:3272
-#, c-format
-msgid "Fetching Feeds (%d enabled)"
-msgstr "Pridobivanje virov (%d omogočeno)"
-
-#: ../src/rss.c:661
-#: ../src/rss-config-factory.c:1507
-#: ../src/rss-config-factory.c:1545
-#: ../src/rss-config-factory.c:1839
-#: ../src/rss-config-factory.c:1991
+#: ../src/rss.c:365
+#: ../src/rss-config-factory.c:1501
+#: ../src/rss-config-factory.c:1535
+#: ../src/rss-config-factory.c:1827
+#: ../src/rss-config-factory.c:1979
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% končano"
 
-#: ../src/rss.c:671
-#: ../src/rss.c:3426
+#: ../src/rss.c:375
+#: ../src/rss.c:3201
 msgid "Feed"
 msgstr "Vir"
 
-#: ../src/rss.c:823
+#: ../src/rss.c:527
 msgid "Enter User/Pass for feed"
 msgstr "Vnesite uporabniško ime/geslo za vir"
 
-#: ../src/rss.c:874
+#: ../src/rss.c:578
 #, c-format
 msgid ""
 "Enter your username and password for:\n"
@@ -304,179 +316,194 @@ msgstr ""
 "Vnesite svoje uporabniško ime in geslo za:\n"
 " '%s'"
 
-#: ../src/rss.c:891
+#: ../src/rss.c:595
 msgid "Username: "
 msgstr "Uporabniško ime:"
 
-#: ../src/rss.c:913
+#: ../src/rss.c:617
 #: ../src/rss-ui.glade.h:34
 msgid "Password: "
 msgstr "Geslo:"
 
-#: ../src/rss.c:951
+#: ../src/rss.c:655
 msgid "_Remember this password"
 msgstr "_Zapomni si to geslo"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:1054
+#: ../src/rss.c:758
 msgid "Canceling..."
 msgstr "Prekinjanje ..."
 
-#: ../src/rss.c:1609
+#: ../src/rss.c:1299
 msgid "Formatting Message..."
 msgstr "Oblikovanje sporočila ..."
 
-#: ../src/rss.c:1782
+#: ../src/rss.c:1472
 msgid "_Copy"
 msgstr "_Kopiraj"
 
-#: ../src/rss.c:1783
+#: ../src/rss.c:1473
 msgid "Select _All"
 msgstr "Izberi _vse"
 
-#: ../src/rss.c:1785
-#: ../src/rss.c:1796
+#: ../src/rss.c:1475
+#: ../src/rss.c:1486
 msgid "Zoom _In"
 msgstr "_Približaj"
 
-#: ../src/rss.c:1786
-#: ../src/rss.c:1797
+#: ../src/rss.c:1476
+#: ../src/rss.c:1487
 msgid "Zoom _Out"
 msgstr "_Oddalji"
 
-#: ../src/rss.c:1787
-#: ../src/rss.c:1798
+#: ../src/rss.c:1477
+#: ../src/rss.c:1488
 msgid "_Normal Size"
 msgstr "O_bičajna velikost"
 
-#: ../src/rss.c:1789
+#: ../src/rss.c:1479
 msgid "_Open Link"
 msgstr "_Odpri povezavo"
 
-#: ../src/rss.c:1790
-#: ../src/rss.c:1804
+#: ../src/rss.c:1480
+#: ../src/rss.c:1494
 msgid "_Copy Link Location"
 msgstr "_Kopiraj mesto povezave"
 
-#: ../src/rss.c:1800
+#: ../src/rss.c:1490
 msgid "_Print..."
 msgstr "_Natisni ..."
 
-#: ../src/rss.c:1801
+#: ../src/rss.c:1491
 msgid "Save _As"
 msgstr "Shrani _kot"
 
-#: ../src/rss.c:1803
+#: ../src/rss.c:1493
 msgid "_Open Link in Browser"
 msgstr "_Odpri povezavo v brskalniku"
 
-#: ../src/rss.c:1845
-#: ../src/rss.c:1895
+#: ../src/rss.c:1535
+#: ../src/rss.c:1585
 msgid "Click to open"
 msgstr "Kliknite za odpiranje"
 
-#: ../src/rss.c:2070
+#: ../src/rss.c:1760
 msgid "Comments"
 msgstr "Opombe"
 
-#: ../src/rss.c:2075
+#: ../src/rss.c:1765
 msgid "Refresh"
 msgstr "Osveži"
 
-#: ../src/rss.c:2095
+#: ../src/rss.c:1785
 msgid "Feed view"
 msgstr "Pogled vira"
 
-#: ../src/rss.c:2101
+#: ../src/rss.c:1791
 msgid "Show Summary"
 msgstr "Pokaži povzetek"
 
-#: ../src/rss.c:2102
+#: ../src/rss.c:1792
 msgid "Show Full Text"
 msgstr "Pokaži polno besedilo"
 
-#: ../src/rss.c:2446
+#: ../src/rss.c:2136
 msgid "Posted under"
 msgstr "Objavljeno pod"
 
-#: ../src/rss.c:2684
+#: ../src/rss.c:2375
 msgid "Fetching feed"
 msgstr "Pridobivanje vira"
 
-#: ../src/rss.c:3002
+#: ../src/rss.c:2693
+#: ../src/rss.c:2944
 msgid "Unamed feed"
 msgstr "Neimenovan vir"
 
-#: ../src/rss.c:3003
-#: ../src/rss.c:3177
+#: ../src/rss.c:2694
+msgid "Error while setting up feed."
+msgstr "Napaka med nastavljanjem vira."
+
+#: ../src/rss.c:2892
+#: ../src/rss.c:2945
 msgid "Error while fetching feed."
 msgstr "Napaka med pridobivanjem vira."
 
-#: ../src/rss.c:3178
+#: ../src/rss.c:2893
 msgid "Invalid Feed"
 msgstr "Neveljaven vir"
 
-#: ../src/rss.c:3190
+#: ../src/rss.c:2914
+#, c-format
+msgid "Adding feed %s"
+msgstr "Dodajanje vira %s"
+
+#: ../src/rss.c:2957
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Dobivanje sporočila %d od %d"
 
-#: ../src/rss.c:3291
+#: ../src/rss.c:3040
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Pridobivanje virov (%d omogočeno)"
+
+#: ../src/rss.c:3064
 msgid "Complete."
 msgstr "Končano."
 
-#: ../src/rss.c:3322
-#: ../src/rss.c:3492
-#: ../src/rss.c:3644
-#: ../src/rss.c:4345
+#: ../src/rss.c:3095
+#: ../src/rss.c:3269
+#: ../src/rss.c:3421
+#: ../src/rss.c:4122
 msgid "Error fetching feed."
 msgstr "Napaka med pridobivanjem vira."
 
-#: ../src/rss.c:3332
+#: ../src/rss.c:3105
 msgid "Canceled."
 msgstr "Preklicano."
 
-#: ../src/rss.c:3376
+#: ../src/rss.c:3151
 msgid "Error while parsing feed."
 msgstr "Napaka med razčlenjevanjem vira."
 
-#: ../src/rss.c:3434
+#: ../src/rss.c:3209
 msgid "Complete"
 msgstr "Končano"
 
-#: ../src/rss.c:3531
+#: ../src/rss.c:3308
 msgid "Formatting error."
 msgstr "Napaka oblikovanja."
 
-#: ../src/rss.c:4656
-#: ../src/rss.c:4778
+#: ../src/rss.c:4433
+#: ../src/rss.c:4555
 msgid "No RSS feeds configured!"
 msgstr "Ni nastavljenih virov RSS!"
 
-#: ../src/rss.c:4662
-#: ../src/rss.c:4876
+#: ../src/rss.c:4439
+#: ../src/rss.c:4653
 msgid "Reading RSS feeds..."
 msgstr "Branje virov RSS ..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:4676
-#: ../src/rss.c:4880
-#: ../src/rss-config-factory.c:1359
-#: ../src/rss-config-factory.c:1876
-#: ../src/rss-config-factory.c:2025
+#: ../src/rss.c:4453
+#: ../src/rss.c:4657
+#: ../src/rss-config-factory.c:1354
+#: ../src/rss-config-factory.c:1864
+#: ../src/rss-config-factory.c:2013
 msgid "Please wait"
 msgstr "Počakajte"
 
-#: ../src/rss.c:4684
-#: ../src/rss.c:4888
-#: ../src/rss-config-factory.c:752
-#: ../src/rss-config-factory.c:1104
+#: ../src/rss.c:4461
+#: ../src/rss.c:4665
+#: ../src/rss-config-factory.c:754
+#: ../src/rss-config-factory.c:1106
 #, no-c-format
 msgid "0% done"
 msgstr "0% končano"
 
-#: ../src/rss.c:4822
+#: ../src/rss.c:4599
 msgid "Waiting..."
 msgstr "Čakanje ..."
 
@@ -489,115 +516,115 @@ msgstr "Novice in blogi"
 msgid "Untitled channel"
 msgstr "Neimenovan kanal"
 
-#: ../src/rss-config-factory.c:155
+#: ../src/rss-config-factory.c:156
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:156
+#: ../src/rss-config-factory.c:157
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:157
+#: ../src/rss-config-factory.c:158
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:419
+#: ../src/rss-config-factory.c:421
 msgid "Edit Feed"
 msgstr "Urejanje virov"
 
-#: ../src/rss-config-factory.c:421
+#: ../src/rss-config-factory.c:423
 msgid "Add Feed"
 msgstr "Dodajanje virov"
 
-#: ../src/rss-config-factory.c:991
+#: ../src/rss-config-factory.c:993
 msgid "Disable"
 msgstr "Onemogoči"
 
-#: ../src/rss-config-factory.c:991
+#: ../src/rss-config-factory.c:993
 msgid "Enable"
 msgstr "Omogoči"
 
-#: ../src/rss-config-factory.c:1026
+#: ../src/rss-config-factory.c:1028
 #: ../src/rss-ui.glade.h:36
 msgid "Remove folder contents"
 msgstr "Odstrani vsebino mape"
 
-#: ../src/rss-config-factory.c:1334
+#: ../src/rss-config-factory.c:1329
 msgid "Import error."
 msgstr "Napaka uvoza."
 
-#: ../src/rss-config-factory.c:1335
+#: ../src/rss-config-factory.c:1330
 msgid "Invalid file or this is not an import file."
 msgstr "Neveljavna datoteka ali pa to ni uvozna datoteka."
 
-#: ../src/rss-config-factory.c:1339
+#: ../src/rss-config-factory.c:1334
 msgid "Importing feeds..."
 msgstr "Uvažanje virov ..."
 
-#: ../src/rss-config-factory.c:1609
-#: ../src/rss-config-factory.c:2119
-#: ../src/rss-config-factory.c:2166
+#: ../src/rss-config-factory.c:1597
+#: ../src/rss-config-factory.c:2107
+#: ../src/rss-config-factory.c:2154
 msgid "All Files"
 msgstr "Vse datoteke"
 
-#: ../src/rss-config-factory.c:1615
-#: ../src/rss-config-factory.c:2172
+#: ../src/rss-config-factory.c:1603
+#: ../src/rss-config-factory.c:2160
 msgid "OPML Files"
 msgstr "Datoteke OPML"
 
-#: ../src/rss-config-factory.c:1621
-#: ../src/rss-config-factory.c:2178
+#: ../src/rss-config-factory.c:1609
+#: ../src/rss-config-factory.c:2166
 msgid "XML Files"
 msgstr "Datoteke XML"
 
-#: ../src/rss-config-factory.c:1634
+#: ../src/rss-config-factory.c:1622
 msgid "Show article's summary"
 msgstr "Pokaži povzetek članka"
 
-#: ../src/rss-config-factory.c:1640
+#: ../src/rss-config-factory.c:1628
 msgid "Feed Enabled"
 msgstr "Vir omogočen"
 
-#: ../src/rss-config-factory.c:1646
+#: ../src/rss-config-factory.c:1634
 msgid "Validate feed"
 msgstr "Potrdi veljavnost vira"
 
-#: ../src/rss-config-factory.c:1683
+#: ../src/rss-config-factory.c:1671
 #: ../src/rss-ui.glade.h:38
 msgid "Select import file"
 msgstr "Izbor datoteke za uvoz"
 
-#: ../src/rss-config-factory.c:1722
+#: ../src/rss-config-factory.c:1710
 #: ../src/rss-ui.glade.h:37
 msgid "Select file to export"
 msgstr "Izbor datoteke za izvoz"
 
-#: ../src/rss-config-factory.c:1859
+#: ../src/rss-config-factory.c:1847
 msgid "Exporting feeds..."
 msgstr "Izvažanje virov ..."
 
-#: ../src/rss-config-factory.c:1916
-#: ../src/rss-config-factory.c:1923
+#: ../src/rss-config-factory.c:1904
+#: ../src/rss-config-factory.c:1911
 msgid "Error exporting feeds!"
 msgstr "Napaka med izvažanjem virov!"
 
-#: ../src/rss-config-factory.c:2004
+#: ../src/rss-config-factory.c:1992
 msgid "Importing cookies..."
 msgstr "Uvažanje piškotkov ..."
 
-#: ../src/rss-config-factory.c:2078
+#: ../src/rss-config-factory.c:2066
 msgid "Select file to import"
 msgstr "Izbor datoteke za uvoz"
 
-#: ../src/rss-config-factory.c:2125
+#: ../src/rss-config-factory.c:2113
 msgid "Mozilla/Netscape Format"
 msgstr "Zapis Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:2131
+#: ../src/rss-config-factory.c:2119
 msgid "Firefox new Format"
 msgstr "Nov zapis Firefox"
 
-#: ../src/rss-config-factory.c:2207
+#: ../src/rss-config-factory.c:2195
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -605,8 +632,8 @@ msgstr ""
 "RSS vir ni nastavljen!\n"
 "Ni mogoče izvoziti."
 
-#: ../src/rss-config-factory.c:2313
-#: ../src/rss-config-factory.c:2827
+#: ../src/rss-config-factory.c:2301
+#: ../src/rss-config-factory.c:2819
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -616,20 +643,20 @@ msgstr ""
 "za izrisovanje namestite firefox ali paket webkit devel\n"
 "in ponovno prevedite evolution-rss, tako da bo videl te pakete."
 
-#: ../src/rss-config-factory.c:2669
+#: ../src/rss-config-factory.c:2661
 #: ../src/rss-ui.glade.h:24
 msgid "Enabled"
 msgstr "Omogočeno"
 
-#: ../src/rss-config-factory.c:2685
+#: ../src/rss-config-factory.c:2677
 msgid "Feed Name"
 msgstr "Ime vira"
 
-#: ../src/rss-config-factory.c:2695
+#: ../src/rss-config-factory.c:2687
 msgid "Type"
 msgstr "Vrsta"
 
-#: ../src/rss-config-factory.c:2912
+#: ../src/rss-config-factory.c:2904
 msgid "News And Blogs"
 msgstr "Novice in blogi"
 
