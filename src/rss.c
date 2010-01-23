@@ -4938,13 +4938,15 @@ create_mail(create_feed *CF)
 		}
 	} else {
 		if (CF->dcdate)	{ //dublin core
+			d("dcdate:%s\n", CF->dcdate);
 			if (strptime(CF->dcdate, "%Y-%m-%dT%T%z", &tm)) {
 				time = mktime(&tm);
 				actual_time = camel_header_decode_date (ctime(&time), &offset);
 			}
-		/*use 'now' as time for failsafe*/
-		camel_mime_message_set_date(new, actual_time, offset);
 		}
+		/*use 'now' as time for failsafe*/
+		d("using now() as fallback\n");
+		camel_mime_message_set_date(new, actual_time, offset);
 	}
 	time = camel_mime_message_get_date (new, NULL) ;
 	time_str = asctime(gmtime(&time));
