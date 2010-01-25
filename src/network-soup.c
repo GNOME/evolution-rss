@@ -68,30 +68,30 @@ got_chunk_blocking_cb(SoupMessage *msg, CallbackInfo *info) {
 #else
 got_chunk_blocking_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 #endif
-    NetStatusProgress progress = {0};
-    const char* clen;
+	NetStatusProgress progress = {0};
+	const char* clen;
 
-    if (info->total == 0) {
+	if (info->total == 0) {
 #if LIBSOUP_VERSION < 2003000
-        clen = soup_message_get_header(msg->response_headers,
-                "Content-length");
+		clen = soup_message_get_header(msg->response_headers,
+			"Content-length");
 #else
-        clen = soup_message_headers_get(msg->response_headers,
-                "Content-length");
+		clen = soup_message_headers_get(msg->response_headers,
+			"Content-length");
 #endif
-        if (!clen)
-            return;
-        info->total = atoi(clen);
-    }
+		if (!clen)
+			return;
+		info->total = atoi(clen);
+	}
 #if LIBSOUP_VERSION < 2003000
-    info->current += msg->response.length;
+	info->current += msg->response.length;
 #else
-    info->current += chunk->length;
+	info->current += chunk->length;
 #endif
 
-    progress.current = info->current;
-    progress.total = info->total;
-    info->user_cb(NET_STATUS_PROGRESS, &progress, info->user_data);
+	progress.current = info->current;
+	progress.total = info->total;
+	info->user_cb(NET_STATUS_PROGRESS, &progress, info->user_data);
 }
 
 static void
@@ -206,7 +206,7 @@ proxy_init(void)
 {
 	EProxy *proxy;
 	proxy = e_proxy_new ();
-        e_proxy_setup_proxy (proxy);
+	e_proxy_setup_proxy (proxy);
 	return proxy;
 }
 
@@ -298,7 +298,7 @@ read_up(gpointer data)
 
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-            g_mkdir_with_parents (feed_dir, 0755);
+		g_mkdir_with_parents (feed_dir, 0755);
 	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
 
@@ -328,7 +328,7 @@ save_up(gpointer data)
 
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-            g_mkdir_with_parents (feed_dir, 0755);
+		g_mkdir_with_parents (feed_dir, 0755);
 	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
 
@@ -336,7 +336,7 @@ save_up(gpointer data)
 	if (fr) {
 		user = g_hash_table_lookup(rf->hruser, data);
 			fputs(user, fr);
-	        fputs("\n", fr);
+		fputs("\n", fr);
 		pass = g_hash_table_lookup(rf->hrpass, data);
 		fputs(pass, fr);
 		fclose(fr);
@@ -356,7 +356,7 @@ del_up(gpointer data)
 	g_free(tmp);
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-            g_mkdir_with_parents (feed_dir, 0755);
+		g_mkdir_with_parents (feed_dir, 0755);
 	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
 	unlink(feed_name);
@@ -368,18 +368,18 @@ del_up(gpointer data)
 static void
 #if LIBSOUP_VERSION < 2003000
 authenticate (SoupSession *session,
-        SoupMessage *msg,
-        const char *auth_type,
-        const char *auth_realm,
-        char **username,
-        char **password,
-        gpointer data)
+		SoupMessage *msg,
+		const char *auth_type,
+		const char *auth_realm,
+		char **username,
+		char **password,
+		gpointer data)
 #else
 authenticate (SoupSession *session,
-	SoupMessage *msg,
-        SoupAuth *auth,
-	gboolean retrying,
-	gpointer data)
+		SoupMessage *msg,
+		SoupAuth *auth,
+		gboolean retrying,
+		gpointer data)
 #endif
 {
 	SoupURI *proxy_uri;
@@ -435,12 +435,12 @@ authpop:		if (G_OBJECT_TYPE(session) == SOUP_TYPE_SESSION_ASYNC) {
 #if LIBSOUP_VERSION < 2003000
 static void
 reauthenticate (SoupSession *session,
-        SoupMessage *msg,
-        const char *auth_type,
-        const char *auth_realm,
-        char **username,
-        char **password,
-        gpointer data)
+		SoupMessage *msg,
+		const char *auth_type,
+		const char *auth_realm,
+		char **username,
+		char **password,
+		gpointer data)
 {
 	if (rf->soup_auth_retry) {
 		//means we're already tested once and probably
@@ -501,11 +501,13 @@ net_get_status(const char *url, GError **err)
 	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 #if LIBSOUP_VERSION < 2003000
-	soup_message_add_header (req->request_headers, "User-Agent",
-                                agstr);
+	soup_message_add_header (req->request_headers,
+		"User-Agent",
+		agstr);
 #else
-	soup_message_headers_append (req->request_headers, "User-Agent",
-                                agstr);
+	soup_message_headers_append (req->request_headers,
+		"User-Agent",
+		agstr);
 #endif
 	g_free(agstr);
 
@@ -533,10 +535,10 @@ out:
 
 gboolean
 net_get_unblocking(gchar *url,
-				NetStatusCallback cb, gpointer data,
-				gpointer cb2, gpointer cbdata2,
-				guint track,
-				GError **err)
+			NetStatusCallback cb, gpointer data,
+			gpointer cb2, gpointer cbdata2,
+			guint track,
+			GError **err)
 {
 	SoupMessage *msg;
 	CallbackInfo *info = NULL;
@@ -571,10 +573,10 @@ net_get_unblocking(gchar *url,
 		rf->key_session = g_hash_table_new(g_direct_hash, g_direct_equal);
 
 	g_signal_connect (soup_sess, "authenticate",
-            G_CALLBACK (authenticate), (gpointer)url);
+		G_CALLBACK (authenticate), (gpointer)url);
 #if LIBSOUP_VERSION < 2003000
 	g_signal_connect (soup_sess, "reauthenticate",
-            G_CALLBACK (reauthenticate), (gpointer)url);
+		G_CALLBACK (reauthenticate), (gpointer)url);
 #endif
 
 	/* Queue an async HTTP request */
@@ -597,10 +599,10 @@ net_get_unblocking(gchar *url,
 			EVOLUTION_VERSION_STRING, VERSION);
 #if LIBSOUP_VERSION < 2003000
 	soup_message_add_header (msg->request_headers, "User-Agent",
-                                agstr);
+		agstr);
 #else
 	soup_message_headers_append (msg->request_headers, "User-Agent",
-                                agstr);
+		agstr);
 #endif
 	g_free(agstr);
 
@@ -610,20 +612,117 @@ net_get_unblocking(gchar *url,
 	}
 
 	soup_session_queue_message (soup_sess, msg,
-           cb2, cbdata2);
+		cb2, cbdata2);
 
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
 //	g_object_weak_ref (G_OBJECT(soup_sess), unblock_free, soup_sess);
 //	GMainLoop *mainloop = g_main_loop_new (g_main_context_default (), FALSE);
-  //	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);
+//	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);
+	return TRUE;
+}
+
+// same stuff as net_get_* but without accumulating headers
+gboolean
+download_unblocking(
+	gchar *url,
+	NetStatusCallback cb,
+	gpointer data,
+	gpointer cb2,
+	gpointer cbdata2,
+	guint track,
+	GError **err)
+{
+	SoupMessage *msg;
+	CallbackInfo *info = NULL;
+	SoupSession *soup_sess;
+	gchar *agstr;
+
+	soup_sess = soup_session_async_new();
+
+
+#if LIBSOUP_VERSION > 2024000
+	if (rss_soup_jar) {
+		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
+	}
+#endif
+
+#if (DATASERVER_VERSION >= 2023001)
+	proxify_session(proxy, soup_sess, url);
+#endif
+	if (cb && data) {
+		info = g_new0(CallbackInfo, 1);
+		info->user_cb = cb;
+		info->user_data = data;
+		info->current = 0;
+		info->total = 0;
+	}
+
+	if (!rf->session)
+		rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
+	if (!rf->abort_session)
+		rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
+	if (!rf->key_session)
+		rf->key_session = g_hash_table_new(g_direct_hash, g_direct_equal);
+
+	g_signal_connect (soup_sess, "authenticate",
+		G_CALLBACK (authenticate), (gpointer)url);
+#if LIBSOUP_VERSION < 2003000
+	g_signal_connect (soup_sess, "reauthenticate",
+		G_CALLBACK (reauthenticate), (gpointer)url);
+#endif
+
+	/* Queue an async HTTP request */
+	msg = soup_message_new ("GET", url);
+	if (!msg) {
+		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
+				soup_status_get_phrase(2));			//invalid url
+		return FALSE;
+	}
+
+	if (track) {
+		//we want to be able to abort this session by calling
+		//abort_all_soup
+		g_hash_table_insert(rf->session, soup_sess, msg);
+		g_hash_table_insert(rf->abort_session, soup_sess, msg);
+		g_hash_table_insert(rf->key_session, data, soup_sess);
+	}
+
+	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
+			EVOLUTION_VERSION_STRING, VERSION);
+#if LIBSOUP_VERSION < 2003000
+	soup_message_add_header (msg->request_headers, "User-Agent",
+		agstr);
+#else
+	soup_message_headers_append (msg->request_headers, "User-Agent",
+		agstr);
+#endif
+	g_free(agstr);
+
+	if (info) {
+		g_signal_connect(G_OBJECT(msg), "got_chunk",
+			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
+	}
+
+	soup_message_body_set_accumulate (msg->response_body, FALSE);
+	soup_session_queue_message (soup_sess, msg,
+		cb2, cbdata2);
+
+////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
+	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
+//	g_object_weak_ref (G_OBJECT(soup_sess), unblock_free, soup_sess);
+//	GMainLoop *mainloop = g_main_loop_new (g_main_context_default (), FALSE);
+//	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);
 	return TRUE;
 }
 
 GString*
-net_post_blocking(gchar *url, GSList *headers, GString *post,
-                  NetStatusCallback cb, gpointer data,
-                  GError **err) {
+net_post_blocking(gchar *url,
+	GSList *headers,
+	GString *post,
+	NetStatusCallback cb,
+	gpointer data,
+	GError **err) {
 #if LIBSOUP_VERSION < 2003000
 	SoupUri *suri = NULL;
 #else
@@ -637,16 +736,23 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 
 	if (!rf->b_session)
 		rf->b_session = soup_sess =
-			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
+			soup_session_sync_new_with_options(
+				SOUP_SESSION_TIMEOUT,
+				SS_TIMEOUT,
+				NULL);
 	else
 		soup_sess = rf->b_session;
 
 
-	g_signal_connect (soup_sess, "authenticate",
-            G_CALLBACK (authenticate), (gpointer)url);
+	g_signal_connect (soup_sess,
+		"authenticate",
+		G_CALLBACK (authenticate),
+		(gpointer)url);
 #if LIBSOUP_VERSION < 2003000
-	g_signal_connect (soup_sess, "reauthenticate",
-            G_CALLBACK (reauthenticate), (gpointer)url);
+	g_signal_connect (soup_sess,
+		"reauthenticate",
+		G_CALLBACK (reauthenticate),
+		(gpointer)url);
 #endif
 
 	req = soup_message_new(SOUP_METHOD_GET, url);
@@ -665,7 +771,10 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 		char *colonpos = strchr(header, ':');
 		*colonpos = 0;
 #if LIBSOUP_VERSION < 2003000
-		soup_message_add_header(req->request_headers, header, colonpos+1);
+		soup_message_add_header(
+			req->request_headers,
+			header,
+			colonpos+1);
 #else
 		soup_message_headers_append(req->request_headers, header, colonpos+1);
 #endif
@@ -674,11 +783,15 @@ net_post_blocking(gchar *url, GSList *headers, GString *post,
 	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 #if LIBSOUP_VERSION < 2003000
-	soup_message_add_header (req->request_headers, "User-Agent",
-                                agstr);
+	soup_message_add_header (
+		req->request_headers,
+		"User-Agent",
+		agstr);
 #else
-	soup_message_headers_append (req->request_headers, "User-Agent",
-                                agstr);
+	soup_message_headers_append (
+		req->request_headers,
+		"User-Agent",
+		agstr);
 #endif
 	g_free(agstr);
 
@@ -715,13 +828,13 @@ out:
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-        if (SOUP_IS_SESSION(key)) {
-                soup_session_abort(key);
-                g_hash_table_find(rf->key_session,
-                        remove_if_match,
-                        user_data);
-        }
-        return TRUE;
+	if (SOUP_IS_SESSION(key)) {
+		soup_session_abort(key);
+		g_hash_table_find(rf->key_session,
+			remove_if_match,
+			user_data);
+	}
+	return TRUE;
 }
 
 void remove_weak(gpointer key, gpointer value, gpointer user_data);
@@ -729,33 +842,33 @@ void remove_weak(gpointer key, gpointer value, gpointer user_data);
 void
 remove_weak(gpointer key, gpointer value, gpointer user_data)
 {
-        g_object_weak_unref(value, unblock_free, key);
+	g_object_weak_unref(value, unblock_free, key);
 }
 
 void
 abort_all_soup(void)
 {
-        //abort all session
-        rf->cancel = 1;
-        rf->cancel_all = 1;
-        if (rf->abort_session) {
-                g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
-                g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
+	//abort all session
+	rf->cancel = 1;
+	rf->cancel_all = 1;
+	if (rf->abort_session) {
+		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
+		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
 //              g_hash_table_foreach(rf->abort_session, cancel_soup_sess, NULL);
-                g_hash_table_destroy(rf->session);
-                rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
-        }
-        if (rf->progress_bar) {
-                gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
-                rf->progress_bar = NULL;        //there's no need to update bar once we canceled feeds
-        }
-        if (rf->b_session) {
-                soup_session_abort(rf->b_session);
-                rf->b_session = NULL;
-                rf->b_msg_session = NULL;
-        }
+		g_hash_table_destroy(rf->session);
+		rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
+	}
+	if (rf->progress_bar) {
+		gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
+		rf->progress_bar = NULL;        //there's no need to update bar once we canceled feeds
+	}
+	if (rf->b_session) {
+		soup_session_abort(rf->b_session);
+		rf->b_session = NULL;
+		rf->b_msg_session = NULL;
+	}
 	rf->cancel = 0;
-        rf->cancel_all = 0;
+	rf->cancel_all = 0;
 }
 
 void

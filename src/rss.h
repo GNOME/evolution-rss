@@ -204,12 +204,12 @@ typedef struct ADD_FEED {
 	GtkWidget	*progress;
 	GtkWidget	*child;		//the dialog child
 	GtkBuilder	*gui;
-        gchar           *feed_url;
+	gchar           *feed_url;
 	gchar		*feed_name;
 	gchar		*prefix;
 	gchar		*tmsg;		//status bar message
-        gboolean        fetch_html;	//show webpage instead of summary
-        gboolean        add;		//ok button
+	gboolean        fetch_html;	//show webpage instead of summary
+	gboolean        add;		//ok button
 	gboolean	changed;
 	gboolean	enabled;
 	gboolean	validate;
@@ -280,7 +280,8 @@ struct _send_info {
 typedef struct CREATE_FEED {	/* used by create_mail function when called by unblocking fetch */
 	gchar *feed;
 	gchar *full_path;	// news&blogs path
-	gchar 	*q,*sender,	// author
+	gchar 	*q,
+		*sender,	// author
 		*subj,		// subject
 		*body,		// body
 		*date,		// date
@@ -290,6 +291,7 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar	*feed_fname;	// feed name file
 	gchar	*feed_uri;
 	gchar *encl;
+	FILE *efile;		//enclosure file
 	gchar *comments;
 	GList *category;	// list of categories article is posted under
 } create_feed;
@@ -308,9 +310,9 @@ typedef struct rss_auth {
 } RSS_AUTH;
 
 struct _rfMessage {
-        guint    status_code;
-        gchar   *body;
-        goffset  length;
+	guint    status_code;
+	gchar   *body;
+	goffset  length;
 };
 typedef struct _rfMessage rfMessage;
 
@@ -340,14 +342,17 @@ void browser_copy_selection(GtkWidget *widget, gpointer data);
 void browser_select_all(GtkWidget *widget, gpointer data);
 void webkit_set_preferences(void);
 #ifdef HAVE_WEBKIT
-gboolean webkit_over_link(WebKitWebView *web_view,
-                                 gchar         *title,
-                                 gchar         *uri,
-                                 gpointer       user_data);
+gboolean webkit_over_link(
+	WebKitWebView *web_view,
+	gchar         *title,
+	gchar         *uri,
+	gpointer       user_data);
+
 gboolean
-webkit_click (GtkEntry *entry,
-                         GtkMenu *menu,
-                         gpointer user_data);
+webkit_click (
+	GtkEntry *entry,
+	GtkMenu *menu,
+	gpointer user_data);
 #endif
 GtkDialog* create_user_pass_dialog(RSS_AUTH *auth);
 void err_destroy (GtkWidget *widget, guint response, gpointer data);
@@ -395,7 +400,15 @@ finish_feed (SoupMessage *msg, gpointer user_data);
 finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
 #endif
 void generic_finish_feed(rfMessage *msg, gpointer user_data);
-void textcb(NetStatusType status, gpointer statusdata, gpointer data);
+void textcb(
+	NetStatusType status,
+	gpointer statusdata,
+	gpointer data);
+
+void download_chunk(
+	NetStatusType status,
+	gpointer statusdata,
+	gpointer data);
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif
@@ -410,7 +423,10 @@ void web_auth_dialog(RSS_AUTH *auth_info);
 gchar *get_main_folder(void);
 gpointer lookup_key(gpointer key);
 void rss_delete_feed(gchar *name, gboolean folder);
-gint update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder);
+gint update_feed_folder(
+	gchar *old_name,
+	gchar *new_name,
+	gboolean valid_folder);
 void
 #if LIBSOUP_VERSION < 2003000
 finish_update_feed_image (SoupMessage *msg, gpointer user_data);

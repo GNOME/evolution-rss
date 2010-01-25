@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2008 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <libxml/HTMLtree.h>
 #include <libxml/debugXML.h>
 #include <camel/camel-url.h>
+#include <e-util/e-mktemp.h>
 
 extern int rss_verbose_debug;
 
@@ -32,6 +33,7 @@ extern int rss_verbose_debug;
 #include "rss.h"
 #include "parser.h"
 #include "misc.h"
+#include "network-soup.h"
 
 /************ RDF Parser *******************/
 
@@ -175,7 +177,7 @@ xml_parse_sux (const char *buf, int len)
 //#if LIBXML_VERSION > 20600 
 		xmlSAXVersion (sax, 2);
 //#else
-  //              memcpy (sax, &xmlDefaultSAXHandler, sizeof (xmlSAXHandler));
+//              memcpy (sax, &xmlDefaultSAXHandler, sizeof (xmlSAXHandler));
 //#endif
 		sax->warning = my_xml_parser_error_handler;
 		sax->error = my_xml_perror_handler;
@@ -304,9 +306,11 @@ parse_html(char *url, const char *html, int len)
 }
 
 const char *
-layer_find_innerelement (xmlNodePtr node,
-	    const char *match, const char *el,
-	    const char *fail)
+layer_find_innerelement (
+	xmlNodePtr node,
+	const char *match,
+	const char *el,
+	const char *fail)
 {
 	while (node!=NULL) {
 #ifdef RDF_DEBUG
@@ -323,7 +327,7 @@ layer_find_innerelement (xmlNodePtr node,
 
 xmlNode *
 html_find (xmlNode *node,
-	    gchar *match)
+	gchar *match)
 {
 	while (node) {
 #ifdef RDF_DEBUG
@@ -352,8 +356,8 @@ html_find (xmlNode *node,
  */
 const char *
 layer_find (xmlNodePtr node,
-	    const char *match,
-	    const char *fail)
+	const char *match,
+	const char *fail)
 {
 	while (node!=NULL) {
 #ifdef RDF_DEBUG
@@ -565,9 +569,9 @@ const gchar *property_rss_modules[1][3] = {
 
 char *
 layer_find_tag_prop (xmlNodePtr node,
-	    char *match,
-	    char *search,
-	    char *fail)
+	char *match,
+	char *search,
+	char *fail)
 {
 	int i;
 	char* (*func)();
@@ -1058,6 +1062,7 @@ update_channel(RDF *r)
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
 	gchar *uid, *msg;
+	gchar *tmpdir, *name, *enclurl;
 	GError *err = NULL;
 
 	safes = encode_rfc2047(chn_name);
@@ -1068,7 +1073,7 @@ update_channel(RDF *r)
 	buf = gen_md5(url);
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-	    g_mkdir_with_parents (feed_dir, 0755);
+		g_mkdir_with_parents (feed_dir, 0755);
 	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
 	g_free(feed_dir);
 
@@ -1097,29 +1102,45 @@ update_channel(RDF *r)
 		}
 		uid = g_strdup(CF->feed_uri);
 		g_array_append_val(r->uids, uid);
-		CF->feedid	= g_strdup(buf);
-		CF->sender	= g_strdup(sender);
+		CF->feedid = g_strdup(buf);
+		CF->sender = g_strdup(sender);
 		if (r->prefix)
-			CF->full_path	= g_strconcat(r->prefix, "/", chn_name, NULL);
+			CF->full_path = g_strconcat(r->prefix, "/", chn_name, NULL);
 		else
-			CF->full_path	= g_strdup(chn_name);
+			CF->full_path = g_strdup(chn_name);
 
 		subj = g_strdup(CF->subj);
 
 		while (gtk_events_pending())
-		  gtk_main_iteration ();
+			gtk_main_iteration ();
 
 		if (!feed_is_new(feed_name, CF->feed_uri)) {
 			ftotal++;
 			if (CF->encl) {
-				fetch_unblocking(
-					CF->encl,
-					textcb,
-					GINT_TO_POINTER(1),
+				tmpdir = e_mkdtemp("evo-rss-XXXXXX");
+				if ( tmpdir == NULL)
+					continue;
+				name = g_build_filename(tmpdir, g_path_get_basename(CF->encl), NULL);
+				g_free(tmpdir);
+				enclurl = CF->encl;
+				//replace encl with filename generated
+				// this will be a weak ref and get feed by free_cf
+				CF->encl = name;
+				dp("enclosure file:%s\n", name)
+				CF->efile = fopen(name, "w");
+				if (!CF->efile) continue;
+				//*************************************************************************//
+				//we need to disable mail filter for large enclosures as it burns cpu a lot//
+				//*************************************************************************//
+				download_unblocking(
+					enclurl,
+					download_chunk,
+					CF->efile,
 					(gpointer)finish_enclosure,
 					CF,
 					0,
 					&err);
+				g_free(enclurl);
 			} else {
 				create_mail(CF);
 				write_feed_status_line(CF->feed_fname, CF->feed_uri);
@@ -1161,18 +1182,21 @@ decode_html_entities(gchar *str)
 
 	g_return_val_if_fail (str != NULL, NULL);
 
-	xmlCtxtUseOptions(ctxt,   XML_PARSE_RECOVER
-				| XML_PARSE_NOENT
-				| XML_PARSE_NOERROR
-				| XML_PARSE_NONET);
+	xmlCtxtUseOptions(
+		ctxt,
+		XML_PARSE_RECOVER
+		| XML_PARSE_NOENT
+		| XML_PARSE_NOERROR
+		| XML_PARSE_NONET);
 
-	tmp =  xmlStringDecodeEntities(ctxt,
-					     BAD_CAST str,
-					     XML_SUBSTITUTE_REF
-					     & XML_SUBSTITUTE_PEREF,
-					     0,
-					     0,
-					     0);
+	tmp =  xmlStringDecodeEntities(
+		ctxt,
+		BAD_CAST str,
+		XML_SUBSTITUTE_REF
+		&XML_SUBSTITUTE_PEREF,
+		0,
+		0,
+		0);
 
 	newstr = g_strdup((gchar *)tmp);
 	xmlFree(tmp);

@@ -32,8 +32,8 @@ extern int rss_verbose_debug;
 
 GString*
 fetch_blocking(gchar *url, GSList *headers, GString *post,
-                  NetStatusCallback cb, gpointer data,
-                  GError **err) {
+	NetStatusCallback cb, gpointer data,
+	GError **err) {
 
 	gchar *scheme = NULL;
 	gchar *buf, *fname;
@@ -61,8 +61,12 @@ fetch_blocking(gchar *url, GSList *headers, GString *post,
 	}
 error:
 	g_print("error\n");
-	g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
-                                g_strerror(errno));
+	g_set_error(
+		err,
+		NET_ERROR,
+		NET_ERROR_GENERIC,
+		"%s",
+		g_strerror(errno));
 	return result;
 }
 
@@ -94,12 +98,12 @@ fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
 	} else {
 		g_free(scheme);
 		return net_get_unblocking(url,
-                                cb,
-                                data,
-                                cb2,
-                                cbdata2,
-                                track,
-                                err);
+				cb,
+				data,
+				cb2,
+				cbdata2,
+				track,
+				err);
 	}
 }
 
