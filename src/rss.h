@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2010  Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,14 +65,14 @@
 #define HTTP_CACHE_PATH "http"
 
 typedef struct _RDF {
-        char		*uri;
-        char		*html;
-        xmlDocPtr	cache;
-        gboolean	shown;
-        gchar		*type;		//char type
-        guint		type_id;	//num type
+	char		*uri;
+	char		*html;
+	xmlDocPtr	cache;
+	gboolean	shown;
+	gchar		*type;		//char type
+	guint		type_id;	//num type
 	gchar		*version;	//feed version
-        gchar		*feedid;	//md5 string id of feed
+	gchar		*feedid;	//md5 string id of feed
 	gchar		*title;		//title of the feed
 	gchar		*prefix;	//directory path
 	gchar		*maindate;	//channel date
@@ -81,8 +81,8 @@ typedef struct _RDF {
 	GtkWidget	*progress;
 	guint		total;		//total articles
 	guint		ttl;		//feed specified refresh interval
-        /* Soup stuff */
-        SoupMessage *message;
+	/* Soup stuff */
+	SoupMessage *message;
 	guint		error;		//invalid feed
 	char		*strerror;	//error msg
 	GArray		*uids;
@@ -108,56 +108,56 @@ typedef struct _hrfeed {
 } hrfeed;
 
 typedef struct _rssfeed {
-        GHashTable      *hrname;		//bind feed name to key
-        GHashTable      *hrname_r;		//and mirrored structure for faster lookups
-        GHashTable      *hrcrc;			//crc32 to key binding
-        GHashTable      *hr;			//feeds hash
-        GHashTable      *hn;			//feeds hash
-        GHashTable      *hre;			//enabled feeds hash
-        GHashTable      *hrt;			//feeds name hash
-        GHashTable      *hrh;			//fetch html flag
-        GHashTable      *hruser;		//auth user hash
-        GHashTable      *hrpass;		//auth pass hash
+	GHashTable      *hrname;		//bind feed name to key
+	GHashTable      *hrname_r;		//and mirrored structure for faster lookups
+	GHashTable      *hrcrc;			//crc32 to key binding
+	GHashTable      *hr;			//feeds hash
+	GHashTable      *hn;			//feeds hash
+	GHashTable      *hre;			//enabled feeds hash
+	GHashTable      *hrt;			//feeds name hash
+	GHashTable      *hrh;			//fetch html flag
+	GHashTable      *hruser;		//auth user hash
+	GHashTable      *hrpass;		//auth pass hash
 	gboolean	soup_auth_retry;	//wether to retry auth after an unsucessful auth
-        GHashTable      *hrdel_feed;		//option to delete messages in current feed
-        GHashTable      *hrdel_days;		//option to delete messages older then days
-        GHashTable      *hrdel_messages;	//option to keep last messages
-        GHashTable      *hrdel_unread;		//option to delete unread messages too
-        GHashTable      *hrttl;
-        GHashTable      *hrttl_multiply;
-        GHashTable      *hrupdate;		//feeds update method
-        GtkWidget       *feed_dialog;
-        GtkWidget       *progress_dialog;
-        GtkWidget       *progress_bar;
-        GtkWidget       *label;
-        GtkWidget       *sr_feed;		//s&r upper text (feed)
-        GtkWidget       *treeview;
-        GtkWidget       *edbutton;
+	GHashTable      *hrdel_feed;		//option to delete messages in current feed
+	GHashTable      *hrdel_days;		//option to delete messages older then days
+	GHashTable      *hrdel_messages;	//option to keep last messages
+	GHashTable      *hrdel_unread;		//option to delete unread messages too
+	GHashTable      *hrttl;
+	GHashTable      *hrttl_multiply;
+	GHashTable      *hrupdate;		//feeds update method
+	GtkWidget       *feed_dialog;
+	GtkWidget       *progress_dialog;
+	GtkWidget       *progress_bar;
+	GtkWidget       *label;
+	GtkWidget       *sr_feed;		//s&r upper text (feed)
+	GtkWidget       *treeview;
+	GtkWidget       *edbutton;
 	GtkWidget	*errdialog;
 	GtkWidget	*preferences;
 	gchar		*err;			//if using soup _unblocking error goes here
 	gchar		*err_feed;		//name of the feed that caused above err
-        gchar           *cfeed;			//current feed name
+	gchar           *cfeed;			//current feed name
 	gboolean	online;			//networkmanager dependant
 	gboolean	fe;			//feed enabled (at least one)
 #ifdef EVOLUTION_2_12
 	EMEventTargetSendReceive *t;
 #else
-        EMPopupTargetSelect *t;
+	EMPopupTargetSelect *t;
 #endif
-        gboolean        setup;
-        gboolean        pending;
-        gboolean        import;			//import going on
+	gboolean        setup;
+	gboolean        pending;
+	gboolean        import;			//import going on
 	gboolean	autoupdate;		//feed is currently auto fetched
 	guint		feed_queue;
-        gboolean        cancel;			//cancelation signal
-        gboolean        cancel_all;		//cancelation signal
-        GHashTable      *session;		//queue of active unblocking sessions
-        GHashTable      *abort_session;		//this is a hack to be able to iterate when
+	gboolean        cancel;			//cancelation signal
+	gboolean        cancel_all;		//cancelation signal
+	GHashTable      *session;		//queue of active unblocking sessions
+	GHashTable      *abort_session;		//this is a hack to be able to iterate when
 						//we remove keys from seesion with weak_ref
-        GHashTable      *key_session;		//queue of active unblocking sessions and keys linked
-        SoupSession     *b_session;		//active blocking session
-        SoupMessage     *b_msg_session;		//message running in the blocking session
+	GHashTable      *key_session;		//queue of active unblocking sessions and keys linked
+	SoupSession     *b_session;		//active blocking session
+	SoupMessage     *b_msg_session;		//message running in the blocking session
 	guint		rc_id;
 	struct _send_info *info;		//s&r data
 	struct userpass	*un;
@@ -173,6 +173,8 @@ typedef struct _rssfeed {
 	GHashTable	*error_hash;
 	guint		test;
 	char		*current_uid;		// currently read article
+	GQueue		*stqueue;		// network downloads tracking
+	GList		*enclist;		// network downloads tracking
 #if HAVE_DBUS
 	DBusConnection	*bus;			// DBUS
 #endif
@@ -230,51 +232,51 @@ typedef struct USERPASS {
 } userpass;
 
 struct _send_data {
-        GList *infos;
+	GList *infos;
 
-        GtkDialog *gd;
-        int cancelled;
+	GtkDialog *gd;
+	int cancelled;
 
-        CamelFolder *inbox;     /* since we're never asked to update this one, do it ourselves */
-        time_t inbox_update;
+	CamelFolder *inbox;     /* since we're never asked to update this one, do it ourselves */
+	time_t inbox_update;
 
-        GMutex *lock;
-        GHashTable *folders;
+	GMutex *lock;
+	GHashTable *folders;
 
-        GHashTable *active;     /* send_info's by uri */
+	GHashTable *active;     /* send_info's by uri */
 };
 
 typedef enum {
-        SEND_RECEIVE,           /* receiver */
-        SEND_SEND,              /* sender */
-        SEND_UPDATE,            /* imap-like 'just update folder info' */
-        SEND_INVALID
+	SEND_RECEIVE,           /* receiver */
+	SEND_SEND,              /* sender */
+	SEND_UPDATE,            /* imap-like 'just update folder info' */
+	SEND_INVALID
 } send_info_t ;
 
 typedef enum {
-        SEND_ACTIVE,
-        SEND_CANCELLED,
-        SEND_COMPLETE
+	SEND_ACTIVE,
+	SEND_CANCELLED,
+	SEND_COMPLETE
 } send_state_t;
 
 struct _send_info {
-        send_info_t type;               /* 0 = fetch, 1 = send */
-        CamelOperation *cancel;
-        char *uri;
-        int keep;
-        send_state_t state;
-        GtkWidget *progress_bar;
-        GtkWidget *cancel_button;
-        GtkWidget *status_label;
+	send_info_t type;               /* 0 = fetch, 1 = send */
+	CamelOperation *cancel;
+	char *uri;
+	int keep;
+	send_state_t state;
+	GtkWidget *progress_bar;
+	GtkWidget *cancel_button;
+	GtkWidget *status_label;
 
-        int again;              /* need to run send again */
+	int again;              /* need to run send again */
 
-        int timeout_id;
-        char *what;
-        int pc;
+	int timeout_id;
+	char *what;
+	int pc;
 
-        /*time_t update;*/
-        struct _send_data *data;
+	/*time_t update;*/
+	struct _send_data *data;
 };
 
 typedef struct CREATE_FEED {	/* used by create_mail function when called by unblocking fetch */
@@ -291,6 +293,7 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar	*feed_fname;	// feed name file
 	gchar	*feed_uri;
 	gchar *encl;
+	gchar *enclurl;
 	FILE *efile;		//enclosure file
 	gchar *comments;
 	GList *category;	// list of categories article is posted under

@@ -1,5 +1,5 @@
 /*  Evolution RSS Reader Plugin
- *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -61,6 +61,18 @@ typedef struct {
 	int current, total;
 	gchar *chunk;
 } CallbackInfo;
+
+typedef struct {
+	SoupSession *ss;
+	SoupMessage *sm;
+	gpointer cb2;
+	gpointer cbdata2;
+	gchar *url;
+} STNET;
+
+#define DOWNLOAD_QUEUE_SIZE 5
+guint net_qid = 0;		// net queue dispatcher
+guint net_queue_run_count = 0; //downloads in progress
 
 static void
 #if LIBSOUP_VERSION < 2003000
@@ -622,7 +634,9 @@ net_get_unblocking(gchar *url,
 	return TRUE;
 }
 
+
 // same stuff as net_get_* but without accumulating headers
+// push all donwloads to a customizable length queue
 gboolean
 download_unblocking(
 	gchar *url,
@@ -637,6 +651,7 @@ download_unblocking(
 	CallbackInfo *info = NULL;
 	SoupSession *soup_sess;
 	gchar *agstr;
+	STNET *stnet;
 
 	soup_sess = soup_session_async_new();
 
@@ -705,8 +720,16 @@ download_unblocking(
 	}
 
 	soup_message_body_set_accumulate (msg->response_body, FALSE);
-	soup_session_queue_message (soup_sess, msg,
-		cb2, cbdata2);
+	stnet = g_new0(STNET, 1);
+	stnet->ss = soup_sess;
+	stnet->sm = msg;
+	stnet->cb2 = cb2;
+	stnet->cbdata2 = cbdata2;
+	stnet->url = g_strdup(url);
+	g_queue_push_tail (rf->stqueue, stnet);
+	rf->enclist = g_list_append (rf->enclist, g_strdup(url));
+	if (!net_qid)
+		net_qid = g_idle_add((GSourceFunc)net_queue_dispatcher, NULL);
 
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
@@ -714,6 +737,35 @@ download_unblocking(
 //	GMainLoop *mainloop = g_main_loop_new (g_main_context_default (), FALSE);
 //	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);
 	return TRUE;
+}
+
+gboolean
+net_queue_dispatcher(void)
+{
+	STNET *_stnet;
+	guint qlen = g_queue_get_length(rf->stqueue);
+
+	dp("net queue size:%d messages processing:%d\n",
+		g_queue_get_length(rf->stqueue),
+		net_queue_run_count);
+
+	if (qlen && net_queue_run_count < gconf_client_get_int (
+						rss_gconf,
+						GCONF_KEY_DOWNLOAD_QUEUE_SIZE,
+						NULL)) {
+		net_queue_run_count++;
+		_stnet = g_queue_pop_head(rf->stqueue);
+		soup_session_queue_message (
+			_stnet->ss,
+			_stnet->sm,
+			_stnet->cb2,
+			_stnet->cbdata2);
+		g_free(_stnet);
+		return TRUE;
+	}
+	dp("workers full, disable queue run!\n");
+	net_qid = 0;
+	return FALSE;
 }
 
 GString*
@@ -911,6 +963,8 @@ rss_soup_init(void)
 		}
 		g_free(cookie_path);
 		g_free(moz_cookie_path);
+		if (!rf->stqueue)
+			rf->stqueue = g_queue_new();
 	}
 #endif
 }

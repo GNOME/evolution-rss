@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -541,7 +541,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	GtkWidget *container, *container2;
 	GtkWidget *widget, *action_area;
 	GtkWidget *content_area, *password_dialog;
-        AtkObject *a11y;
+	AtkObject *a11y;
 	gchar *markup;
 
         widget = gtk_dialog_new_with_buttons (
@@ -593,32 +593,32 @@ create_user_pass_dialog(RSS_AUTH *auth)
                 GTK_TABLE (container), widget,
                 0, 1, 0, 3, GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 
-        widget = gtk_label_new (NULL);
-        gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
+	widget = gtk_label_new (NULL);
+	gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
 
 	markup = g_markup_printf_escaped (_("Enter your username and password for:\n '%s'"), auth->url);
 	gtk_label_set_markup (GTK_LABEL (widget), markup);
 	g_free (markup);
-        gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
-        gtk_widget_show (widget);
+	gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+	gtk_widget_show (widget);
 
         gtk_table_attach (
                 GTK_TABLE (container), widget,
                 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 
-        container2 = gtk_table_new (2, 2, FALSE);
+	container2 = gtk_table_new (2, 2, FALSE);
 	gtk_widget_show (container2);
-        gtk_table_attach (
-                GTK_TABLE (container), container2,
-                1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_table_attach (
+		GTK_TABLE (container), container2,
+		1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 
-        widget = gtk_label_new (NULL);
-        gtk_label_set_markup (GTK_LABEL (widget), _("Username: "));
-        gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
-        gtk_widget_show (widget);
-        gtk_table_attach (
-                GTK_TABLE (container2), widget,
-                0, 1, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	widget = gtk_label_new (NULL);
+	gtk_label_set_markup (GTK_LABEL (widget), _("Username: "));
+	gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+	gtk_widget_show (widget);
+	gtk_table_attach (
+		GTK_TABLE (container2), widget,
+		0, 1, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 
         username = gtk_entry_new ();
         a11y = gtk_widget_get_accessible (username);
@@ -710,9 +710,9 @@ web_auth_dialog(RSS_AUTH *auth_info)
 		user_pass_cb(auth_info, response, dialog);
 	} else
 		g_signal_connect_swapped (dialog,
-                             "response",
-                             G_CALLBACK (user_pass_cb),
-                             auth_info);
+			"response",
+			G_CALLBACK (user_pass_cb),
+			auth_info);
 }
 
 gboolean
@@ -984,27 +984,27 @@ xml_set_prop (xmlNodePtr node, const char *name, char **val)
 static gboolean
 xml_set_bool (xmlNodePtr node, const char *name, gboolean *val)
 {
-        gboolean gbool;
-        char *buf;
+	gboolean gbool;
+	char *buf;
 
-        if ((buf = (char *)xmlGetProp (node, (xmlChar *)name))) {
-                gbool = (!strcmp (buf, "true") || !strcmp (buf, "yes"));
-                xmlFree (buf);
+	if ((buf = (char *)xmlGetProp (node, (xmlChar *)name))) {
+		gbool = (!strcmp (buf, "true") || !strcmp (buf, "yes"));
+		xmlFree (buf);
 
-                if (gbool != *val) {
-                        *val = gbool;
-                        return TRUE;
-                }
-        }
+		if (gbool != *val) {
+			*val = gbool;
+			return TRUE;
+		}
+	}
 
-        return FALSE;
+	return FALSE;
 }
 
 gboolean
 feed_new_from_xml(char *xml)
 {
 	xmlNodePtr node;
-        xmlDocPtr doc = NULL;
+	xmlDocPtr doc = NULL;
 	char *uid = NULL;
 	char *name = NULL;
 	char *url = NULL;
@@ -1040,7 +1040,7 @@ feed_new_from_xml(char *xml)
                 if (!strcmp ((char *)node->name, "url")) {
 			xml_set_content (node, &url);
 		}
-                if (!strcmp ((char *)node->name, "type")) {
+		if (!strcmp ((char *)node->name, "type")) {
 			xml_set_content (node, &type);
 		}
 		if (!strcmp ((char *)node->name, "delete")) {
@@ -1572,12 +1572,12 @@ webkit_click (GtkEntry *entry,
 {
 	GtkWidget *separator, *redo_menuitem;
 	redo_menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_REDO, NULL);
-        gtk_widget_set_sensitive (redo_menuitem, TRUE);
-        gtk_widget_show (redo_menuitem);
-        gtk_menu_shell_insert (GTK_MENU_SHELL (menu), redo_menuitem, 1);
+	gtk_widget_set_sensitive (redo_menuitem, TRUE);
+	gtk_widget_show (redo_menuitem);
+	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), redo_menuitem, 1);
 	separator = gtk_separator_menu_item_new ();
-        gtk_widget_show (separator);
-        gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
+	gtk_widget_show (separator);
+	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
 	return TRUE;
 }
 #endif
@@ -1624,23 +1624,25 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	GtkMenu *menu;
 	gchar *link = NULL;
 #if EVOLUTION_VERSION < 22900
-        EMPopup *emp = NULL;
-        GSList *menus = NULL;
+	EMPopup *emp = NULL;
+	GSList *menus = NULL;
 	gint i=0, menu_size;
 #endif
 
 	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
-                g_warning ("Cannot determine mouse button!\n");
-                return FALSE;
-        }
+		g_warning ("Cannot determine mouse button!\n");
+		return FALSE;
+	}
 
 	link = gtk_moz_embed_get_link_message((GtkMozEmbed *)rf->mozembed);
 
 #if EVOLUTION_VERSION >= 22900
-	menu = e_popup_menu_create_with_domain (rss_menu_items,
-                                                0, (guint32)(strlen(link) ? 3:4),
-						link,
-						GETTEXT_PACKAGE);
+	menu = e_popup_menu_create_with_domain (
+			rss_menu_items,
+			0,
+			(guint32)(strlen(link) ? 3:4),
+			link,
+			GETTEXT_PACKAGE);
 	if (button == 2)
 		gtk_menu_popup (
 			GTK_MENU (menu),
@@ -1657,8 +1659,8 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	for (; i<menu_size; i++)
 		menus = g_slist_prepend(menus, &rss_menu_items[i]);
 
-        e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
-        menu = e_popup_create_menu_once((EPopup *)emp, NULL, 0);
+	e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
+	menu = e_popup_create_menu_once((EPopup *)emp, NULL, 0);
 
 	if (button == 2)
 		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, button, gtk_get_current_event_time());
@@ -1690,7 +1692,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	guint engine = fallback_engine();
 	moz = gtk_scrolled_window_new(NULL,NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(moz),
-                                       GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
@@ -1759,7 +1761,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	if (engine == 2)
 		gtk_widget_show_all(moz);
 
-        gtk_container_add ((GtkContainer *) eb, moz);
+	gtk_container_add ((GtkContainer *) eb, moz);
 ///        gtk_container_check_resize ((GtkContainer *) eb);
 //	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
 //        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
@@ -1776,7 +1778,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 static gboolean
 org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
-        struct _org_gnome_rss_controls_pobject *po =
+	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 	GtkWidget *button;
@@ -3999,8 +4001,8 @@ check_feed_folder(gchar *folder_name)
 			} while (NULL != path[++i]);
 			g_strfreev(path);
 		}
-                mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
-        }
+		mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
+	}
 	g_free(real_name);
 	return mail_folder;
 
@@ -4009,9 +4011,9 @@ check_feed_folder(gchar *folder_name)
 void
 rss_delete_feed(gchar *full_path, gboolean folder)
 {
-        CamelException ex;
+	CamelException ex;
 	gchar *tmp, *tkey, *url;
-        CamelStore *store;
+	CamelStore *store;
 	gchar *name, *real_name, *buf, *feed_dir, *feed_name;
 
 	store = rss_component_peek_local_store();
@@ -4022,7 +4024,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	real_name = g_hash_table_lookup(rf->feed_folders, name);
 	if (!real_name)
 		real_name = name;
-        camel_exception_init (&ex);
+	camel_exception_init (&ex);
 	rss_delete_folders (store, full_path, &ex);
 	if (camel_exception_is_set (&ex)) {
 #if EVOLUTION_VERSION < 22904
@@ -4035,33 +4037,33 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 #endif
 		camel_exception_clear (&ex);
 	}
-        //also remove status file
-        tkey = g_hash_table_lookup(rf->hrname, real_name);
+	//also remove status file
+	tkey = g_hash_table_lookup(rf->hrname, real_name);
 	if (!tkey)
 		return;
-        url =  g_hash_table_lookup(rf->hr, tkey);
+	url =  g_hash_table_lookup(rf->hr, tkey);
 	if (!url)
 		goto out;
-        buf = gen_md5(url);
+	buf = gen_md5(url);
 	feed_dir = rss_component_peek_base_directory();
-        feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
-        g_free(feed_dir);
-        g_free(buf);
-        unlink(feed_name);
+	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	g_free(feed_dir);
+	g_free(buf);
+	unlink(feed_name);
 	tmp = g_strdup_printf("%s.img", feed_name);
-        unlink(tmp);
+	unlink(tmp);
 	g_free(tmp);
 	tmp = g_strdup_printf("%s.fav", feed_name);
-        unlink(tmp);
+	unlink(tmp);
 	g_free(tmp);
 out:	if (folder) {
 		d("print folder:%s\n", real_name);
 		remove_feed_hash(real_name);
 	}
-        delete_feed_folder_alloc(name);
+	delete_feed_folder_alloc(name);
 	g_free(name);
 	g_idle_add((GSourceFunc)store_redraw, GTK_TREE_VIEW(rf->treeview));
-        save_gconf_feed();
+	save_gconf_feed();
 }
 
 static void
@@ -5036,7 +5038,7 @@ create_mail(create_feed *CF)
 	/* no point in filtering mails at import time as it just
 	 * wastes time, user can setup his own afterwards
 	 */
-	if (appended_uid != NULL && !rf->import) {
+	if (appended_uid != NULL && !rf->import && !CF->encl) {	//do not filter enclosure at this time
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
@@ -5143,6 +5145,7 @@ free_cf(create_feed *CF)
 	g_free(CF->website);
 	g_free(CF->feedid);
 	g_free(CF->encl);
+	g_free(CF->enclurl);
 	g_free(CF->feed_fname);
 	g_free(CF->feed_uri);
 	if (CF->comments)
@@ -5154,27 +5157,47 @@ free_cf(create_feed *CF)
 	g_free(CF);
 }
 
+extern guint net_queue_run_count;
+extern guint net_qid;
+
 void
 #if LIBSOUP_VERSION < 2003000
-finish_enclosure (SoupMessage *msg, create_feed *user_data)
+finish_enclosure (SoupMessage *msg,
+		create_feed *user_data)
 #else
-finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data)
+finish_enclosure (SoupSession *soup_sess,
+		SoupMessage *msg,
+		create_feed *user_data)
 #endif
 {
 #if LIBSOUP_VERSION < 2003000
-	fwrite(msg->response.body, msg->response.length, 1, user_data->efile);
+	fwrite(msg->response.body,
+		msg->response.length,
+		1,
+		user_data->efile);
 #else
-	fwrite(msg->response_body->data, msg->response_body->length, 1, user_data->efile);
+	fwrite(msg->response_body->data,
+		msg->response_body->length,
+		1,
+		user_data->efile);
 #endif
 	fclose(user_data->efile);
 
 	if (!feed_is_new(user_data->feed_fname, user_data->feed_uri)) {
 		create_mail(user_data);
-		write_feed_status_line(user_data->feed_fname, user_data->feed_uri);
+		write_feed_status_line(
+				user_data->feed_fname,
+				user_data->feed_uri);
 	}
+	rf->enclist = g_list_remove(rf->enclist, user_data->enclurl);
 	free_cf(user_data);
 	//g_free(msg->response_body->data);
 	//g_object_unref(msg);
+	if (net_queue_run_count) net_queue_run_count--;
+	if (!net_qid)
+		net_qid = g_idle_add(
+				(GSourceFunc)net_queue_dispatcher,
+				NULL);
 }
 
 static void

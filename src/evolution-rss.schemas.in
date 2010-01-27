@@ -88,6 +88,20 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/evolution/evolution-rss/network_queue_size</key>
+      <applyto>/apps/evolution/evolution-rss/network_queue_size</applyto>
+      <owner>evolution-rss</owner>
+      <type>int</type>
+      <default>5</default>
+      <locale name="C">
+        <short>Network queue size</short>
+        <long>
+    	    How many simultaneous downloads.
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/evolution/evolution-rss/html_js</key>
       <applyto>/apps/evolution/evolution-rss/html_js</applyto>
       <owner>evolution-rss</owner>

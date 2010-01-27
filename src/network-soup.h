@@ -57,6 +57,7 @@ GString *net_post_blocking(
 
 #define NET_ERROR net_error_quark()
 int net_error_quark(void);
+gboolean net_queue_dispatcher(void);
 
 #if (DATASERVER_VERSION >= 2023001)
 EProxy *proxy_init(void);

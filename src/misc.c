@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2010  Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -66,35 +66,35 @@ void
 free_hash(gpointer key, gpointer value, gpointer user_data)
 {
 	g_print("FREE - key:%p, value:%p\n", (gchar *)key, (gchar *)value);
- //	xmlFreeDoc(key);
+//	xmlFreeDoc(key);
 }
 
 gboolean
 check_key_match (gpointer key, gpointer value, gpointer user_data)
 {
-        char *sf_href = (char *)key;
-        char *int_uri = (char *)user_data;
+	char *sf_href = (char *)key;
+	char *int_uri = (char *)user_data;
 
 	d("checking hay:%s for neddle:%s\n", sf_href, int_uri);
 
-        if (!strcmp (sf_href, int_uri))
-                return TRUE; /* Quit calling the callback */
+	if (!strcmp (sf_href, int_uri))
+		return TRUE; /* Quit calling the callback */
 
-        return FALSE; /* Continue calling the callback till end of table */
+	return FALSE; /* Continue calling the callback till end of table */
 }
 
 gboolean
 check_if_match (gpointer key, gpointer value, gpointer user_data)
 {
-        char *sf_href = (char *)value;
-        char *int_uri = (char *)user_data;
+	char *sf_href = (char *)value;
+	char *int_uri = (char *)user_data;
 
 	d("checking hay:%s for neddle:%s\n", sf_href, int_uri);
 
-        if (!strcmp (sf_href, int_uri))
-                return TRUE; /* Quit calling the callback */
+	if (!strcmp (sf_href, int_uri))
+		return TRUE; /* Quit calling the callback */
 
-        return FALSE; /* Continue calling the callback till end of table */
+	return FALSE; /* Continue calling the callback till end of table */
 }
 
 gchar *
@@ -208,9 +208,9 @@ get_port_from_uri(gchar *uri)
 	if (strstr(uri, "://") == NULL)
 		return NULL;
 	str = g_strsplit(uri, "://", 2);
-        str2 = g_strsplit(str[1], "/", 2);
-        str3 = g_strsplit(str2[0], ":", 2);
-        port = g_strdup(str3[1]);
+	str2 = g_strsplit(str[1], "/", 2);
+	str3 = g_strsplit(str2[0], ":", 2);
+	port = g_strdup(str3[1]);
 	g_strfreev(str);
 	g_strfreev(str2);
 	g_strfreev(str3);
@@ -227,8 +227,8 @@ get_server_from_uri(gchar *uri)
 	if (strstr(uri, "://") == NULL)
 		return NULL;
 	str = g_strsplit(uri, "://", 2);
-        str2 = g_strsplit(str[1], "/", 2);
-        server = g_strdup_printf("%s://%s", str[0], str2[0]);
+	str2 = g_strsplit(str[1], "/", 2);
+	server = g_strdup_printf("%s://%s", str[0], str2[0]);
 	g_strfreev(str);
 	g_strfreev(str2);
 	return server;
@@ -239,17 +239,17 @@ strplchr(gchar *source)
 {
 	GString *str = g_string_new(NULL);
 	gchar *string;
-        const unsigned char *s = (const unsigned char *)source;
-        guint len = strlen(source);
-        while (*s != 0 || len) {
-             if (*s == 0x3f) {
-                   g_string_append(str, "%3F");
-                   s++;
-             } else
-                   g_string_append_c (str, *s++);
-             len--;
-        }
-        g_string_append_c(str, 0);
+	const unsigned char *s = (const unsigned char *)source;
+	guint len = strlen(source);
+	while (*s != 0 || len) {
+		if (*s == 0x3f) {
+			g_string_append(str, "%3F");
+			s++;
+		} else
+			g_string_append_c (str, *s++);
+		len--;
+	}
+	g_string_append_c(str, 0);
 	string = str->str;
 	g_string_free(str, 0);
 	return string;
@@ -303,26 +303,26 @@ markup_decode (gchar *str)
 gchar *
 gen_crc(const char *msg)
 {
-         register unsigned long crc, poly;
-         uint32_t crc_tab[256];
-         int i,j;
+	register unsigned long crc, poly;
+	uint32_t crc_tab[256];
+	int i,j;
 
-         poly = 0xEDB88320L;
-         for (i = 0; i < 256; i++) {
-                 crc = i;
-                 for (j = 8; j > 0; j--) {
-                         if (crc & 1)
-                                 crc = (crc >> 1) ^ poly;
-                         else
-                                 crc >>= 1;
-                 }
-                 crc_tab[i] = crc;
-         }
+	poly = 0xEDB88320L;
+	for (i = 0; i < 256; i++) {
+		crc = i;
+		for (j = 8; j > 0; j--) {
+			if (crc & 1)
+				crc = (crc >> 1) ^ poly;
+			else
+				crc >>= 1;
+		}
+		crc_tab[i] = crc;
+	}
 
-         crc = 0xFFFFFFFF;
-         for (i = 0; i < strlen(msg); i++)
-                 crc = ((crc >> 8) & 0x00FFFFFF) ^ crc_tab[(crc ^ *msg++) & 0xFF];
-    return g_strdup_printf("%x", (unsigned int)(crc ^ 0xFFFFFFFF));
+	crc = 0xFFFFFFFF;
+	for (i = 0; i < strlen(msg); i++)
+		crc = ((crc >> 8) & 0x00FFFFFF) ^ crc_tab[(crc ^ *msg++) & 0xFF];
+	return g_strdup_printf("%x", (unsigned int)(crc ^ 0xFFFFFFFF));
 }
 
 gchar *
@@ -484,10 +484,10 @@ notrfc:	return 0;
 gchar *
 encode_rfc2047(gchar *str)
 {
-        gchar *tmp = decode_entities(str);
-        gchar *rfctmp = camel_header_encode_string((unsigned char*)tmp);
-        g_free(tmp);
-        return (gchar *)rfctmp;
+	gchar *tmp = decode_entities(str);
+	gchar *rfctmp = camel_header_encode_string((unsigned char*)tmp);
+	g_free(tmp);
+	return (gchar *)rfctmp;
 }
 
 //check if feed already exists in feed file
@@ -495,46 +495,46 @@ encode_rfc2047(gchar *str)
 gboolean
 feed_is_new(gchar *file_name, gchar *needle)
 {
-        gchar rfeed[513];
+	gchar rfeed[513];
 	FILE *fr;
 	int occ;
 	gchar *tmpneedle, *port, *tp;
 
-        memset(rfeed, 0, 512);
+	memset(rfeed, 0, 512);
 	fr = fopen(file_name, "r");
 	occ = 0;
 	tmpneedle = NULL;
 	port =  get_port_from_uri(needle);
-        if (port && atoi(port) == 80) {
+	if (port && atoi(port) == 80) {
 		tp = g_strconcat(":", port, NULL);
-                g_free(port);
-                tmpneedle = strextr(needle, tp);
-                g_free(tp);
-        } else
-                tmpneedle = g_strdup(needle);
+		g_free(port);
+		tmpneedle = strextr(needle, tp);
+		g_free(tp);
+	} else
+		tmpneedle = g_strdup(needle);
 
-        if (fr) {
-            while (fgets(rfeed, 511, fr) != NULL) {
-                if (strstr(rfeed, tmpneedle)) {
-                        occ=1;
-                        break;
-                }
-            }
-            fclose(fr);
-        }
-        g_free(tmpneedle);
-        return occ;
+	if (fr) {
+		while (fgets(rfeed, 511, fr) != NULL) {
+			if (strstr(rfeed, tmpneedle)) {
+				occ=1;
+				break;
+			}
+		}
+		fclose(fr);
+	}
+	g_free(tmpneedle);
+	return occ;
 }
 
 void
 write_feed_status_line(gchar *file, gchar *needle)
 {
-        FILE *fw = fopen(file, "a+");
-        if (fw) {
-                fputs(g_strstrip(needle), fw);
-                fputs("\n", fw);
-                fclose(fw);
-        }
+	FILE *fw = fopen(file, "a+");
+	if (fw) {
+		fputs(g_strstrip(needle), fw);
+		fputs("\n", fw);
+		fclose(fw);
+	}
 }
 
 #endif

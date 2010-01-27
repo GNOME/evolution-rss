@@ -1062,7 +1062,7 @@ update_channel(RDF *r)
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
 	gchar *uid, *msg;
-	gchar *tmpdir, *name, *enclurl;
+	gchar *tmpdir, *name;
 	GError *err = NULL;
 
 	safes = encode_rfc2047(chn_name);
@@ -1117,30 +1117,30 @@ update_channel(RDF *r)
 		if (!feed_is_new(feed_name, CF->feed_uri)) {
 			ftotal++;
 			if (CF->encl) {
+				if (g_list_find_custom(rf->enclist,
+							CF->encl,
+							(GCompareFunc)strcmp))
+					continue;
 				tmpdir = e_mkdtemp("evo-rss-XXXXXX");
 				if ( tmpdir == NULL)
 					continue;
-				name = g_build_filename(tmpdir, g_path_get_basename(CF->encl), NULL);
+				name = g_build_filename(tmpdir,
+						g_path_get_basename(CF->encl),
+						NULL);
 				g_free(tmpdir);
-				enclurl = CF->encl;
-				//replace encl with filename generated
-				// this will be a weak ref and get feed by free_cf
+				CF->enclurl = CF->encl;
 				CF->encl = name;
-				dp("enclosure file:%s\n", name)
+				d("enclosure file:%s\n", name)
 				CF->efile = fopen(name, "w");
 				if (!CF->efile) continue;
-				//*************************************************************************//
-				//we need to disable mail filter for large enclosures as it burns cpu a lot//
-				//*************************************************************************//
 				download_unblocking(
-					enclurl,
+					CF->enclurl,
 					download_chunk,
 					CF->efile,
 					(gpointer)finish_enclosure,
 					CF,
 					0,
 					&err);
-				g_free(enclurl);
 			} else {
 				create_mail(CF);
 				write_feed_status_line(CF->feed_fname, CF->feed_uri);

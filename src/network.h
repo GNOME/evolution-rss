@@ -30,6 +30,7 @@
 #define GCONF_KEY_USER_PROXY "/apps/evolution/evolution-rss/user_proxy"
 #define GCONF_KEY_PASS_PROXY "/apps/evolution/evolution-rss/pass_proxy"
 #define GCONF_KEY_NETWORK_TIMEOUT "/apps/evolution/evolution-rss/network_timeout"
+#define GCONF_KEY_DOWNLOAD_QUEUE_SIZE "/apps/evolution/evolution-rss/network_queue_size"
 
 /* GConf paths and keys from e-d-s e-proxy.c*/
 #define PATH_GCONF_EVO_NETWORK_CONFIG "/apps/evolution/shell/network_config"
