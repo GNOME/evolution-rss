@@ -102,7 +102,7 @@ evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
 schemadir	= $(GCONF_SCHEMA_FILE_DIR)
 schema_in_files = evolution-rss.schemas.in.in
 schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
-%.schema.in: %.schemas.in.in
+%.schemas.in: %.schemas.in.in
 	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
 
 
