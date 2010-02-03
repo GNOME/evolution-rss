@@ -763,7 +763,6 @@ net_queue_dispatcher(void)
 		g_free(_stnet);
 		return TRUE;
 	}
-	dp("workers full, disable queue run!\n");
 	net_qid = 0;
 	return FALSE;
 }

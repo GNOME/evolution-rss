@@ -328,24 +328,24 @@ gen_crc(const char *msg)
 gchar *
 gen_md5(gchar *buffer)
 {
-        unsigned char md5sum[16], res[17], *f;
-        int i;
-        const char tohex[16] = "0123456789abcdef";
+	unsigned char md5sum[16], res[17], *f;
+	int i;
+	const char tohex[16] = "0123456789abcdef";
 
-        md5_get_digest (buffer, strlen(buffer), md5sum);
+	md5_get_digest (buffer, strlen(buffer), md5sum);
 	for (i=0, f = res; i<16;i++) {
-                unsigned int c = md5sum[i];
-                *f++ = tohex[c & 0xf];
-         }
+		unsigned int c = md5sum[i];
+		*f++ = tohex[c & 0xf];
+	}
 	*f++ = 0;
-        return g_strdup((gchar *)res);
+	return g_strdup((gchar *)res);
 }
 
 void
 header_decode_lwsp(const char **in)
 {
-        const char *inptr = *in;
-        char c;
+	const char *inptr = *in;
+	char c;
 
 
         while ((camel_mime_is_lwsp(*inptr) || *inptr =='(') && *inptr != '\0') {
@@ -429,12 +429,12 @@ struct {
 };
 
 static const char tz_months [][4] = {
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
 static const char tz_days [][4] = {
-        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+	"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
 };
 
 gboolean
@@ -462,19 +462,19 @@ is_rfc822(char *in)
                 goto notrfc;
 
 	monthname = decode_token(&inptr);
-        foundmonth = FALSE;
-        if (monthname) {
-                for (i=0;i<sizeof(tz_months)/sizeof(tz_months[0]);i++) {
-                if (!g_ascii_strcasecmp(tz_months[i], monthname)) {
-                               tm.tm_mon = i;
-                               foundmonth = TRUE;
-                               break;
-                         }
+	foundmonth = FALSE;
+	if (monthname) {
+		for (i=0;i<sizeof(tz_months)/sizeof(tz_months[0]);i++) {
+		if (!g_ascii_strcasecmp(tz_months[i], monthname)) {
+				tm.tm_mon = i;
+				foundmonth = TRUE;
+				break;
+			}
 		}
-                        g_free(monthname);
+		g_free(monthname);
 	}
-        if (!foundmonth)
-                goto notrfc;
+	if (!foundmonth)
+		goto notrfc;
 
 	return 1;
 
