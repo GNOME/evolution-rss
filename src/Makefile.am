@@ -32,10 +32,10 @@ RSS_MENU = \
 	<hook class=\"org.gnome.evolution.mail.bonobomenu:1.0\">\n		\
 		<menu target=\"select\" id=\"org.gnome.evolution.mail.browser\">\n	\
 	\n								\
-      <ui file=\"+PLUGIN_INSTALL_DIR+/org-gnome-evolution-rss.xml\"/>\n	\
-          <item verb=\"RSSTask\" type=\"item\" path=\"/commands/RSSTask\" activate=\"org_gnome_cooly_rss_refresh\"/>\n		\
-        </menu>\n \
-    </hook>
+	<ui file=\"+PLUGIN_INSTALL_DIR+/org-gnome-evolution-rss.xml\"/>\n	\
+		<item verb=\"RSSTask\" type=\"item\" path=\"/commands/RSSTask\" activate=\"org_gnome_cooly_rss_refresh\"/>\n		\
+		</menu>\n \
+		</hook>
 
 %.eplug.in.in: %.eplug.xml
 	LC_ALL=C $(INTLTOOL_MERGE) -x -u /tmp $< $@
@@ -100,8 +100,11 @@ evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
 
 
 schemadir	= $(GCONF_SCHEMA_FILE_DIR)
-schema_in_files = evolution-rss.schemas.in
-schema_DATA	= $(schema_in_files:.schemas.in=.schemas)
+schema_in_files = evolution-rss.schemas.in.in
+schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
+%.schema.in: %.schemas.in.in
+	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
+
 
 if HAVE_BONOBO
 server_in_files = GNOME_Evolution_RSS.server.in.in
@@ -130,6 +133,9 @@ uninstall-local:
 	$(GCONFTOOL) -u /apps/evolution/evolution-rss/user_proxy
 	$(GCONFTOOL) -u /apps/evolution/evolution-rss/port_proxy
 	$(GCONFTOOL) -u /apps/evolution/evolution-rss/display_summary
+	$(GCONFTOOL) -u /gnome/url-handlers/feed/command
+	$(GCONFTOOL) -u /gnome/url-handlers/feed/enabled
+	$(GCONFTOOL) -u /gnome/url-handlers/feed/need-terminal
 
 
 DISTCLEANFILES = $(schema_DATA)
@@ -143,12 +149,14 @@ CLEANFILES	= $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.eplug	\
 	org-gnome-evolution-rss.error   \
 	GNOME_Evolution_RSS.server.in	\
-	evolution-rss.schemas
+	evolution-rss.schemas		\
+	evolution-rss.schemas.in	\
+	$(schema_DATA)
 
 EXTRA_DIST =					\
 	$(glade_DATA)				\
 	$(server_in_files)			\
-        $(schema_in_files)			\
+	$(schema_in_files)			\
 	rss.h network.h				\
 	network-soup.c				\
 	network-soup.h				\
@@ -170,7 +178,7 @@ EXTRA_DIST =					\
 	rss-icon-factory.h			\
 	strptime.c				\
 	evolution-import-rss.c			\
-	evolution-rss.schemas.in		\
+	evolution-rss.schemas.in.in		\
 	org-gnome-evolution-rss.eplug.xml	\
 	org-gnome-evolution-rss.error.xml	\
 	org-gnome-evolution-rss.xml

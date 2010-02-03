@@ -328,8 +328,8 @@
 
 
 <schema>
-     <key>/schemas/desktop/gnome/url-handlers/rss/enabled</key>
-     <applyto>/desktop/gnome/url-handlers/rss/enabled</applyto>
+     <key>/schemas/desktop/gnome/url-handlers/feed/enabled</key>
+     <applyto>/desktop/gnome/url-handlers/feed/enabled</applyto>
      <owner>evolution-rss</owner>
      <type>bool</type>
      <default>true</default>
@@ -340,11 +340,11 @@
 </schema>
 
    <schema>
-     <key>/schemas/desktop/gnome/url-handlers/rss/command</key>
-     <applyto>/desktop/gnome/url-handlers/rss/command</applyto>
+     <key>/schemas/desktop/gnome/url-handlers/feed/command</key>
+     <applyto>/desktop/gnome/url-handlers/feed/command</applyto>
      <owner>evolution-rss</owner>
      <type>string</type>
-     <default>@bindir@/evolution-rss %s</default>
+     <default>@bindir@/evolution-import-rss %s</default>
      <locale name="C">
        <short>URL handler for rss feed uris</short>
        <long>URL handler for rss feed uris</long>
@@ -352,8 +352,8 @@
     </schema>
 
    <schema>
-     <key>/schemas/desktop/gnome/url-handlers/rss/need-terminal</key>
-     <applyto>/desktop/gnome/url-handlers/rss/need-terminal</applyto>
+     <key>/schemas/desktop/gnome/url-handlers/feed/need-terminal</key>
+     <applyto>/desktop/gnome/url-handlers/feed/need-terminal</applyto>
      <owner>evolution-rss</owner>
      <type>bool</type>
      <default>false</default>
