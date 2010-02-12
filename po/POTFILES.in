@@ -1,8 +1,9 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
 src/dbus.c
-src/evolution-rss.schemas.in
+src/evolution-rss.schemas.in.in
 src/network-soup.c
+src/notification.c
 src/org-gnome-evolution-rss.eplug.xml
 src/org-gnome-evolution-rss.error.xml
 src/org-gnome-evolution-rss.xml
