@@ -802,9 +802,18 @@ feed_to_xml(gchar *key)
 	xmlDocSetRootElement (doc, root);
 
 	xmlSetProp (root, (xmlChar *)"uid", (xmlChar *)(g_hash_table_lookup(rf->hrname, key)));
-	xmlSetProp (root, (xmlChar *)"enabled", (xmlChar *)(g_hash_table_lookup(rf->hre, lookup_key(key)) ? "true" : "false"));
-	xmlSetProp (root, (xmlChar *)"html", (xmlChar *)(g_hash_table_lookup(rf->hrh, lookup_key(key)) ? "true" : "false"));
-
+	xmlSetProp (
+		root,
+		(xmlChar *)"enabled",
+		(xmlChar *)(g_hash_table_lookup(
+				rf->hre,
+				lookup_key(key)) ? "true" : "false"));
+	xmlSetProp (
+		root,
+		(xmlChar *)"html",
+		(xmlChar *)(g_hash_table_lookup(
+				rf->hrh,
+				lookup_key(key)) ? "true" : "false"));
 
 	xmlNewTextChild (root, NULL, (xmlChar *)"name", (xmlChar *)key);
 	xmlNewTextChild (root, NULL, (xmlChar *)"url", (xmlChar *)g_hash_table_lookup(rf->hr, lookup_key(key)));
@@ -820,11 +829,25 @@ feed_to_xml(gchar *key)
 	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"messages", (xmlChar *)ctmp);
 	g_free(ctmp);
-	xmlSetProp (src, (xmlChar *)"unread",
-		(xmlChar *)(g_hash_table_lookup(rf->hrdel_unread, lookup_key(key)) ? "true" : "false"));
+	xmlSetProp (
+		src,
+		(xmlChar *)"unread",
+		(xmlChar *)(g_hash_table_lookup(
+				rf->hrdel_unread,
+				lookup_key(key)) ? "true" : "false"));
+	xmlSetProp (
+		src,
+		(xmlChar *)"notpresent",
+		(xmlChar *)(g_hash_table_lookup(
+				rf->hrdel_notpresent,
+				lookup_key(key)) ? "true" : "false"));
 
 	src = xmlNewTextChild (root, NULL, (xmlChar *)"ttl", NULL);
-	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))));
+	ctmp = g_strdup_printf(
+		"%d",
+		GPOINTER_TO_INT(g_hash_table_lookup(
+				rf->hrupdate,
+				lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"option", (xmlChar *)ctmp);
 	g_free(ctmp);
 	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key))));
@@ -1014,7 +1037,7 @@ feed_new_from_xml(char *xml)
 	guint del_feed=0;
 	guint del_days=0;
 	guint del_messages=0;
-	guint del_unread=0;
+	guint del_unread=0, del_notpresent=0;
 	guint ttl=0;
 	guint ttl_multiply=0;
 	guint update=0;
@@ -1050,7 +1073,14 @@ feed_new_from_xml(char *xml)
 			del_days = atoi(ctmp);
 			xml_set_prop (node, "messages", &ctmp);
 			del_messages = atoi(ctmp);
-			xml_set_bool (node, "unread", (gboolean *)&del_unread);
+			xml_set_bool (
+				node,
+				"unread",
+				(gboolean *)&del_unread);
+			xml_set_bool (
+				node,
+				"notpresent",
+				(gboolean *)&del_notpresent);
 		}
 		if (!strcmp ((char *)node->name, "ttl")) {
 			xml_set_prop (node, "option", &ctmp);
@@ -1065,36 +1095,58 @@ feed_new_from_xml(char *xml)
 	}
 
 	g_hash_table_insert(rf->hrname, name, uid);
-	g_hash_table_insert(rf->hrname_r, g_strdup(uid), g_strdup(name));
-	g_hash_table_insert(rf->hr, g_strdup(uid), url);
-	g_hash_table_insert(rf->hrh,
-				g_strdup(uid),
-				GINT_TO_POINTER(html));
-	g_hash_table_insert(rf->hrt, g_strdup(uid), type);
-	g_hash_table_insert(rf->hre,
-				g_strdup(uid),
-				GINT_TO_POINTER(enabled));
-	g_hash_table_insert(rf->hrdel_feed,
-				g_strdup(uid),
-				GINT_TO_POINTER(del_feed));
-	g_hash_table_insert(rf->hrdel_days,
-				g_strdup(uid),
-				GINT_TO_POINTER(del_days));
-	g_hash_table_insert(rf->hrdel_messages,
-				g_strdup(uid),
-				GINT_TO_POINTER(del_messages));
-	g_hash_table_insert(rf->hrdel_unread,
-				g_strdup(uid),
-				GINT_TO_POINTER(del_unread));
-	g_hash_table_insert(rf->hrupdate,
-				g_strdup(uid),
-				GINT_TO_POINTER(update));
-	g_hash_table_insert(rf->hrttl,
-				g_strdup(uid),
-				GINT_TO_POINTER(ttl));
-	g_hash_table_insert(rf->hrttl_multiply,
-				g_strdup(uid),
-				GINT_TO_POINTER(ttl_multiply));
+	g_hash_table_insert(
+		rf->hrname_r,
+		g_strdup(uid),
+		g_strdup(name));
+	g_hash_table_insert(
+		rf->hr,
+		g_strdup(uid),
+		url);
+	g_hash_table_insert(
+		rf->hrh,
+		g_strdup(uid),
+		GINT_TO_POINTER(html));
+	g_hash_table_insert(
+		rf->hrt,
+		g_strdup(uid),
+		type);
+	g_hash_table_insert(
+		rf->hre,
+		g_strdup(uid),
+		GINT_TO_POINTER(enabled));
+	g_hash_table_insert(
+		rf->hrdel_feed,
+		g_strdup(uid),
+		GINT_TO_POINTER(del_feed));
+	g_hash_table_insert(
+		rf->hrdel_days,
+		g_strdup(uid),
+		GINT_TO_POINTER(del_days));
+	g_hash_table_insert(
+		rf->hrdel_messages,
+		g_strdup(uid),
+		GINT_TO_POINTER(del_messages));
+	g_hash_table_insert(
+		rf->hrdel_unread,
+		g_strdup(uid),
+		GINT_TO_POINTER(del_unread));
+	g_hash_table_insert(
+		rf->hrdel_notpresent,
+		g_strdup(uid),
+		GINT_TO_POINTER(del_notpresent));
+	g_hash_table_insert(
+		rf->hrupdate,
+		g_strdup(uid),
+		GINT_TO_POINTER(update));
+	g_hash_table_insert(
+		rf->hrttl,
+		g_strdup(uid),
+		GINT_TO_POINTER(ttl));
+	g_hash_table_insert(
+		rf->hrttl_multiply,
+		g_strdup(uid),
+		GINT_TO_POINTER(ttl_multiply));
 	xmlFreeDoc (doc);
 	return TRUE;
 }
@@ -1218,18 +1270,30 @@ read_feeds(rssfeed *rf)
 		g_mkdir_with_parents (feed_dir, 0755);
 	feed_file = g_strdup_printf("%s/evolution-feeds", feed_dir);
 	g_free(feed_dir);
-	rf->hrname = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-	rf->hrname_r = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+	rf->hrname = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+	rf->hrname_r = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 	rf->hr = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 	rf->hre = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrt = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-	rf->hrh = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
-	rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
-	rf->hrdel_feed = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrdel_days = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrdel_messages = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrdel_unread = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrt = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+	rf->hrh = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hruser = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+	rf->hrpass = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+	rf->hrdel_feed = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrdel_days = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrdel_messages = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrdel_unread = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrdel_notpresent = 
+		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrupdate = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrttl = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrttl_multiply = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
@@ -2683,7 +2747,16 @@ prepare_hashes(void)
 				g_free,
 				NULL);
 	if (rf->hrdel_unread == NULL)
-		rf->hrdel_unread = g_hash_table_new_full(g_str_hash,
+		rf->hrdel_unread = 
+			g_hash_table_new_full(
+				g_str_hash,
+				g_str_equal,
+				g_free,
+				NULL);
+	if (rf->hrdel_notpresent == NULL)
+		rf->hrdel_notpresent = 
+			g_hash_table_new_full(
+				g_str_hash,
 				g_str_equal,
 				g_free,
 				NULL);
@@ -2814,9 +2887,14 @@ add:
 		g_hash_table_insert(rf->hrdel_messages,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->del_messages));
-		g_hash_table_insert(rf->hrdel_unread,
+		g_hash_table_insert(
+			rf->hrdel_unread,
 			g_strdup(crc_feed),
 			GINT_TO_POINTER(feed->del_unread));
+		g_hash_table_insert(
+			rf->hrdel_notpresent,
+			g_strdup(crc_feed),
+			GINT_TO_POINTER(feed->del_notpresent));
 		r->ttl = r->ttl ? r->ttl : DEFAULT_TTL;
 		if (feed->update == 2)
 			ttl = feed->ttl;
@@ -5867,7 +5945,7 @@ get_feed_age(RDF *r, gpointer name)
 	gchar *el, *feedid;
 	gchar *real_name;
 	gboolean match;
-	guint del_unread, del_feed;
+	guint del_unread, del_notpresent, del_feed;
 
 	gchar *real_folder = lookup_feed_folder(name);
 	d("Cleaning folder: %s\n", real_folder);
@@ -5877,21 +5955,25 @@ get_feed_age(RDF *r, gpointer name)
 		goto fail;
 	time (&now);
 
-	del_unread = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, key));
-	del_feed = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, key));
+	del_unread = GPOINTER_TO_INT(
+		g_hash_table_lookup(rf->hrdel_unread, key));
+	del_notpresent = GPOINTER_TO_INT(
+		g_hash_table_lookup(rf->hrdel_notpresent, key));
+	del_feed = GPOINTER_TO_INT(
+		g_hash_table_lookup(rf->hrdel_feed, key));
 	inhibit_read = 1;
-	if (del_feed == 3) {
+	if (del_notpresent) {
 		uids = camel_folder_get_uids (folder);
 		camel_folder_freeze(folder);
 		for (i = 0; i < uids->len; i++) {
 			el = NULL;
 			match = FALSE;
 			feedid  = (gchar *)camel_medium_get_header (
-							CAMEL_MEDIUM(camel_folder_get_message(
-								folder,
-								uids->pdata[i],
-								NULL)),
-							"X-Evolution-Rss-Feed-id");
+					CAMEL_MEDIUM(camel_folder_get_message(
+						folder,
+						uids->pdata[i],
+						NULL)),
+					"X-Evolution-Rss-Feed-id");
 			if (!r->uids)
 				break;
 

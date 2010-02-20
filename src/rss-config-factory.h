@@ -22,10 +22,19 @@
 #define SQLITE_MAGIC "SQLite format 3"
 
 gboolean store_redraw(GtkTreeView *data);
-void import_dialog_response(GtkWidget *selector, guint response, gpointer user_data);
+void import_dialog_response(
+	GtkWidget *selector,
+	guint response,
+	gpointer user_data);
+
 void del_days_cb (GtkWidget *widget, add_feed *data);
 void delete_feed_folder_alloc(gchar *old_name);
-void rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex);
+
+void rss_delete_folders (
+	CamelStore *store,
+	const char *full_name,
+	CamelException *ex);
+
 void remove_feed_hash(gpointer name);
 void init_rss_prefs(void);
 void accept_cookies_cb(GtkWidget *widget, GtkWidget *data);
@@ -40,9 +49,23 @@ void restore_feed_hash(gpointer name, hrfeed *s);
 void feeds_dialog_disable(GtkDialog *d, gpointer data);
 GtkWidget *remove_feed_dialog(gchar *msg);
 void feeds_dialog_delete(GtkDialog *d, gpointer data);
-void process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name);
-void import_one_feed(gchar *url, gchar *title, gchar *prefix);
-xmlNode *iterate_import_file(xmlNode *src, gchar **url, xmlChar **title, guint type);
+
+void process_dialog_edit(
+	add_feed *feed,
+	gchar *url,
+	gchar *feed_name);
+
+void import_one_feed(
+	gchar *url,
+	gchar *title,
+	gchar *prefix);
+
+xmlNode *iterate_import_file(
+		xmlNode *src,
+		gchar **url,
+		xmlChar **title,
+		guint type);
+
 #if LIBSOUP_VERSION >= 2026000
 SoupCookieJar *import_cookies(gchar *file);
 void process_cookies(SoupCookieJar *jar);

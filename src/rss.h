@@ -102,6 +102,7 @@ typedef struct _hrfeed {
 	guint hrdel_days;
 	guint hrdel_messages;
 	guint hrdel_unread;
+	guint hrdel_notpresent;
 	guint hrupdate;
 	guint hrttl;
 	guint hrttl_multiply;
@@ -123,6 +124,7 @@ typedef struct _rssfeed {
 	GHashTable      *hrdel_days;		//option to delete messages older then days
 	GHashTable      *hrdel_messages;	//option to keep last messages
 	GHashTable      *hrdel_unread;		//option to delete unread messages too
+	GHashTable      *hrdel_notpresent;	//option to delete messages that are not present in the feed
 	GHashTable      *hrttl;
 	GHashTable      *hrttl_multiply;
 	GHashTable      *hrupdate;		//feeds update method
@@ -220,6 +222,7 @@ typedef struct ADD_FEED {
 	guint		del_days;	// delete messages over del_days old
 	guint		del_messages;	// delete all messages but the last del_messages
 	gboolean	del_unread;	// delete unread messages too
+	gboolean	del_notpresent;	// delete messages that are not present in the feed
 	guint		ttl;	// recommended update time
 	guint		ttl_multiply;	// how much we multiyply ttl value (minutes)
 	guint		update;	// feed update method global; ttl; disabled
@@ -323,18 +326,38 @@ typedef struct _rfMessage rfMessage;
 guint ftotal;
 guint farticle;
 
-void compare_enabled(gpointer key, gpointer value, guint *data);
+void compare_enabled(
+	gpointer key,
+	gpointer value,
+	guint *data);
 guint rss_find_enabled(void);
 void error_destroy(GtkObject *o, void *data);
-void error_response(GtkObject *o, int button, void *data);
+void error_response(
+	GtkObject *o,
+	int button,
+	void *data);
 void cancel_active_op(gpointer key);
-void browser_write(gchar *string, gint length, gchar *base);
-void user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog);
-gboolean proxy_auth_dialog(gchar *title, gchar *user, gchar *pass);
+void browser_write(
+	gchar *string,
+	gint length,
+	gchar *base);
+void user_pass_cb(
+	RSS_AUTH *auth_info,
+	gint response,
+	GtkDialog *dialog);
+
+gboolean proxy_auth_dialog(
+	gchar *title,
+	gchar *user,
+	gchar *pass);
+
 gboolean timeout_soup(void);
 void network_timeout(void);
 gchar *feed_to_xml(gchar *key);
-void prepare_feed(gpointer key, gpointer value, gpointer user_data);
+void prepare_feed(
+	gpointer key,
+	gpointer value,
+	gpointer user_data);
 gboolean feed_new_from_xml(char *xml);
 char *feeds_uid_from_xml (const char *xml);
 void load_gconf_feed(void);
@@ -342,7 +365,9 @@ void migrate_old_config(gchar *feed_file);
 guint read_feeds(rssfeed *rf);
 void reload_cb (GtkWidget *button, gpointer data);
 void gecko_set_preferences(void);
-void browser_copy_selection(GtkWidget *widget, gpointer data);
+void browser_copy_selection(
+	GtkWidget *widget,
+	gpointer data);
 void browser_select_all(GtkWidget *widget, gpointer data);
 void webkit_set_preferences(void);
 #ifdef HAVE_WEBKIT
@@ -359,15 +384,24 @@ webkit_click (
 	gpointer user_data);
 #endif
 GtkDialog* create_user_pass_dialog(RSS_AUTH *auth);
-void err_destroy (GtkWidget *widget, guint response, gpointer data);
+void err_destroy (
+	GtkWidget *widget,
+	guint response,
+	gpointer data);
 void save_gconf_feed(void);
-void rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg);
+void rss_error(
+	gpointer key,
+	gchar *name,
+	gchar *error,
+	gchar *emsg);
 void rss_select_folder(gchar *folder_name);
 gchar *lookup_chn_name_by_url(gchar *url);
 gboolean update_articles(gboolean disabler);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
-gchar *lookup_original_folder(gchar *folder, gboolean *found);
+gchar *lookup_original_folder(
+	gchar *folder,
+	gboolean *found);
 gchar *decode_utf8_entities(gchar *str);
 gchar *decode_html_entities(gchar *str);
 gchar *get_real_channel_name(gchar *uri, gchar *failed);
@@ -389,19 +423,28 @@ void
 #if LIBSOUP_VERSION < 2003000
 finish_website (SoupMessage *msg, gpointer user_data);
 #else
-finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
+finish_website (
+	SoupSession *soup_sess,
+	SoupMessage *msg,
+	gpointer user_data);
 #endif
 void
 #if LIBSOUP_VERSION < 2003000
 finish_enclosure (SoupMessage *msg, create_feed *user_data);
 #else
-finish_enclosure (SoupSession *soup_sess, SoupMessage *msg, create_feed *user_data);
+finish_enclosure (
+	SoupSession *soup_sess,
+	SoupMessage *msg,
+	create_feed *user_data);
 #endif
 void
 #if LIBSOUP_VERSION < 2003000
 finish_feed (SoupMessage *msg, gpointer user_data);
 #else
-finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
+finish_feed (
+	SoupSession *soup_sess,
+	SoupMessage *msg,
+	gpointer user_data);
 #endif
 void generic_finish_feed(rfMessage *msg, gpointer user_data);
 void textcb(
@@ -416,8 +459,14 @@ void download_chunk(
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif
-void write_feeds_folder_line(gpointer key, gpointer value, FILE *file);
-void populate_reversed(gpointer key, gpointer value, GHashTable *hash);
+void write_feeds_folder_line(
+	gpointer key,
+	gpointer value,
+	FILE *file);
+void populate_reversed(
+	gpointer key,
+	gpointer value,
+	GHashTable *hash);
 gchar *rss_component_peek_base_directory(void);
 CamelStore *rss_component_peek_local_store(void);
 void custom_feed_timeout(void);
@@ -435,7 +484,10 @@ void
 #if LIBSOUP_VERSION < 2003000
 finish_update_feed_image (SoupMessage *msg, gpointer user_data);
 #else
-finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data);
+finish_update_feed_image (
+	SoupSession *soup_sess,
+	SoupMessage *msg,
+	gpointer user_data);
 #endif
 //#if EVOLUTION_VERSION >= 22900
 void get_shell(void *ep, ESEventTargetShell *t);
@@ -447,7 +499,10 @@ void update_main_folder(gchar *new_name);
 void search_rebase(gpointer key, gpointer value, gchar *oname);
 void gtkut_window_popup(GtkWidget *window);
 void flaten_status(gpointer msg, gpointer user_data);
-gboolean check_if_enabled (gpointer key, gpointer value, gpointer user_data);
+gboolean check_if_enabled (
+	gpointer key,
+	gpointer value,
+	gpointer user_data);
 void free_filter_uids (gpointer user_data, GObject *ex_msg);
 #if EVOLUTION_VERSION >= 22900
 void quit_cb(void *ep, EShellView *shell_view);

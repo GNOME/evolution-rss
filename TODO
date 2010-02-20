@@ -7,14 +7,12 @@
 	* offline storage for article's home page
 	* implement web controls for diferent redering <Webkits> or <Gecko>
 	* when adding a feed as opml file offer to import (file detection)
-	* run-time migration function from text/evolution-rss-feed -> x-evolution/evolution-rss-feed
 	* cache large feeds
 	* fix recursivity on layer_find_pos
 	* provide predefined groups of feeds (OSS & co)
 	* evolution import rss add no. of retries
 	* slow delete operation on large folders
 	* add handling parser error to setup_feed (check HIG for error msg)
-	* handle slash categories
 	* use combo popup for moving and placement of feed folders
 	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
@@ -41,7 +39,5 @@
 	* image contained in feeds displayed after the coments ??
 	* accept feeds clicked from mails - add feed option to right click context menu
 	* when delete folder remove any pending filter process
-	* Delete artcles no longer in the feed should be a checkbox
 	* when import opml print opml title
-	* add configure option when import for searching rss in the html page
 	* import without fetching (add without validate ?)
