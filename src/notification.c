@@ -35,15 +35,15 @@ extern rssfeed *rf;
 static void
 dialog_key_destroy (GtkWidget *widget, gpointer data)
 {
-        if (data)
-                g_hash_table_remove(rf->error_hash, data);
+	if (data)
+		g_hash_table_remove(rf->error_hash, data);
 }
 
 void
 err_destroy (GtkWidget *widget, guint response, gpointer data)
 {
-        gtk_widget_destroy(widget);
-        rf->errdialog = NULL;
+	gtk_widget_destroy(widget);
+	rf->errdialog = NULL;
 }
 
 void
@@ -80,11 +80,11 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
 			ed = e_alert_dialog_new_for_args(parent,
-					 "org-gnome-evolution-rss:feederr",
-					error, msg, NULL);
+				"org-gnome-evolution-rss:feederr",
+				error, msg, NULL);
 #else
 			ed = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
-			             error, msg, NULL);
+				error, msg, NULL);
 #endif
 			newkey = g_strdup(key);
 			g_signal_connect(
@@ -99,31 +99,36 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 				G_CALLBACK(dialog_key_destroy),
 				newkey);
 			//lame widget destruction, seems e_activity timeout does not destroy it
-			g_timeout_add_seconds(60, (GSourceFunc)gtk_widget_destroy, ed);
+			g_timeout_add_seconds(60, 
+				(GSourceFunc)gtk_widget_destroy,
+				ed);
 
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		em_utils_show_error_silent(ed);
 		g_hash_table_insert(
-				rf->error_hash,
-				newkey,
-				GINT_TO_POINTER(1));
+			rf->error_hash,
+			newkey,
+			GINT_TO_POINTER(1));
 
 #else
-			activity_handler = mail_component_peek_activity_handler (mail_component_peek());
+		activity_handler = 
+			mail_component_peek_activity_handler (mail_component_peek());
 #if (EVOLUTION_VERSION >= 22203)
-			id = e_activity_handler_make_error (
-							activity_handler,
-							(char *)mail_component_peek(),
-							E_LOG_ERROR,
-							ed);
+		id = e_activity_handler_make_error (
+			activity_handler,
+			(char *)mail_component_peek(),
+			E_LOG_ERROR,
+			ed);
 #else
-			id = e_activity_handler_make_error (
-							activity_handler,
-							(char *)mail_component_peek(),
-							(gchar *)msg,
-							ed);
+		id = e_activity_handler_make_error (
+			activity_handler,
+			(char *)mail_component_peek(),
+			(gchar *)msg,
+			ed);
 #endif
-			g_hash_table_insert(rf->error_hash, newkey, GINT_TO_POINTER(id));
+		g_hash_table_insert(rf->error_hash,
+			newkey,
+			GINT_TO_POINTER(id));
 #endif
 		}
 		goto out;
@@ -136,16 +141,21 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		windows = e_shell_get_watched_windows (shell);
 		parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
-                ed  = e_alert_dialog_new_for_args(parent,
-				"org-gnome-evolution-rss:feederr",
-				error, msg, NULL);
+		ed  = e_alert_dialog_new_for_args(parent,
+			"org-gnome-evolution-rss:feederr",
+			error, msg, NULL);
 #else
-                ed  = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
-                             error, msg, NULL);
+		ed  = e_error_new(NULL,
+			"org-gnome-evolution-rss:feederr",
+			error, msg, NULL);
 #endif
-                g_signal_connect(ed, "response", G_CALLBACK(err_destroy), NULL);
-                gtk_widget_show(ed);
-                rf->errdialog = ed;
+		g_signal_connect(
+			ed,
+			"response",
+			G_CALLBACK(err_destroy),
+			NULL);
+		gtk_widget_show(ed);
+		rf->errdialog = ed;
 	}
 
 out:    g_free(msg);
@@ -156,7 +166,8 @@ void
 taskbar_push_message(gchar *message)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	EActivityHandler *activity_handler = 
+		mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
 #else
 	EShellTaskbar *shell_taskbar;
@@ -169,7 +180,8 @@ void
 taskbar_pop_message(void)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	EActivityHandler *activity_handler = 
+		mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_unset_message(activity_handler);
 #else
 	EShellTaskbar *shell_taskbar;
@@ -182,10 +194,14 @@ void
 taskbar_op_abort(gpointer key)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
+	EActivityHandler *activity_handler = 
+		mail_component_peek_activity_handler (mail_component_peek ());
+	guint activity_key = 
+		GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 	if (activity_key)
-		e_activity_handler_operation_finished(activity_handler, activity_key);
+		e_activity_handler_operation_finished(
+				activity_handler,
+				activity_key);
 #endif
 	g_hash_table_remove(rf->activity, key);
 	abort_all_soup();
@@ -215,7 +231,7 @@ taskbar_op_new(gchar *message)
 {
 #if EVOLUTION_VERSION >= 22900 //kb//
 	EShell *shell;
-        EShellBackend *shell_backend;
+	EShellBackend *shell_backend;
 	EActivity *activity;
 #else
 	EActivityHandler *activity_handler;
@@ -229,7 +245,7 @@ taskbar_op_new(gchar *message)
 #if EVOLUTION_VERSION >= 22900 //kb//
 
 	shell = e_shell_get_default ();
-        shell_backend = e_shell_get_backend_by_name (shell, "mail");
+	shell_backend = e_shell_get_backend_by_name (shell, "mail");
 
 	activity = e_activity_new (message);
 	e_activity_set_allow_cancel (activity, TRUE);
@@ -242,23 +258,39 @@ taskbar_op_new(gchar *message)
 		key);
 	return activity;
 #else
-	activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	activity_handler = 
+		mail_component_peek_activity_handler (mail_component_peek ());
 	mcp = g_strdup_printf("%p", mail_component_peek());
 #if (EVOLUTION_VERSION >= 22306)
-	activity_id = e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
-						message, TRUE,
-						(void (*) (gpointer))taskbar_op_abort,
-						 key);
+	activity_id = 
+		e_activity_handler_cancelable_operation_started(
+			activity_handler,
+			"evolution-mail",
+			message,
+			TRUE,
+			(void (*) (gpointer))taskbar_op_abort,
+			key);
 #else
-	progress_icon = e_icon_factory_get_icon ("mail-unread", E_ICON_SIZE_MENU);
+	progress_icon = 
+		e_icon_factory_get_icon (
+			"mail-unread",
+			E_ICON_SIZE_MENU);
 #if (EVOLUTION_VERSION >= 22200)
-	activity_id = e_activity_handler_cancelable_operation_started(activity_handler, "evolution-mail",
-						progress_icon, message, TRUE,
-						(void (*) (gpointer))taskbar_op_abort,
-						 key);
+	activity_id = 
+		e_activity_handler_cancelable_operation_started(
+			activity_handler,
+			"evolution-mail",
+			progress_icon,
+			message, TRUE,
+			(void (*) (gpointer))taskbar_op_abort,
+			key);
 #else
-	e_activity_handler_operation_started(activity_handler, mcp,
-						progress_icon, message, FALSE);
+	e_activity_handler_operation_started(
+		activity_handler,
+		mcp,
+		progress_icon,
+		message,
+		FALSE);
 #endif
 #endif
 	g_free(mcp);
@@ -288,10 +320,10 @@ taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 	if (activity_id) {
 #if (EVOLUTION_VERSION < 22900) //kb//
 		e_activity_handler_operation_progressing(
-				activity_handler,
-				activity_id,
-                                g_strdup(msg),
-                                progress);
+			activity_handler,
+			activity_id,
+			g_strdup(msg),
+			progress);
 #else
 	e_activity_set_percent (activity_id, progress);
 #endif
@@ -329,6 +361,7 @@ taskbar_op_finish(EActivity *id)
 	if (id == NULL) {
 		activity_key = g_hash_table_lookup(rf->activity, "main");
 		if (activity_key) {
+		dp("activity_key:%p\n", activity_key);
 			e_activity_complete (activity_key);
 			g_hash_table_remove(rf->activity, "main");
 		}
@@ -350,15 +383,21 @@ taskbar_op_message(gchar *msg, gchar *unikey)
 #endif
 #endif
 		if (!msg)
-			tmsg = g_strdup_printf(_("Fetching Feeds (%d enabled)"), g_hash_table_size(rf->hrname));
+			tmsg = g_strdup_printf(
+				_("Fetching Feeds (%d enabled)"),
+				g_hash_table_size(rf->hrname));
 		else
 			tmsg = g_strdup(msg);
 
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		if (!msg)
-			activity_id = (EActivity *)taskbar_op_new(tmsg, (gchar *)"main");
+			activity_id = 
+				(EActivity *)taskbar_op_new(
+					tmsg, 
+					(gchar *)"main");
 		else
-			activity_id = (EActivity *)taskbar_op_new(tmsg, msg);
+			activity_id = 
+				(EActivity *)taskbar_op_new(tmsg, msg);
 #else
 #if (EVOLUTION_VERSION >= 22200)
 		if (!msg)
@@ -370,10 +409,16 @@ taskbar_op_message(gchar *msg, gchar *unikey)
 #endif
 #endif
 		if (!msg)
-			g_hash_table_insert(rf->activity, (gchar *)"main", GUINT_TO_POINTER(activity_id));
+			g_hash_table_insert(
+				rf->activity,
+				(gchar *)"main",
+				GUINT_TO_POINTER(activity_id));
 		else
 			if (unikey)
-				g_hash_table_insert(rf->activity, GUINT_TO_POINTER(unikey), GUINT_TO_POINTER(activity_id));
+				g_hash_table_insert(
+					rf->activity,
+					GUINT_TO_POINTER(unikey),
+					GUINT_TO_POINTER(activity_id));
 		g_free(tmsg);
 		return activity_id;
 }

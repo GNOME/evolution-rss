@@ -2911,29 +2911,30 @@ add:
 		goto out;
 	}
 
-	/* <SEARCH FOR FEED> */
 	//search for a feed entry
-/*	rssurl = search_rss(content->str, content->len);
-	if (rssurl) {
-		if (doc)
-			xmlFreeDoc(doc);
-//			if (r->type)
-//				g_free(r->type);
-		if (content)
-			g_string_free(content, 1);
-		feed->feed_url = rssurl;
+	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_SEARCH_RSS, NULL)) {
+		rssurl = search_rss(content->str, content->len);
+		if (rssurl) {
+			if (doc)
+				xmlFreeDoc(doc);
+//				if (r->type)
+//					g_free(r->type);
+			if (content)
+				g_string_free(content, 1);
+			feed->feed_url = rssurl;
 
-		if (g_hash_table_find(
-				rf->hr,
-				check_if_match,
-				feed->feed_url)) {
-			rss_error(NULL, NULL, _("Error adding feed."),
+			if (g_hash_table_find(
+					rf->hr,
+					check_if_match,
+					feed->feed_url)) {
+				rss_error(NULL, NULL, _("Error adding feed."),
 				_("Feed already exists!"));
+				goto out;
+			}
+			setup_feed(g_memdup(feed, sizeof(feed)));
 			goto out;
 		}
-		goto top;
-	}*/
-	/* <SEARCH FOR FEED> */
+	}
 
 	dp("general error\n");
 	rss_error(crc_feed, NULL,
@@ -4504,11 +4505,11 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 {
 #ifndef EVOLUTION_2_12
 	GtkWidget *readrss_dialog;
-        GtkWidget *readrss_label;
-        GtkWidget *readrss_progress;
-        GtkWidget *label,*progress_bar, *cancel_button, *status_label;
+	GtkWidget *readrss_label;
+	GtkWidget *readrss_progress;
+	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
 
-        rf->t = t;
+	rf->t = t;
 
 	//don't waste anytime - we do not have network
 	//should we fake it ? :D
@@ -4519,57 +4520,57 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 	if (!g_hash_table_find(rf->hre, check_if_enabled, NULL))
 		return;
 
-        if (!rf->setup || g_hash_table_size(rf->hrname)<1) {
+	if (!rf->setup || g_hash_table_size(rf->hrname)<1) {
 		taskbar_push_message(_("No RSS feeds configured!"));
-                return;
-        }
+		return;
+	}
 
 	readrss_dialog = e_error_new(NULL,
 		"org-gnome-evolution-rss:readrss",
-                _("Reading RSS feeds..."),
+		_("Reading RSS feeds..."),
 		NULL);
 
-        g_signal_connect(readrss_dialog,
+	g_signal_connect(readrss_dialog,
 		"response",
 		G_CALLBACK(readrss_dialog_cb),
 		NULL);
-        GtkWidget *label2 = gtk_label_new(NULL);
+	GtkWidget *label2 = gtk_label_new(NULL);
 #if GTK_VERSION >= 2006000
 	gtk_label_set_ellipsize (GTK_LABEL (label2), PANGO_ELLIPSIZE_START);
 #endif
 #if GTK_VERSION > 2008011
 	gtk_label_set_justify(GTK_LABEL(label2), GTK_JUSTIFY_CENTER);
 #endif
-        readrss_label = gtk_label_new(_("Please wait"));
-        if (!rf->progress_dialog) {
-                readrss_progress = gtk_progress_bar_new();
-                gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), label2, TRUE, TRUE, 10);
-                gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_label, FALSE, FALSE, 0);
-                gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_progress, FALSE, FALSE, 0);
-                gtk_progress_bar_set_fraction((GtkProgressBar *)readrss_progress, 0);
+	readrss_label = gtk_label_new(_("Please wait"));
+	if (!rf->progress_dialog) {
+		readrss_progress = gtk_progress_bar_new();
+		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), label2, TRUE, TRUE, 10);
+		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_label, FALSE, FALSE, 0);
+		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_progress, FALSE, FALSE, 0);
+		gtk_progress_bar_set_fraction((GtkProgressBar *)readrss_progress, 0);
 		/* xgettext:no-c-format */
-                gtk_progress_bar_set_text((GtkProgressBar *)readrss_progress, _("0% done"));
-                gtk_widget_show_all(readrss_dialog);
-                rf->progress_dialog = readrss_dialog;
-                rf->progress_bar = readrss_progress;
-                rf->label       = label2;
-                flabel       = label2;
-        }
-        if (!rf->pending && !rf->feed_queue) {
-                rf->pending = TRUE;
-                check_folders();
+		gtk_progress_bar_set_text((GtkProgressBar *)readrss_progress, _("0% done"));
+		gtk_widget_show_all(readrss_dialog);
+		rf->progress_dialog = readrss_dialog;
+		rf->progress_bar = readrss_progress;
+		rf->label       = label2;
+		flabel       = label2;
+	}
+	if (!rf->pending && !rf->feed_queue) {
+		rf->pending = TRUE;
+		check_folders();
 
-                rf->err = NULL;
+		rf->err = NULL;
 		force_update = 1;
 		taskbar_op_message(NULL);
 		network_timeout();
-                g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
-                // reset cancelation signal
-                if (rf->cancel)
-                        rf->cancel = 0;
+		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
+		// reset cancelation signal
+		if (rf->cancel)
+			rf->cancel = 0;
 		force_update = 0;
-                rf->pending = FALSE;
-        }
+		rf->pending = FALSE;
+	}
 #endif
 }
 #endif
@@ -4577,31 +4578,31 @@ org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
 static void
 set_send_status(struct _send_info *info, const char *desc, int pc)
 {
-        /* FIXME: LOCK */
-        g_free(info->what);
-        info->what = g_strdup(desc);
-        info->pc = pc;
+	/* FIXME: LOCK */
+	g_free(info->what);
+	info->what = g_strdup(desc);
+	info->pc = pc;
 }
 
 /* for camel operation status */
 static void
 my_op_status(CamelOperation *op, const char *what, int pc, void *data)
 {
-        struct _send_info *info = data;
+	struct _send_info *info = data;
 
 	g_print("OP STATUS\n");
 	g_print("CANCEL!!!!\n");
 
-        switch (pc) {
-        case CAMEL_OPERATION_START:
-                pc = 0;
-                break;
-        case CAMEL_OPERATION_END:
-                pc = 100;
-                break;
-        }
+	switch (pc) {
+	case CAMEL_OPERATION_START:
+		pc = 0;
+		break;
+	case CAMEL_OPERATION_END:
+		pc = 100;
+		break;
+	}
 
-        set_send_status(info, what, pc);
+	set_send_status(info, what, pc);
 }
 
 static void
@@ -4652,17 +4653,17 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 	info = g_malloc0 (sizeof (*info));
 //        info->type = type;
 //
-        info->uri = g_strdup("feed"); //g_stddup
+	info->uri = g_strdup("feed"); //g_stddup
 
-        info->cancel = camel_operation_new (my_op_status, info);
-        info->state = SEND_ACTIVE;
+	info->cancel = camel_operation_new (my_op_status, info);
+	info->state = SEND_ACTIVE;
 //        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
 //
-        g_hash_table_insert (data->active, info->uri, info);
+	g_hash_table_insert (data->active, info->uri, info);
 //        list = g_list_prepend (list, info);
 
 	recv_icon = gtk_image_new_from_stock (
-                        "rss-main", GTK_ICON_SIZE_LARGE_TOOLBAR);
+			"rss-main", GTK_ICON_SIZE_LARGE_TOOLBAR);
 
 	row = t->row;
 	row+=2;
@@ -4670,21 +4671,21 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 
 	gtk_table_resize(GTK_TABLE(t->table), t->row, 4);
 
-        pretty_url = g_strdup ("RSS");
-        label = gtk_label_new (NULL);
+	pretty_url = g_strdup ("RSS");
+	label = gtk_label_new (NULL);
 #if GTK_VERSION >= 2006000
-        gtk_label_set_ellipsize (
-                GTK_LABEL (label), PANGO_ELLIPSIZE_END);
+	gtk_label_set_ellipsize (
+		GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 #endif
 #if GTK_VERSION > 2008011
 	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
 #endif
-        gtk_label_set_markup (GTK_LABEL (label), pretty_url);
-        g_free (pretty_url);
+	gtk_label_set_markup (GTK_LABEL (label), pretty_url);
+	g_free (pretty_url);
 
-        progress_bar = gtk_progress_bar_new ();
+	progress_bar = gtk_progress_bar_new ();
 
-        cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
 	status_label = gtk_label_new (_("Waiting..."));
 //                status_label = e_clipped_label_new (
@@ -5663,7 +5664,7 @@ migrate_crc_md5(const char *name, gchar *url)
 	md5 = gen_md5(url);
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-	    g_mkdir_with_parents (feed_dir, 0755);
+		g_mkdir_with_parents (feed_dir, 0755);
 
 	md5_name = g_build_path("/", feed_dir, md5, NULL);
 	feed_name = g_build_path("/", feed_dir, crc, NULL);
@@ -5676,12 +5677,12 @@ migrate_crc_md5(const char *name, gchar *url)
 		gchar rfeed[513];
 		memset(rfeed, 0, 512);
 		if (fr && fw) {
-		    while (fgets(rfeed, 511, fr) != NULL) {
-			(void)fseek(fw, 0L, SEEK_SET);
-			fwrite(rfeed, strlen(rfeed), 1, fw);
-		    }
-		    fclose(fw);
-		    unlink(feed_name);
+			while (fgets(rfeed, 511, fr) != NULL) {
+				(void)fseek(fw, 0L, SEEK_SET);
+				fwrite(rfeed, strlen(rfeed), 1, fw);
+			}
+			fclose(fw);
+			unlink(feed_name);
 		}
 		fclose(fr);
 

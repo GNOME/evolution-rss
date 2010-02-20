@@ -463,6 +463,20 @@
                         <property name="position">3</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkCheckButton" id="checkbutton5">
+                        <property name="label" translatable="yes">Scan for feed inside webpages</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">4</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -936,9 +950,9 @@
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <property name="local_only">False</property>
     <property name="show_hidden">True</property>
     <property name="action">save</property>
+    <property name="local_only">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="vbox26">
         <property name="visible">True</property>

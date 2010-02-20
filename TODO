@@ -44,4 +44,4 @@
 	* Delete artcles no longer in the feed should be a checkbox
 	* when import opml print opml title
 	* add configure option when import for searching rss in the html page
-	* import withouth fetching (add without validate ?)
+	* import without fetching (add without validate ?)
