@@ -2252,7 +2252,11 @@ export_opml(gchar *file)
 	gtk_widget_destroy(import_dialog);
 	t = time(NULL);
 	tmp = localtime(&t);
-	strftime(outstr, sizeof(outstr), "%a, %d %b %Y %H:%M:%S %z", tmp);
+	strftime(
+		outstr,
+		sizeof(outstr),
+		"%a, %d %b %Y %H:%M:%S %z",
+		tmp);
 	opml = g_strdup_printf("<opml version=\"1.1\">\n<head>\n"
 		"<title>Evolution-RSS Exported Feeds</title>\n"
 		"<dateModified>%s</dateModified>\n</head>\n<body>%s</body>\n</opml>\n",
@@ -2549,12 +2553,20 @@ decorate_export_fs (gpointer data)
 	GtkFileFilter *file_filter = gtk_file_filter_new ();
 	GtkFileFilter *filter = gtk_file_filter_new ();
 
-	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (data), TRUE);
-	gtk_dialog_set_default_response (GTK_DIALOG (data), GTK_RESPONSE_OK);
+	gtk_file_chooser_set_do_overwrite_confirmation (
+		GTK_FILE_CHOOSER (data),
+		TRUE);
+	gtk_dialog_set_default_response (
+		GTK_DIALOG (data),
+		GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (data, FALSE);
 
-	gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*");
-	gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("All Files"));
+	gtk_file_filter_add_pattern (
+		GTK_FILE_FILTER(file_filter),
+		"*");
+	gtk_file_filter_set_name (
+		GTK_FILE_FILTER(file_filter),
+		_("All Files"));
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
 		GTK_FILE_FILTER(file_filter));
 
@@ -3457,8 +3469,16 @@ rss_config_control_new (void)
 
 	sf->import = GTK_WIDGET (gtk_builder_get_object(sf->gui, "import"));
 	sf->export = GTK_WIDGET (gtk_builder_get_object(sf->gui, "export"));
-	g_signal_connect(sf->import, "clicked", G_CALLBACK(import_cb), sf->import);
-	g_signal_connect(sf->export, "clicked", G_CALLBACK(export_cb), sf->export);
+	g_signal_connect(
+		sf->import,
+		"clicked",
+		G_CALLBACK(import_cb),
+		sf->import);
+	g_signal_connect(
+		sf->export,
+		"clicked",
+		G_CALLBACK(export_cb),
+		sf->export);
 
 	control_widget = GTK_WIDGET (gtk_builder_get_object(sf->gui, "feeds-notebook"));
 	g_object_ref (control_widget);
