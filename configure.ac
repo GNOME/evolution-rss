@@ -1,9 +1,9 @@
-AC_INIT([evolution-rss], [0.1.9], http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss)
+AC_INIT([evolution-rss],[0.1.9],[http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss])
 AC_CONFIG_SRCDIR(src)
 
 AM_INIT_AUTOMAKE
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 dnl ******************************
@@ -50,10 +50,10 @@ if test "x$GPP" = "xno"; then
 	AC_MSG_ERROR(C++ Compiler (g++) not installed)
 fi
 #AC_PROG_CXXCPP
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 AC_HEADER_STDC
-AM_DISABLE_STATIC
-AM_PROG_LIBTOOL
+AC_DISABLE_STATIC([])
+LT_INIT
 
 GNOME_COMPILE_WARNINGS
 
