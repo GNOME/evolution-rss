@@ -497,7 +497,7 @@ gboolean check_update_feed_image(gchar *key);
 void get_feed_folders(void);
 void update_main_folder(gchar *new_name);
 void search_rebase(gpointer key, gpointer value, gchar *oname);
-void gtkut_window_popup(GtkWidget *window);
+void evo_window_popup(GtkWidget *window);
 void flaten_status(gpointer msg, gpointer user_data);
 gboolean check_if_enabled (
 	gpointer key,

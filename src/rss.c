@@ -4343,7 +4343,7 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	return 0;
 }
 
-void gtkut_window_popup(GtkWidget *window)
+void evo_window_popup(GtkWidget *window)
 {
 	gint x, y, sx, sy, new_x, new_y;
 
@@ -4370,20 +4370,38 @@ void gtkut_window_popup(GtkWidget *window)
 static void
 icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 {
+#if EVOLUTION_VERSION < 22900 //KB//
 	GList *p, *pnext;
 	for (p = (gpointer)evo_window; p != NULL; p = pnext) {
 		pnext = p->next;
 
 		if (gtk_window_is_active(GTK_WINDOW(p->data))) {
-			g_print("window active\n");
 			gtk_window_iconify(GTK_WINDOW(p->data));
-			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(p->data), TRUE);
+			gtk_window_set_skip_taskbar_hint(
+				GTK_WINDOW(p->data),
+				TRUE);
 		} else {
 			gtk_window_iconify(GTK_WINDOW(p->data));
-			gtkut_window_popup(GTK_WIDGET(p->data));
-			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(p->data), FALSE);
+			evo_window_popup(GTK_WIDGET(p->data));
+			gtk_window_set_skip_taskbar_hint(
+				GTK_WINDOW(p->data),
+				FALSE);
 		}
 	}
+#else
+	if (gtk_window_is_active(evo_window)) {
+		gtk_window_iconify(evo_window);
+		gtk_window_set_skip_taskbar_hint(
+			evo_window,
+			TRUE);
+	} else {
+		gtk_window_iconify(evo_window);
+		evo_window_popup(evo_window);
+		gtk_window_set_skip_taskbar_hint(
+			evo_window,
+			FALSE);
+		}
+#endif
 }
 
 static void
@@ -4395,9 +4413,15 @@ create_status_icon(void)
 			NULL);
 
 		status_icon = gtk_status_icon_new ();
-		gtk_status_icon_set_from_file (status_icon, iconfile);
+		gtk_status_icon_set_from_file (
+			status_icon,
+			iconfile);
 		g_free(iconfile);
-		g_signal_connect (G_OBJECT (status_icon), "activate", G_CALLBACK (icon_activated), NULL);
+		g_signal_connect (
+			G_OBJECT (status_icon),
+			"activate",
+			G_CALLBACK (icon_activated),
+			NULL);
 	}
 //     gtk_status_icon_set_visible (status_icon, FALSE);
 }
