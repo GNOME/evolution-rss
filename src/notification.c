@@ -71,10 +71,6 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		if (!g_hash_table_lookup(rf->error_hash, key)) {
 //			guint activity_id = g_hash_table_lookup(rf->activity, key);
 #if (EVOLUTION_VERSION >= 22900) //kb//
-			EShell *shell;
-			GtkWindow *parent;
-			GList *windows;
-
 			shell = e_shell_get_default ();
 			windows = e_shell_get_watched_windows (shell);
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;

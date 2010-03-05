@@ -4389,16 +4389,16 @@ icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 		}
 	}
 #else
-	if (gtk_window_is_active(evo_window)) {
-		gtk_window_iconify(evo_window);
+	if (gtk_window_is_active(GTK_WINDOW(evo_window))) {
+		gtk_window_iconify(GTK_WINDOW(evo_window));
 		gtk_window_set_skip_taskbar_hint(
-			evo_window,
+			GTK_WINDOW(evo_window),
 			TRUE);
 	} else {
-		gtk_window_iconify(evo_window);
-		evo_window_popup(evo_window);
+		gtk_window_iconify(GTK_WINDOW(evo_window));
+		evo_window_popup(GTK_WIDGET(evo_window));
 		gtk_window_set_skip_taskbar_hint(
-			evo_window,
+			GTK_WINDOW(evo_window),
 			FALSE);
 		}
 #endif
