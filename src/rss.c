@@ -5495,10 +5495,12 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 			goto out;
 		}
 		icon = rss_build_icon (img_file, GTK_ICON_SIZE_MENU);
+		d("icon:%p\n", icon);
 		g_hash_table_insert(icons, g_strdup(key), GINT_TO_POINTER(1));
 		sizes = gtk_icon_theme_get_icon_sizes(gtk_icon_theme_get_default(),
 				"mail-read"); //will mail-read always be there?
-		for (i=0; -1 != (size = sizes[i]); i++)
+		for (i=0; 0 != (size = sizes[i]); i++)
+			d("icon set size:%d\n", size);
 			gtk_icon_theme_add_builtin_icon(key,
 				size,
 				icon);
