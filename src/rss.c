@@ -1402,7 +1402,11 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 		d("resize webkit :width:%d, height: %d\n", width, height);
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow)
+#if GTK_VERSION >= 2019007
+			&& gtk_widget_is_realized(rf->mozembed)
+#else
 			&& GTK_WIDGET_REALIZED(rf->mozembed)
+#endif
 			&& height > 0) {
 				if (!browser_fetching) {
 					gchar *msg = g_strdup_printf("<h5>%s</h5>", _("Formatting Message..."));

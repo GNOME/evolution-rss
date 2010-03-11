@@ -839,7 +839,11 @@ store_redraw(GtkTreeView *data)
 	GtkTreeModel *model;
 
 	g_return_val_if_fail(data, FALSE);
+#if GTK_VERSION >= 2019007
+	g_return_val_if_fail(gtk_widget_is_realized(data), FALSE);
+#else
 	g_return_val_if_fail(GTK_WIDGET_REALIZED(data), FALSE);
+#endif
 
 	if (!store_redrawing) {
 		store_redrawing = 1;
