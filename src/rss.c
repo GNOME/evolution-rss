@@ -1403,7 +1403,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow)
 #if GTK_VERSION >= 2019007
-			&& gtk_widget_is_realized(rf->mozembed)
+			&& gtk_widget_get_realized(rf->mozembed)
 #else
 			&& GTK_WIDGET_REALIZED(rf->mozembed)
 #endif
