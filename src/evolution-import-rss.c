@@ -182,7 +182,7 @@ main (int argc, char *argv[])
 	{
 		system("evolution&");
 		g_print("fireing evolution...\n");
-		sleep(30);
+		g_usleep(30);
         	send_dbus_ping ();
 		g_timeout_add (EVOLUTION_PING_TIMEOUT, err_evo_cb, GINT_TO_POINTER(i++));
 		g_main_loop_run(loop);
