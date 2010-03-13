@@ -208,7 +208,7 @@ gboolean single_pending = FALSE;
 //#endif
 
 rssfeed *rf = NULL;
-guint           upgrade = 0;                // set to 2 when initailization successfull
+guint upgrade = 0;	// set to 2 when initailization successfull
 guint count = 0;
 gchar *buffer = NULL;
 GSList *rss_list = NULL;
@@ -225,7 +225,8 @@ guint32 content_colour;
 guint32 text_colour;
 
 gboolean gecko_ready = FALSE;
-gboolean browser_fetching = 0; //mycall event could be triggered many times in first step (fetching)
+gboolean browser_fetching = 0;	//mycall event could be triggered 
+				//many times in first step (fetching)
 gint browser_fill = 0;	//how much data currently written to browser
 
 gchar *process_feed(RDF *r);
@@ -240,13 +241,15 @@ static void
 #if LIBSOUP_VERSION < 2003000
 finish_image (SoupMessage *msg, CamelStream *user_data);
 #else
-finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data);
+finish_image (SoupSession *soup_sess,
+	SoupMessage *msg, CamelStream *user_data);
 #endif
 void
 #if LIBSOUP_VERSION < 2003000
 finish_create_image (SoupMessage *msg, gchar *user_data);
 #else
-finish_create_image (SoupSession *soup_sess, SoupMessage *msg, gchar *user_data);
+finish_create_image (SoupSession *soup_sess,
+	SoupMessage *msg, gchar *user_data);
 #endif
 gboolean fetch_one_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean fetch_feed(gpointer key, gpointer value, gpointer user_data);
@@ -273,13 +276,15 @@ static void
 #if LIBSOUP_VERSION < 2003000
 finish_create_icon (SoupMessage *msg, FEED_IMAGE *user_data);
 #else
-finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data);
+finish_create_icon (SoupSession *soup_sess,
+	SoupMessage *msg, FEED_IMAGE *user_data);
 #endif
 static void
 #if LIBSOUP_VERSION < 2003000
 finish_create_icon_stream (SoupMessage *msg, FEED_IMAGE *user_data);
 #else
-finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data);
+finish_create_icon_stream (SoupSession *soup_sess,
+	SoupMessage *msg, FEED_IMAGE *user_data);
 #endif
 gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
@@ -596,7 +601,9 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	widget = gtk_label_new (NULL);
 	gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
 
-	markup = g_markup_printf_escaped (_("Enter your username and password for:\n '%s'"), auth->url);
+	markup = g_markup_printf_escaped (
+			_("Enter your username and password for:\n '%s'"),
+			auth->url);
 	gtk_label_set_markup (GTK_LABEL (widget), markup);
 	g_free (markup);
 	gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
@@ -697,9 +704,11 @@ web_auth_dialog(RSS_AUTH *auth_info)
 	gint response;
 
 	if (!rf->hruser)
-		rf->hruser = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+		rf->hruser = g_hash_table_new_full(
+				g_str_hash, g_str_equal, NULL, g_free);
 	if (!rf->hrpass)
-		rf->hrpass = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+		rf->hrpass = g_hash_table_new_full(
+				g_str_hash, g_str_equal, NULL, g_free);
 
 	auth_info->user = g_hash_table_lookup(rf->hruser, auth_info->url);
 	auth_info->pass = g_hash_table_lookup(rf->hrpass, auth_info->url);
@@ -745,7 +754,8 @@ network_timeout(void)
 	if (nettime_id)
 		g_source_remove(nettime_id);
 
-	timeout = gconf_client_get_float(rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
+	timeout = gconf_client_get_float(
+			rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
 
 	if (!timeout)
 		timeout = NETWORK_MIN_TIMEOUT;
@@ -816,17 +826,36 @@ feed_to_xml(gchar *key)
 				lookup_key(key)) ? "true" : "false"));
 
 	xmlNewTextChild (root, NULL, (xmlChar *)"name", (xmlChar *)key);
-	xmlNewTextChild (root, NULL, (xmlChar *)"url", (xmlChar *)g_hash_table_lookup(rf->hr, lookup_key(key)));
-	xmlNewTextChild (root, NULL, (xmlChar *)"type", (xmlChar *)g_hash_table_lookup(rf->hrt, lookup_key(key)));
+	xmlNewTextChild (
+		root, NULL, (xmlChar *)"url",
+		(xmlChar *)g_hash_table_lookup(rf->hr, lookup_key(key)));
+	xmlNewTextChild (
+		root, NULL, (xmlChar *)"type",
+		(xmlChar *)g_hash_table_lookup(rf->hrt, lookup_key(key)));
 
 	src = xmlNewTextChild (root, NULL, (xmlChar *)"delete", NULL);
-	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, lookup_key(key))));
+	ctmp = g_strdup_printf(
+		"%d", 
+		GPOINTER_TO_INT(
+			g_hash_table_lookup(
+				rf->hrdel_feed,
+				lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"option", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, lookup_key(key))));
+	ctmp = g_strdup_printf(
+		"%d",
+		GPOINTER_TO_INT(
+			g_hash_table_lookup(
+				rf->hrdel_days,
+				lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"days", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(key))));
+	ctmp = g_strdup_printf(
+		"%d",
+		GPOINTER_TO_INT(
+			g_hash_table_lookup(
+				rf->hrdel_messages,
+				lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"messages", (xmlChar *)ctmp);
 	g_free(ctmp);
 	xmlSetProp (
@@ -850,10 +879,20 @@ feed_to_xml(gchar *key)
 				lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"option", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key))));
+	ctmp = g_strdup_printf(
+		"%d",
+		GPOINTER_TO_INT(
+			g_hash_table_lookup(
+				rf->hrttl,
+				lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"value", (xmlChar *)ctmp);
 	g_free(ctmp);
-	ctmp = g_strdup_printf("%d", GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl_multiply, lookup_key(key))));
+	ctmp = g_strdup_printf(
+		"%d",
+		GPOINTER_TO_INT(
+			g_hash_table_lookup(
+				rf->hrttl_multiply,
+				lookup_key(key))));
 	xmlSetProp (src, (xmlChar *)"factor", (xmlChar *)ctmp);
 	g_free(ctmp);
 
@@ -1409,7 +1448,9 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 #endif
 			&& height > 0) {
 				if (!browser_fetching) {
-					gchar *msg = g_strdup_printf("<h5>%s</h5>", _("Formatting Message..."));
+					gchar *msg = g_strdup_printf(
+							"<h5>%s</h5>",
+							_("Formatting Message..."));
 					browser_write(msg, strlen(msg), (gchar *)"file:///");
 					g_free(msg);
 					browser_fetching=1;
@@ -5455,9 +5496,11 @@ finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_d
 
 static void
 #if LIBSOUP_VERSION < 2003000
-finish_create_icon_stream (SoupMessage *msg, FEED_IMAGE *user_data)
+finish_create_icon_stream (
+	SoupMessage *msg, FEED_IMAGE *user_data)
 #else
-finish_create_icon_stream (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
+finish_create_icon_stream (
+	SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
 #endif
 {
 	finish_image(soup_sess, msg, user_data->feed_fs);
@@ -5490,9 +5533,13 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 
 	if (pixbuf) {
 		gchar *name = g_hash_table_lookup(rf->hrname_r, key);
-		gchar *full_name = g_strdup_printf("%s/%s", get_main_folder(),
-							lookup_feed_folder(name));
-		rss_folder = camel_store_get_folder (store, full_name, 0, NULL);
+		gchar *full_name = g_strdup_printf(
+					"%s/%s",
+					get_main_folder(),
+					lookup_feed_folder(name));
+		rss_folder = camel_store_get_folder (
+					store,
+					full_name, 0, NULL);
 		if (!rss_folder) {
 			g_free(full_name);
 			result = FALSE;
@@ -5500,8 +5547,10 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 		}
 		icon = rss_build_icon (img_file, GTK_ICON_SIZE_MENU);
 		d("icon:%p\n", icon);
-		g_hash_table_insert(icons, g_strdup(key), GINT_TO_POINTER(1));
-		sizes = gtk_icon_theme_get_icon_sizes(gtk_icon_theme_get_default(),
+		g_hash_table_insert(icons,
+			g_strdup(key), GINT_TO_POINTER(1));
+		sizes = gtk_icon_theme_get_icon_sizes(
+				gtk_icon_theme_get_default(),
 				"mail-read"); //will mail-read always be there?
 		for (i=0; 0 != (size = sizes[i]); i++)
 			d("icon set size:%d\n", size);
@@ -5519,7 +5568,8 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 		row = g_hash_table_lookup (si->full_hash, full_name);
 		if (!row) goto out;
 		path = gtk_tree_row_reference_get_path (row);
-		gtk_tree_model_get_iter ((GtkTreeModel *)tree_store, &iter, path);
+		gtk_tree_model_get_iter (
+			(GtkTreeModel *)tree_store, &iter, path);
 		gtk_tree_path_free (path);
 
 		gtk_tree_store_set(
@@ -5541,7 +5591,8 @@ out:	g_free(img_file);
 #define CAMEL_DATA_CACHE_MASK ((1<<CAMEL_DATA_CACHE_BITS)-1)
 
 static char *
-data_cache_path(CamelDataCache *cdc, int create, const char *path, const char *key)
+data_cache_path(
+	CamelDataCache *cdc, int create, const char *path, const char *key)
 {
 	char *dir, *real;
 	char *tmp = NULL;
@@ -5714,12 +5765,19 @@ fetch_image(gchar *url, gchar *link)
 
 	if (strstr(url, "://") == NULL) {
 		if (*url == '.') //test case when url begins with ".."
-			tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
+			tmpurl = g_strconcat(
+					g_path_get_dirname(link),
+					"/", url, NULL);
 		else {
 			if (*url == '/')
-				tmpurl = g_strconcat(get_server_from_uri(link), "/", url, NULL);
+				tmpurl = g_strconcat(
+						get_server_from_uri(link),
+						"/",
+						url, NULL);
 			else	//url is relative (does not begin with / or .)
-				tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
+				tmpurl = g_strconcat(
+						g_path_get_dirname(link),
+						"/", url, NULL);
 		}
 	} else {
 		tmpurl = g_strdup(url);

@@ -22,14 +22,14 @@
 #include <rss.h>
 
 typedef struct {
-        const char *stock_id;
-        const char *icon;
+	const char *stock_id;
+	const char *icon;
 } RssStockIcon;
 
 static RssStockIcon stock_icons [] = {
-        { RSS_TEXT_HTML, RSS_TEXT_HTML_FILE },
-        { RSS_TEXT_GENERIC, RSS_TEXT_GENERIC_FILE },
-        { RSS_MAIN, RSS_MAIN_FILE }
+	{ RSS_TEXT_HTML, RSS_TEXT_HTML_FILE },
+	{ RSS_TEXT_GENERIC, RSS_TEXT_GENERIC_FILE },
+	{ RSS_MAIN, RSS_MAIN_FILE }
 };
 
 //behaviour of e_icon_factory_get_icon() has changed
@@ -40,13 +40,14 @@ rss_build_icon(const gchar *icon_name,
 {
 	GdkPixbuf *pixbuf, *unscaled;
 	gint size, width, height;
-        g_return_val_if_fail (icon_name != NULL, NULL);
+	g_return_val_if_fail (icon_name != NULL, NULL);
 	if (!gtk_icon_size_lookup (icon_size, &width, &height))
 		return NULL;
 	size = height;
 
 	unscaled = gdk_pixbuf_new_from_file(icon_name, NULL);
-	if (gdk_pixbuf_get_width(unscaled) != size || gdk_pixbuf_get_height(unscaled) != size) {
+	if (gdk_pixbuf_get_width(unscaled) != size 
+	|| gdk_pixbuf_get_height(unscaled) != size) {
 		pixbuf = e_icon_factory_pixbuf_scale (unscaled, size, size);
 		g_object_unref (unscaled);
 	} else
@@ -58,19 +59,20 @@ rss_build_icon(const gchar *icon_name,
 void
 rss_build_stock_images(void)
 {
-        GtkIconFactory *factory;
-        GtkIconSource *source;
+	GtkIconFactory *factory;
+	GtkIconSource *source;
 	int i;
 
-        source = gtk_icon_source_new();
-        factory = gtk_icon_factory_new();
-        gtk_icon_factory_add_default(factory);
+	source = gtk_icon_source_new();
+	factory = gtk_icon_factory_new();
+	gtk_icon_factory_add_default(factory);
 
 	for (i = 0; i < G_N_ELEMENTS (stock_icons); i++) {
 		GtkIconSet *set;
-		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-                                            stock_icons[i].icon,
-                                            NULL);
+		gchar *iconfile = g_build_filename (
+					EVOLUTION_ICONDIR,
+					stock_icons[i].icon,
+					NULL);
 
 		gtk_icon_source_set_filename(source, iconfile);
 		g_free(iconfile);
@@ -80,9 +82,10 @@ rss_build_stock_images(void)
 		gtk_icon_factory_add(factory, stock_icons[i].stock_id, set);
 		gtk_icon_set_unref(set);
 	}
-        gtk_icon_source_free(source);
-	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           EVOLUTION_ICONDIR);
+	gtk_icon_source_free(source);
+	gtk_icon_theme_append_search_path (
+		gtk_icon_theme_get_default (),
+		EVOLUTION_ICONDIR);
 }
 
 void

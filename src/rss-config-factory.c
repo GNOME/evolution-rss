@@ -179,7 +179,8 @@ render_engine_changed (GtkComboBox *dropdown, GCallback *user_data)
 static void
 start_check_cb(GtkWidget *widget, gpointer data)
 {
-	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	gboolean active = gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
 	gconf_client_set_bool (rss_gconf, data, active, NULL);
 }
@@ -187,9 +188,12 @@ start_check_cb(GtkWidget *widget, gpointer data)
 void
 accept_cookies_cb(GtkWidget *widget, GtkWidget *data)
 {
-	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	gboolean active = gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
-	gconf_client_set_bool (rss_gconf, GCONF_KEY_ACCEPT_COOKIES, active, NULL);
+	gconf_client_set_bool (
+		rss_gconf,
+		GCONF_KEY_ACCEPT_COOKIES, active, NULL);
 	gtk_widget_set_sensitive(data, active);
 }
 
@@ -740,11 +744,12 @@ build_dialog_add(gchar *url, gchar *feed_text)
 void
 actions_dialog_add(add_feed *feed, gchar *url)
 {
-	GtkWidget *entry1 = GTK_WIDGET (gtk_builder_get_object(feed->gui, "url_entry"));
+	GtkWidget *entry1 = GTK_WIDGET (
+			gtk_builder_get_object(feed->gui, "url_entry"));
 	GtkWidget *checkbutton1 = GTK_WIDGET (
-				gtk_builder_get_object(feed->gui, "html_check"));
+			gtk_builder_get_object(feed->gui, "html_check"));
 	GtkWidget *checkbutton2 = GTK_WIDGET (
-				gtk_builder_get_object (feed->gui, "enabled_check"));
+			gtk_builder_get_object(feed->gui, "enabled_check"));
 	GtkWidget *checkbutton3 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "validate_check"));
 	GtkWidget *checkbutton4 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_unread"));
 	GtkWidget *radiobutton1 = GTK_WIDGET (gtk_builder_get_object (feed->gui, "storage_rb1"));
@@ -765,7 +770,8 @@ actions_dialog_add(add_feed *feed, gchar *url)
 	case GTK_RESPONSE_OK:
 		//grey out while were processing
 		gtk_widget_set_sensitive(feed->dialog, FALSE);
-		feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
+		feed->feed_url = g_strdup(
+				gtk_entry_get_text(GTK_ENTRY(entry1)));
 		fhtml = gtk_toggle_button_get_active (
 			GTK_TOGGLE_BUTTON (checkbutton1));
 		fhtml ^= 1;
@@ -985,7 +991,8 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
 }
 
 void
-rss_delete_folders (CamelStore *store, const char *full_name, CamelException *ex)
+rss_delete_folders (
+	CamelStore *store, const char *full_name, CamelException *ex)
 {
 	guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE
 		| CAMEL_STORE_FOLDER_INFO_FAST
@@ -1212,7 +1219,8 @@ feeds_dialog_disable(GtkDialog *d, gpointer data)
 		g_hash_table_replace(
 			rf->hre,
 			g_strdup(key),
-			GINT_TO_POINTER(!g_hash_table_lookup(rf->hre, key)));
+			GINT_TO_POINTER(
+				!g_hash_table_lookup(rf->hre, key)));
 		gtk_button_set_label(
 			data,
 			g_hash_table_lookup(rf->hre, key) ? _("Disable") : _("Enable"));
@@ -1257,7 +1265,8 @@ remove_feed_dialog(gchar *msg)
 		GTK_CONTAINER (vbox1),
 		10);
 
-	checkbutton1 = gtk_check_button_new_with_mnemonic (_("Remove folder contents"));
+	checkbutton1 = gtk_check_button_new_with_mnemonic (
+			_("Remove folder contents"));
 	gtk_widget_show (checkbutton1);
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (checkbutton1),
@@ -1421,14 +1430,18 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 					lookup_feed_folder(feed_name),
 					NULL);
 				gchar *dir = g_path_get_dirname(a);
-				gchar *b = g_build_path("/", dir, feed->feed_name, NULL);
+				gchar *b = g_build_path(
+						"/",
+						dir, feed->feed_name, NULL);
 				camel_exception_init (&ex);
 				camel_store_rename_folder (store, a, b, &ex);
 				if (camel_exception_is_set (&ex)) {
 #if EVOLUTION_VERSION < 22904
-					e_error_run(GTK_WINDOW(rf->preferences),
+					e_error_run(GTK_WINDOW(
+						rf->preferences),
 #else
-					e_alert_run_dialog_for_args(GTK_WINDOW(rf->preferences),
+					e_alert_run_dialog_for_args(
+						GTK_WINDOW(rf->preferences),
 #endif
 						"mail:no-rename-folder",
 						a,
@@ -3432,7 +3445,9 @@ rss_config_control_new (void)
 	GtkWidget *label_webkit = GTK_WIDGET (gtk_builder_get_object(sf->gui, "label_webkits"));
 	gtk_label_set_text(
 		GTK_LABEL(label_webkit),
-		_("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \nas renders you need firefox or webkit devel package \ninstalled and evolution-rss should be recompiled to see those packages."));
+		_("Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n\
+		as renders you need firefox or webkit devel package \n\
+		installed and evolution-rss should be recompiled to see those packages."));
 	gtk_widget_show(label_webkit);
 #endif
 	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
@@ -3453,7 +3468,9 @@ rss_config_control_new (void)
 	sf->host_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "host_proxy"));
 	sf->port_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "port_proxy"));
 	sf->details = GTK_WIDGET (gtk_builder_get_object(sf->gui, "details"));
-	sf->proxy_details = GTK_WIDGET (gtk_builder_get_object(sf->gui, "http-proxy-details"));
+	sf->proxy_details = GTK_WIDGET (
+				gtk_builder_get_object(
+					sf->gui, "http-proxy-details"));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->use_proxy),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL));
@@ -3484,7 +3501,10 @@ rss_config_control_new (void)
 		G_CALLBACK(export_cb),
 		sf->export);
 
-	control_widget = GTK_WIDGET (gtk_builder_get_object(sf->gui, "feeds-notebook"));
+	control_widget = GTK_WIDGET (
+				gtk_builder_get_object(
+					sf->gui,
+					"feeds-notebook"));
 	g_object_ref (control_widget);
 
 	gtk_container_remove (
@@ -3517,7 +3537,8 @@ factory (BonoboGenericFactory *factory,
 	return NULL;
 }
 
-BONOBO_ACTIVATION_SHLIB_FACTORY (FACTORY_ID, "Evolution RSS component factory", factory, NULL)
+BONOBO_ACTIVATION_SHLIB_FACTORY (
+	FACTORY_ID, "Evolution RSS component factory", factory, NULL)
 #endif
 
 #if EVOLUTION_VERSION >= 22900
