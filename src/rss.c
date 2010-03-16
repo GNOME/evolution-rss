@@ -1433,11 +1433,13 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
 	int width, height;
 	struct _org_gnome_rss_controls_pobject *po = data;
+	GtkAllocation alloc;
 
 	guint k = rf->headers_mode ? 240 : 106;
 	if (GTK_IS_WIDGET(widget)) {
-		width = widget->allocation.width - 16 - 2;// - 16;
-		height = widget->allocation.height - 16 - k;
+		gtk_widget_get_allocation(widget, &alloc);
+		width = alloc.width - 16 - 2;// - 16;
+		height = alloc.height - 16 - k;
 		d("resize webkit :width:%d, height: %d\n", width, height);
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow)
@@ -2131,6 +2133,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 #if EVOLUTION_VERSION >= 22900 //kb//
 	GdkColor color;
 #endif
+	GtkAllocation alloc;
 
 	current_pobject = t->format;
 	d("Formatting...\n");
@@ -2169,19 +2172,28 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 #endif
 
 	type = camel_mime_part_get_content_type(message);
-	website = camel_medium_get_header (CAMEL_MEDIUM (message), "Website");
+	website = camel_medium_get_header (
+			CAMEL_MEDIUM (message), "Website");
 	if (!website)
 		goto fmerror;
 	addr = (gchar *)camel_header_location_decode(website);
-	feedid  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "RSS-ID");
-	comments  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-comments");
-	category  = (gchar *)camel_medium_get_header (CAMEL_MEDIUM(message), "X-Evolution-rss-category");
-	subject = camel_header_decode_string(camel_medium_get_header (CAMEL_MEDIUM (message),
-				 "Subject"), NULL);
+	feedid  = (gchar *)camel_medium_get_header(
+			CAMEL_MEDIUM(message), "RSS-ID");
+	comments  = (gchar *)camel_medium_get_header (
+				CAMEL_MEDIUM(message),
+				"X-Evolution-rss-comments");
+	category  = (gchar *)camel_medium_get_header(
+				CAMEL_MEDIUM(message),
+				"X-Evolution-rss-category");
+	subject = camel_header_decode_string(
+			camel_medium_get_header (CAMEL_MEDIUM (message),
+			"Subject"), NULL);
 
 	is_html = NULL;
 	if (feedid)
-		is_html =  g_hash_table_lookup(rf->hrh, g_strstrip(feedid)); //feedid is modified
+		is_html =  g_hash_table_lookup(
+				rf->hrh,
+				g_strstrip(feedid)); //feedid is modified
 	if (comments)
 		comments = g_strstrip(comments);
 
@@ -2195,16 +2207,20 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			org_gnome_rss_controls_counter_id);
 	org_gnome_rss_controls_counter_id++;
 	pobj = (struct _org_gnome_rss_controls_pobject *)
-			em_format_html_add_pobject ((EMFormatHTML *) t->format,
-						sizeof(*pobj),
-						classid,
-						message,
-						(EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
+		em_format_html_add_pobject (
+			(EMFormatHTML *) t->format,
+			sizeof(*pobj),
+			classid,
+			message,
+			(EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
 	pobj->is_html = GPOINTER_TO_INT(is_html);
 	pobj->website = g_strstrip(g_strdup((gchar *)website));
 	pobj->stream = t->stream;
 	pobj->object.free = free_rss_controls;
-	camel_stream_printf (t->stream, "<object classid=%s></object>\n", classid);
+	camel_stream_printf (
+		t->stream,
+		"<object classid=%s></object>\n",
+		classid);
 	//precreate stop button as we need it to control it later
 	button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
 	pobj->stopbut = button2;
@@ -2215,11 +2231,13 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		engine = fallback_engine();
 #ifdef HAVE_RENDERKIT
 		if (engine && engine != 10) {
-			char *classid = g_strdup_printf ("org-gnome-rss-controls-%d",
-				org_gnome_rss_controls_counter_id);
+			char *classid = g_strdup_printf(
+					"org-gnome-rss-controls-%d",
+					org_gnome_rss_controls_counter_id);
 			org_gnome_rss_controls_counter_id++;
 			pobj = (struct _org_gnome_rss_controls_pobject *)
-				em_format_html_add_pobject ((EMFormatHTML *) t->format,
+				em_format_html_add_pobject(
+					(EMFormatHTML *) t->format,
 					sizeof(*pobj),
 					classid,
 					message,
@@ -2303,8 +2321,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		d("normal html rendering\n");
 		buffer = g_byte_array_new ();
 		camel_stream_mem_set_byte_array (stream, buffer);
-		mcontent = camel_medium_get_content_object(CAMEL_MEDIUM(t->part));
-		camel_data_wrapper_write_to_stream(mcontent, (CamelStream *)stream);
+		mcontent = camel_medium_get_content_object(
+				CAMEL_MEDIUM(t->part));
+		camel_data_wrapper_write_to_stream(
+			mcontent,
+			(CamelStream *)stream);
 		g_byte_array_append (buffer, (unsigned char *)"", 1);
 //#ifdef EVOLUTION_2_12	//aparently this ("?" char parsing) is fixed in 2.12
 //		//then again this does not work in evo > 2.12 perhaps is gtkhtml related
@@ -2319,18 +2340,28 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 					GCONF_KEY_IMAGE_RESIZE,
 					NULL)) {
 			GtkWidget *obj = (GtkWidget *)emfh->html;
-			guint width = obj->allocation.width - 56;
+			gtk_wiget_get_allocation(obj, &alloc);
+			guint width = alloc.width - 56;
 			gchar *wids = g_strdup_printf("%d", width);
-			xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
+			xmlDoc *src = (xmlDoc *)parse_html_sux(
+						tmp,
+						strlen(tmp));
 			if (src) {
 				xmlNode *doc = (xmlNode *)src;
 				while ((doc = html_find(doc, (gchar *)"img"))) {
 					int real_width = 0;
-					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
+					xmlChar *url = xmlGetProp(
+							doc,
+							(xmlChar *)"src");
 					//FIXME: this should run even if image_resize is not on
-					gchar *real_image = verify_image((gchar *)url, emfh);
+					gchar *real_image = verify_image(
+								(gchar *)url,
+								emfh);
 					if (real_image) {
-						xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)real_image);
+						xmlSetProp(
+							doc,
+							(xmlChar *)"src",
+							(xmlChar *)real_image);
 						g_free(real_image);
 					}
 					pix = gdk_pixbuf_new_from_file(
@@ -2343,14 +2374,22 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 					d("width:%d\n", width);
 					d("real_width:%d\n", real_width);
 
-					wid = xmlGetProp(doc, (xmlChar *)"width");
+					wid = xmlGetProp(
+						doc,
+						(xmlChar *)"width");
 					if (wid) {
 						if (atof((const char *)wid) > width)
-							xmlSetProp(doc, (xmlChar *)"width", (xmlChar *)wids);
+							xmlSetProp(
+								doc,
+								(xmlChar *)"width",
+								(xmlChar *)wids);
 						g_free(wid);
 						goto pixdone;
 					} else if (real_width > width) {
-						xmlSetProp(doc, (xmlChar *)"width", (xmlChar *)wids);
+						xmlSetProp(
+							doc,
+							(xmlChar *)"width",
+							(xmlChar *)wids);
 					}
 pixdone:			g_free(url);
 				}
@@ -2509,7 +2548,8 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 #if EVOLUTION_VERSION > 22900 //kb//
 	CamelFolder *folder;
 	EMFolderTree *folder_tree;
-	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(shell_view);
+	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(
+					shell_view);
 	EActivity *taskid;
 
 
@@ -2533,7 +2573,10 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	key = g_hash_table_lookup(rf->hrname, fname);
 	if (!key)
 		goto out;
-	name = g_strdup_printf("%s: %s", _("Fetching feed"), (gchar *)g_hash_table_lookup(rf->hrname_r, key));
+	name = g_strdup_printf(
+		"%s: %s",
+		_("Fetching feed"),
+		(gchar *)g_hash_table_lookup(rf->hrname_r, key));
 
 	if (g_hash_table_lookup(rf->hre, key)
 	  && !rf->pending && !rf->feed_queue
@@ -2828,7 +2871,10 @@ finish_setup_feed(SoupSession *soup_sess,
 		add_feed *user_data);
 
 void
-finish_setup_feed(SoupSession *soup_sess, SoupMessage *msg, add_feed *user_data)
+finish_setup_feed(
+	SoupSession *soup_sess,
+	SoupMessage *msg,
+	add_feed *user_data)
 {
 	guint ret = 0;
 	guint ttl;
@@ -3448,8 +3494,8 @@ fetch_one_feed(gpointer key, gpointer value, gpointer user_data)
 				(gpointer)finish_feed,
 				g_strdup(key),	// we need to dupe key here
 				1,
-				&err);			// because we might lose it if
-							// feed gets deleted
+				&err);		// because we might lose it if
+						// feed gets deleted
 		if (err) {
 			rf->feed_queue--;
 			msg = g_strdup_printf("\n%s\n%s",
@@ -3704,8 +3750,14 @@ get_feed_folders(void)
 	gchar tmp1[512], tmp2[512];
 	gchar *feed_dir, *feed_file;
 
-	rf->feed_folders = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-	rf->reversed_feed_folders = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+	rf->feed_folders = g_hash_table_new_full(
+				g_str_hash,
+				g_str_equal,
+				g_free, g_free);
+	rf->reversed_feed_folders = g_hash_table_new_full(
+				g_str_hash,
+				g_str_equal,
+				g_free, g_free);
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
@@ -3716,16 +3768,18 @@ get_feed_folders(void)
 		while (!feof(f)) {
 			fgets(tmp1, 512, f);
 			fgets(tmp2, 512, f);
-			g_hash_table_insert(rf->feed_folders,
-						g_strdup(g_strstrip(tmp1)),
-						g_strdup(g_strstrip(tmp2)));
+			g_hash_table_insert(
+				rf->feed_folders,
+				g_strdup(g_strstrip(tmp1)),
+				g_strdup(g_strstrip(tmp2)));
 		}
 		fclose(f);
 	}
 	g_free(feed_file);
-	g_hash_table_foreach(rf->feed_folders,
-				(GHFunc)populate_reversed,
-				rf->reversed_feed_folders);
+	g_hash_table_foreach(
+		rf->feed_folders,
+		(GHFunc)populate_reversed,
+		rf->reversed_feed_folders);
 }
 
 //
@@ -3770,7 +3824,8 @@ lookup_original_folder(gchar *folder, gboolean *found)
 gchar *
 lookup_feed_folder(gchar *folder)
 {
-	gchar *new_folder = g_hash_table_lookup(rf->reversed_feed_folders, folder);
+	gchar *new_folder = g_hash_table_lookup(
+				rf->reversed_feed_folders, folder);
 	return new_folder ? new_folder : folder;
 }
 
@@ -3789,7 +3844,8 @@ void
 #if LIBSOUP_VERSION < 2003000
 finish_update_feed_image (SoupMessage *msg, gpointer user_data)
 #else
-finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
+finish_update_feed_image (
+	SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
 	xmlChar *icon = NULL;
@@ -3846,7 +3902,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 			(gpointer)finish_create_icon,
 			fi,
 			0,
-//			&err);			// because we might lose it if
+//			&err);		// because we might lose it if
 			NULL);
 	} else {
 		//              r->image = NULL;
@@ -3862,7 +3918,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 				(gpointer)finish_create_icon,
 				fi,
 				0,
-//				&err);			// because we might lose it if
+//				&err);	// because we might lose it if
 				NULL);
 		g_free(icon_url);
 		icon_url = g_strconcat(server, "/favicon.ico", NULL);
@@ -3877,7 +3933,7 @@ finish_update_feed_image (SoupSession *soup_sess, SoupMessage *msg, gpointer use
 				(gpointer)finish_create_icon,
 				fi,
 				0,
-//				&err);			// because we might lose it if
+//				&err);	// because we might lose it if
 				NULL);
 	}
 	g_free(key);
@@ -3911,7 +3967,8 @@ check_update_feed_image(gchar *key)
 	}
 	if ((f = fopen(fav_file, "r+"))) {
 		fgets(rfeed, 50, f);
-		remain = start.tv_sec - strtoul((const char *)&rfeed, NULL, 10);
+		remain = start.tv_sec - strtoul(
+					(const char *)&rfeed, NULL, 10);
 		if (FEED_IMAGE_TTL <= remain) {
 			(void)fseek(f, 0L, SEEK_SET);
 			fprintf(f, "%lu", start.tv_sec);
@@ -3919,7 +3976,8 @@ check_update_feed_image(gchar *key)
 			ret =  TRUE;
 			goto out;
 		} else {
-			d("next favicon will be fetched in %lu seconds\n", FEED_IMAGE_TTL - remain);
+			d("next favicon will be fetched in %lu seconds\n",
+				FEED_IMAGE_TTL - remain);
 			fclose(f);
 			ret = FALSE;
 		}
@@ -3984,11 +4042,11 @@ update_feed_image(RDF *r)
 			textcb,
 			NULL,
 			(gpointer)finish_update_feed_image,
-			g_strdup(r->uri),	// we need to dupe key here
+			g_strdup(r->uri),// we need to dupe key here
 			0,
-			&err);			// because we might loose it if
+			&err);		// because we might loose it if
 		g_free(server);
-						// feeds get deleted
+					// feeds get deleted
 	}
 	}
 out:	g_free(feed_file);
@@ -4136,9 +4194,15 @@ update_feed_folder(gchar *old_name, gchar *new_name, gboolean valid_folder)
 			else if (!lookup_key(ofolder))
 				return 0;
 		}
-		g_hash_table_replace(rf->feed_folders, g_strdup(nname), g_strdup(oname));
+		g_hash_table_replace(
+			rf->feed_folders,
+			g_strdup(nname),
+			g_strdup(oname));
 	} else {
-		g_hash_table_replace(rf->feed_folders, g_strdup(nname), g_strdup(orig_name));
+		g_hash_table_replace(
+			rf->feed_folders,
+			g_strdup(nname),
+			g_strdup(orig_name));
 		g_hash_table_remove(rf->feed_folders, oname);
 	}
 
@@ -4159,7 +4223,8 @@ check_feed_folder(gchar *folder_name)
 
 	gchar *main_folder = lookup_main_folder();
 	gchar *real_folder = lookup_feed_folder(folder_name);
-	gchar *real_name = g_strdup_printf("%s/%s", main_folder, real_folder);
+	gchar *real_name = g_strdup_printf(
+				"%s/%s", main_folder, real_folder);
 	d("main_folder:%s\n", main_folder);
 	d("real_folder:%s\n", real_folder);
 	d("real_name:%s\n", real_name);
@@ -4272,18 +4337,24 @@ store_folder_renamed(CamelObject *o, void *event_data, void *data)
 	gchar *main_folder = lookup_main_folder();
 	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
 		|| !g_ascii_strncasecmp(info->old_base, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
-		d("Folder renamed to '%s' from '%s'\n", info->new->full_name, info->old_base);
+		d("Folder renamed to '%s' from '%s'\n",
+			info->new->full_name, info->old_base);
 		if (!g_ascii_strncasecmp(main_folder, info->old_base, strlen(info->old_base))
 		|| !g_ascii_strncasecmp(OLD_FEEDS_FOLDER, info->old_base, strlen(info->old_base)))
 			update_main_folder(info->new->full_name);
 		else
 			if (0 == update_feed_folder(info->old_base, info->new->full_name, 1)) {
 				d("info->old_base:%s\n", info->old_base);
-				d("info->new->full_name:%s\n", info->new->full_name);
+				d("info->new->full_name:%s\n",
+					info->new->full_name);
 				d("this is not a feed!!\n");
-				rebase_feeds(info->old_base, info->new->full_name);
+				rebase_feeds(
+					info->old_base,
+					info->new->full_name);
 			}
-		g_idle_add((GSourceFunc)store_redraw, GTK_TREE_VIEW(rf->treeview));
+		g_idle_add(
+			(GSourceFunc)store_redraw,
+			GTK_TREE_VIEW(rf->treeview));
 		save_gconf_feed();
 	}
 }
@@ -4325,18 +4396,22 @@ custom_update_articles(CDATA *cdata)
 			cdata->user_data,
 			cdata->key,
 			(gpointer)finish_feed,
-			g_strdup(cdata->key),  // we need to dupe key here
+			g_strdup(cdata->key), // we need to dupe key here
 			1,
-			&err);                  // because we might lose it if
+			&err);                // because we might lose it if
 			if (err) {
 				rf->feed_queue--;
 				msg = g_strdup_printf("\n%s\n%s",
 					(char *)cdata->key, err->message);
-				rss_error(cdata->key, NULL, _("Error fetching feed."), msg);
+				rss_error(
+					cdata->key,
+					NULL,
+					_("Error fetching feed."),
+					msg);
 				g_free(msg);
 			}
 		} else if (rf->cancel && !rf->feed_queue) {
-			rf->cancel = 0;         //all feeds where either procesed or skipped
+			rf->cancel = 0;//all feeds where either procesed or skipped
 		}
 	}
 	return TRUE;
@@ -4348,21 +4423,28 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	guint time_id = 0;
 	guint ttl, ttl_multiply;
 	if (!custom_timeout)
-		custom_timeout = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		custom_timeout = g_hash_table_new_full(
+					g_str_hash, g_str_equal,
+					g_free, NULL);
 
 	if (GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(key))) == 2
 	 && g_hash_table_lookup(rf->hre, lookup_key(key))) {
 		d("custom key:%s\n", (char *)key);
-		ttl = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(key)));
-		ttl_multiply = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl_multiply,
-				lookup_key(key)));
+		ttl = GPOINTER_TO_INT(
+			g_hash_table_lookup(rf->hrttl, lookup_key(key)));
+		ttl_multiply = GPOINTER_TO_INT(
+				g_hash_table_lookup(
+					rf->hrttl_multiply,
+					lookup_key(key)));
 		if (ttl) {
 			CDATA *cdata = g_new0(CDATA, 1);
 			cdata->key = key;
 			cdata->value = value;
 			cdata->user_data = user_data;
-			time_id = GPOINTER_TO_INT(g_hash_table_lookup(custom_timeout,
-							lookup_key(key)));
+			time_id = GPOINTER_TO_INT(
+					g_hash_table_lookup(
+						custom_timeout,
+						lookup_key(key)));
 			if (time_id)
 				g_source_remove(time_id);
 			switch (ttl_multiply) {
@@ -4376,9 +4458,10 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 					ttl_multiply = 1;
 					break;
 			}
-			time_id = g_timeout_add (ttl * 60 * 1000 * ttl_multiply,
-				(GtkFunction) custom_update_articles,
-				cdata);
+			time_id = g_timeout_add (
+					ttl * 60 * 1000 * ttl_multiply,
+					(GtkFunction) custom_update_articles,
+					cdata);
 			g_hash_table_replace(custom_timeout,
 				g_strdup(lookup_key(key)),
 				GINT_TO_POINTER(time_id));
@@ -4388,27 +4471,28 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 	return 0;
 }
 
-void evo_window_popup(GtkWidget *window)
+void evo_window_popup(GtkWidget *win)
 {
 	gint x, y, sx, sy, new_x, new_y;
+	GdkWindow *window = gtk_widget_get_window(win);
 
+	g_return_if_fail(win != NULL);
 	g_return_if_fail(window != NULL);
-	g_return_if_fail(window->window != NULL);
 
 	sx = gdk_screen_width();
 	sy = gdk_screen_height();
 
-	gdk_window_get_origin(window->window, &x, &y);
+	gdk_window_get_origin(window, &x, &y);
 	new_x = x % sx; if (new_x < 0) new_x = 0;
 	new_y = y % sy; if (new_y < 0) new_y = 0;
 	if (new_x != x || new_y != y)
-		gdk_window_move(window->window, new_x, new_y);
+		gdk_window_move(window, new_x, new_y);
 
-	gtk_window_set_skip_taskbar_hint(GTK_WINDOW(window), FALSE);
-	gtk_window_present(GTK_WINDOW(window));
+	gtk_window_set_skip_taskbar_hint(GTK_WINDOW(win), FALSE);
+	gtk_window_present(GTK_WINDOW(win));
 #ifdef G_OS_WIN32
 	/* ensure that the window is displayed at the top */
-	gdk_window_show(window->window);
+	gdk_window_show(window);
 #endif
 }
 
@@ -4483,7 +4567,10 @@ flaten_status(gpointer msg, gpointer user_data)
 {
 	if (strlen(msg)) {
 		if (flat_status_msg)
-			flat_status_msg = g_strconcat(flat_status_msg, msg, NULL);
+			flat_status_msg = g_strconcat(
+						flat_status_msg,
+						msg,
+						NULL);
 		else
 			flat_status_msg = g_strdup(msg);
 	}
@@ -4502,7 +4589,9 @@ update_status_icon(const char *channel, gchar *title)
 		if (g_queue_get_length(status_msg) == 6)
 			g_queue_pop_head(status_msg);
 		g_queue_foreach(status_msg, flaten_status, flat_status_msg);
-		stext = g_markup_escape_text(flat_status_msg, strlen(flat_status_msg));
+		stext = g_markup_escape_text(
+				flat_status_msg,
+				strlen(flat_status_msg));
 #if GTK_VERSION >= 2016000
 		gtk_status_icon_set_tooltip_text (status_icon, stext);
 #else
@@ -4522,7 +4611,10 @@ update_status_icon(const char *channel, gchar *title)
 void
 custom_feed_timeout(void)
 {
-	g_hash_table_foreach(rf->hrname, (GHFunc)custom_fetch_feed, statuscb);
+	g_hash_table_foreach(
+		rf->hrname,
+		(GHFunc)custom_fetch_feed,
+		statuscb);
 }
 
 static void
@@ -4581,7 +4673,10 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 			(GtkFunction) update_articles,
 			0);
 	}
-	timeout = gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL);
+	timeout = gconf_client_get_float(
+			rss_gconf,
+			GCONF_KEY_REP_CHECK_TIMEOUT,
+			NULL);
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_REP_CHECK, NULL)) {
 		rf->rc_id = g_timeout_add (60 * 1000 * timeout,
 				(GtkFunction) update_articles,
@@ -4625,12 +4720,18 @@ check_folders(void)
 	CamelStore *store = rss_component_peek_local_store();
 	CamelFolder *mail_folder, *old_folder;
 
-	mail_folder = camel_store_get_folder (store, lookup_main_folder(), 0, NULL);
-	old_folder = camel_store_get_folder (store, OLD_FEEDS_FOLDER, 0, NULL);
+	mail_folder = camel_store_get_folder (
+			store, lookup_main_folder(), 0, NULL);
+	old_folder = camel_store_get_folder (
+			store, OLD_FEEDS_FOLDER, 0, NULL);
 	if (old_folder) {
-		camel_store_rename_folder(store, OLD_FEEDS_FOLDER, lookup_main_folder(), NULL);
+		camel_store_rename_folder(
+			store, OLD_FEEDS_FOLDER,
+			lookup_main_folder(), NULL);
 	} else if (mail_folder == NULL) {
-		camel_store_create_folder (store, NULL, lookup_main_folder(), &ex);
+		camel_store_create_folder (
+			store, NULL,
+			lookup_main_folder(), &ex);
 		return;
 	}
 	camel_object_unref (mail_folder);
@@ -4795,7 +4896,11 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 	}
 
 #ifdef EVOLUTION_2_12
-	g_signal_connect(data->gd, "response", G_CALLBACK(dialog_response), NULL);
+	g_signal_connect(
+		data->gd,
+		"response",
+		G_CALLBACK(dialog_response),
+		NULL);
 
 	info = g_malloc0 (sizeof (*info));
 //        info->type = type;
@@ -4890,17 +4995,29 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 		"org-gnome-evolution-rss:readrss",
 		_("Reading RSS feeds..."), NULL);
 
-	g_signal_connect(readrss_dialog, "response", G_CALLBACK(readrss_dialog_cb), NULL);
+	g_signal_connect(
+		readrss_dialog,
+		"response",
+		G_CALLBACK(readrss_dialog_cb),
+		NULL);
 	GtkWidget *label2 = gtk_label_new(NULL);
 	readrss_label = gtk_label_new(_("Please wait"));
 	if (!rf->progress_dialog) {
 		readrss_progress = gtk_progress_bar_new();
-		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), label2, TRUE, TRUE, 10);
-		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_label, FALSE, FALSE, 0);
-		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_progress, FALSE, FALSE, 0);
-		gtk_progress_bar_set_fraction((GtkProgressBar *)readrss_progress, 0);
+		gtk_box_pack_start(
+			GTK_BOX(((GtkDialog *)readrss_dialog)->vbox),
+			label2, TRUE, TRUE, 10);
+		gtk_box_pack_start(
+			GTK_BOX(((GtkDialog *)readrss_dialog)->vbox),
+			readrss_label, FALSE, FALSE, 0);
+		gtk_box_pack_start(
+			GTK_BOX(((GtkDialog *)readrss_dialog)->vbox),
+			readrss_progress, FALSE, FALSE, 0);
+		gtk_progress_bar_set_fraction(
+			(GtkProgressBar *)readrss_progress, 0);
 		/* xgettext:no-c-format */
-		gtk_progress_bar_set_text((GtkProgressBar *)readrss_progress, _("0% done"));
+		gtk_progress_bar_set_text(
+			(GtkProgressBar *)readrss_progress, _("0% done"));
 		gtk_widget_show_all(readrss_dialog);
 		rf->progress_dialog = readrss_dialog;
 		rf->progress_bar = readrss_progress;
@@ -4916,7 +5033,8 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 		force_update = 1;
 		taskbar_op_message(NULL, NULL);
 		network_timeout();
-		g_hash_table_foreach(rf->hrname, (GHFunc)fetch_feed, statuscb);
+		g_hash_table_foreach(
+			rf->hrname, (GHFunc)fetch_feed, statuscb);
 		// reset cancelation signal
 		if (rf->cancel)
 			rf->cancel = 0;
@@ -4954,7 +5072,8 @@ guint
 fallback_engine(void)
 {
 #ifdef HAVE_RENDERKIT
-	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+	guint engine = gconf_client_get_int(
+			rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
 #if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
 	engine = 0;
 #endif
@@ -4992,11 +5111,17 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 	rss_shell_view = shell_view;
 	shell_window = e_shell_view_get_shell_window (rss_shell_view);
 	g_signal_connect (
-		e_shell_window_get_action (E_SHELL_WINDOW (shell_window), "mail-folder-refresh"), "activate",
+		e_shell_window_get_action (
+			E_SHELL_WINDOW (shell_window),
+			"mail-folder-refresh"),
+			"activate",
 		G_CALLBACK (org_gnome_cooly_folder_refresh),
 		rss_shell_view);
 	g_signal_connect (
-		e_shell_window_get_action (E_SHELL_WINDOW (shell_window), "quit"), "activate",
+		e_shell_window_get_action (
+			E_SHELL_WINDOW (shell_window),
+			"quit"),
+		"activate",
 		G_CALLBACK (quit_cb),
 		rss_shell_view);
 	return TRUE;
@@ -5059,9 +5184,15 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			rf->bus = init_dbus ();
 #endif
 			if (!rf->activity)	//keeping track of taskbar operations
-				rf->activity = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+				rf->activity = g_hash_table_new_full(
+						g_str_hash,
+						g_str_equal,
+						NULL, NULL);
 			if (!rf->error_hash)	//keeping trask of taskbar errors
-				rf->error_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+				rf->error_hash = g_hash_table_new_full(
+							g_str_hash,
+							g_str_equal,
+							g_free, NULL);
 			//there is no shutdown for e-plugin yet.
 			atexit(rss_finalize);
 			render = GPOINTER_TO_INT(
@@ -5071,8 +5202,10 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 
 			if (!render) {	// set render just in case it was forced in configure
 				render = RENDER_N;
-				gconf_client_set_int(rss_gconf,
-						GCONF_KEY_HTML_RENDER, render, NULL);
+				gconf_client_set_int(
+					rss_gconf,
+					GCONF_KEY_HTML_RENDER,
+					render, NULL);
 			}
 #ifdef HAVE_GECKO
 			if (2 == render)
@@ -5169,17 +5302,25 @@ create_mail(create_feed *CF)
 	if (CF->date) {
 		//check if CF->date obeys rfc822
 		if (!is_rfc822(CF->date))
-			camel_mime_message_set_date(new, CAMEL_MESSAGE_DATE_CURRENT, 0);
+			camel_mime_message_set_date(
+				new,
+				CAMEL_MESSAGE_DATE_CURRENT,
+				0);
 		else {
-			actual_time = camel_header_decode_date(CF->date, &offset);
-			camel_mime_message_set_date(new, actual_time, offset);
+			actual_time = camel_header_decode_date(
+					CF->date, &offset);
+			camel_mime_message_set_date(
+					new,
+					actual_time,
+					offset);
 		}
 	} else {
 		if (CF->dcdate)	{ //dublin core
 			d("dcdate:%s\n", CF->dcdate);
 			if (strptime(CF->dcdate, "%Y-%m-%dT%T%z", &tm)) {
 				time = mktime(&tm);
-				actual_time = camel_header_decode_date (ctime(&time), &offset);
+				actual_time = camel_header_decode_date (
+						ctime(&time), &offset);
 			}
 		}
 		/*use 'now' as time for failsafe*/
@@ -5210,9 +5351,11 @@ create_mail(create_feed *CF)
 		cats = g_string_new(NULL);
 		for (p = (GList *)CF->category; p != NULL; p=p->next) {
 			if (p->next)
-				g_string_append_printf(cats, "%s, ", (char *)p->data);
+				g_string_append_printf(
+					cats, "%s, ", (char *)p->data);
 			else
-				g_string_append_printf(cats, "%s", (char *)p->data);
+				g_string_append_printf(
+					cats, "%s", (char *)p->data);
 		}
 		camel_medium_set_header(
 			CAMEL_MEDIUM(new),
