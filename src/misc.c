@@ -49,6 +49,12 @@ on_next_unread_item_activate(gpointer a)
 }
 
 void
+print_list(gpointer data, gpointer user_data)
+{
+	g_print("list element:%s\n", (gchar *)data);
+}
+
+void
 print_hash(gpointer key, gpointer value, gpointer user_data)
 {
 	g_print("key:%s, value:%s\n", (gchar *)key, (gchar *)value);
@@ -258,46 +264,46 @@ strplchr(gchar *source)
 gchar *
 markup_decode (gchar *str)
 {
-        char *iterator, *temp;
-        int cnt = 0;
-        GString *result = g_string_new (NULL);
+	char *iterator, *temp;
+	int cnt = 0;
+	GString *result = g_string_new (NULL);
 
-        g_return_val_if_fail (str != NULL, NULL);
+	g_return_val_if_fail (str != NULL, NULL);
 
-        iterator = str;
+	iterator = str;
 
-        for (cnt = 0, iterator = str;
-             cnt <= (int)(strlen (str));
-             cnt++, iterator++) {
-                if (*iterator == '&') {
-                        int jump = 0;
-                        int i;
+	for (cnt = 0, iterator = str;
+	cnt <= (int)(strlen (str));
+	cnt++, iterator++) {
+		if (*iterator == '&') {
+			int jump = 0;
+			int i;
 
-                        if (g_ascii_strncasecmp (iterator, "&amp;", 5) == 0) {
-                                g_string_append_c (result, '&');
-                                jump = 5;
-                        } else if (g_ascii_strncasecmp (iterator, "&lt;", 4) == 0) {
-                                g_string_append_c (result, '<');
-                                jump = 4;
-                        } else if (g_ascii_strncasecmp (iterator, "&gt;", 4) == 0) {
-                                g_string_append_c (result, '>');
-                                jump = 4;
-                        } else if (g_ascii_strncasecmp (iterator, "&quot;", 6) == 0) {
-                                g_string_append_c (result, '\"');
-                                jump = 6;
-                        }
-                        for (i = jump - 1; i > 0; i--) {
-                                iterator++;
-                                if (*iterator == '\0')
-                                        break;
-                        }
-                } else {
-                        g_string_append_c (result, *iterator);
-                }
-        }
-        temp = result->str;
-        g_string_free (result, FALSE);
-        return temp;
+			if (g_ascii_strncasecmp (iterator, "&amp;", 5) == 0) {
+				g_string_append_c (result, '&');
+				jump = 5;
+			} else if (g_ascii_strncasecmp (iterator, "&lt;", 4) == 0) {
+				g_string_append_c (result, '<');
+				jump = 4;
+			} else if (g_ascii_strncasecmp (iterator, "&gt;", 4) == 0) {
+				g_string_append_c (result, '>');
+				jump = 4;
+			} else if (g_ascii_strncasecmp (iterator, "&quot;", 6) == 0) {
+				g_string_append_c (result, '\"');
+				jump = 6;
+			}
+			for (i = jump - 1; i > 0; i--) {
+				iterator++;
+				if (*iterator == '\0')
+					break;
+			}
+		} else {
+			g_string_append_c (result, *iterator);
+		}
+	}
+	temp = result->str;
+	g_string_free (result, FALSE);
+	return temp;
 }
 
 gchar *
@@ -348,53 +354,53 @@ header_decode_lwsp(const char **in)
 	char c;
 
 
-        while ((camel_mime_is_lwsp(*inptr) || *inptr =='(') && *inptr != '\0') {
-                while (camel_mime_is_lwsp(*inptr) && *inptr != '\0') {
-                        inptr++;
-                }
+	while ((camel_mime_is_lwsp(*inptr) || *inptr =='(') && *inptr != '\0') {
+		while (camel_mime_is_lwsp(*inptr) && *inptr != '\0') {
+			inptr++;
+		}
 
-                /* check for comments */
-                if (*inptr == '(') {
-                        int depth = 1;
-                        inptr++;
-                        while (depth && (c=*inptr) && *inptr != '\0') {
-                                if (c=='\\' && inptr[1]) {
-                                        inptr++;
-                                } else if (c=='(') {
-                                        depth++;
-                                } else if (c==')') {
-                                        depth--;
-                                }
-                                inptr++;
-                        }
-                }
-        }
-        *in = inptr;
+		/* check for comments */
+		if (*inptr == '(') {
+			int depth = 1;
+			inptr++;
+			while (depth && (c=*inptr) && *inptr != '\0') {
+				if (c=='\\' && inptr[1]) {
+					inptr++;
+				} else if (c=='(') {
+					depth++;
+				} else if (c==')') {
+					depth--;
+				}
+				inptr++;
+			}
+		}
+	}
+	*in = inptr;
 }
 
 char *
 decode_token (const char **in)
 {
-        const char *inptr = *in;
-        const char *start;
+	const char *inptr = *in;
+	const char *start;
 
-        header_decode_lwsp (&inptr);
-        start = inptr;
-        while (camel_mime_is_ttoken (*inptr))
-                inptr++;
-        if (inptr > start) {
-                *in = inptr;
-                return g_strndup (start, inptr - start);
-        } else {
-                return NULL;
-        }
+	header_decode_lwsp (&inptr);
+	start = inptr;
+	while (camel_mime_is_ttoken (*inptr))
+		inptr++;
+	if (inptr > start) {
+		*in = inptr;
+		return g_strndup (start, inptr - start);
+	} else {
+		return NULL;
+	}
 }
 
 gchar *extract_main_folder(gchar *folder)
 {
 	gchar *main_folder = lookup_main_folder();
-        gchar *base = g_strdup_printf("%s/", main_folder);
-        gchar **nnew;
+	gchar *base = g_strdup_printf("%s/", main_folder);
+	gchar **nnew;
 	gchar *tmp;
 	if ((nnew = g_strsplit(folder, base, 0))) {
 		g_free(base);
@@ -408,24 +414,24 @@ gchar *extract_main_folder(gchar *folder)
 
 /* hrm, is there a library for this shit? */
 struct {
-        const char *name;
-        int offset;
+	const char *name;
+	int offset;
 } tz_offsets [] = {
-        { "UT", 0 },
-        { "GMT", 0 },
-        { "EST", -500 },        /* these are all US timezones.  bloody yanks */
-        { "EDT", -400 },
-        { "CST", -600 },
-        { "CDT", -500 },
-        { "MST", -700 },
-        { "MDT", -600 },
-        { "PST", -800 },
-        { "PDT", -700 },
-        { "Z", 0 },
-        { "A", -100 },
-        { "M", -1200 },
-        { "N", 100 },
-        { "Y", 1200 },
+	{ "UT", 0 },
+	{ "GMT", 0 },
+	{ "EST", -500 },        /* these are all US timezones.  bloody yanks */
+	{ "EDT", -400 },
+	{ "CST", -600 },
+	{ "CDT", -500 },
+	{ "MST", -700 },
+	{ "MDT", -600 },
+	{ "PST", -800 },
+	{ "PDT", -700 },
+	{ "Z", 0 },
+	{ "A", -100 },
+	{ "M", -1200 },
+	{ "N", 100 },
+	{ "Y", 1200 },
 };
 
 static const char tz_months [][4] = {
@@ -446,20 +452,19 @@ is_rfc822(char *in)
 	gchar *day, *monthname;
 	gboolean foundmonth;
 
-        header_decode_lwsp (&inptr);
+	header_decode_lwsp (&inptr);
 	day =  decode_token(&inptr);
-        if (day)
-        {
+	if (day) {
 		g_free (day);
-                header_decode_lwsp (&inptr);
-                if (*inptr == ',')
-                        inptr++;
-                else
-                        goto notrfc;
+		header_decode_lwsp (&inptr);
+		if (*inptr == ',')
+			inptr++;
+		else
+			goto notrfc;
 	}
-        tm.tm_mday = camel_header_decode_int(&inptr);
-        if (tm.tm_mday == 0)
-                goto notrfc;
+	tm.tm_mday = camel_header_decode_int(&inptr);
+	if (tm.tm_mday == 0)
+		goto notrfc;
 
 	monthname = decode_token(&inptr);
 	foundmonth = FALSE;

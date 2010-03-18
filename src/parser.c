@@ -73,8 +73,12 @@ rss_html_url_decode(const char *html, int len)
 				g_free(feed_dir);
 				return NULL;
 			}
-			tmpurl = camel_url_decode_path(strstr(url, "http:"));
-			xmlSetProp((xmlNodePtr)doc, (xmlChar *)"src", (xmlChar *)tmpurl);
+			tmpurl = camel_url_decode_path(
+					strstr(url, "http:"));
+			xmlSetProp(
+				(xmlNodePtr)doc,
+				(xmlChar *)"src",
+				(xmlChar *)tmpurl);
 			g_free(tmpurl);
 		}
 	}
@@ -83,7 +87,9 @@ rss_html_url_decode(const char *html, int len)
 }
 
 void
-html_set_base(xmlNode *doc, char *base, const char *tag, const char *prop, char *basehref)
+html_set_base(
+	xmlNode *doc, char *base, const char *tag,
+	const char *prop, char *basehref)
 {
 	gchar *url;
 #if LIBSOUP_VERSION < 2003000
@@ -581,15 +587,11 @@ layer_find_tag_prop (xmlNodePtr node,
 		xmlDebugDumpNode (stdout, node, 32);
 		printf("%s.\n", node->name);
 #endif
-		if (node->ns && node->ns->prefix)
-		{
-			for (i=0; i < 1; i++)
-			{
-				if (!strcasecmp ((char *)node->ns->prefix, property_rss_modules[i][1]))
-				{
+		if (node->ns && node->ns->prefix) {
+			for (i=0; i < 1; i++) {
+				if (!strcasecmp ((char *)node->ns->prefix, property_rss_modules[i][1])) {
 					func = (gpointer)property_rss_modules[i][2];
-					if (strcasecmp ((char *)node->ns->prefix, match)==0)
-					{
+					if (strcasecmp ((char *)node->ns->prefix, match)==0) {
 						g_print("URL:%s\n", func(node, search, fail));
 					}
 				}
@@ -868,9 +870,12 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 	char *p = g_strdup(layer_find (top, "title", "Untitled article"));
 	//firstly try to parse as an ATOM author
 	//process person construct
-	char *q1 = g_strdup(layer_find_innerhtml (top, "author", "name", NULL));
-	char *q2 = g_strdup(layer_find_innerhtml (top, "author", "uri", NULL));
-	char *q3 = g_strdup(layer_find_innerhtml (top, "author", "email", NULL));
+	char *q1 = g_strdup(
+			layer_find_innerhtml (top, "author", "name", NULL));
+	char *q2 = g_strdup(
+			layer_find_innerhtml (top, "author", "uri", NULL));
+	char *q3 = g_strdup(
+			layer_find_innerhtml (top, "author", "email", NULL));
 	if (q1) {
 		q1 = g_strdelimit(q1, "><", ' ');
 		qsafe = encode_rfc2047(q1);

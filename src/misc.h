@@ -38,6 +38,7 @@ gchar *sanitize_folder(gchar *text);
 void header_decode_lwsp(const char **in);
 char *decode_token (const char **in);
 gchar *encode_rfc2047(gchar *str);
+void print_list(gpointer data, gpointer user_data);
 void print_hash(gpointer key, gpointer value, gpointer user_data);
 void print_hash_int(gpointer key, gpointer value, gpointer user_data);
 gboolean feed_is_new(gchar *file_name, gchar *needle);

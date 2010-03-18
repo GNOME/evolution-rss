@@ -41,3 +41,4 @@
 	* when delete folder remove any pending filter process
 	* when import opml print opml title
 	* import without fetching (add without validate ?)
+	* do not mark folders as feeds (icon)
