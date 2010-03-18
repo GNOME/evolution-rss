@@ -49,6 +49,7 @@ void restore_feed_hash(gpointer name, hrfeed *s);
 void feeds_dialog_disable(GtkDialog *d, gpointer data);
 GtkWidget *remove_feed_dialog(gchar *msg);
 void feeds_dialog_delete(GtkDialog *d, gpointer data);
+gchar *append_buffer(gchar *result, gchar *str);
 
 void process_dialog_edit(
 	add_feed *feed,

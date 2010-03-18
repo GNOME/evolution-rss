@@ -92,12 +92,12 @@ typedef struct _RDF {
 //to easily restore in case delete does not success or
 //it is canceled
 typedef struct _hrfeed {
-	gchar *hrname;
-	gchar *hrname_r;
-	gchar *hr;
-	guint hre;
-	gchar *hrt;
-	guint hrh;
+	gchar *hrname;		//hr name <name> <key>
+	gchar *hrname_r;	//hr name <key> <name>
+	gchar *hr;		//hr url <key>, <url>
+	guint hre;		//hr enabled <key> <enabled>
+	gchar *hrt;		//hr type <key> <>
+	guint hrh;		//hr html <key> <>
 	guint hrdel_feed;
 	guint hrdel_days;
 	guint hrdel_messages;

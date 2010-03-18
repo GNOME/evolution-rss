@@ -1310,32 +1310,48 @@ read_feeds(rssfeed *rf)
 	feed_file = g_strdup_printf("%s/evolution-feeds", feed_dir);
 	g_free(feed_dir);
 	rf->hrname = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, g_free);
 	rf->hrname_r = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-	rf->hr = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-	rf->hre = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, g_free);
+	rf->hr = g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, g_free);
+	rf->hre = g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrt = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, g_free);
 	rf->hrh = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
 	rf->hruser = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, NULL, g_free);
 	rf->hrpass = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, NULL, g_free);
 	rf->hrdel_feed = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_days = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_messages = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_unread = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrdel_notpresent = 
-		g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrupdate = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrttl = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrttl_multiply = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrupdate = g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrttl = g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
+	rf->hrttl_multiply = g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
 
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
 		migrate_old_config(feed_file);
@@ -2339,13 +2355,17 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		if (gconf_client_get_bool (rss_gconf,
 					GCONF_KEY_IMAGE_RESIZE,
 					NULL)) {
+			gchar *wids;
+			xmlDoc *src;
+			guint width;
+
 			GtkWidget *obj = (GtkWidget *)emfh->html;
-			gtk_wiget_get_allocation(obj, &alloc);
-			guint width = alloc.width - 56;
-			gchar *wids = g_strdup_printf("%d", width);
-			xmlDoc *src = (xmlDoc *)parse_html_sux(
-						tmp,
-						strlen(tmp));
+			gtk_widget_get_allocation(obj, &alloc);
+			width = alloc.width - 56;
+			wids = g_strdup_printf("%d", width);
+			src = (xmlDoc *)parse_html_sux(
+					tmp,
+					strlen(tmp));
 			if (src) {
 				xmlNode *doc = (xmlNode *)src;
 				while ((doc = html_find(doc, (gchar *)"img"))) {
@@ -2616,7 +2636,8 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	if (!rss_folder)
 		goto out;
 	if (!icons)
-		icons = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		icons = g_hash_table_new_full(
+				g_str_hash, g_str_equal, g_free, NULL);
 	ofolder = g_hash_table_lookup(rf->feed_folders, rss_folder);
 	key = g_hash_table_lookup(rf->hrname,
 				ofolder ? ofolder : rss_folder);
@@ -2642,7 +2663,8 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 				goto out;
 #else
 			gchar *feed_dir = rss_component_peek_base_directory();
-			gchar *feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+			gchar *feed_file = g_strdup_printf(
+						"%s/%s.img", feed_dir, key);
 			pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
 			g_free(feed_dir);
 
@@ -3032,7 +3054,8 @@ add:
 
 		if (rf->import && feed->prefix) {
 			gchar *a = g_build_path(
-					"/", feed->prefix ? feed->prefix : "",
+					"/",
+					feed->prefix ? feed->prefix : "",
 					feed->feed_name,
 					NULL);
 			gchar *b = g_build_path("/", r->title, NULL);
@@ -3183,7 +3206,9 @@ void
 update_ttl(gpointer key, guint value)
 {
 	if (2 != GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, key)))
-		g_hash_table_replace(rf->hrttl, g_strdup(key), GINT_TO_POINTER(value));
+		g_hash_table_replace(
+			rf->hrttl, g_strdup(key),
+			GINT_TO_POINTER(value));
 }
 
 
@@ -6149,7 +6174,8 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 				}
 			}
 		}
-		d("uid:%d j:%d/%d, date:%s, imax:%d\n", i, j, q, ctime((const time_t *)min_date), imax);
+		d("uid:%d j:%d/%d, date:%s, imax:%d\n", 
+			i, j, q, ctime((const time_t *)min_date), imax);
 out:		camel_message_info_free(info);
 	}
 	camel_folder_freeze(folder);
@@ -6181,7 +6207,10 @@ get_feed_age(RDF *r, gpointer name)
 	gchar *real_folder = lookup_feed_folder(name);
 	d("Cleaning folder: %s\n", real_folder);
 
-	real_name = g_strdup_printf("%s/%s", lookup_main_folder(), real_folder);
+	real_name = g_strdup_printf(
+			"%s/%s",
+			lookup_main_folder(),
+			real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
 		goto fail;
 	time (&now);

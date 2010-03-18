@@ -65,6 +65,8 @@ static guint feed_enabled = 0;
 static guint feed_validate = 0;
 static guint feed_html = 0;
 guint ccurrent = 0, ctotal = 0;
+GList *flist = NULL;
+gchar *strbuf;
 
 extern rssfeed *rf;
 extern guint upgrade;
@@ -846,9 +848,14 @@ store_redraw(GtkTreeView *data)
 
 	g_return_val_if_fail(data, FALSE);
 #if GTK_VERSION >= 2019007
-	g_return_val_if_fail(gtk_widget_get_realized(data), FALSE);
+	g_return_val_if_fail(
+		gtk_widget_get_realized(
+			GTK_WIDGET(data)),
+			FALSE);
 #else
-	g_return_val_if_fail(GTK_WIDGET_REALIZED(data), FALSE);
+	g_return_val_if_fail(
+		GTK_WIDGET_REALIZED(data),
+		FALSE);
 #endif
 
 	if (!store_redrawing) {
@@ -1029,31 +1036,49 @@ save_feed_hash(gpointer name)
 	saved_feed->hrname = 
 		g_strdup(g_hash_table_lookup(rf->hrname, name));
 	saved_feed->hrname_r = 
-		g_strdup(g_hash_table_lookup(rf->hrname_r, lookup_key(name)));
+		g_strdup(g_hash_table_lookup(
+				rf->hrname_r, lookup_key(name)));
 	saved_feed->hre = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hre, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+					rf->hre, lookup_key(name)));
 	saved_feed->hrt = 
-		g_strdup(g_hash_table_lookup(rf->hrt, lookup_key(name)));
+		g_strdup(g_hash_table_lookup(
+				rf->hrt, lookup_key(name)));
 	saved_feed->hrh = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrh, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+					rf->hrh, lookup_key(name)));
 	saved_feed->hr = 
-		g_strdup(g_hash_table_lookup(rf->hr, lookup_key(name)));
+		g_strdup(g_hash_table_lookup(
+				rf->hr,
+				lookup_key(name)));
 	saved_feed->hrdel_feed = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_feed, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+					rf->hrdel_feed,
+					lookup_key(name)));
 	saved_feed->hrdel_days = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+					rf->hrdel_days,
+					lookup_key(name)));
 	saved_feed->hrdel_messages = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+					rf->hrdel_messages,
+					lookup_key(name)));
 	saved_feed->hrdel_unread = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_unread, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+				rf->hrdel_unread, lookup_key(name)));
 	saved_feed->hrdel_notpresent = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_notpresent, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+				rf->hrdel_notpresent, lookup_key(name)));
 	saved_feed->hrupdate = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrupdate, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+				rf->hrupdate, lookup_key(name)));
 	saved_feed->hrttl = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+				rf->hrttl, lookup_key(name)));
 	saved_feed->hrttl_multiply = 
-		GPOINTER_TO_INT(g_hash_table_lookup(rf->hrttl_multiply, lookup_key(name)));
+		GPOINTER_TO_INT(g_hash_table_lookup(
+				rf->hrttl_multiply,
+				lookup_key(name)));
 	return saved_feed;
 }
 
@@ -1069,17 +1094,27 @@ restore_feed_hash(gpointer name, hrfeed *s)
 	g_hash_table_insert(
 		rf->hrname_r, g_strdup(lookup_key(name)), s->hrname_r);
 	g_hash_table_insert(
-		rf->hre, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hre));
+		rf->hre,
+		g_strdup(lookup_key(name)),
+		GINT_TO_POINTER(s->hre));
 	g_hash_table_insert(
-		rf->hrh, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrh));
+		rf->hrh,
+		g_strdup(lookup_key(name)),
+		GINT_TO_POINTER(s->hrh));
 	g_hash_table_insert(
-		rf->hrt, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrt));
+		rf->hrt,
+		g_strdup(lookup_key(name)),
+		GINT_TO_POINTER(s->hrt));
 	g_hash_table_insert(
 		rf->hr, g_strdup(lookup_key(name)), s->hr);
 	g_hash_table_insert(
-		rf->hrdel_feed, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_feed));
+		rf->hrdel_feed,
+		g_strdup(lookup_key(name)),
+		GINT_TO_POINTER(s->hrdel_feed));
 	g_hash_table_insert(
-		rf->hrdel_days, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrdel_days));
+		rf->hrdel_days,
+		g_strdup(lookup_key(name)),
+		GINT_TO_POINTER(s->hrdel_days));
 	g_hash_table_insert(
 		rf->hrdel_messages,
 		g_strdup(lookup_key(name)),
@@ -1093,9 +1128,13 @@ restore_feed_hash(gpointer name, hrfeed *s)
 		g_strdup(lookup_key(name)),
 		GINT_TO_POINTER(s->hrdel_notpresent));
 	g_hash_table_insert(
-		rf->hrupdate, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrupdate));
+		rf->hrupdate,
+		g_strdup(lookup_key(name)),
+		GINT_TO_POINTER(s->hrupdate));
 	g_hash_table_insert(
-		rf->hrttl, g_strdup(lookup_key(name)), GINT_TO_POINTER(s->hrttl));
+		rf->hrttl,
+		g_strdup(lookup_key(name)),
+		GINT_TO_POINTER(s->hrttl));
 	g_hash_table_insert(
 		rf->hrttl_multiply,
 		g_strdup(lookup_key(name)),
@@ -1517,7 +1556,8 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 }
 
 void
-import_dialog_response(GtkWidget *selector, guint response, gpointer user_data)
+import_dialog_response(
+	GtkWidget *selector, guint response, gpointer user_data)
 {
 	while (gtk_events_pending ())
 		gtk_main_iteration ();
@@ -1654,7 +1694,8 @@ import_opml(gchar *file)
 				src=src->children;
 				src = src->next;
 				src = src->children;
-				d("group name:%s\n", layer_find(src, "name", NULL));
+				d("group name:%s\n",
+					layer_find(src, "name", NULL));
 				src = src->next;
 				while ((src = iterate_import_file(src, &url, &name, 1))) {
 					if (url) {
@@ -1737,16 +1778,27 @@ import_opml(gchar *file)
 			src = src->next;
 		}
 		if (src->name) {
-			gchar *prop = (gchar *)xmlGetProp(src, (xmlChar *)"type");
+			gchar *prop = (gchar *)xmlGetProp(
+						src,
+						(xmlChar *)"type");
 //			if (prop) {
 				if ((prop && !strcmp(prop, "folder")) || !prop) {
-					base = (gchar *)xmlGetProp(src, (xmlChar *)"text");
+					base = (gchar *)xmlGetProp(
+							src,
+							(xmlChar *)"text");
 					if (NULL != src->last) {
 						gchar *tmp = root;
 						if (!root)
-							root = g_build_path("/", base, NULL);
+							root = g_build_path(
+								"/",
+								base,
+								NULL);
 						else {
-							root = g_build_path("/", root, base, NULL);
+							root = g_build_path(
+								"/",
+								root,
+								base,
+								NULL);
 						}
 						if (base) xmlFree(base);
 						if (tmp) g_free(tmp);
@@ -1755,21 +1807,40 @@ import_opml(gchar *file)
 				} else if (strcmp(prop, "link")) {
 				//	&& strcmp(prop, "vfolder")) {
 					if (maintitle)
-						rssprefix = g_build_path("/", maintitle, root, NULL);
+						rssprefix = g_build_path(
+								"/",
+								maintitle,
+								root,
+								NULL);
 					else
 						rssprefix = g_strdup(root);
-					rssurl = (gchar *)xmlGetProp(src, (xmlChar *)"xmlUrl");
+					rssurl = (gchar *)xmlGetProp(
+							src,
+							(xmlChar *)"xmlUrl");
 					if (!rssurl)
 						goto fail;
-					rsstitle = (gchar *)xmlGetProp(src, (xmlChar *)"title");
-					gtk_label_set_text(GTK_LABEL(import_label), (gchar *)rsstitle);
+					rsstitle = (gchar *)xmlGetProp(
+							src,
+							(xmlChar *)"title");
+					gtk_label_set_text(
+						GTK_LABEL(import_label),
+						(gchar *)rsstitle);
 #if GTK_VERSION >= 2006000
-					gtk_label_set_ellipsize (GTK_LABEL (import_label), PANGO_ELLIPSIZE_START);
+					gtk_label_set_ellipsize (
+						GTK_LABEL (import_label),
+						PANGO_ELLIPSIZE_START);
 #endif
-					gtk_label_set_justify(GTK_LABEL(import_label), GTK_JUSTIFY_CENTER);
+					gtk_label_set_justify(
+						GTK_LABEL(import_label),
+						GTK_JUSTIFY_CENTER);
 
-					dp("rssprefix:%s rssurl:%s rsstitle:%s\n", rssprefix, rssurl, rsstitle);
-					import_one_feed(rssurl, rsstitle, rssprefix);
+					dp("rssprefix:%s rssurl:%s rsstitle:%s\n",
+						rssprefix,
+						rssurl, rsstitle);
+					import_one_feed(
+						rssurl,
+						rsstitle,
+						rssprefix);
 					dp("import done\n");
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
@@ -1778,9 +1849,14 @@ fail:					while (gtk_events_pending ())
 					current++;
 					fr = ((current*100)/total);
 					if (fr < 100)
-						gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
-					what = g_strdup_printf(_("%2.0f%% done"), fr);
-					gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
+						gtk_progress_bar_set_fraction(
+							(GtkProgressBar *)import_progress,
+							fr/100);
+					what = g_strdup_printf(
+						_("%2.0f%% done"), fr);
+					gtk_progress_bar_set_text(
+						(GtkProgressBar *)import_progress,
+						what);
 					g_free(what);
 					g_free(rssprefix);
 				}
@@ -1818,9 +1894,11 @@ fail:					while (gtk_events_pending ())
 				gtk_main_iteration ();
 			current++;
 			fr = ((current*100)/total);
-			gtk_progress_bar_set_fraction((GtkProgressBar *)import_progress, fr/100);
+			gtk_progress_bar_set_fraction(
+				(GtkProgressBar *)import_progress, fr/100);
 			what = g_strdup_printf(_("%2.0f%% done"), fr);
-			gtk_progress_bar_set_text((GtkProgressBar *)import_progress, what);
+			gtk_progress_bar_set_text(
+				(GtkProgressBar *)import_progress, what);
 			g_free(what);
 			while (gtk_events_pending ())
 				gtk_main_iteration ();
@@ -1835,10 +1913,12 @@ out:    rf->import = 0;
 }
 
 static void
-select_file_response(GtkWidget *selector, guint response, gpointer user_data)
+select_file_response(
+	GtkWidget *selector, guint response, gpointer user_data)
 {
 	if (response == GTK_RESPONSE_OK) {
-		char *name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (selector));
+		char *name = gtk_file_chooser_get_filename (
+				GTK_FILE_CHOOSER (selector));
 		if (name) {
 			gtk_widget_hide(selector);
 			import_opml(name);
@@ -1851,19 +1931,22 @@ select_file_response(GtkWidget *selector, guint response, gpointer user_data)
 static void
 import_toggle_cb_html (GtkWidget *widget, gpointer data)
 {
-	feed_html  = 1-gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	feed_html  = 1-gtk_toggle_button_get_active (
+			GTK_TOGGLE_BUTTON (widget));
 }
 
 static void
 import_toggle_cb_valid (GtkWidget *widget, gpointer data)
 {
-	feed_validate  = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	feed_validate  = gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (widget));
 }
 
 static void
 import_toggle_cb_ena (GtkWidget *widget, gpointer data)
 {
-	feed_enabled  = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	feed_enabled  = gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (widget));
 }
 
 static void
@@ -2134,7 +2217,8 @@ import_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
-get_folder_info (CamelStore *store, CamelFolderInfo *info, CamelException *ex)
+get_folder_info (
+	CamelStore *store, CamelFolderInfo *info, CamelException *ex)
 {
 while (info) {
 		CamelFolder *fold;
@@ -2167,50 +2251,238 @@ while (info) {
 
 }
 
-static void
-construct_opml_line(gpointer key, gpointer value, gpointer user_data)
+GList*
+gen_folder_parents(
+	GList *list, GList *flist, gchar *tmp);
+
+/* for each feed folders generate complete list
+ * of parents as directory list
+ */
+
+GList*
+gen_folder_parents(GList *list, GList *flist, gchar *tmp)
 {
-	gchar *tmp, *what;
-	float fr;
-	gchar *url = g_hash_table_lookup(rf->hr, value);
-	gchar *url_esc = g_markup_escape_text(url, strlen(url));
-	gchar *key_esc = g_markup_escape_text(key, strlen(key));
+	gchar **path = NULL;
+	gchar *str = NULL;
+	gint i;
 
-#if 0
-	gchar *type = g_hash_table_lookup(rf->hrt, value);
-CamelFolderInfo *info;
-	CamelStore *store = mail_component_peek_local_store(NULL);
-	CamelException ex;
-	guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE | CAMEL_STORE_FOLDER_INFO_FAST;
+	flist = g_list_first(flist);
+	while ((flist = g_list_next(flist))) {
+		if (!strncmp(tmp, flist->data, strlen(tmp))) {
+			path = g_strsplit(flist->data, "/", 0);
+			i=0;
+			str=NULL;
+			if (*path != NULL) {
+				do {
+					if (!str)
+						str = g_strdup(path[i]);
+					else
+						str = g_strconcat(
+							str, "/",
+							path[i], NULL);
+					if (!g_list_find_custom(list, str, (GCompareFunc)strcmp))
+						list = g_list_append(list, str);
+				} while (NULL != path[++i]);
+				g_strfreev(path);
+			}
+			tmp = flist->data;
+		}
+	}
+	return list;
+}
 
+void
+gen_folder_list(
+	gpointer key, gpointer value, gpointer user);
 
-	camel_exception_init (&ex);
+void
+gen_folder_list(gpointer key, gpointer value, gpointer user)
+{
+	gchar *mf = get_main_folder();
+	gchar *tmp = g_hash_table_lookup(
+			rf->reversed_feed_folders, key);
+	gchar *folder;
 
-	info = camel_store_get_folder_info (store, "News and Blogs", flags, &ex);
+	if (tmp) {
+		tmp = g_path_get_dirname(tmp);
+		if (tmp && *tmp != '.')
+			folder = g_build_path("/", mf, tmp, NULL);
+		else
+			folder = g_strdup(mf);
+		g_free(mf);
+		g_free(tmp);
+		if (!g_list_find_custom(flist, folder, (GCompareFunc)strcmp)) {
+			flist = g_list_append(flist, folder);
+		}
+	}
+}
 
-	if (camel_exception_is_set (&ex))
-		goto out;
-	get_folder_info(store, info, &ex);
+void
+create_outline_feeds(
+	gchar *key, gpointer value, gpointer user_data);
 
-out:
-	camel_store_free_folder_info(store, info);
-#endif
+void
+create_outline_feeds(
+	gchar *key, gpointer value, gpointer user_data)
+{
+	gchar *dir = g_path_get_dirname(value);
+	gchar *uid = lookup_key(key);
+	gchar *tmp;
+	if (!uid) goto out;
+	if (!strcmp(user_data, dir)) {
+		gchar *url = g_hash_table_lookup(rf->hr, uid);
+		gchar *url_esc = g_markup_escape_text(url, strlen(url));
+		tmp = g_strdup_printf(
+		"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
+			key, key, key, url_esc, url_esc);
+		strbuf = append_buffer(strbuf, tmp);
+	}
+out:	g_free(dir);
+}
 
-	//gchar *tmp = g_strdup_printf("<outline text=\"%s\" title=\"%s\" type=\"%s\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
-	tmp = g_strdup_printf(
-		"<outline text=\"%s\" title=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
-		key_esc, key_esc, url_esc, url_esc);
-	if (buffer != NULL)
-		buffer = g_strconcat(buffer, tmp, NULL);
-	else
-		buffer = g_strdup(tmp);
-	g_free(tmp);
+gchar *
+append_buffer(gchar *result, gchar *str)
+{
+	if (result != NULL) {
+		gchar *r = result;
+		result = g_strconcat(result, str, NULL);
+//		g_free(str);
+		g_free(r);
+	} else {
+		result = g_strdup(str);
+		g_free(str);
+	}
+	return result;
+}
+
+gchar *
+append_buffer_string(gchar *result, gchar *str);
+
+gchar *
+append_buffer_string(gchar *result, gchar *str)
+{
+	if (result != NULL) {
+		gchar *r = result;
+		result = g_strconcat(result, str, NULL);
+		g_free(r);
+	} else {
+		result = g_strdup(str);
+	}
+	return result;
+}
+
+gchar *
+create_folder_feeds(gchar *folder);
+
+//generates all feeds's outline in folder
+gchar *
+create_folder_feeds(gchar *folder)
+{
+	gchar *tf;
+	GList *names;
+	GHashTable *nhash = g_hash_table_new(
+				g_str_hash,
+				g_str_equal);
+	strbuf = NULL;
+	if (folder && strcmp(folder, get_main_folder()))
+		tf = extract_main_folder(folder);
+	else {
+		tf = g_strdup(".");
+		//get list of "unfoldered" feeds - silly approach
+		names = g_hash_table_get_keys(rf->hrname);
+		while ((names = g_list_next(names))) {
+			if (!g_hash_table_lookup(rf->reversed_feed_folders, names->data))
+				g_hash_table_insert(nhash,
+					names->data, (gchar *)".");
+		}
+		g_hash_table_foreach(
+			nhash,
+			(GHFunc)create_outline_feeds, tf);
+		g_list_free(names);
+		g_hash_table_destroy(nhash);
+	}
+	g_hash_table_foreach(
+		rf->reversed_feed_folders,
+		(GHFunc)create_outline_feeds, tf);
+	g_free(tf);
+	return strbuf;
+}
+
+gchar *
+create_xml(GtkWidget *progress);
+
+gchar *
+create_xml(GtkWidget *progress)
+{
+	gchar *tmp, *result = NULL;
+	GList *list = NULL;
+	GList *p = NULL;
+	GQueue *acc = g_queue_new();
+	gint i = 0;
+	gfloat fr;
+	gchar *what;
+
+	g_hash_table_foreach(
+		rf->hrname,
+		gen_folder_list,
+		NULL);
+	list = flist;
+
+	tmp = list->data;
+	//generate mssing parents
+	while ((list = g_list_next(list))) {
+		p = gen_folder_parents(p, list, tmp);
+		tmp = list->data;
+	}
+	list = flist;
+	//get parents into main list
+	for (p = g_list_first(p); p != NULL; p = g_list_next(p)) {
+		if (!g_list_find_custom(list, p->data, (GCompareFunc)strcmp)) {
+			list = g_list_append(list, p->data);
+		}
+	}
+	list = flist;
+	list = flist = g_list_sort(list, (GCompareFunc)strcmp);
+
+	list = flist;
+	tmp = list->data;
+	strbuf = g_strdup_printf(
+	"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"folder\">\n",
+		tmp, tmp, tmp);
+	result = append_buffer(result, strbuf);
+	strbuf = create_folder_feeds(tmp);
+	result = append_buffer(result, strbuf);
+	while ((list = g_list_next(list))) {
+top:		if (!strncmp(tmp, list->data, strlen(tmp))) {
+			g_queue_push_tail(acc, tmp);
+			strbuf = g_strdup_printf(
+				"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"folder\">\n",
+				(gchar *)list->data,
+				(gchar *)list->data,
+				(gchar *)list->data);
+			result = append_buffer(result, strbuf);
+			strbuf = create_folder_feeds(list->data);
+			result = append_buffer(result, strbuf);
+		} else {
+			result = append_buffer_string(
+					result, (gchar *)"</outline>\n");
+			tmp = g_queue_pop_tail(acc);
+			goto top;
+		}
+		tmp = list->data;
+
 	count++;
 	fr = ((count*100)/g_hash_table_size(rf->hr));
-	gtk_progress_bar_set_fraction((GtkProgressBar *)user_data, fr/100);
+	gtk_progress_bar_set_fraction((GtkProgressBar *)progress, fr/100);
 	what = g_strdup_printf(_("%2.0f%% done"), fr);
-	gtk_progress_bar_set_text((GtkProgressBar *)user_data, what);
+	gtk_progress_bar_set_text((GtkProgressBar *)progress, what);
 	g_free(what);
+
+	}
+	for (i=1;i<=g_queue_get_length(acc)+1;i++)
+		result = append_buffer_string(
+				result, (gchar *)"</outline>\n");
+	return result;
 }
 
 void export_opml(gchar *file);
@@ -2226,7 +2498,6 @@ export_opml(gchar *file)
 	time_t t;
 	struct tm *tmp;
 	FILE *f;
-
 
 	gchar *msg = g_strdup(_("Exporting feeds..."));
 #if EVOLUTION_VERSION < 22904
@@ -2262,10 +2533,7 @@ export_opml(gchar *file)
 	gtk_widget_show_all(import_dialog);
 	g_free(msg);
 	count = 0;
-	g_hash_table_foreach(
-		rf->hrname,
-		construct_opml_line,
-		import_progress);
+	strbuf = create_xml(import_progress);
 	gtk_widget_destroy(import_dialog);
 	t = time(NULL);
 	tmp = localtime(&t);
@@ -2278,8 +2546,8 @@ export_opml(gchar *file)
 		"<title>Evolution-RSS Exported Feeds</title>\n"
 		"<dateModified>%s</dateModified>\n</head>\n<body>%s</body>\n</opml>\n",
 		outstr,
-		buffer);
-	g_free(buffer);
+		strbuf);
+	g_free(strbuf);
 
 	f = fopen(file, "w+");
 	if (f) {
@@ -2309,12 +2577,14 @@ export_opml(gchar *file)
 
 
 static void
-select_export_response(GtkWidget *selector, guint response, gpointer user_data)
+select_export_response(
+	GtkWidget *selector, guint response, gpointer user_data)
 {
 	if (response == GTK_RESPONSE_OK) {
 		char *name;
 
-		name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (selector));
+		name = gtk_file_chooser_get_filename (
+			GTK_FILE_CHOOSER (selector));
 		if (name) {
 			gtk_widget_destroy(selector);
 			export_opml(name);
