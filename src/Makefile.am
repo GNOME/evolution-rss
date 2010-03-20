@@ -162,6 +162,7 @@ EXTRA_DIST =					\
 	network-soup.h				\
 	misc.c					\
 	misc.h					\
+	debug.h					\
 	dbus.c					\
 	dbus.h					\
 	fetch.c					\
