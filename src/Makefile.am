@@ -171,6 +171,7 @@ EXTRA_DIST =					\
 	file-gio.h				\
 	gecko-utils.cpp				\
 	gecko-utils.h				\
+	notification.h				\
 	parser.c				\
 	parser.h				\
 	rss-config-factory.c			\
