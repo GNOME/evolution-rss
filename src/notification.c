@@ -20,16 +20,22 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
-#include <e-util/e-alert-dialog.h>
 #include <mail/em-utils.h>
+#if (EVOLUTION_VERSION >= 22900) //kb//
+#include <e-util/e-alert-dialog.h>
 #include <shell/e-shell-taskbar.h>
 #include <shell/e-shell-view.h>
+#else
+#include <e-util/e-error.h>
+#endif
 
 #include "notification.h"
 #include "rss.h"
 #include "network-soup.h"
 
+#if (EVOLUTION_VERSION >= 22900) //kb//
 extern EShellView *rss_shell_view;
+#endif
 extern rssfeed *rf;
 
 static void
@@ -328,30 +334,7 @@ taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 	}
 }
 
-/*void
-taskbar_op_finish(gchar *key)
-{
-#if  EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-#endif
-	if (rf->activity) {
-#if  EVOLUTION_VERSION < 22900 //kb//
-		guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
-#else
-		EActivity *activity_key = g_hash_table_lookup(rf->activity, key);
-#endif
-		g_print("activity_key:%p\n", activity_key);
-		if (activity_key)
-#if  EVOLUTION_VERSION < 22900 //kb//
-			e_activity_handler_operation_finished(activity_handler, activity_key);
-#else
-			e_activity_complete (activity_key);
-#endif
-		g_hash_table_remove(rf->activity, key);
-	}
-}*/
-
-
+#if (EVOLUTION_VERSION >= 22900) //kb//
 void
 taskbar_op_finish(EActivity *id)
 {
@@ -359,7 +342,7 @@ taskbar_op_finish(EActivity *id)
 	if (id == NULL) {
 		activity_key = g_hash_table_lookup(rf->activity, "main");
 		if (activity_key) {
-		dp("activity_key:%p\n", activity_key);
+			dp("activity_key:%p\n", activity_key);
 			e_activity_complete (activity_key);
 			g_hash_table_remove(rf->activity, "main");
 		}
@@ -368,8 +351,26 @@ taskbar_op_finish(EActivity *id)
 		g_hash_table_remove(rf->activity, id);
 	}
 }
+#else
+void
+taskbar_op_finish(gchar *key)
+{
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
+	if (rf->activity) {
+		guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
+		g_print("activity_key:%p\n", activity_key);
+		if (activity_key)
+			e_activity_handler_operation_finished(activity_handler, activity_key);
+		g_hash_table_remove(rf->activity, key);
+	}
+}
+#endif
 
+#if (EVOLUTION_VERSION >= 22900) //kb//
 EActivity*
+#else
+guint
+#endif
 taskbar_op_message(gchar *msg, gchar *unikey)
 {
 		gchar *tmsg;

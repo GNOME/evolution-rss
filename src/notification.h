@@ -16,10 +16,20 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-EActivity* taskbar_op_message(gchar *msg, gchar *unikey);
+#if (EVOLUTION_VERSION >= 22900) //kb//
+EActivity*
+taskbar_op_message(gchar *msg, gchar *unikey);
+#else
+guint
+taskbar_op_message(gchar *msg, gchar *unikey);
+#endif
 void taskbar_op_abort(gpointer key);
 void taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress);
+#if (EVOLUTION_VERSION >= 22900) //kb//
 void taskbar_op_finish(EActivity *id);
+#else
+void taskbar_op_finish(gchar *key);
+#endif
 void taskbar_push_message(gchar *message);
 void taskbar_pop_message(void);
 

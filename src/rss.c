@@ -406,6 +406,7 @@ browser_write(gchar *string, gint length, gchar *base)
 	switch (engine) {
 	case 2:
 #ifdef HAVE_GECKO
+	base = NULL;
 	gtk_moz_embed_open_stream((GtkMozEmbed *)rf->mozembed,
 			base, "text/html");
 	while (length > 0) {
@@ -2578,6 +2579,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	g_return_if_fail (folder != NULL);
 	folder_name = folder->full_name;
 #else
+	guint taskid;
 	folder_name = t->uri;
 #endif
 	if (folder_name == NULL
@@ -2910,7 +2912,11 @@ finish_setup_feed(
 	gchar *tmsgkey;
 	GError *err = NULL;
 	gchar *tmsg = feed->tmsg;
+#if (EVOLUTION_VERSION >= 22900) //kb//
 	EActivity *aid;
+#else
+	guint aid;
+#endif
 	gpointer crc_feed = gen_md5(feed->feed_url);
 
 	r = g_new0 (RDF, 1);
@@ -3256,8 +3262,10 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	gboolean deleted = 0;
 	GString *response;
 	RDF *r;
+#if (EVOLUTION_VERSION >= 22900) //kb//
 	EActivity *aid;
-#if EVOLUTION_VERSION < 22900
+#else
+	guint aid;
 	MailComponent *mc = mail_component_peek ();
 #endif
 
