@@ -61,11 +61,13 @@ AC_ARG_WITH([mozilla],[],[with_gecko=$withval],[])
 gecko_cv_gecko=$with_gecko
 
 # Autodetect gecko
-#_geckos="xulrunner firefox mozilla-firefox seamonkey mozilla libxul"
 _geckos="xulrunner firefox mozilla-firefox seamonkey mozilla libxul-embedding libxul"
 if test -z "$gecko_cv_gecko"; then
 	for lizard in $_geckos; do
 		if $PKG_CONFIG --exists $lizard-xpcom; then
+			gecko_cv_gecko=$lizard
+			break;
+		elif $PKG_CONFIG --exists $lizard; then
 			gecko_cv_gecko=$lizard
 			break;
 		elif $PKG_CONFIG --exists $lizard-unstable; then
@@ -347,6 +349,16 @@ if test "$gecko_cv_gecko_version_int" -ge "1009000"; then
 	gecko_cv_have_gecko_1_9=yes
 fi
 
+if test "${gecko_cv_gecko}" = "libxul-embedding" -o "${gecko_cv_gecko}" = "libxul"; then
+	PKG_CHECK_EXISTS([${gecko_cv_gecko} >= 1.9.1],[gecko_cv_have_gecko_1_9_1=yes gecko_cv_gecko_version="1.9.1" gecko_cv_gecko_version_int=1009001],[gecko_cv_have_gecko_1_9_1=no])
+else
+	gecko_cv_have_gecko_1_9_1=no
+fi
+
+if test "$gecko_cv_have_gecko_1_9_1" = "yes"; then
+        AC_DEFINE([HAVE_GECKO_1_9_1],[1],[Define if we have gecko 1.9.1])
+fi
+
 fi # if gecko_cv_have_gecko
 
 $1[]_VERSION=$gecko_cv_gecko_version
@@ -394,6 +406,7 @@ AM_CONDITIONAL([HAVE_GECKO_1_7],[test "$gecko_cv_have_gecko" = "yes" -a "$gecko_
 AM_CONDITIONAL([HAVE_GECKO_1_8],[test "$gecko_cv_have_gecko" = "yes" -a "$gecko_cv_gecko_version_int" -ge "1008000"])
 AM_CONDITIONAL([HAVE_GECKO_1_8_1],[test "$gecko_cv_have_gecko" = "yes" -a "$gecko_cv_gecko_version_int" -ge "1008001"])
 AM_CONDITIONAL([HAVE_GECKO_1_9],[test "$gecko_cv_have_gecko" = "yes" -a "$gecko_cv_gecko_version_int" -ge "1009000"])
+AM_CONDITIONAL([HAVE_GECKO_1_9_1],[test "$gecko_cv_have_gecko" = "yes" -a "$gecko_cv_have_gecko_1_9_1" = "yes"])
 AM_CONDITIONAL([HAVE_GECKO_HOME],[test "x$_GECKO_HOME" != "x"])
 AM_CONDITIONAL([HAVE_GECKO_DEBUG],[test "$gecko_cv_have_debug" = "yes"])
 AM_CONDITIONAL([HAVE_GECKO_XPCOM_GLUE],[test "$gecko_cv_have_xpcom_glue" = "yes"])

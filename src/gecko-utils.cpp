@@ -84,86 +84,86 @@ gecko_prefs_set_int (const gchar *key, gint value)
 	return NS_SUCCEEDED(gPrefBranch->SetIntPref (key, value));
 }
 
-/**
- *  * Takes a pointer to a mouse event and returns the mouse
- *   *  button number or -1 on error.
- *    */
+/*
+ * Takes a pointer to a mouse event and returns the mouse
+ * button number or -1 on error.
+ */
 extern "C"
 gint gecko_get_mouse_event_button(gpointer event) {
-        gint    button = 0;
+	gint    button = 0;
 
-        g_return_val_if_fail (event, -1);
+	g_return_val_if_fail (event, -1);
 
-        /* the following lines were found in the Galeon source */
-        nsIDOMMouseEvent *aMouseEvent = (nsIDOMMouseEvent *) event;
-        aMouseEvent->GetButton ((PRUint16 *) &button);
+	/* the following lines were found in the Galeon source */
+	nsIDOMMouseEvent *aMouseEvent = (nsIDOMMouseEvent *) event;
+	aMouseEvent->GetButton ((PRUint16 *) &button);
 
-        /* for some reason we get different numbers on PPC, this fixes
- *          * that up... -- MattA */
-        if (button == 65536)
-        {
-                button = 1;
-        }
-        else if (button == 131072)
-        {
-                button = 2;
-        }
+	/* for some reason we get different numbers on PPC, this fixes
+	 * that up... -- MattA */
+	if (button == 65536) {
+		button = 1;
+	} else if (button == 131072) {
+		button = 2;
+	}
 
-        return button;
+	return button;
 }
 
 extern "C" void
 gecko_set_zoom (GtkWidget *moz, gfloat zoom)
 {
 	nsCOMPtr<nsIWebBrowser>         mWebBrowser;
-        nsCOMPtr<nsIDOMWindow>          mDOMWindow;
+	nsCOMPtr<nsIDOMWindow>          mDOMWindow;
 
-        gtk_moz_embed_get_nsIWebBrowser ((GtkMozEmbed *)moz, getter_AddRefs (mWebBrowser));
-        if (NULL == mWebBrowser) {
-                g_warning ("gecko_set_zoom(): Could not retrieve browser...");
-                return;
-        }
-        mWebBrowser->GetContentDOMWindow (getter_AddRefs (mDOMWindow));
-        if (NULL == mDOMWindow) {
-                g_warning ("gecko_set_zoom(): Could not retrieve DOM window...");
-                return;
-        }
-        mDOMWindow->SetTextZoom (zoom);
+	gtk_moz_embed_get_nsIWebBrowser(
+		(GtkMozEmbed *)moz, getter_AddRefs (mWebBrowser));
+	if (NULL == mWebBrowser) {
+		g_warning ("gecko_set_zoom(): Could not retrieve browser...");
+		return;
+	}
+	mWebBrowser->GetContentDOMWindow(getter_AddRefs (mDOMWindow));
+	if (NULL == mDOMWindow) {
+		g_warning ("gecko_set_zoom(): Could not retrieve DOM window...");
+		return;
+	}
+	mDOMWindow->SetTextZoom (zoom);
 }
 
 extern "C" gfloat
 gecko_get_zoom (GtkWidget *embed)
 {
-        nsCOMPtr<nsIWebBrowser>         mWebBrowser;
-        nsCOMPtr<nsIDOMWindow>          mDOMWindow;
-        float zoom;
+	nsCOMPtr<nsIWebBrowser>         mWebBrowser;
+	nsCOMPtr<nsIDOMWindow>          mDOMWindow;
+	float zoom;
 
-        gtk_moz_embed_get_nsIWebBrowser ((GtkMozEmbed *)embed, getter_AddRefs (mWebBrowser));
-        if (NULL == mWebBrowser) {
-                g_warning ("gecko_get_zoom(): Could not retrieve browser...");
-                return 1.0;
-        }
-        mWebBrowser->GetContentDOMWindow (getter_AddRefs (mDOMWindow));
-        if (NULL == mDOMWindow) {
-                g_warning ("gecko_get_zoom(): Could not retrieve DOM window...");
-                return 1.0;
-        }
-        mDOMWindow->GetTextZoom (&zoom);
-        return zoom;
+	gtk_moz_embed_get_nsIWebBrowser (
+		(GtkMozEmbed *)embed, getter_AddRefs (mWebBrowser));
+	if (NULL == mWebBrowser) {
+		g_warning ("gecko_get_zoom(): Could not retrieve browser...");
+		return 1.0;
+	}
+	mWebBrowser->GetContentDOMWindow (getter_AddRefs (mDOMWindow));
+	if (NULL == mDOMWindow) {
+		g_warning ("gecko_get_zoom(): Could not retrieve DOM window...");
+		return 1.0;
+	}
+	mDOMWindow->GetTextZoom (&zoom);
+	return zoom;
 }
 
 static nsresult
 gecko_do_command (GtkMozEmbed *embed,
-            const char  *command)
+	const char  *command)
 {
-        nsCOMPtr<nsIWebBrowser>     webBrowser;
-        nsCOMPtr<nsICommandManager> cmdManager;
+	nsCOMPtr<nsIWebBrowser>     webBrowser;
+	nsCOMPtr<nsICommandManager> cmdManager;
 
-        gtk_moz_embed_get_nsIWebBrowser (embed, getter_AddRefs (webBrowser));
+	gtk_moz_embed_get_nsIWebBrowser (
+		embed, getter_AddRefs (webBrowser));
 
-        cmdManager = do_GetInterface (webBrowser);
+	cmdManager = do_GetInterface (webBrowser);
 
-        return cmdManager->DoCommand (command, nsnull, nsnull);
+	return cmdManager->DoCommand (command, nsnull, nsnull);
 }
 
 extern "C" void
@@ -191,42 +191,43 @@ gecko_init (void)
 #ifdef XPCOM_GLUE
 	static const GREVersionRange greVersion = {
 	"1.9a", PR_TRUE,
-	"2", PR_TRUE
+	"2.0", PR_TRUE,
 	};
 	char xpcomLocation[4096];
 	d("init XPCOM_GLUE\n");
-	rv = GRE_GetGREPathWithProperties(&greVersion, 1, nsnull, 0, xpcomLocation, 4096);
+	rv = GRE_GetGREPathWithProperties(
+		&greVersion, 1, nsnull, 0, xpcomLocation, 4096);
 	if (NS_FAILED (rv))
-       {
-         g_warning ("Could not determine locale!\n");
-         return FALSE;
-       }
+	{
+		g_warning ("Could not determine locale!\n");
+		return FALSE;
+	}
 
-       // Startup the XPCOM Glue that links us up with XPCOM.
-       rv = XPCOMGlueStartup(xpcomLocation);
-       if (NS_FAILED (rv))
-       {
-         g_warning ("Could not determine locale!\n");
-         return FALSE;
-       }
+	// Startup the XPCOM Glue that links us up with XPCOM.
+	rv = XPCOMGlueStartup(xpcomLocation);
+	if (NS_FAILED (rv))
+	{
+		g_warning ("Could not determine locale!\n");
+		return FALSE;
+	}
 
-       rv = GTKEmbedGlueStartup();
-       if (NS_FAILED (rv))
-       {
-         g_warning ("Could not startup glue!\n");
-         return FALSE;
-       }
+	rv = GTKEmbedGlueStartup();
+	if (NS_FAILED (rv))
+	{
+		g_warning ("Could not startup glue!\n");
+		return FALSE;
+	}
 
-       rv = GTKEmbedGlueStartupInternal();
-       if (NS_FAILED (rv))
-       {
-         g_warning ("Could not startup internal glue!\n");
-         return FALSE;
-       }
+	rv = GTKEmbedGlueStartupInternal();
+	if (NS_FAILED (rv))
+	{
+		g_warning ("Could not startup internal glue!\n");
+		return FALSE;
+	}
 
-       char *lastSlash = strrchr(xpcomLocation, '/');
-       if (lastSlash)
-         *lastSlash = '\0';
+	char *lastSlash = strrchr(xpcomLocation, '/');
+	if (lastSlash)
+		*lastSlash = '\0';
 
 	gtk_moz_embed_set_path(xpcomLocation);
 #else
@@ -240,11 +241,12 @@ gecko_init (void)
 #endif /* XPCOM_GLUE */
 
 	d("load gecko prefs\n");
-	gchar *profile_dir = g_build_filename (g_get_home_dir (),
-					       ".evolution",
-					       "mail",
-					       "rss",
-					       NULL);
+	gchar *profile_dir = g_build_filename (
+				g_get_home_dir (),
+				".evolution",
+				"mail",
+				"rss",
+				NULL);
 
 	gtk_moz_embed_set_profile_path (profile_dir, "mozembed-rss");
 	g_free (profile_dir);
@@ -252,7 +254,8 @@ gecko_init (void)
 	d("embed push startup()\n");
 	gtk_moz_embed_push_startup ();
 
-	nsCOMPtr<nsIPrefService> prefService (do_GetService (NS_PREFSERVICE_CONTRACTID, &rv));
+	nsCOMPtr<nsIPrefService> prefService (
+				do_GetService (NS_PREFSERVICE_CONTRACTID, &rv));
 	NS_ENSURE_SUCCESS (rv, FALSE);
 
 	rv = CallQueryInterface (prefService, &gPrefBranch);
@@ -279,6 +282,6 @@ gecko_shutdown (void)
 #endif
 
 #ifdef HAVE_GECKO_1_9
-        NS_LogTerm ();
+	NS_LogTerm ();
 #endif
 }
