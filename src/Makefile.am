@@ -81,6 +81,7 @@ SOURCES =	fetch.c			\
 		notification.c		\
 		parser.c		\
 		rss.c			\
+		rss-cache.c		\
 		rss-config-factory.c	\
 		rss-icon-factory.c
 if HAVE_GECKO
@@ -174,6 +175,7 @@ EXTRA_DIST =					\
 	notification.h				\
 	parser.c				\
 	parser.h				\
+	rss-cache.h				\
 	rss-config-factory.c			\
 	rss-config-factory.h			\
 	rss-icon-factory.c			\

@@ -91,7 +91,6 @@ int rss_verbose_debug = 0;
 #include <gtk/gtk.h>
 
 #include <shell/es-event.h>
-#include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
 
 #ifdef HAVE_GTKHTMLEDITOR
@@ -139,6 +138,7 @@ int rss_verbose_debug = 0;
 #endif
 
 #include "rss.h"
+#include "rss-cache.h"
 #include "parser.h"
 #include "network-soup.h"
 #include "notification.h"
@@ -163,8 +163,6 @@ GQueue *status_msg;
 gchar *flat_status_msg;
 GPtrArray *filter_uids;
 gpointer current_pobject = NULL;
-
-static CamelDataCache *http_cache = NULL;
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -266,7 +264,6 @@ gboolean display_folder_icon(GtkTreeStore *store, gchar *key);
 typedef struct _FEED_IMAGE {
 	gchar *img_file;
 	CamelStream *feed_fs;
-	CamelDataCache *http_cache;
 	gchar *url;
 	gchar *key;
 	gpointer data;
@@ -384,7 +381,8 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			}
 	//update individual progress if previous percetage has not changed
 			if (rf->progress_bar && rf->feed_queue) {
-				gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar,
+				gtk_progress_bar_set_fraction(
+					(GtkProgressBar *)rf->progress_bar,
 					(double)(100-rf->feed_queue*100/rss_find_enabled())/100);
 			}
 		break;
@@ -406,16 +404,17 @@ browser_write(gchar *string, gint length, gchar *base)
 	switch (engine) {
 	case 2:
 #ifdef HAVE_GECKO
-	base = NULL;
 	gtk_moz_embed_open_stream((GtkMozEmbed *)rf->mozembed,
 			base, "text/html");
 	while (length > 0) {
 		if (length > 4096) {
-			gtk_moz_embed_append_data((GtkMozEmbed *)rf->mozembed,
+			gtk_moz_embed_append_data(
+				(GtkMozEmbed *)rf->mozembed,
 				str, 4096);
 			str+=4096;
 		} else
-			gtk_moz_embed_append_data((GtkMozEmbed *)rf->mozembed,
+			gtk_moz_embed_append_data(
+				(GtkMozEmbed *)rf->mozembed,
 				str, length);
 	length-=4096;
 	}
@@ -1426,7 +1425,10 @@ stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 void
 reload_cb (GtkWidget *button, gpointer data)
 {
-	guint engine = gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+	guint engine = gconf_client_get_int(
+			rss_gconf,
+			GCONF_KEY_HTML_RENDER,
+			NULL);
 	switch (engine) {
 		case 2:
 #ifdef	HAVE_GECKO
@@ -1443,6 +1445,11 @@ reload_cb (GtkWidget *button, gpointer data)
 	}
 }
 
+typedef struct _UB {
+	CamelStream *stream;
+	gchar *url;
+} UB;
+
 void mycall (GtkWidget *widget, GtkAllocation *event, gpointer data);
 
 void
@@ -1451,6 +1458,10 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 	int width, height;
 	struct _org_gnome_rss_controls_pobject *po = data;
 	GtkAllocation alloc;
+	CamelStream *stream = NULL;
+	UB *fi;
+	gchar buffer[4096];
+	gint n;
 
 	guint k = rf->headers_mode ? 240 : 106;
 	if (GTK_IS_WIDGET(widget)) {
@@ -1470,19 +1481,41 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 					gchar *msg = g_strdup_printf(
 							"<h5>%s</h5>",
 							_("Formatting Message..."));
-					browser_write(msg, strlen(msg), (gchar *)"file:///");
+					browser_write(
+						msg, strlen(msg),
+						(gchar *)"file:///fakefile#index");
 					g_free(msg);
 					browser_fetching=1;
-					fetch_unblocking(
-						po->website,
-						browsercb,
-						po->website,
-						(gpointer)finish_website,
-						g_strdup(po->website),	// we need to dupe key here
-						1,
-						NULL);
+					stream = rss_cache_get(po->website);
+					if (!stream) {
+						stream = rss_cache_add(po->website);
+						fi = g_new0(UB, 1);
+						fi->stream = stream;
+						fi->url = g_strdup(po->website);
+						fetch_unblocking(
+							po->website,
+							browsercb,
+							po->website,
+							(gpointer)finish_website,
+							fi,
+							1,
+							NULL);
+					} else {
+	gtk_moz_embed_open_stream((GtkMozEmbed *)rf->mozembed,
+			po->website, "text/html");
+	while ((n = camel_stream_read((CamelStream *)stream, buffer, sizeof(buffer))) > 0) {
+			gtk_moz_embed_append_data(
+				(GtkMozEmbed *)rf->mozembed,
+				buffer, n);
+	}
+	gtk_moz_embed_close_stream((GtkMozEmbed *)rf->mozembed);
+	camel_stream_close(stream);
+	camel_object_unref(stream);
+					}
 				}
-				gtk_widget_set_size_request((GtkWidget *)po->mozembedwindow, width, height);
+				gtk_widget_set_size_request(
+					(GtkWidget *)po->mozembedwindow,
+					width, height);
 // apparently resizing gtkmozembed widget won't redraw if using xulrunner
 // there is no point in reload for the rest
 /*#if defined(HAVE_XULRUNNER)
@@ -1517,10 +1550,12 @@ webkit_set_preferences(void)
 #if (WEBKIT_VERSION >= 1001001)
 	webkit_session = webkit_get_default_session();
 	if (rss_soup_jar)
-		soup_session_add_feature(webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
+		soup_session_add_feature(
+			webkit_session, SOUP_SESSION_FEATURE(rss_soup_jar));
 #endif
 #if (WEBKIT_VERSION >= 1001011)
-	settings = webkit_web_view_get_settings(WEBKIT_WEB_VIEW(rf->mozembed));
+	settings = webkit_web_view_get_settings(
+			WEBKIT_WEB_VIEW(rf->mozembed));
 	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 	g_object_set (settings, "user-agent", agstr,  NULL);
@@ -1612,8 +1647,12 @@ rss_popup_link_copy(EPopup *ep, EPopupItem *pitem, void *data)
 rss_popup_link_copy(GtkWidget *widget, gpointer data)
 #endif
 {
-	gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_PRIMARY), data, -1);
-	gtk_clipboard_set_text (gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), data, -1);
+	gtk_clipboard_set_text (
+		gtk_clipboard_get (GDK_SELECTION_PRIMARY),
+		data, -1);
+	gtk_clipboard_set_text (
+		gtk_clipboard_get (GDK_SELECTION_CLIPBOARD),
+		data, -1);
 }
 
 static void
@@ -1847,12 +1886,25 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	if (engine == 1) {
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
 		webkit_set_preferences();
-		gtk_container_add(GTK_CONTAINER(moz), GTK_WIDGET(rf->mozembed));
-		g_signal_connect (rf->mozembed, "populate-popup", G_CALLBACK (webkit_click), moz);
-		g_signal_connect (rf->mozembed, "hovering-over-link", G_CALLBACK (webkit_over_link), moz);
+		gtk_container_add(
+			GTK_CONTAINER(moz),
+			GTK_WIDGET(rf->mozembed));
+		g_signal_connect (
+			rf->mozembed,
+			"populate-popup",
+			G_CALLBACK (webkit_click),
+			moz);
+		g_signal_connect (
+			rf->mozembed,
+			"hovering-over-link",
+			G_CALLBACK (webkit_over_link), moz);
 //add zoom level
 #if (WEBKIT_VERSION >= 1001007)
-		g_signal_connect (rf->mozembed, "notify::load-status", G_CALLBACK(webkit_net_status), po->stopbut);
+		g_signal_connect (
+			rf->mozembed,
+			"notify::load-status",
+			G_CALLBACK(webkit_net_status),
+			po->stopbut);
 #endif
 	}
 #endif
@@ -1861,7 +1913,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	if (engine == 2) {
 		rss_mozilla_init();	//in case we fail this is a failover
 		rf->mozembed = gtk_moz_embed_new();
-		d("mozembed=%p at %s:%d\n", rf->mozembed, __FILE__, __LINE__);
+		dp("mozembed=%p at %s:%d\n", rf->mozembed, __FILE__, __LINE__);
 		gecko_set_preferences();
 
 		/* FIXME add all those profile shits */
@@ -2068,20 +2120,20 @@ free_rss_browser(EMFormatHTMLPObject *o)
 		soup_session_abort(key);
 	}
 	engine = gconf_client_get_int(rss_gconf,
-					GCONF_KEY_HTML_RENDER,
-					NULL);
+			GCONF_KEY_HTML_RENDER,
+			NULL);
 #ifdef HAVE_GECKO
 	if (engine == 2) {
 		gtk_moz_embed_stop_load((GtkMozEmbed *)rf->mozembed);
 	}
 #endif
 	if (rf->mozembed) {
-		if (engine == 2) //crashes webkit - https://bugs.webkit.org/show_bug.cgi?id=25042
-			gtk_widget_destroy(rf->mozembed);
+//		if (engine == 2) //crashes webkit - https://bugs.webkit.org/show_bug.cgi?id=25042
+//			gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
 	}
 	g_signal_handler_disconnect(po->format->html, po->shandler);
-	gtk_widget_destroy(po->container);
+//	gtk_widget_destroy(po->container);
 	g_free(po->website);
 	browser_fetching = 0;
 }
@@ -3569,6 +3621,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	GString *response;
 	gchar *tmsg, *str;
 	gint len;
+	UB* ub = (UB*)user_data;
 
 	g_return_if_fail(rf->mozembed);
 
@@ -3578,14 +3631,22 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	d("browser fill:%d\n", (int)browser_fill);
 	if (!response->len) {
 		tmsg = g_strdup(_("Formatting error."));
-		browser_write(tmsg, strlen(tmsg), (gchar *)"file://");
+		browser_write(
+			tmsg, strlen(tmsg),
+			 (gchar *)"file:///fakefile#index");
 		g_free(tmsg);
+		//stream remove
+		camel_stream_close(ub->stream);
+		camel_object_unref(ub->stream);
 	} else {
+		camel_stream_write(ub->stream, response->str, strlen(response->str));
+		camel_stream_close(ub->stream);
+		camel_object_unref(ub->stream);
 		str = (response->str);
 		len = strlen(response->str);
 		*str+= browser_fill;
 		len-= browser_fill;
-		browser_write(str, len, user_data);
+		browser_write(str, len, ub->url);
 		g_string_free(response, 1);
 	}
 	browser_fill = 0;
@@ -5207,6 +5268,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			status_msg = g_queue_new();
 			get_feed_folders();
 			rss_build_stock_images();
+			rss_cache_init();
 #if (DATASERVER_VERSION >= 2023001)
 			proxy = proxy_init();
 #endif
@@ -5601,7 +5663,7 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 #endif
 {
 	CamelStream *stream = NULL;
-	stream = camel_data_cache_add(user_data->http_cache, HTTP_CACHE_PATH, user_data->url, NULL);
+	stream = rss_cache_add(user_data->url);
 	finish_image(soup_sess, msg, stream);
 	if (user_data->data == current_pobject)
 		em_format_redraw((EMFormat *)user_data->data);
@@ -5763,30 +5825,6 @@ out:	g_free(img_file);
 }
 #endif
 
-#define CAMEL_DATA_CACHE_BITS (6)
-#define CAMEL_DATA_CACHE_MASK ((1<<CAMEL_DATA_CACHE_BITS)-1)
-
-static char *
-data_cache_path(
-	CamelDataCache *cdc, int create, const char *path, const char *key)
-{
-	char *dir, *real;
-	char *tmp = NULL;
-	guint32 hash;
-
-	hash = g_str_hash(key);
-	hash = (hash>>5)&CAMEL_DATA_CACHE_MASK;
-	dir = alloca(strlen(cdc->path) + strlen(path) + 8);
-	sprintf(dir, "%s/%s/%02x", cdc->path, path, hash);
-	tmp = camel_file_util_safe_filename(key);
-	if (!tmp)
-		return NULL;
-	real = g_strdup_printf("%s/%s", dir, tmp);
-	g_free(tmp);
-
-	return real;
-}
-
 /* validates if image is indeed an image file
  * if image file is not found it tries to fetch it
  * we need to check mime time against content
@@ -5858,7 +5896,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	CamelStream *stream = NULL;
 	gchar *tmpurl = NULL;
 	FEED_IMAGE *fi = NULL;
-	gchar *result, *base_dir, *feed_dir;
+	gchar *result;
 
 	g_return_val_if_fail(url != NULL, NULL);
 
@@ -5882,38 +5920,19 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 		goto working;
 	}
 	g_print("fetch_image_redraw() tmpurl:%s\n", tmpurl);
-	base_dir = rss_component_peek_base_directory();
-	feed_dir = g_build_path("/",
-				base_dir,
-				"static",
-				NULL);
-	g_free(base_dir);
-	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-		g_mkdir_with_parents (feed_dir, 0755);
-	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
-	g_free(feed_dir);
-	if (!http_cache) {
-		result = NULL;
-		goto error;
-	}
-	// expire in a month max
-	// and one week if not accessed sooner
-	camel_data_cache_set_expire_age(http_cache, 24*60*60*30);
-	camel_data_cache_set_expire_access(http_cache, 24*60*60*7);
-	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
+	stream = rss_cache_get(tmpurl);
 	if (!stream) {
 		d("image cache MISS\n");
 		fi = g_new0(FEED_IMAGE, 1);
-		fi->http_cache = http_cache;
 		fi->url = g_strdup(tmpurl);
 		fi->data = data;
 		fetch_unblocking(tmpurl,
-				textcb,
-				g_strdup(tmpurl),
-				(gpointer)finish_image_feedback,
-				fi,
-				1,
-				&err);
+			textcb,
+			g_strdup(tmpurl),
+			(gpointer)finish_image_feedback,
+			fi,
+			1,
+			&err);
 		if (err) {
 			result = NULL;
 			goto error;
@@ -5922,7 +5941,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 		d("image cache HIT\n");
 	}
 
-working:result = data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, tmpurl);
+working:result = rss_cache_get_path(FALSE, tmpurl);
 error:	g_free(tmpurl);
 	return result;
 }
@@ -5935,7 +5954,7 @@ fetch_image(gchar *url, gchar *link)
 	GError *err = NULL;
 	CamelStream *stream = NULL;
 	gchar *tmpurl = NULL;
-	gchar *result, *base_dir, *feed_dir;
+	gchar *result;
 
 	g_return_val_if_fail(url != NULL, NULL);
 
@@ -5959,22 +5978,10 @@ fetch_image(gchar *url, gchar *link)
 		tmpurl = g_strdup(url);
 	}
 	d("fetch_image() tmpurl:%s\n", tmpurl);
-	base_dir = rss_component_peek_base_directory();
-	feed_dir = g_build_path("/",
-				base_dir,
-				"static",
-				NULL);
-	g_free(base_dir);
-	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-		g_mkdir_with_parents (feed_dir, 0755);
-	http_cache = camel_data_cache_new(feed_dir, 0, NULL);
-	if (!http_cache)
-		return NULL;
-	g_free(feed_dir);
-	stream = camel_data_cache_get(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
+	stream = rss_cache_get(tmpurl);
 	if (!stream) {
 		d("image cache MISS\n");
-		stream = camel_data_cache_add(http_cache, HTTP_CACHE_PATH, tmpurl, NULL);
+		stream = rss_cache_add(tmpurl);
 	} else
 		d("image cache HIT\n");
 
@@ -5986,7 +5993,7 @@ fetch_image(gchar *url, gchar *link)
 				0,
 				&err);
 	if (err) return NULL;
-	result = data_cache_path(http_cache, FALSE, HTTP_CACHE_PATH, tmpurl);
+	result = rss_cache_get_path(FALSE, tmpurl);
 	g_free(tmpurl);
 	return result;
 }
@@ -6066,16 +6073,21 @@ update_comments(RDF *r)
 		CF = parse_channel_line(el->children, NULL, NULL);
 		g_string_append_printf (comments,
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 0px; color: #%06x;\">",
-			frame_colour & 0xffffff, content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff);
+			frame_colour & 0xffffff,
+			content_colour & 0xEDECEB & 0xffffff,
+			text_colour & 0xffffff);
 		g_string_append_printf (comments,
 			"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
 			"<a href=%s><b>%s</b></a> on %s</div>",
-			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-				CF->website, CF->subj, CF->date);
+			content_colour & 0xEDECEB & 0xffffff,
+			text_colour & 0xffffff,
+			CF->website, CF->subj, CF->date);
 		g_string_append_printf (comments,
-				"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
-				"%s</div>",
-				frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff,
+			"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
+			"%s</div>",
+			frame_colour & 0xffffff,
+			content_colour & 0xffffff,
+			text_colour & 0xffffff,
 				CF->body);
 		g_string_append_printf(comments, "</div>&nbsp;");
 		free_cf(CF);

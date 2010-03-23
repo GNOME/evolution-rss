@@ -62,7 +62,6 @@
 
 #define NETWORK_MIN_TIMEOUT (60)
 #define NETWORK_TIMEOUT (180000)
-#define HTTP_CACHE_PATH "http"
 
 typedef struct _RDF {
 	char		*uri;
