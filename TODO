@@ -14,7 +14,6 @@
 	* slow delete operation on large folders
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* use combo popup for moving and placement of feed folders
-	* check webbuttons for webkit
 	* cancel operation should cancel fetching feed components
 	* perhaps make quoted text fancier
 	* grey out disabled folders (feeds)
@@ -23,7 +22,6 @@
 	* handle 404 for images in comments
 	* gtkhtml does not handle script tag properly
 	* gtkhtml does not handle &#xD; construct
-	* switch webkit -> gecko leads to crash on pfree()
 	* show feed icons in send & receive dialog
 	* support comments postings
 	* detect duplicate items by content not by feedid

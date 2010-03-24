@@ -173,6 +173,8 @@ struct _org_gnome_rss_controls_pobject {
 	EMFormatHTML *format;
 	GtkWidget *html;
 	GtkWidget *container;
+	GtkWidget *forwbut;		//browser forward button
+	GtkWidget *backbut;		//browser back button
 	GtkWidget *stopbut;		//browser stop button
 	CamelStream *stream;
 	GtkWidget *mozembedwindow;	//window containing GtkMozEmbed
@@ -426,12 +428,22 @@ browser_write(gchar *string, gint length, gchar *base)
 #if (DATASERVER_VERSION >= 2023001)
 		proxify_webkit_session(proxy, base);
 #endif
+
 		webkit_web_view_load_string(
 			WEBKIT_WEB_VIEW(rf->mozembed),
 			str,
 			"text/html",
 			NULL,
 			base);
+		if (strncmp(base, "file:///fake", 12)) {
+			WebKitWebBackForwardList *back_forward_list =
+				webkit_web_view_get_back_forward_list (WEBKIT_WEB_VIEW(rf->mozembed));
+			WebKitWebHistoryItem *item =
+				webkit_web_history_item_new_with_data(base, "Site 1");
+			webkit_web_back_forward_list_add_item(back_forward_list, item);
+		}
+
+
 #endif
 		break;
 	}
@@ -1386,7 +1398,6 @@ back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #endif
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
-		g_print("going back\n");
 		webkit_web_view_go_back (WEBKIT_WEB_VIEW(rf->mozembed));
 	}
 #endif
@@ -1427,10 +1438,7 @@ stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 void
 reload_cb (GtkWidget *button, gpointer data)
 {
-	guint engine = gconf_client_get_int(
-			rss_gconf,
-			GCONF_KEY_HTML_RENDER,
-			NULL);
+	guint engine = fallback_engine();
 	switch (engine) {
 		case 2:
 #ifdef	HAVE_GECKO
@@ -1440,8 +1448,7 @@ reload_cb (GtkWidget *button, gpointer data)
 		break;
 		case 1:
 #ifdef	HAVE_WEBKIT
-	webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
-	webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), data);
+	webkit_web_view_reload_bypass_cache(WEBKIT_WEB_VIEW(rf->mozembed));
 #endif
 		break;
 	}
@@ -1731,6 +1738,29 @@ webkit_net_status (WebKitWebView *view,
 }
 #endif
 
+static void
+webkit_history_status (WebKitWebView *view,
+		GParamSpec *spec,
+		GtkWidget *data)
+{
+	struct _org_gnome_rss_controls_pobject *po =
+			(struct _org_gnome_rss_controls_pobject *) data;
+	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
+	switch (status) {
+		case WEBKIT_LOAD_COMMITTED:
+		default:
+			if (!webkit_web_view_can_go_forward(view))
+				gtk_widget_set_sensitive(po->forwbut, FALSE);
+			else
+				gtk_widget_set_sensitive(po->forwbut, TRUE);
+			if (!webkit_web_view_can_go_back(view))
+				gtk_widget_set_sensitive(po->backbut, FALSE);
+			else
+				gtk_widget_set_sensitive(po->backbut, TRUE);
+		break;
+	}
+}
+
 gboolean
 webkit_over_link(WebKitWebView *web_view,
 		gchar         *title,
@@ -1901,13 +1931,18 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 			po->stopbut);
 #endif
 	}
+		g_signal_connect (
+			rf->mozembed,
+			"notify::load-status",
+			G_CALLBACK(webkit_history_status),
+			po);
 #endif
 
 #ifdef HAVE_GECKO
 	if (engine == 2) {
 		rss_mozilla_init();	//in case we fail this is a failover
 		rf->mozembed = gtk_moz_embed_new();
-		dp("mozembed=%p at %s:%d\n", rf->mozembed, __FILE__, __LINE__);
+		d("mozembed=%p at %s:%d\n", rf->mozembed, __FILE__, __LINE__);
 		gecko_set_preferences();
 
 		/* FIXME add all those profile shits */
@@ -2023,37 +2058,31 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
 	gtk_widget_show_all (button);
 	if (rf->cur_format) {
-		button4 = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
+		button4 = po->backbut;
 		g_signal_connect (button4, "clicked", G_CALLBACK(back_cb), efh);
-//		gtk_widget_set_size_request(button4, 100, 10);
 		gtk_button_set_relief(GTK_BUTTON(button4), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button4, rf->online);
 		gtk_widget_show (button4);
 		gtk_box_pack_start (GTK_BOX (hbox2), button4, TRUE, TRUE, 0);
-		button5 = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+		button5 = po->forwbut;
 		g_signal_connect (button5, "clicked", G_CALLBACK(forward_cb), efh);
-//		gtk_widget_set_size_request(button5, 100, 10);
 		gtk_button_set_relief(GTK_BUTTON(button5), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button5, rf->online);
 		gtk_widget_show (button5);
 		gtk_box_pack_start (GTK_BOX (hbox2), button5, TRUE, TRUE, 0);
-		//GtkWidget *button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
 		button2 = po->stopbut;
 		g_signal_connect (button2, "clicked", G_CALLBACK(stop_cb), efh);
 
-//		gtk_widget_set_size_request(button2, 100, 10);
 		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button2, rf->online);
 		gtk_widget_show (button2);
 		gtk_box_pack_start (GTK_BOX (hbox2), button2, TRUE, TRUE, 0);
 		button3 = gtk_button_new_from_stock (GTK_STOCK_REFRESH);
 		g_signal_connect (button3, "clicked", G_CALLBACK(reload_cb), po->website);
-//		gtk_widget_set_size_request(button3, 100, -1);
 		gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button3, rf->online);
 		gtk_widget_show (button3);
 		gtk_box_pack_start (GTK_BOX (hbox2), button3, TRUE, TRUE, 0);
-//	gtk_widget_show (hbox2);
 	}
 	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
 	gtk_widget_show_all (vbox);
@@ -2187,7 +2216,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	struct _org_gnome_rss_controls_pobject *pobj;
 	gpointer is_html;
 	gchar *classid, *tmp;
-	GtkWidget *button2;
+	GtkWidget *button2, *button3, *button4;
 	xmlDoc *src;
 	xmlChar *wid;
 	GByteArray *buffer;
@@ -2285,6 +2314,10 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		"<object classid=%s></object>\n",
 		classid);
 	//precreate stop button as we need it to control it later
+	button3 = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
+	pobj->backbut = button3;
+	button4 = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+	pobj->forwbut = button4;
 	button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
 	pobj->stopbut = button2;
 	g_free (classid);
@@ -2311,6 +2344,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			pobj->object.free = free_rss_browser;
 			pobj->part = t->part;
 			pobj->stopbut =  button2;
+			pobj->backbut = button3;
+			pobj->forwbut = button4;
 			camel_stream_printf (t->stream,
 				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 				frame_colour & 0xffffff,
