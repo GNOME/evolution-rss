@@ -1110,7 +1110,9 @@ update_channel(RDF *r)
 		CF->feedid = g_strdup(buf);
 		CF->sender = g_strdup(sender);
 		if (r->prefix)
-			CF->full_path = g_strconcat(r->prefix, "/", chn_name, NULL);
+			CF->full_path = g_strconcat(
+						r->prefix, "/",
+						chn_name, NULL);
 		else
 			CF->full_path = g_strdup(chn_name);
 
@@ -1122,9 +1124,8 @@ update_channel(RDF *r)
 		if (!feed_is_new(feed_name, CF->feed_uri)) {
 			ftotal++;
 			if (CF->encl) {
-				if (g_list_find_custom(rf->enclist,
-							CF->encl,
-							(GCompareFunc)strcmp))
+				if (g_list_find_custom(rf->enclist, CF->encl,
+						(GCompareFunc)strcmp))
 					continue;
 				tmpdir = e_mkdtemp("evo-rss-XXXXXX");
 				if ( tmpdir == NULL)
@@ -1148,7 +1149,8 @@ update_channel(RDF *r)
 					&err);
 			} else {
 				create_mail(CF);
-				write_feed_status_line(CF->feed_fname, CF->feed_uri);
+				write_feed_status_line(
+					CF->feed_fname, CF->feed_uri);
 				free_cf(CF);
 			}
 			farticle++;

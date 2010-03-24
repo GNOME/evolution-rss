@@ -223,7 +223,7 @@ guint32 content_colour;
 guint32 text_colour;
 
 gboolean gecko_ready = FALSE;
-gboolean browser_fetching = 0;	//mycall event could be triggered 
+gboolean browser_fetching = 0;	//mycall event could be triggered
 				//many times in first step (fetching)
 gint browser_fill = 0;	//how much data currently written to browser
 
@@ -426,9 +426,11 @@ browser_write(gchar *string, gint length, gchar *base)
 #if (DATASERVER_VERSION >= 2023001)
 		proxify_webkit_session(proxy, base);
 #endif
-		webkit_web_view_load_html_string(
+		webkit_web_view_load_string(
 			WEBKIT_WEB_VIEW(rf->mozembed),
 			str,
+			"text/html",
+			NULL,
 			base);
 #endif
 		break;
@@ -933,6 +935,7 @@ save_gconf_feed(void)
 		NULL);
 
 	while (rss_list) {
+		g_print("saved:%s\n", rss_list->data);
 		g_free (rss_list->data);
 		rss_list = g_slist_remove (rss_list, rss_list->data);
 	}
@@ -1309,41 +1312,41 @@ read_feeds(rssfeed *rf)
 		g_mkdir_with_parents (feed_dir, 0755);
 	feed_file = g_strdup_printf("%s/evolution-feeds", feed_dir);
 	g_free(feed_dir);
-	rf->hrname = 
+	rf->hrname =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, g_free);
-	rf->hrname_r = 
+	rf->hrname_r =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, g_free);
 	rf->hr = g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, g_free);
 	rf->hre = g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrt = 
+	rf->hrt =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, g_free);
-	rf->hrh = 
+	rf->hrh =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
-	rf->hruser = 
+	rf->hruser =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, NULL, g_free);
-	rf->hrpass = 
+	rf->hrpass =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, NULL, g_free);
-	rf->hrdel_feed = 
+	rf->hrdel_feed =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrdel_days = 
+	rf->hrdel_days =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrdel_messages = 
+	rf->hrdel_messages =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrdel_unread = 
+	rf->hrdel_unread =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
-	rf->hrdel_notpresent = 
+	rf->hrdel_notpresent =
 		g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
 	rf->hrupdate = g_hash_table_new_full(
@@ -1448,6 +1451,7 @@ reload_cb (GtkWidget *button, gpointer data)
 typedef struct _UB {
 	CamelStream *stream;
 	gchar *url;
+	gboolean create;
 } UB;
 
 void mycall (GtkWidget *widget, GtkAllocation *event, gpointer data);
@@ -1460,8 +1464,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 	GtkAllocation alloc;
 	CamelStream *stream = NULL;
 	UB *fi;
-	gchar buffer[4096];
-	gint n;
 
 	guint k = rf->headers_mode ? 240 : 106;
 	if (GTK_IS_WIDGET(widget)) {
@@ -1486,32 +1488,25 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 						(gchar *)"file:///fakefile#index");
 					g_free(msg);
 					browser_fetching=1;
+					fi = g_new0(UB, 1);
 					stream = rss_cache_get(po->website);
 					if (!stream) {
 						stream = rss_cache_add(po->website);
-						fi = g_new0(UB, 1);
-						fi->stream = stream;
-						fi->url = g_strdup(po->website);
-						fetch_unblocking(
-							po->website,
-							browsercb,
-							po->website,
-							(gpointer)finish_website,
-							fi,
-							1,
-							NULL);
+						fi->create = 1;
 					} else {
-	gtk_moz_embed_open_stream((GtkMozEmbed *)rf->mozembed,
-			po->website, "text/html");
-	while ((n = camel_stream_read((CamelStream *)stream, buffer, sizeof(buffer))) > 0) {
-			gtk_moz_embed_append_data(
-				(GtkMozEmbed *)rf->mozembed,
-				buffer, n);
-	}
-	gtk_moz_embed_close_stream((GtkMozEmbed *)rf->mozembed);
-	camel_stream_close(stream);
-	camel_object_unref(stream);
+						fi->create = 0;
 					}
+					fi->stream = stream;
+					fi->url = g_strdup(po->website);
+					fetch_unblocking(
+						po->website,
+						browsercb,
+						po->website,
+						(gpointer)finish_website,
+						fi,
+						1,
+						NULL);
+					/*FIXME free fi*/
 				}
 				gtk_widget_set_size_request(
 					(GtkWidget *)po->mozembedwindow,
@@ -2129,11 +2124,11 @@ free_rss_browser(EMFormatHTMLPObject *o)
 #endif
 	if (rf->mozembed) {
 //		if (engine == 2) //crashes webkit - https://bugs.webkit.org/show_bug.cgi?id=25042
-//			gtk_widget_destroy(rf->mozembed);
+			gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
 	}
 	g_signal_handler_disconnect(po->format->html, po->shandler);
-//	gtk_widget_destroy(po->container);
+	gtk_widget_destroy(po->container);
 	g_free(po->website);
 	browser_fetching = 0;
 }
@@ -2998,7 +2993,7 @@ finish_setup_feed(
 		goto out;
 
 	content = g_string_new_len((gchar *)(msg->response_body->data),
-				msg->response_body->length);
+			msg->response_body->length);
 
 	xmlSubstituteEntitiesDefaultValue = 0;
 	doc = xml_parse_sux (content->str, content->len);
@@ -3029,13 +3024,16 @@ add:
 		//	feed->orig_name = r->title;
 		//	r->title = chn_name;
 		}
-		if (chn_name == NULL)
+		if (chn_name == NULL || !strlen(chn_name)) {
 			chn_name = g_strdup (_(DEFAULT_NO_CHANNEL));
+			r->title = chn_name;
+		}
 
 		tmp_chn_name = chn_name;
 		chn_name = sanitize_folder(chn_name);
 		tmp = chn_name;
 		chn_name = generate_safe_chn_name(chn_name);
+		g_print("chn_name:%s\n", chn_name);
 
 		g_hash_table_insert(rf->hrname,
 			g_strdup(chn_name),
@@ -3128,9 +3126,10 @@ add:
 		save_gconf_feed();
 
 		real_name = g_strdup_printf(
-					"%s/%s",
-					lookup_main_folder(),
-					lookup_feed_folder(chn_name));
+				"%s/%s",
+				lookup_main_folder(),
+				lookup_feed_folder(chn_name));
+		g_print("real feed:%s\n", real_name);
 		d("select folder:%s\n", real_name);
 		rss_select_folder(real_name);
 		g_free(real_name);
@@ -3177,8 +3176,9 @@ add:
 					rf->hr,
 					check_if_match,
 					feed->feed_url)) {
-				rss_error(NULL, NULL, _("Error adding feed."),
-				_("Feed already exists!"));
+				rss_error(NULL, NULL,
+					_("Error adding feed."),
+					_("Feed already exists!"));
 				goto out;
 			}
 			setup_feed(g_memdup(feed, sizeof(feed)));
@@ -3228,13 +3228,13 @@ setup_feed(add_feed *feed)
 
 	d("adding feed->feed_url:%s\n", feed->feed_url);
 	fetch_unblocking(
-			feed->feed_url,
-			textcb,
-			NULL,
-			(gpointer)finish_setup_feed,
-			feed,	// we need to dupe key here
-			1,
-			&err);	// because we might lose it if
+		feed->feed_url,
+		textcb,
+		NULL,
+		(gpointer)finish_setup_feed,
+		feed,	// we need to dupe key here
+		1,
+		&err);	// because we might lose it if
 	if (err) {
 		g_print("setup_feed() -> err:%s\n", err->message);
 		tmpkey = gen_md5(feed->feed_url);
@@ -3419,7 +3419,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 		g_hash_table_steal(rf->info->data->active,
 			rf->info->uri);
-		rf->info->data->infos = 
+		rf->info->data->infos =
 			g_list_remove(rf->info->data->infos,
 					rf->info);
 
@@ -3478,19 +3478,24 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (!deleted) {
 		if (!user_data || !lookup_key(user_data))
 			goto out;
-		r->uri =  g_hash_table_lookup(rf->hr, lookup_key(user_data));
+		r->uri =  g_hash_table_lookup(
+				rf->hr, lookup_key(user_data));
 
 		chn_name = display_doc (r);
 
 		if (chn_name) {
 			if (g_ascii_strcasecmp(user_data, chn_name) != 0) {
 				gchar *md5 = g_strdup(
-					g_hash_table_lookup(rf->hrname, user_data));
+					g_hash_table_lookup(
+						rf->hrname, user_data));
 				g_hash_table_remove(rf->hrname_r, md5);
 				g_hash_table_remove(rf->hrname, user_data);
-				g_hash_table_insert(rf->hrname, g_strdup(chn_name), md5);
-				g_hash_table_insert(rf->hrname_r, g_strdup(md5),
-								g_strdup(chn_name));
+				g_hash_table_insert(
+					rf->hrname,
+					g_strdup(chn_name), md5);
+				g_hash_table_insert(
+					rf->hrname_r, g_strdup(md5),
+					g_strdup(chn_name));
 				save_gconf_feed();
 				update_ttl(md5, r->ttl);
 				//save_data = user_data;
@@ -3633,15 +3638,19 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		tmsg = g_strdup(_("Formatting error."));
 		browser_write(
 			tmsg, strlen(tmsg),
-			 (gchar *)"file:///fakefile#index");
+			(gchar *)"file:///fakefile#index");
 		g_free(tmsg);
-		//stream remove
-		camel_stream_close(ub->stream);
-		camel_object_unref(ub->stream);
+		if (ub->create) {
+			//stream remove
+			camel_stream_close(ub->stream);
+			camel_object_unref(ub->stream);
+		}
 	} else {
-		camel_stream_write(ub->stream, response->str, strlen(response->str));
-		camel_stream_close(ub->stream);
-		camel_object_unref(ub->stream);
+		if (ub->create) {
+			camel_stream_write(ub->stream, response->str, strlen(response->str));
+			camel_stream_close(ub->stream);
+			camel_object_unref(ub->stream);
+		}
 		str = (response->str);
 		len = strlen(response->str);
 		*str+= browser_fill;
@@ -5369,6 +5378,7 @@ create_mail(create_feed *CF)
 	gchar *time_str, *buf;
 	gint offset;
 
+g_print("CF:full_pqath:%s\n", CF->full_path);
 	mail_folder = check_feed_folder(CF->full_path);
 	camel_object_ref(mail_folder);
 
