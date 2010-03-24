@@ -935,7 +935,6 @@ save_gconf_feed(void)
 		NULL);
 
 	while (rss_list) {
-		g_print("saved:%s\n", rss_list->data);
 		g_free (rss_list->data);
 		rss_list = g_slist_remove (rss_list, rss_list->data);
 	}
@@ -3033,7 +3032,6 @@ add:
 		chn_name = sanitize_folder(chn_name);
 		tmp = chn_name;
 		chn_name = generate_safe_chn_name(chn_name);
-		g_print("chn_name:%s\n", chn_name);
 
 		g_hash_table_insert(rf->hrname,
 			g_strdup(chn_name),
@@ -3125,17 +3123,17 @@ add:
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
 		save_gconf_feed();
 
+
+		if (feed->validate)
+			display_feed(r);
+
+		/* folder might not be created yet */
 		real_name = g_strdup_printf(
 				"%s/%s",
 				lookup_main_folder(),
 				lookup_feed_folder(chn_name));
-		g_print("real feed:%s\n", real_name);
-		d("select folder:%s\n", real_name);
 		rss_select_folder(real_name);
 		g_free(real_name);
-
-		if (feed->validate)
-			display_feed(r);
 
 		taskbar_op_set_progress(tmsgkey, tmsg, 0.9);
 
@@ -3366,7 +3364,8 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete."));
 			if (rf->info->cancel_button)
 				gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
-			gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
+			gtk_progress_bar_set_fraction(
+				(GtkProgressBar *)rf->progress_bar, 1);
 
 			g_hash_table_steal(rf->info->data->active, rf->info->uri);
 			rf->info->data->infos = g_list_remove(rf->info->data->infos, rf->info);
@@ -3483,7 +3482,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 		chn_name = display_doc (r);
 
-		if (chn_name) {
+		if (chn_name && strlen(chn_name)) {
 			if (g_ascii_strcasecmp(user_data, chn_name) != 0) {
 				gchar *md5 = g_strdup(
 					g_hash_table_lookup(
@@ -5378,7 +5377,6 @@ create_mail(create_feed *CF)
 	gchar *time_str, *buf;
 	gint offset;
 
-g_print("CF:full_pqath:%s\n", CF->full_path);
 	mail_folder = check_feed_folder(CF->full_path);
 	camel_object_ref(mail_folder);
 

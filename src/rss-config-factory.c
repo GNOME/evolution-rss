@@ -700,7 +700,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	ok = GTK_WIDGET (
 		gtk_builder_get_object(gui, "ok_button"));
 	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
-	dp("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
+	d("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (dialog1),
 		ok,
@@ -946,7 +946,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 		}
 		setup_feed(feed);
 	}
-out:    dp("msg_feeds destroy\n");
+out:    d("msg_feeds destroy\n");
 	gtk_widget_destroy(msg_feeds);
 	feed->progress = NULL;
 }
