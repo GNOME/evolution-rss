@@ -119,8 +119,8 @@ RENDER_N=0
 GECKO_DEFINES
 AC_MSG_CHECKING([whether to include Gecko support])
 AC_ARG_ENABLE([gecko],
-        AS_HELP_STRING([--disable-gecko],[Disable Gecko (gtkmozembed) support (default: enabled)]),
-        [],[enable_gecko=yes])
+        AS_HELP_STRING([--disable-gecko],[Disable Gecko (gtkmozembed) support (default: disabled)]),
+        [],[enable_gecko=no])
 AC_MSG_RESULT([$enable_gecko])
 
 if test "$enable_gecko" = "yes"; then
