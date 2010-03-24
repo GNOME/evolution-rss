@@ -442,7 +442,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	guint del_feed = 0;
 	gpointer key = NULL;
 	GtkAccelGroup *accel_group = gtk_accel_group_new ();
-	GtkWidget *ok;
+	GtkWidget *ok, *cancel;
 	GtkWidget *dialog1, *child;
 	GtkWidget *authuser, *authpass;
 	GtkWidget *adv_options, *entry1, *entry2, *feed_name;
@@ -699,9 +699,9 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	ok = GTK_WIDGET (
 		gtk_builder_get_object(gui, "ok_button"));
-//	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
-//	d("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
-/*	gtk_dialog_add_action_widget (
+	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
+	d("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
+	gtk_dialog_add_action_widget (
 		(GtkDialog *)dialog1,
 		ok,
 		GTK_RESPONSE_OK);
@@ -714,7 +714,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		GTK_RESPONSE_CANCEL);
 	GTK_WIDGET_SET_FLAGS (
 		cancel,
-		GTK_CAN_DEFAULT);*/
+		GTK_CAN_DEFAULT);
 
 	gtk_widget_add_accelerator (
 		ok,
