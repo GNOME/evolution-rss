@@ -96,7 +96,7 @@ typedef struct _setupfeed {
 	GtkBuilder *gui;
 	GtkWidget *treeview;
 	GtkWidget *add_feed;
-	GtkWidget 
+	GtkWidget
 		*check1,
 		*check2,
 		*check3,
@@ -241,7 +241,7 @@ treeview_row_activated(GtkTreeView *treeview,
 static void
 rep_check_cb (GtkWidget *widget, gpointer data)
 {
-	gboolean active = 
+	gboolean active =
 		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
 	gconf_client_set_bool (rss_gconf,
@@ -330,7 +330,7 @@ details_cb (GtkWidget *widget, gpointer data)
 		G_CALLBACK(start_check_cb),
 		GCONF_KEY_AUTH_PROXY);
 
-	gchar *user = 
+	gchar *user =
 		gconf_client_get_string(
 			rss_gconf,
 			GCONF_KEY_USER_PROXY,
@@ -436,7 +436,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	gchar *flabel = NULL;
 	gchar *fname;
 	gboolean fhtml = FALSE;
-	gboolean del_unread = FALSE, 
+	gboolean del_unread = FALSE,
 		del_notpresent = FALSE;
 	gboolean auth_enabled;
 	guint del_feed = 0;
@@ -454,7 +454,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		*checkbutton1,
 		*checkbutton2,
 		*checkbutton3,
-		*radiobutton1, 
+		*radiobutton1,
 		*radiobutton2,
 		*radiobutton3,
 		*radiobutton4,
@@ -1033,49 +1033,49 @@ hrfeed*
 save_feed_hash(gpointer name)
 {
 	hrfeed *saved_feed = g_new0(hrfeed, 1);
-	saved_feed->hrname = 
+	saved_feed->hrname =
 		g_strdup(g_hash_table_lookup(rf->hrname, name));
-	saved_feed->hrname_r = 
+	saved_feed->hrname_r =
 		g_strdup(g_hash_table_lookup(
 				rf->hrname_r, lookup_key(name)));
-	saved_feed->hre = 
+	saved_feed->hre =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 					rf->hre, lookup_key(name)));
-	saved_feed->hrt = 
+	saved_feed->hrt =
 		g_strdup(g_hash_table_lookup(
 				rf->hrt, lookup_key(name)));
-	saved_feed->hrh = 
+	saved_feed->hrh =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 					rf->hrh, lookup_key(name)));
-	saved_feed->hr = 
+	saved_feed->hr =
 		g_strdup(g_hash_table_lookup(
 				rf->hr,
 				lookup_key(name)));
-	saved_feed->hrdel_feed = 
+	saved_feed->hrdel_feed =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 					rf->hrdel_feed,
 					lookup_key(name)));
-	saved_feed->hrdel_days = 
+	saved_feed->hrdel_days =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 					rf->hrdel_days,
 					lookup_key(name)));
-	saved_feed->hrdel_messages = 
+	saved_feed->hrdel_messages =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 					rf->hrdel_messages,
 					lookup_key(name)));
-	saved_feed->hrdel_unread = 
+	saved_feed->hrdel_unread =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 				rf->hrdel_unread, lookup_key(name)));
-	saved_feed->hrdel_notpresent = 
+	saved_feed->hrdel_notpresent =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 				rf->hrdel_notpresent, lookup_key(name)));
-	saved_feed->hrupdate = 
+	saved_feed->hrupdate =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 				rf->hrupdate, lookup_key(name)));
-	saved_feed->hrttl = 
+	saved_feed->hrttl =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 				rf->hrttl, lookup_key(name)));
-	saved_feed->hrttl_multiply = 
+	saved_feed->hrttl_multiply =
 		GPOINTER_TO_INT(g_hash_table_lookup(
 				rf->hrttl_multiply,
 				lookup_key(name)));
@@ -1215,7 +1215,7 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
 	GtkTreeIter       iter;
 	gchar *name;
 	if (response == GTK_RESPONSE_OK) {
-		selection = 
+		selection =
 			gtk_tree_view_get_selection(
 				GTK_TREE_VIEW(user_data));
 		if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
@@ -1280,13 +1280,17 @@ remove_feed_dialog(gchar *msg)
 
 #if EVOLUTION_VERSION < 22904
 	dialog1 = e_error_new(
-#else
-	dialog1 = e_alert_dialog_new_for_args(
-#endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:ask-delete-feed",
 		msg,
 		NULL);
+#else
+	dialog1 = e_alert_dialog_new_for_args(
+		GTK_WINDOW(rf->preferences),
+		"org-gnome-evolution-rss:ask-delete-feed",
+		msg,
+		NULL);
+#endif
 	gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
 
 	dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
@@ -2089,7 +2093,7 @@ create_import_dialog (void)
 	GtkWidget *button1;
 	GtkWidget *button2;
 
-	import_file_select = 
+	import_file_select =
 		gtk_file_chooser_dialog_new (
 			_("Select import file"),
 			NULL,
@@ -3188,7 +3192,7 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
 	gchar *ofolder = (gchar *)g_object_get_data((GObject *)epl, "ofolder");
 
-	EMConfigTargetFolder *targetfolder = 
+	EMConfigTargetFolder *targetfolder =
 		(EMConfigTargetFolder *)target->config->target;
 	gchar *main_folder = lookup_main_folder();
 	gchar *folder = targetfolder->folder->full_name;

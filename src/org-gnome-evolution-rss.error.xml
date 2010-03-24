@@ -7,7 +7,7 @@
     <_primary>Reading RSS Feeds...</_primary>
     <button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
   </error>
-  
+
   <error id="rssmsg" type="info">
     <_primary>Updating Feeds...</_primary>
     <button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
@@ -17,7 +17,7 @@
     <primary>{0}</primary>
     <button stock="gtk-ok" response="GTK_RESPONSE_OK"/>
   </error>
-  
+
   <error id="feederr" type="error">
     <primary>{0}</primary>
     <secondary>{1}</secondary>
@@ -25,11 +25,10 @@
   </error>
 
 <error type="question" id="ask-delete-feed" default="GTK_RESPONSE_CANCEL">
- 	<_title>Delete "{0}"?</_title>
- 	<_primary>Really delete feed '{0}' ?</_primary>
- 	<secondary>{1}</secondary>
- 	<button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
- 	<button stock="gtk-delete" response="GTK_RESPONSE_OK"/>
-</error> 
+	<_title>Delete "{0}"?</_title>
+	<_primary>Really delete feed '{0}' ?</_primary>
+	<button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
+	<button stock="gtk-delete" response="GTK_RESPONSE_OK"/>
+</error>
 
 </error-list>
