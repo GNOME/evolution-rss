@@ -950,9 +950,9 @@
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <property name="action">save</property>
-    <property name="local_only">False</property>
     <property name="show_hidden">True</property>
+    <property name="local_only">False</property>
+    <property name="action">save</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="vbox26">
         <property name="visible">True</property>
@@ -1598,7 +1598,7 @@
           </packing>
         </child>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area9">
+          <object class="GtkHButtonBox" id="feed_dialog-aa">
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
