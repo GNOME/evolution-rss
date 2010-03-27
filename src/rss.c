@@ -152,6 +152,7 @@ int rss_verbose_debug = 0;
 #include "rss-icon-factory.h"
 #include "parser.h"
 
+
 int pop = 0;
 GtkWidget *flabel;
 //#define RSS_DEBUG 1
@@ -163,6 +164,8 @@ GQueue *status_msg;
 gchar *flat_status_msg;
 GPtrArray *filter_uids;
 gpointer current_pobject = NULL;
+guint resize_pane_size = 0;
+guint resize_browser_size = 0;
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -181,7 +184,8 @@ struct _org_gnome_rss_controls_pobject {
 	gchar *website;
 	guint is_html;
 	gchar *mem;
-	guint shandler;		//mycall handler_id
+	guint chandler;		//content handler_id
+	guint shandler;		//size handler_id
 	guint counter;		//general counter for carring various numbers
 };
 
@@ -1460,23 +1464,55 @@ typedef struct _UB {
 	gboolean create;
 } UB;
 
-void mycall (GtkWidget *widget, GtkAllocation *event, gpointer data);
+void
+rss_browser_set_size (GtkAdjustment *adj, gpointer data);
 
 void
-mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
+rss_browser_set_size (GtkAdjustment *adj, gpointer data)
 {
-	int width, height;
 	struct _org_gnome_rss_controls_pobject *po = data;
+	GtkWidget *moz = po->mozembedwindow;
 	GtkAllocation alloc;
+	guint width, height;
+	guint diff;
+	if (moz && gtk_widget_get_realized(moz)) {
+	gtk_widget_get_allocation(moz, &alloc);
+	width = alloc.width;
+	height = alloc.height;
+	if (adj->upper > adj->page_size) {
+		diff = (int)(adj->upper - adj->page_size);
+		height -= diff;
+		resize_pane_size = adj->page_size;
+		resize_browser_size = height;
+		gtk_widget_set_size_request(
+			moz,
+			width, height);
+	} else {
+		if (resiz_page != 0) {
+			height = resize_browser_size + 
+				(int)(adj->page_size -
+				resize_pane_size);
+			if (height)
+				gtk_widget_set_size_request(
+				moz,
+				width, height);
+		}
+	}
+	}
+}
+
+void rss_browser_update_content (
+	GtkWidget *widget, GtkAllocation *event, gpointer data);
+
+void
+rss_browser_update_content (
+	GtkWidget *widget, GtkAllocation *event, gpointer data)
+{
+	struct _org_gnome_rss_controls_pobject *po = data;
 	CamelStream *stream = NULL;
 	UB *fi;
 
-	guint k = rf->headers_mode ? 240 : 106;
 	if (GTK_IS_WIDGET(widget)) {
-		gtk_widget_get_allocation(widget, &alloc);
-		width = alloc.width - 16 - 2;// - 16;
-		height = alloc.height - 16 - k;
-		d("resize webkit :width:%d, height: %d\n", width, height);
 		if (po->mozembedwindow && rf->mozembed)
 			if(GTK_IS_WIDGET(po->mozembedwindow)
 #if GTK_VERSION >= 2019007
@@ -1484,7 +1520,7 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 #else
 			&& GTK_WIDGET_REALIZED(rf->mozembed)
 #endif
-			&& height > 0) {
+			) {
 				if (!browser_fetching) {
 					gchar *msg = g_strdup_printf(
 							"<h5>%s</h5>",
@@ -1514,16 +1550,6 @@ mycall (GtkWidget *widget, GtkAllocation *event, gpointer data)
 						NULL);
 					/*FIXME free fi*/
 				}
-				gtk_widget_set_size_request(
-					(GtkWidget *)po->mozembedwindow,
-					width, height);
-// apparently resizing gtkmozembed widget won't redraw if using xulrunner
-// there is no point in reload for the rest
-/*#if defined(HAVE_XULRUNNER)
-// || defined(HAVE_GECKO_1_9)
-if (2 == gconf_client_get_int(rss_gconf, GCONF_KEY_HTML_RENDER, NULL))
-	gtk_moz_embed_reload(GtkMozEmbed *)rf->mozembed, GTK_MOZ_EMBED_FLAG_RELOADNORMAL);
-#endif*/
 			}
 	}
 }
@@ -1792,6 +1818,40 @@ webkit_click (GtkEntry *entry,
 	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
 	return TRUE;
 }
+
+static void
+action_search_cb (GtkAction *action,
+			EMailReader *reader)
+{
+	g_print("search\n");
+}
+
+
+#include <shell/e-shell-searchbar.h>
+void
+rss_search_bar_hook(void)
+{
+	EShellContent *shell_content;
+	EMailReader *reader;
+	GtkAction *action;
+	EShellSearchbar *search_bar;
+	gchar *action_name;
+
+	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	reader = E_MAIL_READER (shell_content);
+
+	action_name = "mail-find";
+	action = e_mail_reader_get_action (reader, action_name);
+	g_signal_connect_swapped (
+		action, "activate",
+		G_CALLBACK (action_search_cb), reader);
+	search_bar = e_shell_content_get_searchbar(shell_content);
+	g_signal_connect_swapped (
+		search_bar, "activate",
+		G_CALLBACK (action_search_cb), NULL);
+
+}
+
 #endif
 
 #ifdef HAVE_GECKO
@@ -1900,6 +1960,8 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 			(struct _org_gnome_rss_controls_pobject *) pobject;
 	GtkWidget *moz;
 	EMFormat *myf = (EMFormat *)efh;
+	GtkAllocation alloc;
+	guint width, height;
 
 	guint engine = fallback_engine();
 	moz = gtk_scrolled_window_new(NULL,NULL);
@@ -1922,6 +1984,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 			rf->mozembed,
 			"hovering-over-link",
 			G_CALLBACK (webkit_over_link), moz);
+
 //add zoom level
 #if (WEBKIT_VERSION >= 1001007)
 		g_signal_connect (
@@ -1946,12 +2009,31 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gecko_set_preferences();
 
 		/* FIXME add all those profile shits */
-		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(moz), GTK_WIDGET(rf->mozembed));
-		//gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(moz), GTK_SHADOW_ETCHED_OUT);
-		g_signal_connect (rf->mozembed, "dom_mouse_click", G_CALLBACK(gecko_click), moz);
-		g_signal_connect (rf->mozembed, "link_message", G_CALLBACK(gecko_over_link), moz);
-		g_signal_connect (rf->mozembed, "net_start", G_CALLBACK(gecko_net_start), po->stopbut);
-		g_signal_connect (rf->mozembed, "net_stop", G_CALLBACK(gecko_net_stop), po->stopbut);
+		gtk_scrolled_window_add_with_viewport(
+				GTK_SCROLLED_WINDOW(moz),
+				GTK_WIDGET(rf->mozembed));
+		gtk_scrolled_window_set_shadow_type (
+				GTK_SCROLLED_WINDOW(moz),
+				GTK_SHADOW_ETCHED_IN);
+		g_signal_connect (rf->mozembed,
+				"dom_mouse_click",
+				G_CALLBACK(gecko_click),
+				moz);
+		g_signal_connect (
+				rf->mozembed,
+				"link_message",
+				G_CALLBACK(gecko_over_link),
+				moz);
+		g_signal_connect (
+				rf->mozembed,
+				"net_start",
+				G_CALLBACK(gecko_net_start),
+				po->stopbut);
+		g_signal_connect (
+				rf->mozembed,
+				"net_stop",
+				G_CALLBACK(gecko_net_stop),
+				po->stopbut);
 	}
 #endif
 
@@ -1960,22 +2042,21 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
 		d("Render engine Webkit\n");
-		if (rf->online) {
-//			webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), po->website);
-		} else
-			webkit_web_view_open(WEBKIT_WEB_VIEW(rf->mozembed), "about:blank");
+		if (!rf->online)
+			webkit_web_view_open(
+				WEBKIT_WEB_VIEW(rf->mozembed),
+				"about:blank");
 	}
 #endif
 
 #ifdef HAVE_GECKO
 	if (engine == 2) {
 		d("Render engine Gecko\n");
-		if (rf->online) {
-			//gtk_moz_embed_stop_load(GTK_MOZ_EMBED(rf->mozembed));
-			//gtk_moz_embed_load_url (GTK_MOZ_EMBED(rf->mozembed), po->website);
-		} else {
-			gtk_moz_embed_stop_load((GtkMozEmbed *)rf->mozembed);
-			gtk_moz_embed_load_url ((GtkMozEmbed *)rf->mozembed, "about:blank");
+		if (!rf->online) {
+			gtk_moz_embed_stop_load(
+				(GtkMozEmbed *)rf->mozembed);
+			gtk_moz_embed_load_url (
+				(GtkMozEmbed *)rf->mozembed, "about:blank");
 		}
 	}
 #endif
@@ -1992,21 +2073,32 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gtk_widget_show_all(moz);
 
 	gtk_container_add ((GtkContainer *) eb, moz);
-///        gtk_container_check_resize ((GtkContainer *) eb);
-//	gtk_widget_set_size_request((GtkWidget *)rf->mozembed, 330, 330);
-//        gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	rf->headers_mode = myf->mode;
 	po->mozembedwindow =  moz;
-	po->shandler = g_signal_connect(efh->html,
+	po->html = efh->html;
+	gtk_widget_get_allocation(GTK_WIDGET(efh->html)->parent, &alloc);
+	width = alloc.width - 20; //FIXME compute this size
+	height = 5000; //alloc.height;
+	gtk_widget_set_size_request(
+		(GtkWidget *)po->mozembedwindow,
+		width, height);
+	GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment(
+				GTK_WIDGET(efh->html)->parent);
+	po->shandler = g_signal_connect(adj,
+		"changed",
+		G_CALLBACK(rss_browser_set_size),
+		po);
+	po->chandler = g_signal_connect(efh->html,
 		"size_allocate",
-		G_CALLBACK(mycall),
+		G_CALLBACK(rss_browser_update_content),
 		po);
 	return TRUE;
 }
 #endif
 
 static gboolean
-org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
+org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb,
+			EMFormatHTMLPObject *pobject)
 {
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) pobject;
@@ -2059,26 +2151,44 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_widget_show_all (button);
 	if (rf->cur_format) {
 		button4 = po->backbut;
-		g_signal_connect (button4, "clicked", G_CALLBACK(back_cb), efh);
+		g_signal_connect (
+			button4,
+			"clicked",
+			G_CALLBACK(back_cb),
+			efh);
 		gtk_button_set_relief(GTK_BUTTON(button4), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button4, rf->online);
 		gtk_widget_show (button4);
-		gtk_box_pack_start (GTK_BOX (hbox2), button4, TRUE, TRUE, 0);
+		gtk_box_pack_start (
+			GTK_BOX (hbox2),
+			button4,
+			TRUE, TRUE, 0);
 		button5 = po->forwbut;
-		g_signal_connect (button5, "clicked", G_CALLBACK(forward_cb), efh);
+		g_signal_connect (
+			button5,
+			"clicked",
+			G_CALLBACK(forward_cb),
+			efh);
 		gtk_button_set_relief(GTK_BUTTON(button5), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button5, rf->online);
 		gtk_widget_show (button5);
 		gtk_box_pack_start (GTK_BOX (hbox2), button5, TRUE, TRUE, 0);
 		button2 = po->stopbut;
-		g_signal_connect (button2, "clicked", G_CALLBACK(stop_cb), efh);
-
+		g_signal_connect (
+			button2,
+			"clicked",
+			G_CALLBACK(stop_cb),
+			efh);
 		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button2, rf->online);
 		gtk_widget_show (button2);
 		gtk_box_pack_start (GTK_BOX (hbox2), button2, TRUE, TRUE, 0);
 		button3 = gtk_button_new_from_stock (GTK_STOCK_REFRESH);
-		g_signal_connect (button3, "clicked", G_CALLBACK(reload_cb), po->website);
+		g_signal_connect (
+			button3,
+			"clicked",
+			G_CALLBACK(reload_cb),
+			po->website);
 		gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button3, rf->online);
 		gtk_widget_show (button3);
@@ -2136,6 +2246,7 @@ free_rss_browser(EMFormatHTMLPObject *o)
 			(struct _org_gnome_rss_controls_pobject *) o;
 	gpointer key = g_hash_table_lookup(rf->key_session, po->website);
 	guint engine;
+	GtkAdjustment *adj;
 
 	d("key sess:%p\n", key);
 	if (key) {
@@ -2155,7 +2266,10 @@ free_rss_browser(EMFormatHTMLPObject *o)
 			gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
 	}
-	g_signal_handler_disconnect(po->format->html, po->shandler);
+	g_signal_handler_disconnect(po->format->html, po->chandler);
+	adj = gtk_scrolled_window_get_vadjustment(
+		GTK_WIDGET(po->format->html)->parent);
+	g_signal_handler_disconnect(adj, po->shandler);
 	gtk_widget_destroy(po->container);
 	g_free(po->website);
 	browser_fetching = 0;
@@ -4362,23 +4476,29 @@ check_feed_folder(gchar *folder_name)
 	gchar *real_folder = lookup_feed_folder(folder_name);
 	gchar *real_name = g_strdup_printf(
 				"%s/%s", main_folder, real_folder);
-	d("main_folder:%s\n", main_folder);
-	d("real_folder:%s\n", real_folder);
-	d("real_name:%s\n", real_name);
+	dp("main_folder:%s\n", main_folder);
+	dp("real_folder:%s\n", real_folder);
+	dp("real_name:%s\n", real_name);
 	mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
 	base_folder = main_folder;
 	if (mail_folder == NULL) {
 		path = g_strsplit(real_folder, "/", 0);
 		if (path) {
 			do {
-				camel_store_create_folder (store,
-					base_folder,
-					path[i],
-					NULL);
-				base_folder = g_strconcat(base_folder,
-					"/",
-					path[i],
-					NULL);
+				if (path[i] == NULL)
+					break;
+				if (path[i] && strlen(path[i])) {
+					camel_store_create_folder (
+						store,
+						base_folder,
+						path[i],
+						NULL);
+					base_folder = g_strconcat(
+							base_folder,
+							"/",
+							path[i],
+							NULL);
+				}
 			} while (NULL != path[++i]);
 			g_strfreev(path);
 		}
@@ -5261,6 +5381,8 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 		"activate",
 		G_CALLBACK (quit_cb),
 		rss_shell_view);
+		g_print("hhok\n");
+	rss_search_bar_hook();
 	return TRUE;
 }
 #endif
