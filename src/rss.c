@@ -1475,7 +1475,13 @@ rss_browser_set_size (GtkAdjustment *adj, gpointer data)
 	GtkAllocation alloc;
 	guint width, height;
 	guint diff;
-	if (moz && gtk_widget_get_realized(moz)) {
+	if (moz
+#if GTK_VERSION >= 2019007
+			&& gtk_widget_get_realized(moz)
+#else
+			&& GTK_WIDGET_REALIZED(moz)
+#endif
+		) {
 	gtk_widget_get_allocation(moz, &alloc);
 	width = alloc.width;
 	height = alloc.height;
@@ -1488,7 +1494,7 @@ rss_browser_set_size (GtkAdjustment *adj, gpointer data)
 			moz,
 			width, height);
 	} else {
-		if (resiz_page != 0) {
+		if (resize_pane_size != 0) {
 			height = resize_browser_size + 
 				(int)(adj->page_size -
 				resize_pane_size);
