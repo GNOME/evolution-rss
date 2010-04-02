@@ -23,7 +23,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <glib.h>
-#include <libedataserver/md5-utils.h>
+//#include <libedataserver/md5-utils.h>
 #include <camel/camel-mime-utils.h>
 
 extern int rss_verbose_debug;
@@ -334,17 +334,29 @@ gen_crc(const char *msg)
 gchar *
 gen_md5(gchar *buffer)
 {
-	unsigned char md5sum[16], res[17], *f;
+	unsigned char res[17], *f;
+	guint8 *md5sum;
+	gsize length;
+	gchar *result;
 	int i;
 	const char tohex[16] = "0123456789abcdef";
+	GChecksum *checksum;
 
-	md5_get_digest (buffer, strlen(buffer), md5sum);
+	length = g_checksum_type_get_length (G_CHECKSUM_MD5);
+	md5sum = g_alloca (length);
+
+	checksum = g_checksum_new (G_CHECKSUM_MD5);
+	g_checksum_update (checksum, (guchar *) buffer, -1);
+	g_checksum_get_digest (checksum, md5sum, &length);
+	g_checksum_free (checksum);
+
 	for (i=0, f = res; i<16;i++) {
 		unsigned int c = md5sum[i];
 		*f++ = tohex[c & 0xf];
 	}
 	*f++ = 0;
-	return g_strdup((gchar *)res);
+	result = g_strdup((gchar *)res);
+	return result;
 }
 
 void
