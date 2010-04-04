@@ -23,8 +23,11 @@
 #include <stdint.h>
 #include <string.h>
 #include <glib.h>
-//#include <libedataserver/md5-utils.h>
+#if (DATASERVER_VERSION >= 2031001)
+#include <camel/camel.h>
+#else
 #include <camel/camel-mime-utils.h>
+#endif
 
 extern int rss_verbose_debug;
 

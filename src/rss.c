@@ -29,15 +29,19 @@ int rss_verbose_debug = 0;
 #include <time.h>
 #include <errno.h>
 
+#if (DATASERVER_VERSION >= 2031001)
+#include <camel/camel.h>
+#else
 #include <camel/camel-mime-message.h>
+#include <camel/camel-file-utils.h>
 #include <camel/camel-folder.h>
 #include <camel/camel-multipart.h>
 #include <camel/camel-stream-mem.h>
 #include <camel/camel-stream-fs.h>
 #include <camel/camel-text-index.h>
+#endif
 
 #include <e-util/e-icon-factory.h>
-//#include <e-util/e-mktemp.h>
 #include <e-util/e-util.h>
 
 
@@ -69,8 +73,6 @@ int rss_verbose_debug = 0;
 #include <mail/mail-tools.h>
 #include <mail/mail-ops.h>
 
-
-
 #include <mail/em-format-html.h>
 #include <mail/em-format-hook.h>
 
@@ -91,7 +93,6 @@ int rss_verbose_debug = 0;
 #include <gtk/gtk.h>
 
 #include <shell/es-event.h>
-#include <camel/camel-file-utils.h>
 
 #ifdef HAVE_GTKHTMLEDITOR
 #include <editor/gtkhtml-editor.h>
@@ -1825,15 +1826,21 @@ webkit_click (GtkEntry *entry,
 	return TRUE;
 }
 
+#include <shell/e-shell-view.h>
+#include <shell/e-shell-searchbar.h>
+#if EVOLUTION_VERSION >= 22900
 static void
-action_search_cb (GtkAction *action,
-			EMailReader *reader)
+action_search_cb (EShellView *shell,
+			GtkWidget *sb)
 {
-	g_print("search\n");
+//	g_signal_connect_swapped (
+//		search_bar, "changed",
+//		G_CALLBACK (em_format_redraw), priv->html_display);
+		g_print("my search\n");
+//	g_print("search:%s\n", e_shell_searchbar_get_search_text(sb));
 }
 
 
-#include <shell/e-shell-searchbar.h>
 void
 rss_search_bar_hook(void)
 {
@@ -1842,21 +1849,47 @@ rss_search_bar_hook(void)
 	GtkAction *action;
 	EShellSearchbar *search_bar;
 	gchar *action_name;
+	EShellView *shell_view;
+	EShellWindow *shell_window;
+	
+
+	CamelFolder *folder;
+	EMFolderTree *folder_tree;
+	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(
+					rss_shell_view);
+	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
+	folder = em_folder_tree_get_selected_folder (folder_tree);
+	g_print("file:%s\n", mail_config_folder_to_cachename (
+				folder, "et-header-"));
+
 
 	shell_content = e_shell_view_get_shell_content (rss_shell_view);
-	reader = E_MAIL_READER (shell_content);
+//	reader = E_MAIL_READER (shell_content);
 
-	action_name = "mail-find";
-	action = e_mail_reader_get_action (reader, action_name);
-	g_signal_connect_swapped (
-		action, "activate",
-		G_CALLBACK (action_search_cb), reader);
-	search_bar = e_shell_content_get_searchbar(shell_content);
-	g_signal_connect_swapped (
-		search_bar, "activate",
-		G_CALLBACK (action_search_cb), NULL);
+//	action_name = "mail-find";
+//	action = e_mail_reader_get_action (reader, action_name);
+//	g_signal_connect_swapped (
+//		action, "activate",
+//		G_CALLBACK (action_search_cb), reader);
+//	search_bar = e_shell_view_get_searchbar(rss_shell_view);
+	//search_bar = e_shell_content_get_searchbar(shell_content);
+	shell_view = e_shell_searchbar_get_shell_view (search_bar);
+//	g_signal_connect_after (
+//		"execute-search", "activate",
+//		G_CALLBACK (action_search_cb), search_bar);
+	shell_window = e_shell_view_get_shell_window (rss_shell_view);
+	g_signal_connect_after (
+			search_bar,
+			"expose-event",
+		G_CALLBACK (action_search_cb),
+		rss_shell_view);
+	e_shell_view_clear_search(shell_view);
+//	g_signal_connect (
+//		search_bar, "execute-search",
+//		G_CALLBACK (action_search_cb), search_bar);
 
 }
+#endif
 
 #endif
 
@@ -4482,9 +4515,9 @@ check_feed_folder(gchar *folder_name)
 	gchar *real_folder = lookup_feed_folder(folder_name);
 	gchar *real_name = g_strdup_printf(
 				"%s/%s", main_folder, real_folder);
-	dp("main_folder:%s\n", main_folder);
-	dp("real_folder:%s\n", real_folder);
-	dp("real_name:%s\n", real_name);
+	d("main_folder:%s\n", main_folder);
+	d("real_folder:%s\n", real_folder);
+	d("real_name:%s\n", real_name);
 	mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
 	base_folder = main_folder;
 	if (mail_folder == NULL) {
@@ -5387,8 +5420,9 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 		"activate",
 		G_CALLBACK (quit_cb),
 		rss_shell_view);
-		g_print("hhok\n");
+#if EVOLUTION_VERSION >= 22900
 	rss_search_bar_hook();
+#endif
 	return TRUE;
 }
 #endif

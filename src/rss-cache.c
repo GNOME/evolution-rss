@@ -17,8 +17,12 @@
  */
 
 #include <string.h>
+#if (DATASERVER_VERSION >= 2031001)
+#include <camel/camel.h>
+#else
 #include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
+#endif
 
 #include "rss.h"
 #include "rss-cache.h"
@@ -37,18 +41,18 @@ rss_cache_init(void)
 	gchar *base_dir, *feed_dir;
 
 	base_dir = rss_component_peek_base_directory();
-        feed_dir = g_build_path("/",
+	feed_dir = g_build_path("/",
 			base_dir,
 			"static",
 			NULL);
-        g_free(base_dir);
-        if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
-                g_mkdir_with_parents (feed_dir, 0755);
-        cache = camel_data_cache_new(feed_dir, 0, NULL);
-        g_free(feed_dir);
+	g_free(base_dir);
+	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
+		g_mkdir_with_parents (feed_dir, 0755);
+	cache = camel_data_cache_new(feed_dir, 0, NULL);
+	g_free(feed_dir);
 
-        if (!cache)
-                return;
+	if (!cache)
+		return;
 
 	// expire in a month max
 	// and one week if not accessed sooner

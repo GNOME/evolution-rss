@@ -16,7 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#if (DATASERVER_VERSION >= 2031001)
+#include <camel/camel.h>
+#else
 #include <camel/camel-data-cache.h>
+#endif
 
 void rss_cache_init(void);
 CamelStream *rss_cache_get(gchar *url);

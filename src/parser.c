@@ -24,7 +24,11 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
 #include <libxml/debugXML.h>
+#if (DATASERVER_VERSION >= 2031001)
+#include <camel/camel.h>
+#else
 #include <camel/camel-url.h>
+#endif
 #include <e-util/e-mktemp.h>
 
 extern int rss_verbose_debug;

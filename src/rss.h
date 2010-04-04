@@ -40,8 +40,12 @@
 #endif
 #include <shell/es-event.h>
 
+#if (DATASERVER_VERSION >= 2031001)
+#include <camel/camel.h>
+#else
 #include <camel/camel-folder.h>
 #include <camel/camel-operation.h>
+#endif
 #include <mail/em-event.h>
 
 #ifdef HAVE_WEBKIT
