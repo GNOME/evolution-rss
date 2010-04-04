@@ -2001,6 +2001,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	EMFormat *myf = (EMFormat *)efh;
 	GtkAllocation alloc;
 	guint width, height;
+	GtkAdjustment *adj;
 
 	guint engine = fallback_engine();
 	moz = gtk_scrolled_window_new(NULL,NULL);
@@ -2114,15 +2115,15 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	gtk_container_add ((GtkContainer *) eb, moz);
 	rf->headers_mode = myf->mode;
 	po->mozembedwindow =  moz;
-	po->html = efh->html;
+	po->html = GTK_WIDGET(efh->html);
 	gtk_widget_get_allocation(GTK_WIDGET(efh->html)->parent, &alloc);
 	width = alloc.width - 20; //FIXME compute this size
 	height = 5000; //alloc.height;
 	gtk_widget_set_size_request(
 		(GtkWidget *)po->mozembedwindow,
 		width, height);
-	GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment(
-				GTK_WIDGET(efh->html)->parent);
+	adj = gtk_scrolled_window_get_vadjustment(
+		(GtkScrolledWindow *)GTK_WIDGET(efh->html)->parent);
 	po->shandler = g_signal_connect(adj,
 		"changed",
 		G_CALLBACK(rss_browser_set_size),
@@ -2307,7 +2308,7 @@ free_rss_browser(EMFormatHTMLPObject *o)
 	}
 	g_signal_handler_disconnect(po->format->html, po->chandler);
 	adj = gtk_scrolled_window_get_vadjustment(
-		GTK_WIDGET(po->format->html)->parent);
+		(GtkScrolledWindow *)GTK_WIDGET(po->format->html)->parent);
 	g_signal_handler_disconnect(adj, po->shandler);
 	gtk_widget_destroy(po->container);
 	g_free(po->website);
