@@ -1826,9 +1826,9 @@ webkit_click (GtkEntry *entry,
 	return TRUE;
 }
 
+#if EVOLUTION_VERSION >= 22900
 #include <shell/e-shell-view.h>
 #include <shell/e-shell-searchbar.h>
-#if EVOLUTION_VERSION >= 22900
 static void
 action_search_cb (EShellView *shell,
 			GtkWidget *sb)

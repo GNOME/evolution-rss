@@ -35,3 +35,4 @@
 	* when import opml print opml title
 	* import without fetching (add without validate ?)
 	* do not mark folders as feeds (icon)
+	* require gtkhtml-editor separate package (?)
