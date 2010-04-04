@@ -30,8 +30,12 @@
 #include <gconf/gconf-client.h>
 #include <gdk/gdkkeysyms.h>
 
+#if (DATASERVER_VERSION >= 2031001)
+#include <camel/camel.h>
+#else
 #include <camel/camel-store.h>
 #include <camel/camel-provider.h>
+#endif
 
 #include <mail/em-config.h>
 
@@ -469,7 +473,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	feed->enabled = TRUE;
 	gladefile = g_build_filename (EVOLUTION_GLADEDIR,
-		"rss-ui.glade",
+		"rss-main.ui",
 		NULL);
 	gui = gtk_builder_new ();
 	if (!gtk_builder_add_from_file (gui, gladefile, &error)) {
@@ -2909,12 +2913,15 @@ export_cb (GtkWidget *widget, gpointer data)
 		if (g_hash_table_size(rf->hrname)<1) {
 #if EVOLUTION_VERSION < 22904
 			e_error_run(GTK_WINDOW(export),
-#else
-			e_alert_run_dialog_for_args(GTK_WINDOW(export),
-#endif
 				"org-gnome-evolution-rss:generr",
 				_("No RSS feeds configured!\nUnable to export."),
 				NULL);
+#else
+			e_alert_run_dialog_for_args(GTK_WINDOW(export),
+				"org-gnome-evolution-rss:generr",
+				_("No RSS feeds configured!\nUnable to export."),
+				NULL);
+#endif
 			return;
 		}
 		gtk_widget_show(export);
@@ -2966,11 +2973,11 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	gdouble adj;
 	GError* error = NULL;
 	gchar *toplevel[] = {(gchar *)"settingsbox", NULL};
-
+	GtkAdjustment *adjustment;
 
 
 	gladefile = g_build_filename (EVOLUTION_GLADEDIR,
-		"rss-html-rendering.glade",
+		"rss-html-rendering.ui",
 		NULL);
 	ui->xml = gtk_builder_new ();
 	if (!gtk_builder_add_objects_from_file (ui->xml, gladefile, toplevel, &error)) {
@@ -3045,21 +3052,26 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		gtk_builder_get_object(ui->xml, "enable_java"));
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (ui->check),
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL));
+		gconf_client_get_bool(
+			rss_gconf, GCONF_KEY_HTML_JAVA, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_HTML_JAVA);
 
-	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "image_resize"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_IMAGE_RESIZE, NULL));
+	ui->check = GTK_WIDGET (
+			gtk_builder_get_object(ui->xml, "image_resize"));
+	gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (ui->check),
+		gconf_client_get_bool(
+			rss_gconf, GCONF_KEY_IMAGE_RESIZE, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_IMAGE_RESIZE);
 
-	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "enable_js"));
+	ui->check = GTK_WIDGET (
+			gtk_builder_get_object(ui->xml, "enable_js"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL));
 	g_signal_connect(ui->check,
@@ -3067,14 +3079,18 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_HTML_JS);
 
-	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "accept_cookies"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL));
+	ui->check = GTK_WIDGET (
+			gtk_builder_get_object(ui->xml, "accept_cookies"));
+	gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (ui->check),
+		gconf_client_get_bool(
+			rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(accept_cookies_cb),
 		ui->import);
-	ui->import = GTK_WIDGET (gtk_builder_get_object(ui->xml, "import_cookies"));
+	ui->import = GTK_WIDGET (
+			gtk_builder_get_object(ui->xml, "import_cookies"));
 	//we have to have ui->import looked up
 
 #if LIBSOUP_VERSION >= 2026000
@@ -3088,13 +3104,26 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	gtk_widget_set_sensitive(ui->check, FALSE);
 #endif
 
-	ui->nettimeout = GTK_WIDGET (gtk_builder_get_object(ui->xml, "nettimeout"));
+	ui->nettimeout = GTK_WIDGET (
+				gtk_builder_get_object(
+					ui->xml, "nettimeout"));
+	/*setup the adjustment*/
+	adjustment = (GtkAdjustment *)gtk_adjustment_new(
+			NETWORK_MIN_TIMEOUT,
+			NETWORK_MIN_TIMEOUT,
+			3600,
+			1,
+			1,
+			0);
+	gtk_spin_button_set_adjustment(
+		(GtkSpinButton *)ui->nettimeout,
+		adjustment);
 	adj = gconf_client_get_float(
 			rss_gconf,
 			GCONF_KEY_NETWORK_TIMEOUT,
 			NULL);
 	if (adj < NETWORK_MIN_TIMEOUT) {
-		adj = 60;
+		adj = NETWORK_MIN_TIMEOUT;
 		gconf_client_set_float (
 			rss_gconf,
 			GCONF_KEY_NETWORK_TIMEOUT,
@@ -3102,7 +3131,8 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 			NULL);
 	}
 	if (adj)
-		gtk_spin_button_set_value((GtkSpinButton *)ui->nettimeout, adj);
+		gtk_spin_button_set_value(
+			(GtkSpinButton *)ui->nettimeout, adj);
 	g_signal_connect(
 		ui->nettimeout,
 		"changed",
@@ -3115,21 +3145,27 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		ui->nettimeout);
 
 	//feed notification
-	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "status_icon"));
+	ui->check = GTK_WIDGET (
+			gtk_builder_get_object(ui->xml, "status_icon"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_STATUS_ICON, NULL));
+		gconf_client_get_bool(
+			rss_gconf, GCONF_KEY_STATUS_ICON, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_STATUS_ICON);
-	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "blink_icon"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_BLINK_ICON, NULL));
+	ui->check = GTK_WIDGET (
+			gtk_builder_get_object(ui->xml, "blink_icon"));
+	gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (ui->check),
+		gconf_client_get_bool(
+			rss_gconf, GCONF_KEY_BLINK_ICON, NULL));
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_BLINK_ICON);
-	ui->check = GTK_WIDGET (gtk_builder_get_object(ui->xml, "feed_icon"));
+	ui->check = GTK_WIDGET (
+			gtk_builder_get_object(ui->xml, "feed_icon"));
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (ui->check),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_FEED_ICON, NULL));
@@ -3427,7 +3463,7 @@ rss_config_control_new (void)
 
 	gladefile = g_build_filename (
 			EVOLUTION_GLADEDIR,
-			"rss-ui.glade",
+			"rss-main.ui",
 			NULL);
 	sf->gui = gtk_builder_new ();
 	if (!gtk_builder_add_from_file (sf->gui, gladefile, &error)) {
