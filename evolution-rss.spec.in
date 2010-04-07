@@ -70,7 +70,7 @@ fi
 %{_bindir}/evolution-import-rss
 %{_sysconfdir}/gconf/schemas/%{name}.schemas
 %{_datadir}/evolution/*/errors/org-gnome-evolution-rss.error
-%{_datadir}/evolution/*/glade/*.glade
+%{_datadir}/evolution/*/ui/*.ui
 %{_datadir}/evolution/*/images/*.png
 %{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.eplug
 %{_libdir}/evolution/*/plugins/org-gnome-evolution-rss.xml
