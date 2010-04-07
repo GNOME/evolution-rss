@@ -80,7 +80,6 @@ LIBGLIB_REQUIRED=2.16.2
 LIBGTK_REQUIRED=2.12.0
 EVOLUTION_REQUIRED=2.4.1
 LIBSOUP_REQUIRED=2.2
-LIBGLADE_REQUIRED=2.0
 LIBGTKHTML_REQUIRED=3.18.3
 
 PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
@@ -92,7 +91,6 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
    libebook-1.2 dnl
    libgnomecanvas-2.0 dnl
    dnl evolution-data-server-1.2 dnl
-   libglade-2.0 dnl
    libgtkhtml-3.14 >= $LIBGTKHTML_REQUIRED
 ])
 
@@ -343,8 +341,8 @@ fi
 privdatadir='${datadir}'/evolution/$EVOLUTION_EXEC_VERSION
 AC_SUBST(privdatadir)
 
-gladedir="$privdatadir/glade"
-AC_SUBST(gladedir)
+uidir="$privdatadir/ui"
+AC_SUBST(uidir)
 
 privlibdir='${libdir}'/evolution/$EVOLUTION_EXEC_VERSION
 AC_SUBST(privlibdir)
@@ -355,7 +353,7 @@ case "$host" in
 *-mingw*)
     os_win32=yes
     NO_UNDEFINED='-no-undefined'
-	if test $evolution_int_version -ge 22700; then
+	if test $evolution_int_version -ge 22700 -a $evolution_int_version -lt 22900; then
 		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail-shared -levolution-mail -lemiscwidgets'
 	else
 		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemiscwidgets'

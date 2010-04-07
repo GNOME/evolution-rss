@@ -515,11 +515,11 @@ void rebase_feeds(gchar *old_name, gchar *new_name);
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);
 
-const char *_e_get_gladedir (void) G_GNUC_CONST;
+const char *_e_get_uidir (void) G_GNUC_CONST;
 const char *_e_get_imagesdir (void) G_GNUC_CONST;
 
-#undef EVOLUTION_GLADEDIR
-#define EVOLUTION_GLADEDIR _e_get_gladedir ()
+#undef EVOLUTION_UIDIR
+#define EVOLUTION_UIDIR _e_get_uidir ()
 
 #undef EVOLUTION_ICONDIR
 #define EVOLUTION_ICONDIR _e_get_imagesdir ()

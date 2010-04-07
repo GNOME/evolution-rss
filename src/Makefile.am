@@ -12,7 +12,7 @@ INCLUDES =							\
 	-DEVOLUTION_VERSION_STRING=\"$(EVOLUTION_EXEC_VERSION)\"\
 	-DEVOLUTION_VERSION=$(evolution_version_int)		\
 	-DDATASERVER_VERSION=$(DATASERVER_VERSION)		\
-	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"			\
+	-DEVOLUTION_UIDIR=\""$(uidir)"\"			\
 	-DEVOLUTION_ICONDIR=\""$(ICON_DIR)"\"			\
 	-DGTK_VERSION="$(GTK_VERSION)"				\
 	-DLIBSOUP_VERSION="$(SOUP_VERSION)"			\
@@ -141,7 +141,7 @@ uninstall-local:
 
 DISTCLEANFILES = $(schema_DATA)
 
-glade_DATA =                    \
+ui_DATA =                    \
 	rss-main.ui		\
 	rss-html-rendering.ui
 
@@ -155,7 +155,7 @@ CLEANFILES	= $(BUILT_SOURCES)	\
 	$(schema_DATA)
 
 EXTRA_DIST =					\
-	$(glade_DATA)				\
+	$(ui_DATA)				\
 	$(server_in_files)			\
 	$(schema_in_files)			\
 	rss.h network.h				\

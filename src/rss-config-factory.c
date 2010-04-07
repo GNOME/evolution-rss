@@ -434,7 +434,7 @@ disable_widget_cb(GtkWidget *widget, GtkBuilder *data)
 add_feed *
 build_dialog_add(gchar *url, gchar *feed_text)
 {
-	char *gladefile;
+	char *uifile;
 	add_feed *feed = g_new0(add_feed, 1);
 	GtkBuilder  *gui;
 	gchar *flabel = NULL;
@@ -472,15 +472,15 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	GError* error = NULL;
 
 	feed->enabled = TRUE;
-	gladefile = g_build_filename (EVOLUTION_GLADEDIR,
+	uifile = g_build_filename (EVOLUTION_UIDIR,
 		"rss-main.ui",
 		NULL);
 	gui = gtk_builder_new ();
-	if (!gtk_builder_add_from_file (gui, gladefile, &error)) {
+	if (!gtk_builder_add_from_file (gui, uifile, &error)) {
 		g_warning ("Couldn't load builder file: %s", error->message);
 		g_error_free (error);
 	}
-	g_free (gladefile);
+	g_free (uifile);
 
 	dialog1 = GTK_WIDGET (gtk_builder_get_object(gui, "feed_dialog"));
 	child = GTK_WIDGET (gtk_builder_get_object(gui, "dialog-vbox9"));
@@ -2969,22 +2969,22 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	GtkCellRenderer *renderer;
 	guint i, render;
 	UIData *ui = g_new0 (UIData, 1);
-	char *gladefile;
+	char *uifile;
 	gdouble adj;
 	GError* error = NULL;
 	gchar *toplevel[] = {(gchar *)"settingsbox", NULL};
 	GtkAdjustment *adjustment;
 
 
-	gladefile = g_build_filename (EVOLUTION_GLADEDIR,
+	uifile = g_build_filename (EVOLUTION_UIDIR,
 		"rss-html-rendering.ui",
 		NULL);
 	ui->xml = gtk_builder_new ();
-	if (!gtk_builder_add_objects_from_file (ui->xml, gladefile, toplevel, &error)) {
+	if (!gtk_builder_add_objects_from_file (ui->xml, uifile, toplevel, &error)) {
 		g_warning ("Couldn't load builder file: %s", error->message);
 		g_error_free (error);
 	}
-	g_free (gladefile);
+	g_free (uifile);
 
 	ui->combobox = GTK_WIDGET (gtk_builder_get_object(ui->xml, "hbox1"));
 	renderer = gtk_cell_renderer_text_new ();
@@ -3447,7 +3447,7 @@ rss_config_control_new (void)
 {
 	GtkWidget *control_widget;
 	GtkWidget *button1, *button2, *button3;
-	gchar *gladefile;
+	gchar *uifile;
 	setupfeed *sf;
 	GtkListStore  *store;
 	GtkTreeIter    iter;
@@ -3461,16 +3461,16 @@ rss_config_control_new (void)
 	d("rf->%p\n", rf);
 	sf = g_new0(setupfeed, 1);
 
-	gladefile = g_build_filename (
-			EVOLUTION_GLADEDIR,
+	uifile = g_build_filename (
+			EVOLUTION_UIDIR,
 			"rss-main.ui",
 			NULL);
 	sf->gui = gtk_builder_new ();
-	if (!gtk_builder_add_from_file (sf->gui, gladefile, &error)) {
+	if (!gtk_builder_add_from_file (sf->gui, uifile, &error)) {
 		g_warning ("Couldn't load builder file: %s", error->message);
 		g_error_free (error);
 	}
-	g_free (gladefile);
+	g_free (uifile);
 
 	treeview = (GtkTreeView *)gtk_builder_get_object(
 					sf->gui,
