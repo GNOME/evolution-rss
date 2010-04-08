@@ -517,12 +517,13 @@ feed_is_new(gchar *file_name, gchar *needle)
 {
 	gchar rfeed[513];
 	FILE *fr;
-	int occ;
+	int occ = 0;
 	gchar *tmpneedle, *port, *tp;
 
 	memset(rfeed, 0, 512);
+	g_print("file_name:%s\n", file_name);
+	g_print("needle:%s\n", needle);
 	fr = fopen(file_name, "r");
-	occ = 0;
 	tmpneedle = NULL;
 	port =  get_port_from_uri(needle);
 	if (port && atoi(port) == 80) {
@@ -534,11 +535,13 @@ feed_is_new(gchar *file_name, gchar *needle)
 		tmpneedle = g_strdup(needle);
 
 	if (fr) {
+	g_print("fr:%p\n", fr);
 		while (fgets(rfeed, 511, fr) != NULL) {
 			if (strstr(rfeed, tmpneedle)) {
 				occ=1;
 				break;
 			}
+			memset(rfeed, 0, 512);
 		}
 		fclose(fr);
 	}

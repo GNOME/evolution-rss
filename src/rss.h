@@ -171,6 +171,7 @@ typedef struct _rssfeed {
 	guint		headers_mode;		//full/simple headers lame method used for gtkmoz & webkit widget calculation
 	GtkWidget	*mozembed;		// object holding gtkmozebmed struct
 						// apparently can only be one
+	GtkWidget	*moz;
 	gchar		*main_folder;		// "News&Blogs" folder name
 	GHashTable	*feed_folders;		// defined feeds folders
 	GHashTable	*reversed_feed_folders;	// easyer when we lookup for the value

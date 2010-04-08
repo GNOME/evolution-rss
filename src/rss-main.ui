@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkListStore" id="liststore1">
     <columns>
@@ -411,7 +412,7 @@
                         <child>
                           <object class="GtkLabel" id="label78">
                             <property name="visible">True</property>
-                            <property comments="to translators: label part of Check for new articles every X minutes&quot; message" name="label" translatable="yes">minutes</property>
+                            <property name="label" translatable="yes" comments="to translators: label part of Check for new articles every X minutes&quot; message">minutes</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -548,8 +549,8 @@
                         <property name="label" translatable="yes">HTTP proxy:</property>
                       </object>
                       <packing>
-                        <property name="x_options"/>
-                        <property name="y_options"/>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -560,7 +561,7 @@
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
-                        <property name="y_options"/>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -571,8 +572,8 @@
                       <packing>
                         <property name="left_attach">2</property>
                         <property name="right_attach">3</property>
-                        <property name="x_options"/>
-                        <property name="y_options"/>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -585,7 +586,7 @@
                       <packing>
                         <property name="left_attach">3</property>
                         <property name="right_attach">4</property>
-                        <property name="y_options"/>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -599,8 +600,8 @@
                       <packing>
                         <property name="left_attach">4</property>
                         <property name="right_attach">5</property>
-                        <property name="x_options"/>
-                        <property name="y_options"/>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -612,8 +613,8 @@
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
-                        <property name="x_options"/>
-                        <property name="y_options"/>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -626,7 +627,7 @@
                         <property name="right_attach">2</property>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
-                        <property name="y_options"/>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -707,8 +708,8 @@
                     <property name="label" translatable="yes">Username:</property>
                   </object>
                   <packing>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -720,8 +721,8 @@
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -732,7 +733,7 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -746,7 +747,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
               </object>
@@ -964,9 +965,9 @@
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <property name="local_only">False</property>
     <property name="action">save</property>
     <property name="show_hidden">True</property>
+    <property name="local_only">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="vbox26">
         <property name="visible">True</property>
@@ -1023,7 +1024,6 @@
   </object>
   <object class="GtkDialog" id="feed_dialog">
     <property name="border_width">5</property>
-    <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
@@ -1047,8 +1047,8 @@
                     <property name="visible">True</property>
                     <property name="n_rows">4</property>
                     <property name="n_columns">2</property>
-                    <property name="column_spacing">1</property>
-                    <property name="row_spacing">2</property>
+                    <property name="column_spacing">10</property>
+                    <property name="row_spacing">10</property>
                     <child>
                       <object class="GtkLabel" id="feed_name_label">
                         <property name="label" translatable="yes">&lt;b&gt;Feed Name: &lt;/b&gt;</property>
@@ -1058,7 +1058,7 @@
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
                         <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -1078,6 +1078,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
+                        <property name="width_chars">40</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1095,7 +1096,7 @@
                       <packing>
                         <property name="bottom_attach">2</property>
                         <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
@@ -1207,7 +1208,7 @@
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="html_check">
-                                <property name="label" translatable="yes">Display only feed summary</property>
+                                <property name="label" translatable="yes">Show feed full text</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -1388,7 +1389,7 @@
                                 <child>
                                   <object class="GtkLabel" id="label12">
                                     <property name="visible">True</property>
-                                    <property comments="To translators: this label is part of the following message: &quot;Delete all but the last X messages." name="label" translatable="yes">messages</property>
+                                    <property name="label" translatable="yes" comments="To translators: this label is part of the following message: &quot;Delete all but the last X messages.">messages</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1440,7 +1441,7 @@
                                 <child>
                                   <object class="GtkLabel" id="label13">
                                     <property name="visible">True</property>
-                                    <property comments="for translators: this label is part of the &quot;Delete articles older than X days&quot; message." name="label" translatable="yes">days</property>
+                                    <property name="label" translatable="yes" comments="for translators: this label is part of the &quot;Delete articles older than X days&quot; message.">days</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1527,8 +1528,8 @@
                                     <property name="label" translatable="yes">Username:</property>
                                   </object>
                                   <packing>
-                                    <property name="x_options"/>
-                                    <property name="y_options"/>
+                                    <property name="x_options"></property>
+                                    <property name="y_options"></property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1540,7 +1541,7 @@
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
-                                    <property name="y_options"/>
+                                    <property name="y_options"></property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1555,7 +1556,7 @@
                                     <property name="right_attach">2</property>
                                     <property name="top_attach">1</property>
                                     <property name="bottom_attach">2</property>
-                                    <property name="y_options"/>
+                                    <property name="y_options"></property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1567,8 +1568,8 @@
                                   <packing>
                                     <property name="top_attach">1</property>
                                     <property name="bottom_attach">2</property>
-                                    <property name="x_options"/>
-                                    <property name="y_options"/>
+                                    <property name="x_options"></property>
+                                    <property name="y_options"></property>
                                   </packing>
                                 </child>
                               </object>

@@ -67,21 +67,30 @@ rss_cache_init(void)
 char *
 rss_cache_get_path(int create, const char *key)
 {
-        char *dir, *real;
-        char *tmp = NULL;
-        guint32 hash;
+	char *dir, *real;
+	char *tmp = NULL;
+	guint32 hash;
 
-        hash = g_str_hash(key);
-        hash = (hash>>5)&CAMEL_DATA_CACHE_MASK;
-        dir = alloca(strlen(cache->path) + strlen(HTTP_CACHE_PATH) + 8);
-        sprintf(dir, "%s/%s/%02x", cache->path, HTTP_CACHE_PATH, hash);
-        tmp = camel_file_util_safe_filename(key);
-        if (!tmp)
-                return NULL;
-        real = g_strdup_printf("%s/%s", dir, tmp);
-        g_free(tmp);
+	hash = g_str_hash(key);
+	hash = (hash>>5)&CAMEL_DATA_CACHE_MASK;
+#if (DATASERVER_VERSION >= 2031001)
+	dir = alloca(strlen(camel_data_cache_get_path(cache))
+		+ strlen(HTTP_CACHE_PATH) + 8);
+	sprintf(dir, "%s/%s/%02x",
+		camel_data_cache_get_path(cache),
+		HTTP_CACHE_PATH, hash);
+#else
+	dir = alloca(strlen(cache->path)
+		+ strlen(HTTP_CACHE_PATH) + 8);
+	sprintf(dir, "%s/%s/%02x", cache->path, HTTP_CACHE_PATH, hash);
+#endif
+	tmp = camel_file_util_safe_filename(key);
+	if (!tmp)
+		return NULL;
+	real = g_strdup_printf("%s/%s", dir, tmp);
+	g_free(tmp);
 
-        return real;
+	return real;
 }
 
 CamelStream*
