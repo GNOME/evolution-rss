@@ -38,7 +38,9 @@ int rss_verbose_debug = 0;
 #include <camel/camel-multipart.h>
 #include <camel/camel-stream-mem.h>
 #include <camel/camel-stream-fs.h>
+#include <camel/camel-stream-buffer.h>
 #include <camel/camel-text-index.h>
+#include <camel/camel-medium.h>
 #endif
 
 #include <e-util/e-icon-factory.h>
@@ -5706,7 +5708,7 @@ create_mail(create_feed *CF)
 		camel_medium_set_content(
 			(CamelMedium *)part, (CamelDataWrapper *)rtext);
 #else
-		camel_medium_set_content_object(i
+		camel_medium_set_content_object(
 			(CamelMedium *)part, (CamelDataWrapper *)rtext);
 #endif
 
