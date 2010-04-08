@@ -2573,7 +2573,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		d("normal html rendering\n");
 		buffer = g_byte_array_new ();
 		camel_stream_mem_set_byte_array (stream, buffer);
+#if EVOLUTION_VERSION >= 23100
+		mcontent = camel_medium_get_content(
+#else
 		mcontent = camel_medium_get_content_object(
+#endif
 				CAMEL_MEDIUM(t->part));
 		camel_data_wrapper_write_to_stream(
 			mcontent,
@@ -2759,7 +2763,11 @@ render_body:	if (category)
 
 	//this is required for proper charset rendering when html
 	camel_data_wrapper_construct_from_stream(dw, fstream);
+#if EVOLUTION_VERSION >= 23100
+	camel_medium_set_content((CamelMedium *)part, dw);
+#else
 	camel_medium_set_content_object((CamelMedium *)part, dw);
+#endif
 	em_format_format_text((EMFormat *)t->format,
 				(CamelStream *)t->stream,
 				(CamelDataWrapper *)part);
@@ -5680,7 +5688,11 @@ create_mail(create_feed *CF)
 		camel_multipart_set_boundary(mp, NULL);
 
 		part = camel_mime_part_new();
+#if EVOLUTION_VERSION >= 23100
+		camel_medium_set_content((CamelMedium *)part, (CamelDataWrapper *)rtext);
+#else
 		camel_medium_set_content_object((CamelMedium *)part, (CamelDataWrapper *)rtext);
+#endif
 
 		camel_multipart_add_part(mp, part);
 		camel_object_unref(part);
@@ -5689,10 +5701,18 @@ create_mail(create_feed *CF)
 			camel_multipart_add_part(mp, msgp);
 			camel_object_unref(msgp);
 		}
+#if EVOLUTION_VERSION >= 23100
+		camel_medium_set_content((CamelMedium *)new, (CamelDataWrapper *)mp);
+#else
 		camel_medium_set_content_object((CamelMedium *)new, (CamelDataWrapper *)mp);
+#endif
 		camel_object_unref(mp);
 	} else
+#if EVOLUTION_VERSION >= 23100
+		camel_medium_set_content(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
+#else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
+#endif
 
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
 
@@ -5753,7 +5773,11 @@ file_to_message(const char *filename)
 
 	camel_data_wrapper_construct_from_stream(content, (CamelStream *)file);
 	camel_object_unref((CamelObject *)file);
+#if EVOLUTION_VERSION >= 23100
+	camel_medium_set_content((CamelMedium *)msg, content);
+#else
 	camel_medium_set_content_object((CamelMedium *)msg, content);
+#endif
 	camel_object_unref(content);
 
 #if EVOLUTION_VERSION < 22900

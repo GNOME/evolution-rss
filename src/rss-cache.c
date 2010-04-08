@@ -48,7 +48,11 @@ rss_cache_init(void)
 	g_free(base_dir);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
+#if EVOLUTION_VERSION >= 23100
+	cache = camel_data_cache_new(feed_dir, NULL);
+#else
 	cache = camel_data_cache_new(feed_dir, 0, NULL);
+#endif
 	g_free(feed_dir);
 
 	if (!cache)
