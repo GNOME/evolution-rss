@@ -2013,37 +2013,27 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 {
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) pobject;
-	GtkWidget *moz;
 	EMFormat *myf = (EMFormat *)efh;
 	GtkAllocation alloc;
 	guint width, height;
 	GtkAdjustment *adj;
 
 	guint engine = fallback_engine();
-	moz = gtk_scrolled_window_new(NULL,NULL);
-//	rf->moz = moz;
-//	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(moz),
-//		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
 		webkit_set_preferences();
-//		gtk_widget_set_visible(GTK_WIDGET(eb)->parent, FALSE);
-//		gtk_container_remove(GTK_WIDGET(eb)->parent, GTK_WIDGET(eb));
-//		gtk_container_add(
-//			GTK_WIDGET(eb),
-//			GTK_WIDGET(rf->mozembed));
-//		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(eb), rf->mozembed);
 		g_signal_connect (
 			rf->mozembed,
 			"populate-popup",
 			G_CALLBACK (webkit_click),
-			moz);
+			NULL);
 		g_signal_connect (
 			rf->mozembed,
 			"hovering-over-link",
-			G_CALLBACK (webkit_over_link), moz);
+			G_CALLBACK (webkit_over_link),
+			NULL);
 
 //add zoom level
 #if (WEBKIT_VERSION >= 1001007)
@@ -2097,7 +2087,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	}
 #endif
 
-	po->container = moz;
+	po->container = rf->mozembed;
 
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
@@ -2122,15 +2112,13 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #endif
 
 
-//	gtk_container_set_resize_mode(w, GTK_RESIZE_PARENT);
-//	gtk_scrolled_window_set_policy(w, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 	//aparently webkit will hang if its not run from the main thread when compiled
 	//with soup
 	//this is as ugly as can be
 	if (engine == 1)
 		g_idle_add((GSourceFunc)show_webkit, rf->mozembed);
 	if (engine == 2)
-		gtk_widget_show_all(moz);
+		gtk_widget_show_all(rf->mozembed);
 
 	gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	rf->headers_mode = myf->mode;
@@ -2295,6 +2283,7 @@ void free_rss_browser(EMFormatHTMLPObject *o);
 void
 free_rss_browser(EMFormatHTMLPObject *o)
 {
+g_free("free\n");
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) o;
 	gpointer key = g_hash_table_lookup(rf->key_session, po->website);
@@ -2388,6 +2377,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	GByteArray *buffer;
 	GdkPixbuf *pix;
 	gchar *feed_dir, *feed_file, *iconfile;
+	gchar *tmp_path, *tmp_file;
 #if EVOLUTION_VERSION >= 22900 //kb//
 	GdkColor color;
 #endif
@@ -2682,8 +2672,16 @@ pixdone:			g_free(url);
 ///		buff=tmp;
 
 		feed_dir = rss_component_peek_base_directory();
-		feed_file = g_strdup_printf("%s/%s.img", feed_dir, feedid);
+		tmp_file = g_strconcat(feedid, ".img", NULL);
+		tmp_path = g_build_path(G_DIR_SEPARATOR_S,
+				feed_dir, tmp_file, NULL);
+		g_free(tmp_file);
 		g_free(feed_dir);
+#if EVOLUTION_VERSION >= 23100
+		feed_file = g_filename_to_uri(tmp_path, NULL, NULL);
+#else
+		feed_file = g_strdup(tmp_path);
+#endif
 
 		camel_stream_printf (
 			fstream,
@@ -2691,8 +2689,11 @@ pixdone:			g_free(url);
 			frame_colour & 0xffffff,
 			content_colour & 0xEDECEB & 0xffffff,
 			text_colour & 0xffffff);
-		if (g_file_test(feed_file, G_FILE_TEST_EXISTS))
-			if ((pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL))) {
+g_print("tmp path:%s|\n", tmp_path);
+		if (g_file_test(tmp_path, G_FILE_TEST_EXISTS)){
+g_print("tmp path:%s|\n", tmp_path);
+g_print("feed file:%s|\n", feed_file);
+			if ((pixbuf = gdk_pixbuf_new_from_file(tmp_path, NULL))) {
 				camel_stream_printf (fstream,
 					"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
 					"<img height=16 src=%s>"
@@ -2706,9 +2707,17 @@ pixdone:			g_free(url);
 				g_free(feed_file);
 				goto render_body;
 			}
-		iconfile = g_build_filename (EVOLUTION_ICONDIR,
+		g_free(tmp_path);
+		}
+		tmp_file = g_build_filename (EVOLUTION_ICONDIR,
 				"rss-16.png",
 				NULL);
+#if EVOLUTION_VERSION >= 23100
+		iconfile = g_filename_to_uri(tmp_file, NULL, NULL);
+#else
+		iconfile = g_strdup(tmp_file);
+#endif
+		g_free(tmp_file);
 		camel_stream_printf (fstream,
 			"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
 			"<img height=16 src=%s>"
