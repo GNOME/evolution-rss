@@ -41,7 +41,7 @@ rss_cache_init(void)
 	gchar *base_dir, *feed_dir;
 
 	base_dir = rss_component_peek_base_directory();
-	feed_dir = g_build_path("/",
+	feed_dir = g_build_path(G_DIR_SEPARATOR_S,
 			base_dir,
 			"static",
 			NULL);

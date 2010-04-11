@@ -3317,11 +3317,11 @@ add:
 
 		if (feed->edit) {
 			gchar *a = g_build_path(
-					"/",
+					G_DIR_SEPARATOR_S,
 					feed->prefix ? feed->prefix : "",
 					feed->feed_name,
 					NULL);
-			gchar *b = g_build_path("/", r->title, NULL);
+			gchar *b = g_build_path(G_DIR_SEPARATOR_S, r->title, NULL);
 			update_feed_folder(b, a, 0);
 			//r->title = feed->feed_name;
 			r->title = a;
@@ -3330,11 +3330,11 @@ add:
 
 		if (rf->import && feed->prefix) {
 			gchar *a = g_build_path(
-					"/",
+					G_DIR_SEPARATOR_S,
 					feed->prefix ? feed->prefix : "",
 					feed->feed_name,
 					NULL);
-			gchar *b = g_build_path("/", r->title, NULL);
+			gchar *b = g_build_path(G_DIR_SEPARATOR_S, r->title, NULL);
 			g_print("update_feed_folder\n");
 			update_feed_folder(b, a, 0);
 			g_print("update_feed_folder done\n");
@@ -6103,7 +6103,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 			//FIXME lame method of extracting data cache path
 			//there must be a function in camel for getting data cache path
 			base_dir = rss_component_peek_base_directory();
-			feed_dir = g_build_path("/",
+			feed_dir = g_build_path(G_DIR_SEPARATOR_S,
 				base_dir,
 				"static",
 				"http",
@@ -6272,8 +6272,8 @@ migrate_crc_md5(const char *name, gchar *url)
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
 
-	md5_name = g_build_path("/", feed_dir, md5, NULL);
-	feed_name = g_build_path("/", feed_dir, crc, NULL);
+	md5_name = g_build_path(G_DIR_SEPARATOR_S, feed_dir, md5, NULL);
+	feed_name = g_build_path(G_DIR_SEPARATOR_S, feed_dir, crc, NULL);
 	g_free(crc);
 	g_free(md5);
 
@@ -6294,7 +6294,7 @@ migrate_crc_md5(const char *name, gchar *url)
 
 	}
 	g_free(feed_name);
-	feed_name = g_build_path("/", feed_dir, crc2, NULL);
+	feed_name = g_build_path(G_DIR_SEPARATOR_S, feed_dir, crc2, NULL);
 	g_free(crc2);
 	if (g_file_test(feed_name, G_FILE_TEST_EXISTS)) {
 		FILE *fr = fopen(feed_name, "r");

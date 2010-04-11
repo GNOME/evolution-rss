@@ -525,7 +525,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	entry2 = GTK_WIDGET (gtk_builder_get_object(gui, "entry2"));
 	feed_name = GTK_WIDGET (gtk_builder_get_object(gui, "feed_name"));
 	if (url != NULL) {
-		flabel = g_build_path("/",
+		flabel = g_build_path(G_DIR_SEPARATOR_S,
 			lookup_main_folder(),
 			lookup_feed_folder(feed_text),
 			NULL);
@@ -1472,13 +1472,13 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 			}
 
 			if (feed->renamed) {
-				gchar *a = g_build_path("/",
+				gchar *a = g_build_path(G_DIR_SEPARATOR_S,
 					lookup_main_folder(),
 					lookup_feed_folder(feed_name),
 					NULL);
 				gchar *dir = g_path_get_dirname(a);
 				gchar *b = g_build_path(
-						"/",
+						G_DIR_SEPARATOR_S,
 						dir, feed->feed_name, NULL);
 				camel_exception_init (&ex);
 				camel_store_rename_folder (store, a, b, &ex);
@@ -1798,12 +1798,12 @@ import_opml(gchar *file)
 						gchar *tmp = root;
 						if (!root)
 							root = g_build_path(
-								"/",
+								G_DIR_SEPARATOR_S,
 								base,
 								NULL);
 						else {
 							root = g_build_path(
-								"/",
+								G_DIR_SEPARATOR_S,
 								root,
 								base,
 								NULL);
@@ -1816,7 +1816,7 @@ import_opml(gchar *file)
 				//	&& strcmp(prop, "vfolder")) {
 					if (maintitle)
 						rssprefix = g_build_path(
-								"/",
+								G_DIR_SEPARATOR_S,
 								maintitle,
 								root,
 								NULL);
@@ -2314,7 +2314,7 @@ gen_folder_list(gpointer key, gpointer value, gpointer user)
 	if (tmp) {
 		tmp = g_path_get_dirname(tmp);
 		if (tmp && *tmp != '.')
-			folder = g_build_path("/", mf, tmp, NULL);
+			folder = g_build_path(G_DIR_SEPARATOR_S, mf, tmp, NULL);
 		else
 			folder = g_strdup(mf);
 		g_free(mf);

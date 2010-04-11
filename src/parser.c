@@ -64,7 +64,7 @@ rss_html_url_decode(const char *html, int len)
 
 	doc = src;
 
-	feed_dir = g_build_path("/",
+	feed_dir = g_build_path(G_DIR_SEPARATOR_S,
 		base_dir,
 		"static",
 		"http",

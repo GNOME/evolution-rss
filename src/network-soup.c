@@ -932,8 +932,8 @@ sync_gecko_cookies(void)
 	//symlink(cookie_path, moz_cookie_path);
 	GFile *cookie_file, *moz_cookie_file;
 	gchar *feed_dir = rss_component_peek_base_directory();
-	gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
-	gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+	gchar *cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "rss-cookies.sqlite", NULL);
+	gchar *moz_cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
 
 	cookie_file = g_file_new_for_path (cookie_path);
 	moz_cookie_file = g_file_new_for_path (moz_cookie_path);
@@ -950,8 +950,8 @@ rss_soup_init(void)
 #if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME)
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL)) {
 		gchar *feed_dir = rss_component_peek_base_directory();
-		gchar *cookie_path = g_build_path("/", feed_dir, "rss-cookies.sqlite", NULL);
-		gchar *moz_cookie_path = g_build_path("/", feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+		gchar *cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "rss-cookies.sqlite", NULL);
+		gchar *moz_cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
 		g_free(feed_dir);
 
 		rss_soup_jar =
