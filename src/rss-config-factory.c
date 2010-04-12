@@ -703,7 +703,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	ok = GTK_WIDGET (
 		gtk_builder_get_object(gui, "ok_button"));
-	GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (ok, TRUE);
 	d("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
 	gtk_dialog_add_action_widget (
 		(GtkDialog *)dialog1,
@@ -716,9 +716,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		GTK_DIALOG (dialog1),
 		cancel,
 		GTK_RESPONSE_CANCEL);
-	GTK_WIDGET_SET_FLAGS (
-		cancel,
-		GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (cancel, TRUE);
 
 	gtk_widget_add_accelerator (
 		ok,
@@ -910,7 +908,7 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 #endif
 	progress = gtk_progress_bar_new();
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
+		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(msg_feeds))),
 		progress,
 		FALSE,
 		FALSE,
@@ -1297,7 +1295,7 @@ remove_feed_dialog(gchar *msg)
 #endif
 	gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
 
-	dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+	dialog_vbox1 = gtk_dialog_get_content_area(GTK_DIALOG (dialog1));
 	gtk_widget_show (dialog_vbox1);
 
 	vbox1 = gtk_vbox_new (FALSE, 10);
@@ -1332,7 +1330,7 @@ remove_feed_dialog(gchar *msg)
 		FALSE,
 		0);
 
-	dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+	dialog_action_area1 = gtk_dialog_get_action_area(GTK_DIALOG (dialog1));
 	gtk_widget_show (dialog_action_area1);
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (dialog_action_area1),
@@ -1399,7 +1397,7 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 		NULL);
 	progress = gtk_progress_bar_new();
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)msg_feeds)->vbox),
+		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(msg_feeds))),
 		progress,
 		FALSE,
 		FALSE,
@@ -1683,13 +1681,13 @@ import_opml(gchar *file)
 	import_label = gtk_label_new(_("Please wait"));
 	import_progress = gtk_progress_bar_new();
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(import_dialog))),
 		import_label,
 		FALSE,
 		FALSE,
 		0);
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(import_dialog))),
 		import_progress,
 		FALSE,
 		FALSE,
@@ -2117,10 +2115,11 @@ create_import_dialog (void)
 		GTK_WINDOW (import_file_select),
 		GDK_WINDOW_TYPE_HINT_DIALOG);
 
-	dialog_vbox5 = GTK_DIALOG (import_file_select)->vbox;
+	dialog_vbox5 = gtk_dialog_get_content_area(GTK_DIALOG (import_file_select));
 	gtk_widget_show (dialog_vbox5);
 
-	dialog_action_area5 = GTK_DIALOG (import_file_select)->action_area;
+	dialog_action_area5 = gtk_dialog_get_action_area(
+				GTK_DIALOG (import_file_select));
 	gtk_widget_show (dialog_action_area5);
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (dialog_action_area5),
@@ -2132,9 +2131,9 @@ create_import_dialog (void)
 		GTK_DIALOG (import_file_select),
 		button1,
 		GTK_RESPONSE_CANCEL);
-	GTK_WIDGET_SET_FLAGS (
+	gtk_widget_set_can_default (
 		button1,
-		GTK_CAN_DEFAULT);
+		TRUE);
 
 	button2 = gtk_button_new_from_stock ("gtk-open");
 	gtk_widget_show (button2);
@@ -2142,7 +2141,7 @@ create_import_dialog (void)
 		GTK_DIALOG (import_file_select),
 		button2,
 		GTK_RESPONSE_OK);
-	GTK_WIDGET_SET_FLAGS (button2, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button2, TRUE);
 
 	gtk_widget_grab_default (button2);
 	return import_file_select;
@@ -2185,10 +2184,11 @@ create_export_dialog (void)
 		GTK_WINDOW (export_file_select),
 		GDK_WINDOW_TYPE_HINT_DIALOG);
 
-	vbox26 = GTK_DIALOG (export_file_select)->vbox;
+	vbox26 = gtk_dialog_get_content_area(GTK_DIALOG (export_file_select));
 	gtk_widget_show (vbox26);
 
-	hbuttonbox1 = GTK_DIALOG (export_file_select)->action_area;
+	hbuttonbox1 = gtk_dialog_get_action_area(
+			GTK_DIALOG (export_file_select));
 	gtk_widget_show (hbuttonbox1);
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (hbuttonbox1),
@@ -2200,14 +2200,14 @@ create_export_dialog (void)
 		GTK_DIALOG (export_file_select),
 		button3,
 		GTK_RESPONSE_CANCEL);
-	GTK_WIDGET_SET_FLAGS (button3, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button3, TRUE);
 
 	button4 = gtk_button_new_from_stock ("gtk-save");
 	gtk_widget_show (button4);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (export_file_select),
 		button4, GTK_RESPONSE_OK);
-	GTK_WIDGET_SET_FLAGS (button4, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button4, TRUE);
 
 	gtk_widget_grab_default (button4);
 	return export_file_select;
@@ -2501,6 +2501,7 @@ export_opml(gchar *file)
 	GtkWidget *import_dialog;
 	GtkWidget *import_label;
 	GtkWidget *import_progress;
+	GtkWidget *content_area;
 	char outstr[200];
 	gchar *opml;
 	time_t t;
@@ -2526,14 +2527,15 @@ export_opml(gchar *file)
 //        g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
 	import_label = gtk_label_new(_("Please wait"));
 	import_progress = gtk_progress_bar_new();
+	content_area = gtk_dialog_get_content_area(GTK_DIALOG(import_dialog));
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+		GTK_BOX(content_area),
 		import_label,
 		FALSE,
 		FALSE,
 		0);
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+		GTK_BOX(content_area),
 		import_progress,
 		FALSE,
 		FALSE,
@@ -2659,6 +2661,7 @@ process_cookies(SoupCookieJar *jar)
 	GSList *list = NULL;
 	gchar *msg = g_strdup(_("Importing cookies..."));
 	GtkWidget *import_dialog, *import_label, *import_progress;
+	GtkWidget *content_area;
 
 	ccurrent = 0;
 	ctotal = 0;
@@ -2682,14 +2685,15 @@ process_cookies(SoupCookieJar *jar)
 		NULL);
 	import_label = gtk_label_new(_("Please wait"));
 	import_progress = gtk_progress_bar_new();
+	content_area = gtk_dialog_get_content_area(GTK_DIALOG(import_dialog));
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+		GTK_BOX(content_area),
 		import_label,
 		FALSE,
 		FALSE,
 		0);
 	gtk_box_pack_start(
-		GTK_BOX(((GtkDialog *)import_dialog)->vbox),
+		GTK_BOX(content_area),
 		import_progress,
 		FALSE,
 		FALSE,
@@ -2761,10 +2765,10 @@ create_import_cookies_dialog (void)
 		GTK_WINDOW (import_file_select),
 		GDK_WINDOW_TYPE_HINT_DIALOG);
 
-	vbox26 = GTK_DIALOG (import_file_select)->vbox;
+	vbox26 = gtk_dialog_get_content_area(GTK_DIALOG (import_file_select));
 	gtk_widget_show (vbox26);
 
-	hbuttonbox1 = GTK_DIALOG (import_file_select)->action_area;
+	hbuttonbox1 = GTK_WIDGET(gtk_dialog_get_action_area(GTK_DIALOG(import_file_select)));
 	gtk_widget_show (hbuttonbox1);
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (hbuttonbox1),
@@ -2776,7 +2780,7 @@ create_import_cookies_dialog (void)
 		GTK_DIALOG (import_file_select),
 		button3,
 		GTK_RESPONSE_CANCEL);
-	GTK_WIDGET_SET_FLAGS (button3, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button3, TRUE);
 
 	button4 = gtk_button_new_from_stock ("gtk-save");
 	gtk_widget_show (button4);
@@ -2784,7 +2788,7 @@ create_import_cookies_dialog (void)
 		GTK_DIALOG (import_file_select),
 		button4,
 		GTK_RESPONSE_OK);
-	GTK_WIDGET_SET_FLAGS (button4, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button4, TRUE);
 
 	gtk_widget_grab_default (button4);
 	return import_file_select;
@@ -3383,7 +3387,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 		gtk_widget_hide(action_area);
 		g_object_ref(feed->child);
 		gtk_container_remove (
-			GTK_CONTAINER (feed->child->parent),
+			GTK_CONTAINER (gtk_widget_get_parent(feed->child)),
 			feed->child);
 		gtk_notebook_remove_page(
 			(GtkNotebook *) data->parent,
@@ -3818,7 +3822,7 @@ rss_config_control_new (void)
 	g_object_ref (control_widget);
 
 	gtk_container_remove (
-		GTK_CONTAINER (control_widget->parent),
+		GTK_CONTAINER (gtk_widget_get_parent(control_widget)),
 		control_widget);
 
 #if EVOLUTION_VERSION < 22900 //kb//

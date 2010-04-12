@@ -1492,7 +1492,7 @@ rss_browser_set_hsize (GtkAdjustment *adj, gpointer data);
 void
 rss_browser_set_hsize (GtkAdjustment *adj, gpointer data)
 {
-	resize_pane_hsize = adj->page_size;
+	resize_pane_hsize = gtk_adjustment_get_page_size(adj);
 }
 
 void rss_browser_update_content (
@@ -2124,7 +2124,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	rf->headers_mode = myf->mode;
 	po->html = GTK_WIDGET(efh->html);
 	adj = gtk_scrolled_window_get_hadjustment(
-		(GtkScrolledWindow *)GTK_WIDGET(efh->html)->parent);
+		(GtkScrolledWindow *)gtk_widget_get_parent(GTK_WIDGET(efh->html)));
 	po->sh_handler = g_signal_connect(adj,
 		"changed",
 		G_CALLBACK(rss_browser_set_hsize),
@@ -2308,7 +2308,8 @@ free_rss_browser(EMFormatHTMLPObject *o)
 		rf->mozembed = NULL;
 	}
 	adj = gtk_scrolled_window_get_hadjustment(
-		(GtkScrolledWindow *)GTK_WIDGET(po->format->html)->parent);
+		(GtkScrolledWindow *)gtk_widget_get_parent(
+					GTK_WIDGET(po->format->html)));
 	g_signal_handler_disconnect(adj, po->sh_handler);
 	gtk_widget_destroy(po->container);
 	g_free(po->website);
