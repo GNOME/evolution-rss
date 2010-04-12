@@ -1526,7 +1526,6 @@ rss_browser_update_content (
 					browser_fetching=1;
 					fi = g_new0(UB, 1);
 					stream = rss_cache_get(po->website);
-g_print("get path:%s\n", rss_cache_get_path(FALSE, po->website));
 					if (!stream) {
 						dp("HTTP cache miss\n");
 						stream = rss_cache_add(po->website);
@@ -2121,6 +2120,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gtk_widget_show_all(rf->mozembed);
 
 	gtk_container_add ((GtkContainer *) eb, rf->mozembed);
+	g_object_ref(rf->mozembed);
 	rf->headers_mode = myf->mode;
 	po->html = GTK_WIDGET(efh->html);
 	adj = gtk_scrolled_window_get_hadjustment(
@@ -2283,7 +2283,6 @@ void free_rss_browser(EMFormatHTMLPObject *o);
 void
 free_rss_browser(EMFormatHTMLPObject *o)
 {
-g_free("free\n");
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) o;
 	gpointer key = g_hash_table_lookup(rf->key_session, po->website);
@@ -2689,10 +2688,7 @@ pixdone:			g_free(url);
 			frame_colour & 0xffffff,
 			content_colour & 0xEDECEB & 0xffffff,
 			text_colour & 0xffffff);
-g_print("tmp path:%s|\n", tmp_path);
 		if (g_file_test(tmp_path, G_FILE_TEST_EXISTS)){
-g_print("tmp path:%s|\n", tmp_path);
-g_print("feed file:%s|\n", feed_file);
 			if ((pixbuf = gdk_pixbuf_new_from_file(tmp_path, NULL))) {
 				camel_stream_printf (fstream,
 					"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
@@ -6094,7 +6090,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 	gsize length;
 	gchar *nurl, *turl;
 	gchar *base_dir, *feed_dir, *name;
-	gchar *scheme;
+	gchar *scheme, *result;
 
 	g_return_val_if_fail(uri != NULL, NULL);
 
@@ -6125,7 +6121,9 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				g_free(scheme);
 			}
 			g_free(base_dir);
-			return name;
+			result = g_filename_to_uri (name, NULL, NULL);
+			g_free(name);
+			return result;
 	} else {
 		/*need to get mime type via file contents or else mime type is
 		 * bound to be wrong, especially on files fetched from the web
@@ -6137,11 +6135,21 @@ verify_image(gchar *uri, EMFormatHTML *format)
 			NULL);
 		mime_type = g_content_type_guess(NULL, (guchar *)contents, length, NULL);
 		/*FIXME mime type here could be wrong */
-		if (g_ascii_strncasecmp (mime_type, "image/", 6))
-			return g_strdup(pixfile);
+		if (g_ascii_strncasecmp (mime_type, "image/", 6)) {
+			result = g_filename_to_uri (pixfile, NULL, NULL);
+			return result;
+		}
 		g_free(mime_type);
 		g_free(contents);
+/* appears the default has changed in efh_url_requested		
+ * / -> file://
+/* http://git.gnome.org/browse/evolution/commit/?id=d9deaf9bbc7fd9d0c72d5cf9b1981e3a56ed1162
+ */
+#if (DATASERVER_VERSION >= 2031001)
+		return g_filename_to_uri(uri, NULL, NULL);
+#else
 		return NULL;
+#endif
 	}
 }
 
