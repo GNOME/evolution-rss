@@ -1536,7 +1536,7 @@ rss_browser_update_content (
 		if (rf->mozembed)
 			if (
 #if GTK_VERSION >= 2019007
-			gtk_widget_get_realized(rf->mozembed) 
+			gtk_widget_get_realized(rf->mozembed)
 #else
 			GTK_WIDGET_REALIZED(rf->mozembed)
 #endif
@@ -1545,9 +1545,9 @@ rss_browser_update_content (
 					gchar *msg = g_strdup_printf(
 							"<h5>%s</h5>",
 							_("Formatting Message..."));
-					browser_write(
-						msg, strlen(msg),
-						(gchar *)"file:///fakefile#index");
+//					browser_write(
+//						msg, strlen(msg),
+//						(gchar *)"file:///fakefile#index");
 					g_free(msg);
 					browser_fetching=1;
 					fi = g_new0(UB, 1);
@@ -1613,7 +1613,7 @@ webkit_set_preferences(void)
 	g_object_set (settings, "user-agent", agstr,  NULL);
 #if (WEBKIT_VERSION >= 1001022)
 	g_object_set (settings, "enable-page-cache", TRUE, NULL);
-	g_object_set (settings, "auto-resize-window", TRUE, NULL);
+	//g_object_set (settings, "auto-resize-window", TRUE, NULL);
 #endif
 	g_free(agstr);
 #endif
@@ -1782,16 +1782,18 @@ webkit_net_status (WebKitWebView *view,
 {
 	GtkAllocation alloc;
 	GtkAdjustment *adj;
-	gint width, height;
+	gint width;
 	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
 	switch (status) {
 		case WEBKIT_LOAD_FINISHED:
 			gtk_widget_set_sensitive(data, FALSE);
-			gtk_widget_get_allocation(rf->mozembed, &alloc);
-			width = alloc.width;
-			if (resize_pane_hsize > width && width != 1)
-				gtk_widget_set_size_request(rf->mozembed,
-				(int)resize_pane_hsize-20, -1);
+			if (rf->mozembed) {
+				gtk_widget_get_allocation(rf->mozembed, &alloc);
+				width = alloc.width;
+				if (resize_pane_hsize > width && width != 1)
+					gtk_widget_set_size_request(rf->mozembed,
+						(int)resize_pane_hsize-14, -1);
+			}
 		break;
 		default:
 			gtk_widget_set_sensitive(data, TRUE);
@@ -2040,7 +2042,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 			(struct _org_gnome_rss_controls_pobject *) pobject;
 	EMFormat *myf = (EMFormat *)efh;
 	GtkAllocation alloc;
-	guint width, height;
+	gint width, height;
 	GtkAdjustment *adj;
 
 	guint engine = fallback_engine();
@@ -2149,8 +2151,13 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	g_object_ref(rf->mozembed);
 	rf->headers_mode = myf->mode;
 	po->html = GTK_WIDGET(efh->html);
+	adj = gtk_scrolled_window_get_vadjustment(
+		(GtkScrolledWindow *)gtk_widget_get_parent(GTK_WIDGET(efh->html)));
+	height = (int)gtk_adjustment_get_page_size(adj);
 	adj = gtk_scrolled_window_get_hadjustment(
 		(GtkScrolledWindow *)gtk_widget_get_parent(GTK_WIDGET(efh->html)));
+	width = (int)gtk_adjustment_get_page_size(adj);
+	gtk_widget_set_size_request(rf->mozembed, width-32, height);
 	po->sh_handler = g_signal_connect(adj,
 		"changed",
 		G_CALLBACK(rss_browser_set_hsize),
