@@ -478,6 +478,9 @@ browser_write(gchar *string, gint length, gchar *base)
 }
 
 void
+browser_stream_write(CamelStream *stream, gchar *base);
+
+void
 browser_stream_write(CamelStream *stream, gchar *base)
 {
 	GString *str = g_string_new(NULL);
@@ -1781,7 +1784,6 @@ webkit_net_status (WebKitWebView *view,
 		GtkWidget *data)
 {
 	GtkAllocation alloc;
-	GtkAdjustment *adj;
 	gint width;
 	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
 	switch (status) {
@@ -1894,7 +1896,6 @@ rss_search_bar_hook(void)
 	gchar *action_name;
 	EShellView *shell_view;
 	EShellWindow *shell_window;
-	
 
 	CamelFolder *folder;
 	EMFolderTree *folder_tree;
@@ -2041,7 +2042,6 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) pobject;
 	EMFormat *myf = (EMFormat *)efh;
-	GtkAllocation alloc;
 	gint width, height;
 	GtkAdjustment *adj;
 
@@ -6165,9 +6165,10 @@ verify_image(gchar *uri, EMFormatHTML *format)
 		}
 		g_free(mime_type);
 		g_free(contents);
-/* appears the default has changed in efh_url_requested		
- * / -> file://
-/* http://git.gnome.org/browse/evolution/commit/?id=d9deaf9bbc7fd9d0c72d5cf9b1981e3a56ed1162
+/*
+ * appears the default has changed in efh_url_requested
+ * the new default is file://
+ * http://git.gnome.org/browse/evolution/commit/?id=d9deaf9bbc7fd9d0c72d5cf9b1981e3a56ed1162
  */
 #if (EVOLUTION_VERSION >= 23001)
 		return g_filename_to_uri(uri, NULL, NULL);
