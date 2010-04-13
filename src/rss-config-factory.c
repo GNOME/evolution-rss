@@ -373,9 +373,8 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 	gtk_list_store_append (store, &iter);
 	full_name = lookup_feed_folder(key);
 	name = g_path_get_basename(full_name);
-	full_path = g_strconcat(
+	full_path = g_build_filename(
 			lookup_main_folder(),
-			"/",
 			full_name,
 			NULL);
 	gtk_list_store_set (
@@ -2246,7 +2245,7 @@ while (info) {
 	fpath = extract_main_folder(fold->full_name);
 	g_print("fpath:%s\n", fpath);
 
-	path = g_strsplit(fpath, "/", 0);
+	path = g_strsplit(fpath, G_DIR_SEPARATOR_S, 0);
 	if (path) {
 		do {
 			g_print("path:%s\n", path[i]);
@@ -2277,7 +2276,7 @@ gen_folder_parents(GList *list, GList *flist, gchar *tmp)
 	flist = g_list_first(flist);
 	while ((flist = g_list_next(flist))) {
 		if (!strncmp(tmp, flist->data, strlen(tmp))) {
-			path = g_strsplit(flist->data, "/", 0);
+			path = g_strsplit(flist->data, G_DIR_SEPARATOR_S, 0);
 			i=0;
 			str=NULL;
 			if (*path != NULL) {
@@ -2285,8 +2284,8 @@ gen_folder_parents(GList *list, GList *flist, gchar *tmp)
 					if (!str)
 						str = g_strdup(path[i]);
 					else
-						str = g_strconcat(
-							str, "/",
+						str = g_build_filename(
+							str,
 							path[i], NULL);
 					if (!g_list_find_custom(list, str, (GCompareFunc)strcmp))
 						list = g_list_append(list, str);

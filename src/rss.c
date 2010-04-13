@@ -156,6 +156,32 @@ int rss_verbose_debug = 0;
 #include "parser.h"
 
 
+#ifdef _WIN32
+char *strcasestr(const char *a, const char *b)
+{
+	char *a2=g_ascii_strdown(a,-1), *b2=g_ascii_strdown(b,-1), *r=strstr(a2,b2);
+	if(r)
+		r=(char *)a+(r-a2);
+	g_free(a2);
+	g_free(b2);
+	return r;
+}
+#endif
+
+static void sanitize_path_separator(gchar *);
+
+static void
+sanitize_path_separator(gchar *str)
+{
+#ifdef _WIN32
+	while (*str != '\0') {
+		if (G_IS_DIR_SEPARATOR(*str))
+			*str = G_DIR_SEPARATOR;
+		str++;
+	}
+#endif
+}
+
 int pop = 0;
 GtkWidget *flabel;
 //#define RSS_DEBUG 1
@@ -1004,7 +1030,7 @@ rss_select_folder(gchar *folder_name)
 #if 0 //kb//
 	CamelStore *store = rss_component_peek_local_store();
 	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
-	gchar *real_name = g_strdup_printf("%s/%s", lookup_main_folder(), folder_name);
+	gchar *real_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", lookup_main_folder(), folder_name);
 	CamelFolder *folder = camel_store_get_folder (store, real_name, 0, NULL);
 
 	g_print("real_name:%s\n", real_name);
@@ -2931,7 +2957,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 #else
 			gchar *feed_dir = rss_component_peek_base_directory();
 			gchar *feed_file = g_strdup_printf(
-						"%s/%s.img", feed_dir, key);
+						"%s" G_DIR_SEPARATOR_S "%s.img", feed_dir, key);
 			pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
 			g_free(feed_dir);
 
@@ -3052,18 +3078,6 @@ search_rss(char *buffer, int len)
 	}
 	return NULL;
 }
-
-#ifdef _WIN32
-char *strcasestr(const char *a, const char *b)
-{
-	char *a2=g_ascii_strdown(a,-1), *b2=g_ascii_strdown(b,-1), *r=strstr(a2,b2);
-	if(r)
-		r=(char *)a+(r-a2);
-	g_free(a2);
-	g_free(b2);
-	return r;
-}
-#endif
 
 void
 prepare_hashes(void)
@@ -3348,7 +3362,7 @@ add:
 
 		/* folder might not be created yet */
 		real_name = g_strdup_printf(
-				"%s/%s",
+				"%s" G_DIR_SEPARATOR_S "%s",
 				lookup_main_folder(),
 				lookup_feed_folder(chn_name));
 		rss_select_folder(real_name);
@@ -4014,17 +4028,17 @@ gchar *
 rss_component_peek_base_directory(void)
 {
 #if (EVOLUTION_VERSION >= 22900) //kb//
-	return g_strdup_printf("%s/rss",
+	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
 //		em_utils_get_data_dir());
 		mail_session_get_data_dir ());
 #else
 	MailComponent *component = mail_component_peek();
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
 #if (EVOLUTION_VERSION >= 22300)		// include devel too
-	return g_strdup_printf("%s/rss",
+	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
 		mail_component_peek_base_directory (component));
 #else
-	return g_strdup_printf("%s/mail/rss",
+	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "mail" G_DIR_SEPARATOR_S "rss",
 		mail_component_peek_base_directory (component));
 #endif
 #endif
@@ -4049,7 +4063,7 @@ get_main_folder(void)
 
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
-	feed_file = g_strdup_printf("%s/main_folder", feed_dir);
+	feed_file = g_strdup_printf("%s" G_DIR_SEPARATOR_S "main_folder", feed_dir);
 	g_free(feed_dir);
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 		FILE *f = fopen(feed_file, "r");
@@ -4082,7 +4096,7 @@ get_feed_folders(void)
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
-	feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
+	feed_file = g_strdup_printf("%s" G_DIR_SEPARATOR_S "feed_folders", feed_dir);
 	g_free(feed_dir);
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 		FILE *f = fopen(feed_file, "r");
@@ -4175,13 +4189,14 @@ finish_update_feed_image (
 	gchar *feed_dir = rss_component_peek_base_directory();
 	gchar *url = (gchar *)user_data;
 	gchar *key = gen_md5(url);
-	gchar *img_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+	gchar *img_file = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s.img", feed_dir, key);
 	gchar *urldir, *server;
 	rfMessage *rfmsg;
 	xmlChar *app;
 	xmlNode *doc;
 
 	g_free(feed_dir);
+	sanitize_path_separator(img_file);
 	urldir = g_path_get_dirname(url);
 	server = get_server_from_uri(url);
 	rfmsg = g_new0(rfMessage, 1);
@@ -4269,7 +4284,7 @@ gboolean
 check_update_feed_image(gchar *key)
 {
 	gchar *feed_dir = rss_component_peek_base_directory();
-	gchar *fav_file = g_strdup_printf("%s/%s.fav", feed_dir, key);
+	gchar *fav_file = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s.fav", feed_dir, key);
 	struct timeval start;
 	FILE *f = NULL;
 	gboolean ret = TRUE;
@@ -4333,7 +4348,7 @@ update_feed_image(RDF *r)
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
-	feed_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+	feed_file = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s.img", feed_dir, key);
 	d("feed_image() tmpurl:%s\n", feed_file);
 	g_free(feed_dir);
 	if (!g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
@@ -4545,14 +4560,15 @@ check_feed_folder(gchar *folder_name)
 	gchar *main_folder = lookup_main_folder();
 	gchar *real_folder = lookup_feed_folder(folder_name);
 	gchar *real_name = g_strdup_printf(
-				"%s/%s", main_folder, real_folder);
+				"%s" G_DIR_SEPARATOR_S "%s", main_folder, real_folder);
 	d("main_folder:%s\n", main_folder);
 	d("real_folder:%s\n", real_folder);
 	d("real_name:%s\n", real_name);
 	mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
 	base_folder = main_folder;
 	if (mail_folder == NULL) {
-		path = g_strsplit(real_folder, "/", 0);
+		sanitize_path_separator(real_folder);
+		path = g_strsplit(real_folder, G_DIR_SEPARATOR_S, 0);
 		if (path) {
 			do {
 				if (path[i] == NULL)
@@ -4627,7 +4643,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 		goto out;
 	buf = gen_md5(url);
 	feed_dir = rss_component_peek_base_directory();
-	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
 	g_free(feed_dir);
 	g_free(buf);
 	unlink(feed_name);
@@ -6008,7 +6024,7 @@ gboolean
 display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 {
 	gchar *feed_dir = rss_component_peek_base_directory();
-	gchar *img_file = g_strdup_printf("%s/%s.img", feed_dir, key);
+	gchar *img_file = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s.img", feed_dir, key);
 	GdkPixbuf *icon, *pixbuf;
 	gboolean result = FALSE;
 	GtkTreeIter iter;
@@ -6026,7 +6042,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	if (pixbuf) {
 		gchar *name = g_hash_table_lookup(rf->hrname_r, key);
 		gchar *full_name = g_strdup_printf(
-					"%s/%s",
+					"%s" G_DIR_SEPARATOR_S "%s",
 					get_main_folder(),
 					lookup_feed_folder(name));
 		rss_folder = camel_store_get_folder (
@@ -6146,7 +6162,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
  * / -> file://
 /* http://git.gnome.org/browse/evolution/commit/?id=d9deaf9bbc7fd9d0c72d5cf9b1981e3a56ed1162
  */
-#if (DATASERVER_VERSION >= 2031001)
+#if (EVOLUTION_VERSION >= 23001)
 		return g_filename_to_uri(uri, NULL, NULL);
 #else
 		return NULL;
@@ -6494,7 +6510,7 @@ get_feed_age(RDF *r, gpointer name)
 	d("Cleaning folder: %s\n", real_folder);
 
 	real_name = g_strdup_printf(
-			"%s/%s",
+			"%s" G_DIR_SEPARATOR_S "%s",
 			lookup_main_folder(),
 			real_folder);
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))

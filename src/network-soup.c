@@ -311,7 +311,7 @@ read_up(gpointer data)
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
-	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
 	g_free(feed_dir);
 
 	fr = fopen(feed_name, "r");
@@ -341,7 +341,7 @@ save_up(gpointer data)
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
-	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
 	g_free(feed_dir);
 
 	fr = fopen(feed_name, "w+");
@@ -369,7 +369,7 @@ del_up(gpointer data)
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
-	feed_name = g_strdup_printf("%s/%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
 	g_free(feed_dir);
 	unlink(feed_name);
 	g_free(feed_name);
