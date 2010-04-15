@@ -29,6 +29,11 @@
 #include <time.h>
 #include <stdbool.h>
 
+#ifdef localtime_r
+#undef localtime_r
+#endif
+#define localtime_r(tp,tmp) memcpy(tmp,localtime(tp),sizeof(struct tm))
+
 #define match_char(ch1, ch2) if (ch1 != ch2) return NULL
 
 #define match_string(cs1, s2) \
