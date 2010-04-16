@@ -1853,23 +1853,6 @@ webkit_over_link(WebKitWebView *web_view,
 	} else
 		taskbar_pop_message();
 	return TRUE;
-
-}
-
-gboolean
-webkit_click (GtkEntry *entry,
-		GtkMenu *menu,
-		gpointer user_data)
-{
-	GtkWidget *separator, *redo_menuitem;
-	redo_menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_REDO, NULL);
-	gtk_widget_set_sensitive (redo_menuitem, TRUE);
-	gtk_widget_show (redo_menuitem);
-	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), redo_menuitem, 1);
-	separator = gtk_separator_menu_item_new ();
-	gtk_widget_show (separator);
-	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
-	return TRUE;
 }
 
 static void
@@ -1887,11 +1870,42 @@ embed_zoom_out_cb (EShellView *shell,
 }
 
 static void
-embed_zoom_100 (EShellView *shell,
+embed_zoom_100_cb (EShellView *shell,
 			gpointer *data)
 {
 	webkit_web_view_set_zoom_level(rf->mozembed, 1);
 }
+
+gboolean
+webkit_click (GtkEntry *entry,
+		GtkMenu *menu,
+		gpointer user_data)
+{
+	GtkWidget *separator, *menuitem;
+	separator = gtk_separator_menu_item_new ();
+	gtk_widget_show (separator);
+	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
+	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_IN, NULL);
+	g_signal_connect(menuitem, "activate", embed_zoom_in_cb, NULL);
+	gtk_widget_set_sensitive (menuitem, TRUE);
+	gtk_widget_show (menuitem);
+	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 3);
+	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_OUT, NULL);
+	g_signal_connect(menuitem, "activate", embed_zoom_out_cb, NULL);
+	gtk_widget_set_sensitive (menuitem, TRUE);
+	gtk_widget_show (menuitem);
+	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 4);
+	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_100, NULL);
+	g_signal_connect(menuitem, "activate", embed_zoom_100_cb, NULL);
+	gtk_widget_set_sensitive (menuitem, TRUE);
+	gtk_widget_show (menuitem);
+	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 5);
+	separator = gtk_separator_menu_item_new ();
+	gtk_widget_show (separator);
+	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 6);
+	return TRUE;
+}
+
 
 void
 webkit_hook_actions(void)
@@ -1916,7 +1930,7 @@ webkit_hook_actions(void)
 	action = e_shell_window_get_action (shell_window, action_name);
 	g_signal_connect (
 		action, "activate",
-		G_CALLBACK (embed_zoom_100), NULL);
+		G_CALLBACK (embed_zoom_100_cb), NULL);
 }
 
 #if EVOLUTION_VERSION >= 22900
