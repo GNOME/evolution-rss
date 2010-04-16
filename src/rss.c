@@ -1618,6 +1618,7 @@ webkit_set_preferences(void)
 	g_object_set (settings, "enable-page-cache", TRUE, NULL);
 	//g_object_set (settings, "auto-resize-window", TRUE, NULL);
 #endif
+	webkit_web_view_set_full_content_zoom(rf->mozembed, TRUE);
 	g_free(agstr);
 #endif
 #endif
@@ -1871,9 +1872,57 @@ webkit_click (GtkEntry *entry,
 	return TRUE;
 }
 
+static void
+embed_zoom_in_cb (EShellView *shell,
+			gpointer *data)
+{
+	webkit_web_view_zoom_in(rf->mozembed);
+}
+
+static void
+embed_zoom_out_cb (EShellView *shell,
+			gpointer *data)
+{
+	webkit_web_view_zoom_out(rf->mozembed);
+}
+
+static void
+embed_zoom_100 (EShellView *shell,
+			gpointer *data)
+{
+	webkit_web_view_set_zoom_level(rf->mozembed, 1);
+}
+
+void
+webkit_hook_actions(void)
+{
+	EShellWindow *shell_window;
+	GtkAction *action;
+	gchar *action_name;
+
+	shell_window = e_shell_view_get_shell_window (rss_shell_view);
+
+	action_name = "mail-zoom-in";
+	action = e_shell_window_get_action (shell_window, action_name);
+	g_signal_connect (
+		action, "activate",
+		G_CALLBACK (embed_zoom_in_cb), NULL);
+	action_name = "mail-zoom-out";
+	action = e_shell_window_get_action (shell_window, action_name);
+	g_signal_connect (
+		action, "activate",
+		G_CALLBACK (embed_zoom_out_cb), NULL);
+	action_name = "mail-zoom-100";
+	action = e_shell_window_get_action (shell_window, action_name);
+	g_signal_connect (
+		action, "activate",
+		G_CALLBACK (embed_zoom_100), NULL);
+}
+
 #if EVOLUTION_VERSION >= 22900
 #include <shell/e-shell-view.h>
 #include <shell/e-shell-searchbar.h>
+
 static void
 action_search_cb (EShellView *shell,
 			GtkWidget *sb)
@@ -1901,14 +1950,10 @@ rss_search_bar_hook(void)
 	EMFolderTree *folder_tree;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(
 					rss_shell_view);
-	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
-	folder = em_folder_tree_get_selected_folder (folder_tree);
-	g_print("file:%s\n", mail_config_folder_to_cachename (
-				folder, "et-header-"));
 
 
 	shell_content = e_shell_view_get_shell_content (rss_shell_view);
-//	reader = E_MAIL_READER (shell_content);
+	reader = E_MAIL_READER (shell_content);
 
 //	action_name = "mail-find";
 //	action = e_mail_reader_get_action (reader, action_name);
@@ -1928,6 +1973,7 @@ rss_search_bar_hook(void)
 		G_CALLBACK (action_search_cb),
 		rss_shell_view);
 	e_shell_view_clear_search(shell_view);
+
 //	g_signal_connect (
 //		search_bar, "execute-search",
 //		G_CALLBACK (action_search_cb), search_bar);
@@ -5476,6 +5522,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 		rss_shell_view);
 #if EVOLUTION_VERSION >= 22900
 	rss_search_bar_hook();
+	webkit_hook_actions();
 #endif
 	return TRUE;
 }
