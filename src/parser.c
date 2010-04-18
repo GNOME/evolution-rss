@@ -872,6 +872,24 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 	create_feed *CF;
 	GList *attachments = NULL;
 
+	//we have to free this somehow
+	//<link></link>
+	link = g_strdup(layer_find (top, "link", NULL));		//RSS,
+	if (!link)								// <link href=>
+		link = (gchar *)layer_find_innerelement(
+				top, "link", "href",
+				g_strdup(_("No Information")));	//ATOM
+	id = (gchar *)layer_find (top, (gchar *)"id",				//ATOM
+			layer_find (top, (gchar *)"guid", NULL));		//RSS 2.0
+	feed = g_strdup_printf("%s\n", id ? id : link);
+	if (feed) g_strstrip(feed);
+	//not very nice but allows shortcutting
+	if (feed_is_new(feed_name, feed)) {
+		g_free(link);
+		if (feed) g_free(feed);
+		return NULL;
+	}
+
 	char *p = g_strdup(layer_find (top, "title", "Untitled article"));
 	//firstly try to parse as an ATOM author
 	//process person construct
@@ -974,13 +992,6 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		//handle attatchments (can be multiple)
 		attachments = layer_find_tag_prop(top, "media", "url");
 
-		//we have to free this somehow
-		//<link></link>
-		link = g_strdup(layer_find (top, "link", NULL));		//RSS,
-		if (!link)								// <link href=>
-			link = (gchar *)layer_find_innerelement(
-						top, "link", "href",
-						g_strdup(_("No Information")));	//ATOM
 
 //                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
 		comments = (gchar *)layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments
@@ -990,10 +1001,6 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		else
 			category = layer_find_all(top, "category", NULL);
 
-		id = (gchar *)layer_find (top, (gchar *)"id",				//ATOM
-				layer_find (top, (gchar *)"guid", NULL));		//RSS 2.0
-		feed = g_strdup_printf("%s\n", id ? id : link);
-		if (feed) g_strstrip(feed);
 		d("link:%s\n", link);
 		d("author:%s\n", q);
 		d("title:%s\n", p);
@@ -1001,37 +1008,34 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		d("date:%s\n", d2);
 		d("body:%s\n", b);
 
-		//not very nice but allows shortcutting
-		if (!feed_is_new(feed_name, feed)) {
-			ftotal++;
-			sp =  decode_html_entities (p);
-			tmp = decode_utf8_entities (b);
-			g_free(b);
+		ftotal++;
+		sp =  decode_html_entities (p);
+		tmp = decode_utf8_entities (b);
+		g_free(b);
 
-			if (feed_name) {
-				xmlDoc *src = (xmlDoc *)parse_html_sux (tmp, strlen(tmp));
-				if (src) {
-					xmlNode *doc = (xmlNode *)src;
+		if (feed_name) {
+			xmlDoc *src = (xmlDoc *)parse_html_sux (tmp, strlen(tmp));
+			if (src) {
+				xmlNode *doc = (xmlNode *)src;
 
-					while ((doc = html_find(doc, (gchar *)"img"))) {
-						gchar *name = NULL;
-						xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
-						if (url) {
-							if ((name = fetch_image((gchar *)url, link))) {
-								xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)name);
-								g_free(name);
-							}
-							xmlFree(url);
+				while ((doc = html_find(doc, (gchar *)"img"))) {
+					gchar *name = NULL;
+					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
+					if (url) {
+						if ((name = fetch_image((gchar *)url, link))) {
+							xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)name);
+							g_free(name);
 						}
+						xmlFree(url);
 					}
-					xmlDocDumpMemory(src, &buff, (int*)&size);
-					xmlFree(src);
+					}
+				xmlDocDumpMemory(src, &buff, (int*)&size);
+				xmlFree(src);
 				}
-				g_free(tmp);
-				b=(gchar *)buff;
-			} else
-				b = tmp;
-		}
+			g_free(tmp);
+			b = (gchar *)buff;
+		} else
+			b = tmp;
 
 		CF = g_new0(create_feed, 1);
 		/* pack all data */
@@ -1108,6 +1112,7 @@ update_channel(RDF *r)
 		}
 
 		CF = parse_channel_line(el->children, feed_name, main_date);
+		if (!CF) continue;
 		if (!r->uids) {
 			r->uids = g_array_new(TRUE, TRUE, sizeof(gpointer));
 		}
