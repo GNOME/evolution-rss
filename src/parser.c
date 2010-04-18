@@ -29,7 +29,6 @@
 #else
 #include <camel/camel-url.h>
 #endif
-#include <e-util/e-mktemp.h>
 
 extern int rss_verbose_debug;
 
@@ -565,7 +564,7 @@ gchar*
 media_rss(xmlNode *node, gchar *search, gchar *fail)
 {
 	gchar *content;
-	g_print("media_rss()\n");
+	d("media_rss()\n");
 
 	content = (gchar *)xmlGetProp(node, (xmlChar *)search);
 	if (content)
@@ -577,14 +576,15 @@ media_rss(xmlNode *node, gchar *search, gchar *fail)
 const gchar *property_rss_modules[1][3] = {
 	{"media", "media", (gchar *)media_rss}};
 
-char *
+GList *
 layer_find_tag_prop (xmlNodePtr node,
-	char *match,
-	char *search,
-	char *fail)
+	const char *match,
+	const char *search)
 {
-	int i;
+	int i = 0;
 	char* (*func)();
+	gchar *tmp;
+	GList *result = NULL;
 
 	while (node!=NULL) {
 #ifdef RDF_DEBUG
@@ -592,18 +592,18 @@ layer_find_tag_prop (xmlNodePtr node,
 		printf("%s.\n", node->name);
 #endif
 		if (node->ns && node->ns->prefix) {
-			for (i=0; i < 1; i++) {
 				if (!strcasecmp ((char *)node->ns->prefix, property_rss_modules[i][1])) {
 					func = (gpointer)property_rss_modules[i][2];
 					if (strcasecmp ((char *)node->ns->prefix, match)==0) {
-						g_print("URL:%s\n", func(node, search, fail));
+						tmp =  func(node, search, NULL);
+						if (tmp)
+							result = g_list_append(result, tmp);
 					}
 				}
-			}
 		}
 		node = node->next;
 	}
-	return fail;
+	return result;
 }
 
 gchar *
@@ -870,6 +870,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 	guint size = 0;
 	GList *category = NULL;
 	create_feed *CF;
+	GList *attachments = NULL;
 
 	char *p = g_strdup(layer_find (top, "title", "Untitled article"));
 	//firstly try to parse as an ATOM author
@@ -970,14 +971,16 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 			g_free(encl);
 			encl = NULL;
 		}
-//		encl = layer_find_tag_prop(el->children, "media", "url",	// RSS 2.0 Enclosure
-//							NULL);		// ATOM Enclosure
+		//handle attatchments (can be multiple)
+		attachments = layer_find_tag_prop(top, "media", "url");
+
 		//we have to free this somehow
 		//<link></link>
 		link = g_strdup(layer_find (top, "link", NULL));		//RSS,
 		if (!link)								// <link href=>
-			link = (gchar *)layer_find_innerelement(top, "link", "href",
-							g_strdup(_("No Information")));	//ATOM
+			link = (gchar *)layer_find_innerelement(
+						top, "link", "href",
+						g_strdup(_("No Information")));	//ATOM
 
 //                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
 		comments = (gchar *)layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments
@@ -998,15 +1001,15 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		d("date:%s\n", d2);
 		d("body:%s\n", b);
 
-		//not very nice but prevents unnecessary long body processing
+		//not very nice but allows shortcutting
 		if (!feed_is_new(feed_name, feed)) {
 			ftotal++;
 			sp =  decode_html_entities (p);
-			tmp = decode_utf8_entities(b);
+			tmp = decode_utf8_entities (b);
 			g_free(b);
 
 			if (feed_name) {
-				xmlDoc *src = (xmlDoc *)parse_html_sux(tmp, strlen(tmp));
+				xmlDoc *src = (xmlDoc *)parse_html_sux (tmp, strlen(tmp));
 				if (src) {
 					xmlNode *doc = (xmlNode *)src;
 
@@ -1039,6 +1042,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		CF->dcdate	= g_strdup(d2);
 		CF->website	= g_strdup(link);
 		CF->encl	= g_strdup(encl);
+		CF->attachments	= attachments;
 		CF->comments	= g_strdup(comments);
 		CF->feed_fname  = g_strdup(feed_name);	//feed file name
 		CF->feed_uri	= g_strdup(feed);	//feed uri (uid!)
@@ -1071,8 +1075,6 @@ update_channel(RDF *r)
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
 	gchar *uid, *msg;
-	gchar *tmpdir, *name;
-	GError *err = NULL;
 
 	safes = encode_rfc2047(chn_name);
 	sender = g_strdup_printf("%s <%s>", safes, chn_name);
@@ -1128,29 +1130,9 @@ update_channel(RDF *r)
 		if (!feed_is_new(feed_name, CF->feed_uri)) {
 			ftotal++;
 			if (CF->encl) {
-				if (g_list_find_custom(rf->enclist, CF->encl,
-						(GCompareFunc)strcmp))
-					continue;
-				tmpdir = e_mkdtemp("evo-rss-XXXXXX");
-				if ( tmpdir == NULL)
-					continue;
-				name = g_build_filename(tmpdir,
-						g_path_get_basename(CF->encl),
-						NULL);
-				g_free(tmpdir);
-				CF->enclurl = CF->encl;
-				CF->encl = name;
-				d("enclosure file:%s\n", name)
-				CF->efile = fopen(name, "w");
-				if (!CF->efile) continue;
-				download_unblocking(
-					CF->enclurl,
-					download_chunk,
-					CF->efile,
-					(gpointer)finish_enclosure,
-					CF,
-					0,
-					&err);
+				process_enclosure(CF);
+			} else if (g_list_length(CF->attachments)) {
+				process_attachments(CF);
 			} else {
 				create_mail(CF);
 				write_feed_status_line(

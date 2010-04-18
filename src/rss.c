@@ -45,6 +45,7 @@ int rss_verbose_debug = 0;
 
 #include <e-util/e-icon-factory.h>
 #include <e-util/e-util.h>
+#include <e-util/e-mktemp.h>
 
 
 #ifdef EVOLUTION_2_12
@@ -197,6 +198,10 @@ guint resize_pane_hsize = 0;
 guint resize_pane_vsize = 0;
 guint resize_browser_hsize = 0;
 guint resize_browser_vsize = 0;
+
+extern guint net_queue_run_count;
+extern guint net_qid;
+
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -1618,7 +1623,7 @@ webkit_set_preferences(void)
 	g_object_set (settings, "enable-page-cache", TRUE, NULL);
 	//g_object_set (settings, "auto-resize-window", TRUE, NULL);
 #endif
-	webkit_web_view_set_full_content_zoom(rf->mozembed, TRUE);
+	webkit_web_view_set_full_content_zoom((WebKitWebView *)rf->mozembed, TRUE);
 	g_free(agstr);
 #endif
 #endif
@@ -1859,21 +1864,21 @@ static void
 embed_zoom_in_cb (EShellView *shell,
 			gpointer *data)
 {
-	webkit_web_view_zoom_in(rf->mozembed);
+	webkit_web_view_zoom_in((WebKitWebView*)rf->mozembed);
 }
 
 static void
 embed_zoom_out_cb (EShellView *shell,
 			gpointer *data)
 {
-	webkit_web_view_zoom_out(rf->mozembed);
+	webkit_web_view_zoom_out((WebKitWebView *)rf->mozembed);
 }
 
 static void
 embed_zoom_100_cb (EShellView *shell,
 			gpointer *data)
 {
-	webkit_web_view_set_zoom_level(rf->mozembed, 1);
+	webkit_web_view_set_zoom_level((WebKitWebView *)rf->mozembed, 1);
 }
 
 gboolean
@@ -1886,17 +1891,20 @@ webkit_click (GtkEntry *entry,
 	gtk_widget_show (separator);
 	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
 	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_IN, NULL);
-	g_signal_connect(menuitem, "activate", embed_zoom_in_cb, NULL);
+	g_signal_connect(menuitem, "activate",
+		(GCallback)embed_zoom_in_cb, NULL);
 	gtk_widget_set_sensitive (menuitem, TRUE);
 	gtk_widget_show (menuitem);
 	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 3);
 	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_OUT, NULL);
-	g_signal_connect(menuitem, "activate", embed_zoom_out_cb, NULL);
+	g_signal_connect(menuitem, "activate",
+		(GCallback)embed_zoom_out_cb, NULL);
 	gtk_widget_set_sensitive (menuitem, TRUE);
 	gtk_widget_show (menuitem);
 	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 4);
 	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_100, NULL);
-	g_signal_connect(menuitem, "activate", embed_zoom_100_cb, NULL);
+	g_signal_connect(menuitem, "activate",
+		(GCallback)embed_zoom_100_cb, NULL);
 	gtk_widget_set_sensitive (menuitem, TRUE);
 	gtk_widget_show (menuitem);
 	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 5);
@@ -1906,13 +1914,14 @@ webkit_click (GtkEntry *entry,
 	return TRUE;
 }
 
+void webkit_hook_actions(void);
 
 void
 webkit_hook_actions(void)
 {
 	EShellWindow *shell_window;
 	GtkAction *action;
-	gchar *action_name;
+	const char *action_name;
 
 	shell_window = e_shell_view_get_shell_window (rss_shell_view);
 
@@ -5685,7 +5694,7 @@ create_mail(create_feed *CF)
 	CamelMimePart *part, *msgp;
 	CamelMultipart *mp;
 	GString *cats;
-	GList *p;
+	GList *p, *l;
 	gchar *time_str, *buf;
 	gint offset;
 
@@ -5789,7 +5798,34 @@ create_mail(create_feed *CF)
 	camel_data_wrapper_construct_from_stream (rtext, stream);
 	camel_object_unref (stream);
 
-	if (CF->encl) {
+	if (CF->attachedfiles) {
+			mp = camel_multipart_new();
+			camel_multipart_set_boundary(mp, NULL);
+
+			part = camel_mime_part_new();
+#if EVOLUTION_VERSION >= 23100
+			camel_medium_set_content(
+				(CamelMedium *)part, (CamelDataWrapper *)rtext);
+#else
+			camel_medium_set_content_object(
+				(CamelMedium *)part, (CamelDataWrapper *)rtext);
+#endif
+			camel_multipart_add_part(mp, part);
+			camel_object_unref(part);
+		for (l = g_list_first(CF->attachedfiles); l != NULL; l = l->next) {
+			msgp = file_to_message(l->data);
+			if (msgp) {
+				camel_multipart_add_part(mp, msgp);
+				camel_object_unref(msgp);
+			}
+		}
+#if EVOLUTION_VERSION >= 23100
+		camel_medium_set_content((CamelMedium *)new, (CamelDataWrapper *)mp);
+#else
+		camel_medium_set_content_object((CamelMedium *)new, (CamelDataWrapper *)mp);
+#endif
+		camel_object_unref(mp);
+	} else	if (CF->encl) {
 		mp = camel_multipart_new();
 		camel_multipart_set_boundary(mp, NULL);
 
@@ -5827,7 +5863,10 @@ create_mail(create_feed *CF)
 	/* no point in filtering mails at import time as it just
 	 * wastes time, user can setup his own afterwards
 	 */
-	if (appended_uid != NULL && !rf->import && !CF->encl) {	//do not filter enclosure at this time
+	if (appended_uid != NULL
+		&& !rf->import
+		&& !CF->encl
+		&& !g_list_length(CF->attachments)) {	//do not filter enclosure at this time nor media files
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
@@ -5947,11 +5986,154 @@ free_cf(create_feed *CF)
 		g_list_foreach(CF->category, (GFunc)g_free, NULL);
 		g_list_free(CF->category);
 	}
+	if (CF->attachments) {
+		g_list_foreach(CF->attachments, (GFunc)g_free, NULL);
+		g_list_free(CF->attachments);
+	}
+	if (CF->attachedfiles) {
+		g_list_foreach(CF->attachedfiles, (GFunc)g_free, NULL);
+		g_list_free(CF->attachedfiles);
+	}
 	g_free(CF);
 }
 
-extern guint net_queue_run_count;
-extern guint net_qid;
+typedef struct CFL {
+	gchar *url;
+	FILE *file;
+	create_feed *CF;
+} cfl;
+
+void
+#if LIBSOUP_VERSION < 2003000
+finish_attachment (
+	SoupMessage *msg,
+	create_feed *user_data);
+#else
+finish_attachment (
+	SoupSession *soup_sess,
+	SoupMessage *msg,
+	cfl *user_data);
+#endif
+
+void
+process_attachments(create_feed *CF)
+{
+	cfl *CFL;
+	GList *l = g_list_first(CF->attachments);
+
+	g_return_if_fail(CF->attachments != NULL);
+
+	do {
+		gchar *tmpdir, *name;
+
+		if (g_list_find_custom(rf->enclist, l->data,
+			(GCompareFunc)strcmp))
+			continue;
+		tmpdir = e_mkdtemp("evo-rss-XXXXXX");
+		if ( tmpdir == NULL)
+			continue;
+		name = g_build_filename(tmpdir,
+			g_path_get_basename(l->data),
+			NULL);
+		g_free(tmpdir);
+		CFL = g_new0(cfl, 1);
+		CFL->url = l->data;
+		CFL->CF = CF;
+		d("enclosure file:%s\n", name)
+		CF->attachedfiles = g_list_append(CF->attachedfiles, name);
+		CF->attachmentsqueue++;
+		CFL->file = fopen(name, "w");
+		if (!CFL->file) return;
+		download_unblocking(
+			CFL->url,
+			download_chunk,
+			CFL->file,
+			(gpointer)finish_attachment,
+			CFL,
+			0,
+			NULL);
+	} while ((l = l->next));
+}
+
+
+
+void
+#if LIBSOUP_VERSION < 2003000
+finish_attachment (SoupMessage *msg,
+		cfl *user_data)
+#else
+finish_attachment (SoupSession *soup_sess,
+		SoupMessage *msg,
+		cfl *user_data)
+#endif
+{
+#if LIBSOUP_VERSION < 2003000
+	fwrite(msg->response.body,
+		msg->response.length,
+		1,
+		user_data->file);
+#else
+	fwrite(msg->response_body->data,
+		msg->response_body->length,
+		1,
+		user_data->file);
+#endif
+	fclose(user_data->file);
+
+	rf->enclist = g_list_remove(rf->enclist, user_data->url);
+	//g_free(msg->response_body->data);
+	//g_object_unref(msg);
+	if (user_data->CF->attachmentsqueue)
+		user_data->CF->attachmentsqueue--;
+
+	if (!user_data->CF->attachmentsqueue) {
+		if (!feed_is_new(user_data->CF->feed_fname, user_data->CF->feed_uri)) {
+			create_mail(user_data->CF);
+			write_feed_status_line(
+				user_data->CF->feed_fname,
+				user_data->CF->feed_uri);
+			free_cf(user_data->CF);
+			g_free(user_data->url);
+			g_free(user_data);
+		}
+	}
+
+	if (net_queue_run_count) net_queue_run_count--;
+	if (!net_qid)
+		net_qid = g_idle_add(
+				(GSourceFunc)net_queue_dispatcher,
+				NULL);
+}
+
+void
+process_enclosure(create_feed *CF)
+{
+	gchar *tmpdir, *name;
+
+	if (g_list_find_custom(rf->enclist, CF->encl,
+			(GCompareFunc)strcmp))
+		return;
+	tmpdir = e_mkdtemp("evo-rss-XXXXXX");
+	if ( tmpdir == NULL)
+		return;
+	name = g_build_filename(tmpdir,
+		g_path_get_basename(CF->encl),
+		NULL);
+	g_free(tmpdir);
+	CF->enclurl = CF->encl;
+	CF->encl = name;
+	d("enclosure file:%s\n", name)
+	CF->efile = fopen(name, "w");
+	if (!CF->efile) return;
+	download_unblocking(
+		CF->enclurl,
+		download_chunk,
+		CF->efile,
+		(gpointer)finish_enclosure,
+		CF,
+		0,
+		NULL);
+}
 
 void
 #if LIBSOUP_VERSION < 2003000

@@ -658,7 +658,8 @@ download_unblocking(
 
 #if LIBSOUP_VERSION > 2024000
 	if (rss_soup_jar) {
-		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
+		soup_session_add_feature(soup_sess,
+			SOUP_SESSION_FEATURE(rss_soup_jar));
 	}
 #endif
 
@@ -674,11 +675,14 @@ download_unblocking(
 	}
 
 	if (!rf->session)
-		rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
+		rf->session = g_hash_table_new(
+				g_direct_hash, g_direct_equal);
 	if (!rf->abort_session)
-		rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
+		rf->abort_session = g_hash_table_new(
+					g_direct_hash, g_direct_equal);
 	if (!rf->key_session)
-		rf->key_session = g_hash_table_new(g_direct_hash, g_direct_equal);
+		rf->key_session = g_hash_table_new(
+					g_direct_hash, g_direct_equal);
 
 	g_signal_connect (soup_sess, "authenticate",
 		G_CALLBACK (authenticate), (gpointer)url);

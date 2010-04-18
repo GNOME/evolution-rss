@@ -300,8 +300,11 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar	*feedid;
 	gchar	*feed_fname;	// feed name file
 	gchar	*feed_uri;
-	gchar *encl;
+	gchar *encl;		//feed enclosure
 	gchar *enclurl;
+	GList *attachments;	//feed media files
+	GList *attachedfiles;	//list of downloaded media files
+	guint attachmentsqueue;	//list of downloaded media files
 	FILE *efile;		//enclosure file
 	gchar *comments;
 	GList *category;	// list of categories article is posted under
@@ -432,9 +435,12 @@ finish_website (
 	SoupMessage *msg,
 	gpointer user_data);
 #endif
+
 void
 #if LIBSOUP_VERSION < 2003000
-finish_enclosure (SoupMessage *msg, create_feed *user_data);
+finish_enclosure (
+	SoupMessage *msg,
+	create_feed *user_data);
 #else
 finish_enclosure (
 	SoupSession *soup_sess,
@@ -460,6 +466,10 @@ void download_chunk(
 	NetStatusType status,
 	gpointer statusdata,
 	gpointer data);
+
+void process_enclosure(create_feed *CF);
+void process_attachments(create_feed *CF);
+
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);
 #endif

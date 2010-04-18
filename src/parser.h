@@ -27,8 +27,16 @@ gchar *layer_find_innerhtml (xmlNodePtr node, const char *match, const char *sub
 xmlNodePtr layer_find_pos (xmlNodePtr node, const char *match, const char *submatch);
 const char *layer_find_tag (xmlNodePtr node, const char *match, const char *fail);
 char *layer_find_url (xmlNodePtr node, char *match, char *fail);
-char *layer_find_tag_prop (xmlNodePtr node, char *match, char *search, char *fail);
-const char *layer_find_ns_tag(xmlNodePtr node, const char *nsmatch, const char *match, const char *fail);
+GList*
+layer_find_tag_prop (xmlNodePtr node,
+				const char *match,
+				const char *search);
+
+const char *
+layer_find_ns_tag (xmlNodePtr node,
+			const char *nsmatch,
+			const char *match,
+			const char *fail);
 gchar *encode_html_entities(gchar *source);
 gchar *decode_entities(gchar *source);
 GList *layer_find_all (xmlNodePtr node, const char *match, const char *fail);
