@@ -152,7 +152,7 @@ typedef struct _rssfeed {
 #endif
 	gboolean        setup;
 	gboolean        pending;
-	gboolean        import;			//import going on
+	guint		import;			//import going on
 	gboolean	autoupdate;		//feed is currently auto fetched
 	guint		feed_queue;
 	gboolean        cancel;			//cancelation signal
@@ -418,6 +418,7 @@ void migrate_crc_md5(const char *name, gchar *url);
 void free_cf(create_feed *CF);
 gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
+void update_progress_text(gchar *title);
 void update_feed_image(RDF *r);
 void update_status_icon(const char *channel, gchar *title);
 void cancel_comments_session(SoupSession *sess);

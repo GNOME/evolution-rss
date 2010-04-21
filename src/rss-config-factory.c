@@ -71,6 +71,8 @@ static guint feed_html = 0;
 guint ccurrent = 0, ctotal = 0;
 GList *flist = NULL;
 gchar *strbuf;
+GtkWidget *import_progress;
+GtkWidget *import_dialog = NULL;
 
 extern rssfeed *rf;
 extern guint upgrade;
@@ -849,14 +851,11 @@ store_redraw(GtkTreeView *data)
 
 	g_return_val_if_fail(data, FALSE);
 #if GTK_VERSION >= 2019007
-	g_return_val_if_fail(
-		gtk_widget_get_realized(
-			GTK_WIDGET(data)),
-			FALSE);
+	if (!gtk_widget_get_realized(GTK_WIDGET(data)))
+		return FALSE;
 #else
-	g_return_val_if_fail(
-		GTK_WIDGET_REALIZED(data),
-		FALSE);
+	if (!GTK_WIDGET_REALIZED(data))
+		return FALSE;
 #endif
 
 	if (!store_redrawing) {
@@ -1582,7 +1581,8 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 	feed->feed_url = g_strdup(url);
 	feed->feed_name = decode_html_entities(title);
 	feed->prefix = g_strdup(prefix);
-	/* we'll get rid of this as soon as we fetch unblocking */
+	rf->progress_bar = import_progress;
+	rf->progress_dialog = import_dialog;
 	if (g_hash_table_find(
 		rf->hr,
 		check_if_match,
@@ -1639,9 +1639,7 @@ import_opml(gchar *file)
 	guint type = 0; //file type
 	gchar *what = NULL;
 	gchar *msg, *tmp, *maintitle = NULL;
-	GtkWidget *import_dialog = NULL;
 	GtkWidget *import_label;
-	GtkWidget *import_progress;
 	float fr;
 
 	xmlNode *src = (xmlNode *)xmlParseFile (file);
@@ -1693,7 +1691,7 @@ import_opml(gchar *file)
 		0);
 	gtk_widget_show_all(import_dialog);
 	g_free(msg);
-	if ((src=src->children)) {
+	if ((src = src->children)) {
 		if (!g_ascii_strcasecmp((char *)src->name, "rdf")) {
 			while (src) {
 				src=src->children;
@@ -1725,9 +1723,9 @@ import_opml(gchar *file)
 			d("total:%d\n", total);
 		}
 	}
+	g_object_set_data((GObject *)import_progress, "total", GINT_TO_POINTER(total));
+	g_object_set_data((GObject *)import_progress, "label", import_label);
 	src = doc;
-	//we'll be safer this way
-	rf->import = 1;
 	name = NULL;
 	while (gtk_events_pending ())
 		gtk_main_iteration ();
@@ -1827,43 +1825,19 @@ import_opml(gchar *file)
 					rsstitle = (gchar *)xmlGetProp(
 							src,
 							(xmlChar *)"title");
-					gtk_label_set_text(
-						GTK_LABEL(import_label),
-						(gchar *)rsstitle);
-#if GTK_VERSION >= 2006000
-					gtk_label_set_ellipsize (
-						GTK_LABEL (import_label),
-						PANGO_ELLIPSIZE_START);
-#endif
-					gtk_label_set_justify(
-						GTK_LABEL(import_label),
-						GTK_JUSTIFY_CENTER);
 
-					dp("rssprefix:%s rssurl:%s rsstitle:%s\n",
+					dp("rssprefix:%s|rssurl:%s|rsstitle:%s|\n",
 						rssprefix,
 						rssurl, rsstitle);
 					import_one_feed(
 						rssurl,
 						rsstitle,
 						rssprefix);
-					dp("import done\n");
+					rf->import++;
+					d("queued.\n");
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
-fail:					while (gtk_events_pending ())
-						gtk_main_iteration ();
-					current++;
-					fr = ((current*100)/total);
-					if (fr < 100)
-						gtk_progress_bar_set_fraction(
-							(GtkProgressBar *)import_progress,
-							fr/100);
-					what = g_strdup_printf(
-						_("%2.0f%% done"), fr);
-					gtk_progress_bar_set_text(
-						(GtkProgressBar *)import_progress,
-						what);
-					g_free(what);
-					g_free(rssprefix);
+fail:					g_free(rssprefix);
 				}
 			xmlFree(prop);
 //			}
@@ -1895,26 +1869,14 @@ fail:					while (gtk_events_pending ())
 			if (name) xmlFree(name);
 			if (url) xmlFree(url);
 
-			while (gtk_events_pending ())
-				gtk_main_iteration ();
-			current++;
-			fr = ((current*100)/total);
-			gtk_progress_bar_set_fraction(
-				(GtkProgressBar *)import_progress, fr/100);
-			what = g_strdup_printf(_("%2.0f%% done"), fr);
-			gtk_progress_bar_set_text(
-				(GtkProgressBar *)import_progress, what);
-			g_free(what);
-			while (gtk_events_pending ())
-				gtk_main_iteration ();
 		}
 	}
 	while (gtk_events_pending ())
 		gtk_main_iteration ();
-out:    rf->import = 0;
+out:    //rf->import = 0;
 	if (maintitle) xmlFree(maintitle);
 	if (doc) xmlFree(doc);
-	gtk_widget_destroy(import_dialog);
+//	gtk_widget_destroy(import_dialog);
 }
 
 static void

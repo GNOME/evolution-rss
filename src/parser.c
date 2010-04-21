@@ -24,6 +24,7 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
 #include <libxml/debugXML.h>
+#include <mail/mail-ops.h>
 #if (DATASERVER_VERSION >= 2031001)
 #include <camel/camel.h>
 #else
@@ -1063,6 +1064,14 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 
 }
 
+void
+refresh_mail_folder(CamelFolder *mail_folder)
+{
+	mail_refresh_folder(mail_folder, NULL, NULL);
+	camel_folder_sync(mail_folder, FALSE, NULL);
+	camel_folder_thaw(mail_folder);
+}
+
 gchar *
 update_channel(RDF *r)
 {
@@ -1079,6 +1088,8 @@ update_channel(RDF *r)
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
 	gchar *uid, *msg;
+	gboolean freeze = FALSE;
+	CamelFolder *mail_folder;
 
 	safes = encode_rfc2047(chn_name);
 	sender = g_strdup_printf("%s <%s>", safes, chn_name);
@@ -1097,6 +1108,7 @@ update_channel(RDF *r)
 
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++) {
 		update_sr_message();
+		update_progress_text(chn_name);
 		if (rf->cancel) goto out;
 
 		if (progress) {
@@ -1127,6 +1139,12 @@ update_channel(RDF *r)
 		else
 			CF->full_path = g_strdup(chn_name);
 
+		if (!freeze) {
+			mail_folder = check_feed_folder(CF->full_path);
+			camel_folder_freeze(mail_folder);
+			freeze = TRUE;
+		}
+
 		subj = g_strdup(CF->subj);
 
 		while (gtk_events_pending())
@@ -1151,6 +1169,8 @@ update_channel(RDF *r)
 		} else
 			free_cf(CF);
 	}
+	refresh_mail_folder(mail_folder);
+	camel_object_unref(mail_folder);
 out:	g_free(sender);
 
 	if (fr) fclose(fr);

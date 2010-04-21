@@ -534,11 +534,10 @@ feed_is_new(gchar *file_name, gchar *needle)
 
 	if (fr) {
 		while (fgets(rfeed, 511, fr) != NULL) {
-			if (strstr(rfeed, tmpneedle)) {
+			if (g_strstr_len(rfeed, -1, tmpneedle)) {
 				occ=1;
 				break;
 			}
-			memset(rfeed, 0, 512);
 		}
 		fclose(fr);
 	}

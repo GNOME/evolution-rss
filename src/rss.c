@@ -439,6 +439,48 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 }
 
 void
+update_progress_text(gchar *title)
+{
+	GtkWidget *label;
+
+	if (!rf->progress_bar)
+		return;
+
+	label = g_object_get_data(rf->progress_bar, "label");
+	if (label) {
+		gtk_label_set_text(
+			GTK_LABEL(label), title);
+		gtk_label_set_ellipsize (
+			GTK_LABEL (label),
+			PANGO_ELLIPSIZE_START);
+		gtk_label_set_justify(
+			GTK_LABEL(label),
+			GTK_JUSTIFY_CENTER);
+	}
+}
+
+void
+update_progress_bar(guint current)
+{
+	gdouble fr;
+	gchar *what;
+	guint total;
+	guint val;
+
+	g_return_if_fail(rf->progress_bar != NULL);
+
+	total = GPOINTER_TO_INT(g_object_get_data(rf->progress_bar, "total"));
+	val = total - current;
+	fr = ((val*100)/total);
+	if (fr < 100)
+		gtk_progress_bar_set_fraction(rf->progress_bar, fr/100);
+	what = g_strdup_printf(_("%2.0f%% done"), fr);
+	gtk_progress_bar_set_text(rf->progress_bar, what);
+	g_free(what);
+}
+
+
+void
 browser_write(gchar *string, gint length, gchar *base)
 {
 	gchar *str = string;
@@ -3214,14 +3256,14 @@ prepare_hashes(void)
 				g_free,
 				NULL);
 	if (rf->hrdel_unread == NULL)
-		rf->hrdel_unread = 
+		rf->hrdel_unread =
 			g_hash_table_new_full(
 				g_str_hash,
 				g_str_equal,
 				g_free,
 				NULL);
 	if (rf->hrdel_notpresent == NULL)
-		rf->hrdel_notpresent = 
+		rf->hrdel_notpresent =
 			g_hash_table_new_full(
 				g_str_hash,
 				g_str_equal,
@@ -3273,6 +3315,9 @@ finish_setup_feed(
 	guint aid;
 #endif
 	gpointer crc_feed = gen_md5(feed->feed_url);
+
+	if (rf->cancel_all)
+		goto out;
 
 	r = g_new0 (RDF, 1);
 	r->shown = TRUE;
@@ -3408,7 +3453,10 @@ add:
 					feed->prefix ? feed->prefix : "",
 					feed->feed_name,
 					NULL);
-			gchar *b = g_build_path(G_DIR_SEPARATOR_S, r->title, NULL);
+			gchar *b = g_build_path(
+					G_DIR_SEPARATOR_S,
+					r->title,
+					NULL);
 			update_feed_folder(b, a, 0);
 			//r->title = feed->feed_name;
 			r->title = a;
@@ -3421,10 +3469,11 @@ add:
 					feed->prefix ? feed->prefix : "",
 					feed->feed_name,
 					NULL);
-			gchar *b = g_build_path(G_DIR_SEPARATOR_S, r->title, NULL);
-			g_print("update_feed_folder\n");
+			gchar *b = g_build_path(
+					G_DIR_SEPARATOR_S,
+					r->title,
+					NULL);
 			update_feed_folder(b, a, 0);
-			g_print("update_feed_folder done\n");
 			g_free(a);
 			g_free(b);
 		}
@@ -3432,9 +3481,18 @@ add:
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
 		save_gconf_feed();
 
-
 		if (feed->validate)
 			display_feed(r);
+
+		if (rf->import) {
+			rf->import--;
+			update_progress_bar(rf->import);
+			if (!rf->import) {
+				gtk_widget_destroy(rf->progress_dialog);
+				rf->progress_bar = NULL;
+				rf->progress_dialog = NULL;
+			}
+		}
 
 		/* folder might not be created yet */
 		real_name = g_strdup_printf(
@@ -4214,7 +4272,7 @@ lookup_original_folder(gchar *folder, gboolean *found)
 	tmp = extract_main_folder(folder);
 	if (tmp) {
 		ofolder = g_hash_table_lookup(rf->feed_folders, tmp);
-		dp("result ofolder:%s\n", ofolder);
+		d("result ofolder:%s\n", ofolder);
 		if (ofolder) {
 			g_free(tmp);
 			if (found) *found = TRUE;
@@ -5701,8 +5759,6 @@ create_mail(create_feed *CF)
 	mail_folder = check_feed_folder(CF->full_path);
 	camel_object_ref(mail_folder);
 
-	camel_folder_freeze(mail_folder);
-
 	info = camel_message_info_new(NULL);
 	camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN, 1);
 
@@ -5870,13 +5926,12 @@ create_mail(create_feed *CF)
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
-/*FIXME do not how to free this
+/*FIXME do not know how to free this
 		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
 	}
-	mail_refresh_folder(mail_folder, NULL, NULL);
-	camel_folder_sync(mail_folder, FALSE, NULL);
-	camel_folder_thaw(mail_folder);
-	camel_operation_end(NULL);
+	//FIXME too lasy to write a separate function
+	if (!rf->import)
+		mail_refresh_folder(mail_folder, NULL, NULL);
 	camel_object_unref(rtext);
 	camel_object_unref(new);
 	camel_message_info_free(info);
@@ -6093,10 +6148,9 @@ finish_attachment (SoupSession *soup_sess,
 				user_data->CF->feed_fname,
 				user_data->CF->feed_uri);
 			free_cf(user_data->CF);
-			g_free(user_data->url);
-			g_free(user_data);
 		}
 	}
+	g_free(user_data);
 
 	if (net_queue_run_count) net_queue_run_count--;
 	if (!net_qid)
@@ -6287,6 +6341,8 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	gint i=0, size;
 	gint *sizes;
 
+	g_return_val_if_fail(mod != NULL, FALSE);
+
 	pixbuf = gdk_pixbuf_new_from_file(img_file, NULL);
 
 	if (pixbuf) {
@@ -6452,7 +6508,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 			tmpurl)) {
 		goto working;
 	}
-	g_print("fetch_image_redraw() tmpurl:%s\n", tmpurl);
+	d("fetch_image_redraw() tmpurl:%s\n", tmpurl);
 	stream = rss_cache_get(tmpurl);
 	if (!stream) {
 		d("image cache MISS\n");

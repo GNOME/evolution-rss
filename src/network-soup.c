@@ -70,7 +70,7 @@ typedef struct {
 	gchar *url;
 } STNET;
 
-#define DOWNLOAD_QUEUE_SIZE 5
+#define DOWNLOAD_QUEUE_SIZE 15
 guint net_qid = 0;		// net queue dispatcher
 guint net_queue_run_count = 0; //downloads in progress
 
@@ -749,7 +749,7 @@ net_queue_dispatcher(void)
 	STNET *_stnet;
 	guint qlen = g_queue_get_length(rf->stqueue);
 
-	dp("net queue size:%d messages processing:%d\n",
+	d("que len:%d workers:%d\n",
 		g_queue_get_length(rf->stqueue),
 		net_queue_run_count);
 

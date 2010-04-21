@@ -37,3 +37,5 @@
 	* do not mark folders as feeds (icon)
 	* require gtkhtml-editor separate package (?)
 	* option to download enclosures (limit to certain size)
+	* split rss feed
+	* possibly completely disable messagefiltering at setup_feed
