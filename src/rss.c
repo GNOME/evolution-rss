@@ -475,6 +475,7 @@ update_progress_bar(guint current)
 	total = GPOINTER_TO_INT(g_object_get_data(
 				(GObject *)rf->progress_bar,
 				"total"));
+	if (total) {
 	val = total - current;
 	fr = ((val*100)/total);
 	if (fr < 100)
@@ -484,6 +485,7 @@ update_progress_bar(guint current)
 	gtk_progress_bar_set_text(
 		(GtkProgressBar *)rf->progress_bar, what);
 	g_free(what);
+	}
 }
 
 
@@ -4800,7 +4802,6 @@ out:	if (folder) {
 	}
 	delete_feed_folder_alloc(name);
 	g_free(name);
-	g_print("gidle store redra\n");
 	g_idle_add((GSourceFunc)store_redraw,
 		GTK_TREE_VIEW(rf->treeview));
 	save_gconf_feed();

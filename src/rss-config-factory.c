@@ -850,13 +850,6 @@ store_redraw(GtkTreeView *data)
 	GtkTreeModel *model;
 
 	g_return_val_if_fail(data, FALSE);
-#if GTK_VERSION >= 2019007
-	if (!gtk_widget_get_realized(GTK_WIDGET(data)))
-		return FALSE;
-#else
-	if (!GTK_WIDGET_REALIZED(data))
-		return FALSE;
-#endif
 
 	if (!store_redrawing) {
 		store_redrawing = 1;
@@ -1386,13 +1379,17 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 
 #if EVOLUTION_VERSION < 22904
 	msg_feeds = e_error_new(
-#else
-	msg_feeds = e_alert_dialog_new_for_args(
-#endif
 		GTK_WINDOW(rf->preferences),
 		"org-gnome-evolution-rss:rssmsg",
 		"",
 		NULL);
+#else
+	msg_feeds = e_alert_dialog_new_for_args(
+		GTK_WINDOW(rf->preferences),
+		"org-gnome-evolution-rss:rssmsg",
+		"",
+		NULL);
+#endif
 	progress = gtk_progress_bar_new();
 	gtk_box_pack_start(
 		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(msg_feeds))),
@@ -1482,15 +1479,14 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 #if EVOLUTION_VERSION < 22904
 					e_error_run(GTK_WINDOW(
 						rf->preferences),
+						"mail:no-rename-folder",
+						a, b, ex.desc, NULL);
 #else
 					e_alert_run_dialog_for_args(
 						GTK_WINDOW(rf->preferences),
-#endif
 						"mail:no-rename-folder",
-						a,
-						b,
-						ex.desc,
-						NULL);
+						a, b, ex.desc, NULL);
+#endif
 					camel_exception_clear (&ex);
 				}
 				g_free(dir);
@@ -1594,6 +1590,8 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 			_("Feed already exists!"));
 	}
 	setup_feed(feed);
+	while (gtk_events_pending ())
+		gtk_main_iteration ();
 }
 
 /*
@@ -1823,7 +1821,7 @@ import_opml(gchar *file)
 							src,
 							(xmlChar *)"title");
 
-					dp("rssprefix:%s|rssurl:%s|rsstitle:%s|\n",
+					d("rssprefix:%s|rssurl:%s|rsstitle:%s|\n",
 						rssprefix,
 						rssurl, rsstitle);
 					import_one_feed(
@@ -1831,7 +1829,7 @@ import_opml(gchar *file)
 						rsstitle,
 						rssprefix);
 					rf->import++;
-					d("queued.\n");
+					g_print("rf->import:%d\n", rf->import);
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
 fail:					g_free(rssprefix);
