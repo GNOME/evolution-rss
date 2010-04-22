@@ -864,6 +864,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 	char *sp = NULL;
 	char *d, *link = NULL;
 	char *comments = NULL;
+	char *p, *q1, *q2, *q3;
 	gchar *feed = NULL;
 	gchar *encl, *tmp, *id;
 	gchar *qsafe, *tcat;
@@ -891,14 +892,14 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 		return NULL;
 	}
 
-	char *p = g_strdup(layer_find (top, "title", "Untitled article"));
+	p = g_strdup(layer_find (top, "title", "Untitled article"));
 	//firstly try to parse as an ATOM author
 	//process person construct
-	char *q1 = g_strdup(
+	q1 = g_strdup(
 			layer_find_innerhtml (top, "author", "name", NULL));
-	char *q2 = g_strdup(
+	q2 = g_strdup(
 			layer_find_innerhtml (top, "author", "uri", NULL));
-	char *q3 = g_strdup(
+	q3 = g_strdup(
 			layer_find_innerhtml (top, "author", "email", NULL));
 	if (q1) {
 		q1 = g_strdelimit(q1, "><", ' ');
@@ -1065,6 +1066,9 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 }
 
 void
+refresh_mail_folder(CamelFolder *mail_folder);
+
+void
 refresh_mail_folder(CamelFolder *mail_folder)
 {
 	mail_refresh_folder(mail_folder, NULL, NULL);
@@ -1089,7 +1093,7 @@ update_channel(RDF *r)
 	gchar *buf, *safes, *feed_dir, *feed_name;
 	gchar *uid, *msg;
 	gboolean freeze = FALSE;
-	CamelFolder *mail_folder;
+	CamelFolder *mail_folder = NULL;
 
 	safes = encode_rfc2047(chn_name);
 	sender = g_strdup_printf("%s <%s>", safes, chn_name);

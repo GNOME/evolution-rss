@@ -39,3 +39,4 @@
 	* option to download enclosures (limit to certain size)
 	* split rss feed
 	* possibly completely disable messagefiltering at setup_feed
+	* after deletion properties list is not updated, or not in sync

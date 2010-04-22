@@ -446,7 +446,7 @@ update_progress_text(gchar *title)
 	if (!rf->progress_bar)
 		return;
 
-	label = g_object_get_data(rf->progress_bar, "label");
+	label = g_object_get_data((GObject *)rf->progress_bar, "label");
 	if (label) {
 		gtk_label_set_text(
 			GTK_LABEL(label), title);
@@ -460,6 +460,9 @@ update_progress_text(gchar *title)
 }
 
 void
+update_progress_bar(guint current);
+
+void
 update_progress_bar(guint current)
 {
 	gdouble fr;
@@ -469,13 +472,17 @@ update_progress_bar(guint current)
 
 	g_return_if_fail(rf->progress_bar != NULL);
 
-	total = GPOINTER_TO_INT(g_object_get_data(rf->progress_bar, "total"));
+	total = GPOINTER_TO_INT(g_object_get_data(
+				(GObject *)rf->progress_bar,
+				"total"));
 	val = total - current;
 	fr = ((val*100)/total);
 	if (fr < 100)
-		gtk_progress_bar_set_fraction(rf->progress_bar, fr/100);
+		gtk_progress_bar_set_fraction(
+			(GtkProgressBar *)rf->progress_bar, fr/100);
 	what = g_strdup_printf(_("%2.0f%% done"), fr);
-	gtk_progress_bar_set_text(rf->progress_bar, what);
+	gtk_progress_bar_set_text(
+		(GtkProgressBar *)rf->progress_bar, what);
 	g_free(what);
 }
 
@@ -4793,6 +4800,7 @@ out:	if (folder) {
 	}
 	delete_feed_folder_alloc(name);
 	g_free(name);
+	g_print("gidle store redra\n");
 	g_idle_add((GSourceFunc)store_redraw,
 		GTK_TREE_VIEW(rf->treeview));
 	save_gconf_feed();
@@ -5927,7 +5935,7 @@ create_mail(create_feed *CF)
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
 /*FIXME do not know how to free this
-		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
+//		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
 	}
 	//FIXME too lasy to write a separate function
 	if (!rf->import)

@@ -1635,12 +1635,9 @@ import_opml(gchar *file)
 	gchar *url = NULL;
 	xmlChar *name = NULL;
 	guint total = 0;
-	guint current = 0;
 	guint type = 0; //file type
-	gchar *what = NULL;
 	gchar *msg, *tmp, *maintitle = NULL;
 	GtkWidget *import_label;
-	float fr;
 
 	xmlNode *src = (xmlNode *)xmlParseFile (file);
 	xmlNode *doc = NULL;
@@ -2183,41 +2180,6 @@ import_cb (GtkWidget *widget, gpointer data)
 		gtk_widget_show(import);
 	}
 	return;
-}
-
-static void
-get_folder_info (
-	CamelStore *store, CamelFolderInfo *info, CamelException *ex)
-{
-while (info) {
-		CamelFolder *fold;
-		gchar **path, *fpath;
-		gint i=0;
-
-	if (info->child) {
-		get_folder_info(store, info->child, ex);
-		if (camel_exception_is_set (ex))
-			return;
-	}
-
-	if (!(fold = camel_store_get_folder (store, info->full_name, 0, ex)))
-		return;
-
-//g_print("fold:%s\n", fold->full_name);
-	fpath = extract_main_folder(fold->full_name);
-	g_print("fpath:%s\n", fpath);
-
-	path = g_strsplit(fpath, G_DIR_SEPARATOR_S, 0);
-	if (path) {
-		do {
-			g_print("path:%s\n", path[i]);
-		} while (NULL != path[i++]);
-	}
-
-	info = info->next;
-	}
-
-
 }
 
 GList*
