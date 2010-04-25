@@ -25,6 +25,16 @@
 #include "network.h"
 #include "file-gio.h"
 
+typedef void (*UnblockCallback)(
+			SoupSession *s,
+			SoupMessage *m,
+			gpointer user_data);
+
+typedef struct FILE_GIO {
+	UnblockCallback callback;
+	gpointer callback_data;
+} fg;
+
 gboolean
 file_get_unblocking(const char *uri, NetStatusCallback cb,
 		gpointer data, gpointer cb2,
@@ -33,13 +43,17 @@ file_get_unblocking(const char *uri, NetStatusCallback cb,
 		GError **err)
 {
 	GFile *file;
+	fg *FG = g_new0(fg, 1);
+	/*repack user_data for gio_finish_feed*/
+	FG->callback = cb2;
+	FG->callback_data = cbdata2;
 
 	file = g_file_new_for_uri (uri);
 	g_file_load_contents_async (
 		file,
 		NULL,
-		cb2,
-		cbdata2);
+		gio_finish_feed,
+		FG);
 	return 1;
 }
 
@@ -49,8 +63,9 @@ gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data)
 	gsize file_size;
 	char *file_contents;
 	gboolean result;
+	fg *FG = (fg *)user_data;
 
-	rfMessage *rfmsg = g_new0(rfMessage, 1);
+	SoupMessage *rfmsg = g_new0(SoupMessage, 1);
 
 	result = g_file_load_contents_finish (
 			G_FILE (object),
@@ -59,9 +74,11 @@ gio_finish_feed (GObject *object, GAsyncResult *res, gpointer user_data)
 			NULL, NULL);
 	if (result) {
 		rfmsg->status_code = SOUP_STATUS_OK;
-		rfmsg->body = file_contents;
-		rfmsg->length = file_size;
-		generic_finish_feed(rfmsg, user_data);
+		rfmsg->response_body = (SoupMessageBody *)g_string_new(NULL);
+		rfmsg->response_body->data = file_contents;
+		rfmsg->response_body->length = file_size;
+		FG->callback(NULL, rfmsg, FG->callback_data);
+
 		g_free (file_contents);
 	}
 	g_free(rfmsg);

@@ -91,7 +91,7 @@ fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,
 		return file_get_unblocking(url,
 				NULL, // add status here //
 				NULL,
-				gio_finish_feed,
+				cb2,
 				cbdata2,
 				0,
 				err);
