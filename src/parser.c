@@ -1143,8 +1143,10 @@ update_channel(RDF *r)
 		else
 			CF->full_path = g_strdup(chn_name);
 
-		if (!freeze) {
+		if (!mail_folder)
 			mail_folder = check_feed_folder(CF->full_path);
+
+		if (!freeze) {
 			camel_folder_freeze(mail_folder);
 			freeze = TRUE;
 		}
@@ -1173,11 +1175,13 @@ update_channel(RDF *r)
 		} else
 			free_cf(CF);
 	}
-	refresh_mail_folder(mail_folder);
+	if (freeze)
+		refresh_mail_folder(mail_folder);
+	if (mail_folder)
 #if (DATASERVER_VERSION >= 2031001)
-	g_object_unref(mail_folder);
+		g_object_unref(mail_folder);
 #else
-	camel_object_unref(mail_folder);
+		camel_object_unref(mail_folder);
 #endif
 out:	g_free(sender);
 
