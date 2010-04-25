@@ -5814,8 +5814,13 @@ create_mail(create_feed *CF)
 
 	addr = camel_internet_address_new();
 	d("date:%s\n", CF->date);
-	camel_address_decode(CAMEL_ADDRESS(addr), author);
+	//I'm too lazy to track this down
+#if (DATASERVER_VERSION >= 2031001)
+	camel_medium_set_header (new, "From", author);
+#else
+	camel_address_decode((CamelAddress *)addr, author);
 	camel_mime_message_set_from(new, addr);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref(addr);
 #else
