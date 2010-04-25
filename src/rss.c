@@ -198,6 +198,7 @@ guint resize_pane_hsize = 0;
 guint resize_pane_vsize = 0;
 guint resize_browser_hsize = 0;
 guint resize_browser_vsize = 0;
+guint progress = 0;
 
 extern guint net_queue_run_count;
 extern guint net_qid;
@@ -468,7 +469,6 @@ update_progress_bar(guint current)
 	gdouble fr;
 	gchar *what;
 	guint total;
-	guint val;
 
 	g_return_if_fail(rf->progress_bar != NULL);
 
@@ -476,8 +476,7 @@ update_progress_bar(guint current)
 				(GObject *)rf->progress_bar,
 				"total"));
 	if (total) {
-	val = total - current;
-	fr = ((val*100)/total);
+	fr = ((progress*100)/total);
 	if (fr < 100)
 		gtk_progress_bar_set_fraction(
 			(GtkProgressBar *)rf->progress_bar, fr/100);
@@ -3513,11 +3512,14 @@ add:
 
 		if (rf->import) {
 			rf->import--;
+			g_print("IMPORT:%d, chn:%s\n", rf->import, chn_name);
+			progress++;
 			update_progress_bar(rf->import);
 			if (!rf->import) {
 				gtk_widget_destroy(rf->progress_dialog);
 				rf->progress_bar = NULL;
 				rf->progress_dialog = NULL;
+				progress = 0;
 			}
 		}
 
@@ -5816,7 +5818,7 @@ create_mail(create_feed *CF)
 	d("date:%s\n", CF->date);
 	//I'm too lazy to track this down
 #if (DATASERVER_VERSION >= 2031001)
-	camel_medium_set_header (new, "From", author);
+	camel_medium_set_header ((CamelMedium *)new, "From", author);
 #else
 	camel_address_decode((CamelAddress *)addr, author);
 	camel_mime_message_set_from(new, addr);
@@ -6089,28 +6091,6 @@ file_to_message(const char *filename)
 	g_free(tname);
 
 	return msg;
-}
-
-void print_cf(create_feed *CF);
-
-void
-print_cf(create_feed *CF)
-{
-	g_print("Sender: %s ", CF->sender);
-	g_print("Subject: %s \n", CF->subj);
-	g_print("Date: %s\n", CF->date);
-	g_print("Feedid: %s\n", CF->feedid);
-	g_print("==========================\n");
-	g_print("Name: %s ", CF->feed_fname);
-	g_print("URI: %s\n", CF->feed_uri);
-	g_print("Path: %s\n", CF->full_path);
-	g_print("Website: %s\n", CF->website);
-	g_print("==========================\n");
-	g_print("%s\n", CF->body);
-	g_print("==========================\n");
-	g_print("q: %s\n", CF->q);
-	g_print("encl: %s\n", CF->encl);
-	g_print("dcdate: %s\n", CF->dcdate);
 }
 
 void

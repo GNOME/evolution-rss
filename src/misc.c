@@ -78,6 +78,26 @@ free_hash(gpointer key, gpointer value, gpointer user_data)
 //	xmlFreeDoc(key);
 }
 
+void
+print_cf(create_feed *CF)
+{
+	g_print("Sender: %s ", CF->sender);
+	g_print("Subject: %s \n", CF->subj);
+	g_print("Date: %s\n", CF->date);
+	g_print("Feedid: %s\n", CF->feedid);
+	g_print("==========================\n");
+	g_print("Name: %s ", CF->feed_fname);
+	g_print("URI: %s\n", CF->feed_uri);
+	g_print("Path: %s\n", CF->full_path);
+	g_print("Website: %s\n", CF->website);
+	g_print("==========================\n");
+	g_print("%s\n", CF->body);
+	g_print("==========================\n");
+	g_print("q: %s\n", CF->q);
+	g_print("encl: %s\n", CF->encl);
+	g_print("dcdate: %s\n", CF->dcdate);
+}
+
 gboolean
 check_key_match (gpointer key, gpointer value, gpointer user_data)
 {
@@ -353,7 +373,7 @@ gen_md5(gchar *buffer)
 	g_checksum_get_digest (checksum, md5sum, &length);
 	g_checksum_free (checksum);
 
-	for (i=0, f = res; i<16;i++) {
+	for (i=0, f = res; i<length;i++) {
 		unsigned int c = md5sum[i];
 		*f++ = tohex[c & 0xf];
 	}

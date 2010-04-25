@@ -1156,24 +1156,26 @@ update_channel(RDF *r)
 		while (gtk_events_pending())
 			gtk_main_iteration ();
 
-		if (!feed_is_new(feed_name, CF->feed_uri)) {
-			ftotal++;
-			if (CF->encl) {
-				process_enclosure(CF);
-			} else if (g_list_length(CF->attachments)) {
-				process_attachments(CF);
-			} else {
+		ftotal++;
+		if (CF->encl) {
+			process_enclosure(CF);
+		} else if (g_list_length(CF->attachments)) {
+			process_attachments(CF);
+		} else {
+			if (!freeze) {
+				mail_folder = check_feed_folder(CF->full_path);
+				camel_folder_freeze(mail_folder);
+				freeze = TRUE;
+			}
 				create_mail(CF);
 				write_feed_status_line(
 					CF->feed_fname, CF->feed_uri);
 				free_cf(CF);
-			}
-			farticle++;
-			d("put success()\n");
-			update_status_icon(chn_name, subj);
-			g_free(subj);
-		} else
-			free_cf(CF);
+		}
+		farticle++;
+		d("put success()\n");
+		update_status_icon(chn_name, subj);
+		g_free(subj);
 	}
 	if (freeze)
 		refresh_mail_folder(mail_folder);

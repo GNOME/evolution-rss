@@ -40,3 +40,4 @@
 	* split rss feed
 	* possibly completely disable messagefiltering at setup_feed
 	* after deletion properties list is not updated, or not in sync
+	* fix editing feeds

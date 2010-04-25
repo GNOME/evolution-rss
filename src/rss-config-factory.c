@@ -1188,7 +1188,7 @@ delete_feed_folder_alloc(gchar *old_name)
 		(gpointer *)f);
 	fclose(f);
 	g_hash_table_destroy(rf->reversed_feed_folders);
-	rf->reversed_feed_folders = 
+	rf->reversed_feed_folders =
 		g_hash_table_new_full(
 			g_str_hash,
 			g_str_equal,
@@ -1241,7 +1241,7 @@ feeds_dialog_disable(GtkDialog *d, gpointer data)
 	gchar *name;
 	gpointer key;
 
-	selection = 
+	selection =
 		gtk_tree_view_get_selection(
 			GTK_TREE_VIEW(rf->treeview));
 	if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
@@ -1588,6 +1588,7 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 			feed->feed_name,
 			_("Error adding feed."),
 			_("Feed already exists!"));
+		rf->import--;
 	}
 	setup_feed(feed);
 	while (gtk_events_pending ())
@@ -1745,6 +1746,7 @@ import_opml(gchar *file)
 	src = src->next;
 	src = src->children;
 	maintitle = (gchar *)layer_find(src, "title", NULL);
+	rf->import=2;
 	while (src) {
 		gchar *rssurl = NULL, *rsstitle = NULL;
 		if (rf->cancel) {
@@ -1824,11 +1826,11 @@ import_opml(gchar *file)
 					d("rssprefix:%s|rssurl:%s|rsstitle:%s|\n",
 						rssprefix,
 						rssurl, rsstitle);
+					rf->import++;
 					import_one_feed(
 						rssurl,
 						rsstitle,
 						rssprefix);
-					rf->import++;
 					g_print("rf->import:%d\n", rf->import);
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
@@ -1861,6 +1863,7 @@ fail:					g_free(rssprefix);
 				GTK_LABEL(import_label),
 				GTK_JUSTIFY_CENTER);
 			import_one_feed(url, (gchar *)name, NULL);
+			rf->import++;
 			if (name) xmlFree(name);
 			if (url) xmlFree(url);
 
@@ -1868,7 +1871,8 @@ fail:					g_free(rssprefix);
 	}
 	while (gtk_events_pending ())
 		gtk_main_iteration ();
-out:    //rf->import = 0;
+out:	//prevent reseting queue before its time dues do async operations
+	rf->import -= 2;
 	if (maintitle) xmlFree(maintitle);
 	if (doc) xmlFree(doc);
 //	gtk_widget_destroy(import_dialog);

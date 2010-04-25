@@ -19,6 +19,7 @@
 #ifndef MISC_H
 #define MISC_H 1
 
+void print_cf(create_feed *CF);
 gchar *gen_crc(const char *msg);
 gchar *gen_md5(gchar *buffer);
 gchar *strplchr(gchar *source);
