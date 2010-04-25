@@ -555,7 +555,11 @@ browser_stream_write(CamelStream *stream, gchar *base)
 		NULL,
 		base);
 	g_string_free(str, 1);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref(in);
+#else
 	camel_object_unref(in);
+#endif
 	webkit_set_history(base);
 }
 
@@ -1631,7 +1635,11 @@ rss_browser_update_content (
 						fi->create = 0;
 						browser_stream_write(stream, po->website);
 						camel_stream_close(stream);
+#if (DATASERVER_VERSION >= 2031001)
+						g_object_unref(stream);
+#else
 						camel_object_unref(stream);
+#endif
 					}
 				}
 			}
@@ -2820,7 +2828,11 @@ pixdone:			g_free(url);
 			buff=(xmlChar *)tmp;
 
 		g_byte_array_free (buffer, 1);
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref(stream);
+#else
 		camel_object_unref(stream);
+#endif
 	//	char *buff = decode_html_entities(buffer2);
 ///		buff=tmp;
 
@@ -2946,9 +2958,15 @@ render_body:	if (category)
 	em_format_format_text((EMFormat *)t->format,
 				(CamelStream *)t->stream,
 				(CamelDataWrapper *)part);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref(dw);
+	g_object_unref(part);
+	g_object_unref(fstream);
+#else
 	camel_object_unref(dw);
 	camel_object_unref(part);
 	camel_object_unref(fstream);
+#endif
 	g_free(buff);
 	g_free(subject);
 
@@ -4018,13 +4036,21 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		if (ub->create) {
 			//stream remove
 			camel_stream_close(ub->stream);
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(ub->stream);
+#else
 			camel_object_unref(ub->stream);
+#endif
 		}
 	} else {
 		if (ub->create) {
 			camel_stream_write(ub->stream, response->str, strlen(response->str));
 			camel_stream_close(ub->stream);
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(ub->stream);
+#else
 			camel_object_unref(ub->stream);
+#endif
 		}
 		str = (response->str);
 		len = strlen(response->str);
@@ -5220,7 +5246,11 @@ check_folders(void)
 			lookup_main_folder(), &ex);
 		return;
 	}
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref (mail_folder);
+#else
 	camel_object_unref (mail_folder);
+#endif
 }
 
 
@@ -5766,7 +5796,11 @@ create_mail(create_feed *CF)
 	gint offset;
 
 	mail_folder = check_feed_folder(CF->full_path);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_ref(mail_folder);
+#else
 	camel_object_ref(mail_folder);
+#endif
 
 	info = camel_message_info_new(NULL);
 	camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN, 1);
@@ -5782,7 +5816,11 @@ create_mail(create_feed *CF)
 	d("date:%s\n", CF->date);
 	camel_address_decode(CAMEL_ADDRESS(addr), author);
 	camel_mime_message_set_from(new, addr);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref(addr);
+#else
 	camel_object_unref(addr);
+#endif
 
 	offset = 0;
 	actual_time = CAMEL_MESSAGE_DATE_CURRENT;
@@ -5861,7 +5899,11 @@ create_mail(create_feed *CF)
 	// w/out an format argument this throws and seg fault
 	camel_stream_printf (stream, "%s", CF->body);
 	camel_data_wrapper_construct_from_stream (rtext, stream);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref (stream);
+#else
 	camel_object_unref (stream);
+#endif
 
 	if (CF->attachedfiles) {
 			mp = camel_multipart_new();
@@ -5876,12 +5918,20 @@ create_mail(create_feed *CF)
 				(CamelMedium *)part, (CamelDataWrapper *)rtext);
 #endif
 			camel_multipart_add_part(mp, part);
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(part);
+#else
 			camel_object_unref(part);
+#endif
 		for (l = g_list_first(CF->attachedfiles); l != NULL; l = l->next) {
 			msgp = file_to_message(l->data);
 			if (msgp) {
 				camel_multipart_add_part(mp, msgp);
+#if (DATASERVER_VERSION >= 2031001)
+				g_object_unref(msgp);
+#else
 				camel_object_unref(msgp);
+#endif
 			}
 		}
 #if EVOLUTION_VERSION >= 23100
@@ -5889,7 +5939,11 @@ create_mail(create_feed *CF)
 #else
 		camel_medium_set_content_object((CamelMedium *)new, (CamelDataWrapper *)mp);
 #endif
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref(mp);
+#else
 		camel_object_unref(mp);
+#endif
 	} else	if (CF->encl) {
 		mp = camel_multipart_new();
 		camel_multipart_set_boundary(mp, NULL);
@@ -5904,18 +5958,30 @@ create_mail(create_feed *CF)
 #endif
 
 		camel_multipart_add_part(mp, part);
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref(part);
+#else
 		camel_object_unref(part);
+#endif
 		msgp = file_to_message(CF->encl);
 		if (msgp) {
 			camel_multipart_add_part(mp, msgp);
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(msgp);
+#else
 			camel_object_unref(msgp);
+#endif
 		}
 #if EVOLUTION_VERSION >= 23100
 		camel_medium_set_content((CamelMedium *)new, (CamelDataWrapper *)mp);
 #else
 		camel_medium_set_content_object((CamelMedium *)new, (CamelDataWrapper *)mp);
 #endif
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref(mp);
+#else
 		camel_object_unref(mp);
+#endif
 	} else
 #if EVOLUTION_VERSION >= 23100
 		camel_medium_set_content(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
@@ -5941,10 +6007,16 @@ create_mail(create_feed *CF)
 	//FIXME too lasy to write a separate function
 	if (!rf->import)
 		mail_refresh_folder(mail_folder, NULL, NULL);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref(rtext);
+	g_object_unref(new);
+	g_object_unref(mail_folder);
+#else
 	camel_object_unref(rtext);
 	camel_object_unref(new);
-	camel_message_info_free(info);
 	camel_object_unref(mail_folder);
+#endif
+	camel_message_info_free(info);
 	g_free(buf);
 }
 
@@ -5983,13 +6055,21 @@ file_to_message(const char *filename)
 		return NULL;
 
 	camel_data_wrapper_construct_from_stream(content, (CamelStream *)file);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref((CamelObject *)file);
+#else
 	camel_object_unref((CamelObject *)file);
+#endif
 #if EVOLUTION_VERSION >= 23100
 	camel_medium_set_content((CamelMedium *)msg, content);
 #else
 	camel_medium_set_content_object((CamelMedium *)msg, content);
 #endif
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref(content);
+#else
 	camel_object_unref(content);
+#endif
 
 #if EVOLUTION_VERSION < 22900
 	type = em_utils_snoop_type(msg);
@@ -6286,12 +6366,20 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 				msg->response_body->length);
 #endif
 			camel_stream_close(user_data);
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(user_data);
+#else
 			camel_object_unref(user_data);
+#endif
 		}
 	} else {
 		camel_stream_write(user_data, pixfilebuf, pixfilelen);
 		camel_stream_close(user_data);
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref(user_data);
+#else
 		camel_object_unref(user_data);
+#endif
 	}
 }
 
@@ -6400,7 +6488,11 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 				COL_STRING_ICON_NAME, key,
 				-1);
 		g_free(full_name);
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref (rss_folder);
+#else
 		camel_object_unref (rss_folder);
+#endif
 		g_object_unref(pixbuf);
 		result = TRUE;
 	}
@@ -6915,7 +7007,11 @@ get_feed_age(RDF *r, gpointer name)
 		camel_folder_expunge (folder, NULL);
 	}
 	total = camel_folder_get_message_count (folder);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref (folder);
+#else
 	camel_object_unref (folder);
+#endif
 	d("delete => remaining total:%d\n", total);
 fail:	g_free(real_name);
 	inhibit_read = 0;

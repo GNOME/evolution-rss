@@ -1174,7 +1174,11 @@ update_channel(RDF *r)
 			free_cf(CF);
 	}
 	refresh_mail_folder(mail_folder);
+#if (DATASERVER_VERSION >= 2031001)
+	g_object_unref(mail_folder);
+#else
 	camel_object_unref(mail_folder);
+#endif
 out:	g_free(sender);
 
 	if (fr) fclose(fr);
