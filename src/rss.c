@@ -2841,7 +2841,7 @@ pixdone:			g_free(url);
 				feed_dir, tmp_file, NULL);
 		g_free(tmp_file);
 		g_free(feed_dir);
-#if EVOLUTION_VERSION >= 23001
+#if EVOLUTION_VERSION >= 23000
 		feed_file = g_filename_to_uri(tmp_path, NULL, NULL);
 #else
 		feed_file = g_strdup(tmp_path);
@@ -2873,7 +2873,7 @@ pixdone:			g_free(url);
 		tmp_file = g_build_filename (EVOLUTION_ICONDIR,
 				"rss-16.png",
 				NULL);
-#if EVOLUTION_VERSION >= 23001
+#if EVOLUTION_VERSION >= 23000
 		iconfile = g_filename_to_uri(tmp_file, NULL, NULL);
 #else
 		iconfile = g_strdup(tmp_file);
@@ -6550,7 +6550,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
  * the new default is file://
  * http://git.gnome.org/browse/evolution/commit/?id=d9deaf9bbc7fd9d0c72d5cf9b1981e3a56ed1162
  */
-#if (EVOLUTION_VERSION >= 23001)
+#if (EVOLUTION_VERSION >= 23000)
 		return g_filename_to_uri(uri, NULL, NULL);
 #else
 		return NULL;
