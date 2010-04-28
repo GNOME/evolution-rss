@@ -354,8 +354,8 @@ case "$host" in
 *-mingw*)
     os_win32=yes
     NO_UNDEFINED='-no-undefined'
-	if test $evolution_int_version -ge 23100; then
-		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemformat -lemiscwidgets'
+	if test $evolution_int_version -ge 23000; then
+		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemiscwidgets -lemformat'
 	else
 		if test $evolution_int_version -ge 22700 -a $evolution_int_version -lt 22900; then
 			NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail-shared -levolution-mail -lemiscwidgets'
