@@ -116,6 +116,8 @@ endif
 @INTLTOOL_SERVER_RULE@
 @INTLTOOL_SCHEMAS_RULE@
 
+if GCONF_SCHEMAS_INSTALL
+
 install-data-local:
 	rm -f $(PLUGIN_INSTALL_DIR)/*gnome-cooly*
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA)
@@ -137,6 +139,8 @@ uninstall-local:
 	$(GCONFTOOL) -u /gnome/url-handlers/feed/command
 	$(GCONFTOOL) -u /gnome/url-handlers/feed/enabled
 	$(GCONFTOOL) -u /gnome/url-handlers/feed/need-terminal
+
+endif
 
 
 DISTCLEANFILES = $(schema_DATA)
