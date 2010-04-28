@@ -5996,7 +5996,8 @@ create_mail(create_feed *CF)
 	/* no point in filtering mails at import time as it just
 	 * wastes time, user can setup his own afterwards
 	 */
-	if (appended_uid != NULL
+	g_warning("FILTER DISABLED\n");
+/*	if (appended_uid != NULL
 		&& !rf->import
 		&& !CF->encl
 		&& !g_list_length(CF->attachments)) {	//do not filter enclosure at this time nor media files
@@ -6004,8 +6005,8 @@ create_mail(create_feed *CF)
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
 /*FIXME do not know how to free this
-//		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);*/
-	}
+//		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);
+	}*/
 	//FIXME too lasy to write a separate function
 	if (!rf->import)
 		mail_refresh_folder(mail_folder, NULL, NULL);
