@@ -1680,6 +1680,9 @@ webkit_set_preferences(void)
 #if (WEBKIT_VERSION >= 1001022)
 	g_object_set (settings, "enable-page-cache", TRUE, NULL);
 	//g_object_set (settings, "auto-resize-window", TRUE, NULL);
+	g_object_set (settings, "enable-plugins",
+		gconf_client_get_bool(rss_gconf, GCONF_KEY_EMBED_PLUGIN, NULL),
+		NULL);
 #endif
 	webkit_web_view_set_full_content_zoom((WebKitWebView *)rf->mozembed, TRUE);
 	g_free(agstr);

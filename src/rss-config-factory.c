@@ -3689,7 +3689,8 @@ rss_config_control_new (void)
 		installed and evolution-rss should be recompiled to see those packages."));
 	gtk_widget_show(label_webkit);
 #endif
-	g_signal_connect (combo, "changed", G_CALLBACK (render_engine_changed), NULL);
+	g_signal_connect (combo, "changed",
+		G_CALLBACK (render_engine_changed), NULL);
 	gtk_widget_show(combo);
 	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
 #endif
