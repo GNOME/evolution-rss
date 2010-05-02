@@ -6744,7 +6744,7 @@ update_comments(RDF *r)
 	gchar *scomments;
 	GString *comments = g_string_new(NULL);
 	for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
-		CF = parse_channel_line(el->children, NULL, NULL);
+		CF = parse_channel_line(el->children, NULL, NULL, NULL);
 		g_string_append_printf (comments,
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 0px; color: #%06x;\">",
 			frame_colour & 0xffffff,
@@ -6932,14 +6932,24 @@ get_feed_age(RDF *r, gpointer name)
 				break;
 
 			for (j=0; NULL != (el = g_array_index(r->uids, gpointer, j)); j++) {
-				if (!g_ascii_strcasecmp(g_strstrip(feedid), g_strstrip(el)))
+				if (!g_ascii_strcasecmp(g_strstrip(feedid), g_strstrip(el))) {
 					match = TRUE;
+					break;
+				}
 			}
 			if (!match) {
 				info = camel_folder_get_message_info(folder, uids->pdata[i]);
 				flags = camel_message_info_flags(info);
 				if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED)) {
+					gchar *feed_dir, *feed_name;
 					camel_folder_delete_message(folder, uids->pdata[i]);
+					feed_dir = rss_component_peek_base_directory();
+					feed_name = g_build_path(G_DIR_SEPARATOR_S, feed_dir, key, NULL);
+					g_free(feed_dir);
+					feed_remove_status_line(
+						feed_name,
+						g_hash_table_lookup(rf->hr, key));
+					g_free(feed_name);
 				}
 				camel_folder_free_message_info(folder, info);
 			}

@@ -23,11 +23,13 @@
 #include <stdint.h>
 #include <string.h>
 #include <glib.h>
+#include <glib/gstdio.h>
 #if (DATASERVER_VERSION >= 2031001)
 #include <camel/camel.h>
 #else
 #include <camel/camel-mime-utils.h>
 #endif
+#include <e-util/e-mktemp.h>
 
 extern int rss_verbose_debug;
 
@@ -528,6 +530,50 @@ encode_rfc2047(gchar *str)
 	gchar *rfctmp = camel_header_encode_string((unsigned char*)tmp);
 	g_free(tmp);
 	return (gchar *)rfctmp;
+}
+
+/* this whole process is not optimal
+ * but for the time being it will have to do
+ */
+void
+feed_remove_status_line(gchar *file_name, gchar *needle)
+{
+	gchar rfeed[513];
+	FILE *fr, *fw;
+	int occ = 0;
+	gchar *tmpneedle, *port, *tp;
+	gchar *tmp = e_mktemp("evo-rss-XXXXXX");
+	if (tmp) {
+		fw = fopen(tmp, "wb");
+		if (!fw)
+			return;
+	}
+
+	memset(rfeed, 0, 512);
+	fr = fopen(file_name, "r");
+	tmpneedle = NULL;
+	port =  get_port_from_uri(needle);
+	if (port && atoi(port) == 80) {
+		tp = g_strconcat(":", port, NULL);
+		g_free(port);
+		tmpneedle = strextr(needle, tp);
+		g_free(tp);
+	} else
+		tmpneedle = g_strdup(needle);
+
+	if (fr) {
+		while (fgets(rfeed, 511, fr) != NULL) {
+			if (!g_strstr_len(rfeed, -1, tmpneedle)) {
+				fputs(rfeed, fw);
+			}
+		}
+		fclose(fr);
+		fclose(fw);
+		g_unlink(file_name);
+		g_rename(tmp, file_name);
+	}
+	g_free(tmpneedle);
+	return occ;
 }
 
 //check if feed already exists in feed file

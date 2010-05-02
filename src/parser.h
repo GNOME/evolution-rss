@@ -43,7 +43,10 @@ GList *layer_find_all (xmlNodePtr node, const char *match, const char *fail);
 xmlDoc *parse_html(char *url, const char *html, int len);
 xmlDoc *parse_html_sux (const char *buf, guint len);
 xmlDoc *xml_parse_sux (const char *buf, int len);
-create_feed *parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date);
+create_feed *parse_channel_line(xmlNode *top,
+				gchar *feed_name,
+				char *main_date,
+				gchar **article_uid);
 gchar *tree_walk (xmlNodePtr root, RDF *r);
 xmlNode *html_find (xmlNode *node, gchar *match);
 void html_set_base(xmlNode *doc, char *base, const char *tag, const char *prop, char *basehref);

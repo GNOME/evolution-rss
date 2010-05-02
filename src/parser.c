@@ -856,7 +856,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 }
 
 create_feed *
-parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
+parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **article_uid)
 {
 	char *q = NULL;
 	char *b = NULL;
@@ -884,7 +884,11 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date)
 	id = (gchar *)layer_find (top, (gchar *)"id",				//ATOM
 			layer_find (top, (gchar *)"guid", NULL));		//RSS 2.0
 	feed = g_strdup_printf("%s\n", id ? id : link);
-	if (feed) g_strstrip(feed);
+	if (feed) {
+		g_strstrip(feed);
+		if (article_uid != NULL)
+			*article_uid = g_strdup(feed);
+	}
 	//not very nice but allows shortcutting
 	if (feed_is_new(feed_name, feed)) {
 		g_free(link);
@@ -1094,6 +1098,7 @@ update_channel(RDF *r)
 	gchar *uid, *msg;
 	gboolean freeze = FALSE;
 	CamelFolder *mail_folder = NULL;
+	gchar *article_uid = NULL;
 
 	safes = encode_rfc2047(chn_name);
 	sender = g_strdup_printf("%s <%s>", safes, chn_name);
@@ -1126,14 +1131,13 @@ update_channel(RDF *r)
 					msg);
 			g_free(msg);
 		}
-
-		CF = parse_channel_line(el->children, feed_name, main_date);
-		if (!CF) continue;
 		if (!r->uids) {
 			r->uids = g_array_new(TRUE, TRUE, sizeof(gpointer));
 		}
-		uid = g_strdup(CF->feed_uri);
-		g_array_append_val(r->uids, uid);
+
+		CF = parse_channel_line(el->children, feed_name, main_date, &article_uid);
+		g_array_append_val(r->uids, article_uid);
+		if (!CF) continue;
 		CF->feedid = g_strdup(buf);
 		CF->sender = g_strdup(sender);
 		if (r->prefix)

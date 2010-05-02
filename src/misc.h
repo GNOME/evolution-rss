@@ -25,9 +25,11 @@ gchar *gen_md5(gchar *buffer);
 gchar *strplchr(gchar *source);
 gchar *markup_decode (gchar *str);
 gboolean check_key_match (gpointer key,
-			 gpointer value,
-			 gpointer user_data);
-gboolean check_if_match (gpointer key, gpointer value, gpointer user_data);
+			gpointer value,
+			gpointer user_data);
+gboolean check_if_match (gpointer key,
+			gpointer value,
+			gpointer user_data);
 gchar *get_server_from_uri(gchar *uri);
 gchar *get_port_from_uri(gchar *uri);
 gchar *get_url_basename(gchar *url);
@@ -43,6 +45,7 @@ void print_list(gpointer data, gpointer user_data);
 void print_hash(gpointer key, gpointer value, gpointer user_data);
 void print_hash_int(gpointer key, gpointer value, gpointer user_data);
 gboolean feed_is_new(gchar *file_name, gchar *needle);
+void feed_remove_status_line(gchar *file_name, gchar *needle);
 void write_feed_status_line(gchar *file, gchar *needle);
 
 #endif
