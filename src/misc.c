@@ -544,7 +544,7 @@ feed_remove_status_line(gchar *file_name, gchar *needle)
 	gchar *tmpneedle, *port, *tp;
 	gchar *tmp = e_mktemp("evo-rss-XXXXXX");
 	if (tmp) {
-		fw = fopen(tmp, "wb");
+		fw = fopen(tmp, "w+");
 		if (!fw)
 			return;
 	}
@@ -573,7 +573,6 @@ feed_remove_status_line(gchar *file_name, gchar *needle)
 		g_rename(tmp, file_name);
 	}
 	g_free(tmpneedle);
-	return occ;
 }
 
 //check if feed already exists in feed file

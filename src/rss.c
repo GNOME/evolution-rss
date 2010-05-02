@@ -6948,7 +6948,7 @@ get_feed_age(RDF *r, gpointer name)
 					g_free(feed_dir);
 					feed_remove_status_line(
 						feed_name,
-						g_hash_table_lookup(rf->hr, key));
+						feedid);
 					g_free(feed_name);
 				}
 				camel_folder_free_message_info(folder, info);
