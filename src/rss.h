@@ -233,6 +233,10 @@ typedef struct ADD_FEED {
 	guint		update;	// feed update method global; ttl; disabled
 	gboolean	renamed;
 	gboolean	edit;
+	GFunc		*ok;
+	void		*ok_arg;
+	GFunc		*cancelable;
+	void		*cancelable_arg;
 } add_feed;
 
 typedef struct USERPASS {

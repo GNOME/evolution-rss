@@ -3559,6 +3559,7 @@ add:
 
 	//search for a feed entry
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_SEARCH_RSS, NULL)) {
+		dp("searching new feed\n");
 		rssurl = search_rss(content->str, content->len);
 		if (rssurl) {
 			if (doc)
@@ -3568,6 +3569,7 @@ add:
 			if (content)
 				g_string_free(content, 1);
 			feed->feed_url = rssurl;
+			g_print("rssurl:%s|\n", rssurl);
 
 			if (g_hash_table_find(
 					rf->hr,
@@ -3578,7 +3580,8 @@ add:
 					_("Feed already exists!"));
 				goto out;
 			}
-			setup_feed(g_memdup(feed, sizeof(feed)));
+			g_warning("Searching FOR feeds broken\n");
+			//setup_feed(g_memdup(feed, sizeof(feed)));
 			goto out;
 		}
 	}
@@ -3589,6 +3592,13 @@ add:
 		_("Invalid Feed"));
 
 out:	rf->pending = FALSE;
+	if (!rf->setup && feed->cancelable != NULL) {
+		void (*f)() = (GFunc)feed->cancelable;
+		f(crc_feed, feed->cancelable_arg);
+	} else if (feed->ok != NULL) {
+		void (*f)() = (GFunc)feed->ok;
+		f(feed->ok_arg);
+	}
 	aid = g_hash_table_lookup(rf->activity, crc_feed);
 	taskbar_op_finish(aid);
 	g_free(crc_feed);

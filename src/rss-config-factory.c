@@ -1432,14 +1432,14 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 			}
 			saved_feed = save_feed_hash(feed_name);
 			remove_feed_hash(feed_name);
-			md5 = gen_md5(feed->feed_url);
-			if (!setup_feed(feed)) {
-				//editing might loose a corectly setup feed
-				//so re-add previous deleted feed
-				restore_feed_hash(key, saved_feed);
-			} else
-				destroy_feed_hash_content(saved_feed);
-			g_free(md5);
+			feed->ok = (GFunc)destroy_feed_hash_content;
+			feed->ok_arg = saved_feed;
+			feed->cancelable = (GFunc)restore_feed_hash;
+			feed->cancelable_arg = saved_feed;
+			setup_feed(feed);
+			/* move destory after finish_setup_feed */
+			gtk_widget_destroy(msg_feeds);
+			return;
 		} else {
 			key = gen_md5(url);
 			g_hash_table_replace(rf->hrh,

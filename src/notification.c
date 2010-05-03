@@ -312,6 +312,8 @@ taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 	EActivity *activity_id;
 #endif
 
+	g_return_if_fail(key != NULL);
+
 #if (EVOLUTION_VERSION < 22900) //kb//
 	activity_handler = mail_component_peek_activity_handler
 				(mail_component_peek ());
