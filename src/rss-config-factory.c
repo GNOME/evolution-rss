@@ -3160,7 +3160,11 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	EMConfigTargetFolder *targetfolder =
 		(EMConfigTargetFolder *)target->config->target;
 	gchar *main_folder = lookup_main_folder();
+#if (DATASERVER_VERSION >= 2031001)
+	gchar *folder = (gchar *)camel_folder_get_full_name(targetfolder->folder);
+#else
 	gchar *folder = targetfolder->folder->full_name;
+#endif
 
 	if (folder == NULL
 	|| g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
@@ -3279,7 +3283,11 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	EMConfigTargetFolder *target = (EMConfigTargetFolder *)data->config->target;
 	gchar *url = NULL, *ofolder = NULL;
 	gchar *main_folder = lookup_main_folder();
+#if (DATASERVER_VERSION >= 2031001)
+	gchar *folder = (gchar *)camel_folder_get_full_name(target->folder);
+#else
 	gchar *folder = target->folder->full_name;
+#endif
 	add_feed *feed = NULL;
 	GtkWidget *action_area, *ok;
 	GtkAccelGroup *accel_group = gtk_accel_group_new ();
