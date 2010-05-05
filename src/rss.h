@@ -233,9 +233,9 @@ typedef struct ADD_FEED {
 	guint		update;	// feed update method global; ttl; disabled
 	gboolean	renamed;
 	gboolean	edit;
-	GFunc		*ok;
+	GFunc		ok;
 	void		*ok_arg;
-	GFunc		*cancelable;
+	GFunc		cancelable;
 	void		*cancelable_arg;
 } add_feed;
 

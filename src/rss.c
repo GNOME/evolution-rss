@@ -3016,7 +3016,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	folder = em_folder_tree_get_selected_folder (folder_tree);
 	g_return_if_fail (folder != NULL);
 #if (DATASERVER_VERSION >= 2031001)
-	folder_name = camel_folder_get_full_name(folder);
+	folder_name = (gchar *)camel_folder_get_full_name(folder);
 #else
 	folder_name = folder->full_name;
 #endif

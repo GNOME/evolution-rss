@@ -1372,7 +1372,6 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 	gpointer key = lookup_key(feed_name);
 	gchar *prefix = NULL;
 	hrfeed *saved_feed;
-	gpointer md5;
 	CamelException ex;
 	CamelStore *store = rss_component_peek_local_store();
 	GtkWidget *msg_feeds, *progress;

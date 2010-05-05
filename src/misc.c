@@ -539,8 +539,7 @@ void
 feed_remove_status_line(gchar *file_name, gchar *needle)
 {
 	gchar rfeed[513];
-	FILE *fr, *fw;
-	int occ = 0;
+	FILE *fr, *fw = NULL;
 	gchar *tmpneedle, *port, *tp;
 	gchar *tmp = e_mktemp("evo-rss-XXXXXX");
 	if (tmp) {

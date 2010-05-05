@@ -1095,7 +1095,7 @@ update_channel(RDF *r)
 	GArray *item = r->item;
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
-	gchar *uid, *msg;
+	gchar *msg;
 	gboolean freeze = FALSE;
 	CamelFolder *mail_folder = NULL;
 	gchar *article_uid = NULL;
@@ -1135,7 +1135,8 @@ update_channel(RDF *r)
 			r->uids = g_array_new(TRUE, TRUE, sizeof(gpointer));
 		}
 
-		CF = parse_channel_line(el->children, feed_name, main_date, &article_uid);
+		CF = parse_channel_line(el->children,
+			feed_name, main_date, &article_uid);
 		g_array_append_val(r->uids, article_uid);
 		if (!CF) continue;
 		CF->feedid = g_strdup(buf);
