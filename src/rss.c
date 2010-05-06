@@ -2044,7 +2044,7 @@ rss_search_bar_hook(void)
 //	g_signal_connect_swapped (
 //		action, "activate",
 //		G_CALLBACK (action_search_cb), reader);
-//	search_bar = e_shell_view_get_searchbar(rss_shell_view);
+	search_bar = e_shell_view_get_searchbar(rss_shell_view);
 	//search_bar = e_shell_content_get_searchbar(shell_content);
 	shell_view = e_shell_searchbar_get_shell_view (search_bar);
 //	g_signal_connect_after (
@@ -5660,7 +5660,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 		G_CALLBACK (quit_cb),
 		rss_shell_view);
 #if EVOLUTION_VERSION >= 22900
-	rss_search_bar_hook();
+/*	rss_search_bar_hook();*/
 	webkit_hook_actions();
 #endif
 	return TRUE;
