@@ -245,10 +245,13 @@ proxify_webkit_session(EProxy *proxy, gchar *uri)
 			d("webkit no PROXY-%s\n", uri);
 		}
 		break;
-		g_object_set (G_OBJECT (webkit_session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+		g_object_set (
+			G_OBJECT (webkit_session),
+			SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
 #ifdef HAVE_LIBSOUP_GNOME
 	case 0:
-		soup_session_add_feature_by_type (webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		soup_session_add_feature_by_type (
+			webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 #endif
 	}
@@ -260,7 +263,8 @@ void
 proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 {
 	SoupURI *proxy_uri = NULL;
-	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+	gint ptype = gconf_client_get_int (
+			rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
 
 	switch (ptype) {
 #ifndef HAVE_LIBSOUP_GNOME
@@ -280,12 +284,16 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 		} else {
 			d("no PROXY-%s\n", uri);
 		}
-		g_object_set (G_OBJECT (session), SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+		g_object_set (
+			G_OBJECT (session),
+			SOUP_SESSION_PROXY_URI,
+			proxy_uri, NULL);
 		break;
 
 #ifdef HAVE_LIBSOUP_GNOME
 	case 0:
-			soup_session_add_feature_by_type (session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+			soup_session_add_feature_by_type (
+				session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 #endif
 	}
@@ -311,15 +319,18 @@ read_up(gpointer data)
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
-	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
+	feed_name = g_strdup_printf(
+			"%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
 	g_free(feed_dir);
 
 	fr = fopen(feed_name, "r");
 	if (fr) {
 		fgets(rfeed, 511, fr);
-		g_hash_table_insert(rf->hruser, data, g_strstrip(g_strdup(rfeed)));
+		g_hash_table_insert(
+			rf->hruser, data, g_strstrip(g_strdup(rfeed)));
 		fgets(rfeed, 511, fr);
-		g_hash_table_insert(rf->hrpass, data, g_strstrip(g_strdup(rfeed)));
+		g_hash_table_insert(
+			rf->hrpass, data, g_strstrip(g_strdup(rfeed)));
 		fclose(fr);
 		res = 1;
 	}
@@ -487,7 +498,8 @@ net_get_status(const char *url, GError **err)
 
 	if (!rf->b_session)
 		rf->b_session = soup_sess =
-			soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
+			soup_session_sync_new_with_options(
+				SOUP_SESSION_TIMEOUT, SS_TIMEOUT, NULL);
 	else
 		soup_sess = rf->b_session;
 
@@ -504,9 +516,11 @@ net_get_status(const char *url, GError **err)
 		char *colonpos = strchr(header, ':');
 		*colonpos = 0;
 #if LIBSOUP_VERSION < 2003000
-		soup_message_add_header(req->request_headers, header, colonpos+1);
+		soup_message_add_header(
+			req->request_headers, header, colonpos+1);
 #else
-		soup_message_headers_append(req->request_headers, header, colonpos+1);
+		soup_message_headers_append(
+			req->request_headers, header, colonpos+1);
 #endif
 		*colonpos = ':';
 	}
@@ -562,7 +576,8 @@ net_get_unblocking(gchar *url,
 
 #if LIBSOUP_VERSION > 2024000
 	if (rss_soup_jar) {
-		soup_session_add_feature(soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
+		soup_session_add_feature(
+			soup_sess, SOUP_SESSION_FEATURE(rss_soup_jar));
 	}
 #endif
 
@@ -578,11 +593,14 @@ net_get_unblocking(gchar *url,
 	}
 
 	if (!rf->session)
-		rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
+		rf->session = g_hash_table_new(
+				g_direct_hash, g_direct_equal);
 	if (!rf->abort_session)
-		rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
+		rf->abort_session = g_hash_table_new(
+					g_direct_hash, g_direct_equal);
 	if (!rf->key_session)
-		rf->key_session = g_hash_table_new(g_direct_hash, g_direct_equal);
+		rf->key_session = g_hash_table_new(
+					g_direct_hash, g_direct_equal);
 
 	g_signal_connect (soup_sess, "authenticate",
 		G_CALLBACK (authenticate), (gpointer)url);
@@ -831,7 +849,8 @@ net_post_blocking(gchar *url,
 			header,
 			colonpos+1);
 #else
-		soup_message_headers_append(req->request_headers, header, colonpos+1);
+		soup_message_headers_append(
+			req->request_headers, header, colonpos+1);
 #endif
 		*colonpos = ':';
 	}
@@ -868,9 +887,13 @@ net_post_blocking(gchar *url,
 	}
 
 #if LIBSOUP_VERSION < 2003000
-	response = g_string_new_len(req->response.body, req->response.length);
+	response = g_string_new_len(
+			req->response.body,
+			req->response.length);
 #else
-	response = g_string_new_len(req->response_body->data, req->response_body->length);
+	response = g_string_new_len(
+			req->response_body->data,
+			req->response_body->length);
 #endif
 
 out:
@@ -908,13 +931,16 @@ abort_all_soup(void)
 	rf->cancel_all = 1;
 	if (rf->abort_session) {
 		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
-		g_hash_table_foreach_remove(rf->abort_session, cancel_soup_sess, NULL);
+		g_hash_table_foreach_remove(
+			rf->abort_session, cancel_soup_sess, NULL);
 //              g_hash_table_foreach(rf->abort_session, cancel_soup_sess, NULL);
 		g_hash_table_destroy(rf->session);
-		rf->session = g_hash_table_new(g_direct_hash, g_direct_equal);
+		rf->session = g_hash_table_new(
+				g_direct_hash, g_direct_equal);
 	}
 	if (rf->progress_bar) {
-		gtk_progress_bar_set_fraction((GtkProgressBar *)rf->progress_bar, 1);
+		gtk_progress_bar_set_fraction(
+			(GtkProgressBar *)rf->progress_bar, 1);
 		rf->progress_bar = NULL;        //there's no need to update bar once we canceled feeds
 	}
 	if (rf->b_session) {
@@ -936,8 +962,12 @@ sync_gecko_cookies(void)
 	//symlink(cookie_path, moz_cookie_path);
 	GFile *cookie_file, *moz_cookie_file;
 	gchar *feed_dir = rss_component_peek_base_directory();
-	gchar *cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "rss-cookies.sqlite", NULL);
-	gchar *moz_cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+	gchar *cookie_path = g_build_path(
+				G_DIR_SEPARATOR_S, feed_dir,
+				"rss-cookies.sqlite", NULL);
+	gchar *moz_cookie_path = g_build_path(
+				G_DIR_SEPARATOR_S, feed_dir,
+				"mozembed-rss", "cookies.sqlite", NULL);
 
 	cookie_file = g_file_new_for_path (cookie_path);
 	moz_cookie_file = g_file_new_for_path (moz_cookie_path);
@@ -954,8 +984,17 @@ rss_soup_init(void)
 #if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME)
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL)) {
 		gchar *feed_dir = rss_component_peek_base_directory();
-		gchar *cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "rss-cookies.sqlite", NULL);
-		gchar *moz_cookie_path = g_build_path(G_DIR_SEPARATOR_S, feed_dir, "mozembed-rss", "cookies.sqlite", NULL);
+		gchar *cookie_path = g_build_path(
+					G_DIR_SEPARATOR_S,
+					feed_dir,
+					"rss-cookies.sqlite",
+					NULL);
+		gchar *moz_cookie_path = g_build_path(
+						G_DIR_SEPARATOR_S,
+						feed_dir,
+						"mozembed-rss",
+						"cookies.sqlite",
+						NULL);
 		g_free(feed_dir);
 
 		rss_soup_jar =
