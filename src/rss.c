@@ -6642,7 +6642,7 @@ fetch_image(gchar *url, gchar *link)
 	GError *err = NULL;
 	CamelStream *stream = NULL;
 	gchar *tmpurl = NULL;
-	gchar *result;
+	gchar *result, *safe;
 
 	g_return_val_if_fail(url != NULL, NULL);
 
@@ -6665,11 +6665,12 @@ fetch_image(gchar *url, gchar *link)
 	} else {
 		tmpurl = g_strdup(url);
 	}
-	d("fetch_image() tmpurl:%s\n", tmpurl);
-	stream = rss_cache_get(tmpurl);
+	safe = g_compute_checksum_for_string (
+		G_CHECKSUM_SHA1, tmpurl, -1);
+	stream = rss_cache_get(safe);
 	if (!stream) {
 		d("image cache MISS\n");
-		stream = rss_cache_add(tmpurl);
+		stream = rss_cache_add(safe);
 	} else
 		d("image cache HIT\n");
 
@@ -6680,9 +6681,15 @@ fetch_image(gchar *url, gchar *link)
 				stream,
 				0,
 				&err);
-	if (err) return NULL;
-	result = rss_cache_get_path(FALSE, tmpurl);
+	if (err) {
+		g_free(tmpurl);
+		g_free(safe);
+		return NULL;
+	}
+	result = rss_cache_get_path(FALSE, safe);
+	g_print("result:%s\n", result);
 	g_free(tmpurl);
+	g_free(safe);
 	return result;
 }
 
