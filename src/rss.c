@@ -4860,10 +4860,15 @@ store_folder_deleted(CamelObject *o, void *event_data, void *data)
 	rss_delete_feed(info->full_name, 1);
 }
 
+typedef struct {
+	gchar *old_base;
+	CamelFolderInfo *new;
+} RenameInfo;
+
 static void
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
 {
-	CamelRenameInfo *info = event_data;
+	RenameInfo *info = event_data;
 
 	gchar *main_folder = lookup_main_folder();
 	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
@@ -5152,7 +5157,11 @@ static void
 rss_online(CamelSession *o, void *event_data, void *data)
 {
 	d("Apoc, are we online?... Almost.\n");
+#if (DATASERVER_VERSION >= 2031002)
+	rf->online =  camel_session_get_online (o);
+#else
 	rf->online =  camel_session_is_online (o);
+#endif
 }
 
 #if EVOLUTION_VERSION < 22900 //KB//
@@ -5228,6 +5237,19 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 
 	/* hook in rename event to catch feeds folder rename */
 	store = rss_component_peek_local_store();
+#if (DATASERVER_VERSION >= 2031002)
+	g_signal_connect(store, "folder_renamed",
+		G_CALLBACK(store_folder_renamed), NULL);
+	g_signal_connect(store, "folder_deleted",
+		G_CALLBACK(store_folder_deleted), NULL);
+	g_signal_connect(
+#if EVOLUTION_VERSION < 22900 //kb//
+			mail_component_peek_session(NULL),
+#else
+			session,
+#endif
+			"online", G_CALLBACK(rss_online), NULL);
+#else
 	camel_object_hook_event(store, "folder_renamed",
 		(CamelObjectEventHookFunc)store_folder_renamed, NULL);
 	camel_object_hook_event(store, "folder_deleted",
@@ -5241,6 +5263,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 			"online",
 			(CamelObjectEventHookFunc)rss_online,
 			NULL);
+#endif
 }
 
 /* check if rss folders exists and create'em otherwise */
@@ -6687,7 +6710,6 @@ fetch_image(gchar *url, gchar *link)
 		return NULL;
 	}
 	result = rss_cache_get_path(FALSE, safe);
-	g_print("result:%s\n", result);
 	g_free(tmpurl);
 	g_free(safe);
 	return result;
