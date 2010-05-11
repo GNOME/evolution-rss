@@ -2003,6 +2003,7 @@ webkit_hook_actions(void)
 		G_CALLBACK (embed_zoom_100_cb), NULL);
 }
 
+#if 0
 #if EVOLUTION_VERSION >= 22900
 #include <shell/e-shell-view.h>
 #include <shell/e-shell-searchbar.h>
@@ -2065,6 +2066,7 @@ rss_search_bar_hook(void)
 }
 #endif
 
+#endif
 #endif
 
 #ifdef HAVE_GECKO
@@ -6044,7 +6046,7 @@ create_mail(create_feed *CF)
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
 		mail_filter_on_demand (mail_folder, filter_uids);
-/*FIXME do not know how to free this
+/ *FIXME do not know how to free this
 //		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);
 	}*/
 	//FIXME too lasy to write a separate function
