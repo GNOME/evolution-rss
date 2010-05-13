@@ -1109,6 +1109,7 @@ update_channel(RDF *r)
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
+
 	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
 	g_free(feed_dir);
 
@@ -1118,7 +1119,8 @@ update_channel(RDF *r)
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++) {
 		update_sr_message();
 		update_progress_text(chn_name);
-		if (rf->cancel) goto out;
+		if (rf->cancel || rf->cancel_all || rf->display_cancel)
+			break;
 
 		if (progress) {
 			gdouble fraction = (gdouble)i/item->len;
@@ -1148,12 +1150,8 @@ update_channel(RDF *r)
 		else
 			CF->full_path = g_strdup(chn_name);
 
-		if (!mail_folder)
+		if (!mail_folder) {
 			mail_folder = check_feed_folder(CF->full_path);
-
-		if (!freeze) {
-			camel_folder_freeze(mail_folder);
-			freeze = TRUE;
 		}
 
 		subj = g_strdup(CF->subj);
@@ -1168,14 +1166,13 @@ update_channel(RDF *r)
 			process_attachments(CF);
 		} else {
 			if (!freeze) {
-				mail_folder = check_feed_folder(CF->full_path);
 				camel_folder_freeze(mail_folder);
 				freeze = TRUE;
 			}
-				create_mail(CF);
-				write_feed_status_line(
-					CF->feed_fname, CF->feed_uri);
-				free_cf(CF);
+			create_mail(CF);
+			write_feed_status_line(
+				CF->feed_fname, CF->feed_uri);
+			free_cf(CF);
 		}
 		farticle++;
 		d("put success()\n");
@@ -1184,12 +1181,15 @@ update_channel(RDF *r)
 	}
 	if (freeze)
 		refresh_mail_folder(mail_folder);
-	if (mail_folder)
+	if (mail_folder) {
+		if (!rf->cancel && !rf->cancel_all && !rf->display_cancel)
+			rss_select_folder(camel_folder_get_full_name(mail_folder));
 #if (DATASERVER_VERSION >= 2031001)
 		g_object_unref(mail_folder);
 #else
 		camel_object_unref(mail_folder);
 #endif
+	}
 out:	g_free(sender);
 
 	if (fr) fclose(fr);

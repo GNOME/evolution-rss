@@ -74,6 +74,7 @@ gchar *strbuf;
 GtkWidget *import_progress;
 GtkWidget *import_dialog = NULL;
 
+extern guint progress;
 extern rssfeed *rf;
 extern guint upgrade;
 extern guint count;
@@ -1538,8 +1539,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 		gtk_tree_model_get (
 			model,
 			&iter,
-			3,
-			&feed_name,
+			3, &feed_name,
 			-1);
 		key = lookup_key(feed_name);
 		name = g_hash_table_lookup(rf->hr, key);
@@ -1558,10 +1558,16 @@ void
 import_dialog_response(
 	GtkWidget *selector, guint response, gpointer user_data)
 {
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
-	if (response == GTK_RESPONSE_CANCEL)
-		rf->cancel = 1;
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy(rf->progress_dialog);
+		while (gtk_events_pending ())
+			gtk_main_iteration ();
+		rf->import_cancel = 1;
+		rf->display_cancel = 1;
+		progress = 0;
+		//rf->cancel_all = 1;
+		abort_all_soup();
+	}
 }
 
 void
@@ -1588,10 +1594,15 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 			_("Error adding feed."),
 			_("Feed already exists!"));
 		rf->import--;
-	}
-	setup_feed(feed);
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
+	} else
+		setup_feed(feed);
+
+	/* this allows adding feeds somewhat synchronous way
+	 * it is very convenient to be able to cancel importing
+	 * of a few hundred feeds
+	 */
+	while (gtk_events_pending())
+		gtk_main_iteration();
 }
 
 /*
@@ -1746,6 +1757,8 @@ import_opml(gchar *file)
 	src = src->children;
 	maintitle = (gchar *)layer_find(src, "title", NULL);
 	rf->import=2;
+	progress = 0;
+	rf->display_cancel=0; //clean this signal - as by this time we already cancel all displaying feed
 	while (src) {
 		gchar *rssurl = NULL, *rsstitle = NULL;
 		if (rf->cancel) {
@@ -1818,6 +1831,11 @@ import_opml(gchar *file)
 							(xmlChar *)"xmlUrl");
 					if (!rssurl)
 						goto fail;
+
+					if (rf->import_cancel) {
+						rf->import = 0;
+						goto out;
+					}
 					rsstitle = (gchar *)xmlGetProp(
 							src,
 							(xmlChar *)"title");
@@ -1826,11 +1844,19 @@ import_opml(gchar *file)
 						rssprefix,
 						rssurl, rsstitle);
 					rf->import++;
+					if (rf->import == 10) {
+					while(gtk_events_pending())
+					gtk_main_iteration();
+					}
 					import_one_feed(
 						rssurl,
 						rsstitle,
 						rssprefix);
-					g_print("rf->import:%d\n", rf->import);
+
+					if (rf->import_cancel) {
+						rf->import = 0;
+						goto out;
+					}
 					if (rssurl) xmlFree(rssurl);
 					if (rsstitle) xmlFree(rsstitle);
 fail:					g_free(rssprefix);
@@ -1871,10 +1897,14 @@ fail:					g_free(rssprefix);
 	while (gtk_events_pending ())
 		gtk_main_iteration ();
 out:	//prevent reseting queue before its time dues do async operations
-	rf->import -= 2;
+	if (rf->import) rf->import -= 2;
+	rf->import_cancel = 0;
 	if (maintitle) xmlFree(maintitle);
 	if (doc) xmlFree(doc);
-//	gtk_widget_destroy(import_dialog);
+	if (import_dialog) {
+		gtk_widget_destroy(import_dialog);
+		import_dialog = NULL;
+	}
 }
 
 static void
@@ -3248,11 +3278,11 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	else
 		feed->renamed = 1;
 
-	process_dialog_edit(feed, url, ofolder);
-
 	authuser = GTK_WIDGET (gtk_builder_get_object(feed->gui, "auth_user"));
 	authpass = GTK_WIDGET (gtk_builder_get_object(feed->gui, "auth_pass"));
 	useauth = GTK_WIDGET (gtk_builder_get_object(feed->gui, "use_auth"));
+
+	process_dialog_edit(feed, url, ofolder);
 
 	user = gtk_entry_get_text(GTK_ENTRY(authuser));
 	pass = gtk_entry_get_text(GTK_ENTRY(authpass));
