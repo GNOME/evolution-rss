@@ -199,6 +199,8 @@ guint resize_pane_vsize = 0;
 guint resize_browser_hsize = 0;
 guint resize_browser_vsize = 0;
 guint progress = 0;
+gboolean feed_new = FALSE;	//make sense only for setting up a new feed
+			//prevents jumping to old feeds when new articles found
 
 extern guint net_queue_run_count;
 extern guint net_qid;
@@ -3382,6 +3384,7 @@ finish_setup_feed(
 		goto out;
 
 	r = g_new0 (RDF, 1);
+	feed_new = TRUE;
 	r->shown = TRUE;
 
 	prepare_hashes();
@@ -3563,7 +3566,7 @@ add:
 
 		if (rf->import) {
 			rf->import--;
-			dp("IMPORT:%d, chn:%s\n", rf->import, chn_name);
+			d("IMPORT:%d, chn:%s\n", rf->import, chn_name);
 			progress++;
 			update_progress_bar(rf->import);
 		}
@@ -6114,7 +6117,7 @@ create_mail(create_feed *CF)
 		g_warning("FILTER DISABLED\n");
 /*		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
-		mail_filter_on_demand (mail_folder, filter_uids);
+		mail_filter_on_demand (mail_folder, filter_uids);*/
 /* FIXME do not know how to free this */
 //		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);
 	}

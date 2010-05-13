@@ -44,6 +44,7 @@ extern int rss_verbose_debug;
 guint rsserror = FALSE;
 gchar *rssstrerror = NULL;
 extern rssfeed *rf;
+extern gboolean feed_new;
 
 //
 // decodes url_encoded strings that might appear in a html body
@@ -1182,8 +1183,11 @@ update_channel(RDF *r)
 	if (freeze)
 		refresh_mail_folder(mail_folder);
 	if (mail_folder) {
-		if (!rf->cancel && !rf->cancel_all && !rf->display_cancel)
+		if ((rf->import || feed_new)
+		&& (!rf->cancel && !rf->cancel_all && !rf->display_cancel)) {
 			rss_select_folder(camel_folder_get_full_name(mail_folder));
+			if (feed_new) feed_new = FALSE;
+		}
 #if (DATASERVER_VERSION >= 2031001)
 		g_object_unref(mail_folder);
 #else
