@@ -1654,10 +1654,10 @@ import_opml(gchar *file)
 	xmlNode *doc = NULL;
 
 	if (!src) {
-		rss_error(NULL,
+error:		rss_error(NULL,
 			NULL,
 			_("Import error."),
-			_("Invalid file or this is not an import file."));
+			_("Invalid file or this file does not contain any feeds."));
 		goto out;
 	}
 	doc = src;
@@ -1718,8 +1718,7 @@ import_opml(gchar *file)
 			d("total:%d\n", total);
 			type = 1;
 			}
-		}
-		else if (!g_ascii_strcasecmp((char *)src->name, "opml")) {
+		} else if (!g_ascii_strcasecmp((char *)src->name, "opml")) {
 			while ((src = iterate_import_file(src, &url, &name, 0))) {
 				if (url && strlen(url)) {
 					total++;
@@ -1731,6 +1730,7 @@ import_opml(gchar *file)
 			d("total:%d\n", total);
 		}
 	}
+	d("file type=%d\n", type);
 	g_object_set_data((GObject *)import_progress, "total", GINT_TO_POINTER(total));
 	g_object_set_data((GObject *)import_progress, "label", import_label);
 	src = doc;
@@ -1740,7 +1740,7 @@ import_opml(gchar *file)
 	if (type == 1) {
 		src=src->children;
 		d("my cont:%s\n", src->content);
-		src=src->children;
+		src = src->children;
 		src = src->next;
 		d("found %s\n", src->name);
 		src = src->children;
@@ -1753,9 +1753,14 @@ import_opml(gchar *file)
 	gchar *base = NULL, *root = NULL, *last = NULL;
 	gchar *rssprefix = NULL;
 	/* need to automate this, not just guess title at random */
-	src=src->children;
-	src = src->children;
+	if (!src || !src->children || !src->children->children)
+		goto error;
+	src = src->children->children;
+	if (!src->next)
+		goto error;
 	src = src->next;
+	if (!src->children)
+		goto error;
 	src = src->children;
 	maintitle = (gchar *)layer_find(src, "title", NULL);
 	rf->import=2;
