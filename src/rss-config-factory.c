@@ -1141,7 +1141,9 @@ remove_feed_hash(gpointer name)
 {
 	//we need to make sure we won't fetch_feed iterate over those hashes
 	rf->pending = TRUE;
-	g_print("TASKBAR_OP_FINISH(name) FIXME!!!\n");
+	/* FIXED since we force cancel_all msg
+	 * check on normal feed deletion while fetching
+	 */
 //	taskbar_op_finish(name);
 	g_hash_table_remove(rf->hre, lookup_key(name));
 	g_hash_table_remove(rf->hrt, lookup_key(name));
@@ -1589,7 +1591,7 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 		check_if_match,
 		feed->feed_url)) {
 		rss_error(
-			NULL,
+			title,
 			feed->feed_name,
 			_("Error adding feed."),
 			_("Feed already exists!"));
