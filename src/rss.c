@@ -1450,10 +1450,9 @@ migrate_old_config(gchar *feed_file)
 	}
 }
 
-guint
+void
 read_feeds(rssfeed *rf)
 {
-	guint res = 0;
 	gchar *feed_dir = rss_component_peek_base_directory();
 	gchar *feed_file;
 
@@ -1510,9 +1509,7 @@ read_feeds(rssfeed *rf)
 	else
 		load_gconf_feed();
 
-	res = 1;
 	g_free(feed_file);
-	return res;
 }
 
 static void
@@ -3166,10 +3163,12 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	}
 
 #if (EVOLUTION_VERSION >= 22703)
-normal:	gtk_tree_store_set (
-		t->store, t->iter,
-		COL_STRING_ICON_NAME, "rss-16",
-		-1);
+normal:
+	//if (key)
+		gtk_tree_store_set (
+			t->store, t->iter,
+			COL_STRING_ICON_NAME, "rss-16",
+			-1);
 #else
 normal:	if (!initialised) { //move this to startup
 		iconfile = g_build_filename (EVOLUTION_ICONDIR,
@@ -3641,7 +3640,7 @@ add:
 out:	rf->pending = FALSE;
 	if (!rf->setup && feed->cancelable != NULL) {
 		void (*f)() = (GFunc)feed->cancelable;
-		f(crc_feed, feed->cancelable_arg);
+		f(feed->cancelable_arg);
 	} else if (feed->ok != NULL) {
 		void (*f)() = (GFunc)feed->ok;
 		f(feed->ok_arg);
@@ -3670,6 +3669,7 @@ setup_feed(add_feed *feed)
 	check_folders();
 	prepare_hashes();
 
+	rf->setup = 0;
 	rf->pending = TRUE;
 
 //	if (!feed->validate)
@@ -5522,7 +5522,7 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 	if (!g_hash_table_find(rf->hre, check_if_enabled, NULL))
 		return;
 
-	if (!rf->setup || g_hash_table_size(rf->hrname)<1) {
+	if (g_hash_table_size(rf->hrname)<1) {
 		taskbar_push_message(_("No RSS feeds configured!"));
 		return;
 	}
@@ -5798,7 +5798,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 				VERSION);
 			rf = malloc(sizeof(rssfeed));
 			memset(rf, 0, sizeof(rssfeed));
-			rf->setup = read_feeds(rf);
+			read_feeds(rf);
 			rf->pending = FALSE;
 			rf->progress_dialog = NULL;
 			rf->errdialog = NULL;

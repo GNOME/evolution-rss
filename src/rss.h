@@ -376,7 +376,7 @@ gboolean feed_new_from_xml(char *xml);
 char *feeds_uid_from_xml (const char *xml);
 void load_gconf_feed(void);
 void migrate_old_config(gchar *feed_file);
-guint read_feeds(rssfeed *rf);
+void read_feeds(rssfeed *rf);
 void reload_cb (GtkWidget *button, gpointer data);
 void gecko_set_preferences(void);
 void browser_copy_selection(

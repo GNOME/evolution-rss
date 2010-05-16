@@ -1081,59 +1081,62 @@ save_feed_hash(gpointer name)
 // s - feed structure to restore
 // upon return s structure is destroyed
 void
-restore_feed_hash(gpointer name, hrfeed *s)
+restore_feed_hash(hrfeed *s)
 {
 	g_hash_table_insert(
-		rf->hrname, g_strdup(name), s->hrname);
+		rf->hrname, s->hrname_r, s->hrname);
 	g_hash_table_insert(
-		rf->hrname_r, g_strdup(lookup_key(name)), s->hrname_r);
+		rf->hrname_r, s->hrname, s->hrname_r);
 	g_hash_table_insert(
 		rf->hre,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hre));
 	g_hash_table_insert(
 		rf->hrh,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrh));
 	g_hash_table_insert(
 		rf->hrt,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrt));
 	g_hash_table_insert(
-		rf->hr, g_strdup(lookup_key(name)), s->hr);
+		rf->hr, g_strdup(s->hrname), s->hr);
 	g_hash_table_insert(
 		rf->hrdel_feed,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrdel_feed));
 	g_hash_table_insert(
 		rf->hrdel_days,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrdel_days));
 	g_hash_table_insert(
 		rf->hrdel_messages,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrdel_messages));
 	g_hash_table_insert(
 		rf->hrdel_unread,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrdel_unread));
 	g_hash_table_insert(
 		rf->hrdel_notpresent,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrdel_notpresent));
 	g_hash_table_insert(
 		rf->hrupdate,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrupdate));
 	g_hash_table_insert(
 		rf->hrttl,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrttl));
 	g_hash_table_insert(
 		rf->hrttl_multiply,
-		g_strdup(lookup_key(name)),
+		g_strdup(s->hrname),
 		GINT_TO_POINTER(s->hrttl_multiply));
 	g_free(s);
+	g_hash_table_destroy(rf->feed_folders);
+	g_hash_table_destroy(rf->reversed_feed_folders);
+	get_feed_folders();
 }
 
 void
@@ -3337,7 +3340,9 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 			goto out;
 
 	ofolder = lookup_original_folder(folder, &found);
+	g_print("ofolder:%s\n", ofolder);
 	key = lookup_key(ofolder);
+	g_print("key:%s\n", key);
 	if (!key) {
 		g_free(ofolder);
 		goto out;
