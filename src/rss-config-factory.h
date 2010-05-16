@@ -45,7 +45,7 @@ void actions_dialog_add(add_feed *feed, gchar *url);
 add_feed *create_dialog_add(gchar *url, gchar *feed_text);
 void destroy_feed_hash_content(hrfeed *s);
 hrfeed *save_feed_hash(gpointer name);
-void restore_feed_hash(gpointer name, hrfeed *s);
+void restore_feed_hash(hrfeed *s);
 void feeds_dialog_disable(GtkDialog *d, gpointer data);
 GtkWidget *remove_feed_dialog(gchar *msg);
 void feeds_dialog_delete(GtkDialog *d, gpointer data);
