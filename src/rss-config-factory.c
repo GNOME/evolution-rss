@@ -3283,7 +3283,7 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 		feed->changed = 0;
 	else
 		feed->changed = 1;
-	if (feed_name && !g_ascii_strncasecmp(feed_name, ofolder, strlen(feed_name)))
+	if (feed_name && 0 != g_ascii_strcasecmp(feed_name, ofolder))
 		feed->renamed = 0;
 	else
 		feed->renamed = 1;
