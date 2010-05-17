@@ -274,7 +274,7 @@ gint browser_fill = 0;	//how much data currently written to browser
 gchar *process_feed(RDF *r);
 gboolean display_feed(RDF *r);
 gchar *display_doc (RDF *r);
-gchar *display_comments (RDF *r);
+gchar *display_comments (RDF *r, EMFormatHTML *format);
 void check_folders(void);
 CamelMimePart *file_to_message(const char *name);
 void check_feed_age(void);
@@ -301,7 +301,7 @@ void fetch_comments(gchar *url, EMFormatHTML *stream);
 
 guint fallback_engine(void);
 
-gchar *print_comments(gchar *url, gchar *stream);
+gchar *print_comments(gchar *url, gchar *stream, EMFormatHTML *format);
 static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 void dup_auth_data(gchar *origurl, gchar *url);
 gboolean display_folder_icon(GtkTreeStore *store, gchar *key);
@@ -331,7 +331,6 @@ finish_create_icon_stream (SoupSession *soup_sess,
 void webkit_set_history(gchar *base);
 gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
-gchar *fetch_image_redraw(gchar *url, gchar *link, gpointer data);
 gchar *verify_image(gchar *uri, EMFormatHTML *format);
 
 GtkTreeStore *evolution_store = NULL;
@@ -2942,7 +2941,7 @@ render_body:	if (category)
 					frame_colour & 0xffffff,
 					content_colour & 0xEDECEB & 0xffffff,
 					text_colour & 0xffffff);
-				result = print_comments(comments, commstream);
+				result = print_comments(comments, commstream, (EMFormatHTML *)t->format);
 				g_free(commstream);
 				rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
 					org_gnome_rss_controls_counter_id);
@@ -4199,7 +4198,7 @@ refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 }
 
 gchar *
-print_comments(gchar *url, gchar *stream)
+print_comments(gchar *url, gchar *stream, EMFormatHTML *format)
 {
 	RDF *r = NULL;
 	xmlDocPtr doc;
@@ -4220,7 +4219,7 @@ print_comments(gchar *url, gchar *stream)
 			r->cache = doc;
 			r->uri = url;
 
-			return display_comments (r);
+			return display_comments (r, format);
 	}
 	return NULL;
 }
@@ -6679,68 +6678,9 @@ gchar *
 fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 {
 	GError *err = NULL;
-	CamelStream *stream = NULL;
 	gchar *tmpurl = NULL;
 	FEED_IMAGE *fi = NULL;
-	gchar *result;
-
-	g_return_val_if_fail(url != NULL, NULL);
-
-	if (strstr(url, "://") == NULL) {
-		if (strstr(url, "http:") == NULL)
-			return NULL;
-		if (*url == '.') //test case when url begins with ".."
-			tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
-		else {
-			if (*url == '/')
-				tmpurl = g_strconcat(get_server_from_uri(link), "/", url, NULL);
-			else	//url is relative (does not begin with / or .)
-				tmpurl = g_strconcat(g_path_get_dirname(link), "/", url, NULL);
-		}
-	} else {
-		tmpurl = g_strdup(url);
-	}
-	if (g_hash_table_find(rf->key_session,
-			check_key_match,
-			tmpurl)) {
-		goto working;
-	}
-	d("fetch_image_redraw() tmpurl:%s\n", tmpurl);
-	stream = rss_cache_get(tmpurl);
-	if (!stream) {
-		d("image cache MISS\n");
-		fi = g_new0(FEED_IMAGE, 1);
-		fi->url = g_strdup(tmpurl);
-		fi->data = data;
-		fetch_unblocking(tmpurl,
-			textcb,
-			g_strdup(tmpurl),
-			(gpointer)finish_image_feedback,
-			fi,
-			1,
-			&err);
-		if (err) {
-			result = NULL;
-			goto error;
-		}
-	} else {
-		d("image cache HIT\n");
-	}
-
-working:result = rss_cache_get_path(FALSE, tmpurl);
-error:	g_free(tmpurl);
-	return result;
-}
-
-
-// constructs url from @base in case url is relative
-gchar *
-fetch_image(gchar *url, gchar *link)
-{
-	GError *err = NULL;
-	CamelStream *stream = NULL;
-	gchar *tmpurl = NULL;
-	gchar *result, *safe;
+	gchar *result, *safe, *cache_file;
 
 	g_return_val_if_fail(url != NULL, NULL);
 
@@ -6753,8 +6693,7 @@ fetch_image(gchar *url, gchar *link)
 			if (*url == '/')
 				tmpurl = g_strconcat(
 						get_server_from_uri(link),
-						"/",
-						url, NULL);
+						"/", url, NULL);
 			else	//url is relative (does not begin with / or .)
 				tmpurl = g_strconcat(
 						g_path_get_dirname(link),
@@ -6763,32 +6702,58 @@ fetch_image(gchar *url, gchar *link)
 	} else {
 		tmpurl = g_strdup(url);
 	}
-	safe = g_compute_checksum_for_string (
-		G_CHECKSUM_SHA1, tmpurl, -1);
-	stream = rss_cache_get(safe);
-	if (!stream) {
-		d("image cache MISS\n");
-		stream = rss_cache_add(safe);
-	} else
-		d("image cache HIT\n");
 
-	fetch_unblocking(tmpurl,
+	if (!tmpurl)
+		return NULL;
+
+	safe = g_compute_checksum_for_string (
+			G_CHECKSUM_SHA1, tmpurl, -1);
+	if (g_hash_table_find(rf->key_session,
+			check_key_match,
+			tmpurl)) {
+		goto working;
+	}
+	d("fetch_image_redraw() tmpurl:%s, safe url:%s\n", tmpurl, safe);
+	cache_file = rss_cache_get_filename(safe);
+	if (!g_file_test (cache_file, G_FILE_TEST_EXISTS)) {
+		d("image cache MISS\n");
+		if (data) {
+			fi = g_new0(FEED_IMAGE, 1);
+			fi->url = g_strdup(safe);
+			fi->data = data;
+			fetch_unblocking(tmpurl,
+				textcb,
+				g_strdup(tmpurl),
+				(gpointer)finish_image_feedback,
+				fi,
+				1,
+				&err);
+		} else {
+			CamelStream *stream = rss_cache_add(safe);
+			fetch_unblocking(tmpurl,
 				textcb,
 				NULL,
 				(gpointer)finish_image,
 				stream,
 				0,
 				&err);
-	if (err) {
-		g_free(tmpurl);
-		g_free(safe);
-		return NULL;
+		}
+		if (err) {
+			result = NULL;
+			g_free(cache_file);
+			goto error;
+		}
+	} else {
+		d("image cache HIT\n");
 	}
-	result = rss_cache_get_path(FALSE, safe);
-	g_free(tmpurl);
+	g_free(cache_file);
+
+working:result = rss_cache_get_path(FALSE, safe);
+error:	g_free(tmpurl);
 	g_free(safe);
 	return result;
 }
+
 
 //migrates old feed data files from crc naming
 //to md5 naming while preserving content
@@ -6885,17 +6850,20 @@ update_comments(RDF *r)
 		free_cf(CF);
 	}
 	commcnt=i;
-scomments=comments->str;
+	scomments=comments->str;
 	g_string_free(comments, FALSE);
 	return scomments;
 }
 
 gchar *
-display_comments (RDF *r)
+display_comments (RDF *r, EMFormatHTML *format)
 {
+	gchar *tmp;
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
 	if (tree_walk (root, r)) {
 		gchar *comments = update_comments(r);
+		tmp = process_images(comments, r->uri, format);
+		g_free(comments);
 		if (r->maindate)
 			g_free(r->maindate);
 		g_array_free(r->item, TRUE);
@@ -6904,7 +6872,7 @@ display_comments (RDF *r)
 			g_free(r->type);
 		if (r)
 			g_free(r);
-		return comments;
+		return tmp;
 	}
 	return NULL;
 }

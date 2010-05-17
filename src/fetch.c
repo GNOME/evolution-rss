@@ -72,6 +72,7 @@ error:
 
 //fetch feed
 //FIXME gio callback hardcoded
+// data - also used as key in key_session when track = 1
 
 gboolean
 fetch_unblocking(gchar *url, NetStatusCallback cb, gpointer data,

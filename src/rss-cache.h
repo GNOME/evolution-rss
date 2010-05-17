@@ -24,5 +24,6 @@
 
 void rss_cache_init(void);
 CamelStream *rss_cache_get(gchar *url);
+gchar *rss_cache_get_filename(gchar *url);
 char* rss_cache_get_path(int create, const char *path);
 CamelStream* rss_cache_add(gchar *url);

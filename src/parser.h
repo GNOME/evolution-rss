@@ -19,6 +19,8 @@
 #ifndef __PARSER_H__
 #define __PARSER_H__
 
+#include <mail/em-format-html.h>
+
 gchar *update_channel(RDF *r);
 xmlDoc *rss_html_url_decode(const char *html, int len);
 const char *layer_find (xmlNodePtr node, const char *match, const char *fail);
@@ -55,6 +57,7 @@ gchar *media_rss(xmlNode *node, gchar *search, gchar *fail);
 gchar *dublin_core_rss(xmlNode *node, gchar *fail);
 void syndication_rss(void);
 gchar *wfw_rss(xmlNode *node, gchar *fail);
+xmlChar *process_images(gchar *text, gchar *link, EMFormatHTML *format);
 
 #endif /*__RSS_H__*/
 

@@ -25,6 +25,7 @@
 #include <libxml/HTMLtree.h>
 #include <libxml/debugXML.h>
 #include <mail/mail-ops.h>
+#include <mail/em-format-html.h>
 #if (DATASERVER_VERSION >= 2031001)
 #include <camel/camel.h>
 #else
@@ -856,6 +857,38 @@ tree_walk (xmlNodePtr root, RDF *r)
 	return r->title;
 }
 
+xmlChar *
+process_images(gchar *text, gchar *link, EMFormatHTML *format)
+{
+	xmlChar *buff = NULL;
+	guint size = 0;
+	xmlDoc *src = (xmlDoc *)parse_html_sux (text, strlen(text));
+	if (src) {
+		xmlNode *doc = (xmlNode *)src;
+		while ((doc = html_find(doc, (gchar *)"img"))) {
+			gchar *name = NULL;
+			xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
+			if (url) {
+				if (name = fetch_image_redraw((gchar *)url, link, format)) {
+					gchar *tmp = g_strconcat(
+							"file://",
+							name, NULL);
+					g_free(name);
+					xmlSetProp(
+						doc, (xmlChar *)"src",
+						(xmlChar *)tmp);
+					g_free(tmp);
+				}
+				xmlFree(url);
+			}
+		}
+		xmlDocDumpMemory(src, &buff, (int*)&size);
+		xmlFree(src);
+		return buff;
+	}
+	return g_strdup(text);
+}
+
 create_feed *
 parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **article_uid)
 {
@@ -1021,24 +1054,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **arti
 		g_free(b);
 
 		if (feed_name) {
-			xmlDoc *src = (xmlDoc *)parse_html_sux (tmp, strlen(tmp));
-			if (src) {
-				xmlNode *doc = (xmlNode *)src;
-
-				while ((doc = html_find(doc, (gchar *)"img"))) {
-					gchar *name = NULL;
-					xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
-					if (url) {
-						if ((name = fetch_image((gchar *)url, link))) {
-							xmlSetProp(doc, (xmlChar *)"src", (xmlChar *)name);
-							g_free(name);
-						}
-						xmlFree(url);
-					}
-					}
-				xmlDocDumpMemory(src, &buff, (int*)&size);
-				xmlFree(src);
-				}
+			buff = process_images(tmp, link, NULL);
 			g_free(tmp);
 			b = (gchar *)buff;
 		} else

@@ -420,6 +420,7 @@ gchar *decode_utf8_entities(gchar *str);
 gchar *decode_html_entities(gchar *str);
 gchar *get_real_channel_name(gchar *uri, gchar *failed);
 gchar *fetch_image(gchar *url, gchar *link);
+gchar *fetch_image_redraw(gchar *url, gchar *link, gpointer data);
 void create_mail(create_feed *CF);
 void migrate_crc_md5(const char *name, gchar *url);
 void free_cf(create_feed *CF);

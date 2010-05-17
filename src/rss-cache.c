@@ -99,6 +99,12 @@ rss_cache_get(gchar *url)
 	return camel_data_cache_get(cache, HTTP_CACHE_PATH, url, NULL);
 }
 
+gchar*
+rss_cache_get_filename(gchar *url)
+{
+	return camel_data_cache_get_filename(cache, HTTP_CACHE_PATH, url, NULL);
+}
+
 CamelStream*
 rss_cache_add(gchar *url)
 {

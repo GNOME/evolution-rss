@@ -3340,9 +3340,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 			goto out;
 
 	ofolder = lookup_original_folder(folder, &found);
-	g_print("ofolder:%s\n", ofolder);
 	key = lookup_key(ofolder);
-	g_print("key:%s\n", key);
 	if (!key) {
 		g_free(ofolder);
 		goto out;
