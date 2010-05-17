@@ -367,16 +367,10 @@ gboolean proxy_auth_dialog(
 
 gboolean timeout_soup(void);
 void network_timeout(void);
-gchar *feed_to_xml(gchar *key);
 void prepare_feed(
 	gpointer key,
 	gpointer value,
 	gpointer user_data);
-gboolean feed_new_from_xml(char *xml);
-char *feeds_uid_from_xml (const char *xml);
-void load_gconf_feed(void);
-void migrate_old_config(gchar *feed_file);
-void read_feeds(rssfeed *rf);
 void reload_cb (GtkWidget *button, gpointer data);
 void gecko_set_preferences(void);
 void browser_copy_selection(
@@ -422,7 +416,6 @@ gchar *get_real_channel_name(gchar *uri, gchar *failed);
 gchar *fetch_image(gchar *url, gchar *link);
 gchar *fetch_image_redraw(gchar *url, gchar *link, gpointer data);
 void create_mail(create_feed *CF);
-void migrate_crc_md5(const char *name, gchar *url);
 void free_cf(create_feed *CF);
 gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
@@ -496,7 +489,6 @@ void custom_feed_timeout(void);
 CamelFolder *check_feed_folder(gchar *folder_name);
 gboolean setup_feed(add_feed *feed);
 void web_auth_dialog(RSS_AUTH *auth_info);
-gchar *get_main_folder(void);
 gpointer lookup_key(gpointer key);
 void rss_delete_feed(gchar *name, gboolean folder);
 gint update_feed_folder(
@@ -517,7 +509,6 @@ void get_shell(void *ep, ESEventTargetShell *t);
 //#endif
 void rss_finalize(void);
 gboolean check_update_feed_image(gchar *key);
-void get_feed_folders(void);
 void update_main_folder(gchar *new_name);
 void search_rebase(gpointer key, gpointer value, gchar *oname);
 void evo_window_popup(GtkWidget *window);

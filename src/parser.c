@@ -36,6 +36,7 @@ extern int rss_verbose_debug;
 
 #include "fetch.h"
 #include "rss.h"
+#include "rss-config.h"
 #include "parser.h"
 #include "misc.h"
 #include "network-soup.h"
@@ -857,7 +858,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	return r->title;
 }
 
-xmlChar *
+gchar *
 process_images(gchar *text, gchar *link, EMFormatHTML *format)
 {
 	xmlChar *buff = NULL;
@@ -869,7 +870,7 @@ process_images(gchar *text, gchar *link, EMFormatHTML *format)
 			gchar *name = NULL;
 			xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
 			if (url) {
-				if (name = fetch_image_redraw((gchar *)url, link, format)) {
+				if ((name = fetch_image_redraw((gchar *)url, link, format))) {
 					gchar *tmp = g_strconcat(
 							"file://",
 							name, NULL);
@@ -884,7 +885,7 @@ process_images(gchar *text, gchar *link, EMFormatHTML *format)
 		}
 		xmlDocDumpMemory(src, &buff, (int*)&size);
 		xmlFree(src);
-		return buff;
+		return (gchar *)buff;
 	}
 	return g_strdup(text);
 }
@@ -902,8 +903,6 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **arti
 	gchar *feed = NULL;
 	gchar *encl, *tmp, *id;
 	gchar *qsafe, *tcat;
-	xmlChar *buff = NULL;
-	guint size = 0;
 	GList *category = NULL;
 	create_feed *CF;
 	GList *attachments = NULL;
@@ -1054,9 +1053,9 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **arti
 		g_free(b);
 
 		if (feed_name) {
-			buff = process_images(tmp, link, NULL);
+			gchar *buff = process_images(tmp, link, NULL);
 			g_free(tmp);
-			b = (gchar *)buff;
+			b = buff;
 		} else
 			b = tmp;
 
@@ -1201,7 +1200,7 @@ update_channel(RDF *r)
 	if (mail_folder) {
 		if ((rf->import || feed_new)
 		&& (!rf->cancel && !rf->cancel_all && !rf->display_cancel)) {
-			rss_select_folder(camel_folder_get_full_name(mail_folder));
+			rss_select_folder((gchar *)camel_folder_get_full_name(mail_folder));
 			if (feed_new) feed_new = FALSE;
 		}
 #if (DATASERVER_VERSION >= 2031001)
@@ -1210,7 +1209,7 @@ update_channel(RDF *r)
 		camel_object_unref(mail_folder);
 #endif
 	}
-out:	g_free(sender);
+	g_free(sender);
 
 	if (fr) fclose(fr);
 	if (fw) fclose(fw);

@@ -17,7 +17,6 @@
  */
 
 #ifdef HAVE_CONFIG_H
-
 #include "config.h"
 #endif
 
@@ -61,6 +60,7 @@ extern int rss_verbose_debug;
 #include "rss.h"
 #include "misc.h"
 #include "parser.h"
+#include "rss-config.h"
 #include "rss-config-factory.h"
 #include "network-soup.h"
 #include "notification.h"

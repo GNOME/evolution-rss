@@ -19,6 +19,8 @@
 #ifndef MISC_H
 #define MISC_H 1
 
+#include <rss.h>
+
 void print_cf(create_feed *CF);
 gchar *gen_crc(const char *msg);
 gchar *gen_md5(gchar *buffer);
@@ -47,5 +49,10 @@ void print_hash_int(gpointer key, gpointer value, gpointer user_data);
 gboolean feed_is_new(gchar *file_name, gchar *needle);
 void feed_remove_status_line(gchar *file_name, gchar *needle);
 void write_feed_status_line(gchar *file, gchar *needle);
+void dup_auth_data(gchar *origurl, gchar *url);
+void sanitize_path_separator(gchar *);
+#ifdef _WIN32
+char *strcasestr(const char *a, const char *b);
+#endif
 
 #endif

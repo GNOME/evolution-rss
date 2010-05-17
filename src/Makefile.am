@@ -82,7 +82,9 @@ SOURCES =	fetch.c			\
 		parser.c		\
 		rss.c			\
 		rss-cache.c		\
+		rss-config.c		\
 		rss-config-factory.c	\
+		rss-image.c		\
 		rss-icon-factory.c
 if HAVE_GECKO
 SOURCES+=	gecko-utils.cpp
@@ -110,6 +112,7 @@ schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
 if HAVE_BONOBO
 server_in_files = GNOME_Evolution_RSS.server.in.in
 server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
+echo "src/GNOME_Evolution_RSS.server.in.in" > po/POTFILES.in
 endif
 
 @EVO_SERVER_RULE@
@@ -180,10 +183,14 @@ EXTRA_DIST =					\
 	parser.c				\
 	parser.h				\
 	rss-cache.h				\
+	rss-config.c				\
+	rss-config.h				\
 	rss-config-factory.c			\
 	rss-config-factory.h			\
 	rss-icon-factory.c			\
 	rss-icon-factory.h			\
+	rss-image.c				\
+	rss-image.h				\
 	strptime.c				\
 	evolution-import-rss.c			\
 	evolution-rss.schemas.in.in		\

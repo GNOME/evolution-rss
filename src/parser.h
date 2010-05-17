@@ -57,7 +57,7 @@ gchar *media_rss(xmlNode *node, gchar *search, gchar *fail);
 gchar *dublin_core_rss(xmlNode *node, gchar *fail);
 void syndication_rss(void);
 gchar *wfw_rss(xmlNode *node, gchar *fail);
-xmlChar *process_images(gchar *text, gchar *link, EMFormatHTML *format);
+gchar *process_images(gchar *text, gchar *link, EMFormatHTML *format);
 
 #endif /*__RSS_H__*/
 

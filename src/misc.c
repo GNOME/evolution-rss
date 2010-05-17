@@ -31,11 +31,13 @@
 #endif
 #include <e-util/e-mktemp.h>
 
-extern int rss_verbose_debug;
 
 #include "rss.h"
 #include "parser.h"
 #include "misc.h"
+
+extern int rss_verbose_debug;
+extern rssfeed *rf;
 
 int getNumericConfValue(gpointer a);
 
@@ -126,6 +128,17 @@ check_if_match (gpointer key, gpointer value, gpointer user_data)
 		return TRUE; /* Quit calling the callback */
 
 	return FALSE; /* Continue calling the callback till end of table */
+}
+
+void
+dup_auth_data(gchar *origurl, gchar *url)
+{
+	gchar *user = g_hash_table_lookup(rf->hruser, origurl);
+	gchar *pass = g_hash_table_lookup(rf->hrpass, origurl);
+	if (user && pass) {
+		g_hash_table_insert(rf->hruser, url, g_strdup(user));
+		g_hash_table_insert(rf->hrpass, url, g_strdup(pass));
+	}
 }
 
 gchar *
@@ -618,6 +631,30 @@ write_feed_status_line(gchar *file, gchar *needle)
 		fputs("\n", fw);
 		fclose(fw);
 	}
+}
+
+#ifdef _WIN32
+char *strcasestr(const char *a, const char *b)
+{
+	char *a2=g_ascii_strdown(a,-1), *b2=g_ascii_strdown(b,-1), *r=strstr(a2,b2);
+	if(r)
+		r=(char *)a+(r-a2);
+	g_free(a2);
+	g_free(b2);
+	return r;
+}
+#endif
+
+void
+sanitize_path_separator(gchar *str)
+{
+#ifdef _WIN32
+	while (*str != '\0') {
+		if (G_IS_DIR_SEPARATOR(*str))
+			*str = G_DIR_SEPARATOR;
+		str++;
+	}
+#endif
 }
 
 #endif
