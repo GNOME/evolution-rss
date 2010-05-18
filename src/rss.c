@@ -3088,7 +3088,7 @@ setup_feed(add_feed *feed)
 	fetch_unblocking(
 		feed->feed_url,
 		textcb,
-		NULL,
+		g_strdup(feed->feed_url),
 		(gpointer)finish_setup_feed,
 		feed,	// we need to dupe key here
 		1,
