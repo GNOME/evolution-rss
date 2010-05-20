@@ -1664,7 +1664,9 @@ error:		rss_error(NULL,
 		goto out;
 	}
 	doc = src;
-	msg = g_strdup(_("Importing feeds..."));
+	tmp = g_path_get_basename(file);
+	msg = g_strdup_printf("%s: %s", _("Importing"), tmp);
+	g_free(tmp);
 #if EVOLUTION_VERSION < 22904
 	import_dialog = e_error_new(
 		GTK_WINDOW(rf->preferences),
