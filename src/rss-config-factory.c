@@ -3307,9 +3307,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 		g_hash_table_remove(rf->hrpass, url);
 
 	if (auth_enabled) {
-		g_hash_table_insert(rf->hruser, url,
+		g_hash_table_insert(rf->hruser, g_strdup(url),
 			g_strdup(gtk_entry_get_text (GTK_ENTRY (authuser))));
-		g_hash_table_insert(rf->hrpass, url,
+		g_hash_table_insert(rf->hrpass, g_strdup(url),
 			g_strdup(gtk_entry_get_text (GTK_ENTRY (authpass))));
 		save_up(url);
 	} else

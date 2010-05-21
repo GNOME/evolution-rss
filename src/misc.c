@@ -135,6 +135,8 @@ dup_auth_data(gchar *origurl, gchar *url)
 {
 	gchar *user = g_hash_table_lookup(rf->hruser, origurl);
 	gchar *pass = g_hash_table_lookup(rf->hrpass, origurl);
+	d("origurl / url:%s / %s\n", origurl, url);
+	d("user / pass:%s / %s\n", user, pass);
 	if (user && pass) {
 		g_hash_table_insert(rf->hruser, url, g_strdup(user));
 		g_hash_table_insert(rf->hrpass, url, g_strdup(pass));

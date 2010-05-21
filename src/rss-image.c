@@ -88,6 +88,7 @@ update_feed_image(RDF *r)
 		dup_auth_data(r->uri, image);
 		fi->feed_fs = feed_fs;
 		fi->key = g_strdup(key);
+		d("call finish_create_icon_stream\n");
 		fetch_unblocking(image,
 			textcb,
 			NULL,
@@ -103,6 +104,7 @@ update_feed_image(RDF *r)
 		gchar *server = get_server_from_uri(r->uri);
 		//authentication data might be different
 		dup_auth_data(r->uri, server);
+		d("call finish_update_feed_image\n");
 		fetch_unblocking(
 			server,
 			textcb,

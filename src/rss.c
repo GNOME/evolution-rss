@@ -541,7 +541,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 		progress = (NetStatusProgress*)statusdata;
 		if (progress->current > 0 && progress->total > 0) {
 			fraction = (float)progress->current / progress->total;
-			g_print("%.2f%% ", fraction*100);
+			g_print("%.2f%% ", fraction);
 		}
 		while (gtk_events_pending())
 			gtk_main_iteration ();
@@ -581,13 +581,13 @@ user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
 			g_hash_table_remove(rf->hruser, auth_info->url);
 
 		g_hash_table_insert(
-			rf->hruser, auth_info->url,
+			rf->hruser, g_strdup(auth_info->url),
 			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->username))));
 
 		if (auth_info->pass)
 			g_hash_table_remove(rf->hrpass, auth_info->url);
 
-		g_hash_table_insert(rf->hrpass, auth_info->url,
+		g_hash_table_insert(rf->hrpass, g_strdup(auth_info->url),
 			g_strdup(gtk_entry_get_text (GTK_ENTRY (auth_info->password))));
 
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auth_info->rememberpass)))
@@ -607,12 +607,14 @@ user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
 		break;
 	default:
 		rf->soup_auth_retry = TRUE;
-		break;
+			soup_session_abort(auth_info->session);
+		goto out;
 	}
-	if (soup_session_get_async_context(auth_info->session))
+	if (G_OBJECT_TYPE(auth_info->session) == SOUP_TYPE_SESSION_ASYNC) {
 		soup_session_unpause_message(
 			auth_info->session, auth_info->message);
-	gtk_widget_destroy(GTK_WIDGET(dialog));
+	}
+out:	gtk_widget_destroy(GTK_WIDGET(dialog));
 	g_free(auth_info);
 
 }
@@ -787,13 +789,16 @@ web_auth_dialog(RSS_AUTH *auth_info)
 
 	if (!rf->hruser)
 		rf->hruser = g_hash_table_new_full(
-				g_str_hash, g_str_equal, NULL, g_free);
+				g_str_hash, g_str_equal, g_free, g_free);
 	if (!rf->hrpass)
 		rf->hrpass = g_hash_table_new_full(
-				g_str_hash, g_str_equal, NULL, g_free);
+				g_str_hash, g_str_equal, g_free, g_free);
 
+	d("auth url:%s\n", auth_info->url);
 	auth_info->user = g_hash_table_lookup(rf->hruser, auth_info->url);
 	auth_info->pass = g_hash_table_lookup(rf->hrpass, auth_info->url);
+	d("auth user:%s\n", auth_info->user);
+	d("auth pass:%s\n", auth_info->pass);
 	dialog = create_user_pass_dialog(auth_info);
 	//Bug 522147 – need to be able to pause synchronous I/O
 	if (G_OBJECT_TYPE(auth_info->session) != SOUP_TYPE_SESSION_ASYNC) {
@@ -2705,12 +2710,12 @@ prepare_hashes(void)
 	if (rf->hruser == NULL)
 		rf->hruser = g_hash_table_new_full(g_str_hash,
 				g_str_equal,
-				NULL,
+				g_free,
 				g_free);
 	if (rf->hrpass == NULL)
 		rf->hrpass = g_hash_table_new_full(g_str_hash,
 				g_str_equal,
-				NULL,
+				g_free,
 				g_free);
 	if (rf->hrname == NULL)
 		rf->hrname = g_hash_table_new_full(g_str_hash,
@@ -2980,7 +2985,8 @@ add:
 		}
 
 		if (!rf->import) {
-			gtk_widget_destroy(rf->progress_dialog);
+			if (rf->progress_dialog)
+				gtk_widget_destroy(rf->progress_dialog);
 			rf->progress_bar = NULL;
 			rf->progress_dialog = NULL;
 			progress = 0;
