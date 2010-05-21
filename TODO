@@ -1,5 +1,6 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
+	* detect duplicate items by content not by feedid
 	* check webkit area sizing when using zoom in/out
 	* implement USM (universal subscription mechanism)
 	* implement notify back of imported feed perhaps libnotify
@@ -15,29 +16,29 @@
 	* grey out disabled folders (feeds)
 	* feed check runtime validation
 	* wrong send and receive count of articles after import
-	* handle 404 for images in comments
 	* gtkhtml does not handle script tag properly
 	* gtkhtml does not handle &#xD; construct
 	* show feed icons in send & receive dialog
 	* support comments postings
-	* detect duplicate items by content not by feedid
 	* make gtkhtml rendering non-blocking
 	* use ellipsize in web auth dialog
+	* find a way to delete a feed that has not been created (directory isn't there)
 	* fix comment cancellation
 	* fix wrong SSL browser dialog
 	* check custom interval fetching right after it was setup
 	* search for threaded implmentation options
 	* config option to sort comments ascending/descending
 	* hook all rss config options in RSS top folder properties in right click menu
-	* image contained in feeds displayed after the coments ??
 	* accept feeds clicked from mails - add feed option to right click context menu
 	* when delete folder remove any pending filter process
-	* when import opml print opml title
 	* import without fetching (add without validate ?)
-	* do not mark folders as feeds (icon)
 	* require gtkhtml-editor separate package (?)
 	* option to download enclosures (limit to certain size)
 	* split rss feed
 	* possibly completely disable messagefiltering at setup_feed
-	* after deletion properties list is not updated, or not in sync
 	* delete of articles not present does not work when no deletion option selected
+	* add select all for feed list or perhaps delete all - manually select each record and pressing delete is a pain on a 10000 feed list
+	* check key->session big memleak ?
+	* finish setup loose the auth info for disaplay feed icon
+	* *.rec info does not get deleted, reusing .rec info results in auth failure
+	* markup failed perhaps in web auth dialog
