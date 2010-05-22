@@ -5745,18 +5745,23 @@ get_feed_age(RDF *r, gpointer name)
 				g_print("got message\n");
 			if (message == NULL)
 				break;
-				g_print("got message\n");
+			g_print("got message\n");
 			feedid  = (gchar *)camel_medium_get_header (
 					CAMEL_MEDIUM(message),
 					"X-Evolution-Rss-Feed-id");
 			g_print("got header\n");
-			if (!r->uids)
+			if (!r->uids) {
+#if (DATASERVER_VERSION >= 2031001)
+				g_object_unref (message);
+#else
+				camel_object_unref (message);
+#endif
 				break;
+			}
 
 			for (j=0; NULL != (el = g_array_index(r->uids, gpointer, j)); j++) {
 				if (!g_ascii_strcasecmp(g_strstrip(feedid), g_strstrip(el))) {
 					match = TRUE;
-					g_object_unref(message);
 					break;
 				}
 			}
@@ -5778,7 +5783,11 @@ get_feed_age(RDF *r, gpointer name)
 				}
 				camel_folder_free_message_info(folder, info);
 			}
-			g_object_unref(message);
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref (message);
+#else
+			camel_object_unref (message);
+#endif
 		}
 		camel_folder_free_uids (folder, uids);
 		camel_folder_sync (folder, TRUE, NULL);
