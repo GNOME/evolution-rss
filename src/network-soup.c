@@ -607,16 +607,6 @@ net_get_unblocking(gchar *url,
 		info->total = 0;
 	}
 
-	if (!rf->session)
-		rf->session = g_hash_table_new(
-				g_direct_hash, g_direct_equal);
-	if (!rf->abort_session)
-		rf->abort_session = g_hash_table_new(
-					g_direct_hash, g_direct_equal);
-	if (!rf->key_session)
-		rf->key_session = g_hash_table_new(
-					g_direct_hash, g_direct_equal);
-
 	g_signal_connect (soup_sess, "authenticate",
 		G_CALLBACK (authenticate), (gpointer)url);
 #if LIBSOUP_VERSION < 2003000
@@ -706,16 +696,6 @@ download_unblocking(
 		info->current = 0;
 		info->total = 0;
 	}
-
-	if (!rf->session)
-		rf->session = g_hash_table_new(
-				g_direct_hash, g_direct_equal);
-	if (!rf->abort_session)
-		rf->abort_session = g_hash_table_new(
-					g_direct_hash, g_direct_equal);
-	if (!rf->key_session)
-		rf->key_session = g_hash_table_new(
-					g_direct_hash, g_direct_equal);
 
 	g_signal_connect (soup_sess, "authenticate",
 		G_CALLBACK (authenticate), (gpointer)url);

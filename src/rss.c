@@ -1061,7 +1061,7 @@ rss_browser_update_content (
 					fi = g_new0(UB, 1);
 					stream = rss_cache_get(po->website);
 					if (!stream) {
-						dp("HTTP cache miss\n");
+						d("HTTP cache miss\n");
 						stream = rss_cache_add(po->website);
 						fi->create = 1;
 					fi->stream = stream;
@@ -2463,7 +2463,6 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 					shell_view);
 	EActivity *taskid;
 
-
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
 	folder = em_folder_tree_get_selected_folder (folder_tree);
 	g_return_if_fail (folder != NULL);
@@ -2771,6 +2770,27 @@ prepare_hashes(void)
 				g_str_equal,
 				g_free,
 				NULL);
+
+	if (!rf->activity)	//keeping track of taskbar operations
+		rf->activity = g_hash_table_new_full(
+					g_str_hash,
+					g_str_equal,
+					NULL, NULL);
+	if (!rf->error_hash)	//keeping trask of taskbar errors
+		rf->error_hash = g_hash_table_new_full(
+					g_str_hash,
+					g_str_equal,
+					g_free, NULL);
+
+	if (!rf->session)
+		rf->session = g_hash_table_new(
+				g_direct_hash, g_direct_equal);
+	if (!rf->abort_session)
+		rf->abort_session = g_hash_table_new(
+					g_direct_hash, g_direct_equal);
+	if (!rf->key_session)
+		rf->key_session = g_hash_table_new(
+					g_direct_hash, g_direct_equal);
 }
 
 void
@@ -3082,7 +3102,6 @@ setup_feed(add_feed *feed)
 	taskbar_op_message(tmsg, gen_md5(feed->feed_url));
 
 	check_folders();
-	prepare_hashes();
 
 	rf->setup = 0;
 	rf->pending = TRUE;
@@ -4950,16 +4969,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			/*D-BUS init*/
 			rf->bus = init_dbus ();
 #endif
-			if (!rf->activity)	//keeping track of taskbar operations
-				rf->activity = g_hash_table_new_full(
-						g_str_hash,
-						g_str_equal,
-						NULL, NULL);
-			if (!rf->error_hash)	//keeping trask of taskbar errors
-				rf->error_hash = g_hash_table_new_full(
-							g_str_hash,
-							g_str_equal,
-							g_free, NULL);
+			prepare_hashes();
 			//there is no shutdown for e-plugin yet.
 			atexit(rss_finalize);
 			render = GPOINTER_TO_INT(
@@ -5766,9 +5776,9 @@ get_feed_age(RDF *r, gpointer name)
 				}
 			}
 			if (!match) {
-				g_print("info\n");
+//				g_print("info\n");
 				info = camel_folder_get_message_info(folder, uids->pdata[i]);
-				g_print("info done\n");
+//				g_print("info done\n");
 				flags = camel_message_info_flags(info);
 				if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED)) {
 					gchar *feed_dir, *feed_name;
@@ -5797,14 +5807,16 @@ get_feed_age(RDF *r, gpointer name)
 	}
 	if (del_feed == 2) {
 		guint del_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, key));
-		g_print("feed ==2\n");
+		g_print("feed == 2\n");
 		uids = camel_folder_get_uids (folder);
 		camel_folder_freeze(folder);
 		for (i = 0; i < uids->len; i++) {
 			g_print("get info\n");
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
+			if (info == NULL)
+				continue;
 			g_print("got info\n");
-			if (info && rf->current_uid && strcmp(rf->current_uid, uids->pdata[i])) {
+			if (rf->current_uid && strcmp(rf->current_uid, uids->pdata[i])) {
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400) {
 					flags = camel_message_info_flags(info);
@@ -5819,19 +5831,17 @@ get_feed_age(RDF *r, gpointer name)
 							camel_folder_delete_message(folder, uids->pdata[i]);
 						}
 				}
-				camel_folder_free_message_info(folder, info);
 			}
+			camel_folder_free_message_info(folder, info);
 		}
 		camel_folder_free_uids (folder, uids);
 		camel_folder_sync (folder, TRUE, NULL);
 		camel_folder_thaw(folder);
 		camel_folder_expunge (folder, NULL);
-		g_print("feed ==2 done\n");
 	}
 	if (del_feed == 1) {
 		guint del_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, key));
 		guint total = camel_folder_get_message_count(folder);
-	g_print("del?\n");
 		i=1;
 		while (del_messages < camel_folder_get_message_count(folder)
 			- camel_folder_get_deleted_message_count(folder) && i <= total) {

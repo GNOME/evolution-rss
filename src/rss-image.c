@@ -452,6 +452,20 @@ out:	g_free(img_file);
 }
 #endif
 
+gchar *
+decode_image_cache_filename(gchar *name)
+{
+	gsize size;
+	gchar *tmp, *csum, *tname;
+	tmp = g_base64_decode(name+4, &size);
+	csum = g_compute_checksum_for_string(G_CHECKSUM_SHA1,
+			tmp, -1);
+	g_free(tmp);
+	tname = rss_cache_get_filename(csum);
+	g_free(csum);
+	return tname;
+}
+
 /* validates if image is indeed an image file
  * if image file is not found it tries to fetch it
  * we need to check mime time against content
@@ -464,11 +478,16 @@ verify_image(gchar *uri, EMFormatHTML *format)
 	gsize length;
 	gchar *nurl, *turl;
 	gchar *base_dir, *feed_dir, *name;
-	gchar *scheme, *result;
+	gchar *scheme, *result, *tname;
+	gchar *duri = NULL;
+	gsize size;
 
 	g_return_val_if_fail(uri != NULL, NULL);
 
-	if (!g_file_test((gchar *)uri, G_FILE_TEST_EXISTS)) {
+	if (strstr(uri, "img:"))
+		duri = g_base64_decode(uri+4, &size);
+
+	if (!g_file_test((gchar *)duri, G_FILE_TEST_EXISTS)) {
 			camel_url_decode((gchar *)uri);
 			//FIXME lame method of extracting data cache path
 			//there must be a function in camel for getting data cache path
@@ -486,7 +505,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 			if (!scheme) {
 				nurl = strextr((gchar *)uri, feed_dir);
 				g_free(feed_dir);
-				turl = nurl + 4;
+				turl = nurl + 4; // skip cache directory
 				name = fetch_image_redraw(turl, NULL, format);
 				g_free(nurl);
 			} else {
@@ -495,15 +514,19 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				g_free(scheme);
 			}
 			g_free(base_dir);
-			result = g_filename_to_uri (name, NULL, NULL);
+			tname = decode_image_cache_filename(name);
 			g_free(name);
+			result = g_filename_to_uri (tname, NULL, NULL);
+			g_free(tname);
+			if (duri)
+				g_free(duri);
 			return result;
 	} else {
 		/*need to get mime type via file contents or else mime type is
 		 * bound to be wrong, especially on files fetched from the web
 		 * this is very important as we might get quite a few images
 		 * missing otherwise */
-		g_file_get_contents (uri,
+		g_file_get_contents (duri ? duri:uri,
 			&contents,
 			&length,
 			NULL);
@@ -511,6 +534,8 @@ verify_image(gchar *uri, EMFormatHTML *format)
 		/*FIXME mime type here could be wrong */
 		if (g_ascii_strncasecmp (mime_type, "image/", 6)) {
 			result = g_filename_to_uri (pixfile, NULL, NULL);
+			if (duri)
+				g_free(duri);
 			return result;
 		}
 		g_free(mime_type);
@@ -521,7 +546,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
  * http://git.gnome.org/browse/evolution/commit/?id=d9deaf9bbc7fd9d0c72d5cf9b1981e3a56ed1162
  */
 #if (EVOLUTION_VERSION >= 23000)
-		return g_filename_to_uri(uri, NULL, NULL);
+		return g_filename_to_uri(duri?duri:uri, NULL, NULL);
 #else
 		return NULL;
 #endif
@@ -535,9 +560,15 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	GError *err = NULL;
 	gchar *tmpurl = NULL;
 	FEED_IMAGE *fi = NULL;
-	gchar *result, *safe, *cache_file;
+	gchar *result, *cache_file;
+	gchar *intern, *burl;
+	gsize size;
 
 	g_return_val_if_fail(url != NULL, NULL);
+
+	if (strstr(url, "img:"))
+		tmpurl = g_base64_decode(url+4, &size);
+	else {
 
 	if (strstr(url, "://") == NULL) {
 		if (*url == '.') //test case when url begins with ".."
@@ -560,21 +591,23 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 
 	if (!tmpurl)
 		return NULL;
+	}
 
-	safe = g_compute_checksum_for_string (
-			G_CHECKSUM_SHA1, tmpurl, -1);
+	intern = g_compute_checksum_for_string(G_CHECKSUM_SHA1,
+			tmpurl, -1);
 	if (g_hash_table_find(rf->key_session,
 			check_key_match,
 			tmpurl)) {
 		goto working;
 	}
-	d("fetch_image_redraw() tmpurl:%s, safe url:%s\n", tmpurl, safe);
-	cache_file = rss_cache_get_filename(safe);
+	d("fetch_image_redraw() tmpurl:%s, intern: %s\n",
+		tmpurl, intern);
+	cache_file = rss_cache_get_filename(intern);
 	if (!g_file_test (cache_file, G_FILE_TEST_EXISTS)) {
 		d("image cache MISS\n");
 		if (data) {
 			fi = g_new0(FEED_IMAGE, 1);
-			fi->url = g_strdup(safe);
+			fi->url = g_strdup(intern);
 			fi->data = data;
 			fetch_unblocking(tmpurl,
 				textcb,
@@ -584,7 +617,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 				1,
 				&err);
 		} else {
-			CamelStream *stream = rss_cache_add(safe);
+			CamelStream *stream = rss_cache_add(intern);
 			fetch_unblocking(tmpurl,
 				textcb,
 				NULL,
@@ -603,9 +636,10 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	}
 	g_free(cache_file);
 
-working:result = rss_cache_get_path(FALSE, safe);
+working:burl = g_base64_encode(tmpurl, strlen(tmpurl));
+	result = g_strdup_printf("img:%s", burl);
+	g_free(burl);
 error:	g_free(tmpurl);
-	g_free(safe);
 	return result;
 }
 

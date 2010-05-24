@@ -871,14 +871,10 @@ process_images(gchar *text, gchar *link, EMFormatHTML *format)
 			xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
 			if (url) {
 				if ((name = fetch_image_redraw((gchar *)url, link, format))) {
-					gchar *tmp = g_strconcat(
-							"file://",
-							name, NULL);
-					g_free(name);
 					xmlSetProp(
 						doc, (xmlChar *)"src",
-						(xmlChar *)tmp);
-					g_free(tmp);
+						(xmlChar *)name);
+					g_free(name);
 				}
 				xmlFree(url);
 			}
