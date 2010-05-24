@@ -1626,7 +1626,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	EMFormat *myf = (EMFormat *)efh;
 	gint width, height;
 	GtkAdjustment *adj;
-
+	gboolean online;
 	guint engine = fallback_engine();
 
 #ifdef HAVE_WEBKIT
@@ -1697,11 +1697,16 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #endif
 
 	po->container = rf->mozembed;
+#if (DATASERVER_VERSION >= 2031002)
+	online =  camel_session_get_online (session);
+#else
+	online =  camel_session_is_online (session);
+#endif
 
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
 		d("Render engine Webkit\n");
-		if (!rf->online)
+		if (!online)
 			webkit_web_view_open(
 				WEBKIT_WEB_VIEW(rf->mozembed),
 				"about:blank");
@@ -1711,7 +1716,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #ifdef HAVE_GECKO
 	if (engine == 2) {
 		d("Render engine Gecko\n");
-		if (!rf->online) {
+		if (!online) {
 			gtk_moz_embed_stop_load(
 				(GtkMozEmbed *)rf->mozembed);
 			gtk_moz_embed_load_url (
@@ -1785,6 +1790,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
 	GtkWidget *label3 = gtk_label_new ("");
 	GtkWidget *button, *button2, *button3, *button4, *button5;
+	gboolean online;
 
 	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
@@ -1805,6 +1811,13 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
 	gtk_widget_show_all (button);
+
+#if (DATASERVER_VERSION >= 2031002)
+	online =  camel_session_get_online (session);
+#else
+	online =  camel_session_is_online (session);
+#endif
+
 	if (rf->cur_format) {
 		button4 = po->backbut;
 		g_signal_connect (
@@ -1813,7 +1826,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 			G_CALLBACK(back_cb),
 			efh);
 		gtk_button_set_relief(GTK_BUTTON(button4), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button4, rf->online);
+		gtk_widget_set_sensitive (button4, online);
 		gtk_widget_show (button4);
 		gtk_box_pack_start (
 			GTK_BOX (hbox2),
@@ -1826,7 +1839,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 			G_CALLBACK(forward_cb),
 			efh);
 		gtk_button_set_relief(GTK_BUTTON(button5), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button5, rf->online);
+		gtk_widget_set_sensitive (button5, online);
 		gtk_widget_show (button5);
 		gtk_box_pack_start (GTK_BOX (hbox2), button5, TRUE, TRUE, 0);
 		button2 = po->stopbut;
@@ -1836,7 +1849,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 			G_CALLBACK(stop_cb),
 			efh);
 		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button2, rf->online);
+		gtk_widget_set_sensitive (button2, online);
 		gtk_widget_show (button2);
 		gtk_box_pack_start (GTK_BOX (hbox2), button2, TRUE, TRUE, 0);
 		button3 = gtk_button_new_from_stock (GTK_STOCK_REFRESH);
@@ -1846,7 +1859,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 			G_CALLBACK(reload_cb),
 			po->website);
 		gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button3, rf->online);
+		gtk_widget_set_sensitive (button3, online);
 		gtk_widget_show (button3);
 		gtk_box_pack_start (GTK_BOX (hbox2), button3, TRUE, TRUE, 0);
 	}
@@ -2456,6 +2469,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	gchar *folder_name;
 	gchar *main_folder = get_main_folder();
 	gchar *ofolder, *name, *fname, *key, *rss_folder;
+	gboolean online;
 #if EVOLUTION_VERSION > 22900 //kb//
 	CamelFolder *folder;
 	EMFolderTree *folder_tree;
@@ -2493,9 +2507,15 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 		_("Fetching feed"),
 		(gchar *)g_hash_table_lookup(rf->hrname_r, key));
 
+#if (DATASERVER_VERSION >= 2031002)
+	online =  camel_session_get_online (session);
+#else
+	online =  camel_session_is_online (session);
+#endif
+
 	if (g_hash_table_lookup(rf->hre, key)
 	  && !rf->pending && !rf->feed_queue
-	  && !single_pending && rf->online) {
+	  && !single_pending && online) {
 		single_pending = TRUE;
 		check_folders();
 		rf->err = NULL;
@@ -3692,6 +3712,11 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 gboolean
 update_articles(gboolean disabler)
 {
+#if (DATASERVER_VERSION >= 2031002)
+	gboolean online =  camel_session_get_online (session);
+#else
+	gboolean online =  camel_session_is_online (session);
+#endif
 #if EVOLUTION_VERSION < 22900 //kb//
 	MailComponent *mc = mail_component_peek ();
 #if EVOLUTION_VERSION > 22801
@@ -3702,7 +3727,7 @@ update_articles(gboolean disabler)
 		rf->cancel=1;
 #endif
 
-	if (!rf->pending && !rf->feed_queue && !rf->cancel_all && rf->online) {
+	if (!rf->pending && !rf->feed_queue && !rf->cancel_all && online) {
 		g_print("Reading RSS articles...\n");
 		rf->autoupdate = TRUE;
 		rf->pending = TRUE;
@@ -4140,8 +4165,13 @@ custom_update_articles(CDATA *cdata)
 {
 	GError *err = NULL;
 	gchar *msg;
-	//if (!rf->pending && !rf->feed_queue && rf->online)
-	if (rf->online) {
+#if (DATASERVER_VERSION >= 2031002)
+	gboolean online =  camel_session_get_online (session);
+#else
+	gboolean online =  camel_session_is_online (session);
+#endif
+	//if (!rf->pending && !rf->feed_queue && online)
+	if (online) {
 		g_print("Fetch (custom) RSS articles...\n");
 		check_folders();
 		rf->err = NULL;
@@ -4384,17 +4414,6 @@ custom_feed_timeout(void)
 		statuscb);
 }
 
-static void
-rss_online(CamelSession *o, void *event_data, void *data)
-{
-	d("Apoc, are we online?... Almost.\n");
-#if (DATASERVER_VERSION >= 2031002)
-	rf->online =  camel_session_get_online (o);
-#else
-	rf->online =  camel_session_is_online (o);
-#endif
-}
-
 #if EVOLUTION_VERSION < 22900 //KB//
 struct __EShellPrivate {
 	/* IID for registering the object on OAF.  */
@@ -4465,27 +4484,11 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 		G_CALLBACK(store_folder_renamed), NULL);
 	g_signal_connect(store, "folder_deleted",
 		G_CALLBACK(store_folder_deleted), NULL);
-	g_signal_connect(
-#if EVOLUTION_VERSION < 22900 //kb//
-			mail_component_peek_session(NULL),
-#else
-			session,
-#endif
-			"online", G_CALLBACK(rss_online), NULL);
 #else
 	camel_object_hook_event(store, "folder_renamed",
 		(CamelObjectEventHookFunc)store_folder_renamed, NULL);
 	camel_object_hook_event(store, "folder_deleted",
 		(CamelObjectEventHookFunc)store_folder_deleted, NULL);
-	camel_object_hook_event(
-#if EVOLUTION_VERSION < 22900 //kb//
-			mail_component_peek_session(NULL),
-#else
-			session,
-#endif
-			"online",
-			(CamelObjectEventHookFunc)rss_online,
-			NULL);
 #endif
 }
 
@@ -5752,14 +5755,11 @@ get_feed_age(RDF *r, gpointer name)
 			el = NULL;
 			match = FALSE;
 			message = camel_folder_get_message(folder, uids->pdata[i], NULL);
-				g_print("got message\n");
 			if (message == NULL)
 				break;
-			g_print("got message\n");
 			feedid  = (gchar *)camel_medium_get_header (
 					CAMEL_MEDIUM(message),
 					"X-Evolution-Rss-Feed-id");
-			g_print("got header\n");
 			if (!r->uids) {
 #if (DATASERVER_VERSION >= 2031001)
 				g_object_unref (message);
@@ -5811,11 +5811,9 @@ get_feed_age(RDF *r, gpointer name)
 		uids = camel_folder_get_uids (folder);
 		camel_folder_freeze(folder);
 		for (i = 0; i < uids->len; i++) {
-			g_print("get info\n");
 			info = camel_folder_get_message_info(folder, uids->pdata[i]);
 			if (info == NULL)
 				continue;
-			g_print("got info\n");
 			if (rf->current_uid && strcmp(rf->current_uid, uids->pdata[i])) {
 				date = camel_message_info_date_sent(info);
 				if (date < now - del_days * 86400) {
