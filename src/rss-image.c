@@ -478,7 +478,8 @@ verify_image(gchar *uri, EMFormatHTML *format)
 	gsize length;
 	gchar *nurl, *turl;
 	gchar *base_dir, *feed_dir, *name;
-	gchar *scheme, *result, *tname;
+	gchar *scheme, *tname;
+	gchar *result = NULL;
 	gchar *duri = NULL;
 	gsize size;
 
@@ -514,10 +515,12 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				g_free(scheme);
 			}
 			g_free(base_dir);
-			tname = decode_image_cache_filename(name);
-			g_free(name);
-			result = g_filename_to_uri (tname, NULL, NULL);
-			g_free(tname);
+			if (name) {
+				tname = decode_image_cache_filename(name);
+				g_free(name);
+				result = g_filename_to_uri (tname, NULL, NULL);
+				g_free(tname);
+			}
 			if (duri)
 				g_free(duri);
 			return result;
@@ -600,9 +603,9 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 			tmpurl)) {
 		goto working;
 	}
-	d("fetch_image_redraw() tmpurl:%s, intern: %s\n",
-		tmpurl, intern);
 	cache_file = rss_cache_get_filename(intern);
+	d("fetch_image_redraw() tmpurl:%s, intern: %s\n",
+		tmpurl, cache_file);
 	if (!g_file_test (cache_file, G_FILE_TEST_EXISTS)) {
 		d("image cache MISS\n");
 		if (data) {
