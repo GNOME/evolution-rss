@@ -26,6 +26,7 @@ typedef struct _FEED_IMAGE {
 
 void rss_load_images(void);
 gboolean display_folder_icon(GtkTreeStore *store, gchar *key);
+gchar *decode_image_cache_filename(gchar *name);
 void
 #if LIBSOUP_VERSION < 2003000
 finish_create_icon (SoupMessage *msg, FEED_IMAGE *user_data);

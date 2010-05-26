@@ -2203,6 +2203,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 		g_string_free(content, 1);
 	} else {
+		gchar *wids;
+		xmlDoc *src;
+		guint width;
+		GtkWidget *obj = (GtkWidget *)emfh->html;
+
 		d("normal html rendering\n");
 		buffer = g_byte_array_new ();
 		camel_stream_mem_set_byte_array (stream, buffer);
@@ -2226,38 +2231,31 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		} else
 			tmp = g_strdup((gchar *)(buffer->data));
 
-		if (gconf_client_get_bool (rss_gconf,
-					GCONF_KEY_IMAGE_RESIZE,
-					NULL)) {
-			gchar *wids;
-			xmlDoc *src;
-			guint width;
-
-			GtkWidget *obj = (GtkWidget *)emfh->html;
-			gtk_widget_get_allocation(obj, &alloc);
-			width = alloc.width - 56;
-			wids = g_strdup_printf("%d", width);
-			src = (xmlDoc *)parse_html_sux(
-					tmp,
-					strlen(tmp));
-			if (src) {
-				xmlNode *doc = (xmlNode *)src;
-				while ((doc = html_find(doc, (gchar *)"img"))) {
-					int real_width = 0;
-					xmlChar *url = xmlGetProp(
-							doc,
-							(xmlChar *)"src");
-					//FIXME: this should run even if image_resize is not on
-					gchar *real_image = verify_image(
-								(gchar *)url,
-								emfh);
-					if (real_image) {
-						xmlSetProp(
-							doc,
-							(xmlChar *)"src",
-							(xmlChar *)real_image);
-						g_free(real_image);
-					}
+		gtk_widget_get_allocation(obj, &alloc);
+		width = alloc.width - 56;
+		wids = g_strdup_printf("%d", width);
+		src = (xmlDoc *)parse_html_sux(
+				tmp,
+				strlen(tmp));
+		if (src) {
+			xmlNode *doc = (xmlNode *)src;
+			while ((doc = html_find(doc, (gchar *)"img"))) {
+				int real_width = 0;
+				xmlChar *url = xmlGetProp(
+						doc,
+						(xmlChar *)"src");
+				gchar *real_image = verify_image(
+							(gchar *)url,
+							emfh);
+				if (real_image) {
+					xmlSetProp(
+						doc,
+						(xmlChar *)"src",
+						(xmlChar *)real_image);
+					g_free(real_image);
+				}
+				if (gconf_client_get_bool (rss_gconf,
+					GCONF_KEY_IMAGE_RESIZE, NULL)) {
 					pix = gdk_pixbuf_new_from_file(
 						(const char *)url,
 						(GError **)NULL);
@@ -2287,12 +2285,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 					}
 pixdone:			g_free(url);
 				}
-				xmlDocDumpMemory(src, &buff, (int*)&size);
-				xmlFree(src);
 			}
-			g_free(wids);
-		} else
-			buff=(xmlChar *)tmp;
+			xmlDocDumpMemory(src, &buff, (int*)&size);
+			xmlFree(src);
+		}
+		g_free(wids);
 
 		g_byte_array_free (buffer, 1);
 #if (DATASERVER_VERSION >= 2031001)
