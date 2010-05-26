@@ -5600,7 +5600,7 @@ display_comments (RDF *r, EMFormatHTML *format)
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
 	if (tree_walk (root, r)) {
 		gchar *comments = update_comments(r);
-		tmp = process_images(comments, r->uri, format);
+		tmp = process_images(comments, r->uri, TRUE, format);
 		g_free(comments);
 		if (r->maindate)
 			g_free(r->maindate);

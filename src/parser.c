@@ -860,7 +860,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 }
 
 gchar *
-process_images(gchar *text, gchar *link, EMFormatHTML *format)
+process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 {
 	xmlChar *buff = NULL;
 	guint size = 0;
@@ -873,10 +873,12 @@ process_images(gchar *text, gchar *link, EMFormatHTML *format)
 			xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
 			if (url) {
 				if ((name = fetch_image_redraw((gchar *)url, link, format))) {
-					tname = decode_image_cache_filename(name);
-					g_free(name);
-					name = g_filename_to_uri (tname, NULL, NULL);
-					g_free(tname);
+					if (decode) {
+						tname = decode_image_cache_filename(name);
+						g_free(name);
+						name = g_filename_to_uri (tname, NULL, NULL);
+						g_free(tname);
+					}
 					xmlSetProp(
 						doc, (xmlChar *)"src",
 						(xmlChar *)name);
@@ -1055,7 +1057,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **arti
 		g_free(b);
 
 		if (feed_name) {
-			gchar *buff = process_images(tmp, link, NULL);
+			gchar *buff = process_images(tmp, link, FALSE, NULL);
 			g_free(tmp);
 			b = buff;
 		} else
