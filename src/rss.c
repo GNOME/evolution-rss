@@ -2252,17 +2252,16 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 						doc,
 						(xmlChar *)"src",
 						(xmlChar *)real_image);
-					g_free(real_image);
 				}
 				if (gconf_client_get_bool (rss_gconf,
-					GCONF_KEY_IMAGE_RESIZE, NULL)) {
+					GCONF_KEY_IMAGE_RESIZE, NULL) && real_image) {
 					pix = gdk_pixbuf_new_from_file(
-						(const char *)url,
+						(const char *)real_image+7, //skip scheme part
 						(GError **)NULL);
 					if (pix)
 						real_width = gdk_pixbuf_get_width(pix);
 
-					d("url:%s\n", url);
+					d("real_image:%s\n", real_image);
 					d("width:%d\n", width);
 					d("real_width:%d\n", real_width);
 
@@ -2283,7 +2282,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 							(xmlChar *)"width",
 							(xmlChar *)wids);
 					}
-pixdone:			g_free(url);
+pixdone:			g_free(real_image);
 				}
 			}
 			xmlDocDumpMemory(src, &buff, (int*)&size);
