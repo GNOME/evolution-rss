@@ -37,6 +37,7 @@ extern int rss_verbose_debug;
 #include "fetch.h"
 #include "rss.h"
 #include "rss-config.h"
+#include "rss-image.h"
 #include "parser.h"
 #include "misc.h"
 #include "network-soup.h"
@@ -863,6 +864,7 @@ process_images(gchar *text, gchar *link, EMFormatHTML *format)
 {
 	xmlChar *buff = NULL;
 	guint size = 0;
+	gchar *tname;
 	xmlDoc *src = (xmlDoc *)parse_html_sux (text, strlen(text));
 	if (src) {
 		xmlNode *doc = (xmlNode *)src;
@@ -871,6 +873,10 @@ process_images(gchar *text, gchar *link, EMFormatHTML *format)
 			xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
 			if (url) {
 				if ((name = fetch_image_redraw((gchar *)url, link, format))) {
+					tname = decode_image_cache_filename(name);
+					g_free(name);
+					name = g_filename_to_uri (tname, NULL, NULL);
+					g_free(tname);
 					xmlSetProp(
 						doc, (xmlChar *)"src",
 						(xmlChar *)name);
