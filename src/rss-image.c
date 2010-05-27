@@ -456,8 +456,9 @@ gchar *
 decode_image_cache_filename(gchar *name)
 {
 	gsize size;
-	gchar *tmp, *csum, *tname;
-	tmp = g_base64_decode(name+4, &size);
+	gchar *csum, *tname;
+	gchar *tmp;
+	tmp = (gchar *)g_base64_decode(name+4, &size);
 	csum = g_compute_checksum_for_string(G_CHECKSUM_SHA1,
 			tmp, -1);
 	g_free(tmp);
@@ -486,9 +487,9 @@ verify_image(gchar *uri, EMFormatHTML *format)
 	g_return_val_if_fail(uri != NULL, NULL);
 
 	if (strstr(uri, "img:"))
-		duri = g_base64_decode(uri+4, &size);
+		duri = (gchar *)g_base64_decode(uri+4, &size);
 
-	if (!g_file_test((gchar *)duri, G_FILE_TEST_EXISTS)) {
+	if (!g_file_test(duri, G_FILE_TEST_EXISTS)) {
 			camel_url_decode((gchar *)uri);
 			//FIXME lame method of extracting data cache path
 			//there must be a function in camel for getting data cache path
@@ -570,7 +571,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	g_return_val_if_fail(url != NULL, NULL);
 
 	if (strstr(url, "img:"))
-		tmpurl = g_base64_decode(url+4, &size);
+		tmpurl = (gchar *)g_base64_decode(url+4, &size);
 	else {
 
 	if (strstr(url, "://") == NULL) {
@@ -639,7 +640,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	}
 	g_free(cache_file);
 
-working:burl = g_base64_encode(tmpurl, strlen(tmpurl));
+working:burl = g_base64_encode((guchar *)tmpurl, strlen(tmpurl));
 	result = g_strdup_printf("img:%s", burl);
 	g_free(burl);
 error:	g_free(tmpurl);

@@ -421,7 +421,7 @@ authenticate (SoupSession *session,
 
 	user = g_hash_table_lookup(rf->hruser, data);
 	pass = g_hash_table_lookup(rf->hrpass, data);
-	d("data:%s, user:%s, pass:%s\n", data, user, pass);
+	d("data:%s, user:%s, pass:%s\n", (gchar *)data, user, pass);
 
 	if (user && pass) {
 #if LIBSOUP_VERSION < 2003000
