@@ -5404,6 +5404,8 @@ process_attachments(create_feed *CF)
 	do {
 		gchar *tmpdir, *name;
 
+		if (!strlen(l->data))
+			continue;
 		if (g_list_find_custom(rf->enclist, l->data,
 			(GCompareFunc)strcmp))
 			continue;
