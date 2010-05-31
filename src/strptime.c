@@ -1094,6 +1094,8 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp, void *stat
   return (char *) rp;
 }
 
+char *
+strptime (const char *buf, const char *format, struct tm *tm);
 
 char *
 strptime (const char *buf, const char *format, struct tm *tm)
