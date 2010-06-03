@@ -1000,8 +1000,8 @@ rss_soup_init(void)
 		}
 		g_free(cookie_path);
 		g_free(moz_cookie_path);
-		if (!rf->stqueue)
-			rf->stqueue = g_queue_new();
 	}
 #endif
+	if (!rf->stqueue)
+		rf->stqueue = g_queue_new();
 }
