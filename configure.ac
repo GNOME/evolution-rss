@@ -103,7 +103,12 @@ if test "x$GTKHTMLEDITOR" == "xYES"; then
         AC_SUBST(GTKHTML_EDITOR_LIBS)
 fi
 
-DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2`
+PKG_CHECK_MODULES([EVOLUTION_DATASERVER], evolution-data-server-1.2, [have_ds=yes], [have_ds=no])
+if test "x$have_ds" == "xYES"; then
+       DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2`
+else
+       DATASERVER_VERSION=`$PKG_CONFIG --modversion libedataserver-1.2`
+fi
 DATASERVER_VERSION=`echo $DATASERVER_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(DATASERVER_VERSION)
 
