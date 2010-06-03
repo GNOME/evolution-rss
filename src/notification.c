@@ -336,37 +336,50 @@ taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress)
 	}
 }
 
-#if (EVOLUTION_VERSION >= 22900) //kb//
-void
-taskbar_op_finish(EActivity *id)
-{
-	EActivity *activity_key;
-	if (id == NULL) {
-		activity_key = g_hash_table_lookup(rf->activity, "main");
-		if (activity_key) {
-			dp("activity_key:%p\n", activity_key);
-			e_activity_complete (activity_key);
-			g_hash_table_remove(rf->activity, "main");
-		}
-	} else {
-		e_activity_complete (id);
-		g_hash_table_remove(rf->activity, id);
-	}
-}
-#else
 void
 taskbar_op_finish(gchar *key)
 {
-	EActivityHandler *activity_handler = mail_component_peek_activity_handler (mail_component_peek ());
-	if (rf->activity) {
-		guint activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
-		g_print("activity_key:%p\n", activity_key);
-		if (activity_key)
+#if (EVOLUTION_VERSION >= 22900) //kb//
+	EActivity *aid = NULL;
+	EActivity *activity_key;
+#else
+	guint aid = NULL;
+	guint activity_key;
+	EActivityHandler *activity_handler;
+#endif
+	if (key) {
+#if (EVOLUTION_VERSION >= 22900) //kb//
+		aid = (EActivity *)g_hash_table_lookup(rf->activity, key);
+#else
+		aid = (guint)g_hash_table_lookup(rf->activity, key);
+#endif
+	}
+	if (aid == NULL) {
+#if (EVOLUTION_VERSION >= 22900) //kb//
+		activity_key = g_hash_table_lookup(rf->activity, "main");
+#else
+		activity_key = g_hash_table_lookup(rf->activity, "main");
+#endif
+		if (activity_key) {
+			dp("activity_key:%p\n", activity_key);
+#if (EVOLUTION_VERSION >= 22900) //kb//
+			e_activity_complete (activity_key);
+#else
 			e_activity_handler_operation_finished(activity_handler, activity_key);
+#endif
+			g_hash_table_remove(rf->activity, "main");
+		}
+	} else {
+#if (EVOLUTION_VERSION >= 22900) //kb//
+		e_activity_complete (aid);
+#else
+		activity_handler = mail_component_peek_activity_handler (
+					mail_component_peek ());
+		e_activity_handler_operation_finished(activity_handler, aid);
+#endif
 		g_hash_table_remove(rf->activity, key);
 	}
 }
-#endif
 
 #if (EVOLUTION_VERSION >= 22900) //kb//
 EActivity*

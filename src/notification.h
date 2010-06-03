@@ -25,11 +25,7 @@ taskbar_op_message(gchar *msg, gchar *unikey);
 #endif
 void taskbar_op_abort(gpointer key);
 void taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress);
-#if (EVOLUTION_VERSION >= 22900) //kb//
-void taskbar_op_finish(EActivity *id);
-#else
 void taskbar_op_finish(gchar *key);
-#endif
 void taskbar_push_message(gchar *message);
 void taskbar_pop_message(void);
 

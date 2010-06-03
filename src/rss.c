@@ -219,9 +219,9 @@ SoupCookieJar *rss_soup_jar;
 #endif
 extern guint rsserror;
 gboolean single_pending = FALSE;
-//#if EVOLUTION_VERSION >= 22900
-//extern CamelSession *session;
-//#endif
+#if EVOLUTION_VERSION < 22900
+extern CamelSession *session;
+#endif
 
 rssfeed *rf = NULL;
 guint upgrade = 0;	// set to 2 when initailization successfull
@@ -1369,21 +1369,21 @@ webkit_over_link(WebKitWebView *web_view,
 }
 
 static void
-embed_zoom_in_cb (EShellView *shell,
+embed_zoom_in_cb (GtkWidget *w,
 			gpointer *data)
 {
 	webkit_web_view_zoom_in((WebKitWebView*)rf->mozembed);
 }
 
 static void
-embed_zoom_out_cb (EShellView *shell,
+embed_zoom_out_cb (GtkWidget *w,
 			gpointer *data)
 {
 	webkit_web_view_zoom_out((WebKitWebView *)rf->mozembed);
 }
 
 static void
-embed_zoom_100_cb (EShellView *shell,
+embed_zoom_100_cb (GtkWidget *w,
 			gpointer *data)
 {
 	webkit_web_view_set_zoom_level((WebKitWebView *)rf->mozembed, 1);
@@ -1427,6 +1427,7 @@ void webkit_hook_actions(void);
 void
 webkit_hook_actions(void)
 {
+#if EVOLUTION_VERSION >= 22900
 	EShellWindow *shell_window;
 	GtkAction *action;
 	const char *action_name;
@@ -1448,6 +1449,7 @@ webkit_hook_actions(void)
 	g_signal_connect (
 		action, "activate",
 		G_CALLBACK (embed_zoom_100_cb), NULL);
+#endif
 }
 
 #if 0
@@ -2518,7 +2520,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 		taskid = taskbar_op_message(name, key);
 		network_timeout();
 		if (!fetch_one_feed(fname, key, statuscb))
-			taskbar_op_finish(taskid);
+			taskbar_op_finish(g_strdup(key));
 		single_pending = FALSE;
 	}
 	g_free(name);
@@ -2791,7 +2793,7 @@ prepare_hashes(void)
 		rf->activity = g_hash_table_new_full(
 					g_str_hash,
 					g_str_equal,
-					NULL, NULL);
+					g_free, NULL);
 	if (!rf->error_hash)	//keeping trask of taskbar errors
 		rf->error_hash = g_hash_table_new_full(
 					g_str_hash,
@@ -2832,11 +2834,6 @@ finish_setup_feed(
 	gchar *tmsgkey;
 	GError *err = NULL;
 	gchar *tmsg = feed->tmsg;
-#if (EVOLUTION_VERSION >= 22900) //kb//
-	EActivity *aid;
-#else
-	guint aid;
-#endif
 	gpointer crc_feed = gen_md5(feed->feed_url);
 
 	if (rf->cancel_all || rf->import_cancel)
@@ -3096,9 +3093,7 @@ out:	rf->pending = FALSE;
 		void (*f)() = (GFunc)feed->ok;
 		f(feed->ok_arg);
 	}
-	aid = g_hash_table_lookup(rf->activity, crc_feed);
-	taskbar_op_finish(aid);
-	g_free(crc_feed);
+	taskbar_op_finish(crc_feed); //g_free
 	g_free(feed->feed_url);
 	if (feed->feed_name) g_free(feed->feed_name);
 	if (feed->prefix) g_free(feed->prefix);
@@ -3213,10 +3208,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	gboolean deleted = 0;
 	GString *response;
 	RDF *r;
-#if (EVOLUTION_VERSION >= 22900) //kb//
-	EActivity *aid;
-#else
-	guint aid;
+#if (EVOLUTION_VERSION < 22900)
 	MailComponent *mc = mail_component_peek ();
 #endif
 
@@ -3249,8 +3241,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	if (rf->feed_queue == 0) {
 		d("taskbar_op_finish()\n");
-		aid = g_hash_table_lookup(rf->activity, key);
-		taskbar_op_finish(aid);
+		taskbar_op_finish(g_strdup(key));
 		taskbar_op_finish(NULL);
 		rf->autoupdate = FALSE;
 		farticle=0;
@@ -3328,8 +3319,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			if (rf->info->data->gd)
 				gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
 		}
-		aid = g_hash_table_lookup(rf->activity, key);
-		taskbar_op_finish(aid);
+		taskbar_op_finish(g_strdup(key));
 		taskbar_op_finish(NULL);
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
@@ -3445,8 +3435,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			if (rf->info->data->gd)
 				gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
 		}
-		aid = g_hash_table_lookup(rf->activity, key);
-		taskbar_op_finish(aid);
+		taskbar_op_finish(g_strdup(key));
 		taskbar_op_finish(NULL);
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
