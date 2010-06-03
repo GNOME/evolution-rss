@@ -519,8 +519,12 @@ verify_image(gchar *uri, EMFormatHTML *format)
 			if (name) {
 				tname = decode_image_cache_filename(name);
 				g_free(name);
+#if (EVOLUTION_VERSION >= 23000)
 				result = g_filename_to_uri (tname, NULL, NULL);
 				g_free(tname);
+#else
+				result = tname;
+#endif
 			}
 			if (duri)
 				g_free(duri);
@@ -537,7 +541,11 @@ verify_image(gchar *uri, EMFormatHTML *format)
 		mime_type = g_content_type_guess(NULL, (guchar *)contents, length, NULL);
 		/*FIXME mime type here could be wrong */
 		if (g_ascii_strncasecmp (mime_type, "image/", 6)) {
+#if (EVOLUTION_VERSION >= 23000)
 			result = g_filename_to_uri (pixfile, NULL, NULL);
+#else
+			result = g_strdup(pixfile);
+#endif
 			if (duri)
 				g_free(duri);
 			return result;
@@ -640,7 +648,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	}
 	g_free(cache_file);
 
-working:burl = g_base64_encode((guchar *)tmpurl, strlen(tmpurl));
+working:burl = (gchar *)g_base64_encode((guchar *)tmpurl, strlen(tmpurl));
 	result = g_strdup_printf("img:%s", burl);
 	g_free(burl);
 error:	g_free(tmpurl);
