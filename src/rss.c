@@ -2520,7 +2520,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 		taskid = taskbar_op_message(name, key);
 		network_timeout();
 		if (!fetch_one_feed(fname, key, statuscb))
-			taskbar_op_finish(g_strdup(key));
+			taskbar_op_finish(key);
 		single_pending = FALSE;
 	}
 	g_free(name);
@@ -2793,7 +2793,7 @@ prepare_hashes(void)
 		rf->activity = g_hash_table_new_full(
 					g_str_hash,
 					g_str_equal,
-					g_free, NULL);
+					NULL, NULL);
 	if (!rf->error_hash)	//keeping trask of taskbar errors
 		rf->error_hash = g_hash_table_new_full(
 					g_str_hash,
@@ -3093,7 +3093,8 @@ out:	rf->pending = FALSE;
 		void (*f)() = (GFunc)feed->ok;
 		f(feed->ok_arg);
 	}
-	taskbar_op_finish(crc_feed); //g_free
+	taskbar_op_finish(crc_feed);
+	g_free(crc_feed);
 	g_free(feed->feed_url);
 	if (feed->feed_name) g_free(feed->feed_name);
 	if (feed->prefix) g_free(feed->prefix);
@@ -3241,7 +3242,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	if (rf->feed_queue == 0) {
 		d("taskbar_op_finish()\n");
-		taskbar_op_finish(g_strdup(key));
+		taskbar_op_finish(key);
 		taskbar_op_finish(NULL);
 		rf->autoupdate = FALSE;
 		farticle=0;
@@ -3319,7 +3320,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			if (rf->info->data->gd)
 				gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
 		}
-		taskbar_op_finish(g_strdup(key));
+		taskbar_op_finish(key);
 		taskbar_op_finish(NULL);
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
@@ -3435,7 +3436,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			if (rf->info->data->gd)
 				gtk_widget_destroy((GtkWidget *)rf->info->data->gd);
 		}
-		taskbar_op_finish(g_strdup(key));
+		taskbar_op_finish(key);
 		taskbar_op_finish(NULL);
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
