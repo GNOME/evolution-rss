@@ -1630,6 +1630,9 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	GtkAdjustment *adj;
 	gboolean online;
 	guint engine = fallback_engine();
+#if EVOLUTION_VERSION >= 23103
+	EWebView *web_view;
+#endif
 
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
@@ -1739,12 +1742,19 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	gtk_container_add ((GtkContainer *) eb, rf->mozembed);
 	g_object_ref(rf->mozembed);
 	rf->headers_mode = myf->mode;
+
+#if EVOLUTION_VERSION >= 23103
+	web_view = em_format_html_get_web_view (efh);
+	po->html = gtk_widget_get_toplevel (GTK_WIDGET (web_view));
+#else
 	po->html = GTK_WIDGET(efh->html);
+#endif
+
 	adj = gtk_scrolled_window_get_vadjustment(
-		(GtkScrolledWindow *)gtk_widget_get_parent(GTK_WIDGET(efh->html)));
+		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
 	height = (int)gtk_adjustment_get_page_size(adj);
 	adj = gtk_scrolled_window_get_hadjustment(
-		(GtkScrolledWindow *)gtk_widget_get_parent(GTK_WIDGET(efh->html)));
+		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
 	width = (int)gtk_adjustment_get_page_size(adj);
 	gtk_widget_set_size_request(rf->mozembed, width-32, height);
 	po->sh_handler = g_signal_connect(adj,
@@ -1918,6 +1928,9 @@ free_rss_browser(EMFormatHTMLPObject *o)
 	gpointer key = g_hash_table_lookup(rf->key_session, po->website);
 	guint engine;
 	GtkAdjustment *adj;
+#if EVOLUTION_VERSION >= 23103
+	EWebView *web_view;
+#endif
 
 	d("key sess:%p\n", key);
 	if (key) {
@@ -1937,9 +1950,17 @@ free_rss_browser(EMFormatHTMLPObject *o)
 			gtk_widget_destroy(rf->mozembed);
 		rf->mozembed = NULL;
 	}
+
+#if EVOLUTION_VERSION >= 23103
+	web_view = em_format_html_get_web_view (po->format);
+	adj = gtk_scrolled_window_get_hadjustment(
+		(GtkScrolledWindow *)gtk_widget_get_parent(
+					GTK_WIDGET(web_view)));
+#else
 	adj = gtk_scrolled_window_get_hadjustment(
 		(GtkScrolledWindow *)gtk_widget_get_parent(
 					GTK_WIDGET(po->format->html)));
+#endif
 	g_signal_handler_disconnect(adj, po->sh_handler);
 	gtk_widget_destroy(po->container);
 	g_free(po->website);
@@ -2208,7 +2229,14 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		gchar *wids;
 		xmlDoc *src;
 		guint width;
-		GtkWidget *obj = (GtkWidget *)emfh->html;
+		GtkWidget *obj;
+#if EVOLUTION_VERSION >= 23103
+		EWebView *web_view;
+		web_view = em_format_html_get_web_view (emfh);
+		obj = (GtkWidget *)web_view;
+#else
+		obj = (GtkWidget *)emfh->html;
+#endif
 
 		d("normal html rendering\n");
 		buffer = g_byte_array_new ();
@@ -5739,7 +5767,6 @@ get_feed_age(RDF *r, gpointer name)
 		uids = camel_folder_get_uids (folder);
 		camel_folder_freeze(folder);
 		for (i = 0; i < uids->len; i++) {
-		g_print("notpresent\n");
 			el = NULL;
 			match = FALSE;
 			message = camel_folder_get_message(folder, uids->pdata[i], NULL);
@@ -5791,11 +5818,9 @@ get_feed_age(RDF *r, gpointer name)
 		camel_folder_sync (folder, TRUE, NULL);
 		camel_folder_thaw(folder);
 		camel_folder_expunge (folder, NULL);
-		g_print("notpresent done\n");
 	}
 	if (del_feed == 2) {
 		guint del_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, key));
-		g_print("feed == 2\n");
 		uids = camel_folder_get_uids (folder);
 		camel_folder_freeze(folder);
 		for (i = 0; i < uids->len; i++) {
