@@ -708,7 +708,13 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	ok = GTK_WIDGET (
 		gtk_builder_get_object(gui, "ok_button"));
+#if GTK_VERSION < 2018000
+	GTK_WIDGET_SET_FLAGS (
+		ok,
+		GTK_CAN_DEFAULT);
+#else
 	gtk_widget_set_can_default (ok, TRUE);
+#endif
 	d("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
 	gtk_dialog_add_action_widget (
 		(GtkDialog *)dialog1,
@@ -721,7 +727,13 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		GTK_DIALOG (dialog1),
 		cancel,
 		GTK_RESPONSE_CANCEL);
+#if GTK_VERSION < 2018000
+	GTK_WIDGET_SET_FLAGS (
+		cancel,
+		GTK_CAN_DEFAULT);
+#else
 	gtk_widget_set_can_default (cancel, TRUE);
+#endif
 
 	gtk_widget_add_accelerator (
 		ok,
@@ -902,12 +914,21 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 		NULL);
 #endif
 	progress = gtk_progress_bar_new();
+#if GTK_VERSION >= 2014000
 	gtk_box_pack_start(
 		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(msg_feeds))),
 		progress,
 		FALSE,
 		FALSE,
 		0);
+#else
+	gtk_box_pack_start(
+		GTK_BOX(GTK_DIALOG(msg_feeds)->vbox),
+		progress,
+		FALSE,
+		FALSE,
+		0);
+#endif
 	gtk_progress_bar_set_fraction(
 		(GtkProgressBar *)progress,
 		0);
@@ -1295,7 +1316,11 @@ remove_feed_dialog(gchar *msg)
 #endif
 	gtk_window_set_keep_above(GTK_WINDOW(dialog1), TRUE);
 
+#if GTK_VERSION >= 2014000
 	dialog_vbox1 = gtk_dialog_get_content_area(GTK_DIALOG (dialog1));
+#else
+	dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+#endif
 	gtk_widget_show (dialog_vbox1);
 
 	vbox1 = gtk_vbox_new (FALSE, 10);
@@ -1330,7 +1355,11 @@ remove_feed_dialog(gchar *msg)
 		FALSE,
 		0);
 
+#if GTK_VERSION >= 2014000
 	dialog_action_area1 = gtk_dialog_get_action_area(GTK_DIALOG (dialog1));
+#else
+	dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+#endif
 	gtk_widget_show (dialog_action_area1);
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (dialog_action_area1),
@@ -1399,12 +1428,21 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 		NULL);
 #endif
 	progress = gtk_progress_bar_new();
+#if GTK_VERSION >= 2014000
 	gtk_box_pack_start(
 		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(msg_feeds))),
 		progress,
 		FALSE,
 		FALSE,
 		0);
+#else
+	gtk_box_pack_start(
+		GTK_BOX(GTK_DIALOG(msg_feeds)->vbox),
+		progress,
+		FALSE,
+		FALSE,
+		0);
+#endif
 	gtk_progress_bar_set_fraction((GtkProgressBar *)progress, 0);
 	/* xgettext:no-c-format */
 	gtk_progress_bar_set_text((GtkProgressBar *)progress, _("0% done"));
@@ -1693,6 +1731,7 @@ error:		rss_error(NULL,
 		NULL);
 	import_label = gtk_label_new(_("Please wait"));
 	import_progress = gtk_progress_bar_new();
+#if GTK_VERSION >= 2014000
 	gtk_box_pack_start(
 		GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(import_dialog))),
 		import_label,
@@ -1705,6 +1744,20 @@ error:		rss_error(NULL,
 		FALSE,
 		FALSE,
 		0);
+#else
+	gtk_box_pack_start(
+		GTK_BOX(GTK_DIALOG(import_dialog)->vbox),
+		import_label,
+		FALSE,
+		FALSE,
+		0);
+	gtk_box_pack_start(
+		GTK_BOX(GTK_DIALOG(import_dialog)->vbox),
+		import_progress,
+		FALSE,
+		FALSE,
+		0);
+#endif
 	gtk_widget_show_all(import_dialog);
 	g_free(msg);
 	if ((src = src->children)) {
@@ -2119,11 +2172,20 @@ create_import_dialog (void)
 		GTK_WINDOW (import_file_select),
 		GDK_WINDOW_TYPE_HINT_DIALOG);
 
+#if GTK_VERSION >= 2014000
 	dialog_vbox5 = gtk_dialog_get_content_area(GTK_DIALOG (import_file_select));
+#else
+	dialog_vbox5 = GTK_DIALOG (import_file_select)->vbox;
+#endif
 	gtk_widget_show (dialog_vbox5);
 
+#if GTK_VERSION >= 2014000
 	dialog_action_area5 = gtk_dialog_get_action_area(
 				GTK_DIALOG (import_file_select));
+#else
+	dialog_action_area5 = GTK_DIALOG (import_file_select)->action_area;
+#endif
+
 	gtk_widget_show (dialog_action_area5);
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (dialog_action_area5),
@@ -2135,9 +2197,15 @@ create_import_dialog (void)
 		GTK_DIALOG (import_file_select),
 		button1,
 		GTK_RESPONSE_CANCEL);
+#if GTK_VERSION < 2018000
+	GTK_WIDGET_SET_FLAGS (
+		button1,
+		GTK_CAN_DEFAULT);
+#else
 	gtk_widget_set_can_default (
 		button1,
 		TRUE);
+#endif
 
 	button2 = gtk_button_new_from_stock ("gtk-open");
 	gtk_widget_show (button2);
@@ -2145,7 +2213,13 @@ create_import_dialog (void)
 		GTK_DIALOG (import_file_select),
 		button2,
 		GTK_RESPONSE_OK);
+#if GTK_VERSION < 2018000
+	GTK_WIDGET_SET_FLAGS (
+		button2,
+		GTK_CAN_DEFAULT);
+#else
 	gtk_widget_set_can_default(button2, TRUE);
+#endif
 
 	gtk_widget_grab_default (button2);
 	return import_file_select;
@@ -2188,11 +2262,19 @@ create_export_dialog (void)
 		GTK_WINDOW (export_file_select),
 		GDK_WINDOW_TYPE_HINT_DIALOG);
 
+#if GTK_VERSION >= 2014000
 	vbox26 = gtk_dialog_get_content_area(GTK_DIALOG (export_file_select));
+#else
+	vbox26 = GTK_DIALOG (export_file_select)->vbox;
+#endif
 	gtk_widget_show (vbox26);
 
+#if GTK_VERSION >= 2014000
 	hbuttonbox1 = gtk_dialog_get_action_area(
 			GTK_DIALOG (export_file_select));
+#else
+	hbuttonbox1 = GTK_DIALOG (export_file_select)->action_area;
+#endif
 	gtk_widget_show (hbuttonbox1);
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (hbuttonbox1),
@@ -2204,14 +2286,25 @@ create_export_dialog (void)
 		GTK_DIALOG (export_file_select),
 		button3,
 		GTK_RESPONSE_CANCEL);
+#if GTK_VERSION < 2018000
+	GTK_WIDGET_SET_FLAGS (
+		button3,
+		GTK_CAN_DEFAULT);
+#else
 	gtk_widget_set_can_default(button3, TRUE);
-
+#endif
 	button4 = gtk_button_new_from_stock ("gtk-save");
 	gtk_widget_show (button4);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (export_file_select),
 		button4, GTK_RESPONSE_OK);
+#if GTK_VERSION < 2018000
+	GTK_WIDGET_SET_FLAGS (
+		button4,
+		GTK_CAN_DEFAULT);
+#else
 	gtk_widget_set_can_default(button4, TRUE);
+#endif
 
 	gtk_widget_grab_default (button4);
 	return export_file_select;
@@ -2496,7 +2589,11 @@ export_opml(gchar *file)
 //        g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
 	import_label = gtk_label_new(_("Please wait"));
 	import_progress = gtk_progress_bar_new();
+#if GTK_VERSION >= 2014000
 	content_area = gtk_dialog_get_content_area(GTK_DIALOG(import_dialog));
+#else
+	content_area = GTK_DIALOG(import_dialog)->vbox;
+#endif
 	gtk_box_pack_start(
 		GTK_BOX(content_area),
 		import_label,
@@ -2953,10 +3050,16 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		"rss-html-rendering.ui",
 		NULL);
 	ui->xml = gtk_builder_new ();
+#if GTK_VERSION >= 2014000
 	if (!gtk_builder_add_objects_from_file (ui->xml, uifile, toplevel, &error)) {
 		g_warning ("Couldn't load builder file: %s", error->message);
 		g_error_free (error);
 	}
+#else
+	g_warning("gtk too old! cannot create ui file. need >= 2.14\n");
+	// and not very interesed to back port this
+	return NULL;
+#endif
 	g_free (uifile);
 
 	ui->combobox = GTK_WIDGET (gtk_builder_get_object(ui->xml, "hbox1"));

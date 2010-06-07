@@ -29,9 +29,16 @@
 #include <e-util/e-error.h>
 #endif
 
-#include "notification.h"
+#if EVOLUTION_VERSION <= 22203
+#include <misc/e-activity-handler.h>
+#include <e-util/e-icon-factory.h>
+#endif
+
+extern int rss_verbose_debug;
+
 #include "rss.h"
 #include "network-soup.h"
+#include "notification.h"
 
 #if (EVOLUTION_VERSION >= 22900) //kb//
 extern EShellView *rss_shell_view;
@@ -183,7 +190,7 @@ void
 taskbar_pop_message(void)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = 
+	EActivityHandler *activity_handler =
 		mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_unset_message(activity_handler);
 #else
@@ -198,9 +205,9 @@ void
 taskbar_op_abort(gpointer key)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = 
+	EActivityHandler *activity_handler =
 		mail_component_peek_activity_handler (mail_component_peek ());
-	guint activity_key = 
+	guint activity_key =
 		GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, key));
 	if (activity_key)
 		e_activity_handler_operation_finished(
@@ -262,11 +269,11 @@ taskbar_op_new(gchar *message)
 		key);
 	return activity;
 #else
-	activity_handler = 
+	activity_handler =
 		mail_component_peek_activity_handler (mail_component_peek ());
 	mcp = g_strdup_printf("%p", mail_component_peek());
 #if (EVOLUTION_VERSION >= 22306)
-	activity_id = 
+	activity_id =
 		e_activity_handler_cancelable_operation_started(
 			activity_handler,
 			"evolution-mail",
@@ -275,12 +282,12 @@ taskbar_op_new(gchar *message)
 			(void (*) (gpointer))taskbar_op_abort,
 			key);
 #else
-	progress_icon = 
+	progress_icon =
 		e_icon_factory_get_icon (
 			"mail-unread",
 			E_ICON_SIZE_MENU);
 #if (EVOLUTION_VERSION >= 22200)
-	activity_id = 
+	activity_id =
 		e_activity_handler_cancelable_operation_started(
 			activity_handler,
 			"evolution-mail",
@@ -343,9 +350,10 @@ taskbar_op_finish(gchar *key)
 	EActivity *aid = NULL;
 	EActivity *activity_key;
 #else
-	guint aid = NULL;
+	guint aid = 0;
 	guint activity_key;
-	EActivityHandler *activity_handler;
+	EActivityHandler *activity_handler = mail_component_peek_activity_handler (
+						mail_component_peek ());
 #endif
 	if (key) {
 #if (EVOLUTION_VERSION >= 22900) //kb//
@@ -358,10 +366,10 @@ taskbar_op_finish(gchar *key)
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		activity_key = g_hash_table_lookup(rf->activity, "main");
 #else
-		activity_key = g_hash_table_lookup(rf->activity, "main");
+		activity_key = GPOINTER_TO_INT(g_hash_table_lookup(rf->activity, "main"));
 #endif
 		if (activity_key) {
-			dp("activity_key:%p\n", activity_key);
+			d("activity_key:%p\n", (gpointer)activity_key);
 #if (EVOLUTION_VERSION >= 22900) //kb//
 			e_activity_complete (activity_key);
 #else
@@ -373,8 +381,6 @@ taskbar_op_finish(gchar *key)
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		e_activity_complete (aid);
 #else
-		activity_handler = mail_component_peek_activity_handler (
-					mail_component_peek ());
 		e_activity_handler_operation_finished(activity_handler, aid);
 #endif
 		g_hash_table_remove(rf->activity, key);
@@ -405,12 +411,12 @@ taskbar_op_message(gchar *msg, gchar *unikey)
 
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		if (!msg)
-			activity_id = 
+			activity_id =
 				(EActivity *)taskbar_op_new(
-					tmsg, 
+					tmsg,
 					(gchar *)"main");
 		else
-			activity_id = 
+			activity_id =
 				(EActivity *)taskbar_op_new(tmsg, msg);
 #else
 #if (EVOLUTION_VERSION >= 22200)

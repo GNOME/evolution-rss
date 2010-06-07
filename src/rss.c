@@ -1008,7 +1008,11 @@ reload_cb (GtkWidget *button, gpointer data)
 		break;
 		case 1:
 #ifdef	HAVE_WEBKIT
+#if (WEBKIT_VERSION >= 1000003)
 	webkit_web_view_reload_bypass_cache(WEBKIT_WEB_VIEW(rf->mozembed));
+#else
+	webkit_web_view_reload(WEBKIT_WEB_VIEW(rf->mozembed));
+#endif
 #endif
 		break;
 	}
@@ -1026,7 +1030,11 @@ rss_browser_set_hsize (GtkAdjustment *adj, gpointer data);
 void
 rss_browser_set_hsize (GtkAdjustment *adj, gpointer data)
 {
+#if GTK_VERSION >= 2014000
 	resize_pane_hsize = gtk_adjustment_get_page_size(adj);
+#else
+	resize_pane_hsize = (adj->page_size);
+#endif
 }
 
 void rss_browser_update_content (
@@ -1327,9 +1335,12 @@ webkit_set_history(gchar *base)
 		webkit_web_view_get_back_forward_list (WEBKIT_WEB_VIEW(rf->mozembed));
 	WebKitWebHistoryItem *item =
 		webkit_web_history_item_new_with_data(base, "Untitled");
+#if (WEBKIT_VERSION >= 1001001)
 	webkit_web_back_forward_list_add_item(back_forward_list, item);
+#endif
 }
 
+#if (WEBKIT_VERSION >= 1001007)
 static void
 webkit_history_status (WebKitWebView *view,
 		GParamSpec *spec,
@@ -1352,6 +1363,7 @@ webkit_history_status (WebKitWebView *view,
 		break;
 	}
 }
+#endif
 
 gboolean
 webkit_over_link(WebKitWebView *web_view,
@@ -1658,11 +1670,13 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 			po->stopbut);
 #endif
 	}
+#if (WEBKIT_VERSION >= 1001007)
 		g_signal_connect (
 			rf->mozembed,
 			"notify::load-status",
 			G_CALLBACK(webkit_history_status),
 			po);
+#endif
 #endif
 
 #ifdef HAVE_GECKO
@@ -1752,10 +1766,18 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 
 	adj = gtk_scrolled_window_get_vadjustment(
 		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
+#if GTK_VERSION >= 2014000
 	height = (int)gtk_adjustment_get_page_size(adj);
+#else
+	height = (int)(adj->page_size);
+#endif
 	adj = gtk_scrolled_window_get_hadjustment(
 		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
+#if GTK_VERSION >= 2014000
 	width = (int)gtk_adjustment_get_page_size(adj);
+#else
+	width = (int)(adj->page_size);
+#endif
 	gtk_widget_set_size_request(rf->mozembed, width-32, height);
 	po->sh_handler = g_signal_connect(adj,
 		"changed",
@@ -2261,7 +2283,11 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		} else
 			tmp = g_strdup((gchar *)(buffer->data));
 
+#if GTK_VERSION >= 2018000
 		gtk_widget_get_allocation(obj, &alloc);
+#else
+		alloc.width = obj->allocation.width;;
+#endif
 		width = alloc.width - 56;
 		wids = g_strdup_printf("%d", width);
 		src = (xmlDoc *)parse_html_sux(
@@ -4285,7 +4311,11 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 void evo_window_popup(GtkWidget *win)
 {
 	gint x, y, sx, sy, new_x, new_y;
+#if GTK_VERSION >= 2014000
 	GdkWindow *window = gtk_widget_get_window(win);
+#else
+	GdkWindow *window = win->window;
+#endif
 
 	g_return_if_fail(win != NULL);
 	g_return_if_fail(window != NULL);

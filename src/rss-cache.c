@@ -99,10 +99,41 @@ rss_cache_get(gchar *url)
 	return camel_data_cache_get(cache, HTTP_CACHE_PATH, url, NULL);
 }
 
+#if DATASERVER_VERSION <= 2025004
+#define CAMEL_DATA_CACHE_BITS (6)
+#define CAMEL_DATA_CACHE_MASK ((1<<CAMEL_DATA_CACHE_BITS)-1)
+
+static char *
+data_cache_path(
+	CamelDataCache *cdc, int create, const char *path, const char *key)
+{
+	char *dir, *real;
+	char *tmp = NULL;
+	guint32 hash;
+
+	hash = g_str_hash(key);
+	hash = (hash>>5)&CAMEL_DATA_CACHE_MASK;
+	dir = alloca(strlen(cdc->path) + strlen(path) + 8);
+	sprintf(dir, "%s/%s/%02x", cdc->path, path, hash);
+	tmp = camel_file_util_safe_filename(key);
+	if (!tmp)
+		return NULL;
+	real = g_strdup_printf("%s/%s", dir, tmp);
+	g_free(tmp);
+
+	return real;
+}
+#endif
+
+
 gchar*
 rss_cache_get_filename(gchar *url)
 {
+#if DATASERVER_VERSION <= 2025004
+	return data_cache_path(cache, FALSE, HTTP_CACHE_PATH, url);
+#else
 	return camel_data_cache_get_filename(cache, HTTP_CACHE_PATH, url, NULL);
+#endif
 }
 
 CamelStream*
