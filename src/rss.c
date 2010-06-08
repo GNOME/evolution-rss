@@ -1084,7 +1084,7 @@ rss_browser_update_content (
 						NULL);
 					/*FIXME free fi*/
 					} else {
-						g_print("cache read\n");
+						d("cache read\n");
 						fi->create = 0;
 						browser_stream_write(stream, po->website);
 						camel_stream_close(stream);
@@ -1642,9 +1642,6 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	GtkAdjustment *adj;
 	gboolean online;
 	guint engine = fallback_engine();
-#if EVOLUTION_VERSION >= 23103
-	EWebView *web_view;
-#endif
 
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
@@ -1758,8 +1755,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	rf->headers_mode = myf->mode;
 
 #if EVOLUTION_VERSION >= 23103
-	web_view = em_format_html_get_web_view (efh);
-	po->html = gtk_widget_get_toplevel (GTK_WIDGET (web_view));
+	po->html = (GtkWidget *)em_format_html_get_web_view (efh);
 #else
 	po->html = GTK_WIDGET(efh->html);
 #endif
