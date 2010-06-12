@@ -3060,23 +3060,6 @@ add:
 		if (rf->cancel_all || rf->import_cancel)
 			goto out;
 
-		if (rf->import) {
-			rf->import--;
-			d("IMPORT:%d, chn:%s\n", rf->import, chn_name);
-			progress++;
-			update_progress_bar(rf->import);
-		}
-
-		if (!rf->import) {
-			if (rf->progress_dialog)
-				gtk_widget_destroy(rf->progress_dialog);
-			rf->progress_bar = NULL;
-			rf->progress_dialog = NULL;
-			progress = 0;
-			rf->display_cancel = 0;
-			rf->import_cancel = 0;
-			rf->cancel_all = 0;
-		}
 
 		taskbar_op_set_progress(tmsgkey, tmsg, 0.9);
 
@@ -3136,6 +3119,23 @@ add:
 		_("Invalid Feed"));
 
 out:	rf->pending = FALSE;
+	if (rf->import) {
+		rf->import--;
+		d("IMPORT queue size:%d\n", rf->import);
+		progress++;
+		update_progress_bar(rf->import);
+	}
+
+	if (!rf->import) {
+		if (rf->progress_dialog)
+			gtk_widget_destroy(rf->progress_dialog);
+		rf->progress_bar = NULL;
+		rf->progress_dialog = NULL;
+		progress = 0;
+		rf->display_cancel = 0;
+		rf->import_cancel = 0;
+		rf->cancel_all = 0;
+	}
 	if (!rf->setup && feed->cancelable != NULL) {
 		void (*f)() = (GFunc)feed->cancelable;
 		f(feed->cancelable_arg);
@@ -4217,7 +4217,8 @@ custom_update_articles(CDATA *cdata)
 		// check if we're enabled and no cancelation signal pending
 		// and no imports pending
 		dp("cdata->key:%s\n", (gchar *)cdata->key);
-		if (g_hash_table_lookup(rf->hre, lookup_key(cdata->key)) && !rf->cancel && !rf->import) {
+		if (g_hash_table_lookup(rf->hre, lookup_key(cdata->key))
+		&& !rf->cancel && !rf->import) {
 			d("\nFetching: %s..%s\n",
 				(char *)g_hash_table_lookup(rf->hr,
 					lookup_key(cdata->key)),
