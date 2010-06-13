@@ -45,7 +45,6 @@ extern int rss_verbose_debug;
 /************ RDF Parser *******************/
 
 guint rsserror = FALSE;
-gchar *rssstrerror = NULL;
 extern rssfeed *rf;
 extern gboolean feed_new;
 
@@ -164,7 +163,6 @@ static void
 my_xml_perror_handler (void *ctx, const char *msg, ...)
 {
 	rsserror = TRUE;
-//	rssstrerror
 	g_print("xml_parse_sux(): ERROR:%s\n", msg);
 }
 
@@ -179,54 +177,54 @@ xml_parse_sux (const char *buf, int len)
 {
 	static xmlSAXHandler *sax;
 	xmlParserCtxtPtr ctxt;
-	xmlDoc *doc;
+	xmlDoc *doc = NULL;
+	gchar *mime_type;
+
 	rsserror = FALSE;
-	rssstrerror = NULL;
 
 	g_return_val_if_fail (buf != NULL, NULL);
+	mime_type = g_content_type_guess(NULL, (guchar *)buf, len, NULL);
+	//feeding parsed anything other than xml results in blocking delays
+	//it's possible we can relax parser by using xmlErrorFunc
+	if (!g_ascii_strncasecmp (mime_type, "application/", 12)) {
+		if (!sax) {
+			xmlInitParser();
+			sax = xmlMalloc (sizeof (xmlSAXHandler));
+			xmlSAXVersion (sax, 2);
+			sax->warning = my_xml_parser_error_handler;
+			sax->error = my_xml_perror_handler;
+		}
 
-	if (!sax) {
-		xmlInitParser();
-		sax = xmlMalloc (sizeof (xmlSAXHandler));
-//#if LIBXML_VERSION > 20600 
-		xmlSAXVersion (sax, 2);
-//#else
-//              memcpy (sax, &xmlDefaultSAXHandler, sizeof (xmlSAXHandler));
-//#endif
-		sax->warning = my_xml_parser_error_handler;
-		sax->error = my_xml_perror_handler;
-	}
+		if (len == -1)
+			len = strlen (buf);
+		ctxt = xmlCreateMemoryParserCtxt (buf, len);
+		if (!ctxt)
+			return NULL;
 
-	if (len == -1)
-		len = strlen (buf);
-	ctxt = xmlCreateMemoryParserCtxt (buf, len);
-	if (!ctxt)
-		return NULL;
+		xmlFree (ctxt->sax);
+		ctxt->sax = sax;
+		ctxt->sax2 = 1;
+		ctxt->str_xml = xmlDictLookup (ctxt->dict, BAD_CAST "xml", 3);
+		ctxt->str_xmlns = xmlDictLookup (ctxt->dict, BAD_CAST "xmlns", 5);
+		ctxt->str_xml_ns = xmlDictLookup (ctxt->dict, XML_XML_NAMESPACE, 36);
 
-	xmlFree (ctxt->sax);
-	ctxt->sax = sax;
-//#if LIBXML_VERSION > 20600
-	ctxt->sax2 = 1;
-	ctxt->str_xml = xmlDictLookup (ctxt->dict, BAD_CAST "xml", 3);
-	ctxt->str_xmlns = xmlDictLookup (ctxt->dict, BAD_CAST "xmlns", 5);
-	ctxt->str_xml_ns = xmlDictLookup (ctxt->dict, XML_XML_NAMESPACE, 36);
-//#endif
+		ctxt->recovery = TRUE;
+		ctxt->vctxt.error = my_xml_parser_error_handler;
+		ctxt->vctxt.warning = my_xml_parser_error_handler;
 
-	ctxt->recovery = TRUE;
-	ctxt->vctxt.error = my_xml_parser_error_handler;
-	ctxt->vctxt.warning = my_xml_parser_error_handler;
 
-	xmlCtxtUseOptions(ctxt, XML_PARSE_DTDLOAD
+		xmlCtxtUseOptions(ctxt, XML_PARSE_DTDLOAD
 				| XML_PARSE_NOENT);
 
-//                                | XML_PARSE_NOCDATA);
+		xmlParseDocument (ctxt);
 
-	xmlParseDocument (ctxt);
-
-	doc = ctxt->myDoc;
-	ctxt->sax = NULL;
-	xmlFreeParserCtxt (ctxt);
-
+		doc = ctxt->myDoc;
+		ctxt->sax = NULL;
+		xmlFreeParserCtxt (ctxt);
+	} else {
+		rsserror = TRUE;
+	}
+	g_free(mime_type);
 	return doc;
 }
 

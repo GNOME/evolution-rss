@@ -3405,7 +3405,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		xmlError *err = xmlGetLastError();
 		gchar *tmsg = g_strdup_printf("\n%s\nInvalid feed: %s",
 				(gchar *)user_data,
-				err->message);
+				err ? err->message : _("illegal content type!"));
 		rss_error(user_data,
 			NULL,
 			_("Error while parsing feed."),
