@@ -2619,8 +2619,8 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 #endif
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
 //			if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
-					// unfortunately e_icon_factory_get_icon return broken image in case of error
-					// we use gdk_pixbuf_new_from_file to test the validity of the image file
+			// unfortunately e_icon_factory_get_icon return broken image in case of error
+			// we use gdk_pixbuf_new_from_file to test the validity of the image file
 #if (EVOLUTION_VERSION >= 22703)
 			if (display_folder_icon(t->store, key))
 				goto out;
@@ -5108,6 +5108,7 @@ create_mail(create_feed *CF)
 	tmp = decode_entities(CF->subj);
 	tmp2 = markup_decode(tmp);
 	safe_subj = camel_header_encode_string((unsigned char *)tmp2);
+	g_strdelimit(safe_subj, "\n", ' ');
 	camel_mime_message_set_subject(new, safe_subj);
 	g_free(tmp);
 	g_free(tmp2);
