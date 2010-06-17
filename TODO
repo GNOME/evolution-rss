@@ -40,3 +40,4 @@
 	* add select all for feed list or perhaps delete all - manually select each record and pressing delete is a pain on a 10000 feed list - abitily to select just for deletion
 	* check key->session big memleak ?
 	* markup fail perhaps in web auth dialog
+	* nice to add progressive downloading of images

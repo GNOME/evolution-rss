@@ -487,7 +487,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 	g_return_val_if_fail(uri != NULL, NULL);
 
 	if (strstr(uri, "img:"))
-		duri = (gchar *)g_base64_decode(uri+4, &size);
+		duri = decode_image_cache_filename(uri);
 
 	if (!g_file_test(duri, G_FILE_TEST_EXISTS)) {
 			camel_url_decode((gchar *)uri);
@@ -511,6 +511,8 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				name = fetch_image_redraw(turl, NULL, format);
 				g_free(nurl);
 			} else {
+				if (!strcmp(scheme, "file"))
+					goto fail;
 				turl = uri;
 				name = fetch_image_redraw(uri, NULL, format);
 				g_free(scheme);
@@ -534,22 +536,14 @@ verify_image(gchar *uri, EMFormatHTML *format)
 		 * bound to be wrong, especially on files fetched from the web
 		 * this is very important as we might get quite a few images
 		 * missing otherwise */
-		g_file_get_contents (duri ? duri:uri,
+		g_file_get_contents (duri?duri:uri,
 			&contents,
 			&length,
 			NULL);
 		mime_type = g_content_type_guess(NULL, (guchar *)contents, length, NULL);
 		/*FIXME mime type here could be wrong */
-		if (g_ascii_strncasecmp (mime_type, "image/", 6)) {
-#if (EVOLUTION_VERSION >= 23000)
-			result = g_filename_to_uri (pixfile, NULL, NULL);
-#else
-			result = g_strdup(pixfile);
-#endif
-			if (duri)
-				g_free(duri);
-			return result;
-		}
+		if (g_ascii_strncasecmp (mime_type, "image/", 6))
+			goto fail;
 		g_free(mime_type);
 		g_free(contents);
 /*
@@ -563,6 +557,15 @@ verify_image(gchar *uri, EMFormatHTML *format)
 		return NULL;
 #endif
 	}
+fail:
+#if (EVOLUTION_VERSION >= 23000)
+			result = g_filename_to_uri (pixfile, NULL, NULL);
+#else
+			result = g_strdup(pixfile);
+#endif
+			if (duri)
+				g_free(duri);
+			return result;
 }
 
 // constructs url from @base in case url is relative
