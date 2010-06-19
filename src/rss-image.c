@@ -554,7 +554,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 #if (EVOLUTION_VERSION >= 23000)
 		return g_filename_to_uri(duri?duri:uri, NULL, NULL);
 #else
-		return NULL;
+		return duri?duri:uri;
 #endif
 	}
 fail:
