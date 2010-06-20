@@ -1137,6 +1137,12 @@ webkit_set_preferences(void)
 	g_object_set (settings, "enable-plugins",
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_EMBED_PLUGIN, NULL),
 		NULL);
+	g_object_set (settings, "enable-java-applet",
+		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL),
+		NULL);
+	g_object_set (settings, "enable-scripts",
+		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL),
+		NULL);
 #endif
 	webkit_web_view_set_full_content_zoom(
 		(WebKitWebView *)rf->mozembed, TRUE);
