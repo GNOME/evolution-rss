@@ -263,7 +263,9 @@ guint fallback_engine(void);
 gchar *print_comments(gchar *url, gchar *stream, EMFormatHTML *format);
 static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
+#ifdef HAVE_WEBKIT
 void webkit_set_history(gchar *base);
+#endif
 gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
 
@@ -496,19 +498,30 @@ browser_stream_write(CamelStream *stream, gchar *base)
 		g_free(tmp);
 		line = NULL;
 	}
+#ifdef HAVE_WEBKIT
+#if (WEBKIT_VERSION >= 1001001)
 	webkit_web_view_load_string(
 		WEBKIT_WEB_VIEW(rf->mozembed),
 		str->str,
 		"text/html",
 		NULL,
 		base);
+#else
+	webkit_web_view_load_html_string(
+		WEBKIT_WEB_VIEW(rf->mozembed),
+		str->str,
+		base);
+#endif
+#endif
 	g_string_free(str, 1);
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref(in);
 #else
 	camel_object_unref(in);
 #endif
+#ifdef HAVE_WEBKIT
 	webkit_set_history(base);
+#endif
 }
 
 static void
