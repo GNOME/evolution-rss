@@ -873,9 +873,13 @@ process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 				if ((name = fetch_image_redraw((gchar *)url, link, format))) {
 					if (decode) {
 						tname = decode_image_cache_filename(name);
+#if (EVOLUTION_VERSION >= 23000)
 						g_free(name);
 						name = g_filename_to_uri (tname, NULL, NULL);
 						g_free(tname);
+#else
+						name = tname;
+#endif
 					}
 					xmlSetProp(
 						doc, (xmlChar *)"src",
