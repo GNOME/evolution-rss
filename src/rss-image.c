@@ -467,6 +467,35 @@ decode_image_cache_filename(gchar *name)
 	return tname;
 }
 
+gboolean image_is_valid(gchar *image);
+
+gboolean
+file_is_image(gchar *image)
+{
+	gchar *mime_type, *contents;
+	gsize length;
+	gboolean result = TRUE;
+
+	g_return_val_if_fail(image != NULL, FALSE);
+
+	/*need to get mime type via file contents or else mime type is
+	 * bound to be wrong, especially on files fetched from the web
+	 * this is very important as we might get quite a few images
+	 * missing otherwise */
+	g_file_get_contents (image,
+		&contents,
+		&length,
+		NULL);
+	mime_type = g_content_type_guess(NULL,
+			(guchar *)contents, length, NULL);
+	/*FIXME mime type here could be wrong */
+	if (g_ascii_strncasecmp (mime_type, "image/", 6))
+		result = FALSE;
+	g_free(mime_type);
+	g_free(contents);
+	return result;
+}
+
 /* validates if image is indeed an image file
  * if image file is not found it tries to fetch it
  * we need to check mime time against content
@@ -475,19 +504,20 @@ decode_image_cache_filename(gchar *name)
 gchar *
 verify_image(gchar *uri, EMFormatHTML *format)
 {
-	gchar *mime_type, *contents;
-	gsize length;
 	gchar *nurl, *turl;
 	gchar *base_dir, *feed_dir, *name;
 	gchar *scheme, *tname;
 	gchar *result = NULL;
 	gchar *duri = NULL;
-	gsize size;
 
 	g_return_val_if_fail(uri != NULL, NULL);
 
 	if (strstr(uri, "img:"))
 		duri = decode_image_cache_filename(uri);
+	else {
+		if (!(duri = g_filename_from_uri(uri, NULL, NULL)))
+			duri = g_strdup(uri);
+	}
 
 	if (!g_file_test(duri, G_FILE_TEST_EXISTS)) {
 			camel_url_decode((gchar *)uri);
@@ -523,29 +553,22 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				g_free(name);
 #if (EVOLUTION_VERSION >= 23000)
 				result = g_filename_to_uri (tname, NULL, NULL);
-				g_free(tname);
 #else
-				result = tname;
+				result = g_strdup(tname);
 #endif
+				if (!file_is_image(tname)) {
+					g_free(tname);
+					goto fail;
+				}
+				g_free(tname);
 			}
+
 			if (duri)
 				g_free(duri);
 			return result;
 	} else {
-		/*need to get mime type via file contents or else mime type is
-		 * bound to be wrong, especially on files fetched from the web
-		 * this is very important as we might get quite a few images
-		 * missing otherwise */
-		g_file_get_contents (duri?duri:uri,
-			&contents,
-			&length,
-			NULL);
-		mime_type = g_content_type_guess(NULL, (guchar *)contents, length, NULL);
-		/*FIXME mime type here could be wrong */
-		if (g_ascii_strncasecmp (mime_type, "image/", 6))
+		if (!file_is_image(duri))
 			goto fail;
-		g_free(mime_type);
-		g_free(contents);
 /*
  * appears the default has changed in efh_url_requested
  * the new default is file://
