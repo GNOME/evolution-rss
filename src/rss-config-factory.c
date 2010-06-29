@@ -3300,9 +3300,9 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	guint i=0;
 	gchar *key = NULL;
 
-	add_feed *feed = (add_feed *)g_object_get_data((GObject *)epl, "add-feed");
-	gchar *url = (gchar *)g_object_get_data((GObject *)epl, "url");
-	gchar *ofolder = (gchar *)g_object_get_data((GObject *)epl, "ofolder");
+	add_feed *feed = (add_feed *)g_object_get_data((GObject *)target->config->widget, "add-feed");
+	gchar *url = (gchar *)g_object_get_data((GObject *)target->config->widget, "url");
+	gchar *ofolder = (gchar *)g_object_get_data((GObject *)target->config->widget, "ofolder");
 
 	EMConfigTargetFolder *targetfolder =
 		(EMConfigTargetFolder *)target->config->target;
@@ -3478,12 +3478,12 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 			NULL,
 			0);
 		g_object_set_data_full (
-			G_OBJECT (epl),
+			G_OBJECT (data->parent),
 			"add-feed",
 			feed,
 			NULL);
-		g_object_set_data_full (G_OBJECT (epl), "url", url, NULL);
-		g_object_set_data_full (G_OBJECT (epl), "ofolder", ofolder, NULL);
+		g_object_set_data_full (G_OBJECT (data->parent), "url", url, NULL);
+		g_object_set_data_full (G_OBJECT (data->parent), "ofolder", ofolder, NULL);
 		ok = GTK_WIDGET (
 			gtk_builder_get_object(feed->gui, "ok_button"));
 
