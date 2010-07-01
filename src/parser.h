@@ -47,7 +47,7 @@ xmlDoc *parse_html_sux (const char *buf, guint len);
 xmlDoc *xml_parse_sux (const char *buf, int len);
 create_feed *parse_channel_line(xmlNode *top,
 				gchar *feed_name,
-				char *main_date,
+				RDF *r,
 				gchar **article_uid);
 gchar *tree_walk (xmlNodePtr root, RDF *r);
 xmlNode *html_find (xmlNode *node, gchar *match);

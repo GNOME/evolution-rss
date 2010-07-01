@@ -710,20 +710,22 @@ tree_walk (xmlNodePtr root, RDF *r)
 {
 	xmlNodePtr walk;
 	xmlNodePtr rewalk = root;
-	xmlNodePtr channel = NULL;
-	xmlNodePtr image = NULL;
+	xmlNodePtr channel = NULL, image = NULL, link = NULL;
 	GArray *item = g_array_new (TRUE, TRUE, sizeof (xmlNodePtr));
 	gchar *t;
 	gchar *charset;
 	gchar *md2, *tmp, *ver;
 
-	/* check in-memory encoding first, fallback to transport encoding, which may or may not be correct */
+	/* check in-memory encoding first,
+	 * fallback to transport encoding, which may or may not be correct
+	 */
 	if (r->cache->charset == XML_CHAR_ENCODING_UTF8
 	    || r->cache->charset == XML_CHAR_ENCODING_ASCII) {
 		charset = NULL;
 	} else {
 		/* bad/missing encoding, fallback to latin1 (locale?) */
-		charset = r->cache->encoding ? (gchar *)r->cache->encoding : (gchar *)"iso-8859-1";
+		charset = r->cache->encoding ?
+			(gchar *)r->cache->encoding : (gchar *)"iso-8859-1";
 	}
 
 	do {
@@ -735,18 +737,15 @@ tree_walk (xmlNodePtr root, RDF *r)
 			printf ("%p, %s\n", walk, walk->name);
 #endif
 			if (strcasecmp ((char *)walk->name, "rdf") == 0) {
-//				xmlNode *node = walk;
 				rewalk = walk->children;
 				walk = walk->next;
 				if (!r->type)
 					r->type = g_strdup("RDF");
 				r->type_id = RDF_FEED;
-//				gchar *ver = xmlGetProp(node, "version");
 				if (r->version)
 					g_free(r->version);
 				r->version = g_strdup("(RSS 1.0)");
-//				if (ver)
-//					xmlFree(ver);
+				r->base = (gchar *)xmlGetProp(walk, (xmlChar *)"base");
 				continue;
 			}
 			if (strcasecmp ((char *)walk->name, "rss") == 0){
@@ -762,6 +761,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 				r->version = g_strdup(ver);
 				if (ver)
 					xmlFree(ver);
+				r->base = (gchar *)xmlGetProp(node, (xmlChar *)"base");
 				continue;
 			}
 			if (strcasecmp ((char *)walk->name, "feed") == 0) {
@@ -780,6 +780,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 						g_free(r->version);
 					r->version = g_strdup("1.0");
 				}
+				r->base = (gchar *)xmlGetProp(walk, (xmlChar *)"base");
 			}
 
 			/* This is the channel top level */
@@ -809,18 +810,9 @@ tree_walk (xmlNodePtr root, RDF *r)
 		fprintf(stderr, "ERROR:No channel definition.\n");
 		return NULL;
 	}
-//	gchar *server = get_server_from_uri(r->uri);
-//	gchar *fav = g_strconcat(server, "/favicon.ico", NULL);
-//	g_free(server);
 
 	if (image != NULL)
 		r->image = (gchar *)layer_find(image->children, "url", NULL);
-
-//	g_print("status image:%d\n", net_get_status(r->image, NULL));
-//	if (404 == net_get_status(r->image, NULL))
-//		r->image = NULL;
-
-//	g_free(fav);
 
 	t = g_strdup(get_real_channel_name(r->uri, NULL));
 	//feed might be added with no validation
@@ -897,7 +889,7 @@ process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 }
 
 create_feed *
-parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **article_uid)
+parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 {
 	char *q = NULL;
 	char *b = NULL;
@@ -912,6 +904,12 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **arti
 	GList *category = NULL;
 	create_feed *CF;
 	GList *attachments = NULL;
+	gchar *base = NULL, *main_date = NULL;
+
+	if (r) {
+		base = r->base;
+		main_date = r->maindate;
+	}
 
 	//we have to free this somehow
 	//<link></link>
@@ -1059,7 +1057,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, char *main_date, gchar **arti
 		g_free(b);
 
 		if (feed_name) {
-			gchar *buff = process_images(tmp, link, FALSE, NULL);
+			gchar *buff = process_images(tmp, base ? base : link, FALSE, NULL);
 			g_free(tmp);
 			b = buff;
 		} else
@@ -1113,7 +1111,6 @@ update_channel(RDF *r)
 	create_feed *CF;
 	gchar *chn_name = r->title;
 	gchar *url = r->uri;
-	gchar *main_date = r->maindate;
 	GArray *item = r->item;
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
@@ -1159,8 +1156,8 @@ update_channel(RDF *r)
 			r->uids = g_array_new(TRUE, TRUE, sizeof(gpointer));
 		}
 
-		CF = parse_channel_line(el->children,
-			feed_name, main_date, &article_uid);
+		CF = parse_channel_line(el->children, feed_name,
+			r, &article_uid);
 		g_array_append_val(r->uids, article_uid);
 		if (!CF) continue;
 		CF->feedid = g_strdup(buf);
@@ -1206,7 +1203,8 @@ update_channel(RDF *r)
 	if (mail_folder) {
 		if ((rf->import || feed_new)
 		&& (!rf->cancel && !rf->cancel_all && !rf->display_cancel)) {
-			rss_select_folder((gchar *)camel_folder_get_full_name(mail_folder));
+			rss_select_folder(
+				(gchar *)camel_folder_get_full_name(mail_folder));
 			if (feed_new) feed_new = FALSE;
 		}
 #if (DATASERVER_VERSION >= 2031001)

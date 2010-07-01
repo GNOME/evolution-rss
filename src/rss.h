@@ -68,6 +68,7 @@
 #define NETWORK_TIMEOUT (180000)
 
 typedef struct _RDF {
+	gchar		*base;
 	char		*uri;
 	char		*html;
 	xmlDocPtr	cache;
