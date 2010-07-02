@@ -1,4 +1,4 @@
-# Slovenian translation of evolution-rss.
+# Slovenian translations for evolution-rss.
 # Copyright (C) 2009 evolution-rss's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evolution-rss package.
 #
@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&component=general\n"
 "POT-Creation-Date: 2010-05-26 20:35+0000\n"
-"PO-Revision-Date: 2010-05-28 13:15+0100\n"
-"Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
+"PO-Revision-Date: 2010-07-02 22:45+0100\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr "Vir že obstaja!"
 #: ../src/dbus.c:124
 #, c-format
 msgid "New feed imported: %s"
-msgstr "Nov vir je uvožen: %s"
+msgstr "Uvožen nov vir: %s"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Accepts Cookies"
@@ -67,7 +67,7 @@ msgstr "Preveri nove članke"
 
 #: ../src/evolution-rss.schemas.in.in.h:7
 msgid "Check for new articles everytime Evolution is started."
-msgstr "Preverjanje za nove članke ob vsakem zagonu Evolution."
+msgstr "Preveri za nove članke ob vsakem zagonu programa Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:8
 msgid "Checks articles on startup"
@@ -115,7 +115,7 @@ msgstr "Evolution RSS bo preiskal spletne strani za rss vsebino"
 
 #: ../src/evolution-rss.schemas.in.in.h:19
 msgid "Evolution will show article's summary instead of article's webpage. Summary can also be html."
-msgstr "Prikazan bo povzetek članka namesto spletne strani članka. Povzetek je lahko v html."
+msgstr "Prikazan bo povzetek članka namesto spletne strani članka. Povzetek je lahko v zapisu html."
 
 #: ../src/evolution-rss.schemas.in.in.h:20
 msgid "Feeds list"
@@ -135,15 +135,15 @@ msgstr "Ime gostitelja posredniškega strežnika uporabljenega za vire in vsebin
 
 #: ../src/evolution-rss.schemas.in.in.h:24
 msgid "How many simultaneous downloads."
-msgstr "Koliko hkratnih prejemov?"
+msgstr "Koliko prejemanj lahko teče sočasno?"
 
 #: ../src/evolution-rss.schemas.in.in.h:25
 msgid "How to handle RSS URLs"
-msgstr "Kako upravljati z URL-ji RSS"
+msgstr "Kako upravljati z naslovi URL RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
 msgid "Html render"
-msgstr "Izris html"
+msgstr "Izrisovalnik HTML"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "If the proxy server requires authentication. This is the password field."
@@ -199,7 +199,7 @@ msgstr "Uporabniško ime posredniškega strežnika"
 
 #: ../src/evolution-rss.schemas.in.in.h:40
 msgid "Remove feed folder"
-msgstr "Odstranitev mape virov"
+msgstr "Odstrani mapo virov"
 
 #: ../src/evolution-rss.schemas.in.in.h:41
 msgid "Run program in terminal"
@@ -211,7 +211,7 @@ msgstr "Preiskovanje spletnih strani za RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:43
 msgid "Set to true to have a program specified in command handle RSS URLs"
-msgstr "Izbrana možnost določa, da program določen v ukazu upravlja z URI-ji "
+msgstr "Izbrana možnost omogoča, da program določen v ukazu upravlja z naslovi URI "
 
 #: ../src/evolution-rss.schemas.in.in.h:44
 msgid "Show articles comments"
@@ -235,11 +235,11 @@ msgstr "Vrsta izrisovalnika HTML za prikaz strani html."
 
 #: ../src/evolution-rss.schemas.in.in.h:49
 msgid "URL handler for rss feed uris"
-msgstr "Upravljalnik URL za uri-je rss virov"
+msgstr "Upravljalnik naslovov URL za naslove uri rss virov"
 
 #: ../src/evolution-rss.schemas.in.in.h:50
 msgid "Use a proxy server to fetch articles and content."
-msgstr "Uporaba posredniškega strežnika za dobivanje člankov in vsebine."
+msgstr "Uporaba posredniškega strežnika za pridobivanje člankov in vsebine."
 
 #: ../src/evolution-rss.schemas.in.in.h:51
 msgid "Use proxy server"
@@ -265,9 +265,9 @@ msgid ""
 "\n"
 "+URL+"
 msgstr ""
-"Evolution vstavek bralnika RSS .\n"
+"Vstavek Evolution bralnika RSS .\n"
 "\n"
-"Ta vstavek evolution pošti doda podporo za vire RSS. Podpora RSS je bila izgrajena na deloma obstoječi podpori RSS v veji evolution-1.4. Cilj je bil imeti RSS na istem mestu kot pošto, saj razvijalci trenutno ne vidimo smisla v ločenem RSS bralniku, ker je članek RSS podoben sporočilu e-pošte.\n"
+"Vstavek omogoča prejemanje virov RSS preko elektronske pošte. Podpora RSS je bila izgrajena na deloma obstoječi podpori RSS v veji evolution-1.4. Cilj je bil imeti RSS na istem mestu kot pošto, saj trenutno ni vidieti smisla v ločenem RSS bralniku, ker je članek RSS podoben sporočilu e-pošte.\n"
 "\n"
 "Evolution RSS lahko prikaže članek v pogledu povzetka ali pogledu HTML.\n"
 "\n"
@@ -275,7 +275,7 @@ msgstr ""
 "\n"
 "<b>Različica: evolution-rss +RAZLIČICA+</b>\n"
 "\n"
-"+URL"
+"+URL+"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:12
 msgid "Size"
@@ -311,7 +311,7 @@ msgstr "Posodobitev virov RSS"
 
 #: ../src/org-gnome-evolution-rss.xml.h:4
 msgid "_Read RSS"
-msgstr "_Beri RSS"
+msgstr "_Preberi RSS"
 
 #: ../src/rss.c:348
 #: ../src/rss.c:432
@@ -349,7 +349,7 @@ msgstr "Geslo:"
 
 #: ../src/rss.c:767
 msgid "_Remember this password"
-msgstr "_Zapomni si to geslo"
+msgstr "_Zapomni si geslo"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
@@ -464,7 +464,7 @@ msgstr "Dodajanje vira %s"
 #: ../src/rss.c:3154
 #, c-format
 msgid "Getting message %d of %d"
-msgstr "Dobivanje sporočila %d od %d"
+msgstr "Pridobivanje sporočila %d od %d"
 
 #: ../src/rss.c:3266
 msgid "Complete."
@@ -694,7 +694,7 @@ msgstr "Ni podatkov"
 #~ msgid "<b>Article Notification</b>"
 #~ msgstr "<b>Obvestilo o članku<b>"
 #~ msgid "<b>Engine: </b>"
-#~ msgstr "<b>Pogon: </b>"
+#~ msgstr "<b>Programnik: </b>"
 #~ msgid "<b>HTML Rendering</b>"
 #~ msgstr "<b>Izrisovanje HTML</b>"
 
