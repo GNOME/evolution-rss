@@ -1,3 +1,82 @@
+Evolution-RSS 0.2.0
+------------------------------
+
+Bug fixes:
+621269 - RSS feed items with blank lines in header fail to render
+612621 - Can't update feeds requiring authentication
+617849 - Crash in e_shell_searchbar_get_shell_view at e-shell-searchbar.c:1060
+617717 - evolution-rss doesn't compile with evolution master
+596034 - Cannot rename RSS folders
+598570 - evolution crashed with SIGSEGV in g_markup_escape_text()
+599660 - Feeds do not get updated in evolution 2.28.1
+599528 - queue enclosure downloads and reduce memory usage for large enclosures
+rhbz #595745 - fix displaying of images (regardles of resize setting)
+rhbz #523552 - Evolution crashes when changing properties on a non-feed folder
+
+
+Miscellaneous Fixes:
+	Use xml:base when resolving links if feed provides it
+	Fix opening of multiple properties windows
+	Respect java/script webkit options
+	Hide broken images in case feeds images are corrupted
+	Fix update online status
+	Fix re-fetching of expired cache items
+	Fix adding feed requiring authentication
+	Do not crash on canceling imports
+	Show feed comments images
+	Fix folder rename
+	Revan opml import process
+	Fix editing feeds
+	Fix deleton for articles no longer present in the feed
+	Respect --disable-schemas-install configure option
+39f3121 add gconf option to disable playing embeded objects in rss browser
+e9e33a5 temporary disable filter of articles
+	Properly support importing file:// type feeds
+	Handle media extension properly
+	Implement browser menu zoom controls
+	Implement GSEAL compilance
+	Fix webkit browser window resize
+	Fix webkit controls
+	Support feeds with missing title, missing author
+	Disable gecko by default - we do not support Gecko anymore
+	Support folders in opml export
+	Fix loading of folder icons
+	Do not crash when clicking rss icon in notification area
+	Make setting up feeds process async
+	Add support for no type opml entities
+	Use atom:published for date when parsing atom feeds
+	Handle broken feeds with null as enclosure
+	Migrate to Gtkbuilder
+	Inline images do not go out when sending emails in evolution
+	Add expire option for cached images and fetch images if they cannot be served from cache
+	Add auto-resize images option for extra large images
+	Port to kill-bonobo
+
+Translations:
+	António Lima (pt)
+	Mario Blättermann (de)
+	Jorge González (es)
+	Kostas Papadimas (el)
+	Fran Dieguez (gl)
+	Akom C (th)
+	Claude Paroz (fr)
+	Shankar Prasad (kn)
+	Tao Wei (cn)
+	Gergely Szarka (hu)
+	Andrej Žnidaršič (sl)
+	Jonh Wendell (pt_BR)
+	Marek Cernocky (cz)
+	Petr Kovar (cz)
+	Jiri Eischmann (cz)
+	Kjartan Maraas (nb)
+	A S Alam (pa)
+	Runa Bhattacharjee (bn_IN)
+	Sweta Kothari (gu)
+	I. Felix (ta)
+	Manoj Kumar Giri (or)
+	Krishna Babu K (te)
+
+
 Evolution-RSS 0.1.4
 ------------------------------
 
@@ -34,7 +113,7 @@ Bug fixes:
 	#573914 -  feeds are not readable with Ubuntu Darkroom theme
 
 Translations:
-        Jorge González (es)
+	Jorge González (es)
 	Daniel Nylander (sw)
 	Fran Dieguez (gl)
 	krishnababu k (te)
