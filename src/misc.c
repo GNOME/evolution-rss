@@ -582,10 +582,10 @@ feed_remove_status_line(gchar *file_name, gchar *needle)
 			}
 		}
 		fclose(fr);
-		fclose(fw);
 		g_unlink(file_name);
 		g_rename(tmp, file_name);
 	}
+	fclose(fw);
 	g_free(tmpneedle);
 }
 
