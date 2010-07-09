@@ -3050,6 +3050,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	}
 #else
 	g_warning("gtk too old! cannot create ui file. need >= 2.14\n");
+	g_free(ui);
 	// and not very interesed to back port this
 	return NULL;
 #endif

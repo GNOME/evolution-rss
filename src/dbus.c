@@ -141,6 +141,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 			g_print("Feed received, but error getting message: %s\n", error.message);
 			dbus_error_free (&error);
 		}
+		g_free(feed);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "ping")) {

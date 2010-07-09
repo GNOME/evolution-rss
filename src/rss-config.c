@@ -559,13 +559,12 @@ get_main_folder(void)
 	g_free(feed_dir);
 	if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 		FILE *f = fopen(feed_file, "r");
-		if (f) {
-			if (fgets(mf, 511, f) != NULL) {
-				fclose(f);
-				g_free(feed_file);
-				return g_strdup(mf);
-			}
+		if (f && fgets(mf, 511, f) != NULL) {
+			fclose(f);
+			g_free(feed_file);
+			return g_strdup(mf);
 		}
+		fclose(f);
 	}
 	g_free(feed_file);
 	return g_strdup(DEFAULT_FEEDS_FOLDER);
@@ -641,10 +640,10 @@ migrate_crc_md5(const char *name, gchar *url)
 				(void)fseek(fw, 0L, SEEK_SET);
 				fwrite(rfeed, strlen(rfeed), 1, fw);
 			}
-			fclose(fw);
 			unlink(feed_name);
 		}
-		fclose(fr);
+		if (fr) fclose(fr);
+		if (fw)	fclose(fw);
 	}
 	g_free(feed_name);
 	feed_name = g_build_path(G_DIR_SEPARATOR_S, feed_dir, crc2, NULL);
@@ -659,11 +658,10 @@ migrate_crc_md5(const char *name, gchar *url)
 				(void)fseek(fw, 0L, SEEK_SET);
 				fwrite(rfeed, strlen(rfeed), 1, fw);
 			}
-			fclose(fw);
 			unlink(feed_name);
 		}
-		fclose(fr);
-
+		if (fr) fclose(fr);
+		if (fw)	fclose(fw);
 	}
 
 	g_free(feed_name);

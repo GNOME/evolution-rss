@@ -835,6 +835,7 @@ proxy_auth_dialog(gchar *title, gchar *user, gchar *pass)
 	auth_info->pass = pass;
 	dialog = create_user_pass_dialog(auth_info);
 	result = gtk_dialog_run(GTK_DIALOG(dialog));
+	/*LEAK g_free(auth_info);*/
 	return TRUE;
 }
 
@@ -3434,15 +3435,15 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			_("Error while parsing feed."),
 			tmsg);
 		g_free(tmsg);
-		goto out;
+		goto cleanup;
 	}
 
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
-		goto out;
+		goto cleanup;
 
 	if (!deleted) {
 		if (!user_data || !lookup_key(user_data))
-			goto out;
+			goto cleanup;
 		r->uri =  g_hash_table_lookup(
 				rf->hr, lookup_key(user_data));
 
@@ -3469,18 +3470,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 				get_feed_age(r, user_data);
 		}
-		if (r->cache)
-			xmlFreeDoc(r->cache);
-		if (r->type)
-			g_free(r->type);
-		if (r->version)
-			g_free(r->version);
-		if (r->uids)
-			g_array_free(r->uids, TRUE);
 	}
 	//ftotal+=r->total;
 	update_sr_message();
-	g_free(r);
 	g_string_free(response, 1);
 
 //tout:
@@ -3519,8 +3511,16 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		rf->info = NULL;
 	}
 #endif
-out:
-	if (chn_name) { //user_data
+cleanup:if (r->cache)
+		xmlFreeDoc(r->cache);
+	if (r->type)
+		g_free(r->type);
+	if (r->version)
+		g_free(r->version);
+	if (r->uids)
+		g_array_free(r->uids, TRUE);
+	g_free(r);
+out:	if (chn_name) { //user_data
 		//not sure why it dies here
 		if (!rf->cancel && !rf->cancel_all)
 			g_free(chn_name); //user_data
@@ -3991,12 +3991,11 @@ sync_folders(void)
 		return;
 
 	if (!g_hash_table_size(rf->feed_folders))
-		return;
+		goto exit;
 
 	g_hash_table_foreach(rf->feed_folders,
 		(GHFunc)write_feeds_folder_line,
 		(gpointer *)f);
-	fclose(f);
 	g_free(feed_file);
 	g_hash_table_destroy(rf->reversed_feed_folders);
 	rf->reversed_feed_folders = g_hash_table_new_full(g_str_hash,
@@ -4006,6 +4005,8 @@ sync_folders(void)
 	g_hash_table_foreach(rf->feed_folders,
 			(GHFunc)populate_reversed,
 			rf->reversed_feed_folders);
+exit:	fclose(f);
+	return;
 }
 
 /*construct feed_folders file with rename allocation
