@@ -5318,10 +5318,10 @@ create_mail(create_feed *CF)
 		&& !rf->import
 		&& !CF->encl
 		&& !g_list_length(CF->attachments)) {	//do not filter enclosure at this time nor media files
-		g_warning("FILTER DISABLED\n");
-/*		filter_uids = g_ptr_array_sized_new(1);
+//		g_warning("FILTER DISABLED\n");
+		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
-		mail_filter_on_demand (mail_folder, filter_uids);*/
+		mail_filter_on_demand (mail_folder, filter_uids);
 /* FIXME do not know how to free this */
 //		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);
 	}
