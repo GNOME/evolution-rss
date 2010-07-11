@@ -65,6 +65,7 @@ extern int rss_verbose_debug;
 #include "network-soup.h"
 #include "notification.h"
 
+GHashTable *tmphash = NULL;
 static guint feed_enabled = 0;
 static guint feed_validate = 0;
 static guint feed_html = 0;
@@ -1627,18 +1628,20 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 	feed->prefix = g_strdup(prefix);
 	rf->progress_bar = import_progress;
 	rf->progress_dialog = import_dialog;
-	if (g_hash_table_find(
-		rf->hr,
-		check_if_match,
-		feed->feed_url)) {
+	if ((g_hash_table_find(rf->hr, check_if_match,feed->feed_url))
+	   || (g_hash_table_find(tmphash, check_if_match, feed->feed_url))) {
 		rss_error(
 			title,
 			feed->feed_name,
 			_("Error adding feed."),
 			_("Feed already exists!"));
 		rf->import--;
-	} else
+	} else {
 		setup_feed(feed);
+		g_hash_table_insert(tmphash,
+			g_strdup(url),
+			g_strdup(url));
+	}
 
 	/* this allows adding feeds somewhat synchronous way
 	 * it is very convenient to be able to cancel importing
@@ -1822,6 +1825,12 @@ error:		rss_error(NULL,
 	src = src->children;
 	maintitle = (gchar *)layer_find(src, "title", NULL);
 	rf->import=2;
+	if (!tmphash)
+		tmphash = g_hash_table_new_full(
+				g_str_hash,
+				g_str_equal,
+				g_free,
+				g_free);
 	progress = 0;
 	rf->display_cancel=0; //clean this signal - as by this time we already cancel all displaying feed
 	while (src) {
@@ -1932,6 +1941,7 @@ fail:					g_free(rssprefix);
 	}
 		goto out;
 	}
+	g_print("MARK #1\n");
 
 	while ((src = iterate_import_file(src, &url, &name, type))) {
 		if (url && strlen(url)) {
@@ -1961,7 +1971,9 @@ fail:					g_free(rssprefix);
 	}
 	while (gtk_events_pending ())
 		gtk_main_iteration ();
-out:	//prevent reseting queue before its time dues do async operations
+out:	g_hash_table_destroy(tmphash);
+	tmphash=NULL;
+	//prevent reseting queue before its time dues do async operations
 	if (rf->import) rf->import -= 2;
 	rf->import_cancel = 0;
 	if (maintitle) xmlFree(maintitle);
