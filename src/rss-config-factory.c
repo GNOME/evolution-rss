@@ -372,13 +372,10 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 	GtkListStore  *store = user_data;
 	GtkTreeIter    iter;
 	gchar *full_name, *name, *full_path;
-	gchar *tmp;
 
 	gtk_list_store_append (store, &iter);
 	full_name = lookup_feed_folder(key);
 	name = g_path_get_basename(full_name);
-	tmp = g_markup_escape_text(name, -1);
-	g_free(name);
 	full_path = g_build_filename(
 			lookup_main_folder(),
 			full_name,
@@ -387,12 +384,12 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 		store,
 		&iter,
 		0, g_hash_table_lookup(rf->hre, lookup_key(key)),
-		1, tmp,
+		1, name,
 		2, g_hash_table_lookup(rf->hrt, lookup_key(key)),
 		3, g_strdup(key),
 		4, full_path,
 		-1);
-	g_free(tmp);
+	g_free(name);
 	g_free(full_path);
 }
 
