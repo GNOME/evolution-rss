@@ -1586,7 +1586,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 				gtk_widget_destroy(feed->dialog);
 			process_dialog_edit(feed, name, feed_name);
 		}
-		if (feed->feed_url)
+		if (feed && feed->feed_url)
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
 	}
 }
