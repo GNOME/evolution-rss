@@ -29,7 +29,7 @@ GITIGNOREFILES= 	aclocal.m4				\
 			ltmain.sh				\
 			m4/libtool.m4				\
 			m4/lt*.m4				\
-			src/GNOME_Evolution_RSS_2.26.server
+			src/GNOME_Evolution_RSS_2.*.server
 
 
 # Generate a ChangeLog file from 'git log'
