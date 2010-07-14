@@ -198,7 +198,8 @@ EXTRA_DIST =					\
 	evolution-rss.schemas.in.in		\
 	org-gnome-evolution-rss.eplug.xml	\
 	org-gnome-evolution-rss.error.xml	\
-	org-gnome-evolution-rss.xml
+	org-gnome-evolution-rss.xml		\
+	GNOME_Evolution_RSS.server.in.in
 
 
 if HAVE_DBUS
