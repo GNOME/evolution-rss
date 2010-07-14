@@ -4167,33 +4167,28 @@ store_folder_deleted(CamelObject *o, void *event_data, void *data)
 	rss_delete_feed(info->full_name, 1);
 }
 
-typedef struct {
-	gchar *old_base;
-	CamelFolderInfo *new;
-} RenameInfo;
-
 static void
-store_folder_renamed(CamelObject *o, void *event_data, void *data)
+store_folder_renamed(CamelStore *store,
+			const gchar *old_name,
+			CamelFolderInfo *info)
 {
-	RenameInfo *info = event_data;
-
 	gchar *main_folder = lookup_main_folder();
-	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
-		|| !g_ascii_strncasecmp(info->old_base, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
+	if (!g_ascii_strncasecmp(old_name, main_folder, strlen(main_folder))
+		|| !g_ascii_strncasecmp(old_name, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
 		d("Folder renamed to '%s' from '%s'\n",
-			info->new->full_name, info->old_base);
-		if (!g_ascii_strncasecmp(main_folder, info->old_base, strlen(info->old_base))
-		|| !g_ascii_strncasecmp(OLD_FEEDS_FOLDER, info->old_base, strlen(info->old_base)))
-			update_main_folder(info->new->full_name);
+			info->full_name, old_name);
+		if (!g_ascii_strncasecmp(main_folder, old_name, strlen(old_name))
+		|| !g_ascii_strncasecmp(OLD_FEEDS_FOLDER, old_name, strlen(old_name)))
+			update_main_folder(info->full_name);
 		else
-			if (0 == update_feed_folder(info->old_base, info->new->full_name, 1)) {
-				d("info->old_base:%s\n", info->old_base);
-				d("info->new->full_name:%s\n",
-					info->new->full_name);
+			if (0 == update_feed_folder(old_name, info->full_name, 1)) {
+				d("old_name:%s\n", old_name);
+				d("info->full_name:%s\n",
+					info->full_name);
 				d("this is not a feed!!\n");
 				rebase_feeds(
-					info->old_base,
-					info->new->full_name);
+					old_name,
+					info->full_name);
 			}
 		g_idle_add(
 			(GSourceFunc)store_redraw,
