@@ -112,7 +112,10 @@ fi
 DATASERVER_VERSION=`echo $DATASERVER_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(DATASERVER_VERSION)
 
-dnl default renderer and fall it it in case no other render is found
+dnl default renderer
+DEFAULT_RENDER=webkit
+dnl ... and fall to this in case no other render is found
+FAIL_RENDER=gtkhtml
 RENDER=gtkhtml
 RENDER_N=0
 
@@ -198,16 +201,18 @@ if test "x$have_gecko" != "xno"; then
         AC_MSG_RESULT([$gecko_cv_have_xpcom_glue])
 #			CPPFLAGS="$_SAVE_CPPFLAGS"
 		AC_ARG_WITH([primary-render],
-		[AS_HELP_STRING([--with-primary-render],
-		[Forces Gecko or Webkit to be the primary html renderer [default:gtkHTML]])],
+		[AS_HELP_STRING([--with-primary-render=@<:@gecko/webkit/gtkhtml@:>@],
+		[Forces Gecko or Webkit to be the primary html renderer [default:webkit]])],
 		[RENDER=$with_primary_render], [RENDER=gtkhtml])
-		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xgecko"; then
+		if test "$RENDER" != $FAIL_RENDER -a "x$RENDER" == "xgecko"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
 			RENDER_N=2
 		else
-			dnl fall back to gtkhtml if selection is not valid
-			RENDER=gtkhtml
-			RENDER_N=0
+			if test "x$DEFAULT_RENDER" == "xgecko"; then
+				RENDER=gecko
+				RENDER_N=2
+				AC_MSG_NOTICE([Using $RENDER as primary HTML render])
+			fi
 		fi
 	fi
 fi
@@ -220,7 +225,7 @@ AM_CONDITIONAL([HAVE_XPCOM_GLUE], [test "$gecko_cv_have_xpcom_glue" = "yes"])
 
 AC_MSG_CHECKING([whether to include Webkit support])
 AC_ARG_ENABLE([webkit],
-        AS_HELP_STRING([--disable-webkit],[Disable Webkit (Apple's Upstream Webkit) support (default: enabled)]),
+        AS_HELP_STRING([--disable-webkit],[Disable Webkit (Apple Upstream Webkit) support (default: enabled)]),
         [],[enable_webkit=yes])
 AC_MSG_RESULT([$enable_webkit])
 
@@ -251,15 +256,17 @@ if test "x$have_webkit" != "xno"; then
 	if test "x$RENDER" != "xgecko"; then
 		AC_ARG_WITH([primary-render],
 		[AS_HELP_STRING([--with-primary-render=@<:@gecko/webkit/gtkhtml@:>@],
-		[Forces Gecko or Webkit to be the primary html renderer [default:gtkhtml]])],
+		[Forces Gecko or Webkit to be the primary html renderer [default:webkit]])],
 		[RENDER=$with_primary_render], [RENDER=gtkhtml])
-		if test "$RENDER" != "gtkhtml" -a "x$RENDER" == "xwebkit"; then
+		if test "$RENDER" != $FAIL_RENDER -a "x$RENDER" == "xwebkit"; then
 			AC_MSG_NOTICE([$RENDER set as primary HTML render])
 			RENDER_N=1
 		else
-			dnl fall back to gtkhtml if selection is not valid
-			RENDER=gtkhtml
-			RENDER_N=0
+			if test "x$DEFAULT_RENDER" == "xwebkit"; then
+				RENDER=webkit
+				RENDER_N=1
+				AC_MSG_NOTICE([Using $RENDER as primary HTML render])
+			fi
 		fi
 	fi
 fi
