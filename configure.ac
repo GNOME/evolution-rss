@@ -17,7 +17,6 @@ AS_COMPILER_FLAGS(WARNING_FLAGS,
 	-DGTK_DISABLE_DEPRECATED
 	-DG_DISABLE_SINGLE_INCLUDES
 	-DGTK_DISABLE_SINGLE_INCLUDES
-	-DGSEAL_ENABLE
 	-Wall -Wextra
 	-Wno-missing-field-initializers
 	-Wno-sign-compare
@@ -29,6 +28,10 @@ AS_COMPILER_FLAGS(WARNING_FLAGS,
 	-Wmissing-noreturn -Wnested-externs -Wpointer-arith
 	-Wredundant-decls -Wundef -Wwrite-strings")
 AC_SUBST(WARNING_FLAGS)
+
+dnl We do not ship with GSEAL_ENABLED since it breaks builds for
+dnl for at least gtk 2.18
+dnl	-DGSEAL_ENABLE
 
 CFLAGS="$CFLAGS $WARNING_FLAGS"
 #LDFLAGS="$LDFLAGS -Wl,--no-undefined"
