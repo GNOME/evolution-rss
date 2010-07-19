@@ -112,9 +112,13 @@ schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
 if HAVE_BONOBO
 server_in_files = GNOME_Evolution_RSS.server.in.in
 server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
-	sed -i -e 's!^#src/GNOME_Evolution_RSS.server.in.in!src/GNOME_Evolution_RSS.server.in.in!g' $(top_srcdir)/po/POTFILES.in
+	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.skip
+	sed -i -e 's!^#src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
+	echo 'src/GNOME_Evolution_RSS.server.in.in' >> $(top_srcdir)/po/POTFILES.in
 else
-	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!#src\/GNOME_Evolution_RSS.server.in.in!g' $(top_srcdir)/po/POTFILES.in
+	sed -i -e 's!^#src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
+	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
+	echo 'src/GNOME_Evolution_RSS.server.in.in' >> $(top_srcdir)/po/POTFILES.skip
 endif
 
 @EVO_SERVER_RULE@
