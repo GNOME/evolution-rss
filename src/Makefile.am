@@ -108,13 +108,17 @@ schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
 %.schemas.in: %.schemas.in.in
 	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
 
+server_in_files = GNOME_Evolution_RSS.server.in.in
 
 if HAVE_BONOBO
-server_in_files = GNOME_Evolution_RSS.server.in.in
 server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
-	sed -i -e 's!^#src/GNOME_Evolution_RSS.server.in.in!src/GNOME_Evolution_RSS.server.in.in!g' $(top_srcdir)/po/POTFILES.in
+	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.skip
+	sed -i -e 's!^#src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
+	echo 'src/GNOME_Evolution_RSS.server.in.in' >> $(top_srcdir)/po/POTFILES.in
 else
-	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!#src\/GNOME_Evolution_RSS.server.in.in!g' $(top_srcdir)/po/POTFILES.in
+	sed -i -e 's!^#src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
+	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
+	echo 'src/GNOME_Evolution_RSS.server.in.in' > $(top_srcdir)/po/POTFILES.skip
 endif
 
 @EVO_SERVER_RULE@
@@ -198,8 +202,7 @@ EXTRA_DIST =					\
 	evolution-rss.schemas.in.in		\
 	org-gnome-evolution-rss.eplug.xml	\
 	org-gnome-evolution-rss.error.xml	\
-	org-gnome-evolution-rss.xml		\
-	src/GNOME_Evolution_RSS.server.in.in
+	org-gnome-evolution-rss.xml
 
 
 if HAVE_DBUS
