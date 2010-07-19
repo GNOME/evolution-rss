@@ -793,7 +793,6 @@ actions_dialog_add(add_feed *feed, gchar *url)
 				gtk_entry_get_text(GTK_ENTRY(entry1)));
 		fhtml = gtk_toggle_button_get_active (
 			GTK_TOGGLE_BUTTON (checkbutton1));
-		fhtml |= 1;
 		feed->fetch_html = fhtml;
 		feed->enabled = gtk_toggle_button_get_active(
 			GTK_TOGGLE_BUTTON(checkbutton2));
@@ -3356,7 +3355,6 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 	feed->feed_url = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry1)));
 	fhtml = gtk_toggle_button_get_active (
 			GTK_TOGGLE_BUTTON (checkbutton1));
-	fhtml |= 1;
 	feed->fetch_html = fhtml;
 	feed->enabled = gtk_toggle_button_get_active(
 		GTK_TOGGLE_BUTTON(checkbutton2));
