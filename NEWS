@@ -22,15 +22,13 @@ Miscellaneous Fixes:
 	Fix update online status
 	Fix re-fetching of expired cache items
 	Fix adding feed requiring authentication
-	Do not crash on canceling imports
+	Do not crash on cancelling imports
 	Show feed comments images
 	Fix folder rename
 	Revan opml import process
 	Fix editing feeds
-	Fix deleton for articles no longer present in the feed
+	Fix deletion for articles no longer present in the feed
 	Respect --disable-schemas-install configure option
-39f3121 add gconf option to disable playing embeded objects in rss browser
-e9e33a5 temporary disable filter of articles
 	Properly support importing file:// type feeds
 	Handle media extension properly
 	Implement browser menu zoom controls
