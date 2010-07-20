@@ -1732,7 +1732,6 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	}
 #endif
 
-	po->container = rf->mozembed;
 #if (DATASERVER_VERSION >= 2031002)
 	online =  camel_session_get_online (session);
 #else
@@ -1771,7 +1770,9 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 		gtk_widget_show_all(rf->mozembed);
 
 	gtk_container_add ((GtkContainer *) eb, rf->mozembed);
-	g_object_ref(rf->mozembed);
+	//appears distroying webkit's parent window results in crash
+	g_object_ref(eb);
+	po->container = eb;
 	rf->headers_mode = myf->mode;
 
 #if EVOLUTION_VERSION >= 23103
@@ -2000,7 +2001,7 @@ free_rss_browser(EMFormatHTMLPObject *o)
 					GTK_WIDGET(po->format->html)));
 #endif
 	g_signal_handler_disconnect(adj, po->sh_handler);
-	gtk_widget_destroy(po->container);
+	g_object_unref(po->container);
 	g_free(po->website);
 	browser_fetching = 0;
 }
