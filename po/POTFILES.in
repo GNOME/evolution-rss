@@ -15,4 +15,4 @@ src/rss-html-rendering.ui
 src/rss-image.c
 src/rss-main.ui
 src/parser.c
-#src/GNOME_Evolution_RSS.server.in.in
+
