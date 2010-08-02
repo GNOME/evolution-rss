@@ -901,7 +901,7 @@ out:
 gboolean
 cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
-	if (SOUP_IS_SESSION(key)) {
+	if (key && SOUP_IS_SESSION(key)) {
 		soup_session_abort(key);
 		g_hash_table_find(rf->key_session,
 			remove_if_match,
@@ -926,9 +926,9 @@ abort_all_soup(void)
 	rf->cancel_all = 1;
 	if (rf->abort_session) {
 		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
-		g_hash_table_foreach_remove(
-			rf->abort_session, cancel_soup_sess, NULL);
-//              g_hash_table_foreach(rf->abort_session, cancel_soup_sess, NULL);
+		if (g_hash_table_size(rf->abort_session))
+			g_hash_table_foreach_remove(
+				rf->abort_session, cancel_soup_sess, NULL);
 		g_hash_table_destroy(rf->session);
 		rf->session = g_hash_table_new(
 				g_direct_hash, g_direct_equal);
