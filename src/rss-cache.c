@@ -23,6 +23,7 @@
 #include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
 #endif
+#include <libedataserver/e-data-server-util.h>
 
 #include "rss.h"
 #include "rss-cache.h"
@@ -38,14 +39,12 @@ void
 rss_cache_init(void)
 {
 	//CamelDataCache *cache = NULL;
-	gchar *base_dir, *feed_dir;
+	gchar *feed_dir;
 
-	base_dir = rss_component_peek_base_directory();
 	feed_dir = g_build_path(G_DIR_SEPARATOR_S,
-			base_dir,
-			"static",
+			e_get_user_cache_dir(),
+			"rss",
 			NULL);
-	g_free(base_dir);
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
 #if EVOLUTION_VERSION >= 23100

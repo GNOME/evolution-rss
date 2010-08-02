@@ -4171,12 +4171,12 @@ store_folder_deleted(CamelObject *o, void *event_data, void *data)
 
 #if (DATASERVER_VERSION < 2031001)
 typedef struct {
-       gchar *old_base;
-       CamelFolderInfo *new;
+	gchar *old_base;
+	CamelFolderInfo *new;
 } RenameInfo;
 #endif
 
- static void
+static void
 #if (DATASERVER_VERSION < 2031001)
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
 #else

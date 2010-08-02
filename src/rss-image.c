@@ -18,6 +18,7 @@
 
 #include <glib.h>
 #include <camel/camel.h>
+#include <libedataserver/e-data-server-util.h>
 #include <mail/em-folder-tree.h>
 #include <mail/em-format-html.h>
 #include <sys/time.h>
@@ -511,7 +512,7 @@ gchar *
 verify_image(gchar *uri, EMFormatHTML *format)
 {
 	gchar *nurl, *turl;
-	gchar *base_dir, *feed_dir, *name;
+	gchar *feed_dir, *name;
 	gchar *scheme, *tname;
 	gchar *result = NULL;
 	gchar *duri = NULL;
@@ -529,11 +530,9 @@ verify_image(gchar *uri, EMFormatHTML *format)
 			camel_url_decode((gchar *)uri);
 			//FIXME lame method of extracting data cache path
 			//there must be a function in camel for getting data cache path
-			base_dir = rss_component_peek_base_directory();
 			feed_dir = g_build_path(G_DIR_SEPARATOR_S,
-				base_dir,
-				"static",
-				"http",
+				e_get_user_cache_dir(),
+				"rss",
 				NULL);
 			scheme = g_uri_parse_scheme(uri);
 			/* calling fetch_image_redraw with link NULL
@@ -553,7 +552,6 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				name = fetch_image_redraw(uri, NULL, format);
 				g_free(scheme);
 			}
-			g_free(base_dir);
 			if (name) {
 				tname = decode_image_cache_filename(name);
 				g_free(name);

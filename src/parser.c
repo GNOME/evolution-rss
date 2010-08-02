@@ -31,6 +31,7 @@
 #else
 #include <camel/camel-url.h>
 #endif
+#include <libedataserver/e-data-server-util.h>
 
 extern int rss_verbose_debug;
 
@@ -57,7 +58,6 @@ rss_html_url_decode(const char *html, int len)
 	xmlDoc *src = NULL;
 	xmlDoc *doc = NULL;
 	gchar *url, *tmpurl;
-	gchar *base_dir = rss_component_peek_base_directory();
 	gchar *feed_dir;
 
 	src = (xmlDoc *)parse_html_sux(html, len);
@@ -68,11 +68,7 @@ rss_html_url_decode(const char *html, int len)
 	doc = src;
 
 	feed_dir = g_build_path(G_DIR_SEPARATOR_S,
-		base_dir,
-		"static",
-		"http",
-		NULL);
-	g_free(base_dir);
+		e_get_user_cache_dir(), "rss", NULL);
 
 	while ((doc = (xmlDoc *)html_find((xmlNode *)doc, (gchar *)"img"))) {
 		if ((url = (gchar *)xmlGetProp((xmlNodePtr)doc, (xmlChar *)"src"))) {
