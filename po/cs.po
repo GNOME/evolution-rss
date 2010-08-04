@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-15 21:36+0200\n"
-"PO-Revision-Date: 2010-06-24 23:54+0200\n"
+"POT-Creation-Date: 2010-08-04 08:58+0200\n"
+"PO-Revision-Date: 2010-07-17 10:43+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Lokalize 1.0\n"
 
-#: ../src/dbus.c:119 ../src/rss.c:3130 ../src/rss-config-factory.c:959
-#: ../src/rss-config-factory.c:1474 ../src/rss-config-factory.c:1629
+#: ../src/dbus.c:119 ../src/rss.c:3131 ../src/rss-config-factory.c:958
+#: ../src/rss-config-factory.c:1473 ../src/rss-config-factory.c:1628
 msgid "Error adding feed."
 msgstr "Chyba při přidávání kanálu."
 
-#: ../src/dbus.c:120 ../src/rss.c:3131 ../src/rss-config-factory.c:960
-#: ../src/rss-config-factory.c:1475 ../src/rss-config-factory.c:1630
+#: ../src/dbus.c:120 ../src/rss.c:3132 ../src/rss-config-factory.c:959
+#: ../src/rss-config-factory.c:1474 ../src/rss-config-factory.c:1629
 msgid "Feed already exists!"
 msgstr "Kanál již existuje!"
 
@@ -251,7 +251,7 @@ msgstr "Použít proxy server pro stažení článků a obsahu."
 msgid "Use proxy server"
 msgstr "Použít proxy server"
 
-#: ../src/notification.c:407 ../src/rss.c:3309
+#: ../src/notification.c:407 ../src/rss.c:3310
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Stahování kanálů (%d povoleno)"
@@ -328,13 +328,13 @@ msgstr "Aktualizovat kanály RSS"
 msgid "_Read RSS"
 msgstr "Čís_t RSS"
 
-#: ../src/rss.c:350 ../src/rss.c:434 ../src/rss-config-factory.c:2549
-#: ../src/rss-config-factory.c:2717
+#: ../src/rss.c:350 ../src/rss.c:434 ../src/rss-config-factory.c:2548
+#: ../src/rss-config-factory.c:2716
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% hotovo"
 
-#: ../src/rss.c:367 ../src/rss.c:3484
+#: ../src/rss.c:367 ../src/rss.c:3485
 msgid "Feed"
 msgstr "Kanál"
 
@@ -417,110 +417,110 @@ msgstr "_Otevřít odkaz v prohlížeči"
 msgid "Click to open"
 msgstr "Kliknutím otevřít"
 
-#: ../src/rss.c:1822
+#: ../src/rss.c:1823
 msgid "Comments"
 msgstr "Komentáře"
 
-#: ../src/rss.c:1827
+#: ../src/rss.c:1828
 msgid "Refresh"
 msgstr "Obnovit"
 
-#: ../src/rss.c:1848
+#: ../src/rss.c:1849
 msgid "Feed view"
 msgstr "Zobrazení kanálu"
 
-#: ../src/rss.c:1854
+#: ../src/rss.c:1855
 msgid "Show Summary"
 msgstr "Zobrazit shrnutí"
 
-#: ../src/rss.c:1855
+#: ../src/rss.c:1856
 msgid "Show Full Text"
 msgstr "Zobrazit celý text"
 
-#: ../src/rss.c:2259
+#: ../src/rss.c:2260
 msgid "Posted under"
 msgstr "Vystaveno pod"
 
-#: ../src/rss.c:2579
+#: ../src/rss.c:2580
 msgid "Fetching feed"
 msgstr "Probíhá stahování kanálu"
 
-#: ../src/rss.c:2931 ../src/rss.c:3211
+#: ../src/rss.c:2932 ../src/rss.c:3212
 msgid "Unamed feed"
 msgstr "Nepojmenovaný kanál"
 
-#: ../src/rss.c:2932
+#: ../src/rss.c:2933
 msgid "Error while setting up feed."
 msgstr "Chyba během nastavování kanálu."
 
-#: ../src/rss.c:3142 ../src/rss.c:3212
+#: ../src/rss.c:3143 ../src/rss.c:3213
 msgid "Error while fetching feed."
 msgstr "Chyba během stahování kanálu."
 
-#: ../src/rss.c:3143
+#: ../src/rss.c:3144
 msgid "Invalid Feed"
 msgstr "Neplatný kanál"
 
-#: ../src/rss.c:3185
+#: ../src/rss.c:3186
 #, c-format
 msgid "Adding feed %s"
 msgstr "Probíhá přidávání kanálu %s"
 
-#: ../src/rss.c:3224
+#: ../src/rss.c:3225
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Získávání zprávy %d z %d"
 
-#: ../src/rss.c:3332
+#: ../src/rss.c:3333
 msgid "Complete."
 msgstr "Dokončeno."
 
-#: ../src/rss.c:3370 ../src/rss.c:3552 ../src/rss.c:3591 ../src/rss.c:3766
-#: ../src/rss.c:4294
+#: ../src/rss.c:3371 ../src/rss.c:3553 ../src/rss.c:3592 ../src/rss.c:3767
+#: ../src/rss.c:4295
 msgid "Error fetching feed."
 msgstr "Chyba během stahování kanálu."
 
-#: ../src/rss.c:3382
+#: ../src/rss.c:3383
 msgid "Canceled."
 msgstr "Zrušeno."
 
-#: ../src/rss.c:3432
+#: ../src/rss.c:3433
 msgid "illegal content type!"
-msgstr ""
+msgstr "neplatný typ obsahu!"
 
-#: ../src/rss.c:3435
+#: ../src/rss.c:3436
 msgid "Error while parsing feed."
 msgstr "Chyba během zpracovávání kanálu."
 
-#: ../src/rss.c:3493
+#: ../src/rss.c:3494
 msgid "Complete"
 msgstr "Dokončeno"
 
-#: ../src/rss.c:3633
+#: ../src/rss.c:3634
 msgid "Formatting error."
 msgstr "Chyba formátování."
 
-#: ../src/rss.c:4647 ../src/rss.c:4769
+#: ../src/rss.c:4648 ../src/rss.c:4770
 msgid "No RSS feeds configured!"
 msgstr "Žádné kanály RSS nejsou nastaveny!"
 
-#: ../src/rss.c:4653 ../src/rss.c:4871
+#: ../src/rss.c:4654 ../src/rss.c:4872
 msgid "Reading RSS feeds..."
 msgstr "Čtení kanálů RSS…"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:4667 ../src/rss.c:4879 ../src/rss-config-factory.c:1725
-#: ../src/rss-config-factory.c:2592 ../src/rss-config-factory.c:2754
+#: ../src/rss.c:4668 ../src/rss.c:4880 ../src/rss-config-factory.c:1724
+#: ../src/rss-config-factory.c:2591 ../src/rss-config-factory.c:2753
 msgid "Please wait"
 msgstr "Prosím čekejte"
 
-#: ../src/rss.c:4675 ../src/rss.c:4895 ../src/rss-config-factory.c:936
-#: ../src/rss-config-factory.c:1447
+#: ../src/rss.c:4676 ../src/rss.c:4896 ../src/rss-config-factory.c:935
+#: ../src/rss-config-factory.c:1446
 #, no-c-format
 msgid "0% done"
 msgstr "0% d hotovo"
 
-#: ../src/rss.c:4817
+#: ../src/rss.c:4818
 msgid "Waiting..."
 msgstr "Čekání…"
 
@@ -552,88 +552,88 @@ msgstr "Upravit kanál"
 msgid "Add Feed"
 msgstr "Přidat kanál"
 
-#: ../src/rss-config-factory.c:1287
+#: ../src/rss-config-factory.c:1286
 msgid "Disable"
 msgstr "Zakázat"
 
-#: ../src/rss-config-factory.c:1287
+#: ../src/rss-config-factory.c:1286
 msgid "Enable"
 msgstr "Povolit"
 
-#: ../src/rss-config-factory.c:1338
+#: ../src/rss-config-factory.c:1337
 msgid "Remove folder contents"
 msgstr "Odstranit obsah složky"
 
-#: ../src/rss-config-factory.c:1696
+#: ../src/rss-config-factory.c:1695
 msgid "Import error."
 msgstr "Chyba importu."
 
-#: ../src/rss-config-factory.c:1697
+#: ../src/rss-config-factory.c:1696
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Neplatný soubor nebo soubor neobsahuje žádné kanály."
 
-#: ../src/rss-config-factory.c:1702
+#: ../src/rss-config-factory.c:1701
 msgid "Importing"
 msgstr "Importuje se"
 
-#: ../src/rss-config-factory.c:2039 ../src/rss-config-factory.c:2874
-#: ../src/rss-config-factory.c:2936
+#: ../src/rss-config-factory.c:2038 ../src/rss-config-factory.c:2873
+#: ../src/rss-config-factory.c:2935
 msgid "All Files"
 msgstr "Všechny soubory"
 
-#: ../src/rss-config-factory.c:2050 ../src/rss-config-factory.c:2946
+#: ../src/rss-config-factory.c:2049 ../src/rss-config-factory.c:2945
 msgid "OPML Files"
 msgstr "Soubory OPML"
 
-#: ../src/rss-config-factory.c:2061 ../src/rss-config-factory.c:2953
+#: ../src/rss-config-factory.c:2060 ../src/rss-config-factory.c:2952
 msgid "XML Files"
 msgstr "Soubory XML"
 
-#: ../src/rss-config-factory.c:2076
+#: ../src/rss-config-factory.c:2075
 msgid "Show article's summary"
 msgstr "Zobrazit shrnutí článku"
 
-#: ../src/rss-config-factory.c:2089
+#: ../src/rss-config-factory.c:2088
 msgid "Feed Enabled"
 msgstr "Kanál povolen"
 
-#: ../src/rss-config-factory.c:2102
+#: ../src/rss-config-factory.c:2101
 msgid "Validate feed"
 msgstr "Validovat kanál"
 
-#: ../src/rss-config-factory.c:2159
+#: ../src/rss-config-factory.c:2158
 msgid "Select import file"
 msgstr "Vyberte soubor k importování"
 
-#: ../src/rss-config-factory.c:2242
+#: ../src/rss-config-factory.c:2241
 msgid "Select file to export"
 msgstr "Vyberte soubor k exportování"
 
-#: ../src/rss-config-factory.c:2575
+#: ../src/rss-config-factory.c:2574
 msgid "Exporting feeds..."
 msgstr "Exportování kanálů…"
 
-#: ../src/rss-config-factory.c:2639 ../src/rss-config-factory.c:2647
+#: ../src/rss-config-factory.c:2638 ../src/rss-config-factory.c:2646
 msgid "Error exporting feeds!"
 msgstr "Chyba během exportování kanálů!"
 
-#: ../src/rss-config-factory.c:2730
+#: ../src/rss-config-factory.c:2729
 msgid "Importing cookies..."
 msgstr "Probíhá importování cookies…"
 
-#: ../src/rss-config-factory.c:2810
+#: ../src/rss-config-factory.c:2809
 msgid "Select file to import"
 msgstr "Vybrat soubor pro import"
 
-#: ../src/rss-config-factory.c:2880
+#: ../src/rss-config-factory.c:2879
 msgid "Mozilla/Netscape Format"
 msgstr "Formát Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:2886
+#: ../src/rss-config-factory.c:2885
 msgid "Firefox new Format"
 msgstr "Nový formát Firefox"
 
-#: ../src/rss-config-factory.c:2989 ../src/rss-config-factory.c:2994
+#: ../src/rss-config-factory.c:2988 ../src/rss-config-factory.c:2993
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -641,7 +641,7 @@ msgstr ""
 "Žádné kanály RSS nenastaveny!\n"
 "Nelze exportovat."
 
-#: ../src/rss-config-factory.c:3114
+#: ../src/rss-config-factory.c:3113
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -651,19 +651,19 @@ msgstr ""
 "jako vykreslovače potřebuje mít vývojové balíčky firefoxu a webkitu \n"
 "nainstalované a evolution-rss musí být překompilován, aby tyto balíčky viděl."
 
-#: ../src/rss-config-factory.c:3587
+#: ../src/rss-config-factory.c:3585
 msgid "Enabled"
 msgstr "Povoleno"
 
-#: ../src/rss-config-factory.c:3614
+#: ../src/rss-config-factory.c:3612
 msgid "Feed Name"
 msgstr "Název kanálu"
 
-#: ../src/rss-config-factory.c:3627
+#: ../src/rss-config-factory.c:3625
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/rss-config-factory.c:3845
+#: ../src/rss-config-factory.c:3843
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "\t\tas renders you need firefox or webkit devel package \n"
@@ -674,15 +674,15 @@ msgstr ""
 "\t\tnainstalované a evolution-rss musí být překompilován, aby tyto balíčky "
 "viděl."
 
-#: ../src/rss-config-factory.c:3960
+#: ../src/rss-config-factory.c:3958
 msgid "News And Blogs"
 msgstr "Novinky a blogy"
 
-#: ../src/parser.c:920
+#: ../src/parser.c:916
 msgid "No Information"
 msgstr "Žádná informace"
 
-#: ../src/parser.c:1012
+#: ../src/parser.c:1008
 msgid "No information"
 msgstr "Žádné informace"
 
