@@ -17,6 +17,7 @@
  */
 
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <camel/camel.h>
 #include <libedataserver/e-data-server-util.h>
 #include <mail/em-folder-tree.h>
@@ -474,10 +475,10 @@ decode_image_cache_filename(gchar *name)
 gboolean image_is_valid(gchar *image);
 
 gboolean
-file_is_image(gchar *image);
+file_is_image(gchar *image, gboolean cleanup);
 
 gboolean
-file_is_image(gchar *image)
+file_is_image(gchar *image, gboolean cleanup)
 {
 	gchar *mime_type, *contents;
 	gsize length;
@@ -496,8 +497,15 @@ file_is_image(gchar *image)
 	mime_type = g_content_type_guess(NULL,
 			(guchar *)contents, length, NULL);
 	/*FIXME mime type here could be wrong */
-	if (g_ascii_strncasecmp (mime_type, "image/", 6))
+	if (g_ascii_strncasecmp (mime_type, "image/", 6)) {
+		struct stat st;
+		if (cleanup) {
+			g_stat(image, &st);
+			if (st.st_size == 0)
+				g_unlink(image);
+		}
 		result = FALSE;
+	}
 	g_free(mime_type);
 	g_free(contents);
 	return result;
@@ -560,7 +568,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 #else
 				result = g_strdup(tname);
 #endif
-				if (!file_is_image(tname)) {
+				if (!file_is_image(tname, 1)) {
 					g_free(tname);
 					goto fail;
 				}
@@ -571,7 +579,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 				g_free(duri);
 			return result;
 	} else {
-		if (!file_is_image(duri))
+		if (!file_is_image(duri, 1))
 			goto fail;
 /*
  * appears the default has changed in efh_url_requested
