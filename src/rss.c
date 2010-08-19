@@ -887,7 +887,7 @@ receive_cancel(GtkButton *button, struct _send_info *info)
 			gtk_label_set_markup (GTK_LABEL (info->status_label),
 //                        e_clipped_label_set_text (
 //                              E_CLIPPED_LABEL (info->status_label),
-				_("Canceling..."));
+				_("Cancelling..."));
 		info->state = SEND_CANCELLED;
 		readrss_dialog_cb(NULL, NULL);
 	}
@@ -2929,7 +2929,7 @@ finish_setup_feed(
 		g_set_error(&err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 			soup_status_get_phrase(msg->status_code));
 		rss_error(crc_feed,
-			feed->feed_name ? feed->feed_name: _("Unamed feed"),
+			feed->feed_name ? feed->feed_name: _("Unnamed feed"),
 			_("Error while setting up feed."),
 			err->message);
 		goto out;

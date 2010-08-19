@@ -152,7 +152,7 @@
 	<locale name="C">
 		<short>Automaticaly Resize Images</short>
 		<long>
-			Evolution RSS will automatically resize images lager than displayed area.
+			Evolution RSS will automatically resize images larger than displayed area.
 		</long>
 	</locale>
     </schema>
@@ -307,7 +307,7 @@
       <locale name="C">
         <short>Show articles comments</short>
         <long>
-    	    It will display article's comments by default if present.
+    	    If a feed article has comments, it will be displayed.
         </long>
       </locale>
     </schema>

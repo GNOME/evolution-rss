@@ -416,10 +416,26 @@ del_days_cb (GtkWidget *widget, add_feed *data)
 }
 
 void
+update_days_label_cb (GtkWidget *widget, GtkLabel *data)
+{
+	guint val = gtk_spin_button_get_value((GtkSpinButton*)widget);
+	gtk_label_set_text(data,
+		ngettext("day", "days", val));
+}
+
+void
 del_messages_cb (GtkWidget *widget, add_feed *data)
 {
 	guint adj = gtk_spin_button_get_value((GtkSpinButton*)widget);
 	data->del_messages = adj;
+}
+
+void
+update_messages_label_cb (GtkWidget *widget, GtkLabel *data)
+{
+	guint val = gtk_spin_button_get_value((GtkSpinButton*)widget);
+	gtk_label_set_text(data,
+		ngettext("message", "messages", val));
 }
 
 void
@@ -469,6 +485,7 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		*radiobutton6,
 		*radiobutton7,
 		*ttl_value;
+	GtkWidget *label1, *label2;
 	GtkWidget *spinbutton1, *spinbutton2;
 	GtkWidget *checkbutton4;
 	GtkImage *image;
@@ -574,6 +591,12 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	spinbutton1 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_sb1"));
 	spinbutton2 = GTK_WIDGET (gtk_builder_get_object(gui, "storage_sb2"));
+	label1 = GTK_WIDGET(gtk_builder_get_object(gui, "label12"));
+	g_signal_connect(
+		spinbutton1,
+		"value-changed",
+		G_CALLBACK(update_messages_label_cb),
+		label1);
 	if (feed->del_messages)
 		gtk_spin_button_set_value(
 			GTK_SPIN_BUTTON(spinbutton1),
@@ -624,6 +647,12 @@ build_dialog_add(gchar *url, gchar *feed_text)
 			1);
 	}
 
+	label2 = GTK_WIDGET(gtk_builder_get_object(gui, "label13"));
+	g_signal_connect(
+		spinbutton2,
+		"value-changed",
+		G_CALLBACK(update_days_label_cb),
+		label2);
 	if (feed->del_days)
 		gtk_spin_button_set_value(
 			GTK_SPIN_BUTTON(spinbutton2),

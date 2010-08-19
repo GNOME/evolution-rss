@@ -965,9 +965,9 @@
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <property name="action">save</property>
-    <property name="show_hidden">True</property>
     <property name="local_only">False</property>
+    <property name="show_hidden">True</property>
+    <property name="action">save</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="vbox26">
         <property name="visible">True</property>
@@ -1389,7 +1389,6 @@
                                 <child>
                                   <object class="GtkLabel" id="label12">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes" comments="To translators: this label is part of the following message: &quot;Delete all but the last X messages.">messages</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1441,7 +1440,6 @@
                                 <child>
                                   <object class="GtkLabel" id="label13">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes" comments="for translators: this label is part of the &quot;Delete articles older than X days&quot; message.">days</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>

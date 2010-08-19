@@ -27,7 +27,6 @@ void import_dialog_response(
 	guint response,
 	gpointer user_data);
 
-void del_days_cb (GtkWidget *widget, add_feed *data);
 void delete_feed_folder_alloc(gchar *old_name);
 
 void rss_delete_folders (
@@ -38,7 +37,10 @@ void rss_delete_folders (
 void remove_feed_hash(gpointer name);
 void init_rss_prefs(void);
 void accept_cookies_cb(GtkWidget *widget, GtkWidget *data);
+void del_days_cb (GtkWidget *widget, add_feed *data);
+void update_days_label_cb (GtkWidget *widget, GtkLabel *data);
 void del_messages_cb (GtkWidget *widget, add_feed *data);
+void update_messages_label_cb (GtkWidget *widget, GtkLabel *data);
 void disable_widget_cb(GtkWidget *widget, GtkBuilder *data);
 add_feed *build_dialog_add(gchar *url, gchar *feed_text);
 void actions_dialog_add(add_feed *feed, gchar *url);
