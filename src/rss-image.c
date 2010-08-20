@@ -281,7 +281,11 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 	stream = rss_cache_add(user_data->url);
 	finish_image(soup_sess, msg, stream);
 	if (user_data->data == current_pobject)
+#if EVOLUTION_VERSION >= 23190
+		em_format_queue_redraw((EMFormat *)user_data->data);
+#else
 		em_format_redraw((EMFormat *)user_data->data);
+#endif
 	g_free(user_data->url);
 	g_free(user_data);
 }
