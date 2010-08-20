@@ -5808,14 +5808,14 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 		d("uid:%d j:%d/%d, date:%s, imax:%d\n",
 			i, j, q, ctime(&min_date), imax);
 out:		camel_message_info_free(info);
+		while (gtk_events_pending())
+			gtk_main_iteration ();
 	}
 	camel_folder_freeze(folder);
 	if (min_date) {
 		camel_folder_delete_message (folder, uids->pdata[imax]);
 	}
 	camel_folder_thaw(folder);
-	while (gtk_events_pending())
-		gtk_main_iteration ();
 	camel_folder_free_uids (folder, uids);
 }
 
@@ -5904,6 +5904,8 @@ get_feed_age(RDF *r, gpointer name)
 #else
 			camel_object_unref (message);
 #endif
+			while (gtk_events_pending())
+				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
 		camel_folder_sync (folder, TRUE, NULL);
@@ -5935,6 +5937,8 @@ get_feed_age(RDF *r, gpointer name)
 				}
 			}
 			camel_folder_free_message_info(folder, info);
+			while (gtk_events_pending())
+				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
 		camel_folder_sync (folder, TRUE, NULL);
