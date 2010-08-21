@@ -403,6 +403,7 @@ void rss_error(
 	gchar *name,
 	gchar *error,
 	gchar *emsg);
+void rss_hooks_init(void);
 void rss_select_folder(gchar *folder_name);
 gchar *lookup_chn_name_by_url(gchar *url);
 gboolean update_articles(gboolean disabler);

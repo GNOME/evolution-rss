@@ -4200,7 +4200,6 @@ store_folder_renamed(CamelStore *store,
 #if (DATASERVER_VERSION < 2031001)
 	RenameInfo *info = event_data;
 #endif
-
 	gchar *main_folder = lookup_main_folder();
 #if (DATASERVER_VERSION < 2031001)
        if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
@@ -4559,7 +4558,6 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 #endif
 {
 	gdouble timeout;
-	CamelStore *store;
 
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
 		//as I don't know how to set this I'll setup a 10 secs timeout
@@ -4580,21 +4578,6 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 	custom_feed_timeout();
 
 	rss_load_images();
-
-
-	/* hook in rename event to catch feeds folder rename */
-	store = rss_component_peek_local_store();
-#if (DATASERVER_VERSION >= 2031002)
-	g_signal_connect(store, "folder_renamed",
-		G_CALLBACK(store_folder_renamed), NULL);
-	g_signal_connect(store, "folder_deleted",
-		G_CALLBACK(store_folder_deleted), NULL);
-#else
-	camel_object_hook_event(store, "folder_renamed",
-		(CamelObjectEventHookFunc)store_folder_renamed, NULL);
-	camel_object_hook_event(store, "folder_deleted",
-		(CamelObjectEventHookFunc)store_folder_deleted, NULL);
-#endif
 }
 
 /* check if rss folders exists and create'em otherwise */
@@ -4987,6 +4970,24 @@ void quit_cb(void *ep, EShellView *shell_view)
 	rf->cancel_all=1;
 }
 
+void rss_hooks_init(void)
+{
+	CamelStore *store;
+	/* hook in rename event to catch feeds folder rename */
+	store = rss_component_peek_local_store();
+#if (DATASERVER_VERSION >= 2031002)
+	g_signal_connect(store, "folder_renamed",
+		G_CALLBACK(store_folder_renamed), NULL);
+	g_signal_connect(store, "folder_deleted",
+		G_CALLBACK(store_folder_deleted), NULL);
+#else
+	camel_object_hook_event(store, "folder_renamed",
+		(CamelObjectEventHookFunc)store_folder_renamed, NULL);
+	camel_object_hook_event(store, "folder_deleted",
+		(CamelObjectEventHookFunc)store_folder_deleted, NULL);
+#endif
+}
+
 gboolean e_plugin_ui_init (GtkUIManager *ui_manager,
 	EShellView *shell_view);
 
@@ -5016,6 +5017,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 /*	rss_search_bar_hook();*/
 	webkit_hook_actions();
 #endif
+	rss_hooks_init();
 	return TRUE;
 }
 #endif
