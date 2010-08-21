@@ -41,3 +41,4 @@
 	* check key->session big memleak ?
 	* markup fail perhaps in web auth dialog
 	* nice to add progressive downloading of images
+	* redraw browser window after submit ?
