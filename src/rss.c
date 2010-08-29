@@ -660,7 +660,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
 	password_dialog = GTK_WIDGET (widget);
 
-#if GTK_VERSION >= 2014000
+#if GTK_CHECK_VERSION (2,14,0)
 	action_area = gtk_dialog_get_action_area (GTK_DIALOG(password_dialog));
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG(password_dialog));
 #else
@@ -1048,7 +1048,7 @@ rss_browser_set_hsize (GtkAdjustment *adj, gpointer data);
 void
 rss_browser_set_hsize (GtkAdjustment *adj, gpointer data)
 {
-#if GTK_VERSION >= 2014000
+#if GTK_CHECK_VERSION (2,14,0)
 	resize_pane_hsize = gtk_adjustment_get_page_size(adj);
 #else
 	resize_pane_hsize = (adj->page_size);
@@ -1069,7 +1069,7 @@ rss_browser_update_content (
 	if (GTK_IS_WIDGET(widget)) {
 		if (rf->mozembed)
 			if (
-#if GTK_VERSION >= 2019007
+#if GTK_CHECK_VERSION (2,19,7)
 			gtk_widget_get_realized(rf->mozembed)
 #else
 			GTK_WIDGET_REALIZED(rf->mozembed)
@@ -1790,14 +1790,14 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 
 	adj = gtk_scrolled_window_get_vadjustment(
 		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
-#if GTK_VERSION >= 2014000
+#if GTK_CHECK_VERSION (2,14,0)
 	height = (int)gtk_adjustment_get_page_size(adj);
 #else
 	height = (int)(adj->page_size);
 #endif
 	adj = gtk_scrolled_window_get_hadjustment(
 		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
-#if GTK_VERSION >= 2014000
+#if GTK_CHECK_VERSION (2,14,0)
 	width = (int)gtk_adjustment_get_page_size(adj);
 #else
 	width = (int)(adj->page_size);
@@ -2308,7 +2308,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		} else
 			tmp = g_strdup((gchar *)(buffer->data));
 
-#if GTK_VERSION >= 2018000
+#if GTK_CHECK_VERSION (2,18,0)
 		gtk_widget_get_allocation(obj, &alloc);
 #else
 		alloc.width = obj->allocation.width;;
@@ -4202,10 +4202,10 @@ store_folder_renamed(CamelStore *store,
 #endif
 	gchar *main_folder = lookup_main_folder();
 #if (DATASERVER_VERSION < 2031001)
-       if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
+	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
                || !g_ascii_strncasecmp(info->old_base, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
 #else
-       if (!g_ascii_strncasecmp(old_name, main_folder, strlen(main_folder))
+	if (!g_ascii_strncasecmp(old_name, main_folder, strlen(main_folder))
                || !g_ascii_strncasecmp(old_name, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
 #endif
 
@@ -4371,7 +4371,7 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 void evo_window_popup(GtkWidget *win)
 {
 	gint x, y, sx, sy, new_x, new_y;
-#if GTK_VERSION >= 2014000
+#if GTK_CHECK_VERSION (2,14,0)
 	GdkWindow *window = gtk_widget_get_window(win);
 #else
 	GdkWindow *window = win->window;
@@ -4493,7 +4493,7 @@ update_status_icon(const char *channel, gchar *title)
 		stext = g_markup_escape_text(
 				flat_status_msg,
 				strlen(flat_status_msg));
-#if GTK_VERSION >= 2016000
+#if GTK_CHECK_VERSION (2,16,0)
 		gtk_status_icon_set_tooltip_text (status_icon, stext);
 #else
 		gtk_status_icon_set_tooltip (status_icon, stext);
@@ -4796,11 +4796,11 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 
 	pretty_url = g_strdup ("RSS");
 	label = gtk_label_new (NULL);
-#if GTK_VERSION >= 2006000
+#if GTK_CHECK_VERSION (2,6,0)
 	gtk_label_set_ellipsize (
 		GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 #endif
-#if GTK_VERSION > 2008011
+#if GTK_CHECK_VERSION (2,8,11)
 	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
 #endif
 	gtk_label_set_markup (GTK_LABEL (label), pretty_url);

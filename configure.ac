@@ -276,11 +276,6 @@ AC_SUBST(RENDER_CFLAGS)
 AC_SUBST(RENDER)
 AC_SUBST(RENDER_N)
 
-# check for ellipsize
-GTK_VERSION=`$PKG_CONFIG --modversion gtk+-2.0`
-GTK_VERSION=`echo $GTK_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
-AC_SUBST(GTK_VERSION)
-
 dnl ***********
 dnl GConf stuff
 dnl ***********
