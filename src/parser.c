@@ -706,7 +706,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 {
 	xmlNodePtr walk;
 	xmlNodePtr rewalk = root;
-	xmlNodePtr channel = NULL, image = NULL, link = NULL;
+	xmlNodePtr channel = NULL, image = NULL;
 	GArray *item = g_array_new (TRUE, TRUE, sizeof (xmlNodePtr));
 	gchar *t;
 	gchar *charset;

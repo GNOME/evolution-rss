@@ -3993,7 +3993,7 @@ init_rss_prefs(void)
 		"page-rss",
 		"rss",
 		_("News And Blogs"),
-		rss_config_control_new,
+		(EPreferencesWindowCreatePageFn)rss_config_control_new,
 		800);
 }
 #endif
