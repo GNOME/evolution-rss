@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-25 22:58+0100\n"
-"PO-Revision-Date: 2010-07-23 13:35+0000\n"
+"POT-Creation-Date: 2010-09-10 22:52+0100\n"
+"PO-Revision-Date: 2010-09-09 23:48+0000\n"
 "Last-Translator: António Lima <amrlima@gmail.com>\n"
 "Language-Team: gnome_pt@yahoogroups.com\n"
 "MIME-Version: 1.0\n"
@@ -19,13 +19,13 @@ msgstr ""
 "X-Poedit-Language: Portuguese\n"
 "X-Poedit-Country: PORTUGAL\n"
 
-#: ../src/dbus.c:119 ../src/rss.c:3131 ../src/rss-config-factory.c:958
-#: ../src/rss-config-factory.c:1473 ../src/rss-config-factory.c:1628
+#: ../src/dbus.c:119 ../src/rss.c:3135 ../src/rss-config-factory.c:987
+#: ../src/rss-config-factory.c:1502 ../src/rss-config-factory.c:1657
 msgid "Error adding feed."
 msgstr "Erro ao adicionar fonte."
 
-#: ../src/dbus.c:120 ../src/rss.c:3132 ../src/rss-config-factory.c:959
-#: ../src/rss-config-factory.c:1474 ../src/rss-config-factory.c:1629
+#: ../src/dbus.c:120 ../src/rss.c:3136 ../src/rss-config-factory.c:988
+#: ../src/rss-config-factory.c:1503 ../src/rss-config-factory.c:1658
 msgid "Feed already exists!"
 msgstr "A fonte já existe!"
 
@@ -100,9 +100,9 @@ msgstr "O Evolution RSS irá aceitar cookies de artigos que navegue."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
 msgid ""
-"Evolution RSS will automatically resize images lager than displayed area."
+"Evolution RSS will automatically resize images larger than displayed area."
 msgstr ""
-"O Evolution RSS irá automaticamente redimensionar imagens maiores do que a "
+"O Evolution RSS irá redimensionar automaticamente imagens maiores do que a "
 "área de apresentação"
 
 #: ../src/evolution-rss.schemas.in.in.h:18
@@ -146,17 +146,17 @@ msgid "Html render"
 msgstr "Renderização html"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Se um artigo de fonte tiver comentários, será apresentado."
+
+#: ../src/evolution-rss.schemas.in.in.h:28
 msgid ""
 "If the proxy server requires authentication. This is the password field."
 msgstr "Se o servidor proxy requer autenticação. Este é o campo de senha."
 
-#: ../src/evolution-rss.schemas.in.in.h:28
+#: ../src/evolution-rss.schemas.in.in.h:29
 msgid "Interval in seconds before a conection is dropped."
 msgstr "Intervalo em segundos antes de desistir uma ligação."
-
-#: ../src/evolution-rss.schemas.in.in.h:29
-msgid "It will display article's comments by default if present."
-msgstr "Irá apresentar os comentários do artigo por omissão, se existentes."
 
 #: ../src/evolution-rss.schemas.in.in.h:30
 msgid "Java Enabled"
@@ -251,7 +251,7 @@ msgstr "Utilizar um servidor proxy para obter artigos e conteúdos."
 msgid "Use proxy server"
 msgstr "Utilizar servidor proxy"
 
-#: ../src/notification.c:407 ../src/rss.c:3310
+#: ../src/notification.c:407 ../src/rss.c:3314
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "A Obter Fontes (%d activas)"
@@ -329,13 +329,13 @@ msgstr "Actualizar fontes RSS"
 msgid "_Read RSS"
 msgstr "Le_r RSS"
 
-#: ../src/rss.c:350 ../src/rss.c:434 ../src/rss-config-factory.c:2548
-#: ../src/rss-config-factory.c:2716
+#: ../src/rss.c:350 ../src/rss.c:434 ../src/rss-config-factory.c:2577
+#: ../src/rss-config-factory.c:2745
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% concluído"
 
-#: ../src/rss.c:367 ../src/rss.c:3485
+#: ../src/rss.c:367 ../src/rss.c:3489
 msgid "Feed"
 msgstr "Fonte"
 
@@ -367,161 +367,165 @@ msgstr "_Recordar esta senha"
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
 #: ../src/rss.c:890
-msgid "Canceling..."
+msgid "Cancelling..."
 msgstr "A Cancelar..."
 
-#: ../src/rss.c:1077
+#: ../src/rss.c:1081
 msgid "Formatting Message..."
 msgstr "A Formatar Mensagem..."
 
-#: ../src/rss.c:1288
+#: ../src/rss.c:1292
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../src/rss.c:1289
+#: ../src/rss.c:1293
 msgid "Select _All"
 msgstr "Seleccionar _Todos"
 
-#: ../src/rss.c:1291 ../src/rss.c:1302
+#: ../src/rss.c:1295 ../src/rss.c:1306
 msgid "Zoom _In"
 msgstr "_Aumentar o Zoom"
 
-#: ../src/rss.c:1292 ../src/rss.c:1303
+#: ../src/rss.c:1296 ../src/rss.c:1307
 msgid "Zoom _Out"
 msgstr "Reduzir o Z_oom"
 
-#: ../src/rss.c:1293 ../src/rss.c:1304
+#: ../src/rss.c:1297 ../src/rss.c:1308
 msgid "_Normal Size"
 msgstr "Tamanho _Normal"
 
-#: ../src/rss.c:1295
+#: ../src/rss.c:1299
 msgid "_Open Link"
 msgstr "_Abrir Ligação"
 
-#: ../src/rss.c:1296 ../src/rss.c:1310
+#: ../src/rss.c:1300 ../src/rss.c:1314
 msgid "_Copy Link Location"
 msgstr "_Copiar Endereço da Ligação"
 
-#: ../src/rss.c:1306
+#: ../src/rss.c:1310
 msgid "_Print..."
 msgstr "Im_primir"
 
-#: ../src/rss.c:1307
+#: ../src/rss.c:1311
 msgid "Save _As"
 msgstr "Guardar _Como"
 
-#: ../src/rss.c:1309
+#: ../src/rss.c:1313
 msgid "_Open Link in Browser"
 msgstr "_Abrir Ligação no Navegador"
 
-#: ../src/rss.c:1398 ../src/rss.c:1579
+#: ../src/rss.c:1402 ../src/rss.c:1583
 msgid "Click to open"
 msgstr "Clique para abrir"
 
-#: ../src/rss.c:1823
+#: ../src/rss.c:1827
 msgid "Comments"
 msgstr "Comentários"
 
-#: ../src/rss.c:1828
+#: ../src/rss.c:1832
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: ../src/rss.c:1849
+#: ../src/rss.c:1853
 msgid "Feed view"
 msgstr "Vista de fonte"
 
-#: ../src/rss.c:1855
+#: ../src/rss.c:1859
 msgid "Show Summary"
 msgstr "Apresentar Resumo"
 
-#: ../src/rss.c:1856
+#: ../src/rss.c:1860
 msgid "Show Full Text"
 msgstr "Apresentar Texto Completo"
 
-#: ../src/rss.c:2260
+#: ../src/rss.c:2264
 msgid "Posted under"
 msgstr "Publicado em"
 
-#: ../src/rss.c:2580
+#: ../src/rss.c:2584
 msgid "Fetching feed"
 msgstr "A obter fonte"
 
-#: ../src/rss.c:2932 ../src/rss.c:3212
-msgid "Unamed feed"
+#: ../src/rss.c:2936
+msgid "Unnamed feed"
 msgstr "Fonte sem nome"
 
-#: ../src/rss.c:2933
+#: ../src/rss.c:2937
 msgid "Error while setting up feed."
 msgstr "Erro ao configurar fonte."
 
-#: ../src/rss.c:3143 ../src/rss.c:3213
+#: ../src/rss.c:3147 ../src/rss.c:3217
 msgid "Error while fetching feed."
 msgstr "Erro ao obter fonte."
 
-#: ../src/rss.c:3144
+#: ../src/rss.c:3148
 msgid "Invalid Feed"
 msgstr "Fonte Inválida"
 
-#: ../src/rss.c:3186
+#: ../src/rss.c:3190
 #, c-format
 msgid "Adding feed %s"
 msgstr "A adicionar fonte %s"
 
-#: ../src/rss.c:3225
+#: ../src/rss.c:3216
+msgid "Unamed feed"
+msgstr "Fonte sem nome"
+
+#: ../src/rss.c:3229
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "A obter mensagem %d de %d"
 
-#: ../src/rss.c:3333
+#: ../src/rss.c:3337
 msgid "Complete."
 msgstr "Terminado."
 
-#: ../src/rss.c:3371 ../src/rss.c:3553 ../src/rss.c:3592 ../src/rss.c:3767
-#: ../src/rss.c:4295
+#: ../src/rss.c:3375 ../src/rss.c:3557 ../src/rss.c:3596 ../src/rss.c:3779
+#: ../src/rss.c:4306
 msgid "Error fetching feed."
 msgstr "Erro ao obter fonte."
 
-#: ../src/rss.c:3383
+#: ../src/rss.c:3387
 msgid "Canceled."
 msgstr "Cancelado."
 
-#: ../src/rss.c:3433
+#: ../src/rss.c:3437
 msgid "illegal content type!"
 msgstr "tipo de conteúdo inválido!"
 
-#: ../src/rss.c:3436
+#: ../src/rss.c:3440
 msgid "Error while parsing feed."
 msgstr "Erro ao processar fonte."
 
-#: ../src/rss.c:3494
+#: ../src/rss.c:3498
 msgid "Complete"
 msgstr "Terminado"
 
-#: ../src/rss.c:3634
+#: ../src/rss.c:3638
 msgid "Formatting error."
 msgstr "Erro de formatação."
 
-#: ../src/rss.c:4648 ../src/rss.c:4770
+#: ../src/rss.c:4643 ../src/rss.c:4765
 msgid "No RSS feeds configured!"
 msgstr "Nenhuma fonte RSS configurada!"
 
-#: ../src/rss.c:4654 ../src/rss.c:4872
+#: ../src/rss.c:4649 ../src/rss.c:4867
 msgid "Reading RSS feeds..."
 msgstr "A ler fontes RSS..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:4668 ../src/rss.c:4880 ../src/rss-config-factory.c:1724
-#: ../src/rss-config-factory.c:2591 ../src/rss-config-factory.c:2753
+#: ../src/rss.c:4663 ../src/rss.c:4875 ../src/rss-config-factory.c:1753
+#: ../src/rss-config-factory.c:2620 ../src/rss-config-factory.c:2782
 msgid "Please wait"
 msgstr "Por favor, aguarde"
 
-#: ../src/rss.c:4676 ../src/rss.c:4896 ../src/rss-config-factory.c:935
-#: ../src/rss-config-factory.c:1446
+#: ../src/rss.c:4671 ../src/rss.c:4891 ../src/rss-config-factory.c:964
+#: ../src/rss-config-factory.c:1475
 #, no-c-format
 msgid "0% done"
 msgstr "0% terminado"
 
-#: ../src/rss.c:4818
+#: ../src/rss.c:4813
 msgid "Waiting..."
 msgstr "A aguardar..."
 
@@ -545,96 +549,108 @@ msgstr "Webkit"
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:493
+#: ../src/rss-config-factory.c:423
+msgid "day"
+msgid_plural "days"
+msgstr[0] "dia"
+msgstr[1] "dias"
+
+#: ../src/rss-config-factory.c:438
+msgid "message"
+msgid_plural "messages"
+msgstr[0] "mensagem"
+msgstr[1] "mensagens"
+
+#: ../src/rss-config-factory.c:510
 msgid "Edit Feed"
 msgstr "Editar Fonte"
 
-#: ../src/rss-config-factory.c:495
+#: ../src/rss-config-factory.c:512
 msgid "Add Feed"
 msgstr "Adicionar Fonte"
 
-#: ../src/rss-config-factory.c:1286
+#: ../src/rss-config-factory.c:1315
 msgid "Disable"
 msgstr "Desactivar"
 
-#: ../src/rss-config-factory.c:1286
+#: ../src/rss-config-factory.c:1315
 msgid "Enable"
 msgstr "Activar"
 
-#: ../src/rss-config-factory.c:1337
+#: ../src/rss-config-factory.c:1366
 msgid "Remove folder contents"
 msgstr "Remover conteúdos da pasta"
 
-#: ../src/rss-config-factory.c:1695
+#: ../src/rss-config-factory.c:1724
 msgid "Import error."
 msgstr "Erro de importação."
 
-#: ../src/rss-config-factory.c:1696
+#: ../src/rss-config-factory.c:1725
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Ficheiro inválido ou este não contém qualquer fonte."
 
-#: ../src/rss-config-factory.c:1701
+#: ../src/rss-config-factory.c:1730
 msgid "Importing"
 msgstr "A importar"
 
-#: ../src/rss-config-factory.c:2038 ../src/rss-config-factory.c:2873
-#: ../src/rss-config-factory.c:2935
+#: ../src/rss-config-factory.c:2067 ../src/rss-config-factory.c:2902
+#: ../src/rss-config-factory.c:2964
 msgid "All Files"
 msgstr "Todos os Ficheiros"
 
-#: ../src/rss-config-factory.c:2049 ../src/rss-config-factory.c:2945
+#: ../src/rss-config-factory.c:2078 ../src/rss-config-factory.c:2974
 msgid "OPML Files"
 msgstr "Ficheiros OPML"
 
-#: ../src/rss-config-factory.c:2060 ../src/rss-config-factory.c:2952
+#: ../src/rss-config-factory.c:2089 ../src/rss-config-factory.c:2981
 msgid "XML Files"
 msgstr "Ficheiros XML"
 
-#: ../src/rss-config-factory.c:2075
+#: ../src/rss-config-factory.c:2104
 msgid "Show article's summary"
 msgstr "Apresentar resumo do artigo"
 
-#: ../src/rss-config-factory.c:2088
+#: ../src/rss-config-factory.c:2117
 msgid "Feed Enabled"
 msgstr "Fonte Activa"
 
-#: ../src/rss-config-factory.c:2101
+#: ../src/rss-config-factory.c:2130
 msgid "Validate feed"
 msgstr "Validar fonte"
 
-#: ../src/rss-config-factory.c:2158
+#: ../src/rss-config-factory.c:2187
 msgid "Select import file"
 msgstr "Seleccionar ficheiro a importar"
 
-#: ../src/rss-config-factory.c:2241
+#: ../src/rss-config-factory.c:2270
 msgid "Select file to export"
 msgstr "Seleccionar ficheiro a exportar"
 
-#: ../src/rss-config-factory.c:2574
+#: ../src/rss-config-factory.c:2603
 msgid "Exporting feeds..."
 msgstr "A exportar fontes..."
 
-#: ../src/rss-config-factory.c:2638 ../src/rss-config-factory.c:2646
+#: ../src/rss-config-factory.c:2667 ../src/rss-config-factory.c:2675
 msgid "Error exporting feeds!"
 msgstr "Erro ao exportar fontes!"
 
-#: ../src/rss-config-factory.c:2729
+#: ../src/rss-config-factory.c:2758
 msgid "Importing cookies..."
 msgstr "A importar cookies..."
 
-#: ../src/rss-config-factory.c:2809
+#: ../src/rss-config-factory.c:2838
 msgid "Select file to import"
 msgstr "Seleccionar ficheiro a importar"
 
-#: ../src/rss-config-factory.c:2879
+#: ../src/rss-config-factory.c:2908
 msgid "Mozilla/Netscape Format"
 msgstr "Formato Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:2885
+#: ../src/rss-config-factory.c:2914
 msgid "Firefox new Format"
 msgstr "Novo formato Firefox"
 
-#: ../src/rss-config-factory.c:2988 ../src/rss-config-factory.c:2993
+#: ../src/rss-config-factory.c:3017 ../src/rss-config-factory.c:3022
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -642,7 +658,7 @@ msgstr ""
 "Nenhuma fonte RSS configurada!\n"
 "Incapaz de exportar."
 
-#: ../src/rss-config-factory.c:3113
+#: ../src/rss-config-factory.c:3142
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -653,19 +669,19 @@ msgstr ""
 "do firefox ou webkit instalados e o evolution-rss deve ser recompilado para "
 "ver esses pacotes."
 
-#: ../src/rss-config-factory.c:3585
+#: ../src/rss-config-factory.c:3622
 msgid "Enabled"
 msgstr "Activo"
 
-#: ../src/rss-config-factory.c:3612
+#: ../src/rss-config-factory.c:3649
 msgid "Feed Name"
 msgstr "Nome da Fonte"
 
-#: ../src/rss-config-factory.c:3625
+#: ../src/rss-config-factory.c:3662
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/rss-config-factory.c:3843
+#: ../src/rss-config-factory.c:3880
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "\t\tas renders you need firefox or webkit devel package \n"
@@ -676,17 +692,20 @@ msgstr ""
 "\t\tdo firefox ou webkit instalados e o evolution-rss deve ser \t\t"
 "\trecompilado para ver esses pacotes."
 
-#: ../src/rss-config-factory.c:3958
+#: ../src/rss-config-factory.c:3995
 msgid "News And Blogs"
 msgstr "Notícias e Blogs"
 
-#: ../src/parser.c:920
+#: ../src/parser.c:916
 msgid "No Information"
 msgstr "Nenhuma Informação"
 
-#: ../src/parser.c:1012
+#: ../src/parser.c:1008
 msgid "No information"
 msgstr "Nenhuma Informação"
+
+#~ msgid "It will display article's comments by default if present."
+#~ msgstr "Irá apresentar os comentários do artigo por omissão, se existentes."
 
 #~ msgid "Importing feeds..."
 #~ msgstr "A importar fontes..."
@@ -862,17 +881,11 @@ msgstr "Nenhuma Informação"
 #~ msgid "_Edit"
 #~ msgstr "_Editar"
 
-#~ msgid "days"
-#~ msgstr "dias"
-
 #~ msgid "hours"
 #~ msgstr "horas"
 
 #~ msgid "label"
 #~ msgstr "etiqueta"
-
-#~ msgid "messages"
-#~ msgstr "mensagens"
 
 #~ msgid "minutes"
 #~ msgstr "minutos"
