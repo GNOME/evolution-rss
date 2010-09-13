@@ -5807,8 +5807,8 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 				}
 			}
 		}
-		d("uid:%d j:%d/%d, date:%s, imax:%d\n",
-			i, j, q, ctime(&min_date), imax);
+//		d("uid:%d j:%d/%d, absdate:%d, date:%s, imax:%d\n",
+//			i, j, q, min_date, ctime(&min_date), imax);
 out:		camel_message_info_free(info);
 		while (gtk_events_pending())
 			gtk_main_iteration ();
@@ -5884,9 +5884,7 @@ get_feed_age(RDF *r, gpointer name)
 				}
 			}
 			if (!match) {
-//				g_print("info\n");
 				info = camel_folder_get_message_info(folder, uids->pdata[i]);
-//				g_print("info done\n");
 				flags = camel_message_info_flags(info);
 				if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED)) {
 					gchar *feed_dir, *feed_name;
@@ -5910,9 +5908,8 @@ get_feed_age(RDF *r, gpointer name)
 				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
-		camel_folder_sync (folder, TRUE, NULL);
+		camel_folder_sync (folder, FALSE, NULL);
 		camel_folder_thaw(folder);
-		camel_folder_expunge (folder, NULL);
 	}
 	if (del_feed == 2) {
 		guint del_days = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_days, key));
@@ -5928,12 +5925,10 @@ get_feed_age(RDF *r, gpointer name)
 					flags = camel_message_info_flags(info);
 					if (!(flags & CAMEL_MESSAGE_SEEN)) {
 						if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED)) {
-							//camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN|CAMEL_MESSAGE_DELETED, ~0);
 							camel_folder_delete_message(folder, uids->pdata[i]);
 						}
 					} else
 						if (!(flags & CAMEL_MESSAGE_FLAGGED)) {
-							//camel_message_info_set_flags(info, CAMEL_MESSAGE_DELETED, ~0);
 							camel_folder_delete_message(folder, uids->pdata[i]);
 						}
 				}
@@ -5943,21 +5938,26 @@ get_feed_age(RDF *r, gpointer name)
 				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
-		camel_folder_sync (folder, TRUE, NULL);
+		camel_folder_sync (folder, FALSE, NULL);
 		camel_folder_thaw(folder);
-		camel_folder_expunge (folder, NULL);
+		//need to find a better expunde method
+		//camel_folder_expunge (folder, NULL);
 	}
 	if (del_feed == 1) {
 		guint del_messages = GPOINTER_TO_INT(g_hash_table_lookup(rf->hrdel_messages, key));
 		guint total = camel_folder_get_message_count(folder);
+		camel_folder_freeze(folder);
 		i=1;
 		while (del_messages < camel_folder_get_message_count(folder)
 			- camel_folder_get_deleted_message_count(folder) && i <= total) {
 			delete_oldest_article(folder, del_unread);
 			i++;
 		}
-		camel_folder_sync (folder, TRUE, NULL);
-		camel_folder_expunge (folder, NULL);
+		//too heavy to sync with expunge
+		camel_folder_sync (folder, FALSE, NULL);
+		camel_folder_thaw(folder);
+		//need to find a better expunde method
+		//camel_folder_expunge (folder, NULL);
 	}
 	total = camel_folder_get_message_count (folder);
 #if (DATASERVER_VERSION >= 2031001)
