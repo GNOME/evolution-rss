@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-21 12:37+0200\n"
-"PO-Revision-Date: 2010-03-16 18:29+0200\n"
+"POT-Creation-Date: 2010-09-15 19:58+0200\n"
+"PO-Revision-Date: 2010-09-05 18:29+0200\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
@@ -97,9 +97,7 @@ msgstr "Aktiver statusikon i statusfeltet"
 msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "Evolution RSS vil acceptere cookier, fra artikler du gennemser."
 
-# engelsk fejl? lager -> larger
 #: ../src/evolution-rss.schemas.in.in.h:17
-#, fuzzy
 msgid ""
 "Evolution RSS will automatically resize images larger than displayed area."
 msgstr ""
@@ -148,7 +146,7 @@ msgstr "Html-optegner"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "If a feed article has comments, it will be displayed."
-msgstr ""
+msgstr "Hvis en nyhedsartikel har kommentarer, vil de blive vist."
 
 #: ../src/evolution-rss.schemas.in.in.h:28
 msgid ""
@@ -366,11 +364,9 @@ msgstr "Adgangskode: "
 msgid "_Remember this password"
 msgstr "_Husk denne adgangskode"
 
-# engelsk fejl? to l'er
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
 #: ../src/rss.c:890
-#, fuzzy
 msgid "Cancelling..."
 msgstr "Afbryder..."
 
@@ -452,7 +448,6 @@ msgstr "Indhenter nyhedskilde"
 
 # unnamed
 #: ../src/rss.c:2936
-#, fuzzy
 msgid "Unnamed feed"
 msgstr "Unavngivet nyhedskilde"
 
@@ -488,7 +483,7 @@ msgid "Complete."
 msgstr "Færdig."
 
 #: ../src/rss.c:3375 ../src/rss.c:3557 ../src/rss.c:3596 ../src/rss.c:3779
-#: ../src/rss.c:4307
+#: ../src/rss.c:4306
 msgid "Error fetching feed."
 msgstr "Fejl ved indhentning af nyhedskilde."
 
@@ -499,7 +494,7 @@ msgstr "Afbrudt."
 
 #: ../src/rss.c:3437
 msgid "illegal content type!"
-msgstr ""
+msgstr "ulovlig indholdstype!"
 
 #: ../src/rss.c:3440
 msgid "Error while parsing feed."
@@ -513,27 +508,27 @@ msgstr "Færdig"
 msgid "Formatting error."
 msgstr "Formatfejl."
 
-#: ../src/rss.c:4660 ../src/rss.c:4782
+#: ../src/rss.c:4643 ../src/rss.c:4765
 msgid "No RSS feeds configured!"
 msgstr "Ingen RSS-nyhedskilder konfigureret!"
 
-#: ../src/rss.c:4666 ../src/rss.c:4884
+#: ../src/rss.c:4649 ../src/rss.c:4867
 msgid "Reading RSS feeds..."
 msgstr "Læser RSS-nyhedskilder..."
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss.c:4680 ../src/rss.c:4892 ../src/rss-config-factory.c:1753
+#: ../src/rss.c:4663 ../src/rss.c:4875 ../src/rss-config-factory.c:1753
 #: ../src/rss-config-factory.c:2620 ../src/rss-config-factory.c:2782
 msgid "Please wait"
 msgstr "Vent venligst"
 
-#: ../src/rss.c:4688 ../src/rss.c:4908 ../src/rss-config-factory.c:964
+#: ../src/rss.c:4671 ../src/rss.c:4891 ../src/rss-config-factory.c:964
 #: ../src/rss-config-factory.c:1475
 #, no-c-format
 msgid "0% done"
 msgstr "0 % færdig"
 
-#: ../src/rss.c:4830
+#: ../src/rss.c:4813
 msgid "Waiting..."
 msgstr "Venter..."
 
@@ -558,17 +553,15 @@ msgid "Mozilla"
 msgstr "Mozilla"
 
 #: ../src/rss-config-factory.c:423
-#, fuzzy
 msgid "day"
 msgid_plural "days"
-msgstr[0] "dage"
+msgstr[0] "dag"
 msgstr[1] "dage"
 
 #: ../src/rss-config-factory.c:438
-#, fuzzy
 msgid "message"
 msgid_plural "messages"
-msgstr[0] "beskeder"
+msgstr[0] "besked"
 msgstr[1] "beskeder"
 
 #: ../src/rss-config-factory.c:510
@@ -596,14 +589,12 @@ msgid "Import error."
 msgstr "Importfejl."
 
 #: ../src/rss-config-factory.c:1725
-#, fuzzy
 msgid "Invalid file or this file does not contain any feeds."
-msgstr "Ugyldig fil eller dette er ikke en importfil."
+msgstr "Ugyldig fil eller denne fil indeholder ikke nogen nyhedskilder."
 
 #: ../src/rss-config-factory.c:1730
-#, fuzzy
 msgid "Importing"
-msgstr "_Importer"
+msgstr "Importerer"
 
 #: ../src/rss-config-factory.c:2067 ../src/rss-config-factory.c:2902
 #: ../src/rss-config-factory.c:2964
@@ -680,30 +671,29 @@ msgstr ""
 "som optegnere skal du have udviklingspakken til firefox eller webkit "
 "installeret og evolution-rss skal rekompileres, så den kan se disse pakker."
 
-#: ../src/rss-config-factory.c:3614
+#: ../src/rss-config-factory.c:3622
 msgid "Enabled"
 msgstr "Aktiveret"
 
-#: ../src/rss-config-factory.c:3641
+#: ../src/rss-config-factory.c:3649
 msgid "Feed Name"
 msgstr "Nyhedskildenavn"
 
-#: ../src/rss-config-factory.c:3654
+#: ../src/rss-config-factory.c:3662
 msgid "Type"
 msgstr "Type"
 
-#: ../src/rss-config-factory.c:3872
-#, fuzzy
+#: ../src/rss-config-factory.c:3880
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "\t\tas renders you need firefox or webkit devel package \n"
 "\t\tinstalled and evolution-rss should be recompiled to see those packages."
 msgstr ""
 "Bemærk: For at kunne bruge Mozilla (Firefox) eller Apple Webkit \n"
-"som optegnere skal du have udviklingspakken til firefox eller webkit "
-"installeret og evolution-rss skal rekompileres, så den kan se disse pakker."
+"\t\tsom optegnere skal du have udviklingspakken til firefox eller webkit \t"
+"\tinstalleret og evolution-rss skal rekompileres, så den kan se disse pakker."
 
-#: ../src/rss-config-factory.c:3987
+#: ../src/rss-config-factory.c:3995
 msgid "News And Blogs"
 msgstr "Nyheder og blog"
 
@@ -714,200 +704,3 @@ msgstr "Ingen information"
 #: ../src/parser.c:1008
 msgid "No information"
 msgstr "Ingen information"
-
-#~ msgid "It will display article's comments by default if present."
-#~ msgstr ""
-#~ "Den vil vise artiklens kommentarer som standard, hvis kommentarerne er "
-#~ "til stede."
-
-#~ msgid "Importing feeds..."
-#~ msgstr "Importerer nyhedskilder..."
-
-#~ msgid "<b>Article Notification</b>"
-#~ msgstr "<b>Artikelpåmindelse</b>"
-
-#~ msgid "<b>Engine: </b>"
-#~ msgstr "<b>Motor: </b>"
-
-#~ msgid "<b>HTML Rendering</b>"
-#~ msgstr "<b>HTML-optegning</b>"
-
-#~ msgid "<b>Network timeout:</b>"
-#~ msgstr "<b>Netværkstidsudløb:</b>"
-
-#~ msgid "Accept cookies from sites"
-#~ msgstr "Accepter cookier fra netsider"
-
-#~ msgid "Automatically resize images"
-#~ msgstr "Ændr automatisk størrelse på billeder"
-
-#~ msgid "Blink icon in notification area"
-#~ msgstr "Ikonblink i statusfeltet"
-
-#~ msgid "Block pop-up windows"
-#~ msgstr "Bloker pop op-vinduer"
-
-#~ msgid "Enable Java"
-#~ msgstr "Aktiver Java"
-
-#~ msgid "Enable JavaScript"
-#~ msgstr "Aktiver JavaScript"
-
-#~ msgid "Import Cookies"
-#~ msgstr "Importer cookier"
-
-#~ msgid "Show feed icon"
-#~ msgstr "Vis nyhedskildeikon"
-
-#~ msgid "Show icon in notification area"
-#~ msgstr "Vis ikon i statusfeltet"
-
-#~ msgid "seconds"
-#~ msgstr "sekunder"
-
-#~ msgid "<b>Advanced options</b>"
-#~ msgstr "<b>Avancerede indstillinger</b>"
-
-#~ msgid "<b>Feed Name: </b>"
-#~ msgstr "<b>Nyhedskildenavn: </b>"
-
-#~ msgid "<b>Feed URL:</b>"
-#~ msgstr "<b>Nyhedskilde-URL:</b>"
-
-#~ msgid "<b>Location:</b>"
-#~ msgstr "<b>Placering:</b>"
-
-#~ msgid "<span weight=\"bold\">Settings</span>"
-#~ msgstr "<span weight=\"bold\">Opsætning</span>"
-
-#~ msgid "Always delete unread articles"
-#~ msgstr "Slet altid ulæste artikler"
-
-#~ msgid "Authentication"
-#~ msgstr "Godkendelse"
-
-#~ msgid "By default show article summary instead of webpage"
-#~ msgstr "Som standard vis artikelresume i steden for internetside"
-
-#~ msgid "Certificates Table"
-#~ msgstr "Certificattabel"
-
-#~ msgid "Check for new articles at startup"
-#~ msgstr "Tjek om der er nye artikler ved opstart"
-
-#~ msgid "Check for new articles every"
-#~ msgstr "Tjek om der er nye artikler hver"
-
-#~ msgid "Delete all but the last"
-#~ msgstr "Slet alle med undtagelse af den sidste"
-
-#~ msgid "Delete articles older than"
-#~ msgstr "Slet artikler ældre end"
-
-#~ msgid "Delete articles that are no longer in the feed"
-#~ msgstr "Slet artikler som ikke længere er i nyhedskilden"
-
-#~ msgid "Delete feed?"
-#~ msgstr "Slet nyhedskilde?"
-
-#~ msgid "Details"
-#~ msgstr "Detaljer"
-
-#~ msgid "Display only feed summary"
-#~ msgstr "Vis kun nyhedskilderesume"
-
-#~ msgid "Do no update feed"
-#~ msgstr "Opdater ikke nyhedskilde"
-
-#~ msgid "Do not delete feeds"
-#~ msgstr "Slet ikke nyhedskilder"
-
-#~ msgid "E_xport"
-#~ msgstr "_Eksporter"
-
-#~ msgid "Enable Plugins"
-#~ msgstr "Aktiver udvidelsesmoduler"
-
-#~ msgid "Engine: "
-#~ msgstr "Motor: "
-
-#~ msgid "Feeds"
-#~ msgstr "Nyhedskilder"
-
-#~ msgid "General"
-#~ msgstr "Generelt"
-
-#~ msgid "HTML"
-#~ msgstr "HTML"
-
-#~ msgid "HTTP Proxy Details"
-#~ msgstr "HTTP-proxydetaljer"
-
-#~ msgid "HTTP proxy:"
-#~ msgstr "HTTP-proxy:"
-
-#~ msgid "Network"
-#~ msgstr "Netværk"
-
-#~ msgid "No proxy for:"
-#~ msgstr "Ingen proxy for:"
-
-#~ msgid "Port:"
-#~ msgstr "Port:"
-
-#~ msgid "Scan for feed inside webpages"
-#~ msgstr "Skan for nyhedskilde i internetsider"
-
-#~ msgid "Setup"
-#~ msgstr "Opsætning"
-
-#~ msgid "Show article comments"
-#~ msgstr "Vis artikels kommentarer"
-
-#~ msgid "Storage"
-#~ msgstr "Lager"
-
-#~ msgid "Update"
-#~ msgstr "Opdater"
-
-#~ msgid "Update in"
-#~ msgstr "Opdater i"
-
-#~ msgid "Use Proxy"
-#~ msgstr "Brug proxy"
-
-#~ msgid "Use authentication"
-#~ msgstr "Brug godkendelse"
-
-#~ msgid "Use global update interval"
-#~ msgstr "Brug globalt opdateringsinterval"
-
-#~ msgid "Username:"
-#~ msgstr "Brugernavn:"
-
-#~ msgid "Validate"
-#~ msgstr "Valider"
-
-#~ msgid "_Add"
-#~ msgstr "_Tilføj"
-
-#~ msgid "_Edit"
-#~ msgstr "_Rediger"
-
-#~ msgid "hours"
-#~ msgstr "timer"
-
-#~ msgid "label"
-#~ msgstr "etiket"
-
-#~ msgid "minutes"
-#~ msgstr "minutter"
-
-#~ msgid "Evolution Feeds Control"
-#~ msgstr "Evolutions nyhedskildekontrol"
-
-#~ msgid "Evolution RSS Reader"
-#~ msgstr "Evolutions RSS-læser"
-
-#~ msgid "Manage your RDF,RSS,ATOM feeds here"
-#~ msgstr "Håndter dine RDF-, RSS- og ATOM-nyhedskilder her"
