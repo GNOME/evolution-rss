@@ -649,7 +649,9 @@ create_user_pass_dialog(RSS_AUTH *auth)
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_OK, GTK_RESPONSE_OK,
 		NULL);
+#if GTK_MINOR_VERSION < 22
 	gtk_dialog_set_has_separator (GTK_DIALOG (widget), FALSE);
+#endif
 	gtk_dialog_set_default_response (
 		GTK_DIALOG (widget), GTK_RESPONSE_OK);
 	gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
@@ -4459,7 +4461,9 @@ create_status_icon(void)
 gboolean
 flicker_stop(gpointer user_data)
 {
+#if GTK_MINOR_VERSION < 22
 	gtk_status_icon_set_blinking (status_icon, FALSE);
+#endif
 	return FALSE;
 }
 
@@ -4500,9 +4504,11 @@ update_status_icon(const char *channel, gchar *title)
 #endif
 		g_free(stext);
 		gtk_status_icon_set_visible (status_icon, TRUE);
+#if GTK_MINOR_VERSION < 22
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
 		&& !gtk_status_icon_get_blinking(status_icon))
 			gtk_status_icon_set_blinking (status_icon, TRUE);
+#endif
 		g_timeout_add(15 * 1000, flicker_stop, NULL);
 		g_free(flat_status_msg);
 		flat_status_msg = NULL;
