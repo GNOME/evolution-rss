@@ -129,12 +129,16 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 				if (rf->treeview)
 					store_redraw(GTK_TREE_VIEW(rf->treeview));
 				save_gconf_feed();
+#if (DATASERVER_VERSION >= 2033001)
+				camel_operation_pop_message (NULL);
+#else
 				camel_operation_end(NULL);
+#endif
 			}
 
 
-    //  dbus_message_unref(reply);
- //     return DBUS_HANDLER_RESULT_REMOVE_MESSAGE;
+//  dbus_message_unref(reply);
+//     return DBUS_HANDLER_RESULT_REMOVE_MESSAGE;
 
 			//dbus_free (s);
 		} else {

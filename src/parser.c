@@ -1092,7 +1092,12 @@ void
 refresh_mail_folder(CamelFolder *mail_folder)
 {
 	mail_refresh_folder(mail_folder, NULL, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+		camel_folder_synchronize (mail_folder, FALSE, G_PRIORITY_DEFAULT,
+			NULL, NULL, NULL);
+#else
 	camel_folder_sync(mail_folder, FALSE, NULL);
+#endif
 	camel_folder_thaw(mail_folder);
 }
 

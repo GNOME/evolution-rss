@@ -277,7 +277,11 @@ typedef enum {
 
 struct _send_info {
 	send_info_t type;               /* 0 = fetch, 1 = send */
+#if (DATASERVER_VERSION >= 2033001)
+	GCancellable *cancel;
+#else
 	CamelOperation *cancel;
+#endif
 	char *uri;
 	int keep;
 	send_state_t state;

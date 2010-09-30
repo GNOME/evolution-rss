@@ -492,7 +492,11 @@ browser_stream_write(CamelStream *stream, gchar *base)
 	GString *str = g_string_new(NULL);
 	gchar *line;
 	CamelStream *in = camel_stream_buffer_new(stream, CAMEL_STREAM_BUFFER_READ);
+#if (DATASERVER_VERSION >= 2033001)
+	while ((line = camel_stream_buffer_read_line((CamelStreamBuffer *)in, NULL,  NULL))) {
+#else
 	while ((line = camel_stream_buffer_read_line((CamelStreamBuffer *)in, NULL))) {
+#endif
 		gchar *tmp = line;
 		g_string_append(str, line);
 		g_free(tmp);
@@ -916,7 +920,11 @@ rss_select_folder(gchar *folder_name)
 	shell_sidebar  = e_shell_view_get_shell_sidebar(rss_shell_view);
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
 	store = rss_component_peek_local_store();
+#if (DATASERVER_VERSION >= 2033001)
+	fold = camel_store_get_folder_sync (store, folder_name, 0, NULL, NULL);
+#else
 	fold = camel_store_get_folder (store, folder_name, 0, NULL);
+#endif
 	if (!fold) return;
 	uri = mail_tools_folder_to_url (fold);
 	em_folder_tree_set_selected(folder_tree, uri, 0);
@@ -1107,7 +1115,11 @@ rss_browser_update_content (
 						d("cache read\n");
 						fi->create = 0;
 						browser_stream_write(stream, po->website);
-						camel_stream_close(stream, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+						camel_stream_close (stream, NULL, NULL);
+#else
+						camel_stream_close (stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 						g_object_unref(stream);
 #else
@@ -2296,10 +2308,17 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		mcontent = camel_medium_get_content_object(
 				CAMEL_MEDIUM(t->part));
 #endif
-		camel_data_wrapper_write_to_stream(
+#if DATASERVER_VERSION >= 233001
+		camel_data_wrapper_write_to_stream_sync (
+			mcontent,
+			(CamelStream *)stream,
+			NULL, NULL);
+#else
+		camel_data_wrapper_write_to_stream (
 			mcontent,
 			(CamelStream *)stream,
 			NULL);
+#endif
 		g_byte_array_append (buffer, (unsigned char *)"", 1);
 //#ifdef EVOLUTION_2_12	//aparently this ("?" char parsing) is fixed in 2.12
 //		//then again this does not work in evo > 2.12 perhaps is gtkhtml related
@@ -2495,15 +2514,25 @@ render_body:	if (category)
 	}
 
 	//this is required for proper charset rendering when html
-	camel_data_wrapper_construct_from_stream(dw, fstream, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+	camel_data_wrapper_construct_from_stream_sync (dw, fstream, NULL, NULL);
+#else
+	camel_data_wrapper_construct_from_stream (dw, fstream, NULL);
+#endif
 #if EVOLUTION_VERSION >= 23100
 	camel_medium_set_content((CamelMedium *)part, dw);
 #else
 	camel_medium_set_content_object((CamelMedium *)part, dw);
 #endif
+#if EVOLUTION_VERSION >= 23300
+	em_format_format_text((EMFormat *)t->format,
+				(CamelStream *)t->stream,
+				(CamelDataWrapper *)part, NULL);
+#else
 	em_format_format_text((EMFormat *)t->format,
 				(CamelStream *)t->stream,
 				(CamelDataWrapper *)part);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref(dw);
 	g_object_unref(part);
@@ -3644,7 +3673,11 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		g_free(tmsg);
 		if (ub->create) {
 			//stream remove
-			camel_stream_close(ub->stream, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+			camel_stream_close (ub->stream, NULL, NULL);
+#else
+			camel_stream_close (ub->stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref(ub->stream);
 #else
@@ -3653,8 +3686,13 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		}
 	} else {
 		if (ub->create) {
+#if (DATASERVER_VERSION >= 2033001)
+			camel_stream_write(ub->stream, response->str, strlen(response->str), NULL, NULL);
+			camel_stream_close(ub->stream, NULL, NULL);
+#else
 			camel_stream_write(ub->stream, response->str, strlen(response->str), NULL);
 			camel_stream_close(ub->stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref(ub->stream);
 #else
@@ -4083,7 +4121,11 @@ check_feed_folder(gchar *folder_name)
 	d("main_folder:%s\n", main_folder);
 	d("real_folder:%s\n", real_folder);
 	d("real_name:%s\n", real_name);
+#if (DATASERVER_VERSION >= 2033001)
+	mail_folder = camel_store_get_folder_sync (store, real_name, 0, NULL, NULL);
+#else
 	mail_folder = camel_store_get_folder (store, real_name, 0, NULL);
+#endif
 	base_folder = main_folder;
 	if (mail_folder == NULL) {
 		sanitize_path_separator(real_folder);
@@ -4093,11 +4135,20 @@ check_feed_folder(gchar *folder_name)
 				if (path[i] == NULL)
 					break;
 				if (path[i] && strlen(path[i])) {
+#if (DATASERVER_VERSION >= 2033001)
+					camel_store_create_folder_sync (
+						store,
+						base_folder,
+						path[i],
+						NULL,
+						NULL);
+#else
 					camel_store_create_folder (
 						store,
 						base_folder,
 						path[i],
 						NULL);
+#endif
 					base_folder = g_strconcat(
 							base_folder,
 							"/",
@@ -4107,10 +4158,18 @@ check_feed_folder(gchar *folder_name)
 			} while (NULL != path[++i]);
 			g_strfreev(path);
 		}
+#if (DATASERVER_VERSION >= 2033001)
+		mail_folder = camel_store_get_folder_sync (store,
+				real_name,
+				0,
+				NULL,
+				NULL);
+#else
 		mail_folder = camel_store_get_folder (store,
 				real_name,
 				0,
 				NULL);
+#endif
 	}
 	g_free(real_name);
 	return mail_folder;
@@ -4593,6 +4652,23 @@ check_folders(void)
 	CamelStore *store = rss_component_peek_local_store();
 	CamelFolder *mail_folder, *old_folder;
 
+#if (DATASERVER_VERSION >= 2033001)
+	/*FIXME block*/
+	mail_folder = camel_store_get_folder_sync (
+			store, lookup_main_folder(), 0, NULL, NULL);
+	old_folder = camel_store_get_folder_sync (
+			store, OLD_FEEDS_FOLDER, 0, NULL, NULL);
+	if (old_folder) {
+		camel_store_rename_folder_sync(
+			store, OLD_FEEDS_FOLDER,
+			lookup_main_folder(), NULL, NULL);
+	} else if (mail_folder == NULL) {
+		camel_store_create_folder_sync (
+			store, NULL,
+			lookup_main_folder(), NULL, NULL);
+		return;
+	}
+#else
 	mail_folder = camel_store_get_folder (
 			store, lookup_main_folder(), 0, NULL);
 	old_folder = camel_store_get_folder (
@@ -4607,6 +4683,7 @@ check_folders(void)
 			lookup_main_folder(), NULL);
 		return;
 	}
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref (mail_folder);
 #else
@@ -4718,6 +4795,7 @@ my_op_status(CamelOperation *op, const char *what, int pc, void *data)
 	g_print("OP STATUS\n");
 	g_print("CANCEL!!!!\n");
 
+#if (DATASERVER_VERSION < 2033001)
 	switch (pc) {
 	case CAMEL_OPERATION_START:
 		pc = 0;
@@ -4726,6 +4804,7 @@ my_op_status(CamelOperation *op, const char *what, int pc, void *data)
 		pc = 100;
 		break;
 	}
+#endif
 
 	set_send_status(info, what, pc);
 }
@@ -4784,7 +4863,13 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 //
 	info->uri = g_strdup("feed"); //g_stddup
 
+#if (DATASERVER_VERSION >= 2033001)
+	info->cancel = camel_operation_new ();
+	g_signal_connect(info->cancel, "status",
+		G_CALLBACK(my_op_status), info);
+#else
 	info->cancel = camel_operation_new (my_op_status, info);
+#endif
 	info->state = SEND_ACTIVE;
 //        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
 //
@@ -5269,7 +5354,12 @@ create_mail(create_feed *CF)
 	stream = camel_stream_mem_new ();
 	// w/out an format argument this throws and seg fault
 	camel_stream_printf (stream, "%s", CF->body);
+#if (DATASERVER_VERSION >= 2033001)
+	/*FIXME may block */
+	camel_data_wrapper_construct_from_stream_sync (rtext, stream, NULL, NULL);
+#else
 	camel_data_wrapper_construct_from_stream (rtext, stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref (stream);
 #else
@@ -5360,7 +5450,13 @@ create_mail(create_feed *CF)
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 #endif
 
-	camel_folder_append_message(mail_folder, new, info, &appended_uid, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+	camel_folder_append_message_sync (mail_folder, new, info,
+			&appended_uid, NULL, NULL);
+#else
+	camel_folder_append_message (mail_folder, new, info,
+			&appended_uid, NULL);
+#endif
 
 	/* no point in filtering mails at import time as it just
 	 * wastes time, user can setup his own afterwards
@@ -5427,7 +5523,13 @@ file_to_message(const char *filename)
 	if (!file)
 		return NULL;
 
-	camel_data_wrapper_construct_from_stream(content, (CamelStream *)file, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+	camel_data_wrapper_construct_from_stream_sync (content,
+		(CamelStream *)file, NULL, NULL);
+#else
+	camel_data_wrapper_construct_from_stream(content,
+		(CamelStream *)file, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref((CamelObject *)file);
 #else
@@ -5851,7 +5953,11 @@ get_feed_age(RDF *r, gpointer name)
 			"%s" G_DIR_SEPARATOR_S "%s",
 			lookup_main_folder(),
 			real_folder);
+#if (DATASERVER_VERSION >= 2033001)
+	if (!(folder = camel_store_get_folder_sync (store, real_name, 0, NULL, NULL)))
+#else
 	if (!(folder = camel_store_get_folder (store, real_name, 0, NULL)))
+#endif
 		goto fail;
 	time (&now);
 
@@ -5868,7 +5974,13 @@ get_feed_age(RDF *r, gpointer name)
 		for (i = 0; i < uids->len; i++) {
 			el = NULL;
 			match = FALSE;
-			message = camel_folder_get_message(folder, uids->pdata[i], NULL);
+#if (DATASERVER_VERSION >= 2033001)
+			message = camel_folder_get_message_sync (folder,
+				uids->pdata[i], NULL, NULL);
+#else
+			message = camel_folder_get_message (folder,
+				uids->pdata[i], NULL);
+#endif
 			if (message == NULL)
 				break;
 			feedid  = (gchar *)camel_medium_get_header (
@@ -5914,7 +6026,12 @@ get_feed_age(RDF *r, gpointer name)
 				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
+#if (DATASERVER_VERSION >= 2033001)
+		camel_folder_synchronize (folder, FALSE, G_PRIORITY_DEFAULT,
+			NULL, NULL, NULL);
+#else
 		camel_folder_sync (folder, FALSE, NULL);
+#endif
 		camel_folder_thaw(folder);
 	}
 	if (del_feed == 2) {
@@ -5944,7 +6061,12 @@ get_feed_age(RDF *r, gpointer name)
 				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
+#if (DATASERVER_VERSION >= 2033001)
+		camel_folder_synchronize (folder, FALSE, G_PRIORITY_DEFAULT,
+			NULL, NULL, NULL);
+#else
 		camel_folder_sync (folder, FALSE, NULL);
+#endif
 		camel_folder_thaw(folder);
 		//need to find a better expunde method
 		//camel_folder_expunge (folder, NULL);
@@ -5960,7 +6082,12 @@ get_feed_age(RDF *r, gpointer name)
 			i++;
 		}
 		//too heavy to sync with expunge
+#if (DATASERVER_VERSION >= 2033001)
+		camel_folder_synchronize (folder, FALSE, G_PRIORITY_DEFAULT,
+			NULL, NULL, NULL);
+#else
 		camel_folder_sync (folder, FALSE, NULL);
+#endif
 		camel_folder_thaw(folder);
 		//need to find a better expunde method
 		//camel_folder_expunge (folder, NULL);

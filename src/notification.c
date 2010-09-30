@@ -258,8 +258,15 @@ taskbar_op_new(gchar *message)
 	shell = e_shell_get_default ();
 	shell_backend = e_shell_get_backend_by_name (shell, "mail");
 
+#if EVOLUTION_VERSION >= 23300
+	activity = e_activity_new ();
+	e_activity_set_primary_text (activity, message);
+	/* does this even makes sense */
+	e_activity_set_cancellable (activity, NULL);
+#else
 	activity = e_activity_new (message);
 	e_activity_set_allow_cancel (activity, TRUE);
+#endif
 	e_activity_set_percent (activity, 0.0);
 	e_shell_backend_add_activity (shell_backend, activity);
 

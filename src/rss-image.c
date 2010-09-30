@@ -317,12 +317,21 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 				msg->response.length);
 #else
 		if (msg->response_body->data) {
-			camel_stream_write(user_data,
+#if (DATASERVER_VERSION >= 2033001)
+			camel_stream_write (user_data,
+				msg->response_body->data,
+				msg->response_body->length,
+				NULL,
+				NULL);
+			camel_stream_close(user_data, NULL, NULL);
+#else
+			camel_stream_write (user_data,
 				msg->response_body->data,
 				msg->response_body->length,
 				NULL);
-#endif
 			camel_stream_close(user_data, NULL);
+#endif
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref(user_data);
 #else
@@ -330,8 +339,13 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 		}
 	} else {
+#if (DATASERVER_VERSION >= 2033001)
+		camel_stream_write (user_data, pixfilebuf, pixfilelen, NULL, NULL);
+		camel_stream_close (user_data, NULL, NULL);
+#else
 		camel_stream_write(user_data, pixfilebuf, pixfilelen, NULL);
 		camel_stream_close(user_data, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 		g_object_unref(user_data);
 #else
@@ -407,9 +421,15 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 					"%s" G_DIR_SEPARATOR_S "%s",
 					get_main_folder(),
 					lookup_feed_folder(name));
+#if (DATASERVER_VERSION >= 2033001)
+		rss_folder = camel_store_get_folder_sync (
+					store,
+					full_name, 0, NULL, NULL);
+#else
 		rss_folder = camel_store_get_folder (
 					store,
 					full_name, 0, NULL);
+#endif
 		if (!rss_folder) {
 			g_free(full_name);
 			result = FALSE;

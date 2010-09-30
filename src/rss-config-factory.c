@@ -1015,7 +1015,13 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, GError **error)
 
 		d("deleting folder '%s'\n", fi->full_name);
 
-		if (!(folder = camel_store_get_folder (store, fi->full_name, 0, error)))
+#if (DATASERVER_VERSION >= 2033001)
+		if (!(folder = camel_store_get_folder_sync (store, fi->full_name,
+			0, NULL, error)))
+#else
+		if (!(folder = camel_store_get_folder (store, fi->full_name,
+			0, error)))
+#endif
 			return;
 
 			uids = camel_folder_get_uids (folder);
@@ -1028,12 +1034,20 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, GError **error)
 
 			camel_folder_free_uids (folder, uids);
 
-			camel_folder_sync (folder, TRUE, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+			camel_folder_synchronize_sync (folder, TRUE, NULL, NULL);
+#else
+			camel_folder_synch (folder, TRUE, NULL);
+#endif
 			camel_folder_thaw (folder);
 
 		d("do camel_store_delete_folder()\n");
 
+#if (DATASERVER_VERSION >= 2033001)
+		camel_store_delete_folder_sync (store, fi->full_name, NULL, error);
+#else
 		camel_store_delete_folder (store, fi->full_name, error);
+#endif
 		if (error != NULL)
 			return;
 
@@ -1052,10 +1066,17 @@ rss_delete_folders (CamelStore *store,
 	CamelFolderInfo *fi = NULL;
 
 	d("camel_store_get_folder_info() %s\n", full_name);
+#if (DATASERVER_VERSION >= 2033001)
+	fi = camel_store_get_folder_info_sync (
+		store,
+		full_name,
+		flags, NULL, error);
+#else
 	fi = camel_store_get_folder_info (
 		store,
 		full_name,
 		flags, error);
+#endif
 	if (!fi || error != NULL)
 		return;
 
@@ -1546,7 +1567,11 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 				gchar *b = g_build_path(
 						G_DIR_SEPARATOR_S,
 						dir, feed->feed_name, NULL);
+#if (DATASERVER_VERSION >= 2033001)
+				camel_store_rename_folder_sync (store, a, b, NULL, &error);
+#else
 				camel_store_rename_folder (store, a, b, &error);
+#endif
 				if (error != NULL) {
 					e_alert_run_dialog_for_args(
 						GTK_WINDOW(rf->preferences),
