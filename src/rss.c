@@ -2308,7 +2308,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		mcontent = camel_medium_get_content_object(
 				CAMEL_MEDIUM(t->part));
 #endif
-#if DATASERVER_VERSION >= 233001
+#if DATASERVER_VERSION >= 2033001
 		camel_data_wrapper_write_to_stream_sync (
 			mcontent,
 			(CamelStream *)stream,
