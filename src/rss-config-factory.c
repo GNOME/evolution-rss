@@ -1037,7 +1037,7 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, GError **error)
 #if (DATASERVER_VERSION >= 2033001)
 			camel_folder_synchronize_sync (folder, TRUE, NULL, NULL);
 #else
-			camel_folder_synch (folder, TRUE, NULL);
+			camel_folder_sync (folder, TRUE, NULL);
 #endif
 			camel_folder_thaw (folder);
 
