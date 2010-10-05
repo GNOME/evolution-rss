@@ -2986,7 +2986,6 @@ finish_setup_feed(
 		chn_name = process_feed(r);
 //		taskbar_op_set_progress(tmsgkey, tmsg, 0.6);
 
-add:
 		//feed name can only come from an import so we rather prefer
 		//resulted channel name instead of supplied one
 		if (feed->feed_name && !chn_name) {

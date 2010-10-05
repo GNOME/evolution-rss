@@ -4019,7 +4019,7 @@ init_rss_prefs(void)
 		"rss",
 		_("News And Blogs"),
 #if EVOLUTION_VERSION >= 23106
-		rss_config_control_new,
+		(EPreferencesWindowCreatePageFn)rss_config_control_new,
 #else
 		rss_config_control_new(),
 #endif
