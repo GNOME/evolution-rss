@@ -957,7 +957,11 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
 	rf->cur_format = rf->cur_format^1;
 	rf->chg_format = 1;
+#if EVOLUTION_VERSION >= 23190
+	em_format_queue_redraw((EMFormat *)pobject);
+#else
 	em_format_redraw((EMFormat *)pobject);
+#endif
 //	while (gtk_events_pending ())
 //           gtk_main_iteration ();
 }
@@ -3697,7 +3701,11 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 	g_string_free(response, 0);
 
 	if (reload && !rf->cur_format) {
+#if EVOLUTION_VERSION >= 23190
+		em_format_queue_redraw((EMFormat *)user_data);
+#else
 		em_format_redraw((EMFormat *)user_data);
+#endif
 	}
 
 	while (gtk_events_pending ())
@@ -3707,7 +3715,11 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 static void
 refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
+#if EVOLUTION_VERSION >= 23190
+	em_format_queue_redraw((EMFormat *)pobject);
+#else
 	em_format_redraw((EMFormat *)pobject);
+#endif
 }
 
 gchar *
