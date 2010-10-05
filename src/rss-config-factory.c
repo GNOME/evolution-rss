@@ -3574,7 +3574,11 @@ EvolutionConfigControl *
 #else
 GtkWidget *
 #endif
+#if EVOLUTION_VERSION >= 23106
+rss_config_control_new (EShell *shell);
+#else
 rss_config_control_new (void);
+#endif
 
 //kb//
 #if EVOLUTION_VERSION < 22900
@@ -3582,7 +3586,11 @@ EvolutionConfigControl *
 #else
 GtkWidget *
 #endif
+#if EVOLUTION_VERSION >= 23106
+rss_config_control_new (EShell *shell)
+#else
 rss_config_control_new (void)
+#endif
 {
 	GtkWidget *control_widget;
 	GtkWidget *button1, *button2, *button3;
@@ -4010,7 +4018,11 @@ init_rss_prefs(void)
 		"page-rss",
 		"rss",
 		_("News And Blogs"),
+#if EVOLUTION_VERSION >= 23106
+		rss_config_control_new,
+#else
 		rss_config_control_new(),
+#endif
 		800);
 }
 #endif
