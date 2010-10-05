@@ -976,7 +976,11 @@ destroy_delete(GtkWidget *selector, gpointer user_data)
 //this function resembles emfu_delete_rec in mail/em-folder-utils.c
 //which is not exported ?
 static void
+#if (EVOLUTION_VERSION < 23191)
 rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
+#else
+rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, GError **error)
+#endif
 {
 	int i;
 	GPtrArray *uids;
@@ -986,7 +990,11 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
 
 		d("deleting folder '%s'\n", fi->full_name);
 
+#if (EVOLUTION_VERSION < 23191)
 		if (!(folder = camel_store_get_folder (store, fi->full_name, 0, ex)))
+#else
+		if (!(folder = camel_store_get_folder (store, fi->full_name, 0, error)))
+#endif
 			return;
 
 			uids = camel_folder_get_uids (folder);
@@ -1004,8 +1012,13 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
 
 		d("do camel_store_delete_folder()\n");
 
+#if (EVOLUTION_VERSION < 23191)
 		camel_store_delete_folder (store, fi->full_name, ex);
 		if (camel_exception_is_set (ex))
+#else
+		camel_store_delete_folder (store, fi->full_name, error);
+		if (error != NULL)
+#endif
 			return;
 
 		fi = fi->next;
@@ -1013,8 +1026,15 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, CamelException *ex)
 }
 
 void
-rss_delete_folders (
-	CamelStore *store, const char *full_name, CamelException *ex)
+#if (EVOLUTION_VERSION < 23191)
+rss_delete_folders (CamelStore *store,
+		const char *full_name,
+		CamelException *ex)
+#else
+rss_delete_folders (CamelStore *store,
+		const char *full_name,
+		GError **error)
+#endif
 {
 	guint32 flags = CAMEL_STORE_FOLDER_INFO_RECURSIVE
 		| CAMEL_STORE_FOLDER_INFO_FAST
@@ -1025,12 +1045,21 @@ rss_delete_folders (
 	fi = camel_store_get_folder_info (
 		store,
 		full_name,
+#if (EVOLUTION_VERSION < 23191)
 		flags, ex);
 	if (!fi || camel_exception_is_set (ex))
+#else
+		flags, error);
+	if (!fi || error != NULL)
+#endif
 		return;
 
 	d("call rss_delete_rec()\n");
+#if (EVOLUTION_VERSION < 23191)
 	rss_delete_rec (store, fi, ex);
+#else
+	rss_delete_rec (store, fi, error);
+#endif
 	camel_store_free_folder_info (store, fi);
 }
 
@@ -1407,7 +1436,11 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 	gpointer key = lookup_key(feed_name);
 	gchar *prefix = NULL;
 	hrfeed *saved_feed;
+#if EVOLUTION_VERSION < 23191
 	CamelException ex;
+#else
+	GError *error = NULL;
+#endif
 	CamelStore *store = rss_component_peek_local_store();
 	GtkWidget *msg_feeds, *progress;
 
@@ -1516,9 +1549,15 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 				gchar *b = g_build_path(
 						G_DIR_SEPARATOR_S,
 						dir, feed->feed_name, NULL);
+
+#if EVOLUTION_VERSION < 23191
 				camel_exception_init (&ex);
 				camel_store_rename_folder (store, a, b, &ex);
 				if (camel_exception_is_set (&ex)) {
+#else
+				camel_store_rename_folder (store, a, b, &error);
+				if (error != NULL) {
+#endif
 #if EVOLUTION_VERSION < 22904
 					e_error_run(GTK_WINDOW(
 						rf->preferences),
@@ -1528,9 +1567,17 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 					e_alert_run_dialog_for_args(
 						GTK_WINDOW(rf->preferences),
 						"mail:no-rename-folder",
+#if EVOLUTION_VERSION < 23191
 						a, b, ex.desc, NULL);
+#else
+						a, b, error->message, NULL);
 #endif
+#endif
+#if EVOLUTION_VERSION < 23191
 					camel_exception_clear (&ex);
+#else
+					g_clear_error(&error);
+#endif
 				}
 				g_free(dir);
 				g_free(b);

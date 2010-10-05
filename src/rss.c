@@ -492,7 +492,11 @@ browser_stream_write(CamelStream *stream, gchar *base)
 	GString *str = g_string_new(NULL);
 	gchar *line;
 	CamelStream *in = camel_stream_buffer_new(stream, CAMEL_STREAM_BUFFER_READ);
+#if EVOLUTION_VERSION < 23191
 	while ((line = camel_stream_buffer_read_line((CamelStreamBuffer *)in))) {
+#else
+	while ((line = camel_stream_buffer_read_line((CamelStreamBuffer *)in, NULL))) {
+#endif
 		gchar *tmp = line;
 		g_string_append(str, line);
 		g_free(tmp);
@@ -1107,7 +1111,11 @@ rss_browser_update_content (
 						d("cache read\n");
 						fi->create = 0;
 						browser_stream_write(stream, po->website);
+#if EVOLUTION_VERSION < 23191
 						camel_stream_close(stream);
+#else
+						camel_stream_close(stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 						g_object_unref(stream);
 #else
@@ -1155,13 +1163,16 @@ webkit_set_preferences(void)
 	g_object_set (settings, "enable-page-cache", TRUE, NULL);
 	//g_object_set (settings, "auto-resize-window", TRUE, NULL);
 	g_object_set (settings, "enable-plugins",
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_EMBED_PLUGIN, NULL),
+		gconf_client_get_bool(rss_gconf,
+			GCONF_KEY_EMBED_PLUGIN, NULL),
 		NULL);
 	g_object_set (settings, "enable-java-applet",
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JAVA, NULL),
+		gconf_client_get_bool(rss_gconf,
+			GCONF_KEY_HTML_JAVA, NULL),
 		NULL);
 	g_object_set (settings, "enable-scripts",
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_HTML_JS, NULL),
+		gconf_client_get_bool(rss_gconf,
+			GCONF_KEY_HTML_JS, NULL),
 		NULL);
 #endif
 	webkit_web_view_set_full_content_zoom(
@@ -2295,7 +2306,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 #endif
 		camel_data_wrapper_write_to_stream(
 			mcontent,
+#if EVOLUTION_VERSION < 23191
 			(CamelStream *)stream);
+#else
+			(CamelStream *)stream,
+			NULL);
+#endif
 		g_byte_array_append (buffer, (unsigned char *)"", 1);
 //#ifdef EVOLUTION_2_12	//aparently this ("?" char parsing) is fixed in 2.12
 //		//then again this does not work in evo > 2.12 perhaps is gtkhtml related
@@ -2491,7 +2507,11 @@ render_body:	if (category)
 	}
 
 	//this is required for proper charset rendering when html
+#if EVOLUTION_VERSION < 23191
 	camel_data_wrapper_construct_from_stream(dw, fstream);
+#else
+	camel_data_wrapper_construct_from_stream(dw, fstream, NULL);
+#endif
 #if EVOLUTION_VERSION >= 23100
 	camel_medium_set_content((CamelMedium *)part, dw);
 #else
@@ -3640,7 +3660,11 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		g_free(tmsg);
 		if (ub->create) {
 			//stream remove
+#if EVOLUTION_VERSION < 23191
 			camel_stream_close(ub->stream);
+#else
+			camel_stream_close(ub->stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref(ub->stream);
 #else
@@ -3649,8 +3673,13 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		}
 	} else {
 		if (ub->create) {
+#if EVOLUTION_VERSION < 23191
 			camel_stream_write(ub->stream, response->str, strlen(response->str));
 			camel_stream_close(ub->stream);
+#else
+			camel_stream_write(ub->stream, response->str, strlen(response->str), NULL);
+			camel_stream_close(ub->stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref(ub->stream);
 #else
@@ -4116,7 +4145,11 @@ check_feed_folder(gchar *folder_name)
 void
 rss_delete_feed(gchar *full_path, gboolean folder)
 {
+#if EVOLUTION_VERSION < 23191
 	CamelException ex;
+#else
+	GError *error = NULL;
+#endif
 	gchar *tmp, *tkey, *url;
 	CamelStore *store;
 	gchar *name, *real_name, *buf, *feed_dir, *feed_name;
@@ -4129,24 +4162,42 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	real_name = g_hash_table_lookup(rf->feed_folders, name);
 	if (!real_name)
 		real_name = name;
+
+#if EVOLUTION_VERSION < 23191
 	camel_exception_init (&ex);
 	rss_delete_folders (store, full_path, &ex);
 	if (camel_exception_is_set (&ex)) {
+#else
+	rss_delete_folders (store, full_path, &error);
+	if (error != NULL) {
+#endif
 #if EVOLUTION_VERSION < 22904
 		e_error_run(NULL,
 			"mail:no-delete-folder",
 			full_path,
+#if EVOLUTION_VERSION < 23191
 			ex.desc,
+#else
+			error->message,
+#endif
 			NULL);
 #else
 		e_alert_run_dialog_for_args(
 			e_shell_get_active_window (NULL),
 			"mail:no-delete-folder",
 			full_path,
+#if EVOLUTION_VERSION < 23191
 			ex.desc,
+#else
+			error->message,
+#endif
 			NULL);
 #endif
+#if EVOLUTION_VERSION < 23191
 		camel_exception_clear (&ex);
+#else
+		g_clear_error(&error);
+#endif
 	}
 	//also remove status file
 	tkey = g_hash_table_lookup(rf->hrname,
@@ -4576,7 +4627,9 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 void
 check_folders(void)
 {
+#if EVOLUTION_VERSION < 23191
 	CamelException ex;
+#endif
 	CamelStore *store = rss_component_peek_local_store();
 	CamelFolder *mail_folder, *old_folder;
 
@@ -4587,11 +4640,19 @@ check_folders(void)
 	if (old_folder) {
 		camel_store_rename_folder(
 			store, OLD_FEEDS_FOLDER,
+#if EVOLUTION_VERSION < 23191
+			lookup_main_folder(), &ex);
+#else
 			lookup_main_folder(), NULL);
+#endif
 	} else if (mail_folder == NULL) {
 		camel_store_create_folder (
 			store, NULL,
+#if EVOLUTION_VERSION < 23191
 			lookup_main_folder(), &ex);
+#else
+			lookup_main_folder(), NULL);
+#endif
 		return;
 	}
 #if (DATASERVER_VERSION >= 2031001)
@@ -5118,7 +5179,9 @@ create_mail(create_feed *CF)
 	CamelMimeMessage *new = camel_mime_message_new();
 	CamelInternetAddress *addr;
 	CamelMessageInfo *info;
+#if EVOLUTION_VERSION < 23191
 	CamelException *ex = NULL;
+#endif
 	struct tm tm;
 	time_t time, actual_time;
 	CamelDataWrapper *rtext;
@@ -5238,7 +5301,11 @@ create_mail(create_feed *CF)
 	stream = camel_stream_mem_new ();
 	// w/out an format argument this throws and seg fault
 	camel_stream_printf (stream, "%s", CF->body);
+#if EVOLUTION_VERSION < 23191
 	camel_data_wrapper_construct_from_stream (rtext, stream);
+#else
+	camel_data_wrapper_construct_from_stream (rtext, stream, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref (stream);
 #else
@@ -5329,7 +5396,11 @@ create_mail(create_feed *CF)
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 #endif
 
+#if EVOLUTION_VERSION < 23191
 	camel_folder_append_message(mail_folder, new, info, &appended_uid, ex);
+#else
+	camel_folder_append_message(mail_folder, new, info, &appended_uid, NULL);
+#endif
 
 	/* no point in filtering mails at import time as it just
 	 * wastes time, user can setup his own afterwards
@@ -5390,12 +5461,20 @@ file_to_message(const char *filename)
 	file = (CamelStreamFs *)
 			camel_stream_fs_new_with_name(filename,
 				O_RDWR|O_CREAT,
+#if EVOLUTION_VERSION < 23191
 				0666);
+#else
+				0666, NULL);
+#endif
 
 	if (!file)
 		return NULL;
 
+#if EVOLUTION_VERSION < 23191
 	camel_data_wrapper_construct_from_stream(content, (CamelStream *)file);
+#else
+	camel_data_wrapper_construct_from_stream(content, (CamelStream *)file, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref((CamelObject *)file);
 #else

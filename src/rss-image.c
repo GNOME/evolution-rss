@@ -84,7 +84,11 @@ update_feed_image(RDF *r)
 	if (!g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 	if (image) {		//we need to validate image here with load_pixbuf
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(feed_file,
+#if EVOLUTION_VERSION < 23191
 			O_RDWR|O_CREAT, 0666);
+#else
+			O_RDWR|O_CREAT, 0666, NULL);
+#endif
 		dup_auth_data(r->uri, image);
 		fi->feed_fs = feed_fs;
 		fi->key = g_strdup(key);
@@ -317,9 +321,15 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 		if (msg->response_body->data) {
 			camel_stream_write(user_data,
 				msg->response_body->data,
+#if EVOLUTION_VERSION < 23191
 				msg->response_body->length);
-#endif
 			camel_stream_close(user_data);
+#else
+				msg->response_body->length,
+				NULL);
+			camel_stream_close(user_data, NULL);
+#endif
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref(user_data);
 #else
@@ -327,8 +337,13 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 		}
 	} else {
+#if EVOLUTION_VERSION < 23191
 		camel_stream_write(user_data, pixfilebuf, pixfilelen);
 		camel_stream_close(user_data);
+#else
+		camel_stream_write(user_data, pixfilebuf, pixfilelen, NULL);
+		camel_stream_close(user_data, NULL);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 		g_object_unref(user_data);
 #else
@@ -344,10 +359,16 @@ finish_create_icon (SoupMessage *msg, FEED_IMAGE *user_data)
 finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
 #endif
 {
-	d("finish_image(): status:%d, user_data:%s\n", msg->status_code, user_data->img_file);
+	d("finish_image(): status:%d, user_data:%s\n",
+		msg->status_code, user_data->img_file);
 	if (404 != msg->status_code) {
-		CamelStream *feed_fs = camel_stream_fs_new_with_name(user_data->img_file,
-			O_RDWR|O_CREAT, 0666);
+		CamelStream *feed_fs = camel_stream_fs_new_with_name(
+					user_data->img_file,
+#if EVOLUTION_VERSION < 23191
+					O_RDWR|O_CREAT, 0666);
+#else
+					O_RDWR|O_CREAT, 0666, NULL);
+#endif
 		finish_image(soup_sess, msg, feed_fs);
 #if (EVOLUTION_VERSION >= 22703)
 		display_folder_icon(evolution_store, user_data->key);
@@ -472,6 +493,9 @@ decode_image_cache_filename(gchar *name)
 }
 
 gboolean image_is_valid(gchar *image);
+
+gboolean
+file_is_image(gchar *image);
 
 gboolean
 file_is_image(gchar *image)

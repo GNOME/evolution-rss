@@ -33,7 +33,11 @@ void delete_feed_folder_alloc(gchar *old_name);
 void rss_delete_folders (
 	CamelStore *store,
 	const char *full_name,
+#if EVOLUTION_VERSION < 23191
 	CamelException *ex);
+#else
+	GError **error);
+#endif
 
 void remove_feed_hash(gpointer name);
 void init_rss_prefs(void);
