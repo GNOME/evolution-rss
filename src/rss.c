@@ -67,7 +67,11 @@ int rss_verbose_debug = 0;
 #include <e-util/e-alert-dialog.h> //remove//
 #include <glib/gi18n.h>
 #include <mail/e-mail-local.h>
+#if EVOLUTION_VERSION >= 29101
+#include <mail/e-mail-session.h>
+#else
 #include <mail/mail-session.h>
+#endif
 #include <shell/e-shell.h>
 #include <shell/e-shell-view.h>
 #include <misc/e-popup-menu.h>
@@ -908,6 +912,9 @@ rss_select_folder(gchar *folder_name)
 {
 #if EVOLUTION_VERSION >= 22900
 	EMFolderTree *folder_tree = NULL;
+#if EVOLUTION_VERSION >= 29101
+	const
+#endif
 	gchar *uri;
 	CamelStore *store;
 	CamelFolder *fold = NULL;
@@ -926,8 +933,15 @@ rss_select_folder(gchar *folder_name)
 	fold = camel_store_get_folder (store, folder_name, 0, NULL);
 #endif
 	if (!fold) return;
+#if EVOLUTION_VERSION >= 29101
+	uri = camel_folder_get_uri (fold);
+#else
 	uri = mail_tools_folder_to_url (fold);
+#endif
 	em_folder_tree_set_selected(folder_tree, uri, 0);
+#endif
+#if EVOLUTION_VERSION < 29101
+	g_free(uri);
 #endif
 #if 0 //kb//
 	CamelStore *store = rss_component_peek_local_store();
@@ -954,7 +968,6 @@ rss_select_folder(gchar *folder_name)
 //	GtkWidget *po = (GtkWidget *)model.parent_object;
 //      em_folder_tree_set_selected ((EMFolderView *)po), uri, FALSE);
 //	camel_operation_end(NULL);
-	g_free(uri);
 	camel_object_unref (folder);
 	g_free(real_name);
 #endif
@@ -1672,6 +1685,23 @@ show_webkit(GtkWidget *webkit)
 	return FALSE;
 }
 
+#if EVOLUTION_VERSION >= 29101
+EMailSession*
+rss_get_mail_session(void);
+
+EMailSession*
+rss_get_mail_session(void)
+{
+	EMailBackend *backend;
+	EMailReader *reader;
+	EShellContent *shell_content;
+	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	reader = E_MAIL_READER (shell_content);
+	backend = e_mail_reader_get_backend (reader);
+	return e_mail_backend_get_session (backend);
+}
+#endif
+
 #ifdef HAVE_RENDERKIT
 static gboolean
 org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
@@ -1753,10 +1783,15 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	}
 #endif
 
+#if EVOLUTION_VERSION >= 29101
+	online =  camel_session_get_online (
+			CAMEL_SESSION(rss_get_mail_session()));
+#else
 #if (DATASERVER_VERSION >= 2031002)
 	online =  camel_session_get_online (session);
 #else
 	online =  camel_session_is_online (session);
+#endif
 #endif
 
 #ifdef HAVE_WEBKIT
@@ -1864,6 +1899,7 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	GtkWidget *button, *button2, *button3, *button4, *button5;
 	gboolean online;
 
+
 	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
@@ -1884,10 +1920,15 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
 	gtk_widget_show_all (button);
 
+#if EVOLUTION_VERSION >= 29101
+	online =  camel_session_get_online (
+			CAMEL_SESSION(rss_get_mail_session()));
+#else
 #if (DATASERVER_VERSION >= 2031002)
 	online =  camel_session_get_online (session);
 #else
 	online =  camel_session_is_online (session);
+#endif
 #endif
 
 	if (rf->cur_format) {
@@ -2615,10 +2656,15 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 		_("Fetching feed"),
 		(gchar *)g_hash_table_lookup(rf->hrname_r, key));
 
+#if EVOLUTION_VERSION >= 29101
+	online =  camel_session_get_online (
+			CAMEL_SESSION(rss_get_mail_session()));
+#else
 #if (DATASERVER_VERSION >= 2031002)
 	online =  camel_session_get_online (session);
 #else
 	online =  camel_session_is_online (session);
+#endif
 #endif
 
 	if (g_hash_table_lookup(rf->hre, key)
@@ -3824,10 +3870,15 @@ fetch_comments(gchar *url, EMFormatHTML *stream)
 gboolean
 update_articles(gboolean disabler)
 {
+#if EVOLUTION_VERSION >= 29101
+	gboolean online =  camel_session_get_online (
+			CAMEL_SESSION(rss_get_mail_session()));
+#else
 #if (DATASERVER_VERSION >= 2031002)
 	gboolean online =  camel_session_get_online (session);
 #else
 	gboolean online =  camel_session_is_online (session);
+#endif
 #endif
 #if EVOLUTION_VERSION < 22900 //kb//
 	MailComponent *mc = mail_component_peek ();
@@ -4325,10 +4376,15 @@ custom_update_articles(CDATA *cdata)
 {
 	GError *err = NULL;
 	gchar *msg;
+#if EVOLUTION_VERSION >= 29101
+	gboolean online =  camel_session_get_online (
+			CAMEL_SESSION(rss_get_mail_session()));
+#else
 #if (DATASERVER_VERSION >= 2031002)
 	gboolean online =  camel_session_get_online (session);
 #else
 	gboolean online =  camel_session_is_online (session);
+#endif
 #endif
 	//if (!rf->pending && !rf->feed_queue && online)
 	if (online) {
@@ -5468,7 +5524,15 @@ create_mail(create_feed *CF)
 //		g_warning("FILTER DISABLED\n");
 		filter_uids = g_ptr_array_sized_new(1);
 		g_ptr_array_add(filter_uids, appended_uid);
+
+#if EVOLUTION_VERSION >= 29101
+		mail_filter_folder (
+			rss_get_mail_session(), mail_folder,
+			filter_uids, E_FILTER_SOURCE_DEMAND, FALSE);
+#else
 		mail_filter_on_demand (mail_folder, filter_uids);
+#endif
+
 /* FIXME do not know how to free this */
 //		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);
 	}
