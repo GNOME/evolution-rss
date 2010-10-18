@@ -67,6 +67,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 	gpointer newkey;
 #if (EVOLUTION_VERSION >= 22900) //kb//
 	EShell *shell;
+	EShellBackend *backend;
 	GtkWindow *parent;
 	GList *windows;
 #else
@@ -82,15 +83,21 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 #if (EVOLUTION_VERSION >= 22200)
 	if (key) {
 		if (!g_hash_table_lookup(rf->error_hash, key)) {
-//			guint activity_id = g_hash_table_lookup(rf->activity, key);
 #if (EVOLUTION_VERSION >= 22900) //kb//
 			shell = e_shell_get_default ();
 			windows = e_shell_get_watched_windows (shell);
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
+#if (EVOLUTION_VERSION >= 29102)
+			backend = e_shell_get_backend_by_name (shell, "mail");
+			e_mail_backend_submit_alert (
+				backend, "org-gnome-evolution-rss:feederr",
+				error, msg, NULL);
+#else
 			ed = e_alert_dialog_new_for_args(parent,
 				"org-gnome-evolution-rss:feederr",
 				error, msg, NULL);
+#endif
 #else
 			ed = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
 				error, msg, NULL);
@@ -108,10 +115,11 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 				G_CALLBACK(dialog_key_destroy),
 				newkey);
 			//lame widget destruction, seems e_activity timeout does not destroy it
-			g_timeout_add_seconds(60, 
+			g_timeout_add_seconds(60,
 				(GSourceFunc)gtk_widget_destroy,
 				ed);
 
+#if (EVOLUTION_VERSION < 29102)
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		em_utils_show_error_silent(ed);
 		g_hash_table_insert(
@@ -120,7 +128,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			GINT_TO_POINTER(1));
 
 #else
-		activity_handler = 
+		activity_handler =
 			mail_component_peek_activity_handler (mail_component_peek());
 #if (EVOLUTION_VERSION >= 22203)
 		id = e_activity_handler_make_error (
@@ -138,6 +146,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		g_hash_table_insert(rf->error_hash,
 			newkey,
 			GINT_TO_POINTER(id));
+#endif
 #endif
 		}
 		goto out;
