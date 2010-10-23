@@ -3509,15 +3509,16 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	xmlSubstituteEntitiesDefaultValue = 1;
 	r->cache = xml_parse_sux (response->str, response->len);
 	if (rsserror) {
+		gchar *title = g_strdup_printf(
+				_("Error while parsing feed %s"),
+				(gchar *)user_data);
 		xmlError *err = xmlGetLastError();
-		gchar *tmsg = g_strdup_printf("\n%s\nInvalid feed: %s",
-				(gchar *)user_data,
+		gchar *tmsg = g_strdup(
 				err ? err->message : _("illegal content type!"));
 		rss_error(user_data,
-			NULL,
-			_("Error while parsing feed."),
-			tmsg);
+			NULL, title, tmsg);
 		g_free(tmsg);
+		g_free(title);
 		goto cleanup;
 	}
 
