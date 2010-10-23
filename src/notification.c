@@ -393,6 +393,7 @@ taskbar_op_finish(gchar *key)
 #if (EVOLUTION_VERSION >= 22900) //kb//
 #if (EVOLUTION_VERSION >= 29102)
 			e_activity_set_state (activity_key, E_ACTIVITY_COMPLETED);
+			g_object_unref(activity_key);
 #else
 			e_activity_complete (activity_key);
 #endif
@@ -405,6 +406,7 @@ taskbar_op_finish(gchar *key)
 #if (EVOLUTION_VERSION >= 22900) //kb//
 #if (EVOLUTION_VERSION >= 29102)
 		e_activity_set_state (aid, E_ACTIVITY_COMPLETED);
+		g_object_unref(aid);
 #else
 		e_activity_complete (aid);
 #endif
