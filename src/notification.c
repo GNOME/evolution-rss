@@ -184,7 +184,7 @@ void
 taskbar_push_message(gchar *message)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = 
+	EActivityHandler *activity_handler =
 		mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
 #else
@@ -269,7 +269,11 @@ taskbar_op_new(gchar *message)
 
 #if EVOLUTION_VERSION >= 23300
 	activity = e_activity_new ();
+#if (EVOLUTION_VERSION >= 29102)
+	e_activity_set_text (activity, message);
+#else
 	e_activity_set_primary_text (activity, message);
+#endif
 	/* does this even makes sense */
 	e_activity_set_cancellable (activity, NULL);
 #else
@@ -387,7 +391,11 @@ taskbar_op_finish(gchar *key)
 		if (activity_key) {
 			d("activity_key:%p\n", (gpointer)activity_key);
 #if (EVOLUTION_VERSION >= 22900) //kb//
+#if (EVOLUTION_VERSION >= 29102)
+			e_activity_set_state (activity_key, E_ACTIVITY_COMPLETED);
+#else
 			e_activity_complete (activity_key);
+#endif
 #else
 			e_activity_handler_operation_finished(activity_handler, activity_key);
 #endif
@@ -395,7 +403,11 @@ taskbar_op_finish(gchar *key)
 		}
 	} else {
 #if (EVOLUTION_VERSION >= 22900) //kb//
+#if (EVOLUTION_VERSION >= 29102)
+		e_activity_set_state (aid, E_ACTIVITY_COMPLETED);
+#else
 		e_activity_complete (aid);
+#endif
 #else
 		e_activity_handler_operation_finished(activity_handler, aid);
 #endif
