@@ -171,6 +171,7 @@ guint nettime_id = 0;
 guint force_update = 0;
 GHashTable *custom_timeout;
 GtkStatusIcon *status_icon = NULL;
+gboolean winstatus;
 GQueue *status_msg;
 gchar *flat_status_msg;
 GPtrArray *filter_uids;
@@ -4514,8 +4515,8 @@ void evo_window_popup(GtkWidget *win)
 #endif
 }
 
-static void
-icon_activated (GtkStatusIcon *icon, gpointer pnotify)
+void
+toggle_window(void)
 {
 #if EVOLUTION_VERSION < 22900 //KB//
 	GList *p, *pnext;
@@ -4525,30 +4526,66 @@ icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 		if (gtk_window_is_active(GTK_WINDOW(p->data))) {
 			gtk_window_iconify(GTK_WINDOW(p->data));
 			gtk_window_set_skip_taskbar_hint(
-				GTK_WINDOW(p->data),
-				TRUE);
+				GTK_WINDOW(p->data), TRUE);
+			winstatus = TRUE;
 		} else {
 			gtk_window_iconify(GTK_WINDOW(p->data));
 			evo_window_popup(GTK_WIDGET(p->data));
 			gtk_window_set_skip_taskbar_hint(
-				GTK_WINDOW(p->data),
-				FALSE);
+				GTK_WINDOW(p->data), FALSE);
+			winstatus = FALSE;
 		}
 	}
 #else
 	if (gtk_window_is_active(GTK_WINDOW(evo_window))) {
 		gtk_window_iconify(GTK_WINDOW(evo_window));
 		gtk_window_set_skip_taskbar_hint(
-			GTK_WINDOW(evo_window),
-			TRUE);
+			GTK_WINDOW(evo_window), TRUE);
+		winstatus = TRUE;
 	} else {
 		gtk_window_iconify(GTK_WINDOW(evo_window));
 		evo_window_popup(GTK_WIDGET(evo_window));
 		gtk_window_set_skip_taskbar_hint(
-			GTK_WINDOW(evo_window),
-			FALSE);
-		}
+			GTK_WINDOW(evo_window), FALSE);
+		winstatus = FALSE;
+	}
 #endif
+}
+
+static void
+icon_activated (GtkStatusIcon *icon, gpointer pnotify)
+{
+	gchar *uri;
+	gchar *real_name;
+	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
+			"rss-icon-read.png",
+			NULL);
+	gtk_status_icon_set_from_file (
+		status_icon,
+		iconfile);
+	g_free(iconfile);
+	gtk_status_icon_set_has_tooltip (status_icon, FALSE);
+	uri = g_object_get_data (G_OBJECT (status_icon), "uri");
+	if (uri) {
+		real_name = g_build_path(G_DIR_SEPARATOR_S,
+				lookup_main_folder(),
+				lookup_feed_folder(uri), NULL);
+		rss_select_folder(real_name);
+	}
+}
+
+static gboolean
+button_press_cb (
+	GtkWidget *widget,
+	GdkEventButton *event,
+	gpointer data)
+{
+	if (((event->button != 1) || (event->type != GDK_2BUTTON_PRESS)) && winstatus != TRUE) {
+		return FALSE;
+	}
+	toggle_window();
+	icon_activated(NULL, NULL);
+	return TRUE;
 }
 
 static void
@@ -4556,9 +4593,8 @@ create_status_icon(void)
 {
 	if (!status_icon) {
 		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-			"rss-icon-unread.png",
+			"rss-icon-read.png",
 			NULL);
-
 		status_icon = gtk_status_icon_new ();
 		gtk_status_icon_set_from_file (
 			status_icon,
@@ -4569,8 +4605,13 @@ create_status_icon(void)
 			"activate",
 			G_CALLBACK (icon_activated),
 			NULL);
+		g_signal_connect (
+			G_OBJECT (status_icon),
+			"button-press-event",
+			G_CALLBACK (button_press_cb),
+			NULL);
 	}
-//     gtk_status_icon_set_visible (status_icon, FALSE);
+	gtk_status_icon_set_has_tooltip (status_icon, FALSE);
 }
 
 gboolean
@@ -4581,6 +4622,7 @@ flicker_stop(gpointer user_data)
 #endif
 	return FALSE;
 }
+
 
 void
 flaten_status(gpointer msg, gpointer user_data)
@@ -4601,31 +4643,44 @@ update_status_icon(const char *channel, gchar *title)
 {
 	gchar *total;
 	gchar *stext;
+	gchar *iconfile;
+	gchar *tchn, *ttit;
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL)) {
-		total = g_strdup_printf("%s: %s\n\n", channel, title);
+		tchn = g_markup_escape_text (channel, -1);
+		ttit = g_markup_escape_text (title, -1);
+		total = g_strdup_printf("<b>%s</b>\n%s\n", tchn, ttit);
+		g_free(tchn);
+		g_free(ttit);
 		create_status_icon();
+		iconfile = g_build_filename (EVOLUTION_ICONDIR,
+			"rss-icon-unread.png",
+			NULL);
+		gtk_status_icon_set_from_file (
+			status_icon,
+			iconfile);
+		g_free(iconfile);
 		g_queue_push_tail(status_msg, total);
-		//g_free(total);
 		if (g_queue_get_length(status_msg) == 6)
 			g_queue_pop_head(status_msg);
 		g_queue_foreach(status_msg, flaten_status, flat_status_msg);
-		stext = g_markup_escape_text(
-				flat_status_msg,
-				strlen(flat_status_msg));
 #if GTK_CHECK_VERSION (2,16,0)
-		gtk_status_icon_set_tooltip_text (status_icon, stext);
+		gtk_status_icon_set_tooltip_markup (status_icon, flat_status_msg);
 #else
 		gtk_status_icon_set_tooltip (status_icon, stext);
 #endif
-		g_free(stext);
-		gtk_status_icon_set_visible (status_icon, TRUE);
 #if GTK_MINOR_VERSION < 22
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
 		&& !gtk_status_icon_get_blinking(status_icon))
 			gtk_status_icon_set_blinking (status_icon, TRUE);
-#endif
 		g_timeout_add(15 * 1000, flicker_stop, NULL);
+#endif
+		gtk_status_icon_set_has_tooltip (status_icon, TRUE);
+		g_object_set_data_full (
+			G_OBJECT (status_icon), "uri",
+			g_strdup (lookup_feed_folder(channel)),
+			(GDestroyNotify) g_free);
 		g_free(flat_status_msg);
+		g_print(total);
 		flat_status_msg = NULL;
 	}
 }
@@ -5226,6 +5281,8 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			rf->bus = init_dbus ();
 #endif
 			prepare_hashes();
+			if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL))
+				create_status_icon();
 			//there is no shutdown for e-plugin yet.
 			atexit(rss_finalize);
 			render = GPOINTER_TO_INT(

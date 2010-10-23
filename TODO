@@ -42,3 +42,4 @@
 	* markup fail perhaps in web auth dialog
 	* nice to add progressive downloading of images
 	* redraw browser window after submit ?
+	* add configuration option to right click on status icon
