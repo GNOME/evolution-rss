@@ -295,78 +295,6 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 	}
 }
 
-#if (EVOLUTION_VERSION < 22200)		// include devel too
-static void
-close_details_cb (GtkWidget *widget, gpointer data)
-{
-	gtk_widget_hide(data);
-}
-
-static void
-set_string_cb (GtkWidget *widget, gpointer data)
-{
-	const gchar *text = gtk_entry_get_text (GTK_ENTRY (widget));
-	gconf_client_set_string (
-		rss_gconf,
-		data,
-		text,
-		NULL);
-}
-
-static void
-details_cb (GtkWidget *widget, gpointer data)
-{
-	GtkWidget *details = GTK_WIDGET (gtk_builder_get_object(data, "http-proxy-details"));
-	GtkWidget *close = GTK_WIDGET (gtk_builder_get_object(data, "closebutton2"));
-	GtkWidget *proxy_auth = GTK_WIDGET (gtk_builder_get_object(data, "proxy_auth"));
-	GtkWidget *proxy_user = GTK_WIDGET (gtk_builder_get_object(data, "proxy_user"));
-	GtkWidget *proxy_pass = GTK_WIDGET (gtk_builder_get_object(data, "proxy_pass"));
-	g_signal_connect(
-		close,
-		"clicked",
-		G_CALLBACK(close_details_cb),
-		details);
-
-	gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (proxy_auth),
-		gconf_client_get_bool(rss_gconf,
-		GCONF_KEY_AUTH_PROXY,
-		NULL));
-	g_signal_connect(
-		proxy_auth,
-		"clicked",
-		G_CALLBACK(start_check_cb),
-		GCONF_KEY_AUTH_PROXY);
-
-	gchar *user =
-		gconf_client_get_string(
-			rss_gconf,
-			GCONF_KEY_USER_PROXY,
-			NULL);
-	if (user)
-		gtk_entry_set_text(GTK_ENTRY(proxy_user), user);
-	g_signal_connect(
-		proxy_user,
-		"changed",
-		G_CALLBACK(set_string_cb),
-		GCONF_KEY_USER_PROXY);
-	gchar *pass = gconf_client_get_string(
-			rss_gconf,
-			GCONF_KEY_PASS_PROXY,
-			NULL);
-	if (pass)
-		gtk_entry_set_text(GTK_ENTRY(proxy_pass), pass);
-	g_signal_connect(
-		proxy_pass,
-		"changed",
-		G_CALLBACK(set_string_cb),
-		GCONF_KEY_PASS_PROXY);
-
-	gtk_widget_show(details);
-}
-#endif
-
-
 static void
 construct_list(gpointer key, gpointer value, gpointer user_data)
 {
@@ -3912,39 +3840,6 @@ rss_config_control_new (void)
 	gtk_widget_show(combo);
 	gtk_box_pack_start(GTK_BOX(sf->combo_hbox), combo, FALSE, FALSE, 0);
 #endif
-
-#if (EVOLUTION_VERSION < 22200)		// include devel too
-	/*first make the tab visible */
-	g_object_set(GTK_WIDGET (gtk_builder_get_object(sf->gui, "label_HTML")),
-					"visible", TRUE,
-					NULL);
-	g_object_set(GTK_WIDGET (gtk_builder_get_object(sf->gui, "vbox_HTML")),
-					"visible", TRUE,
-					NULL);
-	/* Network tab */
-	sf->use_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "use_proxy"));
-	sf->host_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "host_proxy"));
-	sf->port_proxy = GTK_WIDGET (gtk_builder_get_object(sf->gui, "port_proxy"));
-	sf->details = GTK_WIDGET (gtk_builder_get_object(sf->gui, "details"));
-	sf->proxy_details = GTK_WIDGET (
-				gtk_builder_get_object(
-					sf->gui, "http-proxy-details"));
-
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->use_proxy),
-		gconf_client_get_bool(rss_gconf, GCONF_KEY_USE_PROXY, NULL));
-	g_signal_connect(
-		sf->use_proxy,
-		"clicked",
-		G_CALLBACK(start_check_cb),
-		GCONF_KEY_USE_PROXY);
-	g_signal_connect(
-		sf->details,
-		"clicked",
-		G_CALLBACK(details_cb),
-		sf->gui);
-#endif
-
-
 
 	sf->import = GTK_WIDGET (gtk_builder_get_object(sf->gui, "import"));
 	sf->export = GTK_WIDGET (gtk_builder_get_object(sf->gui, "export"));
