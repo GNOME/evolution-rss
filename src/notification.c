@@ -29,11 +29,6 @@
 #include <e-util/e-error.h>
 #endif
 
-#if EVOLUTION_VERSION <= 22203
-#include <misc/e-activity-handler.h>
-#include <e-util/e-icon-factory.h>
-#endif
-
 extern int rss_verbose_debug;
 
 #include "rss.h"
@@ -80,7 +75,6 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 	else
 		msg = g_strdup(emsg);
 
-#if (EVOLUTION_VERSION >= 22200)
 	if (key) {
 		if (!g_hash_table_lookup(rf->error_hash, key)) {
 #if (EVOLUTION_VERSION >= 22900) //kb//
@@ -130,19 +124,11 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 #else
 		activity_handler =
 			mail_component_peek_activity_handler (mail_component_peek());
-#if (EVOLUTION_VERSION >= 22203)
 		id = e_activity_handler_make_error (
 			activity_handler,
 			(char *)mail_component_peek(),
 			E_LOG_ERROR,
 			ed);
-#else
-		id = e_activity_handler_make_error (
-			activity_handler,
-			(char *)mail_component_peek(),
-			(gchar *)msg,
-			ed);
-#endif
 		g_hash_table_insert(rf->error_hash,
 			newkey,
 			GINT_TO_POINTER(id));
@@ -151,7 +137,6 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		}
 		goto out;
 	}
-#endif
 
 	if (!rf->errdialog) {
 #if (EVOLUTION_VERSION >= 22900) //kb//
@@ -232,22 +217,14 @@ EActivity *
 #else
 guint
 #endif
-#if (EVOLUTION_VERSION >= 22200)
 taskbar_op_new(gchar *message, gpointer key);
-#else
-taskbar_op_new(gchar *message);
-#endif
 
 #if EVOLUTION_VERSION >= 22900 //kb//
 EActivity *
 #else
 guint
 #endif
-#if (EVOLUTION_VERSION >= 22200)
 taskbar_op_new(gchar *message, gpointer key)
-#else
-taskbar_op_new(gchar *message)
-#endif
 {
 #if EVOLUTION_VERSION >= 22900 //kb//
 	EShell *shell;
@@ -306,7 +283,6 @@ taskbar_op_new(gchar *message)
 		e_icon_factory_get_icon (
 			"mail-unread",
 			E_ICON_SIZE_MENU);
-#if (EVOLUTION_VERSION >= 22200)
 	activity_id =
 		e_activity_handler_cancelable_operation_started(
 			activity_handler,
@@ -315,14 +291,6 @@ taskbar_op_new(gchar *message)
 			message, TRUE,
 			(void (*) (gpointer))taskbar_op_abort,
 			key);
-#else
-	e_activity_handler_operation_started(
-		activity_handler,
-		mcp,
-		progress_icon,
-		message,
-		FALSE);
-#endif
 #endif
 	g_free(mcp);
 	return activity_id;
@@ -428,9 +396,6 @@ taskbar_op_message(gchar *msg, gchar *unikey)
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		EActivity *activity_id;
 #else
-#if (EVOLUTION_VERSION >= 22200)
-		guint activity_id;
-#endif
 #endif
 		if (!msg)
 			tmsg = g_strdup_printf(
@@ -449,14 +414,10 @@ taskbar_op_message(gchar *msg, gchar *unikey)
 			activity_id =
 				(EActivity *)taskbar_op_new(tmsg, msg);
 #else
-#if (EVOLUTION_VERSION >= 22200)
 		if (!msg)
 			activity_id = taskbar_op_new(tmsg, (gchar *)"main");
 		else
 			activity_id = taskbar_op_new(tmsg, msg);
-#else
-		activity_id = taskbar_op_new(tmsg);
-#endif
 #endif
 		if (!msg)
 			g_hash_table_insert(
