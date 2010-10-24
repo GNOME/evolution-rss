@@ -47,11 +47,7 @@ int rss_verbose_debug = 0;
 #include <e-util/e-util.h>
 #include <e-util/e-mktemp.h>
 
-
-#ifdef EVOLUTION_2_12
 #include <mail/em-event.h>
-#endif
-
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
 
@@ -160,9 +156,8 @@ int rss_verbose_debug = 0;
 #endif
 #include "rss-config-factory.h"
 #include "rss-icon-factory.h"
+#include "rss-status-icon.h"
 #include "parser.h"
-
-
 
 int pop = 0;
 GtkWidget *flabel;
@@ -170,10 +165,8 @@ GtkWidget *flabel;
 guint nettime_id = 0;
 guint force_update = 0;
 GHashTable *custom_timeout;
-GtkStatusIcon *status_icon = NULL;
-gboolean winstatus;
+extern GtkStatusIcon *status_icon;
 GQueue *status_msg;
-gchar *flat_status_msg;
 GPtrArray *filter_uids;
 gpointer current_pobject = NULL;
 guint resize_pane_hsize = 0;
@@ -210,10 +203,6 @@ struct _org_gnome_rss_controls_pobject {
 };
 
 GtkWidget *evo_window;
-#if (EVOLUTION_VERSION < 22703)
-static GdkPixbuf *folder_icon;
-static gboolean initialised = FALSE;
-#endif
 GHashTable *icons = NULL;
 #if (DATASERVER_VERSION >= 2023001)
 extern EProxy *proxy;
@@ -346,21 +335,6 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 				while (gtk_events_pending ())
 				gtk_main_iteration ();
 			if (rf->cancel_all) break;
-#ifndef EVOLUTION_2_12
-		if (rf->progress_dialog  && 0 <= fraction && 1 >= fraction) {
-			gtk_progress_bar_set_fraction(
-				(GtkProgressBar *)rf->progress_bar,
-				fraction);
-			gchar *what = g_strdup_printf(
-					_("%2.0f%% done"),
-					fraction*100);
-			gtk_label_set_text(GTK_LABEL(rf->label), data);
-			gtk_progress_bar_set_text(
-				(GtkProgressBar *)rf->progress_bar,
-				what);
-			g_free(what);
-		}
-#else
 		if (rf->progress_bar && 0 <= fraction && 1 >= fraction) {
 			gtk_progress_bar_set_fraction(
 				(GtkProgressBar *)rf->progress_bar,
@@ -376,7 +350,6 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 				furl);
 			g_free(furl);
 		}
-#endif
 			}
 	//update individual progress if previous percetage has not changed
 			if (rf->progress_bar && rf->feed_queue) {
@@ -883,10 +856,6 @@ readrss_dialog_cb (GtkWidget *widget, gpointer data)
 {
 	d("\nCancel reading feeds\n");
 	abort_all_soup();
-#ifndef EVOLUTION_2_12
-	gtk_widget_destroy(widget);
-	rf->progress_dialog = NULL;
-#endif
 	rf->cancel = 1;
 }
 
@@ -1298,9 +1267,7 @@ rss_popup_link_open(EPopup *ep, EPopupItem *pitem, void *data)
 rss_popup_link_open(GtkWidget *widget, gpointer data)
 #endif
 {
-#if (EVOLUTION_VERSION >= 22505)
 	e_show_uri (NULL, data);
-#endif
 }
 
 void
@@ -2362,10 +2329,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			NULL);
 #endif
 		g_byte_array_append (buffer, (unsigned char *)"", 1);
-//#ifdef EVOLUTION_2_12	//aparently this ("?" char parsing) is fixed in 2.12
-//		//then again this does not work in evo > 2.12 perhaps is gtkhtml related
-//		buff = buffer->data;
-//#else
 		if (camel_content_type_is(type, "text", "evolution-rss-feed")) {	//old evolution-rss content type
 			tmp = decode_utf8_entities((gchar *)(buffer->data));
 		} else
@@ -2684,17 +2647,12 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 out:	return;
 }
 
-#if (EVOLUTION_VERSION >= 22306)
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t);
 
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 {
 	gchar *rss_folder, *ofolder, *key;
 	gchar *main_folder = get_main_folder();
-#if (EVOLUTION_VERSION < 22703)
-	GdkPixbuf *icon, *pixbuf;
-	gchar *iconfile;
-#endif
 
 	main_folder = get_main_folder();
 	if (t->folder_name == NULL
@@ -2716,90 +2674,42 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 		goto normal;
 
 
-#if (EVOLUTION_VERSION >= 22703)
 	if (!evolution_store)
 		evolution_store = t->store;
 
 	if (!(g_hash_table_lookup(icons, key))) {
-#else
-	if (!(icon = g_hash_table_lookup(icons, key))) {
-#endif
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
 //			if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 			// unfortunately e_icon_factory_get_icon return broken image in case of error
 			// we use gdk_pixbuf_new_from_file to test the validity of the image file
-#if (EVOLUTION_VERSION >= 22703)
 			if (display_folder_icon(t->store, key))
 				goto out;
-#else
-			gchar *feed_dir = rss_component_peek_base_directory();
-			gchar *feed_file = g_strdup_printf(
-						"%s" G_DIR_SEPARATOR_S "%s.img", feed_dir, key);
-			pixbuf = gdk_pixbuf_new_from_file(feed_file, NULL);
-			g_free(feed_dir);
-
-			if (pixbuf) {
-				icon = e_icon_factory_get_icon (feed_file, E_ICON_SIZE_MENU);
-				g_hash_table_insert(icons, g_strdup(key), icon);
-				g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
-			} else
-				goto normal; //failed to load the icon so just throw the default
-
-			g_free(feed_file);
-#endif
 		}
 	} else {
-#if (EVOLUTION_VERSION >= 22703)
 		gtk_tree_store_set (
 			t->store, t->iter,
 			COL_STRING_ICON_NAME, key,
 			-1);
-#else
-	g_object_set (t->renderer, "pixbuf", icon, "visible", 1, NULL);
-#endif
 		goto out;
 	}
 
-#if (EVOLUTION_VERSION >= 22703)
 normal:
 	//if (key)
 		gtk_tree_store_set (
 			t->store, t->iter,
 			COL_STRING_ICON_NAME, "rss-16",
 			-1);
-#else
-normal:	if (!initialised) { //move this to startup
-		iconfile = g_build_filename (EVOLUTION_ICONDIR,
-			"rss-16.png",
-			NULL);
-		folder_icon = e_icon_factory_get_icon (iconfile, E_ICON_SIZE_MENU);
-		g_free(iconfile);
-		initialised = TRUE;
-	}
-	g_object_set (t->renderer, "pixbuf", folder_icon, "visible", 1, NULL);
-#endif
 out:	g_free(main_folder);
 	return;
 }
-#endif
 
-#ifdef EVOLUTION_2_12
 void org_gnome_evolution_rss_article_show(void *ep, EMEventTargetMessage *t);
-#else
-void org_gnome_evolution_rss_article_show(void *ep, void *t);
-#endif
 
-#ifdef EVOLUTION_2_12
 void org_gnome_evolution_rss_article_show(void *ep, EMEventTargetMessage *t)
 {
 	if (rf && (!inhibit_read || !delete_op))
 		rf->current_uid = g_strdup(t->uid);
 }
-#else
-void org_gnome_evolution_rss_article_show(void *ep, void *t)
-{
-}
-#endif
 
 gboolean
 check_chn_name(gchar *chn_name)
@@ -3404,13 +3314,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		rf->autoupdate = FALSE;
 		farticle=0;
 		ftotal=0;
-#ifndef EVOLUTION_2_12
-		if(rf->progress_dialog) {
-			gtk_widget_destroy(rf->progress_dialog);
-			rf->progress_dialog = NULL;
-			rf->progress_bar = NULL;
-		}
-#else
 		if(rf->label && rf->info) {
 			gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete."));
 			if (rf->info->cancel_button)
@@ -3432,7 +3335,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			rf->progress_bar = NULL;
 			rf->info = NULL;
 		}
-#endif
 	}
 
 	if (rf->cancel_all)
@@ -3457,7 +3359,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	}
 
 	if (rf->cancel) {
-#ifdef EVOLUTION_2_12
 		if(rf->label && rf->feed_queue == 0 && rf->info) {
 			farticle=0;
 			ftotal=0;
@@ -3486,7 +3387,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		rf->progress_bar = NULL;
 		rf->info = NULL;
 		}
-#endif
 		goto out;
 	}
 
@@ -3561,7 +3461,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 //tout:
 
-#ifdef EVOLUTION_2_12
 	if (rf->sr_feed && !deleted) {
 		gchar *furl = g_markup_printf_escaped(
 				"<b>%s</b>: %s",
@@ -3594,7 +3493,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		rf->progress_bar = NULL;
 		rf->info = NULL;
 	}
-#endif
 cleanup:if (r->cache)
 		xmlFreeDoc(r->cache);
 	if (r->type)
@@ -3917,13 +3815,8 @@ rss_component_peek_base_directory(void)
 #else
 	MailComponent *component = mail_component_peek();
 /* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
-#if (EVOLUTION_VERSION >= 22300)		// include devel too
 	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
 		mail_component_peek_base_directory (component));
-#else
-	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "mail" G_DIR_SEPARATOR_S "rss",
-		mail_component_peek_base_directory (component));
-#endif
 #endif
 }
 
@@ -4517,176 +4410,6 @@ void evo_window_popup(GtkWidget *win)
 }
 
 void
-toggle_window(void)
-{
-#if EVOLUTION_VERSION < 22900 //KB//
-	GList *p, *pnext;
-	for (p = (gpointer)evo_window; p != NULL; p = pnext) {
-		pnext = p->next;
-
-		if (gtk_window_is_active(GTK_WINDOW(p->data))) {
-			gtk_window_iconify(GTK_WINDOW(p->data));
-			gtk_window_set_skip_taskbar_hint(
-				GTK_WINDOW(p->data), TRUE);
-			winstatus = TRUE;
-		} else {
-			gtk_window_iconify(GTK_WINDOW(p->data));
-			evo_window_popup(GTK_WIDGET(p->data));
-			gtk_window_set_skip_taskbar_hint(
-				GTK_WINDOW(p->data), FALSE);
-			winstatus = FALSE;
-		}
-	}
-#else
-	if (gtk_window_is_active(GTK_WINDOW(evo_window))) {
-		gtk_window_iconify(GTK_WINDOW(evo_window));
-		gtk_window_set_skip_taskbar_hint(
-			GTK_WINDOW(evo_window), TRUE);
-		winstatus = TRUE;
-	} else {
-		gtk_window_iconify(GTK_WINDOW(evo_window));
-		evo_window_popup(GTK_WIDGET(evo_window));
-		gtk_window_set_skip_taskbar_hint(
-			GTK_WINDOW(evo_window), FALSE);
-		winstatus = FALSE;
-	}
-#endif
-}
-
-static void
-icon_activated (GtkStatusIcon *icon, gpointer pnotify)
-{
-	gchar *uri;
-	gchar *real_name;
-	gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-			"rss-icon-read.png",
-			NULL);
-	gtk_status_icon_set_from_file (
-		status_icon,
-		iconfile);
-	g_free(iconfile);
-	gtk_status_icon_set_has_tooltip (status_icon, FALSE);
-	uri = g_object_get_data (G_OBJECT (status_icon), "uri");
-	if (uri) {
-		real_name = g_build_path(G_DIR_SEPARATOR_S,
-				lookup_main_folder(),
-				lookup_feed_folder(uri), NULL);
-		rss_select_folder(real_name);
-	}
-}
-
-static gboolean
-button_press_cb (
-	GtkWidget *widget,
-	GdkEventButton *event,
-	gpointer data)
-{
-	if (((event->button != 1) || (event->type != GDK_2BUTTON_PRESS)) && winstatus != TRUE) {
-		return FALSE;
-	}
-	toggle_window();
-	icon_activated(NULL, NULL);
-	return TRUE;
-}
-
-static void
-create_status_icon(void)
-{
-	if (!status_icon) {
-		gchar *iconfile = g_build_filename (EVOLUTION_ICONDIR,
-			"rss-icon-read.png",
-			NULL);
-		status_icon = gtk_status_icon_new ();
-		gtk_status_icon_set_from_file (
-			status_icon,
-			iconfile);
-		g_free(iconfile);
-		g_signal_connect (
-			G_OBJECT (status_icon),
-			"activate",
-			G_CALLBACK (icon_activated),
-			NULL);
-		g_signal_connect (
-			G_OBJECT (status_icon),
-			"button-press-event",
-			G_CALLBACK (button_press_cb),
-			NULL);
-	}
-	gtk_status_icon_set_has_tooltip (status_icon, FALSE);
-}
-
-gboolean
-flicker_stop(gpointer user_data)
-{
-#if GTK_MINOR_VERSION < 22
-	gtk_status_icon_set_blinking (status_icon, FALSE);
-#endif
-	return FALSE;
-}
-
-
-void
-flaten_status(gpointer msg, gpointer user_data)
-{
-	if (strlen(msg)) {
-		if (flat_status_msg)
-			flat_status_msg = g_strconcat(
-						flat_status_msg,
-						msg,
-						NULL);
-		else
-			flat_status_msg = g_strdup(msg);
-	}
-}
-
-void
-update_status_icon(const char *channel, gchar *title)
-{
-	gchar *total;
-	gchar *stext;
-	gchar *iconfile;
-	gchar *tchn, *ttit;
-	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL)) {
-		tchn = g_markup_escape_text (channel, -1);
-		ttit = g_markup_escape_text (title, -1);
-		total = g_strdup_printf("<b>%s</b>\n%s\n", tchn, ttit);
-		g_free(tchn);
-		g_free(ttit);
-		create_status_icon();
-		iconfile = g_build_filename (EVOLUTION_ICONDIR,
-			"rss-icon-unread.png",
-			NULL);
-		gtk_status_icon_set_from_file (
-			status_icon,
-			iconfile);
-		g_free(iconfile);
-		g_queue_push_tail(status_msg, total);
-		if (g_queue_get_length(status_msg) == 6)
-			g_queue_pop_head(status_msg);
-		g_queue_foreach(status_msg, flaten_status, flat_status_msg);
-#if GTK_CHECK_VERSION (2,16,0)
-		gtk_status_icon_set_tooltip_markup (status_icon, flat_status_msg);
-#else
-		gtk_status_icon_set_tooltip (status_icon, stext);
-#endif
-#if GTK_MINOR_VERSION < 22
-		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
-		&& !gtk_status_icon_get_blinking(status_icon))
-			gtk_status_icon_set_blinking (status_icon, TRUE);
-		g_timeout_add(15 * 1000, flicker_stop, NULL);
-#endif
-		gtk_status_icon_set_has_tooltip (status_icon, TRUE);
-		g_object_set_data_full (
-			G_OBJECT (status_icon), "uri",
-			g_strdup (lookup_feed_folder(channel)),
-			(GDestroyNotify) g_free);
-		g_free(flat_status_msg);
-		g_print(total);
-		flat_status_msg = NULL;
-	}
-}
-
-void
 custom_feed_timeout(void)
 {
 	g_hash_table_foreach(
@@ -4803,91 +4526,11 @@ check_folders(void)
 #endif
 }
 
-
-
 gboolean
 check_if_enabled (gpointer key, gpointer value, gpointer user_data)
 {
 	return GPOINTER_TO_INT(value);
 }
-
-#if 0
-void org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t);
-
-void
-org_gnome_cooly_rss_refresh(void *ep, EMPopupTargetSelect *t)
-{
-#ifndef EVOLUTION_2_12
-	GtkWidget *readrss_dialog;
-	GtkWidget *readrss_label;
-	GtkWidget *readrss_progress;
-	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
-
-	rf->t = t;
-
-	//don't waste anytime - we do not have network
-	//should we fake it ? :D
-	if (!rf->online)
-		return;
-
-	//no feeds enabled
-	if (!g_hash_table_find(rf->hre, check_if_enabled, NULL))
-		return;
-
-	if (!rf->setup || g_hash_table_size(rf->hrname)<1) {
-		taskbar_push_message(_("No RSS feeds configured!"));
-		return;
-	}
-
-	readrss_dialog = e_error_new(NULL,
-		"org-gnome-evolution-rss:readrss",
-		_("Reading RSS feeds..."),
-		NULL);
-
-	g_signal_connect(readrss_dialog,
-		"response",
-		G_CALLBACK(readrss_dialog_cb),
-		NULL);
-	GtkWidget *label2 = gtk_label_new(NULL);
-#if GTK_VERSION >= 2006000
-	gtk_label_set_ellipsize (GTK_LABEL (label2), PANGO_ELLIPSIZE_START);
-#endif
-#if GTK_VERSION > 2008011
-	gtk_label_set_justify(GTK_LABEL(label2), GTK_JUSTIFY_CENTER);
-#endif
-	readrss_label = gtk_label_new(_("Please wait"));
-	if (!rf->progress_dialog) {
-		readrss_progress = gtk_progress_bar_new();
-		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), label2, TRUE, TRUE, 10);
-		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_label, FALSE, FALSE, 0);
-		gtk_box_pack_start(GTK_BOX(((GtkDialog *)readrss_dialog)->vbox), readrss_progress, FALSE, FALSE, 0);
-		gtk_progress_bar_set_fraction((GtkProgressBar *)readrss_progress, 0);
-		/* xgettext:no-c-format */
-		gtk_progress_bar_set_text((GtkProgressBar *)readrss_progress, _("0% done"));
-		gtk_widget_show_all(readrss_dialog);
-		rf->progress_dialog = readrss_dialog;
-		rf->progress_bar = readrss_progress;
-		rf->label       = label2;
-		flabel       = label2;
-	}
-	if (!rf->pending && !rf->feed_queue) {
-		rf->pending = TRUE;
-		check_folders();
-
-		rf->err = NULL;
-		force_update = 1;
-		taskbar_op_message(NULL);
-		network_timeout();
-		g_hash_table_foreach(rf->hrname, fetch_feed, statuscb);
-		// reset cancelation signal
-		if (rf->cancel)
-			rf->cancel = 0;
-		force_update = 0;
-		rf->pending = FALSE;
-	}
-#endif
-}
-#endif
 
 static void
 set_send_status(struct _send_info *info, const char *desc, int pc)
@@ -4929,23 +4572,13 @@ dialog_response(GtkDialog *gd, int button, struct _send_data *data)
 }
 
 void
-#ifdef EVOLUTION_2_12
 org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t);
-#else
-org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t);
-#endif
 
 void
-#ifdef EVOLUTION_2_12
 org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
-#else
-org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
-#endif
 {
-#ifdef EVOLUTION_2_12
 	struct _send_info *info;
 	struct _send_data *data = (struct _send_data *)t->data;
-#endif
 
 	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
 	GtkWidget *recv_icon;
@@ -4962,8 +4595,6 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 		taskbar_push_message(_("No RSS feeds configured!"));
 		return;
 	}
-
-#ifdef EVOLUTION_2_12
 	g_signal_connect(
 		data->gd,
 		"response",
@@ -5051,54 +4682,6 @@ org_gnome_evolution_rss(void *ep, EMPopupTargetSelect *t)
 	rf->sr_feed	= label;
 	rf->label	= status_label;
 	flabel		= status_label;
-#else
-
-#if (EVOLUTION_VERSION >= 22900) //kb//
-	EShell *shell;
-	GtkWindow *parent;
-	GList *windows;
-
-	shell = e_shell_get_default ();
-	windows = e_shell_get_watched_windows (shell);
-	parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
-
-	readrss_dialog = e_alert_dialog_new_for_args(parent,
-#else
-	readrss_dialog = e_error_new(NULL,
-#endif
-		"org-gnome-evolution-rss:readrss",
-		_("Reading RSS feeds..."), NULL);
-
-	g_signal_connect(
-		readrss_dialog,
-		"response",
-		G_CALLBACK(readrss_dialog_cb),
-		NULL);
-	GtkWidget *label2 = gtk_label_new(NULL);
-	readrss_label = gtk_label_new(_("Please wait"));
-	if (!rf->progress_dialog) {
-		readrss_progress = gtk_progress_bar_new();
-		gtk_box_pack_start(
-			GTK_BOX(((GtkDialog *)readrss_dialog)->vbox),
-			label2, TRUE, TRUE, 10);
-		gtk_box_pack_start(
-			GTK_BOX(((GtkDialog *)readrss_dialog)->vbox),
-			readrss_label, FALSE, FALSE, 0);
-		gtk_box_pack_start(
-			GTK_BOX(((GtkDialog *)readrss_dialog)->vbox),
-			readrss_progress, FALSE, FALSE, 0);
-		gtk_progress_bar_set_fraction(
-			(GtkProgressBar *)readrss_progress, 0);
-		/* xgettext:no-c-format */
-		gtk_progress_bar_set_text(
-			(GtkProgressBar *)readrss_progress, _("0% done"));
-		gtk_widget_show_all(readrss_dialog);
-		rf->progress_dialog = readrss_dialog;
-		rf->progress_bar = readrss_progress;
-		rf->label	= label2;
-		flabel		= label2;
-	}
-#endif
 	if (!rf->pending && !rf->feed_queue) {
 		rf->pending = TRUE;
 		check_folders();

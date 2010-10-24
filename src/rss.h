@@ -146,11 +146,7 @@ typedef struct _rssfeed {
 	gchar           *cfeed;			//current feed name
 	gboolean	online;			//networkmanager dependant
 	gboolean	fe;			//feed enabled (at least one)
-#ifdef EVOLUTION_2_12
 	EMEventTargetSendReceive *t;
-#else
-	EMPopupTargetSelect *t;
-#endif
 	gboolean        setup;
 	gboolean        pending;
 	guint		import;			//import going on
@@ -427,9 +423,7 @@ gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
 void update_progress_text(gchar *title);
 void update_feed_image(RDF *r);
-void update_status_icon(const char *channel, gchar *title);
 void cancel_comments_session(SoupSession *sess);
-gboolean flicker_stop(gpointer user_data);
 gchar *search_rss(char *buffer, int len);
 void prepare_hashes(void);
 void update_ttl(gpointer key, guint value);
@@ -518,7 +512,6 @@ gboolean check_update_feed_image(gchar *key);
 void update_main_folder(gchar *new_name);
 void search_rebase(gpointer key, gpointer value, gchar *oname);
 void evo_window_popup(GtkWidget *window);
-void flaten_status(gpointer msg, gpointer user_data);
 gboolean check_if_enabled (
 	gpointer key,
 	gpointer value,

@@ -84,7 +84,8 @@ SOURCES =	fetch.c			\
 		rss-config.c		\
 		rss-config-factory.c	\
 		rss-image.c		\
-		rss-icon-factory.c
+		rss-icon-factory.c	\
+		rss-status-icon.c
 if HAVE_GECKO
 SOURCES+=	gecko-utils.cpp
 endif

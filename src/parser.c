@@ -39,6 +39,7 @@ extern int rss_verbose_debug;
 #include "rss.h"
 #include "rss-config.h"
 #include "rss-image.h"
+#include "rss-status-icon.h"
 #include "parser.h"
 #include "misc.h"
 #include "network-soup.h"
