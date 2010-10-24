@@ -235,9 +235,6 @@ taskbar_op_new(gchar *message, gpointer key)
 	char *mcp;
 	guint activity_id;
 #endif
-#if EVOLUTION_VERSION < 22306
-	GdkPixbuf *progress_icon;
-#endif
 
 #if EVOLUTION_VERSION >= 22900 //kb//
 
@@ -269,7 +266,6 @@ taskbar_op_new(gchar *message, gpointer key)
 	activity_handler =
 		mail_component_peek_activity_handler (mail_component_peek ());
 	mcp = g_strdup_printf("%p", mail_component_peek());
-#if (EVOLUTION_VERSION >= 22306)
 	activity_id =
 		e_activity_handler_cancelable_operation_started(
 			activity_handler,
@@ -278,20 +274,6 @@ taskbar_op_new(gchar *message, gpointer key)
 			TRUE,
 			(void (*) (gpointer))taskbar_op_abort,
 			key);
-#else
-	progress_icon =
-		e_icon_factory_get_icon (
-			"mail-unread",
-			E_ICON_SIZE_MENU);
-	activity_id =
-		e_activity_handler_cancelable_operation_started(
-			activity_handler,
-			"evolution-mail",
-			progress_icon,
-			message, TRUE,
-			(void (*) (gpointer))taskbar_op_abort,
-			key);
-#endif
 	g_free(mcp);
 	return activity_id;
 #endif //kb//

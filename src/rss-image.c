@@ -368,9 +368,7 @@ finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_d
 					user_data->img_file,
 					O_RDWR|O_CREAT, 0666, NULL);
 		finish_image(soup_sess, msg, feed_fs);
-#if (EVOLUTION_VERSION >= 22703)
 		display_folder_icon(evolution_store, user_data->key);
-#endif
 	}
 	g_free(user_data->key);
 	g_free(user_data);
@@ -386,14 +384,11 @@ finish_create_icon_stream (
 #endif
 {
 	finish_image(soup_sess, msg, user_data->feed_fs);
-#if (EVOLUTION_VERSION >= 22703)
 	display_folder_icon(evolution_store, user_data->key);
-#endif
 	g_free(user_data->key);
 	g_free(user_data);
 }
 
-#if (EVOLUTION_VERSION >= 22703)
 gboolean
 display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 {
@@ -479,7 +474,6 @@ out:	g_free(img_file);
 	g_free(feed_dir);
 	return result;
 }
-#endif
 
 gchar *
 decode_image_cache_filename(gchar *name)
