@@ -402,7 +402,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	EMFolderTreeModel *mod = (EMFolderTreeModel *)tree_store;
 	struct _EMFolderTreeModelStoreInfo *si;
 	CamelStore *store = rss_component_peek_local_store();
-	CamelFolder *rss_folder;
+	CamelFolderInfo *rssi;
 	gint i=0, size;
 	gint *sizes;
 
@@ -412,20 +412,22 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 
 	if (pixbuf) {
 		gchar *name = g_hash_table_lookup(rf->hrname_r, key);
-		gchar *full_name = g_strdup_printf(
-					"%s" G_DIR_SEPARATOR_S "%s",
+		gchar *full_name = g_build_path(
+					G_DIR_SEPARATOR_S,
 					get_main_folder(),
-					lookup_feed_folder(name));
+					lookup_feed_folder(name),
+					NULL);
+/*folder isn't created yet?*/
 #if (DATASERVER_VERSION >= 2033001)
-		rss_folder = camel_store_get_folder_sync (
+		rssi = camel_store_get_folder_info_sync (
 					store,
 					full_name, 0, NULL, NULL);
 #else
-		rss_folder = camel_store_get_folder (
+		rssi = camel_store_get_folder_info (
 					store,
 					full_name, 0, NULL);
 #endif
-		if (!rss_folder) {
+		if (!rssi) {
 			g_free(full_name);
 			result = FALSE;
 			goto out;
@@ -462,11 +464,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 				COL_STRING_ICON_NAME, key,
 				-1);
 		g_free(full_name);
-#if (DATASERVER_VERSION >= 2031001)
-		g_object_unref (rss_folder);
-#else
-		camel_object_unref (rss_folder);
-#endif
+		camel_store_free_folder_info (store, rssi);
 		g_object_unref(pixbuf);
 		result = TRUE;
 	}
