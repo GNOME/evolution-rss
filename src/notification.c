@@ -57,12 +57,12 @@ err_destroy (GtkWidget *widget, guint response, gpointer data)
 void
 rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 {
-	GtkWidget *ed;
+	GtkWidget *ed = NULL;
 	gchar *msg;
 	gpointer newkey;
 #if (EVOLUTION_VERSION >= 22900) //kb//
 	EShell *shell;
-	EShellBackend *backend;
+	EMailBackend *backend;
 	GtkWindow *parent;
 	GList *windows;
 #else
@@ -83,7 +83,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
 #if (EVOLUTION_VERSION >= 29102)
-			backend = e_shell_get_backend_by_name (shell, "mail");
+			backend = (EMailBackend *)e_shell_get_backend_by_name (shell, "mail");
 			e_mail_backend_submit_alert (
 				backend, "org-gnome-evolution-rss:feederr",
 				error, msg, NULL);

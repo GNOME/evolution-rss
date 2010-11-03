@@ -292,8 +292,8 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 
 #ifdef HAVE_LIBSOUP_GNOME
 	case 0:
-			soup_session_add_feature_by_type (
-				session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		soup_session_add_feature_by_type (
+			session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 #endif
 	}
