@@ -21,10 +21,6 @@
 #endif
 #include "debug.h"
 
-#if HAVE_DBUS
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-lowlevel.h>
-#endif
 #include "network.h"
 
 #ifndef __RSS_H_
@@ -180,9 +176,6 @@ typedef struct _rssfeed {
 	char		*current_uid;		// currently read article
 	GQueue		*stqueue;		// network downloads tracking
 	GList		*enclist;		// network downloads tracking
-#if HAVE_DBUS
-	DBusConnection	*bus;			// DBUS
-#endif
 } rssfeed;
 
 #define GCONF_KEY_DISPLAY_SUMMARY "/apps/evolution/evolution-rss/display_summary"

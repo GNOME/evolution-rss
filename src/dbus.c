@@ -25,9 +25,8 @@
 #include <string.h>
 #include <glib.h>
 #include <glib/gi18n-lib.h>
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-lowlevel.h>
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 
 extern int rss_verbose_debug;
 
@@ -38,45 +37,20 @@ extern int rss_verbose_debug;
 #include "dbus.h"
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
-#define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
+#define RSS_DBUS_SERVICE "org.gnome.evolution.mail.rss"
+//#define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
+#define DBUS_INTERFACE "org.gnome.evolution.mail.rss"
 #define DBUS_REPLY_INTERFACE "org.gnome.evolution.mail.rss.out"
 
-static DBusConnection *bus = NULL;
+static GDBusConnection *connection = NULL;
 static gboolean enabled = FALSE;
 
 extern rssfeed *rf;
 
-#if 0
-static void
-send_dbus_message (const char *name, const char *data, guint new)
-{
-	DBusMessage *message;
-
-	/* Create a new message on the DBUS_INTERFACE */
-	if (!(message = dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, name)))
-		return;
-
-	/* Appends the data as an argument to the message */
-	dbus_message_append_args (message,
-#if DBUS_VERSION >= 310
-				  DBUS_TYPE_STRING, &data,
-#else
-				  DBUS_TYPE_STRING, data,
-#endif
-				  DBUS_TYPE_INVALID);
-
-	/* Sends the message */
-	dbus_connection_send (bus, message, NULL);
-
-	/* Frees the message */
-	dbus_message_unref (message);
-}
-#endif
-
 static gboolean
 reinit_dbus (gpointer user_data)
 {
-	if (!enabled || init_dbus ())
+	if (!enabled || init_gdbus ())
 		return FALSE;
 
 	/* keep trying to re-establish dbus connection */
@@ -84,110 +58,130 @@ reinit_dbus (gpointer user_data)
 	return TRUE;
 }
 
-static DBusHandlerResult
-filter_function (DBusConnection *connection, DBusMessage *message, void *user_data)
+static void
+connection_closed_cb (GDBusConnection *pconnection,
+	gboolean remote_peer_vanished, GError *error,
+	gpointer user_data)
 {
-	if (dbus_message_is_signal (message, DBUS_INTERFACE_LOCAL, "Disconnected") &&
-	    strcmp (dbus_message_get_path (message), DBUS_PATH_LOCAL) == 0) {
-		dbus_connection_unref (bus);
-		bus = NULL;
+	g_return_if_fail (connection != pconnection);
+	g_object_unref (connection);
+	connection = NULL;
 
-		g_timeout_add (3000, reinit_dbus, NULL);
-
-		return DBUS_HANDLER_RESULT_HANDLED;
-	}
-	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "evolution_rss_feed")) {
-		DBusError error;
-		char *s;
-		add_feed *feed = g_new0(add_feed, 1);
-		dbus_error_init (&error);
-		if (dbus_message_get_args
-			(message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID)) {
-			g_print("New Feed received: %s\n", s);
-			feed->feed_url = g_strdup(s);
-			feed->add=1;
-			feed->enabled=feed->validate=1;
-			feed->fetch_html = 0;
-			if (feed->feed_url && strlen(feed->feed_url)) {
-				gchar *text = feed->feed_url;
-				feed->feed_url = sanitize_url(feed->feed_url);
-				g_free(text);
-				d("sanitized feed URL: %s\n", feed->feed_url);
-				if (g_hash_table_find(rf->hr,
-                                        check_if_match,
-					feed->feed_url)) {
-					rss_error(NULL, NULL, _("Error adding feed."),
-						_("Feed already exists!"));
-					return DBUS_HANDLER_RESULT_HANDLED;
-				}
-				if (setup_feed(feed)) {
-					gchar *msg = g_strdup_printf(_("New feed imported: %s"),
-							lookup_chn_name_by_url(feed->feed_url));
-					taskbar_push_message(msg);
-					g_free(msg);
-				}
-				if (rf->treeview)
-					store_redraw(GTK_TREE_VIEW(rf->treeview));
-				save_gconf_feed();
-#if (DATASERVER_VERSION >= 2033001)
-				camel_operation_pop_message (NULL);
-#else
-				camel_operation_end(NULL);
-#endif
-			}
-
-
-//  dbus_message_unref(reply);
-//     return DBUS_HANDLER_RESULT_REMOVE_MESSAGE;
-
-			//dbus_free (s);
-		} else {
-			g_print("Feed received, but error getting message: %s\n", error.message);
-			dbus_error_free (&error);
-		}
-		g_free(feed);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	}
-	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "ping")) {
-		DBusMessage *reply;
-		fprintf(stderr, "!!Ping!! received from %s\n",
-				dbus_message_get_sender(message));
-		fprintf(stderr, "Sending !!Pong!! back\n");
-		reply = dbus_message_new_signal (DBUS_PATH, DBUS_REPLY_INTERFACE, "pong");
-//		dbus_message_set_reply_serial(reply,
-//			dbus_message_get_serial(message));
-		dbus_connection_send (connection, reply, NULL);
-		dbus_connection_flush (connection);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	}
-
-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	g_timeout_add (3000, reinit_dbus, NULL);
 }
 
-DBusConnection *
-init_dbus (void)
+static void
+signal_cb (GDBusConnection *connection,
+		const gchar *sender_name,
+		const gchar *object_path,
+		const gchar *interface_name,
+		const gchar *signal_name,
+		GVariant *parameters,
+		gpointer user_data)
 {
-	static DBusConnection *bus = NULL;
-	DBusError error;
-	GMainLoop *loop;
-	loop = g_main_loop_new (NULL, FALSE);
+	if (g_strcmp0 (interface_name, DBUS_INTERFACE) != 0
+	|| g_strcmp0 (object_path, DBUS_PATH) != 0)
+		return;
 
-	if (rf->bus != NULL)
-		return rf->bus;
+	d("interface:%s!\n", interface_name);
+	d("path:%s!\n", object_path);
+	d("signal_name:%s!\n", signal_name);
 
-	dbus_error_init (&error);
-	if (!(bus = dbus_bus_get (DBUS_BUS_SESSION, &error))) {
-		g_warning ("could not get system bus: %s\n", error.message);
-		dbus_error_free (&error);
-		return NULL;
+
+	if (!g_strcmp0 (signal_name, "import")) {
+		gchar *url = NULL;
+		add_feed *feed = g_new0(add_feed, 1);
+		g_variant_get (parameters, "((s))", &url);
+		g_print("New Feed received: %s\n", url);
+		feed->feed_url = g_strdup(url);
+		feed->add=1;
+		feed->enabled=feed->validate=1;
+		feed->fetch_html = 0;
+		if (feed->feed_url && strlen(feed->feed_url)) {
+			gchar *text = feed->feed_url;
+			feed->feed_url = sanitize_url(feed->feed_url);
+			g_free(text);
+			d("sanitized feed URL: %s\n", feed->feed_url);
+			if (g_hash_table_find(rf->hr, check_if_match, feed->feed_url)) {
+				rss_error(NULL, NULL, _("Error adding feed."),
+					_("Feed already exists!"));
+					return;
+			}
+			if (setup_feed(feed)) {
+				gchar *msg = g_strdup_printf(_("Importing URL: %s"),
+						feed->feed_url);
+				taskbar_push_message(msg);
+				g_free(msg);
+			}
+			if (rf->treeview)
+				store_redraw(GTK_TREE_VIEW(rf->treeview));
+			save_gconf_feed();
+#if (DATASERVER_VERSION >= 2033001)
+			camel_operation_pop_message (NULL);
+#else
+		camel_operation_end(NULL);
+#endif
+		}
+		g_free(url);
 	}
 
-	dbus_connection_setup_with_g_main (bus, NULL);
-	dbus_bus_add_match (bus, "type='signal',interface='org.gnome.evolution.mail.rss.in'", NULL);
-	dbus_connection_set_exit_on_disconnect (bus, FALSE);
+	if (!g_strcmp0 (signal_name, "ping")) {
+		GDBusMessage *message;
+		GVariantBuilder *builder;
+		GError *error = NULL;
+		d("Ping! received from %s\n", interface_name);
 
-	dbus_connection_add_filter (bus, filter_function, loop, NULL);
+		if (!(message = g_dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, "pong")))
+			return;
+		d("Sending Pong! back\n");
+		builder = g_variant_builder_new (G_VARIANT_TYPE_TUPLE);
+		g_variant_builder_add(builder, "s", "ponging");
+		g_dbus_message_set_body (message, g_variant_builder_end (builder));
+		g_dbus_connection_send_message (connection, message,
+			G_DBUS_SEND_MESSAGE_FLAGS_NONE, NULL, &error);
+		g_object_unref (message);
+		if (error) {
+			g_debug ("Error while sending ping-request: %s", error->message);
+			g_error_free (error);
+		}
+	}
+}
 
-	return bus;
+gboolean
+init_gdbus (void)
+{
+	GError *error = NULL;
+
+	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
+	if (error) {
+		g_warning ("could not get system bus: %s\n", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	g_dbus_connection_set_exit_on_close (connection, FALSE);
+	g_signal_connect (connection, "closed",
+		G_CALLBACK (connection_closed_cb), NULL);
+
+	if (!g_dbus_connection_signal_subscribe (
+		connection,
+		NULL,
+		RSS_DBUS_SERVICE,
+/*		DBUS_INTERFACE,*/
+		NULL,
+		DBUS_PATH,
+		NULL,
+		G_DBUS_SIGNAL_FLAGS_NONE,
+		signal_cb,
+		NULL,
+		NULL)) {
+			g_warning ("%s: Failed to subscribe for a signal", G_STRFUNC);
+			goto fail;
+		}
+	return FALSE;
+
+
+fail:	g_object_unref(connection);
+	return TRUE;
 }
 

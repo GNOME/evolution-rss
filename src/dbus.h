@@ -17,5 +17,4 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-DBusConnection *init_dbus (void);
-
+gboolean init_gdbus (void);

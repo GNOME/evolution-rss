@@ -4,7 +4,6 @@ DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install
 INCLUDES =							\
 	-I$(top_srcdir)						\
 	$(RENDER_CFLAGS)					\
-	$(DBUS_CFLAGS)						\
 	$(LIBSOUP_GNOME_CFLAGS)					\
 	$(GTKHTML_EDITOR_CFLAGS)				\
 	-DGETTEXT_PACKAGE="\"$(GETTEXT_PACKAGE)\""		\
@@ -18,10 +17,7 @@ INCLUDES =							\
 	-DWEBKIT_VERSION="$(WEBKIT_VERSION)"			\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
-	-DHAVE_DBUS=$(DBD)					\
-	-DDBUS_API_SUBJECT_TO_CHANGE				\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
-#	$(WARNING_FLAGS)
 
 if ! HAVE_XPCOM_GLUE
 INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
@@ -73,7 +69,8 @@ plugin_DATA = org-gnome-evolution-rss.eplug \
 plugin_LTLIBRARIES = liborg-gnome-evolution-rss.la
 
 
-SOURCES =	fetch.c			\
+SOURCES =	dbus.c			\
+		fetch.c			\
 		file-gio.c		\
 		misc.c			\
 		network-soup.c		\
@@ -89,17 +86,14 @@ SOURCES =	fetch.c			\
 if HAVE_GECKO
 SOURCES+=	gecko-utils.cpp
 endif
-if HAVE_DBUS
-SOURCES+=	dbus.c
-endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(DBUS_LIBS) $(NO_UNDEFINED_LIBS)
+liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(DATASERVER_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(NO_UNDEFINED_LIBS)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 #$(GECKO_RPATH)
 
 evolution_import_rss_SOURCES = evolution-import-rss.c
-evolution_import_rss_LDFLAGS = $(DBUS_LIBS)
+evolution_import_rss_LDFLAGS = $(EVOLUTION_RSS_EPLUGIN_LIBS)
 
 
 schemadir	= $(GCONF_SCHEMA_FILE_DIR)
@@ -205,13 +199,8 @@ EXTRA_DIST =					\
 	org-gnome-evolution-rss.xml
 
 
-if HAVE_DBUS
 bin_PROGRAMS = \
 	evolution-import-rss
-DBD=1
-else
-DBD=0
-endif
 
 
 -include $(top_srcdir)/git.mk

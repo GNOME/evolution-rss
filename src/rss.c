@@ -151,9 +151,7 @@ int rss_verbose_debug = 0;
 #include "file-gio.h"
 #include "fetch.h"
 #include "misc.h"
-#if HAVE_DBUS
 #include "dbus.h"
-#endif
 #include "rss-config-factory.h"
 #include "rss-icon-factory.h"
 #include "rss-status-icon.h"
@@ -4859,11 +4857,9 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			proxy = proxy_init();
 #endif
 			rss_soup_init();
-#if HAVE_DBUS
-			d("init_dbus()\n");
-			/*D-BUS init*/
-			rf->bus = init_dbus ();
-#endif
+			d("init_gdbus()\n");
+			/*G D-BUS init*/
+			init_gdbus ();
 			prepare_hashes();
 			if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL))
 				create_status_icon();
@@ -4891,10 +4887,6 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 		}
 		upgrade = 2; //init done
 	} else {
-#if HAVE_DBUS
-		if (rf->bus != NULL)
-			dbus_connection_unref (rf->bus);
-#endif
 		abort_all_soup();
 		printf("Plugin disabled\n");
 	}

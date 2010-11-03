@@ -105,12 +105,15 @@ fi
 
 PKG_CHECK_MODULES([EVOLUTION_DATASERVER], evolution-data-server-1.2, [have_ds=yes], [have_ds=no])
 if test "x$have_ds" == "xYES"; then
-       DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2`
+	DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2`
+	DATASERVER_LIBS=`$PKG_CONFIG --libs evolution-data-server-1.2`
 else
-       DATASERVER_VERSION=`$PKG_CONFIG --modversion libedataserver-1.2`
+	DATASERVER_VERSION=`$PKG_CONFIG --modversion libedataserver-1.2`
+	DATASERVER_LIBS=`$PKG_CONFIG --libs libedataserver-1.2`
 fi
 DATASERVER_VERSION=`echo $DATASERVER_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(DATASERVER_VERSION)
+AC_SUBST(DATASERVER_LIBS)
 
 dnl default renderer
 DEFAULT_RENDER=webkit
@@ -285,8 +288,7 @@ AM_GCONF_SOURCE_2
 dnl ********************
 dnl extract soup version
 dnl ********************
-SOUP_VERSION=`$PKG_CONFIG --modversion libsoup$SOUP`
-SOUP_VERSION=`echo $SOUP_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
+SOUP_VERSION="$($PKG_CONFIG --modversion libsoup$SOUP|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}')"
 AC_SUBST(SOUP_VERSION)
 PKG_CHECK_MODULES([LIBSOUP_GNOME], libsoup-gnome$SOUP, [have_libsoup_gnome=yes], [have_libsoup_gnome=no])
 if test "x$have_libsoup_gnome" == "xyes"; then
@@ -297,21 +299,6 @@ else
 	LIBSOUP_LIBS=`$PKG_CONFIG --libs libsoup$SOUP`
 fi
 AC_SUBST(LIBSOUP_LIBS)
-
-dnl ***********
-dnl D-BUS stuff
-dnl ***********
-have_dbus=no
-AC_ARG_ENABLE([DBUS],
-        AS_HELP_STRING([--disable-dbus],[Disable D-BUS support (default: enabled)]),
-        [])
-
-if test "x$enable_dbus" != "xno"; then
-	PKG_CHECK_MODULES(DBUS, dbus-glib-1, [have_dbus=yes], [have_dbus=no])
-	AC_SUBST(DBUS_CFLAGS)
-	AC_SUBST(DBUS_LIBS)
-fi
-AM_CONDITIONAL([HAVE_DBUS], [test x$have_dbus = xyes])
 
 evolution_int_version="$(echo "$EVOLUTION_EXEC_VERSION" | $AWK -F . '{print [$]1 * 10000 + [$]2 * 100 + [$]3}')"
 if test $evolution_int_version -lt 22900; then
@@ -401,7 +388,7 @@ pixmaps/Makefile
 
 kits="gtkHTML"
 if test "x$have_webkit" != "xno" -a "$enable_webkit" = "yes"; then
-        kits=$kits", WebKit ($WEBKIT_S_VERSION)"
+	kits=$kits", WebKit ($WEBKIT_S_VERSION)"
 fi
 # rename libxul to xulrunner to prevent confusion on debian
 if test "x$gecko_cv_gecko" == "xlibxul"; then
@@ -411,13 +398,10 @@ if test "x$have_gecko" != "xno" -a "$enable_gecko" = "yes"; then
 kits="$kits, $gecko_cv_gecko (gecko engine version $gecko_cv_gecko_version)"
 fi
 
-if test "x$have_dbus" == "xyes"; then
-	have_dbus_build="yes"
-	import_feeds="evolution-import-rss"
-else
-	have_dbus_build="evolution-import-rss module will not be built"
-	import_feeds="no"
-fi
+dnl on by default now
+have_dbus_build="yes"
+import_feeds="evolution-import-rss"
+
 
 AC_OUTPUT
 echo "
