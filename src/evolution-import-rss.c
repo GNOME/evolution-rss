@@ -88,7 +88,7 @@ send_dbus_message (const char *name, const char *data)
 	builder = g_variant_builder_new (G_VARIANT_TYPE_TUPLE);
 
 	/* Appends the data as an argument to the message */
-	g_variant_builder_add (builder, "(s)", data);
+	g_variant_builder_add (builder, "s", data);
 	g_dbus_message_set_body (message, g_variant_builder_end (builder));
 
 	/* Sends the message */
@@ -188,9 +188,8 @@ no_evo_cb (gpointer user_data)
 		system("evolution&");
 		g_usleep(30);
 		send_dbus_ping ();
-		return TRUE;
-	} else
 		return FALSE;
+	}
 }
 
 

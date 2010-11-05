@@ -91,16 +91,14 @@ signal_cb (GDBusConnection *connection,
 	if (!g_strcmp0 (signal_name, "import")) {
 		gchar *url = NULL;
 		add_feed *feed = g_new0(add_feed, 1);
-		g_variant_get (parameters, "((s))", &url);
+		g_variant_get (parameters, "(s)", &url);
 		g_print("New Feed received: %s\n", url);
-		feed->feed_url = g_strdup(url);
+		feed->feed_url = url;
 		feed->add=1;
 		feed->enabled=feed->validate=1;
 		feed->fetch_html = 0;
-		if (feed->feed_url && strlen(feed->feed_url)) {
-			gchar *text = feed->feed_url;
+		if (feed->feed_url) {
 			feed->feed_url = sanitize_url(feed->feed_url);
-			g_free(text);
 			d("sanitized feed URL: %s\n", feed->feed_url);
 			if (g_hash_table_find(rf->hr, check_if_match, feed->feed_url)) {
 				rss_error(NULL, NULL, _("Error adding feed."),
