@@ -4783,6 +4783,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 
 	rss_shell_view = shell_view;
 	shell_window = e_shell_view_get_shell_window (rss_shell_view);
+	evo_window = shell_window;
 	g_signal_connect (
 		e_shell_window_get_action (
 			E_SHELL_WINDOW (shell_window),
