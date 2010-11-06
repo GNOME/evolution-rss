@@ -78,11 +78,11 @@ create_status_icon(void)
 			status_icon,
 			iconfile);
 		g_free(iconfile);
-/*		g_signal_connect (
+		g_signal_connect (
 			G_OBJECT (status_icon),
 			"activate",
 			G_CALLBACK (icon_activated),
-			NULL);*/
+			NULL);
 		g_signal_connect (
 			G_OBJECT (status_icon),
 			"button-press-event",

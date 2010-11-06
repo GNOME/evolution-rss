@@ -189,6 +189,8 @@ EXTRA_DIST =					\
 	rss-config-factory.h			\
 	rss-icon-factory.c			\
 	rss-icon-factory.h			\
+	rss-status-icon.c			\
+	rss-status-icon.h			\
 	rss-image.c				\
 	rss-image.h				\
 	strptime.c				\
