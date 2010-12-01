@@ -661,13 +661,13 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		G_CALLBACK(disable_widget_cb),
 		gui);
 
-	ok = gtk_button_new_from_stock (GTK_STOCK_OK);
-	gtk_widget_show (ok);
-	gtk_dialog_add_action_widget (dialog1, ok, GTK_RESPONSE_OK);
-
 	cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 	gtk_widget_show (cancel);
 	gtk_dialog_add_action_widget (dialog1, cancel, GTK_RESPONSE_CANCEL);
+
+	ok = gtk_button_new_from_stock (GTK_STOCK_OK);
+	gtk_widget_show (ok);
+	gtk_dialog_add_action_widget (dialog1, ok, GTK_RESPONSE_OK);
 
 	gtk_widget_add_accelerator (
 		ok,
