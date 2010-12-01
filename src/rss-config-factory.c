@@ -661,34 +661,13 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		G_CALLBACK(disable_widget_cb),
 		gui);
 
-	ok = GTK_WIDGET (
-		gtk_builder_get_object(gui, "ok_button"));
-#if GTK_CHECK_VERSION (2,18,0)
-	gtk_widget_set_can_default (ok, TRUE);
-#else
-	GTK_WIDGET_SET_FLAGS (
-		ok,
-		GTK_CAN_DEFAULT);
-#endif
-	d("/*Gtk-CRITICAL **: gtk_box_pack: assertion `child->parent == NULL' failed*/");
-	gtk_dialog_add_action_widget (
-		(GtkDialog *)dialog1,
-		ok,
-		GTK_RESPONSE_OK);
+	ok = gtk_button_new_from_stock (GTK_STOCK_OK);
+	gtk_widget_show (ok);
+	gtk_dialog_add_action_widget (dialog1, ok, GTK_RESPONSE_OK);
 
-	cancel = GTK_WIDGET (
-		gtk_builder_get_object(gui, "cancel_button"));
-	gtk_dialog_add_action_widget (
-		GTK_DIALOG (dialog1),
-		cancel,
-		GTK_RESPONSE_CANCEL);
-#if GTK_CHECK_VERSION (2,18,0)
-	gtk_widget_set_can_default (cancel, TRUE);
-#else
-	GTK_WIDGET_SET_FLAGS (
-		cancel,
-		GTK_CAN_DEFAULT);
-#endif
+	cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	gtk_widget_show (cancel);
+	gtk_dialog_add_action_widget (dialog1, cancel, GTK_RESPONSE_CANCEL);
 
 	gtk_widget_add_accelerator (
 		ok,
@@ -3467,26 +3446,6 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 			NULL);
 		g_object_set_data_full (G_OBJECT (data->parent), "url", url, NULL);
 		g_object_set_data_full (G_OBJECT (data->parent), "ofolder", ofolder, NULL);
-		ok = GTK_WIDGET (
-			gtk_builder_get_object(feed->gui, "ok_button"));
-
-		gtk_widget_add_accelerator (
-			ok,
-			"activate",
-			accel_group,
-			GDK_Return,
-			(GdkModifierType) 0,
-			GTK_ACCEL_VISIBLE);
-		gtk_widget_add_accelerator (
-			ok,
-			"activate",
-			accel_group,
-			GDK_KP_Enter,
-			(GdkModifierType) 0,
-			GTK_ACCEL_VISIBLE);
-		gtk_window_add_accel_group (
-			GTK_WINDOW (feed->dialog),
-			accel_group);
 		return feed->child;
 	}
 
