@@ -364,6 +364,37 @@ html_find (xmlNode *node,
 	return NULL;
 }
 
+/* as html_find() but takes an array of strings for input */
+xmlNode *
+html_find_s (xmlNode *node,
+	gchar **match)
+{
+	guint i;
+	while (node) {
+#ifdef RDF_DEBUG
+		xmlDebugDumpNode (stdout, node, 32);
+		printf("%s.\n", node->name);
+#endif
+		if (node->children)
+			node = node->children;
+		else {
+			while (node && !node->next)
+				node = node->parent;
+			if (!node)
+				return NULL;
+			node = node->next;
+		}
+
+		if (node->name) {
+			for (i = 0; match[i]; i++) {
+				if (!g_strcmp0 ((char *)node->name, match[i]))
+					return node;
+			}
+		}
+	}
+	return NULL;
+}
+
 /* returns node disregarding type
  */
 const char *
@@ -654,6 +685,28 @@ layer_find_pos (xmlNodePtr node,
 	return NULL;
 }
 
+/*
+ * locates a property using a query in the format atribute=property
+ */
+
+gchar *
+layer_query_find_prop (xmlNodePtr node,
+		const char *match,
+		xmlChar *attr,
+		const char *attrprop,
+		xmlChar *prop)
+{
+	node = node->children;
+	while (node!=NULL) {
+		if (!g_ascii_strcasecmp((gchar *)node->name, match)
+		&& (!g_ascii_strcasecmp((gchar *)xmlGetProp(node, attr), attrprop)
+		   || !xmlGetProp(node, attr)))
+					return (gchar *)xmlGetProp(node, prop);
+		node = node->next;
+	}
+	return NULL;
+}
+
 char *
 layer_find_url (xmlNodePtr node,
 		char *match,
@@ -781,6 +834,11 @@ tree_walk (xmlNodePtr root, RDF *r)
 					r->version = g_strdup("1.0");
 				}
 				r->base = (gchar *)xmlGetProp(walk, (xmlChar *)"base");
+				if (!r->base)
+					r->base = layer_query_find_prop (walk,
+							"link",
+							(xmlChar *)"rel",
+							"alternate", (xmlChar *)"href");
 			}
 
 			/* This is the channel top level */
@@ -849,6 +907,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 	return r->title;
 }
 
+static const char *html_const[4] = {"img", "a", NULL};
+
 gchar *
 process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 {
@@ -858,7 +918,7 @@ process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 	xmlDoc *src = (xmlDoc *)parse_html_sux (text, strlen(text));
 	if (src) {
 		xmlNode *doc = (xmlNode *)src;
-		while ((doc = html_find(doc, (gchar *)"img"))) {
+		while ((doc = html_find_s(doc, (gchar **)html_const))) {
 			gchar *name = NULL;
 			xmlChar *url = xmlGetProp(doc, (xmlChar *)"src");
 			if (url) {
@@ -879,6 +939,26 @@ process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 					g_free(name);
 				}
 				xmlFree(url);
+			} else {
+				gchar *url = (gchar *)xmlGetProp(doc, (xmlChar *)"href");
+				if (url
+				&& (g_ascii_strncasecmp (url, "http://", 7) &&
+					g_ascii_strncasecmp (url, "https://", 8) &&
+					g_ascii_strncasecmp (url, "ftp://", 6) &&
+					g_ascii_strncasecmp (url, "nntp://", 7) &&
+					g_ascii_strncasecmp (url, "mailto:", 7) &&
+					g_ascii_strncasecmp (url, "news:", 5) &&
+					g_ascii_strncasecmp (url, "file:", 5) &&
+					g_ascii_strncasecmp (url, "callto:", 7) &&
+					g_ascii_strncasecmp (url, "h323:", 5) &&
+					g_ascii_strncasecmp (url, "sip:", 4) &&
+					g_ascii_strncasecmp (url, "webcal:", 7))) {
+					name = g_build_path(G_DIR_SEPARATOR_S, link, url, NULL);
+					xmlFree(url);
+					xmlSetProp(doc, (xmlChar *)"href",
+						(xmlChar *)name);
+					g_free(name);
+				}
 			}
 		}
 		xmlDocDumpMemory(src, &buff, (int*)&size);
