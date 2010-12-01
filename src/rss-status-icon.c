@@ -163,7 +163,6 @@ update_status_icon(const char *channel, gchar *title)
 		tchn = g_markup_escape_text (channel, -1);
 		ttit = g_markup_escape_text (title, -1);
 		total = g_strdup_printf("<b>%s</b>\n%s\n", tchn, ttit);
-		g_print("total:%s\n", total);
 		g_free(tchn);
 		g_free(ttit);
 		create_status_icon();
