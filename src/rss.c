@@ -420,6 +420,8 @@ browser_write(gchar *string, gint length, gchar *base)
 {
 	gchar *str = string;
 	guint engine = fallback_engine();
+	xmlDoc *src = (xmlDoc *)parse_html(base, string, length);
+	gchar *encoding =  (gchar *)htmlGetMetaEncoding(src);
 	switch (engine) {
 	case 2:
 #ifdef HAVE_GECKO
@@ -450,7 +452,7 @@ browser_write(gchar *string, gint length, gchar *base)
 			WEBKIT_WEB_VIEW(rf->mozembed),
 			str,
 			"text/html",
-			NULL,
+			encoding,
 			base);
 		if (strncmp(base, "file:///fake", 12))
 			webkit_set_history(base);
@@ -466,7 +468,9 @@ void
 browser_stream_write(CamelStream *stream, gchar *base)
 {
 	GString *str = g_string_new(NULL);
-	gchar *line;
+	gchar *line, *encoding;
+	xmlDoc *src;
+
 	CamelStream *in = camel_stream_buffer_new(stream, CAMEL_STREAM_BUFFER_READ);
 #if (DATASERVER_VERSION >= 2033001)
 	while ((line = camel_stream_buffer_read_line((CamelStreamBuffer *)in, NULL,  NULL))) {
@@ -478,13 +482,15 @@ browser_stream_write(CamelStream *stream, gchar *base)
 		g_free(tmp);
 		line = NULL;
 	}
+	src = (xmlDoc *)parse_html(base, str->str, str->len);
+	encoding =  (gchar *)htmlGetMetaEncoding(src);
 #ifdef HAVE_WEBKIT
 #if (WEBKIT_VERSION >= 1001001)
 	webkit_web_view_load_string(
 		WEBKIT_WEB_VIEW(rf->mozembed),
 		str->str,
 		"text/html",
-		NULL,
+		encoding,
 		base);
 #else
 	webkit_web_view_load_html_string(
