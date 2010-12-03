@@ -56,9 +56,8 @@ rss_html_url_decode(const char *html, int len)
 {
 	xmlDoc *src = NULL;
 	xmlDoc *doc = NULL;
-	gchar *url, *tmpurl;
-	gchar *base_dir = rss_component_peek_base_directory();
-	gchar *feed_dir;
+	gchar *url;
+	gchar *duri = NULL;
 
 	src = (xmlDoc *)parse_html_sux(html, len);
 
@@ -67,29 +66,19 @@ rss_html_url_decode(const char *html, int len)
 
 	doc = src;
 
-	feed_dir = g_build_path(G_DIR_SEPARATOR_S,
-		base_dir,
-		"static",
-		"http",
-		NULL);
-	g_free(base_dir);
-
 	while ((doc = (xmlDoc *)html_find((xmlNode *)doc, (gchar *)"img"))) {
 		if ((url = (gchar *)xmlGetProp((xmlNodePtr)doc, (xmlChar *)"src"))) {
-			if (strstr(url, feed_dir) == NULL) {
-				g_free(feed_dir);
-				return NULL;
+			if (strstr(url, "img:")) {
+				gchar *tmp = decode_image_cache_filename(url);
+				duri = g_strconcat("file://", tmp, NULL);
+				g_free(tmp);
 			}
-			tmpurl = camel_url_decode_path(
-					strstr(url, "http:"));
 			xmlSetProp(
 				(xmlNodePtr)doc,
 				(xmlChar *)"src",
-				(xmlChar *)tmpurl);
-			g_free(tmpurl);
+				(xmlChar *)duri);
 		}
 	}
-	g_free(feed_dir);
 	return src;
 }
 

@@ -86,6 +86,9 @@ EVOLUTION_REQUIRED=2.4.1
 LIBSOUP_REQUIRED=2.2
 LIBGTKHTML_REQUIRED=3.18.3
 
+GTKHTML_VERSION="libgtkhtml-3.14"
+GTKHTML_EDITOR_VERSION="gtkhtml-editor-3.14"
+
 PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
 [  glib-2.0 >= $LIBGLIB_REQUIRED dnl
    gtk+-2.0 >= $LIBGTK_REQUIRED dnl
@@ -95,11 +98,11 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
    libebook-1.2 dnl
    libgnomecanvas-2.0 dnl
    dnl evolution-data-server-1.2 dnl
-   libgtkhtml-3.14 >= $LIBGTKHTML_REQUIRED
+   $GTKHTML_VERSION >= $LIBGTKHTML_REQUIRED
 ])
 
-PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor, [GTKHTMLEDITOR=YES], [GTKHTMLEDITOR=NO])
-if test "x$GTKHTMLEDITOR" == "xYES"; then
+PKG_CHECK_MODULES([GTKHTML_EDITOR], $GTKHTML_EDITOR_VERSION, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
+if test "x$GTKHTMLEDITOR" == "xyes"; then
         AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
         AC_SUBST(HAVE_GTKHTMLEDITOR)
         AC_SUBST(GTKHTML_EDITOR_CFLAGS)
@@ -431,13 +434,14 @@ AC_OUTPUT
 echo "
 	Evolution RSS plugin successfully configured
 
-	Source code location	: $srcdir
-	Installation path	: $PLUGIN_INSTALL_DIR
-	Prefix			: $prefix
-	HTML renders		: $kits
-	Primary HTML render	: $RENDER
-	D-BUS support		: $have_dbus_build
-	libsoup-gnome support	: $have_libsoup_gnome
-	Import feeds		: $import_feeds
+	Source code location		: $srcdir
+	Installation path		: $PLUGIN_INSTALL_DIR
+	Prefix				: $prefix
+	HTML renders			: $kits
+	html editor (send mail as rss)	: $GTKHTMLEDITOR
+	Primary HTML render		: $RENDER
+	D-BUS support			: $have_dbus_build
+	libsoup-gnome support		: $have_libsoup_gnome
+	Import feeds			: $import_feeds
 
 	"
