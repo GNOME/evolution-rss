@@ -74,6 +74,20 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/evolution/evolution-rss/custom_font</key>
+      <applyto>/apps/evolution/evolution-rss/custom_font</applyto>
+      <owner>evolution-rss</owner>
+      <type>float</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Use custom font</short>
+        <long>
+		Use a custom font size instead of system defaults.
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/evolution/evolution-rss/min_font_size</key>
       <applyto>/apps/evolution/evolution-rss/min_font_size</applyto>
       <owner>evolution-rss</owner>
