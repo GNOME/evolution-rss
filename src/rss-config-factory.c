@@ -3140,15 +3140,15 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
 			break;
 		case 1:
-#ifndef HAVE_WEBKIT
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
-			break;
+#ifdef HAVE_WEBKIT
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
 #endif
+			break;
 		case 2:
-#ifndef HAVE_GECKO
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
-			break;
+#ifdef HAVE_GECKO
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 2);
 #endif
+			break;
 		default:
 			g_print("Selected render not supported! Failling back to default.\n");
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), render);
