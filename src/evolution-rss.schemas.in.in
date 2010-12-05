@@ -74,6 +74,20 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/evolution/evolution-rss/min_font_size</key>
+      <applyto>/apps/evolution/evolution-rss/min_font_size</applyto>
+      <owner>evolution-rss</owner>
+      <type>float</type>
+      <default>12</default>
+      <locale name="C">
+        <short>Minimum font size</short>
+        <long>
+		The size of the font used in full text preview.
+        </long>
+      </locale>
+    </schema>
+    <schema>
+
       <key>/schemas/apps/evolution/evolution-rss/network_timeout</key>
       <applyto>/apps/evolution/evolution-rss/network_timeout</applyto>
       <owner>evolution-rss</owner>

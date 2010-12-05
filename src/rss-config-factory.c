@@ -94,6 +94,7 @@ extern SoupCookieJar *rss_soup_jar;
 typedef struct {
 	GtkBuilder  *xml;
 	GConfClient *gconf;
+	GtkWidget   *minfont;
 	GtkWidget   *combobox;
 	GtkWidget   *check;
 	GtkWidget   *nettimeout;
@@ -2968,11 +2969,11 @@ export_cb (GtkWidget *widget, gpointer data)
 
 
 static void
-network_timeout_cb (GtkWidget *widget, gpointer data)
+spin_update_cb (GtkWidget *widget, gchar *key)
 {
 	gconf_client_set_float (
 		rss_gconf,
-		GCONF_KEY_NETWORK_TIMEOUT,
+		key,
 		gtk_spin_button_get_value((GtkSpinButton*)widget),
 		NULL);
 }
@@ -2987,6 +2988,18 @@ destroy_ui_data (gpointer data)
 	g_object_unref (ui->xml);
 	g_object_unref (ui->gconf);
 	g_free (ui);
+}
+
+void
+font_cb(GtkWidget *widget, GtkWidget *data)
+{
+	gboolean active = 1-gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (widget));
+	/* Save the new setting to gconf */
+	gconf_client_set_bool (
+		rss_gconf,
+		GCONF_KEY_CUSTOM_FONT, active, NULL);
+	gtk_widget_set_sensitive(data, active);
 }
 
 GtkWidget *e_plugin_lib_get_configure_widget (EPlugin *epl);
@@ -3008,6 +3021,7 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	GError* error = NULL;
 	gchar *toplevel[] = {(gchar *)"settingsbox", NULL};
 	GtkAdjustment *adjustment;
+	GtkWidget *widget1, *widget2;
 
 
 	uifile = g_build_filename (EVOLUTION_UIDIR,
@@ -3049,15 +3063,15 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
 			break;
 		case 1:
-#ifndef HAVE_WEBKIT
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
-			break;
+#ifdef HAVE_WEBKIT
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
 #endif
+			break;
 		case 2:
 #ifndef HAVE_GECKO
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
-			break;
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 2);
 #endif
+			break;
 		default:
 			g_print("Selected render not supported! Failling back to default.\n");
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo), render);
@@ -3088,6 +3102,56 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		FALSE,
 		FALSE,
 		0);
+
+	widget1 = GTK_WIDGET (
+			gtk_builder_get_object(
+				ui->xml, "fontsize"));
+	widget2 = GTK_WIDGET (
+			gtk_builder_get_object(
+				ui->xml, "fontsetting"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget2),
+		1-gconf_client_get_bool (
+			rss_gconf,
+			GCONF_KEY_CUSTOM_FONT, NULL));
+	g_object_set(widget1, "sensitive", (gboolean)1-gtk_toggle_button_get_active (
+			GTK_TOGGLE_BUTTON (widget2)), NULL);
+	g_signal_connect (
+		widget2,
+		"toggled",
+		G_CALLBACK (font_cb),
+		widget1);
+
+	ui->minfont = GTK_WIDGET (
+			gtk_builder_get_object(
+				ui->xml, "minfont"));
+	/*setup the adjustment*/
+	adjustment = (GtkAdjustment *)gtk_adjustment_new(
+			12,	//DEFAULT MIN FONT
+			1,	//DEFAULT MIN FONT
+			100,
+			1,
+			1,
+			0);
+	gtk_spin_button_set_adjustment(
+		(GtkSpinButton *)ui->minfont,
+		adjustment);
+	adj = gconf_client_get_float(
+			rss_gconf,
+			GCONF_KEY_MIN_FONT_SIZE,
+			NULL);
+	if (adj)
+		gtk_spin_button_set_value(
+			(GtkSpinButton *)ui->minfont, adj);
+	g_signal_connect(
+		ui->minfont,
+		"changed",
+		G_CALLBACK(spin_update_cb),
+		(gpointer)GCONF_KEY_MIN_FONT_SIZE);
+	g_signal_connect(
+		ui->minfont,
+		"value-changed",
+		G_CALLBACK(spin_update_cb),
+		(gpointer)GCONF_KEY_MIN_FONT_SIZE);
 
 	ui->check = GTK_WIDGET (
 		gtk_builder_get_object(ui->xml, "enable_java"));
@@ -3177,13 +3241,13 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	g_signal_connect(
 		ui->nettimeout,
 		"changed",
-		G_CALLBACK(network_timeout_cb),
-		ui->nettimeout);
+		G_CALLBACK(spin_update_cb),
+		(gpointer)GCONF_KEY_NETWORK_TIMEOUT);
 	g_signal_connect(
 		ui->nettimeout,
 		"value-changed",
-		G_CALLBACK(network_timeout_cb),
-		ui->nettimeout);
+		G_CALLBACK(spin_update_cb),
+		(gpointer)GCONF_KEY_NETWORK_TIMEOUT);
 
 	//feed notification
 	ui->check = GTK_WIDGET (

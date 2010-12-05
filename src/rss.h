@@ -180,6 +180,8 @@ typedef struct _rssfeed {
 
 #define GCONF_KEY_DISPLAY_SUMMARY "/apps/evolution/evolution-rss/display_summary"
 #define GCONF_KEY_START_CHECK "/apps/evolution/evolution-rss/startup_check"
+#define GCONF_KEY_CUSTOM_FONT "/apps/evolution/evolution-rss/custom_font"
+#define GCONF_KEY_MIN_FONT_SIZE "/apps/evolution/evolution-rss/min_font_size"
 #define GCONF_KEY_REP_CHECK "/apps/evolution/evolution-rss/rep_check"
 #define GCONF_KEY_REP_CHECK_TIMEOUT "/apps/evolution/evolution-rss/rep_check_timeout"
 #define GCONF_KEY_SHOW_COMMENTS "/apps/evolution/evolution-rss/show_comments"

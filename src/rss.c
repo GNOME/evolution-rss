@@ -1150,6 +1150,17 @@ webkit_set_preferences(void)
 	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 	g_object_set (settings, "user-agent", agstr,  NULL);
+	if (gconf_client_get_bool (rss_gconf,
+			GCONF_KEY_CUSTOM_FONT, NULL)) {
+		g_object_set (settings, "minimum-font-size",
+			(gint)gconf_client_get_float(rss_gconf,
+				GCONF_KEY_MIN_FONT_SIZE, NULL),
+			NULL);
+		g_object_set (settings, "minimum-logical-font-size",
+			(gint)gconf_client_get_float(rss_gconf,
+				GCONF_KEY_MIN_FONT_SIZE, NULL),
+			NULL);
+	}
 #if (WEBKIT_VERSION >= 1001022)
 	g_object_set (settings, "enable-page-cache", TRUE, NULL);
 	//g_object_set (settings, "auto-resize-window", TRUE, NULL);
