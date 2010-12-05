@@ -663,11 +663,13 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 	gtk_widget_show (cancel);
-	gtk_dialog_add_action_widget (dialog1, cancel, GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_action_widget (GTK_DIALOG(dialog1),
+		cancel, GTK_RESPONSE_CANCEL);
 
 	ok = gtk_button_new_from_stock (GTK_STOCK_OK);
 	gtk_widget_show (ok);
-	gtk_dialog_add_action_widget (dialog1, ok, GTK_RESPONSE_OK);
+	gtk_dialog_add_action_widget (GTK_DIALOG(dialog1),
+		ok, GTK_RESPONSE_OK);
 
 	gtk_widget_add_accelerator (
 		ok,
@@ -3398,8 +3400,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	gchar *folder = target->folder->full_name;
 #endif
 	add_feed *feed = NULL;
-	GtkWidget *action_area, *ok;
-	GtkAccelGroup *accel_group = gtk_accel_group_new ();
+	GtkWidget *action_area;
 	gpointer key;
 	gboolean found;
 
