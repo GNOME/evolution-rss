@@ -175,12 +175,13 @@ void
 taskbar_push_message(gchar *message)
 {
 #if EVOLUTION_VERSION < 22900 //kb//
-	EActivityHandler *activity_handler = 
+	EActivityHandler *activity_handler =
 		mail_component_peek_activity_handler (mail_component_peek ());
 	e_activity_handler_set_message(activity_handler, message);
 #else
 	EShellTaskbar *shell_taskbar;
-	g_return_if_fail(rss_shell_view != NULL);
+	if (!rss_shell_view)
+		return;
 	shell_taskbar = e_shell_view_get_shell_taskbar (rss_shell_view);
 	e_shell_taskbar_set_message (shell_taskbar, message);
 #endif
