@@ -188,8 +188,8 @@ no_evo_cb (gpointer user_data)
 		system("evolution&");
 		g_usleep(30);
 		send_dbus_ping ();
-		return FALSE;
 	}
+	return FALSE;
 }
 
 

@@ -124,6 +124,7 @@ typedef struct _setupfeed {
 	GtkWidget *combo_hbox;
 } setupfeed;
 
+void font_cb(GtkWidget *widget, GtkWidget *data);
 static void feeds_dialog_edit(GtkDialog *d, gpointer data);
 void decorate_import_cookies_fs (gpointer data);
 gboolean store_redrawing = FALSE;
@@ -272,7 +273,7 @@ rep_check_cb (GtkWidget *widget, gpointer data)
 			g_source_remove(rf->rc_id);
 		rf->rc_id = g_timeout_add (
 				60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)data),
-				(GtkFunction) update_articles,
+				(GSourceFunc) update_articles,
 				(gpointer)1);
 		}
 }
@@ -291,7 +292,7 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 			g_source_remove(rf->rc_id);
 		rf->rc_id = g_timeout_add (
 			60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)widget),
-			(GtkFunction) update_articles,
+			(GSourceFunc) update_articles,
 			(gpointer)1);
 	}
 }
