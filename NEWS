@@ -1,3 +1,17 @@
+Evolution-RSS 0.2.2
+------------------------------
+
+Miscellaneous Fixes:
+	Remove warnings on missing shellview.
+	Fix render engine combo.
+	Fix gtkhtml detection.
+	Fix sending RSS articles as mails.
+	Improve displaying of folder icons (it greately speeds up the loading)
+
+Bug fixes:
+635157 - Bad character encoding when showing full text
+636053 - Host-relative links in atom feed don't work
+
 Evolution-RSS 0.2.1
 ------------------------------
 
