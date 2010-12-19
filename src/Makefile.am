@@ -106,6 +106,7 @@ server_in_files = GNOME_Evolution_RSS.server.in.in
 
 if HAVE_BONOBO
 server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
+	touch $(top_srcdir)/po/POTFILES.skip
 	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.skip
 	sed -i -e 's!^#src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
 	echo 'src/GNOME_Evolution_RSS.server.in.in' >> $(top_srcdir)/po/POTFILES.in
