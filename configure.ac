@@ -76,24 +76,11 @@ SOUP="-$SOUP"
 fi
 fi
 
-dnl locate gtkhtml package
-GTKHTML=
-PKG_CHECK_MODULES([GTKHTML], libgtkhtml-3.14, [GH=3.14], [GH=])
-if test "x$GH" == "x"; then
-	PKG_CHECK_MODULES(GTKHTML, libgtkhtml, [GH=], [GH=0])
-fi
-GTKHTML="-$GH"
-
-if test "x$GH" == "x0"; then
-	AC_MSG_ERROR([libgtkhtml-3.14 devel headers required])
-fi
-
 dnl base packages and versions
 LIBGLIB_REQUIRED=2.16.2
 LIBGTK_REQUIRED=2.12.0
 EVOLUTION_REQUIRED=2.4.1
 LIBSOUP_REQUIRED=2.2
-LIBGTKHTML_REQUIRED=3.18.3
 
 PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
 [  glib-2.0 >= $LIBGLIB_REQUIRED dnl
@@ -102,23 +89,24 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    libebook-1.2 dnl
-   libgtkhtml$GTKHTML >= $LIBGTKHTML_REQUIRED
 ])
 
-PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
-if test "x$GTKHTMLEDITOR" == "xyes"; then
-	AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
-	AC_SUBST(HAVE_GTKHTMLEDITOR)
-	AC_SUBST(GTKHTML_EDITOR_CFLAGS)
-	AC_SUBST(GTKHTML_EDITOR_LIBS)
+GTKHTML_EDITOR_VERSION=`$PKG_CONFIG --modversion gtkhtml-editor 2>/dev/null`
+if test -n "$GTKHTML_EDITOR_VERSION"; then
+	PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
 else
-PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor$GTKHTML, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
-if test "x$GTKHTMLEDITOR" == "xyes"; then
-	AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
-	AC_SUBST(HAVE_GTKHTMLEDITOR)
-	AC_SUBST(GTKHTML_EDITOR_CFLAGS)
-	AC_SUBST(GTKHTML_EDITOR_LIBS)
-fi
+	gtkhtml_api_versions='14 15'
+	for i in $gtkhtml_api_versions; do
+		GTKHTML_EDITOR_VERSION=`$PKG_CONFIG --modversion gtkhtml-editor-3.$i 2>/dev/null`
+		if test -n "$GTKHTML_EDITOR_VERSION"; then
+			PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor-3.$i, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
+			AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
+			AC_SUBST(HAVE_GTKHTMLEDITOR)
+			AC_SUBST(GTKHTML_EDITOR_CFLAGS)
+			AC_SUBST(GTKHTML_EDITOR_LIBS)
+			break;
+		fi
+	done
 fi
 
 PKG_CHECK_MODULES([EVOLUTION_DATASERVER], evolution-data-server-1.2, [have_ds=yes], [have_ds=no])
