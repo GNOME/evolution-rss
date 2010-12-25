@@ -79,14 +79,13 @@ fi
 dnl locate gtkhtml package
 GTKHTML=
 PKG_CHECK_MODULES([GTKHTML], libgtkhtml-3.14, [GH=3.14], [GH=])
-if test "x$GH" != "x3.14"; then
-	AC_MSG_ERROR([libgtkhtml-3.14 devel headers required])
-else
 if test "x$GH" == "x"; then
-	PKG_CHECK_MODULES(GTKHTML, libgtkhtml, [GH=], [])
-else
-GTKHTML="-$GH"
+	PKG_CHECK_MODULES(GTKHTML, libgtkhtml, [GH=], [GH=0])
 fi
+GTKHTML="-$GH"
+
+if test "x$GH" == "x0"; then
+	AC_MSG_ERROR([libgtkhtml-3.14 devel headers required])
 fi
 
 dnl base packages and versions
@@ -108,17 +107,17 @@ PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
 
 PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
 if test "x$GTKHTMLEDITOR" == "xyes"; then
-        AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
-        AC_SUBST(HAVE_GTKHTMLEDITOR)
-        AC_SUBST(GTKHTML_EDITOR_CFLAGS)
-        AC_SUBST(GTKHTML_EDITOR_LIBS)
+	AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
+	AC_SUBST(HAVE_GTKHTMLEDITOR)
+	AC_SUBST(GTKHTML_EDITOR_CFLAGS)
+	AC_SUBST(GTKHTML_EDITOR_LIBS)
 else
 PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor$GTKHTML, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
 if test "x$GTKHTMLEDITOR" == "xyes"; then
-        AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
-        AC_SUBST(HAVE_GTKHTMLEDITOR)
-        AC_SUBST(GTKHTML_EDITOR_CFLAGS)
-        AC_SUBST(GTKHTML_EDITOR_LIBS)
+	AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
+	AC_SUBST(HAVE_GTKHTMLEDITOR)
+	AC_SUBST(GTKHTML_EDITOR_CFLAGS)
+	AC_SUBST(GTKHTML_EDITOR_LIBS)
 fi
 fi
 
