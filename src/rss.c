@@ -1471,6 +1471,7 @@ webkit_click (GtkEntry *entry,
 	return TRUE;
 }
 
+#ifdef HAVE_WEBKIT
 void webkit_hook_actions(void);
 
 void
@@ -1500,6 +1501,7 @@ webkit_hook_actions(void)
 		G_CALLBACK (embed_zoom_100_cb), NULL);
 #endif
 }
+#endif
 
 #if 0
 #if EVOLUTION_VERSION >= 22900
@@ -4817,7 +4819,9 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 		rss_shell_view);
 #if EVOLUTION_VERSION >= 22900
 /*	rss_search_bar_hook();*/
+#ifdef HAVE_WEBKIT
 	webkit_hook_actions();
+#endif
 #endif
 	rss_hooks_init();
 	return TRUE;
