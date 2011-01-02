@@ -248,7 +248,7 @@ gboolean display_feed_async(gpointer key);
 gboolean fetch_one_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean fetch_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean custom_fetch_feed(gpointer key, gpointer value, gpointer user_data);
-void fetch_comments(gchar *url, EMFormatHTML *stream);
+void fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream);
 
 guint fallback_engine(void);
 
@@ -686,8 +686,8 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	widget = gtk_label_new (NULL);
 	gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
 
-	markup = g_markup_printf_escaped (
-			_("Enter your username and password for:\n '%s'"),
+	markup = g_markup_printf_escaped ("%s '%s'\n",
+			_("Enter your username and password for:"),
 			auth->url);
 	gtk_label_set_markup (GTK_LABEL (widget), markup);
 	g_free (markup);
@@ -2528,7 +2528,9 @@ render_body:	if (category)
 				g_free(rfrclsid);
 				commstream = NULL;
 			} else {
-				fetch_comments(comments, (EMFormatHTML *)t->format);
+				gchar *uri =  g_strdup(g_hash_table_lookup(
+						rf->hr, g_strstrip(feedid)));
+				fetch_comments(comments, g_strdup(uri), (EMFormatHTML *)t->format);
 			}
 			camel_stream_printf (fstream, "</div>");
 		}
@@ -3756,14 +3758,19 @@ print_comments(gchar *url, gchar *stream, EMFormatHTML *format)
 
 
 void
-fetch_comments(gchar *url, EMFormatHTML *stream)
+fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream)
 {
 	GError *err = NULL;
 	SoupSession *comm_sess = NULL;
 	gchar *uniqcomm;
 
 	d("\nFetching comments from: %s\n", url);
-	uniqcomm = g_strdup_printf("COMMENT-%s", url);
+	/* we use uniqcomm to get back comment soup session*/
+	if (mainurl) {
+		uniqcomm = g_strdup_printf("RSS-%s;COMMENT-%s", mainurl, url);
+		g_free(mainurl);
+	} else
+		uniqcomm = g_strdup_printf("COMMENT-%s", url);
 
 	fetch_unblocking(
 			url,

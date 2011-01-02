@@ -410,7 +410,7 @@ authenticate (SoupSession *session,
 	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
 
 	if (msg->status_code == SOUP_STATUS_PROXY_UNAUTHORIZED) {
-		g_print("proxy:%d\n", soup_auth_is_for_proxy(auth));
+		d("proxy:%d\n", soup_auth_is_for_proxy(auth));
 	g_object_get (G_OBJECT(session),
 				"proxy-uri", &proxy_uri,
 				NULL);
@@ -585,6 +585,8 @@ net_get_unblocking(gchar *url,
 	CallbackInfo *info = NULL;
 	SoupSession *soup_sess;
 	gchar *agstr;
+	gchar *mainurl = NULL;
+	gchar **res;
 
 	soup_sess = soup_session_async_new();
 
@@ -606,12 +608,20 @@ net_get_unblocking(gchar *url,
 		info->current = 0;
 		info->total = 0;
 	}
+	/*try to find upstream url to supply a password*/
+	if (data) {
+		res = g_strsplit(data, ";COMMENT-", 0);
+		if (res[0] && g_str_has_prefix(res[0], "RSS-")) {
+			mainurl = g_strdup(res[0]+4);
+			g_strfreev(res);
+		}
+	}
 
 	g_signal_connect (soup_sess, "authenticate",
-		G_CALLBACK (authenticate), (gpointer)url);
+		G_CALLBACK (authenticate), (gpointer)mainurl?mainurl:url);
 #if LIBSOUP_VERSION < 2003000
 	g_signal_connect (soup_sess, "reauthenticate",
-		G_CALLBACK (reauthenticate), (gpointer)url);
+		G_CALLBACK (reauthenticate), (gpointer)mainurl?mainurl:url);
 #endif
 
 	/* Queue an async HTTP request */
