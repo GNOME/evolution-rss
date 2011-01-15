@@ -185,7 +185,7 @@
 	</locale>
     </schema>
 
-    <schema>
+<schema>
 	<key>/schemas/apps/evolution/evolution-rss/search_rss</key>
 	<applyto>/apps/evolution/evolution-rss/search_rss</applyto>
 	<owner>evolution-rss</owner>
@@ -197,7 +197,49 @@
 			Evolution RSS will scan web pages for rss content
 		</long>
 	</locale>
-    </schema>
+</schema>
+
+<schema>
+	<key>/schemas/apps/evolution/evolution-rss/download_enclosures</key>
+	<applyto>/apps/evolution/evolution-rss/download_enclosures</applyto>
+	<owner>evolution-rss</owner>
+	<type>bool</type>
+	<default>true</default>
+	<locale name="C">
+		<short>Download enclosures</short>
+		<long>
+			Evolution will download all feed enclosures a feed article may contain.
+		</long>
+	</locale>
+</schema>
+
+<schema>
+	<key>/schemas/apps/evolution/evolution-rss/enclosure_limit</key>
+	<applyto>/apps/evolution/evolution-rss/enclosure_limit</applyto>
+	<owner>evolution-rss</owner>
+	<type>bool</type>
+	<default>false</default>
+	<locale name="C">
+		<short>Limit enclosure size</short>
+		<long>
+			Limit maximum enclosure size evolution will download.
+		</long>
+	</locale>
+</schema>
+
+<schema>
+	<key>/schemas/apps/evolution/evolution-rss/enclosure_size</key>
+	<applyto>/apps/evolution/evolution-rss/enclosure_size</applyto>
+	<owner>evolution-rss</owner>
+	<type>float</type>
+	<default>1024</default>
+	<locale name="C">
+		<short>Max enclosure size</short>
+		<long>
+			Limit maximum enclosure size evolution will download.
+		</long>
+	</locale>
+</schema>
 
     <schema>
       <key>/schemas/apps/evolution/evolution-rss/status_icon</key>

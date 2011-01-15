@@ -667,7 +667,6 @@ net_get_unblocking(gchar *url,
 	return TRUE;
 }
 
-
 // same stuff as net_get_* but without accumulating headers
 // push all donwloads to a customizable length queue
 gboolean
@@ -754,7 +753,8 @@ download_unblocking(
 	stnet->cbdata2 = cbdata2;
 	stnet->url = g_strdup(url);
 	g_queue_push_tail (rf->stqueue, stnet);
-	rf->enclist = g_list_append (rf->enclist, g_strdup(url));
+	rf->enclist = g_list_append (rf->enclist, url);
+
 	if (!net_qid)
 		net_qid = g_idle_add((GSourceFunc)net_queue_dispatcher, NULL);
 
@@ -909,7 +909,7 @@ out:
 }
 
 gboolean
-cancel_soup_sess(gpointer key, gpointer value, gpointer user_data)
+abort_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
 	if (key && SOUP_IS_SESSION(key)) {
 		soup_session_abort(key);
@@ -938,7 +938,7 @@ abort_all_soup(void)
 		g_hash_table_foreach(rf->abort_session, remove_weak, NULL);
 		if (g_hash_table_size(rf->abort_session))
 			g_hash_table_foreach_remove(
-				rf->abort_session, cancel_soup_sess, NULL);
+				rf->abort_session, abort_soup_sess, NULL);
 		g_hash_table_destroy(rf->session);
 		rf->session = g_hash_table_new(
 				g_direct_hash, g_direct_equal);

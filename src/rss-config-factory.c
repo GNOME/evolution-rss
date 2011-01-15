@@ -110,8 +110,11 @@ typedef struct _setupfeed {
 		*check2,
 		*check3,
 		*check4,
-		*check5;
+		*check5,
+		*check6,
+		*check7;
 	GtkWidget *spin;
+	GtkWidget *enclsize;
 	GtkWidget *use_proxy;
 	GtkWidget *host_proxy;
 	GtkWidget *port_proxy;
@@ -261,7 +264,7 @@ rep_check_cb (GtkWidget *widget, gpointer data)
 	//if we already have a timeout set destroy it first
 	if (rf->rc_id && !active)
 		g_source_remove(rf->rc_id);
-		if (active) {
+	if (active) {
 			gtk_spin_button_update((GtkSpinButton *)data);
 			//we have to make sure we have a timeout value
 			if (!gconf_client_get_float(rss_gconf, GCONF_KEY_REP_CHECK_TIMEOUT, NULL))
@@ -275,7 +278,36 @@ rep_check_cb (GtkWidget *widget, gpointer data)
 				60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)data),
 				(GSourceFunc) update_articles,
 				(gpointer)1);
-		}
+	}
+}
+
+static void
+enclosure_limit_cb (GtkWidget *widget, gpointer data)
+{
+	gboolean active =
+		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	/* Save the new setting to gconf */
+	gconf_client_set_bool (rss_gconf,
+		GCONF_KEY_ENCLOSURE_LIMIT,
+		active,
+		NULL);
+	if (active) {
+		//we have to make sure we have a timeout value
+		if (!gconf_client_get_float(rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL))
+				gconf_client_set_float (rss_gconf,
+					GCONF_KEY_ENCLOSURE_SIZE,
+					gtk_spin_button_get_value((GtkSpinButton *)data),
+					NULL);
+	}
+}
+
+static void
+enclosure_size_cb (GtkWidget *widget, gpointer data)
+{
+	gconf_client_set_float (rss_gconf,
+		GCONF_KEY_ENCLOSURE_SIZE,
+		gtk_spin_button_get_value((GtkSpinButton*)widget),
+		NULL);
 }
 
 static void
@@ -3547,6 +3579,7 @@ rss_config_control_new (void)
 {
 	GtkWidget *control_widget;
 	GtkWidget *button1, *button2, *button3;
+	GtkWidget *tmpwidget;
 	gchar *uifile;
 	setupfeed *sf;
 	GtkListStore  *store;
@@ -3555,7 +3588,7 @@ rss_config_control_new (void)
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
 	GtkTreeViewColumn *column;
-	gdouble adj;
+	gdouble adj, size;
 	GError* error = NULL;
 
 	d("rf->%p\n", rf);
@@ -3719,7 +3752,17 @@ rss_config_control_new (void)
 			gtk_builder_get_object(
 				sf->gui,
 				"checkbutton5"));
+	sf->check6 = GTK_WIDGET (
+			gtk_builder_get_object(
+				sf->gui,
+				"checkbuttonS6"));
+	sf->check7 = GTK_WIDGET (
+			gtk_builder_get_object(
+				sf->gui,
+				"checkbutton9"));
 	sf->spin = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton1"));
+	sf->enclsize = GTK_WIDGET (gtk_builder_get_object(sf->gui, "adjustment6"));
+	tmpwidget = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton2"));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check1),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_REP_CHECK, NULL));
@@ -3742,6 +3785,26 @@ rss_config_control_new (void)
 		"value-changed",
 		G_CALLBACK(rep_check_timeout_cb),
 		sf->check1);
+
+	size = gconf_client_get_float(rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
+	if (size)
+		gtk_spin_button_set_value((GtkSpinButton *)tmpwidget, size);
+	g_signal_connect(
+		sf->check7,
+		"clicked",
+		G_CALLBACK(enclosure_limit_cb),
+		sf->enclsize);
+	g_signal_connect(
+		tmpwidget,
+		"changed",
+		G_CALLBACK(enclosure_size_cb),
+		sf->check7);
+	g_signal_connect(
+		tmpwidget,
+		"value-changed",
+		G_CALLBACK(enclosure_size_cb),
+		sf->check7);
+
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (sf->check2),
 		gconf_client_get_bool(
@@ -3782,6 +3845,26 @@ rss_config_control_new (void)
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_SEARCH_RSS);
+	gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (sf->check6),
+		gconf_client_get_bool(
+			rss_gconf,
+			GCONF_KEY_DOWNLOAD_ENCLOSURES,
+			NULL));
+	g_signal_connect(sf->check6,
+		"clicked",
+		G_CALLBACK(start_check_cb),
+		(gpointer)GCONF_KEY_DOWNLOAD_ENCLOSURES);
+	gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (sf->check7),
+		gconf_client_get_bool(
+			rss_gconf,
+			GCONF_KEY_ENCLOSURE_LIMIT,
+			NULL));
+	g_signal_connect(sf->check7,
+		"clicked",
+		G_CALLBACK(start_check_cb),
+		(gpointer)GCONF_KEY_ENCLOSURE_LIMIT);
 
 	sf->import = GTK_WIDGET (gtk_builder_get_object(sf->gui, "import"));
 	sf->export = GTK_WIDGET (gtk_builder_get_object(sf->gui, "export"));

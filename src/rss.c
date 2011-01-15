@@ -306,12 +306,24 @@ void error_response(GtkObject *o, int button, void *data)
 
 
 void
+abort_active_op(gpointer key)
+{
+	gpointer key_session = g_hash_table_lookup(rf->key_session, key);
+	gpointer value = g_hash_table_lookup(rf->session, key_session);
+	if (value) {
+		abort_soup_sess(key_session, value, NULL);
+	}
+}
+
+void
 cancel_active_op(gpointer key)
 {
 	gpointer key_session = g_hash_table_lookup(rf->key_session, key);
 	gpointer value = g_hash_table_lookup(rf->session, key_session);
-	if (value)
-		cancel_soup_sess(key_session, value, NULL);
+	if (value) {
+		soup_session_cancel_message (key_session, value,
+			SOUP_STATUS_CANCELLED);
+	}
 }
 
 static void
@@ -562,6 +574,12 @@ download_chunk(
 	case NET_STATUS_PROGRESS:
 		progress = (NetStatusProgress*)statusdata;
 		if (progress->current > 0 && progress->total > 0) {
+			guint encl_max_size = (gint)gconf_client_get_float(
+				rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
+			if (progress->total > encl_max_size * 1024) { //TOLERANCE!!!
+				cancel_active_op((gpointer)data);
+				return;
+			}
 			//fraction = (float)progress->current / progress->total;
 			fwrite(progress->chunk, 1, progress->chunksize, (FILE *)data);
 		}
@@ -5322,6 +5340,7 @@ free_cf(create_feed *CF)
 
 typedef struct CFL {
 	gchar *url;
+	gchar *name;
 	FILE *file;
 	create_feed *CF;
 } cfl;
@@ -5364,9 +5383,10 @@ process_attachments(create_feed *CF)
 		CFL = g_new0(cfl, 1);
 		CFL->url = l->data;
 		CFL->CF = CF;
-		d("enclosure file:%s\n", name)
+		d("attachment file:%s\n", name)
 		CF->attachedfiles = g_list_append(CF->attachedfiles, name);
 		CF->attachmentsqueue++;
+		CFL->name = name;
 		CFL->file = fopen(name, "w");
 		if (!CFL->file) return;
 		download_unblocking(
@@ -5375,7 +5395,7 @@ process_attachments(create_feed *CF)
 			CFL->file,
 			(gpointer)finish_attachment,
 			CFL,
-			0,
+			1,
 			NULL);
 	} while ((l = l->next));
 }
@@ -5393,6 +5413,13 @@ finish_attachment (SoupSession *soup_sess,
 		cfl *user_data)
 #endif
 {
+	if (msg->status_code == SOUP_STATUS_CANCELLED) {
+		user_data->CF->attachedfiles =
+			g_list_remove(user_data->CF->attachedfiles,
+				user_data->name);
+		goto out;
+	}
+
 #if LIBSOUP_VERSION < 2003000
 	fwrite(msg->response.body,
 		msg->response.length,
@@ -5404,7 +5431,7 @@ finish_attachment (SoupSession *soup_sess,
 		1,
 		user_data->file);
 #endif
-	fclose(user_data->file);
+out:	fclose(user_data->file);
 
 	rf->enclist = g_list_remove(rf->enclist, user_data->url);
 	//g_free(msg->response_body->data);
@@ -5436,8 +5463,9 @@ process_enclosure(create_feed *CF)
 	gchar *tmpdir, *name;
 
 	if (g_list_find_custom(rf->enclist, CF->encl,
-			(GCompareFunc)strcmp))
+			(GCompareFunc)strcmp)) {
 		return;
+	}
 	tmpdir = e_mkdtemp("evo-rss-XXXXXX");
 	if ( tmpdir == NULL)
 		return;
@@ -5456,7 +5484,7 @@ process_enclosure(create_feed *CF)
 		CF->efile,
 		(gpointer)finish_enclosure,
 		CF,
-		0,
+		1,
 		NULL);
 }
 
@@ -5470,6 +5498,10 @@ finish_enclosure (SoupSession *soup_sess,
 		create_feed *user_data)
 #endif
 {
+	if (msg->status_code == SOUP_STATUS_CANCELLED) {
+		user_data->encl = NULL;
+		goto out;
+	}
 #if LIBSOUP_VERSION < 2003000
 	fwrite(msg->response.body,
 		msg->response.length,
@@ -5481,7 +5513,7 @@ finish_enclosure (SoupSession *soup_sess,
 		1,
 		user_data->efile);
 #endif
-	fclose(user_data->efile);
+out:	fclose(user_data->efile);
 
 	if (!feed_is_new(user_data->feed_fname, user_data->feed_uri)) {
 		create_mail(user_data);

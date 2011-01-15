@@ -44,6 +44,8 @@ extern int rss_verbose_debug;
 #include "misc.h"
 #include "network-soup.h"
 
+extern GConfClient *rss_gconf;
+
 /************ RDF Parser *******************/
 
 guint rsserror = FALSE;
@@ -1255,21 +1257,26 @@ update_channel(RDF *r)
 			gtk_main_iteration ();
 
 		ftotal++;
-		if (CF->encl) {
-			process_enclosure(CF);
-		} else if (g_list_length(CF->attachments)) {
-			process_attachments(CF);
-		} else {
-			if (!freeze) {
-				camel_folder_freeze(mail_folder);
-				freeze = TRUE;
+		if (gconf_client_get_bool(rss_gconf, GCONF_KEY_DOWNLOAD_ENCLOSURES, NULL)) {
+			if (CF->encl) {
+				process_enclosure(CF);
+				goto done;
+			} else if (g_list_length(CF->attachments)) {
+				process_attachments(CF);
+				goto done;
 			}
-			create_mail(CF);
-			write_feed_status_line(
-				CF->feed_fname, CF->feed_uri);
-			free_cf(CF);
 		}
-		farticle++;
+
+		if (!freeze) {
+			camel_folder_freeze(mail_folder);
+			freeze = TRUE;
+		}
+		create_mail(CF);
+		write_feed_status_line(
+			CF->feed_fname, CF->feed_uri);
+		free_cf(CF);
+
+done:		farticle++;
 		d("put success()\n");
 		update_status_icon(chn_name, subj);
 		g_free(subj);

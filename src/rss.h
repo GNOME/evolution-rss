@@ -185,6 +185,9 @@ typedef struct _rssfeed {
 #define GCONF_KEY_REP_CHECK "/apps/evolution/evolution-rss/rep_check"
 #define GCONF_KEY_REP_CHECK_TIMEOUT "/apps/evolution/evolution-rss/rep_check_timeout"
 #define GCONF_KEY_SHOW_COMMENTS "/apps/evolution/evolution-rss/show_comments"
+#define GCONF_KEY_DOWNLOAD_ENCLOSURES "/apps/evolution/evolution-rss/download_enclosures"
+#define GCONF_KEY_ENCLOSURE_LIMIT "/apps/evolution/evolution-rss/enclosure_limit"
+#define GCONF_KEY_ENCLOSURE_SIZE "/apps/evolution/evolution-rss/enclosure_size"
 #define GCONF_KEY_REMOVE_FOLDER "/apps/evolution/evolution-rss/remove_folder"
 #define GCONF_KEY_HTML_RENDER "/apps/evolution/evolution-rss/html_render"
 #define GCONF_KEY_HTML_JS "/apps/evolution/evolution-rss/html_js"
@@ -346,6 +349,7 @@ void error_response(
 	GtkObject *o,
 	int button,
 	void *data);
+void abort_active_op(gpointer key);
 void cancel_active_op(gpointer key);
 void browser_write(
 	gchar *string,
