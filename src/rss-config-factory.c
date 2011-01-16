@@ -314,7 +314,6 @@ static void
 rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 {
 	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data));
-	gtk_spin_button_update((GtkSpinButton *)widget);
 	gconf_client_set_float (rss_gconf,
 		GCONF_KEY_REP_CHECK_TIMEOUT,
 		gtk_spin_button_get_value((GtkSpinButton*)widget),
@@ -3579,7 +3578,6 @@ rss_config_control_new (void)
 {
 	GtkWidget *control_widget;
 	GtkWidget *button1, *button2, *button3;
-	GtkWidget *tmpwidget;
 	gchar *uifile;
 	setupfeed *sf;
 	GtkListStore  *store;
@@ -3761,8 +3759,7 @@ rss_config_control_new (void)
 				sf->gui,
 				"checkbutton9"));
 	sf->spin = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton1"));
-	sf->enclsize = GTK_WIDGET (gtk_builder_get_object(sf->gui, "adjustment6"));
-	tmpwidget = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton2"));
+	sf->enclsize = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton2"));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check1),
 		gconf_client_get_bool(rss_gconf, GCONF_KEY_REP_CHECK, NULL));
@@ -3777,30 +3774,20 @@ rss_config_control_new (void)
 		sf->spin);
 	g_signal_connect(
 		sf->spin,
-		"changed",
-		G_CALLBACK(rep_check_timeout_cb),
-		sf->check1);
-	g_signal_connect(
-		sf->spin,
 		"value-changed",
 		G_CALLBACK(rep_check_timeout_cb),
 		sf->check1);
 
 	size = gconf_client_get_float(rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
 	if (size)
-		gtk_spin_button_set_value((GtkSpinButton *)tmpwidget, size);
+		gtk_spin_button_set_value((GtkSpinButton *)sf->enclsize, size);
 	g_signal_connect(
 		sf->check7,
 		"clicked",
 		G_CALLBACK(enclosure_limit_cb),
 		sf->enclsize);
 	g_signal_connect(
-		tmpwidget,
-		"changed",
-		G_CALLBACK(enclosure_size_cb),
-		sf->check7);
-	g_signal_connect(
-		tmpwidget,
+		sf->enclsize,
 		"value-changed",
 		G_CALLBACK(enclosure_size_cb),
 		sf->check7);

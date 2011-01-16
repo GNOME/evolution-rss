@@ -33,7 +33,6 @@
 	* when delete folder remove any pending filter process
 	* import without fetching (add without validate ?)
 	* require gtkhtml-editor separate package (?)
-	* option to download enclosures (limit to certain size)
 	* split rss feed
 	* possibly completely disable messagefiltering at setup_feed
 	* delete of articles not present does not work when no deletion option selected
