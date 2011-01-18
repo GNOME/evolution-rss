@@ -555,7 +555,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 		progress = (NetStatusProgress*)statusdata;
 		if (progress->current > 0 && progress->total > 0) {
 			fraction = (float)progress->current / progress->total;
-			g_print("%.2f%% ", fraction);
+			d("%.2f%% ", fraction);
 		}
 		while (gtk_events_pending())
 			gtk_main_iteration ();
