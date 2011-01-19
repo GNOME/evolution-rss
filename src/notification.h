@@ -23,7 +23,12 @@ taskbar_op_message(gchar *msg, gchar *unikey);
 guint
 taskbar_op_message(gchar *msg, gchar *unikey);
 #endif
-void taskbar_op_abort(gpointer key);
+void
+#if EVOLUTION_VERSION > 29102
+taskbar_op_abort(CamelOperation *cancellable, gpointer key);
+#else
+taskbar_op_abort(gpointer key);
+#endif
 void taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress);
 void taskbar_op_finish(gchar *key);
 void taskbar_push_message(gchar *message);
