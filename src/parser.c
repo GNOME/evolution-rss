@@ -689,18 +689,19 @@ layer_query_find_prop (xmlNodePtr node,
 		const char *attrprop,
 		xmlChar *prop)
 {
-	node = node->children;
 	while (node!=NULL) {
 		if (!g_ascii_strcasecmp((gchar *)node->name, match)) {
 			gchar *tprop = (gchar *)xmlGetProp(node, attr);
 			if (tprop) {
-				 if (g_ascii_strcasecmp(tprop, attrprop))
-					break;
+				if (g_ascii_strcasecmp(tprop, attrprop)) {
+					xmlFree(tprop);
+					goto next;
+				}
 			}
 			xmlFree(tprop);
 			return (gchar *)xmlGetProp(node, prop);
 		}
-		node = node->next;
+next:		node = node->next;
 	}
 	return NULL;
 }
@@ -833,7 +834,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 				}
 				r->base = (gchar *)xmlGetProp(walk, (xmlChar *)"base");
 				if (!r->base)
-					r->base = layer_query_find_prop (walk,
+					r->base = layer_query_find_prop (walk->children,
 							"link",
 							(xmlChar *)"rel",
 							"alternate", (xmlChar *)"href");
@@ -992,10 +993,13 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 	//we have to free this somehow
 	//<link></link>
 	link = g_strdup(layer_find (top, "link", NULL));		//RSS,
-	if (!link)								// <link href=>
-		link = (gchar *)layer_find_innerelement(
-				top, "link", "href",
-				g_strdup(_("No Information")));	//ATOM
+	if (!link) {                                                            // <link href=>
+		if (!(link = layer_query_find_prop (top,
+			"link",(xmlChar *)"rel",
+			"alternate", (xmlChar *)"href")))       //ATOM
+				link = g_strdup(_("No Information"));
+	}
+
 	id = (gchar *)layer_find (top, (gchar *)"id",				//ATOM
 			layer_find (top, (gchar *)"guid", NULL));		//RSS 2.0
 	feed = g_strdup_printf("%s\n", id ? id : link);
