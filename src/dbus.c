@@ -114,7 +114,7 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 				g_free(text);
 				d("sanitized feed URL: %s\n", feed->feed_url);
 				if (g_hash_table_find(rf->hr,
-                                        check_if_match,
+					check_if_match,
 					feed->feed_url)) {
 					rss_error(NULL, NULL, _("Error adding feed."),
 						_("Feed already exists!"));
@@ -141,7 +141,6 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 			g_print("Feed received, but error getting message: %s\n", error.message);
 			dbus_error_free (&error);
 		}
-		g_free(feed);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 	else if (dbus_message_is_signal (message, DBUS_INTERFACE, "ping")) {
