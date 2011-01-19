@@ -823,7 +823,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 				}
 				r->base = (gchar *)xmlGetProp(walk, (xmlChar *)"base");
 				if (!r->base)
-					r->base = layer_query_find_prop (node->children,
+					r->base = layer_query_find_prop (walk->children,
 							"link",
 							(xmlChar *)"rel",
 							"alternate", (xmlChar *)"href");
