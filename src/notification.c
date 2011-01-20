@@ -393,7 +393,7 @@ taskbar_op_message(gchar *msg, gchar *unikey)
 			tmsg = g_strdup_printf(
 				_("Fetching Feeds (%d enabled)"),
 				g_hash_table_size(rf->hrname));
-			unikey = "main";
+			unikey = (gchar *)"main";
 		} else
 			tmsg = g_strdup(msg);
 
