@@ -230,6 +230,10 @@ sanitize_folder(gchar *text)
 	while (*tmp2 == '.') tmp2++;
 	tmp2 = g_strdup (tmp2);
 	g_free (tmp);
+	/* replace remaining dots with spaces - dots aren't supported since evo's Maildir migration*/
+#if EVOLUTION_VERSION > 29103
+	g_strdelimit(tmp2, ".", ' ');
+#endif
 	return tmp2;
 }
 
