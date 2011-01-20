@@ -122,7 +122,9 @@ filter_function (DBusConnection *connection, DBusMessage *message, void *user_da
 				}
 				if (setup_feed(feed)) {
 					gchar *msg = g_strdup_printf(_("New feed imported: %s"),
-							lookup_chn_name_by_url(feed->feed_url));
+							lookup_chn_name_by_url(feed->feed_url)?
+							lookup_chn_name_by_url(feed->feed_url):
+							feed->feed_url);
 					taskbar_push_message(msg);
 					g_free(msg);
 				}
