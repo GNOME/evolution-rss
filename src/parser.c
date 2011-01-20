@@ -638,13 +638,16 @@ layer_find_innerhtml (xmlNodePtr node,
 		const char *match, const char *submatch,
 		gchar *fail)
 {
+	gchar *tmp;
+	xmlNodePtr tmpnode;
 	while (node!=NULL) {
-#ifdef RDF_DEBUG
-		xmlDebugDumpNode (stdout, node, 32);
-		printf("%s.\n", node->name);
-#endif
 		if (strcasecmp ((char *)node->name, match)==0 && node->children) {
-			return (gchar *)layer_find(node->children->next, submatch, fail);
+			tmpnode = node->children;
+			while (tmpnode) {
+				if ((tmp = (gchar *)layer_find(tmpnode, submatch, NULL)))
+					return tmp;
+				tmpnode = tmpnode->next;
+			}
 		}
 		node = node->next;
 	}
@@ -1043,7 +1046,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 				g_free(q2);
 			}
 			g_free(qsafe);
-		} else {			//then RSS or RDF
+	} else {			//then RSS or RDF
 			xmlNodePtr source;
 			source = layer_find_pos(top, "source", "author");
 			//try the source construct
@@ -1077,7 +1080,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 				if (q2) g_free(q2);
 				if (q3) g_free(q3);
 			}
-		}
+	}
 		//FIXME this might need xmlFree when namespacing
 		b = (gchar *)layer_find_tag (top, "content",		//we prefer content first		  <--
 				layer_find_tag (top, "description",	//it seems description is rather shorten version of the content, so |
@@ -1201,13 +1204,15 @@ update_channel(RDF *r)
 	GArray *item = r->item;
 	GtkWidget *progress = r->progress;
 	gchar *buf, *safes, *feed_dir, *feed_name;
-	gchar *msg;
+	gchar *msg, *safchn;
 	gboolean freeze = FALSE;
 	CamelFolder *mail_folder = NULL;
 	gchar *article_uid = NULL;
 
 	safes = encode_rfc2047(chn_name);
-	sender = g_strdup_printf("%s <%s>", safes, chn_name);
+	safchn = g_strchomp (g_strdup(chn_name));
+	sender = g_strdup_printf("%s <%s>", safes, safchn);
+	g_free(safchn);
 	g_free(safes);
 
 	migrate_crc_md5(chn_name, url);
