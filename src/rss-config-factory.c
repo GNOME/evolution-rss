@@ -862,7 +862,8 @@ store_redraw(GtkTreeView *data)
 {
 	GtkTreeModel *model;
 
-	g_return_val_if_fail(data, FALSE);
+	if (!data)
+		return FALSE;
 
 	if (!store_redrawing) {
 		store_redrawing = 1;
