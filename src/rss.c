@@ -125,6 +125,9 @@ int rss_verbose_debug = 0;
 	#include <WebKit/webkitwebview.h>
 	#else
 	#include <webkit/webkitwebview.h>
+#if (WEBKIT_VERSION >= 1003010)
+	#include <webkit/webkitglobals.h>
+#endif
 	#endif
 	#endif
 #endif
