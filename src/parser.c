@@ -634,13 +634,16 @@ layer_find_innerhtml (xmlNodePtr node,
 		const char *match, const char *submatch,
 		gchar *fail)
 {
+	gchar *tmp;
+	xmlNodePtr tmpnode;
 	while (node!=NULL) {
-#ifdef RDF_DEBUG
-		xmlDebugDumpNode (stdout, node, 32);
-		printf("%s.\n", node->name);
-#endif
 		if (strcasecmp ((char *)node->name, match)==0 && node->children) {
-			return (gchar *)layer_find(node->children->next, submatch, fail);
+			tmpnode = node->children;
+			while (tmpnode) {
+				if ((tmp = (gchar *)layer_find(tmpnode, submatch, NULL)))
+					return tmp;
+				tmpnode = tmpnode->next;
+			}
 		}
 		node = node->next;
 	}
