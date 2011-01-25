@@ -1351,7 +1351,8 @@ webkit_net_status (WebKitWebView *view,
 		GtkWidget *data)
 {
 	GtkAllocation alloc;
-	gint width;
+	GtkRequisition req;
+	gint width, w;
 	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
 	switch (status) {
 		case WEBKIT_LOAD_FINISHED:
@@ -1359,9 +1360,19 @@ webkit_net_status (WebKitWebView *view,
 			if (rf->mozembed) {
 				gtk_widget_get_allocation(rf->mozembed, &alloc);
 				width = alloc.width;
-				if (resize_pane_hsize > width && width != 1)
+				if (resize_pane_hsize > width && width != 1) {
 					gtk_widget_set_size_request(rf->mozembed,
-						(int)resize_pane_hsize-14, -1);
+						-1, -1);
+					gtk_widget_size_request(rf->mozembed, &req);
+
+					if (req.width < resize_pane_hsize-14)
+						w = resize_pane_hsize-14;
+					else
+						w = req.width;
+
+					gtk_widget_set_size_request(rf->mozembed,
+						w, req.height);
+				}
 			}
 		break;
 		default:
@@ -1822,7 +1833,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 #else
 	width = (int)(adj->page_size);
 #endif
-	gtk_widget_set_size_request(rf->mozembed, width-32, height);
+	gtk_widget_set_size_request(rf->mozembed, width-14, height);
 	po->sh_handler = g_signal_connect(adj,
 		"changed",
 		G_CALLBACK(rss_browser_set_hsize),
