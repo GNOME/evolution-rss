@@ -501,7 +501,8 @@ file_is_image(gchar *image)
 	gsize length;
 	gboolean result = TRUE;
 
-	g_return_val_if_fail(image != NULL, FALSE);
+	if (!g_file_test(image, G_FILE_TEST_EXISTS))
+		return FALSE;
 
 	/*need to get mime type via file contents or else mime type is
 	 * bound to be wrong, especially on files fetched from the web
