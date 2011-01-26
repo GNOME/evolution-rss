@@ -107,34 +107,18 @@ got_chunk_blocking_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 }
 
 static void
-#if LIBSOUP_VERSION < 2003000
-got_chunk_cb(SoupMessage *msg, CallbackInfo *info) {
-#else
 got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
-#endif
 
 	NetStatusProgress *progress = NULL;
 	const char* clen;
 
-	if (info->total == 0) {
-#if LIBSOUP_VERSION < 2003000
-		clen = soup_message_get_header(msg->response_headers,
-				"Content-length");
-			return;
-#else
-		clen = soup_message_headers_get(msg->response_headers,
-				"Content-length");
-#endif
-		if (!clen)
-			info->total = 0;
-		else
-			info->total = atoi(clen);
-	}
-#if LIBSOUP_VERSION < 2003000
-	info->current += msg->response.length;
-#else
+	clen = soup_message_headers_get(msg->response_headers,
+			"Content-length");
+	if (!clen)
+		info->total = 0;
+	else
+		info->total = atoi(clen);
 	info->current += chunk->length;
-#endif
 	info->chunk = (gchar *)chunk->data;
 	progress = g_new0(NetStatusProgress, 1);
 
@@ -574,6 +558,34 @@ out:
 	return response;
 }
 
+static void
+redirect_handler (SoupMessage *msg, gpointer user_data)
+{
+	if (SOUP_STATUS_IS_REDIRECTION (msg->status_code)) {
+		SoupSession *soup_session = user_data;
+		SoupURI *new_uri;
+		const gchar *new_loc;
+
+		new_loc = soup_message_headers_get (msg->response_headers, "Location");
+		if (!new_loc)
+			return;
+			g_print("new loc:%s\n", new_loc);
+
+		new_uri = soup_uri_new_with_base (soup_message_get_uri (msg), new_loc);
+		if (!new_uri) {
+			soup_message_set_status_full (msg,
+				SOUP_STATUS_MALFORMED,
+				"Invalid Redirect URL");
+			return;
+		}
+
+		soup_message_set_uri (msg, new_uri);
+		soup_session_requeue_message (soup_session, msg);
+
+		soup_uri_free (new_uri);
+	}
+}
+
 gboolean
 net_get_unblocking(gchar *url,
 			NetStatusCallback cb, gpointer data,
@@ -656,14 +668,16 @@ net_get_unblocking(gchar *url,
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
 	}
 
+	soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
+	soup_message_add_header_handler (msg, "got_body",
+		"Location", G_CALLBACK (redirect_handler), soup_sess);
+
 	soup_session_queue_message (soup_sess, msg,
 		cb2, cbdata2);
 
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
 //	g_object_weak_ref (G_OBJECT(soup_sess), unblock_free, soup_sess);
-//	GMainLoop *mainloop = g_main_loop_new (g_main_context_default (), FALSE);
-//	g_timeout_add (10 * 1000, &conn_mainloop_quit, mainloop);
 	return TRUE;
 }
 
