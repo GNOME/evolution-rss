@@ -569,7 +569,6 @@ redirect_handler (SoupMessage *msg, gpointer user_data)
 		new_loc = soup_message_headers_get (msg->response_headers, "Location");
 		if (!new_loc)
 			return;
-			g_print("new loc:%s\n", new_loc);
 
 		new_uri = soup_uri_new_with_base (soup_message_get_uri (msg), new_loc);
 		if (!new_uri) {
