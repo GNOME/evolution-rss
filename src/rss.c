@@ -3353,7 +3353,11 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			rss_find_enabled());
 		taskbar_op_set_progress((gchar *)"main",
 			tmsg,
+#if EVOLUTION_VERSION > 22900
+			rf->feed_queue ? 100-(gdouble)((rf->feed_queue*100/rss_find_enabled())) : 1);
+#else
 			rf->feed_queue ? 1-(gdouble)((rf->feed_queue*100/rss_find_enabled()))/100 : 1);
+#endif
 		g_free(tmsg);
 	}
 
