@@ -332,9 +332,9 @@ cancel_active_op(gpointer key)
 static void
 statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 {
-//	rssfeed *rf = data;
 	NetStatusProgress *progress;
 	float fraction = 0;
+	gchar *key;
 	d("status:%d\n", status);
 
 	switch (status) {
@@ -345,26 +345,33 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			progress = (NetStatusProgress*)statusdata;
 			if (progress->current > 0 && progress->total > 0) {
 				fraction = (float)progress->current / progress->total;
+
 				while (gtk_events_pending ())
-				gtk_main_iteration ();
-			if (rf->cancel_all) break;
-		if (rf->progress_bar && 0 <= fraction && 1 >= fraction) {
-			gtk_progress_bar_set_fraction(
-				(GtkProgressBar *)rf->progress_bar,
-				fraction);
-		}
-		if (rf->sr_feed) {
-			gchar *furl = g_markup_printf_escaped(
-					"<b>%s</b>: %s",
-					_("Feed"),
-					(char *)data);
-			gtk_label_set_markup (
-				GTK_LABEL (rf->sr_feed),
-				furl);
-			g_free(furl);
-		}
+					gtk_main_iteration ();
+
+				if (rf->cancel_all) break;
+
+				if ((key = lookup_key(data)))
+					taskbar_op_set_progress(
+						lookup_key(data), NULL, fraction*100);
+
+				if (rf->progress_bar && 0 <= fraction && 1 >= fraction) {
+					gtk_progress_bar_set_fraction(
+						(GtkProgressBar *)rf->progress_bar,
+						fraction);
+				}
+				if (rf->sr_feed) {
+					gchar *furl = g_markup_printf_escaped(
+						"<b>%s</b>: %s",
+						_("Feed"),
+						(char *)data);
+					gtk_label_set_markup (
+						GTK_LABEL (rf->sr_feed),
+						furl);
+					g_free(furl);
+				}
 			}
-	//update individual progress if previous percetage has not changed
+			//update individual progress if previous percetage has not changed
 			if (rf->progress_bar && rf->feed_queue) {
 				gtk_progress_bar_set_fraction(
 					(GtkProgressBar *)rf->progress_bar,
@@ -372,8 +379,6 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			}
 		break;
 		case NET_STATUS_DONE:
-			//progress_window_set_cancel_cb(pw, NULL, NULL);
-			//progress_window_set_progress(pw, -1);
 			g_print("NET_STATUS_DONE\n");
 		break;
 		default:
