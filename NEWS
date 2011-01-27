@@ -1,3 +1,21 @@
+Evolution-RSS 0.2.3
+------------------------------
+Miscellaneous Fixes:
+	Fix parsing of ref=alternate nodes
+	Do not pass empty string to strcasecmp
+	Fix fetch feed operation progress bar
+	Allow build with newer webkit
+	Fix parsing children nodes
+	Remove excesive debug warnings
+	Init rss folder hooks later
+	Print imported feed url in case cannot lookup channel name
+	Use ref alternate in atom feeds to get feed link
+
+Bug fixes:
+Bug 639825 - RSS plugin freezes Evolution on some posts if 'Show full text'
+Bug 639942 - Segfault when importing new feed
+Bug 638297 - undefined reference to webkit_hook_actions
+
 Evolution-RSS 0.2.2
 ------------------------------
 
