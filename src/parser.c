@@ -692,13 +692,15 @@ layer_query_find_prop (xmlNodePtr node,
 		if (!g_ascii_strcasecmp((gchar *)node->name, match)) {
 			gchar *tprop = (gchar *)xmlGetProp(node, attr);
 			if (tprop) {
-				if (g_ascii_strcasecmp(tprop, attrprop))
-					break;
+				if (g_ascii_strcasecmp(tprop, attrprop)) {
+					xmlFree(tprop);
+					goto next;
+				}
 			}
 			xmlFree(tprop);
 		return (gchar *)xmlGetProp(node, prop);
 		}
-		node = node->next;
+next:		node = node->next;
 	}
 	return NULL;
 }
