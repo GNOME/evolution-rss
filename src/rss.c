@@ -1378,12 +1378,12 @@ webkit_net_status (WebKitWebView *view,
 			if (rf->mozembed) {
 				gtk_widget_get_allocation(rf->mozembed, &alloc);
 				width = alloc.width;
-				if (resize_pane_hsize > width && width != 1) {
+				if (resize_pane_hsize+14 > width && width != 1) {
 					gtk_widget_set_size_request(rf->mozembed,
 						-1, -1);
 					gtk_widget_size_request(rf->mozembed, &req);
 
-					if (req.width < resize_pane_hsize-14)
+					if (req.width < resize_pane_hsize+14)
 						w = resize_pane_hsize-14;
 					else
 						w = req.width;
