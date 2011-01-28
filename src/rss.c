@@ -916,8 +916,6 @@ rss_select_folder(gchar *folder_name)
 	const
 #endif
 	gchar *uri;
-	CamelStore *store;
-	CamelFolder *fold = NULL;
 	EShellSidebar *shell_sidebar;
 
 	d("rss_select_folder() %s:%d\n", __FILE__, __LINE__);
@@ -926,22 +924,12 @@ rss_select_folder(gchar *folder_name)
 
 	shell_sidebar  = e_shell_view_get_shell_sidebar(rss_shell_view);
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
-	store = rss_component_peek_local_store();
-#if (DATASERVER_VERSION >= 2033001)
-	fold = camel_store_get_folder_sync (store, folder_name, 0, NULL, NULL);
-#else
-	fold = camel_store_get_folder (store, folder_name, 0, NULL);
-#endif
-	if (!fold) return;
-#if EVOLUTION_VERSION >= 29101
-	uri = camel_folder_get_uri (fold);
-#else
-	uri = mail_tools_folder_to_url (fold);
-#endif
+
+	uri = lookup_uri_by_folder_name(folder_name);
 	em_folder_tree_set_selected(folder_tree, uri, 0);
 #endif
 #if EVOLUTION_VERSION < 29101
-	g_free(uri);
+	if (uri) g_free(uri);
 #endif
 #if 0 //kb//
 	CamelStore *store = rss_component_peek_local_store();
@@ -3794,6 +3782,7 @@ print_comments(gchar *url, gchar *stream, EMFormatHTML *format)
 
 			return display_comments (r, format);
 	}
+	g_free(r);
 	return NULL;
 }
 
@@ -3953,6 +3942,30 @@ lookup_chn_name_by_url(gchar *url)
 	return chn_name;
 }
 
+gchar *
+lookup_uri_by_folder_name(gchar *name)
+{
+	CamelFolder *folder;
+	gchar *uri;
+	CamelStore *store = rss_component_peek_local_store();
+
+	if (!name)
+		return NULL;
+
+#if (DATASERVER_VERSION >= 2033001)
+	folder = camel_store_get_folder_sync (store, name, 0, NULL, NULL);
+#else
+	folder = camel_store_get_folder (store, name, 0, NULL);
+#endif
+	if (!folder) return NULL;
+#if EVOLUTION_VERSION >= 29101
+	uri = (gchar *)camel_folder_get_uri (folder);
+#else
+	uri = mail_tools_folder_to_url (folder);
+#endif
+	return uri;
+}
+
 void
 update_main_folder(gchar *new_name)
 {
@@ -4016,6 +4029,7 @@ search_rebase(gpointer key, gpointer value, gchar *oname)
 	if (!strncmp(key, tmp, strlen(tmp))) {
 		rebase_keys = g_list_append(rebase_keys, key);
 	}
+	g_free(tmp);
 }
 
 void
@@ -4052,7 +4066,7 @@ sync_folders(void)
 	g_free(feed_dir);
 	f = fopen(feed_file, "wb");
 	if (!f)
-		return;
+		goto out;
 
 	if (!g_hash_table_size(rf->feed_folders))
 		goto exit;
@@ -4060,7 +4074,6 @@ sync_folders(void)
 	g_hash_table_foreach(rf->feed_folders,
 		(GHFunc)write_feeds_folder_line,
 		(gpointer *)f);
-	g_free(feed_file);
 	g_hash_table_destroy(rf->reversed_feed_folders);
 	rf->reversed_feed_folders = g_hash_table_new_full(g_str_hash,
 			g_str_equal,
@@ -4070,6 +4083,7 @@ sync_folders(void)
 			(GHFunc)populate_reversed,
 			rf->reversed_feed_folders);
 exit:	fclose(f);
+out:	g_free(feed_file);
 	return;
 }
 
@@ -4850,7 +4864,7 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 
 	rss_shell_view = shell_view;
 	shell_window = e_shell_view_get_shell_window (rss_shell_view);
-	evo_window = shell_window;
+	evo_window = (GtkWidget *)shell_window;
 	g_signal_connect (
 		e_shell_window_get_action (
 			E_SHELL_WINDOW (shell_window),

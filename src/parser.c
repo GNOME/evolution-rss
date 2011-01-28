@@ -81,6 +81,7 @@ rss_html_url_decode(const char *html, int len)
 				(xmlNodePtr)doc,
 				(xmlChar *)"src",
 				(xmlChar *)duri);
+			xmlFree(url);
 		}
 	}
 	return src;

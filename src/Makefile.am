@@ -80,6 +80,7 @@ SOURCES =	dbus.c			\
 		rss-cache.c		\
 		rss-config.c		\
 		rss-config-factory.c	\
+		rss-evo-common.c	\
 		rss-image.c		\
 		rss-icon-factory.c	\
 		rss-status-icon.c
@@ -188,6 +189,8 @@ EXTRA_DIST =					\
 	rss-config.h				\
 	rss-config-factory.c			\
 	rss-config-factory.h			\
+	rss-evo-common.c			\
+	rss-evo-common.h			\
 	rss-icon-factory.c			\
 	rss-icon-factory.h			\
 	rss-status-icon.c			\

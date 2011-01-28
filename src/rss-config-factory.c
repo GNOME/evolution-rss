@@ -46,7 +46,11 @@
 #include <e-util/e-alert-dialog.h>
 #include <misc/e-preferences-window.h>
 #include <mail/e-mail-local.h>
+#include <mail/em-folder-selector.h>
+
+#include <mail/em-utils.h>
 #include <shell/e-shell.h>
+#include <shell/e-shell-view.h>
 #endif
 
 
@@ -56,12 +60,14 @@
 #endif
 
 extern int rss_verbose_debug;
+extern EShellView *rss_shell_view;
 
 #include "rss.h"
 #include "misc.h"
 #include "parser.h"
 #include "rss-config.h"
 #include "rss-config-factory.h"
+#include "rss-evo-common.h"
 #include "network-soup.h"
 #include "notification.h"
 
@@ -411,6 +417,78 @@ disable_widget_cb(GtkWidget *widget, GtkBuilder *data)
 	gtk_widget_set_sensitive(authpass, auth_enabled);
 }
 
+void
+folder_cb (GtkWidget *widget, gpointer data);
+
+void
+folder_cb (GtkWidget *widget, gpointer data)
+{
+	CamelFolder *folder;
+	EMailBackend *backend;
+	EMailSession *session;
+	CamelFolderInfo *folderinfo;
+	GtkWidget *folder_tree;
+	GtkWidget *dialog;
+	GtkWindow *window;
+	const gchar *uri;
+	struct _copy_folder_data *cfd;
+
+	EMailReader *reader;
+	EShellContent *shell_content;
+
+	gchar *text = (gchar *)gtk_label_get_text(GTK_LABEL(data));
+
+	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	reader = E_MAIL_READER (shell_content);
+	backend = e_mail_reader_get_backend (reader);
+
+	session = e_mail_backend_get_session (backend);
+
+	folder = e_mail_reader_get_folder (reader);
+	window = e_mail_reader_get_window (reader);
+
+	folder_tree = em_folder_tree_new (session);
+	emu_restore_folder_tree_state (EM_FOLDER_TREE (folder_tree));
+
+	em_folder_tree_set_excluded (
+		EM_FOLDER_TREE (folder_tree),
+		EMFT_EXCLUDE_NOSELECT | EMFT_EXCLUDE_VIRTUAL |
+		EMFT_EXCLUDE_VTRASH);
+
+	dialog = em_folder_selector_new (
+			window, EM_FOLDER_TREE (folder_tree),
+			EM_FOLDER_SELECTOR_CAN_CREATE,
+			_("Move to Folder"), NULL, _("M_ove"));
+
+	if ((uri = lookup_uri_by_folder_name(text)))
+		em_folder_selector_set_selected (
+			EM_FOLDER_SELECTOR (dialog),
+			uri);
+
+	folderinfo = em_folder_tree_get_selected_folder_info ((EMFolderTree *)folder_tree);
+
+	cfd = g_malloc (sizeof (*cfd));
+	cfd->fi = folderinfo;
+	cfd->delete = 1;
+
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK) {
+		gchar *tmp;
+		gchar *name = g_path_get_basename(text);
+		uri = em_folder_selector_get_selected_uri (
+			EM_FOLDER_SELECTOR (dialog));
+		rss_emfu_copy_folder_selected (backend, uri, cfd);
+		tmp = g_build_path(G_DIR_SEPARATOR_S,
+				em_utils_folder_name_from_uri(uri),
+				name, NULL);
+		g_free(name);
+		gtk_label_set_text(GTK_LABEL(data), tmp);
+		g_free(tmp);
+	}
+
+	gtk_widget_destroy (dialog);
+}
+
+
 add_feed *
 build_dialog_add(gchar *url, gchar *feed_text)
 {
@@ -520,6 +598,9 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		location_button = GTK_WIDGET (gtk_builder_get_object(gui, "location_button"));
 
 		gtk_widget_show(location_button);
+		g_signal_connect (
+			GTK_BUTTON (location_button),
+			"clicked", G_CALLBACK (folder_cb), entry2);
 		location_label = GTK_WIDGET (
 			gtk_builder_get_object(gui,
 			"location_label"));
@@ -833,7 +914,8 @@ store_redraw(GtkTreeView *data)
 {
 	GtkTreeModel *model;
 
-	g_return_val_if_fail(data, FALSE);
+	if (!data)
+		return FALSE;
 
 	if (!store_redrawing) {
 		store_redrawing = 1;
@@ -1191,8 +1273,10 @@ delete_feed_folder_alloc(gchar *old_name)
 	feed_file = g_strdup_printf("%s/feed_folders", feed_dir);
 	g_free(feed_dir);
 	f = fopen(feed_file, "wb");
-	if (!f)
+	if (!f) {
+		g_free(feed_file);
 		return;
+	}
 
 	orig_name = g_hash_table_lookup(
 			rf->feed_folders,

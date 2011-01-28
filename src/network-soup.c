@@ -638,6 +638,7 @@ net_get_unblocking(gchar *url,
 	/* Queue an async HTTP request */
 	msg = soup_message_new ("GET", url);
 	if (!msg) {
+		g_free(info);
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(2));			//invalid url
 		return FALSE;
@@ -677,6 +678,8 @@ net_get_unblocking(gchar *url,
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
 //	g_object_weak_ref (G_OBJECT(soup_sess), unblock_free, soup_sess);
+	if (mainurl)
+		g_free(mainurl);
 	return TRUE;
 }
 
@@ -729,6 +732,7 @@ download_unblocking(
 	/* Queue an async HTTP request */
 	msg = soup_message_new ("GET", url);
 	if (!msg) {
+		g_free(info);
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(2));			//invalid url
 		return FALSE;
