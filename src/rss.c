@@ -4629,6 +4629,9 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 	custom_feed_timeout();
 
 	rss_load_images();
+#if EVOLUTION_VERSION < 22900
+	rss_hooks_init();
+#endif
 }
 
 /* check if rss folders exists and create'em otherwise */
@@ -5025,13 +5028,6 @@ if (engine == 1) {
 	return 0;
 }
 
-#if EVOLUTION_VERSION >= 22900
-void quit_cb(void *ep, EShellView *shell_view)
-{
-	g_print("RSS: Preparing to quit...\n");
-	rf->cancel_all=1;
-}
-
 void rss_hooks_init(void)
 {
 	CamelStore *store;
@@ -5048,6 +5044,14 @@ void rss_hooks_init(void)
 	camel_object_hook_event(store, "folder_deleted",
 		(CamelObjectEventHookFunc)store_folder_deleted, NULL);
 #endif
+}
+
+
+#if EVOLUTION_VERSION >= 22900
+void quit_cb(void *ep, EShellView *shell_view)
+{
+	g_print("RSS: Preparing to quit...\n");
+	rf->cancel_all=1;
 }
 
 gboolean e_plugin_ui_init (GtkUIManager *ui_manager,
