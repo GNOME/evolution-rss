@@ -175,7 +175,11 @@ xml_parse_sux (const char *buf, int len)
 	mime_type = g_content_type_guess(NULL, (guchar *)buf, len, NULL);
 	//feeding parsed anything other than xml results in blocking delays
 	//it's possible we can relax parser by using xmlErrorFunc
-	if (!g_ascii_strncasecmp (mime_type, "application/", 12)) {
+	//UPDATE: add text/* - but exclude text/html I've seen huge delays because of this
+	//I doubt there'll be any text/html feeds
+	if (!g_ascii_strncasecmp (mime_type, "application/", 12)
+	   || (!g_ascii_strncasecmp (mime_type, "text/", 5)
+	   && g_ascii_strncasecmp (mime_type, "text/html", 9))) {
 		if (!sax) {
 			xmlInitParser();
 			sax = xmlMalloc (sizeof (xmlSAXHandler));
