@@ -643,7 +643,7 @@ layer_find_innerhtml (xmlNodePtr node,
 	while (node!=NULL) {
 		if (strcasecmp ((char *)node->name, match)==0 && node->children) {
 			tmpnode = node->children;
-			while (tmpnode) {
+			while (tmpnode && tmpnode->name) {
 				if ((tmp = (gchar *)layer_find(tmpnode, submatch, NULL)))
 					return tmp;
 				tmpnode = tmpnode->next;
