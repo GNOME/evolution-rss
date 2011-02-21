@@ -297,12 +297,12 @@ rss_find_enabled(void)
 /* hash table of ops->dialogue of active errors */
 static GHashTable *active_errors = NULL;
 
-void error_destroy(GtkObject *o, void *data)
+void error_destroy(GObject *o, void *data)
 {
 	g_hash_table_remove(active_errors, data);
 }
 
-void error_response(GtkObject *o, int button, void *data)
+void error_response(GObject *o, int button, void *data)
 {
 	gtk_widget_destroy((GtkWidget *)o);
 }

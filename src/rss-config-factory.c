@@ -789,14 +789,22 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		ok,
 		"activate",
 		accel_group,
+		#if GTK_CHECK_VERSION(2,99,0)
+		GDK_KEY_Return,
+		#else
 		GDK_Return,
+		#endif
 		(GdkModifierType) 0,
 		GTK_ACCEL_VISIBLE);
 	gtk_widget_add_accelerator (
 		ok,
 		"activate",
 		accel_group,
+		#if GTK_CHECK_VERSION(2,99,0)
+		GDK_KEY_KP_Enter,
+		#else
 		GDK_KP_Enter,
+		#endif
 		(GdkModifierType) 0,
 		GTK_ACCEL_VISIBLE);
 	gtk_window_add_accel_group (
@@ -3777,12 +3785,12 @@ rss_config_control_new (void)
 
 	//make sure something (first row) is selected
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-	gtk_tree_model_iter_nth_child(
+	if (gtk_tree_model_iter_nth_child(
 		GTK_TREE_MODEL(store),
 		&iter,
 		NULL,
-		0);
-	gtk_tree_selection_select_iter(selection, &iter);
+		0))
+		gtk_tree_selection_select_iter(selection, &iter);
 
 	gtk_tree_view_columns_autosize (treeview);
 	g_signal_connect((gpointer) treeview,

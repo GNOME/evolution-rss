@@ -24,11 +24,16 @@ AC_PROG_AWK
 
 AC_MSG_CHECKING(Evolution version)
 dnl is this a reasonable thing to do ?
-EVOLUTION_VERSION=`$PKG_CONFIG --modversion evolution-shell 2>/dev/null`
+EVOLUTION_VERSION=`$PKG_CONFIG --modversion evolution-shell-3.0 2>/dev/null`
+if test -n "$EVOLUTION_VERSION"; then
+        EVOLUTION_BASE_VERSION_S="-3.0"
+else
+	EVOLUTION_VERSION=`$PKG_CONFIG --modversion evolution-shell 2>/dev/null`
+	EVOLUTION_BASE_VERSION_S=""
+fi
 if test -n "$EVOLUTION_VERSION"; then
         EVOLUTION_BASE_VERSION=$EVOLUTION_VERSION
-        EVOLUTION_BASE_VERSION_S=""
-        EVOLUTION_EXEC_VERSION=`$PKG_CONFIG --variable=execversion evolution-shell 2>/dev/null`
+        EVOLUTION_EXEC_VERSION=`$PKG_CONFIG --variable=execversion evolution-shell$EVOLUTION_BASE_VERSION_S 2>/dev/null`
         if test -n "$EVOLUTION_EXEC_VERSION"; then
                 break;
         else

@@ -344,9 +344,9 @@ void compare_enabled(
 	gpointer value,
 	guint *data);
 guint rss_find_enabled(void);
-void error_destroy(GtkObject *o, void *data);
+void error_destroy(GObject *o, void *data);
 void error_response(
-	GtkObject *o,
+	GObject *o,
 	int button,
 	void *data);
 void abort_active_op(gpointer key);

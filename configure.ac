@@ -78,13 +78,20 @@ fi
 
 dnl base packages and versions
 LIBGLIB_REQUIRED=2.16.2
+LIBGTK_VERSION=2
 LIBGTK_REQUIRED=2.12.0
 EVOLUTION_REQUIRED=2.4.1
 LIBSOUP_REQUIRED=2.2
 
+if test "$EVOLUTION_BASE_VERSION_S" = "-3.0"; then
+	LIBGTK_VERSION=3
+	LIBGTK_REQUIRED=2.99.3
+	EVOLUTION_REQUIRED=2.91.6
+fi
+
 PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
 [  glib-2.0 >= $LIBGLIB_REQUIRED dnl
-   gtk+-2.0 >= $LIBGTK_REQUIRED dnl
+   gtk+-$LIBGTK_VERSION.0 >= $LIBGTK_REQUIRED dnl
    libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
    evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
@@ -95,11 +102,15 @@ GTKHTML_EDITOR_VERSION=`$PKG_CONFIG --modversion gtkhtml-editor 2>/dev/null`
 if test -n "$GTKHTML_EDITOR_VERSION"; then
 	PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
 else
-	gtkhtml_api_versions='14 15'
+	if test "$EVOLUTION_BASE_VERSION_S" = "-3.0"; then
+		gtkhtml_api_versions='4.0'
+	else
+		gtkhtml_api_versions='3.15 3.14'
+	fi
 	for i in $gtkhtml_api_versions; do
-		GTKHTML_EDITOR_VERSION=`$PKG_CONFIG --modversion gtkhtml-editor-3.$i 2>/dev/null`
+		GTKHTML_EDITOR_VERSION=`$PKG_CONFIG --modversion gtkhtml-editor-$i 2>/dev/null`
 		if test -n "$GTKHTML_EDITOR_VERSION"; then
-			PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor-3.$i, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
+			PKG_CHECK_MODULES([GTKHTML_EDITOR], gtkhtml-editor-$i, [GTKHTMLEDITOR=yes], [GTKHTMLEDITOR=no])
 			AC_DEFINE_UNQUOTED(HAVE_GTKHTMLEDITOR, 1, [gthtml editor component present])
 			AC_SUBST(HAVE_GTKHTMLEDITOR)
 			AC_SUBST(GTKHTML_EDITOR_CFLAGS)
