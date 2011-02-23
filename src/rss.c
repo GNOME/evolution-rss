@@ -4262,33 +4262,67 @@ store_folder_deleted(CamelObject *o, void *event_data, void *data)
 	rss_delete_feed(info->full_name, 1);
 }
 
+#if (DATASERVER_VERSION < 2031001)
 typedef struct {
 	gchar *old_base;
 	CamelFolderInfo *new;
 } RenameInfo;
+#endif
 
 static void
+#if (DATASERVER_VERSION < 2031001)
 store_folder_renamed(CamelObject *o, void *event_data, void *data)
+#else
+store_folder_renamed(CamelStore *store,
+		const gchar *old_name,
+		CamelFolderInfo *info)
+#endif
 {
+#if (DATASERVER_VERSION < 2031001)
 	RenameInfo *info = event_data;
+#endif
 
 	gchar *main_folder = lookup_main_folder();
+#if (DATASERVER_VERSION < 2031001)
 	if (!g_ascii_strncasecmp(info->old_base, main_folder, strlen(main_folder))
 		|| !g_ascii_strncasecmp(info->old_base, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
+#else
+	if (!g_ascii_strncasecmp(old_name, main_folder, strlen(main_folder))
+		|| !g_ascii_strncasecmp(old_name, OLD_FEEDS_FOLDER, strlen(OLD_FEEDS_FOLDER))) {
+#endif
 		d("Folder renamed to '%s' from '%s'\n",
+#if (DATASERVER_VERSION < 2031001)
 			info->new->full_name, info->old_base);
+#else
+			info->full_name, old_name);
+#endif
+#if (DATASERVER_VERSION < 2031001)
 		if (!g_ascii_strncasecmp(main_folder, info->old_base, strlen(info->old_base))
 		|| !g_ascii_strncasecmp(OLD_FEEDS_FOLDER, info->old_base, strlen(info->old_base)))
 			update_main_folder(info->new->full_name);
+#else
+		if (!g_ascii_strncasecmp(main_folder, old_name, strlen(old_name))
+		|| !g_ascii_strncasecmp(OLD_FEEDS_FOLDER, old_name, strlen(old_name)))
+			update_main_folder(info->full_name);
+#endif
 		else
+#if (DATASERVER_VERSION < 2031001)
 			if (0 == update_feed_folder(info->old_base, info->new->full_name, 1)) {
 				d("info->old_base:%s\n", info->old_base);
 				d("info->new->full_name:%s\n",
 					info->new->full_name);
+#else
+			if (0 == update_feed_folder((gchar *)old_name, info->full_name, 1)) {
+				d("info->old_base:%s\n", old_name);
+				d("info->new->full_name:%s\n",
+					info->full_name);
+#endif
 				d("this is not a feed!!\n");
-				rebase_feeds(
-					info->old_base,
-					info->new->full_name);
+#if (DATASERVER_VERSION < 2031001)
+				rebase_feeds(info->old_base, info->new->full_name);
+#else
+				rebase_feeds((gchar *)old_name, info->full_name);
+#endif
 			}
 		g_idle_add(
 			(GSourceFunc)store_redraw,
