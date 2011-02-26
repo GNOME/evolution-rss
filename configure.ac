@@ -250,16 +250,25 @@ AC_ARG_ENABLE([webkit],
 AC_MSG_RESULT([$enable_webkit])
 
 if test "$enable_webkit" = "yes"; then
-PKG_CHECK_MODULES([WEBKIT], webkit-1.0, [have_webkit=yes], [have_webkit=no])
+	if test "$EVOLUTION_BASE_VERSION_S" = "-3.0"; then
+		webkit_api="webkitgtk-3.0"
+	else
+		webkit_api="webkit-1.0"
+	fi
+for i in $webkit_api; do
+	PKG_CHECK_MODULES([WEBKIT], $i, [have_webkit=yes], [have_webkit=no])
+	if test "x$have_webkit" == "xyes"; then
+		WEBKIT_S_VERSION=`$PKG_CONFIG --modversion $i`
+		WEBKIT_VERSION=`echo $WEBKIT_S_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
+		break;
+	fi
+done
 if test "x$have_webkit" == "xno"; then
 	PKG_CHECK_MODULES([WebKitGtk], WebKitGtk, [have_webkit=yes], [have_webkit=no])
 	AC_DEFINE_UNQUOTED(WEBKIT_UNSTD, 1, [unstandard webkit installation])
 	WEBKIT_CFLAGS=$WebKitGtk_CFLAGS
 	WEBKIT_LIBS=$WebKitGtk_LIBS
 	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion WebKitGtk`
-	WEBKIT_VERSION=`echo $WEBKIT_S_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
-else
-	WEBKIT_S_VERSION=`$PKG_CONFIG --modversion webkit-1.0`
 	WEBKIT_VERSION=`echo $WEBKIT_S_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 fi
 AC_SUBST([WEBKIT_VERSION])
