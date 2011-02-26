@@ -95,7 +95,7 @@ create_status_icon(void)
 gboolean
 flicker_stop(gpointer user_data)
 {
-#if GTK_MINOR_VERSION < 22
+#if GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 22
 	gtk_status_icon_set_blinking (status_icon, FALSE);
 #endif
 	return FALSE;
@@ -182,7 +182,7 @@ update_status_icon(const char *channel, gchar *title)
 #else
 		gtk_status_icon_set_tooltip (status_icon, flat_status_msg);
 #endif
-#if GTK_MINOR_VERSION < 22
+#if GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 22
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
 		&& !gtk_status_icon_get_blinking(status_icon))
 			gtk_status_icon_set_blinking (status_icon, TRUE);

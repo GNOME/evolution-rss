@@ -661,7 +661,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_OK, GTK_RESPONSE_OK,
 		NULL);
-#if GTK_MINOR_VERSION < 22
+#if GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 22
 	gtk_dialog_set_has_separator (GTK_DIALOG (widget), FALSE);
 #endif
 	gtk_dialog_set_default_response (
@@ -1369,7 +1369,11 @@ webkit_net_status (WebKitWebView *view,
 				if (resize_pane_hsize+14 > width && width != 1) {
 					gtk_widget_set_size_request(rf->mozembed,
 						-1, -1);
+#if GTK_MAJOR_VERSION < 3
 					gtk_widget_size_request(rf->mozembed, &req);
+#else
+					gtk_widget_get_preferred_size(rf->mozembed, &req, NULL);
+#endif
 
 					if (req.width < resize_pane_hsize+14)
 						w = resize_pane_hsize-14;
