@@ -346,9 +346,6 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			if (progress->current > 0 && progress->total > 0) {
 				fraction = (float)progress->current / progress->total;
 
-				while (gtk_events_pending ())
-					gtk_main_iteration ();
-
 				if (rf->cancel_all) break;
 
 				if ((key = lookup_key(data)))
@@ -562,8 +559,6 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 			fraction = (float)progress->current / progress->total;
 			d("%.2f%% ", fraction);
 		}
-		while (gtk_events_pending())
-			gtk_main_iteration ();
 		break;
 	default:
 		g_warning("unhandled network status %d\n", status);
@@ -971,8 +966,6 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #else
 	em_format_redraw((EMFormat *)pobject);
 #endif
-//	while (gtk_events_pending ())
-//           gtk_main_iteration ();
 }
 
 
@@ -3453,9 +3446,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 
 	g_print("feed %s\n", (gchar *)user_data);
 
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
-
 	r = g_new0 (RDF, 1);
 	r->shown = TRUE;
 	xmlSubstituteEntitiesDefaultValue = 1;
@@ -3747,9 +3737,6 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 		em_format_redraw((EMFormat *)user_data);
 #endif
 	}
-
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
 }
 
 static void
@@ -5717,8 +5704,6 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 //		d("uid:%d j:%d/%d, absdate:%d, date:%s, imax:%d\n",
 //			i, j, q, min_date, ctime(&min_date), imax);
 out:		camel_message_info_free(info);
-		while (gtk_events_pending())
-			gtk_main_iteration ();
 	}
 	camel_folder_freeze(folder);
 	if (min_date) {
@@ -5821,8 +5806,6 @@ get_feed_age(RDF *r, gpointer name)
 #else
 			camel_object_unref (message);
 #endif
-			while (gtk_events_pending())
-				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
 #if (DATASERVER_VERSION >= 2033001)
@@ -5856,8 +5839,6 @@ get_feed_age(RDF *r, gpointer name)
 				}
 			}
 			camel_folder_free_message_info(folder, info);
-			while (gtk_events_pending())
-				gtk_main_iteration ();
 		}
 		camel_folder_free_uids (folder, uids);
 #if (DATASERVER_VERSION >= 2033001)

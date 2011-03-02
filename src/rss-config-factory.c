@@ -942,8 +942,6 @@ store_redraw(GtkTreeView *data)
 static void
 msg_feeds_response(GtkWidget *selector, guint response, gpointer user_data)
 {
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
 	if (response == GTK_RESPONSE_CANCEL)
 		rf->cancel = 1;
 	gtk_widget_destroy(selector);
@@ -1004,8 +1002,6 @@ feeds_dialog_add(GtkDialog *d, gpointer data)
 		G_CALLBACK(msg_feeds_response),
 		NULL);
 	gtk_widget_show_all(msg_feeds);
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
 	if (feed->feed_url && strlen(feed->feed_url)) {
 		text = feed->feed_url;
 		feed->feed_url = sanitize_url(feed->feed_url);
@@ -1536,8 +1532,6 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 		G_CALLBACK(msg_feeds_response),
 		NULL);
 	gtk_widget_show_all(msg_feeds);
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
 	if (!feed->add)
 		goto out;
 	text = feed->feed_url;
@@ -1684,8 +1678,6 @@ import_dialog_response(
 {
 	if (response == GTK_RESPONSE_CANCEL) {
 		gtk_widget_destroy(rf->progress_dialog);
-		while (gtk_events_pending ())
-			gtk_main_iteration ();
 		rf->import_cancel = 1;
 		rf->display_cancel = 1;
 		progress = 0;
@@ -1727,8 +1719,6 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 	 * it is very convenient to be able to cancel importing
 	 * of a few hundred feeds
 	 */
-	while (gtk_events_pending())
-		gtk_main_iteration();
 }
 
 /*
@@ -1876,8 +1866,6 @@ error:		rss_error(NULL,
 	g_object_set_data((GObject *)import_progress, "label", import_label);
 	src = doc;
 	name = NULL;
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
 	if (type == 1) {
 		src=src->children;
 		d("my cont:%s\n", src->content);
@@ -1999,8 +1987,8 @@ error:		rss_error(NULL,
 						rssurl, rsstitle);
 					rf->import++;
 					if (rf->import == 10) {
-					while(gtk_events_pending())
-					gtk_main_iteration();
+//					while(gtk_events_pending())
+//					gtk_main_iteration();
 					}
 					import_one_feed(
 						rssurl,
@@ -2049,8 +2037,6 @@ fail:					g_free(rssprefix);
 
 		}
 	}
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
 out:	g_hash_table_destroy(tmphash);
 	tmphash=NULL;
 	//prevent reseting queue before its time dues do async operations
@@ -2805,8 +2791,6 @@ inject_cookie(SoupCookie *cookie, GtkProgressBar *progress)
 		gtk_progress_bar_set_text(progress, text);
 		g_free(text);
 		soup_cookie_jar_add_cookie(rss_soup_jar, cookie);
-		while (gtk_events_pending ())
-			gtk_main_iteration ();
 	}
 }
 

@@ -1272,9 +1272,6 @@ update_channel(RDF *r)
 
 		subj = g_strdup(CF->subj);
 
-		while (gtk_events_pending())
-			gtk_main_iteration ();
-
 		ftotal++;
 		if (gconf_client_get_bool(rss_gconf, GCONF_KEY_DOWNLOAD_ENCLOSURES, NULL)) {
 			if (CF->encl) {
