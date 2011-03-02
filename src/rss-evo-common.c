@@ -25,8 +25,44 @@
 #include <mail/e-mail-local.h>
 #include <mail/e-mail-reader.h>
 #include <mail/em-folder-utils.h>
+#include <libedataserver/e-proxy.h>
+
+#ifdef HAVE_LIBSOUP_GNOME
+#include <libsoup/soup-gnome.h>
+#include <libsoup/soup-gnome-features.h>
+#endif
+
+#define d(x)
 
 #include "rss-evo-common.h"
+
+enum ProxyType {
+	PROXY_TYPE_SYSTEM = 0,
+	PROXY_TYPE_NO_PROXY,
+	PROXY_TYPE_MANUAL,
+	PROXY_TYPE_AUTO_URL /* no auto-proxy at the moment */
+};
+
+/* Enum definition is copied from gnome-vfs/modules/http-proxy.c */
+typedef enum {
+        PROXY_IPV4 = 4,
+        PROXY_IPV6 = 6
+} ProxyAddrType;
+
+typedef struct {
+	ProxyAddrType type;     /* Specifies whether IPV4 or IPV6 */
+	gpointer  addr;         /* Either in_addr* or in6_addr* */
+	gpointer  mask;         /* Either in_addr* or in6_addr* */
+} ProxyHostAddr;
+
+struct _EProxyPrivate {
+	SoupURI *uri_http, *uri_https;
+	guint notify_id_evo, notify_id_sys, notify_id_sys_http; /* conxn id of gconf_client_notify_add  */
+	GSList* ign_hosts;      /* List of hostnames. (Strings)         */
+	GSList* ign_addrs;      /* List of hostaddrs. (ProxyHostAddrs)  */
+	gboolean use_proxy;     /* Is our-proxy enabled? */
+	enum ProxyType type;
+};
 
 gboolean
 rss_emfu_is_special_local_folder (const gchar *name)
@@ -109,3 +145,123 @@ fail:
 	g_free (cfd);
 }
 
+void
+rss_ipv6_network_addr (const struct in6_addr *addr, const struct in6_addr *mask,
+			struct in6_addr *res)
+{
+	gint i;
+
+	for (i = 0; i < 16; ++i) {
+		res->s6_addr[i] = addr->s6_addr[i] & mask->s6_addr[i];
+	}
+}
+
+gboolean
+rss_ep_need_proxy_http (EProxy* proxy, const gchar * host, SoupAddress *addr)
+{
+	EProxyPrivate *priv = proxy->priv;
+	ProxyHostAddr *p_addr = NULL;
+	GSList *l;
+	gint addr_len;
+	struct sockaddr* so_addr = NULL;
+
+	/* check for ignored first */
+	if (rss_ep_is_in_ignored (proxy, host))
+		return FALSE;
+
+	so_addr = soup_address_get_sockaddr (addr, &addr_len);
+
+	if (!so_addr)
+		return TRUE;
+
+	if (so_addr->sa_family == AF_INET) {
+		struct in_addr in, *mask, *addr_in;
+
+		in = ((struct sockaddr_in *)so_addr)->sin_addr;
+		for (l = priv->ign_addrs; l; l = l->next) {
+			p_addr = (ProxyHostAddr *)l->data;
+			if (p_addr->type == PROXY_IPV4) {
+				addr_in =  ((struct in_addr *)p_addr->addr);
+				mask = ((struct in_addr *)p_addr->mask);
+				d(g_print ("ep_need_proxy:ipv4: in: %ul\t mask: %ul\t addr: %ul\n",
+					   in.s_addr, mask->s_addr, addr_in->s_addr));
+				if ((in.s_addr & mask->s_addr) == addr_in->s_addr) {
+					d(g_print ("Host [%s] doesn't require proxy\n", host));
+					return FALSE;
+				}
+			}
+		}
+	} else {
+		struct in6_addr in6, net6;
+		struct in_addr *addr_in, *mask;
+
+		in6 = ((struct sockaddr_in6 *)so_addr)->sin6_addr;
+		for (l = priv->ign_addrs; l; l = l->next) {
+			p_addr = (ProxyHostAddr *)l->data;
+			rss_ipv6_network_addr (&in6, (struct in6_addr *)p_addr->mask, &net6);
+			if (p_addr->type == PROXY_IPV6) {
+				if (IN6_ARE_ADDR_EQUAL (&net6, (struct in6_addr *)p_addr->addr)) {
+					d(g_print ("Host [%s] doesn't require proxy\n", host));
+					return FALSE;
+				}
+			} else if (p_addr->type == PROXY_IPV6 &&
+				   IN6_IS_ADDR_V4MAPPED (&net6)) {
+				guint32 v4addr;
+
+				addr_in =  ((struct in_addr *)p_addr->addr);
+				mask = ((struct in_addr *)p_addr->mask);
+
+				v4addr = net6.s6_addr[12] << 24
+					| net6.s6_addr[13] << 16
+					| net6.s6_addr[14] << 8
+					| net6.s6_addr[15];
+				if ((v4addr & mask->s_addr) != addr_in->s_addr) {
+					d(g_print ("Host [%s] doesn't require proxy\n", host));
+					return FALSE;
+				}
+			}
+		}
+	}
+
+	d(g_print ("%s needs a proxy to connect to internet\n", host));
+	return TRUE;
+}
+
+gboolean
+rss_ep_need_proxy_https (EProxy* proxy, const gchar * host)
+{
+	/* Can we share ignore list from HTTP at all? */
+	return !rss_ep_is_in_ignored (proxy, host);
+}
+
+gboolean
+rss_ep_is_in_ignored (EProxy *proxy, const gchar *host)
+{
+	EProxyPrivate *priv;
+	GSList* l;
+	gchar *hn;
+
+	g_return_val_if_fail (proxy != NULL, FALSE);
+	g_return_val_if_fail (host != NULL, FALSE);
+
+	priv = proxy->priv;
+	if (!priv->ign_hosts)
+		return FALSE;
+
+	hn = g_ascii_strdown (host, -1);
+
+        for (l = priv->ign_hosts; l; l = l->next) {
+                if (*((gchar *)l->data) == '*') {
+                        if (g_str_has_suffix (hn, ((gchar *)l->data)+1)) {
+                                g_free (hn);
+                                return TRUE;
+                        }
+                } else if (strcmp (hn, l->data) == 0) {
+                                g_free (hn);
+                                return TRUE;
+                }
+        }
+        g_free (hn);
+
+        return FALSE;
+}

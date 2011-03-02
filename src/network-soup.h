@@ -22,6 +22,11 @@
 #if (DATASERVER_VERSION >= 2023001)
 #include <libedataserver/e-proxy.h>
 #endif
+#include <libsoup/soup.h>
+#ifdef HAVE_LIBSOUP_GNOME
+#include <libsoup/soup-gnome.h>
+#include <libsoup/soup-gnome-features.h>
+#endif
 
 void abort_all_soup(void);
 gboolean abort_soup_sess(
@@ -55,6 +60,18 @@ GString *net_post_blocking(
 	gpointer data,
 	GError **err);
 
+typedef void (*wkCallback)(gchar *str, gchar *base, gchar *encoding);
+
+typedef struct {
+	gchar *str;
+	wkCallback cb;
+	gchar *base;
+	gchar *host;
+	gchar *encoding;
+	SoupAddress *addr;
+} WEBKITNET;
+
+
 #define NET_ERROR net_error_quark()
 int net_error_quark(void);
 gboolean net_queue_dispatcher(void);
@@ -63,6 +80,7 @@ gboolean net_queue_dispatcher(void);
 EProxy *proxy_init(void);
 void proxify_webkit_session(EProxy *proxy, gchar *uri);
 void proxify_session(EProxy *proxy, SoupSession *session, gchar *uri);
+void proxify_webkit_session_async(EProxy *proxy, WEBKITNET *wknet);
 #endif
 
 guint save_up(gpointer data);

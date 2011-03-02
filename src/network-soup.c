@@ -35,6 +35,7 @@
 
 extern int rss_verbose_debug;
 
+#include "rss-evo-common.h"
 #include "network.h"
 #include "network-soup.h"
 #include "rss.h"
@@ -68,7 +69,12 @@ typedef struct {
 	gpointer cb2;
 	gpointer cbdata2;
 	gchar *url;
+	gchar *host;
+	SoupAddress *addr;
 } STNET;
+
+void proxify_session_async(EProxy *proxy, STNET *stnet);
+static void rss_webkit_resolve_callback (SoupAddress *addr, guint status, gpointer data);
 
 #define DOWNLOAD_QUEUE_SIZE 15
 guint net_qid = 0;		// net queue dispatcher
@@ -161,12 +167,10 @@ recv_msg (SoupMessage *msg, gpointer user_data)
 static gboolean
 remove_if_match (gpointer key, gpointer value, gpointer user_data)
 {
-	if (value == user_data)
-	{
+	if (value == user_data) {
 		g_hash_table_remove(rf->key_session, key);
 		return TRUE;
-	}
-	else
+	} else
 		return FALSE;
 }
 
@@ -206,39 +210,62 @@ proxy_init(void)
 	return proxy;
 }
 
+//this will insert proxy in the session
+//and queue loading of page
 void
-proxify_webkit_session(EProxy *proxy, gchar *uri)
+proxify_webkit_session_async(EProxy *proxy, WEBKITNET *wknet)
 {
-	SoupURI *proxy_uri = NULL;
-	gint ptype = gconf_client_get_int (rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+	SoupURI *proxy_uri = NULL, *su;
+	gint ptype = gconf_client_get_int (
+			rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
 
 	switch (ptype) {
 #ifndef HAVE_LIBSOUP_GNOME
 	case 0:
 #endif
 	case 2:
-		if (e_proxy_require_proxy_for_uri (proxy, uri)) {
+		su = soup_uri_new (wknet->base);
+		if (su) {
+			if (su->scheme == SOUP_URI_SCHEME_HTTPS) {
+				if (rss_ep_need_proxy_https (proxy, su->host)) {
 #if (DATASERVER_VERSION >=2026000)
-			proxy_uri = e_proxy_peek_uri_for (proxy, uri);
-			d("webkit proxified %s with %s:%d\n", uri, proxy_uri->host, proxy_uri->port);
+					proxy_uri = e_proxy_peek_uri_for (proxy, wknet->base);
 #else
-			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
-			return;
+					g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
+					soup_uri_free(su);
+					return;
 #endif
-		} else  {
-			d("webkit no PROXY-%s\n", uri);
+					if (proxy_uri) {
+						d("proxified %s with %s:%d\n", wknet->base, proxy_uri->host, proxy_uri->port);
+					}
+				} else {
+					d("no PROXY-%s\n", wknet->base);
+				}
+				g_object_set (
+					G_OBJECT (webkit_session),
+					SOUP_SESSION_PROXY_URI,
+					proxy_uri, NULL);
+				soup_uri_free(su);
+				goto out;
+			} else {
+				wknet->addr = soup_address_new (su->host, 0);
+				soup_uri_free(su);
+				soup_address_resolve_async (wknet->addr, NULL, NULL,
+					rss_webkit_resolve_callback, wknet);
+				return;
+			}
 		}
 		break;
-		g_object_set (
-			G_OBJECT (webkit_session),
-			SOUP_SESSION_PROXY_URI, proxy_uri, NULL);
+
 #ifdef HAVE_LIBSOUP_GNOME
 	case 0:
 		soup_session_add_feature_by_type (
-			webkit_session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+			webkit_session,
+			SOUP_TYPE_PROXY_RESOLVER_GNOME);
 		break;
 #endif
 	}
+out:	wknet->cb(wknet->str, wknet->base, wknet->encoding);
 
 }
 
@@ -284,6 +311,122 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 
 }
 #endif
+
+static void
+rss_resolve_callback (SoupAddress *addr, guint status, gpointer data)
+{
+	STNET *stnet = (STNET *)data;
+	SoupURI *proxy_uri = NULL;
+	if (status == SOUP_STATUS_OK) {
+		if (rss_ep_need_proxy_http (proxy, stnet->host, stnet->addr)) {
+#if (DATASERVER_VERSION >=2026000)
+			proxy_uri = e_proxy_peek_uri_for (proxy, stnet->url);
+#else
+			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
+			return;
+#endif
+			if (proxy_uri) {
+				d("proxified %s with %s:%d\n", stnet->url, proxy_uri->host, proxy_uri->port);
+			}
+		}
+	} else {
+		d("no PROXY-%s\n", stnet->url);
+	}
+	g_object_set (
+		G_OBJECT (stnet->ss),
+		SOUP_SESSION_PROXY_URI,
+		proxy_uri, NULL);
+	soup_session_queue_message (stnet->ss, stnet->sm,
+		stnet->cb2, stnet->cbdata2);
+}
+
+static void
+rss_webkit_resolve_callback (SoupAddress *addr, guint status, gpointer data)
+{
+	WEBKITNET *wknet = (WEBKITNET *)data;
+	SoupURI *proxy_uri = NULL;
+	if (status == SOUP_STATUS_OK) {
+		if (rss_ep_need_proxy_http (proxy, wknet->host, wknet->addr)) {
+#if (DATASERVER_VERSION >=2026000)
+			proxy_uri = e_proxy_peek_uri_for (proxy, wknet->base);
+#else
+			g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
+			return;
+#endif
+			if (proxy_uri) {
+				dp("proxified %s with %s:%d\n", wknet->base, proxy_uri->host, proxy_uri->port);
+			}
+		}
+	} else {
+		d("no PROXY-%s\n", wknet->base);
+	}
+	g_object_set (
+		G_OBJECT (webkit_session),
+		SOUP_SESSION_PROXY_URI,
+		proxy_uri, NULL);
+	wknet->cb(wknet->str, wknet->base, wknet->encoding);
+}
+
+//this will insert proxy in the session
+//and queue the message to be sent
+void
+proxify_session_async(EProxy *proxy, STNET *stnet)
+{
+	SoupURI *proxy_uri = NULL, *su;
+	gint ptype = gconf_client_get_int (
+			rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+
+	switch (ptype) {
+#ifndef HAVE_LIBSOUP_GNOME
+	case 0:
+#endif
+	case 2:
+		su = soup_uri_new (stnet->url);
+		stnet->host = su->host;
+		if (su) {
+			if (su->scheme == SOUP_URI_SCHEME_HTTPS) {
+				if (rss_ep_need_proxy_https (proxy, su->host)) {
+#if (DATASERVER_VERSION >=2026000)
+					proxy_uri = e_proxy_peek_uri_for (proxy, stnet->url);
+#else
+					g_print("WARN: e_proxy_peek_uri_for() requires evolution-data-server 2.26\n");
+					soup_uri_free(su);
+					return;
+#endif
+					if (proxy_uri) {
+						d("proxified %s with %s:%d\n", stnet->url, proxy_uri->host, proxy_uri->port);
+					}
+				} else {
+					d("no PROXY-%s\n", stnet->url);
+				}
+				g_object_set (
+					G_OBJECT (stnet->ss),
+					SOUP_SESSION_PROXY_URI,
+					proxy_uri, NULL);
+				soup_uri_free(su);
+				goto out;
+			} else {
+				stnet->addr = soup_address_new (su->host, 0);
+				soup_uri_free(su);
+				soup_address_resolve_async (stnet->addr, NULL, NULL,
+					rss_resolve_callback, stnet);
+				return;
+			}
+		}
+		break;
+
+#ifdef HAVE_LIBSOUP_GNOME
+	case 0:
+		soup_session_add_feature_by_type (
+			stnet->ss, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+		break;
+#endif
+	}
+
+out:	soup_session_queue_message (stnet->ss, stnet->sm,
+		stnet->cb2, stnet->cbdata2);
+
+}
 
 guint
 read_up(gpointer data)
@@ -598,6 +741,7 @@ net_get_unblocking(gchar *url,
 	gchar *agstr;
 	gchar *mainurl = NULL;
 	gchar **res;
+	STNET *stnet;
 
 	soup_sess = soup_session_async_new();
 
@@ -609,9 +753,6 @@ net_get_unblocking(gchar *url,
 	}
 #endif
 
-#if (DATASERVER_VERSION >= 2023001)
-	proxify_session(proxy, soup_sess, url);
-#endif
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);
 		info->user_cb = cb;
@@ -638,7 +779,7 @@ net_get_unblocking(gchar *url,
 	/* Queue an async HTTP request */
 	msg = soup_message_new ("GET", url);
 	if (!msg) {
-		g_free(info);
+		if (info) g_free(info);
 		g_set_error(err, NET_ERROR, NET_ERROR_GENERIC, "%s",
 				soup_status_get_phrase(2));			//invalid url
 		return FALSE;
@@ -672,8 +813,15 @@ net_get_unblocking(gchar *url,
 	soup_message_add_header_handler (msg, "got_body",
 		"Location", G_CALLBACK (redirect_handler), soup_sess);
 
-	soup_session_queue_message (soup_sess, msg,
-		cb2, cbdata2);
+	stnet = g_new0(STNET, 1);
+	stnet->ss = soup_sess;
+	stnet->sm = msg;
+	stnet->cb2 = cb2;
+	stnet->cbdata2 = cbdata2;
+	stnet->url = g_strdup(url);
+
+	proxify_session_async(proxy, stnet);
+	//free stnet
 
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);

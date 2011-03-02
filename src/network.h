@@ -85,10 +85,10 @@
 #define GCONF_E_AUTOCONFIG_URL_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "autoconfig_url"*/
 
 enum ProxyType {
-        PROXY_TYPE_SYSTEM = 0,
-        PROXY_TYPE_NO_PROXY,
-        PROXY_TYPE_MANUAL,
-        PROXY_TYPE_AUTO_URL /* no auto-proxy at the moment */
+	PROXY_TYPE_SYSTEM = 0,
+	PROXY_TYPE_NO_PROXY,
+	PROXY_TYPE_MANUAL,
+	PROXY_TYPE_AUTO_URL /* no auto-proxy at the moment */
 };
 
 typedef enum {
@@ -98,24 +98,24 @@ typedef enum {
 } NetErrorCode;
 
 typedef enum {
-    NET_STATUS_NULL,
-    NET_STATUS_BEGIN,
-    NET_STATUS_SUCCESS,
-    NET_STATUS_ERROR,
-    NET_STATUS_PROGRESS,
-    NET_STATUS_DONE
+	NET_STATUS_NULL,
+	NET_STATUS_BEGIN,
+	NET_STATUS_SUCCESS,
+	NET_STATUS_ERROR,
+	NET_STATUS_PROGRESS,
+	NET_STATUS_DONE
 } NetStatusType;
 
 typedef struct {
-    guint32 current;
-    guint32 total;
-    gchar *chunk;
-    guint chunksize;
+	guint32 current;
+	guint32 total;
+	gchar *chunk;
+	guint chunksize;
 } NetStatusProgress;
 
 typedef void (*NetStatusCallback)(NetStatusType status,
-                                  gpointer statusdata,
-                                  gpointer data);
+				gpointer statusdata,
+				gpointer data);
 
 
 #endif /* __NETWORK_H__ */

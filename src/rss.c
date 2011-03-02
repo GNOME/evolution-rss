@@ -260,6 +260,7 @@ static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
 #ifdef HAVE_WEBKIT
 void webkit_set_history(gchar *base);
+void rss_webkit_load_string(gchar *str, gchar *base, gchar *encoding);
 #endif
 gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
@@ -405,6 +406,19 @@ update_progress_text(gchar *title)
 }
 
 void
+rss_webkit_load_string(gchar *str, gchar *base, gchar *encoding)
+{
+	webkit_web_view_load_string(
+		WEBKIT_WEB_VIEW(rf->mozembed),
+		str,
+		"text/html",
+		encoding,
+		base);
+	if (strncmp(base, "file:///fake", 12))
+		webkit_set_history(base);
+}
+
+void
 update_progress_bar(guint current);
 
 void
@@ -435,6 +449,7 @@ update_progress_bar(guint current)
 void
 browser_write(gchar *string, gint length, gchar *base)
 {
+	WEBKITNET *wknet;
 	gchar *str = string;
 	guint engine = fallback_engine();
 	xmlDoc *src = (xmlDoc *)parse_html(base, string, length);
@@ -462,17 +477,14 @@ browser_write(gchar *string, gint length, gchar *base)
 	case 1:
 #ifdef HAVE_WEBKIT
 #if (DATASERVER_VERSION >= 2023001)
-		proxify_webkit_session(proxy, base);
-#endif
 
-		webkit_web_view_load_string(
-			WEBKIT_WEB_VIEW(rf->mozembed),
-			str,
-			"text/html",
-			encoding,
-			base);
-		if (strncmp(base, "file:///fake", 12))
-			webkit_set_history(base);
+		wknet = g_new0(WEBKITNET, 1);
+		wknet->base = base;
+		wknet->encoding = encoding;
+		wknet->str = str;
+		wknet->cb = rss_webkit_load_string;
+		proxify_webkit_session_async(proxy, wknet);
+#endif
 #endif
 		break;
 	}
@@ -3658,7 +3670,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		browser_write(
 			tmsg, strlen(tmsg),
 			(gchar *)"file:///fakefile#index");
-		g_free(tmsg);
+		//g_free(tmsg);
 		if (ub->create) {
 			//stream remove
 #if (DATASERVER_VERSION >= 2033001)
@@ -3687,7 +3699,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 			camel_object_unref(ub->stream);
 #endif
 		}
-		str = (response->str);
+		str = g_strdup(response->str);
 		len = strlen(response->str);
 		*str+= browser_fill;
 		len-= browser_fill;

@@ -19,10 +19,19 @@
 #ifndef __RSS_EVO_COMMON_H_
 #define __RSS_EVO_COMMON_H_
 
+#include <mail/e-mail-backend.h>
+#include <camel/camel.h>
+#include <libedataserver/e-proxy.h>
+
 struct _copy_folder_data {
 	CamelFolderInfo *fi;
 	gboolean delete;
 };
+
+void
+rss_ipv6_network_addr (const struct in6_addr *addr,
+		const struct in6_addr *mask,
+		struct in6_addr *res);
 
 gboolean
 rss_emfu_is_special_local_folder (const gchar *name);
@@ -31,6 +40,18 @@ void
 rss_emfu_copy_folder_selected (EMailBackend *backend,
 		const gchar *uri,
 		gpointer data);
+
+gboolean
+rss_e_proxy_require_proxy_for_uri (EProxy* proxy, const gchar * uri);
+
+gboolean
+rss_ep_need_proxy_http (EProxy* proxy, const gchar * host, SoupAddress *addr);
+
+gboolean
+rss_ep_need_proxy_https (EProxy* proxy, const gchar * host);
+
+gboolean
+rss_ep_is_in_ignored (EProxy *proxy, const gchar *host);
 
 #endif /*__RSS_EVO_COMMON_H_*/
 
