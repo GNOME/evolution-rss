@@ -245,13 +245,14 @@ AM_CONDITIONAL([HAVE_XPCOM_GLUE], [test "$gecko_cv_have_xpcom_glue" = "yes"])
 
 AC_MSG_CHECKING([whether to include Webkit support])
 AC_ARG_ENABLE([webkit],
-        AS_HELP_STRING([--disable-webkit],[Disable Webkit (Apple Upstream Webkit) support (default: enabled)]),
-        [],[enable_webkit=yes])
+	AS_HELP_STRING([--disable-webkit],[Disable Webkit (Apple Upstream Webkit) support (default: enabled)]),
+	[],[enable_webkit=yes])
 AC_MSG_RESULT([$enable_webkit])
 
 if test "$enable_webkit" = "yes"; then
 	if test "$EVOLUTION_BASE_VERSION_S" = "-3.0"; then
 		webkit_api="webkitgtk-3.0"
+		AC_MSG_NOTICE(GTK3 builds requires webkitgtk3)
 	else
 		webkit_api="webkit-1.0"
 	fi
