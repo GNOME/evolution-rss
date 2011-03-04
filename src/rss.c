@@ -584,7 +584,6 @@ download_chunk(
 	gpointer data)
 {
 	NetStatusProgress *progress;
-	//float fraction = 0;
 	switch (status) {
 	case NET_STATUS_PROGRESS:
 		progress = (NetStatusProgress*)statusdata;
@@ -595,7 +594,10 @@ download_chunk(
 				cancel_active_op((gpointer)data);
 				return;
 			}
-			//fraction = (float)progress->current / progress->total;
+			if (progress->reset) {
+				rewind(data);
+				progress->reset = 0;
+			}
 			fwrite(progress->chunk, 1, progress->chunksize, (FILE *)data);
 		}
 		break;

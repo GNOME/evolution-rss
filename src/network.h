@@ -111,6 +111,7 @@ typedef struct {
 	guint32 total;
 	gchar *chunk;
 	guint chunksize;
+	gboolean reset;		//signal to reset stream (usually because of redirect)
 } NetStatusProgress;
 
 typedef void (*NetStatusCallback)(NetStatusType status,

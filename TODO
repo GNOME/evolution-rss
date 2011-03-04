@@ -44,3 +44,4 @@
 	* add configuration option to right click on status icon
 	* default render engine broken again
 	* detect rss-id changes (file changes) -> feeds downloaded all over again
+	* proxify async the download_* functions
