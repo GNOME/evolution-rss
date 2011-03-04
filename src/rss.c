@@ -3932,7 +3932,10 @@ lookup_feed_folder(gchar *folder)
 {
 	gchar *new_folder = g_hash_table_lookup(
 				rf->reversed_feed_folders, folder);
-	return new_folder ? new_folder : folder;
+	/* replace remaining dots with spaces - dots aren't supported since evo's Maildir migration*/
+#if EVOLUTION_VERSION > 29103
+	return g_strdelimit(new_folder ? new_folder : folder, ".", ' ');
+#endif
 }
 
 gchar *
