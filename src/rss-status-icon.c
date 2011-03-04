@@ -45,9 +45,11 @@ icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 	gtk_status_icon_set_has_tooltip (status_icon, FALSE);
 	uri = g_object_get_data (G_OBJECT (status_icon), "uri");
 	if (uri) {
+		gchar *folder_name = lookup_feed_folder(uri);
 		real_name = g_build_path(G_DIR_SEPARATOR_S,
 				lookup_main_folder(),
-				lookup_feed_folder(uri), NULL);
+				folder_name, NULL);
+		g_free(folder_name);
 		rss_select_folder(real_name);
 	}
 }
@@ -191,7 +193,7 @@ update_status_icon(const char *channel, gchar *title)
 		gtk_status_icon_set_has_tooltip (status_icon, TRUE);
 		g_object_set_data_full (
 			G_OBJECT (status_icon), "uri",
-			g_strdup (lookup_feed_folder((gchar *)channel)),
+			lookup_feed_folder((gchar *)channel),
 			(GDestroyNotify) g_free);
 		g_free(flat_status_msg);
 //		g_free(total);

@@ -359,6 +359,7 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 		-1);
 	g_free(name);
 	g_free(full_path);
+	g_free(full_name);
 }
 
 static void
@@ -584,12 +585,14 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	entry2 = GTK_WIDGET (gtk_builder_get_object(gui, "entry2"));
 	feed_name = GTK_WIDGET (gtk_builder_get_object(gui, "feed_name"));
 	if (url != NULL) {
+		gchar *folder_name = lookup_feed_folder(feed_text);
 		flabel = g_build_path(G_DIR_SEPARATOR_S,
 			lookup_main_folder(),
-			lookup_feed_folder(feed_text),
+			folder_name,
 			NULL);
 		gtk_label_set_text(GTK_LABEL(entry2), flabel);
-		fname = g_path_get_basename(lookup_feed_folder(feed_text));
+		fname = g_path_get_basename(folder_name);
+		g_free(folder_name);
 		gtk_entry_set_text(GTK_ENTRY(feed_name), fname);
 		g_free(fname);
 		gtk_widget_show(feed_name);
@@ -1538,8 +1541,11 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 	feed->feed_url = sanitize_url(feed->feed_url);
 	g_free(text);
 	if (feed->feed_url) {
+		gchar *folder_name;
 		feed->edit=1;
-		prefix = g_path_get_dirname(lookup_feed_folder(feed_name));
+		folder_name = lookup_feed_folder(feed_name);
+		prefix = g_path_get_dirname(folder_name);
+		g_free(folder_name);
 		if (*prefix != '.')
 			feed->prefix = prefix;
 		if (strcmp(url, feed->feed_url)) {
@@ -1587,14 +1593,16 @@ process_dialog_edit(add_feed *feed, gchar *url, gchar *feed_name)
 			}
 
 			if (feed->renamed) {
+				gchar *folder_name = lookup_feed_folder(feed_name);
 				gchar *a = g_build_path(G_DIR_SEPARATOR_S,
 					lookup_main_folder(),
-					lookup_feed_folder(feed_name),
+					folder_name,
 					NULL);
 				gchar *dir = g_path_get_dirname(a);
 				gchar *b = g_build_path(
 						G_DIR_SEPARATOR_S,
 						dir, feed->feed_name, NULL);
+				g_free(folder_name);
 #if (DATASERVER_VERSION >= 2033001)
 				camel_store_rename_folder_sync (store, a, b, NULL, &error);
 #else

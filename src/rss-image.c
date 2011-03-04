@@ -412,11 +412,13 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 
 	if (pixbuf) {
 		gchar *name = g_hash_table_lookup(rf->hrname_r, key);
+		gchar *folder_name = lookup_feed_folder(name);
 		gchar *full_name = g_build_path(
 					G_DIR_SEPARATOR_S,
 					get_main_folder(),
-					lookup_feed_folder(name),
+					folder_name,
 					NULL);
+		g_free(folder_name);
 /*folder isn't created yet?*/
 #if (DATASERVER_VERSION >= 2033001)
 		rssi = camel_store_get_folder_info_sync (

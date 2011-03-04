@@ -3933,9 +3933,11 @@ lookup_feed_folder(gchar *folder)
 	gchar *new_folder = g_hash_table_lookup(
 				rf->reversed_feed_folders, folder);
 	/* replace remaining dots with spaces - dots aren't supported since evo's Maildir migration*/
+	gchar *res = g_strdup(new_folder ? new_folder : folder);
 #if EVOLUTION_VERSION > 29103
-	return g_strdelimit(new_folder ? new_folder : folder, ".", ' ');
+	g_strdelimit(res, ".", ' ');
 #endif
+	return res;
 }
 
 gchar *
@@ -4203,6 +4205,7 @@ check_feed_folder(gchar *folder_name)
 #endif
 	}
 	g_free(real_name);
+	g_free(real_folder);
 	return mail_folder;
 
 }
@@ -5895,6 +5898,7 @@ get_feed_age(RDF *r, gpointer name)
 #endif
 	d("delete => remaining total:%d\n", total);
 fail:	g_free(real_name);
+	g_free(real_folder);
 	inhibit_read = 0;
 }
 
