@@ -60,6 +60,8 @@ typedef struct {
 	gpointer user_data;
 	int current, total;
 	gchar *chunk;
+	gboolean reset;
+	SoupSession *ss;
 } CallbackInfo;
 
 typedef struct {
@@ -142,6 +144,10 @@ got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 	progress->total = info->total;
 	progress->chunk = (gchar *)chunk->data;
 	progress->chunksize = (gint)chunk->length;
+	if (info->reset) {
+		progress->reset = info->reset;
+		info->reset = 0;
+	}
 	info->user_cb(NET_STATUS_PROGRESS, progress, info->user_data);
 	g_free(progress);
 }
@@ -574,6 +580,36 @@ out:
 	return response;
 }
 
+static void
+redirect_handler (SoupMessage *msg, gpointer user_data)
+{
+	if (SOUP_STATUS_IS_REDIRECTION (msg->status_code)) {
+		CallbackInfo *info = user_data;
+		SoupURI *new_uri;
+		const gchar *new_loc;
+
+		new_loc = soup_message_headers_get (msg->response_headers, "Location");
+		if (!new_loc)
+			return;
+
+		info->reset=1;
+
+		new_uri = soup_uri_new_with_base (soup_message_get_uri (msg), new_loc);
+		if (!new_uri) {
+			soup_message_set_status_full (msg,
+				SOUP_STATUS_MALFORMED,
+				"Invalid Redirect URL");
+			return;
+		}
+
+		soup_message_set_uri (msg, new_uri);
+		soup_session_requeue_message (info->ss, msg);
+
+		soup_uri_free (new_uri);
+	}
+}
+
+
 gboolean
 net_get_unblocking(gchar *url,
 			NetStatusCallback cb, gpointer data,
@@ -605,6 +641,7 @@ net_get_unblocking(gchar *url,
 		info->user_data = data;
 		info->current = 0;
 		info->total = 0;
+		info->ss = soup_sess;
 	}
 
 	g_signal_connect (soup_sess, "authenticate",
@@ -645,6 +682,10 @@ net_get_unblocking(gchar *url,
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
 	}
+
+	soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
+	soup_message_add_header_handler (msg, "got_body",
+		"Location", G_CALLBACK (redirect_handler), soup_sess);
 
 	soup_session_queue_message (soup_sess, msg,
 		cb2, cbdata2);
@@ -695,6 +736,7 @@ download_unblocking(
 		info->user_data = data;
 		info->current = 0;
 		info->total = 0;
+		info->ss = soup_sess;
 	}
 
 	g_signal_connect (soup_sess, "authenticate",
@@ -735,6 +777,10 @@ download_unblocking(
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
 	}
+
+	soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
+	soup_message_add_header_handler (msg, "got_body",
+		"Location", G_CALLBACK (redirect_handler), info);
 
 	soup_message_body_set_accumulate (msg->response_body, FALSE);
 	stnet = g_new0(STNET, 1);

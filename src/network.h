@@ -107,10 +107,11 @@ typedef enum {
 } NetStatusType;
 
 typedef struct {
-    guint32 current;
-    guint32 total;
-    gchar *chunk;
-    guint chunksize;
+	guint32 current;
+	guint32 total;
+	gchar *chunk;
+	guint chunksize;
+	gboolean reset;         //signal to reset stream (usually because of redirect)
 } NetStatusProgress;
 
 typedef void (*NetStatusCallback)(NetStatusType status,
