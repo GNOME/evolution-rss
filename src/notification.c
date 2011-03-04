@@ -40,12 +40,14 @@ extern EShellView *rss_shell_view;
 #endif
 extern rssfeed *rf;
 
+#if (EVOLUTION_VERSION < 29102)
 static void
 dialog_key_destroy (GtkWidget *widget, gpointer data)
 {
 	if (data)
 		g_hash_table_remove(rf->error_hash, data);
 }
+#endif
 
 void
 err_destroy (GtkWidget *widget, guint response, gpointer data)
@@ -59,7 +61,9 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 {
 	GtkWidget *ed = NULL;
 	gchar *msg;
+#if (EVOLUTION_VERSION < 29102)
 	gpointer newkey;
+#endif
 #if (EVOLUTION_VERSION >= 22900) //kb//
 	EShell *shell;
 	EMailBackend *backend;
@@ -96,6 +100,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			ed = e_error_new(NULL, "org-gnome-evolution-rss:feederr",
 				error, msg, NULL);
 #endif
+#if (EVOLUTION_VERSION < 29102)
 			newkey = g_strdup(key);
 			g_signal_connect(
 				ed, "response",
@@ -112,6 +117,7 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			g_timeout_add_seconds(60,
 				(GSourceFunc)gtk_widget_destroy,
 				ed);
+#endif
 
 #if (EVOLUTION_VERSION < 29102)
 #if (EVOLUTION_VERSION >= 22900) //kb//
