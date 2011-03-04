@@ -27,7 +27,6 @@ GtkStatusIcon *status_icon = NULL;
 gboolean winstatus;
 gchar *flat_status_msg;
 extern GtkWidget *evo_window;
-extern GConfClient *rss_gconf;
 extern GQueue *status_msg;
 
 void
@@ -161,7 +160,8 @@ update_status_icon(const char *channel, gchar *title)
 	gchar *total;
 	gchar *iconfile;
 	gchar *tchn, *ttit;
-	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL)) {
+	GConfClient *client = gconf_client_get_default();
+	if (gconf_client_get_bool (client, GCONF_KEY_STATUS_ICON, NULL)) {
 		tchn = g_markup_escape_text (channel, -1);
 		ttit = g_markup_escape_text (title, -1);
 		total = g_strdup_printf("<b>%s</b>\n%s\n", tchn, ttit);
@@ -185,7 +185,7 @@ update_status_icon(const char *channel, gchar *title)
 		gtk_status_icon_set_tooltip (status_icon, flat_status_msg);
 #endif
 #if GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 22
-		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_BLINK_ICON, NULL)
+		if (gconf_client_get_bool (client, GCONF_KEY_BLINK_ICON, NULL)
 		&& !gtk_status_icon_get_blinking(status_icon))
 			gtk_status_icon_set_blinking (status_icon, TRUE);
 		g_timeout_add(15 * 1000, flicker_stop, NULL);
@@ -199,5 +199,6 @@ update_status_icon(const char *channel, gchar *title)
 //		g_free(total);
 		flat_status_msg = NULL;
 	}
+	g_object_unref(client);
 }
 

@@ -27,7 +27,6 @@
 #include "rss-config.h"
 
 extern rssfeed *rf;
-extern GConfClient *rss_gconf;
 
 GSList *rss_list = NULL;
 
@@ -381,8 +380,9 @@ load_gconf_feed(void)
 {
 	GSList *list, *l = NULL;
 	char *uid;
+	GConfClient *client = gconf_client_get_default();
 
-	list = gconf_client_get_list (rss_gconf,
+	list = gconf_client_get_list (client,
 		"/apps/evolution/evolution-rss/feeds",
 		GCONF_VALUE_STRING, NULL);
 	for (l = list; l; l = l->next) {
@@ -396,16 +396,17 @@ load_gconf_feed(void)
 	}
 	g_slist_foreach(list, (GFunc) g_free, NULL);
 	g_slist_free(list);
+	g_object_unref(client);
 }
 
 void
 save_gconf_feed(void)
 {
-
+	GConfClient *client = gconf_client_get_default();
 	g_hash_table_foreach(rf->hrname, prepare_feed, NULL);
 
 	gconf_client_set_list (
-		rss_gconf,
+		client,
 		"/apps/evolution/evolution-rss/feeds",
 		GCONF_VALUE_STRING,
 		rss_list,
@@ -416,7 +417,8 @@ save_gconf_feed(void)
 		rss_list = g_slist_remove (rss_list, rss_list->data);
 	}
 
-	gconf_client_suggest_sync (rss_gconf, NULL);
+	gconf_client_suggest_sync (client, NULL);
+	g_object_unref(client);
 }
 
 
