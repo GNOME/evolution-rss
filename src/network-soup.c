@@ -816,11 +816,10 @@ net_get_unblocking(gchar *url,
 	if (info) {
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
+		soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
+		soup_message_add_header_handler (msg, "got_body",
+			"Location", G_CALLBACK (redirect_handler), info);
 	}
-
-	soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
-	soup_message_add_header_handler (msg, "got_body",
-		"Location", G_CALLBACK (redirect_handler), info);
 
 	stnet = g_new0(STNET, 1);
 	stnet->ss = soup_sess;
@@ -918,11 +917,11 @@ download_unblocking(
 	if (info) {
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
+		soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
+		soup_message_add_header_handler (msg, "got_body",
+			"Location", G_CALLBACK (redirect_handler), info);
 	}
 
-	soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
-	soup_message_add_header_handler (msg, "got_body",
-		"Location", G_CALLBACK (redirect_handler), info);
 	soup_message_body_set_accumulate (msg->response_body, FALSE);
 	stnet = g_new0(STNET, 1);
 	stnet->ss = soup_sess;
