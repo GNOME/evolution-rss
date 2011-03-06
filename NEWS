@@ -1,3 +1,12 @@
+Evolution-RSS 0.2.4
+------------------------------
+
+Bug fixes:
+Bug 643187 - url redirection for enclosures doesn't work as expected
+Bug 643050 - crash on moving rss-folder
+Bug 642357 - crash on parsing RSS feed
+Bug 641237 - Importing RDF feed fails
+
 Evolution-RSS 0.2.3
 ------------------------------
 Miscellaneous Fixes:
