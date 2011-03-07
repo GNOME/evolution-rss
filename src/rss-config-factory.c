@@ -2428,8 +2428,10 @@ gen_folder_list(gpointer key, gpointer value, gpointer user)
 	gchar *tmp = g_hash_table_lookup(
 			rf->reversed_feed_folders, key);
 	gchar *folder;
+	d("mf:%s\n", mf);
 
 	if (tmp) {
+		d("tmp:%s\n", tmp);
 		tmp = g_path_get_dirname(tmp);
 		if (tmp && *tmp != '.')
 			folder = g_build_path(G_DIR_SEPARATOR_S, mf, tmp, NULL);
@@ -2438,6 +2440,7 @@ gen_folder_list(gpointer key, gpointer value, gpointer user)
 		g_free(mf);
 		g_free(tmp);
 		if (!g_list_find_custom(flist, folder, (GCompareFunc)strcmp)) {
+			d("append folder:%s\n", folder);
 			flist = g_list_append(flist, folder);
 		}
 	}
@@ -2552,28 +2555,31 @@ create_xml(GtkWidget *progress)
 		rf->hrname,
 		gen_folder_list,
 		NULL);
-	list = flist;
 
-	tmp = list->data;
-	//generate mssing parents
-	while ((list = g_list_next(list))) {
-		p = gen_folder_parents(p, list, tmp);
+	if (list) {
+		list = flist;
 		tmp = list->data;
-	}
-	list = flist;
-	//get parents into main list
-	for (p = g_list_first(p); p != NULL; p = g_list_next(p)) {
-		if (!g_list_find_custom(list, p->data, (GCompareFunc)strcmp)) {
-			list = g_list_append(list, p->data);
+		//generate mssing parents
+		while ((list = g_list_next(list))) {
+			p = gen_folder_parents(p, list, tmp);
+			tmp = list->data;
 		}
-	}
-	list = flist;
-	list = flist = g_list_sort(list, (GCompareFunc)strcmp);
+		list = flist;
+		//get parents into main list
+		for (p = g_list_first(p); p != NULL; p = g_list_next(p)) {
+			if (!g_list_find_custom(list, p->data, (GCompareFunc)strcmp)) {
+				list = g_list_append(list, p->data);
+			}
+		}
+		list = flist;
+		list = flist = g_list_sort(list, (GCompareFunc)strcmp);
+	} else
+		flist = g_list_append(flist, get_main_folder());
 
 	list = flist;
 	tmp = list->data;
 	strbuf = g_strdup_printf(
-	"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"folder\">\n",
+		"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"folder\">\n",
 		tmp, tmp, tmp);
 	result = append_buffer(result, strbuf);
 	strbuf = create_folder_feeds(tmp);
