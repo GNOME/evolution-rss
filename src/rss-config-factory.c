@@ -3033,6 +3033,7 @@ decorate_export_fs (gpointer data)
 		GTK_DIALOG (data),
 		GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (data, FALSE);
+	gtk_file_chooser_set_current_name (data, "evolution-rss.opml");
 
 	gtk_file_filter_add_pattern (
 		GTK_FILE_FILTER(file_filter),
