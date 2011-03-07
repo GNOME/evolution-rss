@@ -3047,6 +3047,17 @@ decorate_export_fs (gpointer data)
 	file_filter = gtk_file_filter_new ();
 	gtk_file_filter_add_pattern (
 		GTK_FILE_FILTER(file_filter),
+		"*.xml");
+	gtk_file_filter_set_name (
+		GTK_FILE_FILTER(file_filter),
+		_("XML Files"));
+	gtk_file_chooser_add_filter (
+		GTK_FILE_CHOOSER (data),
+		GTK_FILE_FILTER(file_filter));
+
+	file_filter = gtk_file_filter_new ();
+	gtk_file_filter_add_pattern (
+		GTK_FILE_FILTER(file_filter),
 		"*.opml");
 	gtk_file_filter_set_name (
 		GTK_FILE_FILTER(file_filter),
@@ -3055,11 +3066,6 @@ decorate_export_fs (gpointer data)
 		GTK_FILE_CHOOSER (data),
 		GTK_FILE_FILTER(file_filter));
 
-	file_filter = gtk_file_filter_new ();
-	gtk_file_filter_add_pattern (GTK_FILE_FILTER(file_filter), "*.xml");
-	gtk_file_filter_set_name (GTK_FILE_FILTER(file_filter), _("XML Files"));
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (data),
-		GTK_FILE_FILTER(file_filter));
 
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (data),
 		GTK_FILE_FILTER(file_filter));
