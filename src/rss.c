@@ -4567,7 +4567,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 	}
 	custom_feed_timeout();
 
-	rss_load_images();
+	rss_init_images();
 }
 
 /* check if rss folders exists and create'em otherwise */
@@ -4798,6 +4798,7 @@ rss_finalize(void)
 	g_print(".done\n");
 	if (rf->mozembed)
 		gtk_widget_destroy(rf->mozembed);
+	rss_finish_images();
 
 /*	guint render = GPOINTER_TO_INT(
 		gconf_client_get_int(rss_gconf,

@@ -43,6 +43,8 @@ gchar *pixfile;
 char *pixfilebuf;
 gsize pixfilelen;
 extern GHashTable *icons;
+GHashTable *missing;
+
 void
 #if LIBSOUP_VERSION < 2003000
 finish_image_feedback (SoupMessage *msg, FEED_IMAGE *user_data);
@@ -51,7 +53,7 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 #endif
 
 void
-rss_load_images(void)
+rss_init_images(void)
 {
 	/* load transparency */
 	pixfile = g_build_filename (EVOLUTION_ICONDIR,
@@ -63,6 +65,12 @@ rss_load_images(void)
 			&pixfilelen,
 			NULL,
 			NULL);
+}
+
+void
+rss_finish_images(void)
+{
+	g_hash_table_destroy(missing);
 }
 
 void
@@ -280,6 +288,21 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 	CamelStream *stream = NULL;
 	stream = rss_cache_add(user_data->url);
 	finish_image(soup_sess, msg, stream);
+	if (!missing)
+		missing = g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, NULL);
+
+	if (503 == msg->status_code || //handle this timedly fasion
+	    404 == msg->status_code || //NOT FOUND
+	    400 == msg->status_code || //bad request
+	      2 == msg->status_code || //STATUS_CANT_RESOLVE
+	      1 == msg->status_code || //TIMEOUT (CANCELLED) ?
+	      7 == msg->status_code ||// STATUS_IO_ERROR
+		msg->response_body->length) { //ZERO SIZE
+			g_hash_table_insert(missing,
+				g_strdup(user_data->url), GINT_TO_POINTER(1));
+		}
+
 	if (user_data->data == current_pobject)
 #if EVOLUTION_VERSION >= 23190
 		em_format_queue_redraw((EMFormat *)user_data->data);
@@ -546,7 +569,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 	gchar *result = NULL;
 	gchar *duri = NULL;
 
-	g_return_val_if_fail(uri != NULL, NULL);
+	if (!uri) return NULL;
 
 	if (strstr(uri, "img:"))
 		duri = decode_image_cache_filename(uri);
@@ -555,7 +578,22 @@ verify_image(gchar *uri, EMFormatHTML *format)
 			duri = g_strdup(uri);
 	}
 
-	if (!g_file_test(duri, G_FILE_TEST_EXISTS)) {
+	if (!missing)
+		missing = g_hash_table_new_full(
+			g_str_hash, g_str_equal, g_free, g_free);
+
+	if (g_file_test(duri, G_FILE_TEST_EXISTS)) {
+		struct stat st;
+		g_stat(duri, &st);
+		if (st.st_size == 83) {
+			if (g_hash_table_lookup(missing, g_path_get_basename (duri)))
+				goto out;
+			g_unlink(duri);
+			d("retrying file:%s\n", duri);
+		}
+	}
+
+out:	if (!g_file_test(duri, G_FILE_TEST_EXISTS)) {
 			camel_url_decode((gchar *)uri);
 			//FIXME lame method of extracting data cache path
 			//there must be a function in camel for getting data cache path
@@ -674,6 +712,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 	cache_file = rss_cache_get_filename(intern);
 	d("fetch_image_redraw() tmpurl:%s, intern: %s\n",
 		tmpurl, cache_file);
+
 	if (!g_file_test (cache_file, G_FILE_TEST_EXISTS)) {
 		d("image cache MISS\n");
 		if (data) {

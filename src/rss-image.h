@@ -24,7 +24,8 @@ typedef struct _FEED_IMAGE {
 	gpointer data;
 } FEED_IMAGE;
 
-void rss_load_images(void);
+void rss_init_images(void);
+void rss_finish_images(void);
 gboolean display_folder_icon(GtkTreeStore *store, gchar *key);
 gchar *decode_image_cache_filename(gchar *name);
 void
