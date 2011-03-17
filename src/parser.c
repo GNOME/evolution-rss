@@ -544,7 +544,6 @@ layer_find_tag (xmlNodePtr node,
 {
 	xmlBufferPtr buf = xmlBufferCreate();
 	gchar *content;
-	guint len = 0;
 	int i;
 	char* (*func)();
 
@@ -571,7 +570,7 @@ layer_find_tag (xmlNodePtr node,
 					//we need separate xhtml parsing because of xmlNodegetcontent substitutes html entities
 					if (nodetype && !strcasecmp(nodetype, "xhtml")) {		// test this with "html" or smth else
 						//this looses html entities
-						len = xmlNodeDump(buf, node->doc, node, 0, 0);
+						xmlNodeDump(buf, node->doc, node, 0, 0);
 						content = g_strdup_printf("%s", xmlBufferContent(buf));
 					} else {
 						content = (char *)xmlNodeGetContent(node);
@@ -773,20 +772,7 @@ tree_walk (xmlNodePtr root, RDF *r)
 	xmlNodePtr channel = NULL, image = NULL;
 	GArray *item = g_array_new (TRUE, TRUE, sizeof (xmlNodePtr));
 	gchar *t;
-	gchar *charset;
 	gchar *md2, *tmp, *ver;
-
-	/* check in-memory encoding first,
-	 * fallback to transport encoding, which may or may not be correct
-	 */
-	if (r->cache->charset == XML_CHAR_ENCODING_UTF8
-	    || r->cache->charset == XML_CHAR_ENCODING_ASCII) {
-		charset = NULL;
-	} else {
-		/* bad/missing encoding, fallback to latin1 (locale?) */
-		charset = r->cache->encoding ?
-			(gchar *)r->cache->encoding : (gchar *)"iso-8859-1";
-	}
 
 	do {
 		walk = rewalk;

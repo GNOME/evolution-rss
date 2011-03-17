@@ -662,7 +662,6 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	GtkWidget *container, *container2;
 	GtkWidget *widget, *action_area;
 	GtkWidget *content_area, *password_dialog;
-	AtkObject *a11y;
 	gchar *markup;
 
 	widget = gtk_dialog_new_with_buttons (
@@ -748,7 +747,6 @@ create_user_pass_dialog(RSS_AUTH *auth)
 		0, 1, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 
 	username = gtk_entry_new ();
-	a11y = gtk_widget_get_accessible (username);
 	gtk_entry_set_visibility (GTK_ENTRY (username), TRUE);
 	gtk_entry_set_activates_default (GTK_ENTRY (username), TRUE);
 	gtk_widget_grab_focus (username);
@@ -770,7 +768,6 @@ create_user_pass_dialog(RSS_AUTH *auth)
 		0, 1, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 
 	password = gtk_entry_new ();
-	a11y = gtk_widget_get_accessible (password);
 	gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
 	gtk_entry_set_activates_default (GTK_ENTRY (password), TRUE);
 	gtk_widget_grab_focus (password);
@@ -851,13 +848,12 @@ gboolean
 proxy_auth_dialog(gchar *title, gchar *user, gchar *pass)
 {
 	GtkDialog *dialog;
-	gint result;
 
 	RSS_AUTH *auth_info = g_new0(RSS_AUTH, 1);
 	auth_info->user = user;
 	auth_info->pass = pass;
 	dialog = create_user_pass_dialog(auth_info);
-	result = gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_dialog_run(GTK_DIALOG(dialog));
 	/*LEAK g_free(auth_info);*/
 	return TRUE;
 }
@@ -2048,7 +2044,9 @@ free_rss_browser(EMFormatHTMLPObject *o)
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) o;
 	gpointer key = g_hash_table_lookup(rf->key_session, po->website);
+#ifdef HAVE_GECKO
 	guint engine;
+#endif
 	GtkAdjustment *adj;
 #if EVOLUTION_VERSION >= 23103
 	EWebView *web_view;
@@ -2059,10 +2057,10 @@ free_rss_browser(EMFormatHTMLPObject *o)
 		g_hash_table_remove(rf->key_session, po->website);
 		soup_session_abort(key);
 	}
+#ifdef HAVE_GECKO
 	engine = gconf_client_get_int(rss_gconf,
 			GCONF_KEY_HTML_RENDER,
 			NULL);
-#ifdef HAVE_GECKO
 	if (engine == 2) {
 		gtk_moz_embed_stop_load((GtkMozEmbed *)rf->mozembed);
 	}
@@ -2643,8 +2641,6 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	EMFolderTree *folder_tree;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(
 					shell_view);
-	EActivity *taskid;
-
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
 	folder = em_folder_tree_get_selected_folder (folder_tree);
 	g_return_if_fail (folder != NULL);
@@ -2654,7 +2650,6 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	folder_name = folder->full_name;
 #endif
 #else
-	guint taskid;
 	folder_name = t->uri;
 #endif
 	if (folder_name == NULL
@@ -2692,7 +2687,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 		single_pending = TRUE;
 		check_folders();
 		rf->err = NULL;
-		taskid = taskbar_op_message(name, key);
+		taskbar_op_message(name, key);
 		network_timeout();
 		if (!fetch_one_feed(fname, key, statuscb))
 			taskbar_op_finish(key);
@@ -2944,7 +2939,6 @@ finish_setup_feed(
 	SoupMessage *msg,
 	add_feed *user_data)
 {
-	guint ret = 0;
 	guint ttl;
 	add_feed *feed = (add_feed *)user_data;
 	RDF *r = NULL;
@@ -3152,7 +3146,6 @@ add:
 			g_string_free(content, 1);*/
 
 		rf->setup = 1;
-		ret = 1;
 		goto out;
 	}
 

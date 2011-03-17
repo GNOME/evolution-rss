@@ -442,7 +442,6 @@ folder_cb (GtkWidget *widget, gpointer data);
 void
 folder_cb (GtkWidget *widget, gpointer data)
 {
-	CamelFolder *folder;
 	EMailBackend *backend;
 	EMailSession *session;
 	CamelFolderInfo *folderinfo;
@@ -463,7 +462,6 @@ folder_cb (GtkWidget *widget, gpointer data)
 
 	session = e_mail_backend_get_session (backend);
 
-	folder = e_mail_reader_get_folder (reader);
 	window = e_mail_reader_get_window (reader);
 
 	folder_tree = em_folder_tree_new (session);

@@ -1,13 +1,10 @@
 
 	* maybe implement md5 for uniqueing articles (for broken feeds)
 	* detect duplicate items by content not by feedid
-	* check webkit area sizing when using zoom in/out
 	* implement USM (universal subscription mechanism)
 	* implement notify back of imported feed perhaps libnotify
 	* when adding a feed as opml file offer to import (file detection)
-	* fix recursivity on layer_find_pos
 	* provide predefined groups of feeds (OSS & co)
-	* evolution import rss add no. of retries
 	* slow delete operation on large folders
 	* add handling parser error to setup_feed (check HIG for error msg)
 	* use combo popup for moving and placement of feed folders
@@ -23,7 +20,6 @@
 	* make gtkhtml rendering non-blocking
 	* use ellipsize in web auth dialog
 	* find a way to delete a feed that has not been created (directory isn't there)
-	* fix comment cancellation
 	* fix wrong SSL browser dialog
 	* check custom interval fetching right after it was setup
 	* search for threaded implmentation options
@@ -45,5 +41,3 @@
 	* default render engine broken again
 	* retest deleting a feed when fetching in progress
 	* detect rss-id changes (file changes) -> feeds downloaded all over again
-	* make move of feed to different folder real work
-	* proxify async the download_* functions
