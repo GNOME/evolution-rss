@@ -286,11 +286,16 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 #endif
 {
 	CamelStream *stream = NULL;
+	gchar *mime_type;
 	stream = rss_cache_add(user_data->url);
 	finish_image(soup_sess, msg, stream);
 	if (!missing)
 		missing = g_hash_table_new_full(
 			g_str_hash, g_str_equal, g_free, NULL);
+
+	mime_type = g_content_type_guess(NULL,
+			(guchar *)msg->response_body->data,
+			msg->response_body->length, NULL);
 
 	if (503 == msg->status_code || //handle this timedly fasion
 	    404 == msg->status_code || //NOT FOUND
@@ -298,10 +303,14 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 	      2 == msg->status_code || //STATUS_CANT_RESOLVE
 	      1 == msg->status_code || //TIMEOUT (CANCELLED) ?
 	      7 == msg->status_code ||// STATUS_IO_ERROR
-		msg->response_body->length) { //ZERO SIZE
+		msg->response_body->length || //ZERO SIZE
+	/*FIXME mime type here could be wrong */
+	0 != g_ascii_strncasecmp (mime_type, "image/", 6)) { //ZERO SIZE
 			g_hash_table_insert(missing,
-				g_strdup(user_data->url), GINT_TO_POINTER(1));
+				g_strdup(user_data->url),
+				GINT_TO_POINTER(1));
 		}
+	g_free(mime_type);
 
 	if (user_data->data == current_pobject)
 #if EVOLUTION_VERSION >= 23190
