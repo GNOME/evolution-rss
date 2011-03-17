@@ -65,6 +65,8 @@ typedef struct {
 	SoupSession *ss;
 } CallbackInfo;
 
+typedef void (*pCallback)(gpointer data);
+
 typedef struct {
 	SoupSession *ss;
 	SoupMessage *sm;
@@ -73,8 +75,12 @@ typedef struct {
 	gchar *url;
 	gchar *host;
 	SoupAddress *addr;
+	pCallback callback;
+	gpointer data;
 } STNET;
 
+void idle_callback(gpointer data);
+void queue_callback(gpointer data);
 void proxify_session_async(EProxy *proxy, STNET *stnet);
 static void rss_webkit_resolve_callback (SoupAddress *addr, guint status, gpointer data);
 
@@ -342,8 +348,7 @@ rss_resolve_callback (SoupAddress *addr, guint status, gpointer data)
 		G_OBJECT (stnet->ss),
 		SOUP_SESSION_PROXY_URI,
 		proxy_uri, NULL);
-	soup_session_queue_message (stnet->ss, stnet->sm,
-		stnet->cb2, stnet->cbdata2);
+	stnet->callback(stnet->data);
 }
 
 static void
@@ -371,6 +376,14 @@ rss_webkit_resolve_callback (SoupAddress *addr, guint status, gpointer data)
 		SOUP_SESSION_PROXY_URI,
 		proxy_uri, NULL);
 	wknet->cb(wknet->str, wknet->base, wknet->encoding);
+}
+
+void
+queue_callback(gpointer data)
+{
+	STNET *stnet = (STNET *)data;
+	soup_session_queue_message (stnet->ss, stnet->sm,
+		stnet->cb2, stnet->cbdata2);
 }
 
 //this will insert proxy in the session
@@ -429,9 +442,8 @@ proxify_session_async(EProxy *proxy, STNET *stnet)
 #endif
 	}
 
-out:	soup_session_queue_message (stnet->ss, stnet->sm,
-		stnet->cb2, stnet->cbdata2);
-
+out:	stnet->callback(stnet->data);
+	//free stnet
 }
 
 guint
@@ -827,6 +839,8 @@ net_get_unblocking(gchar *url,
 	stnet->cb2 = cb2;
 	stnet->cbdata2 = cbdata2;
 	stnet->url = g_strdup(url);
+	stnet->callback = queue_callback;
+	stnet->data = stnet;
 
 	proxify_session_async(proxy, stnet);
 	//free stnet
@@ -837,6 +851,17 @@ net_get_unblocking(gchar *url,
 	if (mainurl)
 		g_free(mainurl);
 	return TRUE;
+}
+
+void
+idle_callback(gpointer data)
+{
+	STNET *stnet = (STNET *)data;
+	g_queue_push_tail (rf->stqueue, stnet);
+	rf->enclist = g_list_append (rf->enclist, stnet->url);
+
+	if (!net_qid)
+		net_qid = g_idle_add((GSourceFunc)net_queue_dispatcher, NULL);
 }
 
 // same stuff as net_get_* but without accumulating headers
@@ -867,9 +892,6 @@ download_unblocking(
 	}
 #endif
 
-#if (DATASERVER_VERSION >= 2023001)
-	proxify_session(proxy, soup_sess, url);
-#endif
 	if (cb && data) {
 		info = g_new0(CallbackInfo, 1);
 		info->user_cb = cb;
@@ -928,14 +950,14 @@ download_unblocking(
 	stnet->sm = msg;
 	stnet->cb2 = cb2;
 	stnet->cbdata2 = cbdata2;
-	stnet->url = g_strdup(url);
-
-
-	g_queue_push_tail (rf->stqueue, stnet);
-	rf->enclist = g_list_append (rf->enclist, url);
+	stnet->url = url;
+	stnet->callback = idle_callback;
+	stnet->data = stnet;
 
 	if (!net_qid)
 		net_qid = g_idle_add((GSourceFunc)net_queue_dispatcher, NULL);
+
+	stnet->callback(stnet->data);
 
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
