@@ -181,6 +181,13 @@ gboolean feed_new = FALSE;	//make sense only for setting up a new feed
 extern guint net_queue_run_count;
 extern guint net_qid;
 
+typedef struct CFL {
+	gchar *url;
+	gchar *name;
+	FILE *file;
+	create_feed *CF;
+} cfl;
+
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -584,21 +591,36 @@ download_chunk(
 	gpointer data)
 {
 	NetStatusProgress *progress;
+	cfl *CFL = (cfl *)data;
 	switch (status) {
 	case NET_STATUS_PROGRESS:
+		if (!CFL->file) {
+			gchar *name;
+			gchar *tmpdir = e_mkdtemp("evo-rss-XXXXXX");
+			if (tmpdir == NULL)
+				return;
+			name = g_build_filename(tmpdir,
+				g_path_get_basename(CFL->url),
+				NULL);
+			g_free(tmpdir);
+			CFL->CF->attachedfiles = g_list_append(CFL->CF->attachedfiles, name);
+			CFL->name = name;
+			CFL->file = fopen(name, "w");
+			if (!CFL->file) return;
+		}
 		progress = (NetStatusProgress*)statusdata;
 		if (progress->current > 0 && progress->total > 0) {
 			guint encl_max_size = (gint)gconf_client_get_float(
 				rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
 			if (progress->total > encl_max_size * 1024) { //TOLERANCE!!!
-				cancel_active_op((gpointer)data);
+				cancel_active_op((gpointer)CFL->file);
 				return;
 			}
 			if (progress->reset) {
-				rewind(data);
+				rewind(CFL->file);
 				progress->reset = 0;
 			}
-			fwrite(progress->chunk, 1, progress->chunksize, (FILE *)data);
+			fwrite(progress->chunk, 1, progress->chunksize, (FILE *)CFL->file);
 		}
 		break;
 	default:
@@ -5380,13 +5402,6 @@ free_cf(create_feed *CF)
 	g_free(CF);
 }
 
-typedef struct CFL {
-	gchar *url;
-	gchar *name;
-	FILE *file;
-	create_feed *CF;
-} cfl;
-
 void
 #if LIBSOUP_VERSION < 2003000
 finish_attachment (
@@ -5408,33 +5423,20 @@ process_attachments(create_feed *CF)
 	g_return_if_fail(CF->attachments != NULL);
 
 	do {
-		gchar *tmpdir, *name;
-
 		if (!strlen(l->data))
 			continue;
 		if (g_list_find_custom(rf->enclist, l->data,
 			(GCompareFunc)strcmp))
 			continue;
-		tmpdir = e_mkdtemp("evo-rss-XXXXXX");
-		if ( tmpdir == NULL)
-			continue;
-		name = g_build_filename(tmpdir,
-			g_path_get_basename(l->data),
-			NULL);
-		g_free(tmpdir);
 		CFL = g_new0(cfl, 1);
 		CFL->url = l->data;
 		CFL->CF = CF;
-		d("attachment file:%s\n", name)
-		CF->attachedfiles = g_list_append(CF->attachedfiles, name);
+		d("attachment file:%s\n", l->data)
 		CF->attachmentsqueue++;
-		CFL->name = name;
-		CFL->file = fopen(name, "w");
-		if (!CFL->file) return;
 		download_unblocking(
 			CFL->url,
 			download_chunk,
-			CFL->file,
+			CFL,
 			(gpointer)finish_attachment,
 			CFL,
 			1,
@@ -5476,8 +5478,6 @@ finish_attachment (SoupSession *soup_sess,
 out:	fclose(user_data->file);
 
 	rf->enclist = g_list_remove(rf->enclist, user_data->url);
-	//g_free(msg->response_body->data);
-	//g_object_unref(msg);
 	if (user_data->CF->attachmentsqueue)
 		user_data->CF->attachmentsqueue--;
 
@@ -5502,30 +5502,22 @@ out:	fclose(user_data->file);
 void
 process_enclosure(create_feed *CF)
 {
-	gchar *tmpdir, *name;
+	cfl *CFL;
 
 	if (g_list_find_custom(rf->enclist, CF->encl,
 			(GCompareFunc)strcmp)) {
 		return;
 	}
-	tmpdir = e_mkdtemp("evo-rss-XXXXXX");
-	if ( tmpdir == NULL)
-		return;
-	name = g_build_filename(tmpdir,
-		g_path_get_basename(CF->encl),
-		NULL);
-	g_free(tmpdir);
-	CF->enclurl = CF->encl;
-	CF->encl = name;
-	d("enclosure file:%s\n", name)
-	CF->efile = fopen(name, "w");
-	if (!CF->efile) return;
+	d("enclosure file:%s\n", CF->encl)
+	CFL = g_new0(cfl, 1);
+	CFL->url = CF->encl;
+	CFL->CF = CF;
 	download_unblocking(
-		CF->enclurl,
+		CF->encl,
 		download_chunk,
-		CF->efile,
+		CFL,
 		(gpointer)finish_enclosure,
-		CF,
+		CFL,
 		1,
 		NULL);
 }
@@ -5540,33 +5532,36 @@ finish_enclosure (SoupSession *soup_sess,
 		create_feed *user_data)
 #endif
 {
+	cfl *CFL = (cfl *)user_data;
+	create_feed *CF = CFL->CF;
 	if (msg->status_code == SOUP_STATUS_CANCELLED) {
-		user_data->encl = NULL;
+		CF->encl = NULL;
 		goto out;
 	}
 #if LIBSOUP_VERSION < 2003000
 	fwrite(msg->response.body,
 		msg->response.length,
 		1,
-		user_data->efile);
+		CFL->file);
 #else
 	fwrite(msg->response_body->data,
 		msg->response_body->length,
 		1,
-		user_data->efile);
+		CFL->file);
 #endif
-out:	fclose(user_data->efile);
+out:	fclose(CFL->file);
+	CF->efile = CFL->file;
+	CF->enclurl = CF->encl;
+	CF->encl = g_strdup(CFL->name);
 
-	if (!feed_is_new(user_data->feed_fname, user_data->feed_uri)) {
-		create_mail(user_data);
+	if (!feed_is_new(CF->feed_fname, CF->feed_uri)) {
+		create_mail(CF);
 		write_feed_status_line(
-				user_data->feed_fname,
-				user_data->feed_uri);
+				CF->feed_fname,
+				CF->feed_uri);
 	}
-	rf->enclist = g_list_remove(rf->enclist, user_data->enclurl);
-	free_cf(user_data);
-	//g_free(msg->response_body->data);
-	//g_object_unref(msg);
+	rf->enclist = g_list_remove(rf->enclist, CF->enclurl);
+	free_cf(CF);
 	if (net_queue_run_count) net_queue_run_count--;
 	if (!net_qid)
 		net_qid = g_idle_add(
