@@ -77,7 +77,7 @@
       <key>/schemas/apps/evolution/evolution-rss/custom_font</key>
       <applyto>/apps/evolution/evolution-rss/custom_font</applyto>
       <owner>evolution-rss</owner>
-      <type>float</type>
+      <type>bool</type>
       <default>false</default>
       <locale name="C">
         <short>Use custom font</short>
