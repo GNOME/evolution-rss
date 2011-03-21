@@ -713,6 +713,38 @@ next:		node = node->next;
 	return NULL;
 }
 
+/*
+ * like layer_query_find_prop but locates all properties in an entry
+ */
+
+GList *
+layer_query_find_all_prop (xmlNodePtr node,
+		const char *match,
+		xmlChar *attr,
+		const char *attrprop,
+		xmlChar *prop)
+{
+	gchar *tmp;
+	GList *result = NULL;
+	while (node!=NULL) {
+		if (!g_ascii_strcasecmp((gchar *)node->name, match)) {
+			gchar *tprop = (gchar *)xmlGetProp(node, attr);
+			if (tprop) {
+				if (g_ascii_strcasecmp(tprop, attrprop)) {
+					xmlFree(tprop);
+					goto next;
+				}
+			}
+			xmlFree(tprop);
+			tmp =  (gchar *)xmlGetProp(node, prop);
+			if (tmp)
+				result = g_list_append(result, tmp);
+		}
+next:		node = node->next;
+	}
+	return result;
+}
+
 char *
 layer_find_url (xmlNodePtr node,
 		char *match,
@@ -1103,6 +1135,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 		//handle multiple enclosures
 		encl = (gchar *)layer_find_innerelement(top, "enclosure", "url",	// RSS 2.0 Enclosure
 			layer_find_innerelement(top, "link", "enclosure", NULL));		// ATOM Enclosure
+
 		//handle screwed feeds that set url to "" (feed does not validate!)
 		if (encl && !strlen(encl)) {
 			g_free(encl);
@@ -1110,7 +1143,10 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 		}
 		//handle attatchments (can be multiple)
 		attachments = layer_find_tag_prop(top, "media", "url");
-
+		if (!attachments)
+			attachments = layer_query_find_all_prop (top,
+				"link", (xmlChar *)"rel",
+				"enclosure", (xmlChar *)"href");
 
 //                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
 		comments = (gchar *)layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments

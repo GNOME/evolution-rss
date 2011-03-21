@@ -49,6 +49,13 @@ layer_query_find_prop (xmlNodePtr node,
 		const char *attrprop,
 		xmlChar *prop);
 
+GList *
+layer_query_find_all_prop (xmlNodePtr node,
+		const char *match,
+		xmlChar *attr,
+		const char *attrprop,
+		xmlChar *prop);
+
 const char *layer_find_tag (xmlNodePtr node,
 			const char *match,
 			const char *fail);
