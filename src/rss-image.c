@@ -70,7 +70,8 @@ rss_init_images(void)
 void
 rss_finish_images(void)
 {
-	g_hash_table_destroy(missing);
+	if (missing)
+		g_hash_table_destroy(missing);
 }
 
 void
