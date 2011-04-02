@@ -359,6 +359,7 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 	GtkTreeIter    iter;
 	gchar *full_name, *name, *full_path;
 
+	gchar *tip = g_markup_escape_text(key, strlen(key));
 	gtk_list_store_append (store, &iter);
 	full_name = lookup_feed_folder(key);
 	name = g_path_get_basename(full_name);
@@ -372,7 +373,7 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 		0, g_hash_table_lookup(rf->hre, lookup_key(key)),
 		1, name,
 		2, g_hash_table_lookup(rf->hrt, lookup_key(key)),
-		3, g_strdup(key),
+		3, tip,
 		4, full_path,
 		-1);
 	g_free(name);
