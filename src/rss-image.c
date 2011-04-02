@@ -590,7 +590,7 @@ verify_image(gchar *uri, EMFormatHTML *format)
 
 	if (!missing)
 		missing = g_hash_table_new_full(
-			g_str_hash, g_str_equal, g_free, g_free);
+			g_str_hash, g_str_equal, g_free, NULL);
 
 	if (g_file_test(duri, G_FILE_TEST_EXISTS)) {
 		struct stat st;
