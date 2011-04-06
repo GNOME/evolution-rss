@@ -25,5 +25,7 @@
 #define dp(f, x...) { g_print("%s(%d) %s():", __FILE__, __LINE__, __FUNCTION__);\
 			g_print(f, ## x);}
 
+#define rss_debug_time_start(timer, msg) { g_print("%s\n", msg); timer =  g_timer_new();}
+#define rss_debug_time_stop(timer, msg) { g_timer_stop(timer); g_print("%s done %f(s)\n", msg, g_timer_elapsed(timer, NULL));}
 #endif /*__DEBUG_H__*/
 
