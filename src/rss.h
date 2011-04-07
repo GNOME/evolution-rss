@@ -409,6 +409,7 @@ gboolean update_articles(gboolean disabler);
 gchar *lookup_chn_name_by_url(gchar *url);
 gchar *lookup_main_folder(void);
 gchar *lookup_feed_folder(gchar *folder);
+gchar *lookup_feed_folder_raw(gchar *folder);
 gchar *lookup_original_folder(
 	gchar *folder,
 	gboolean *found);

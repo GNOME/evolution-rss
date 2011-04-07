@@ -361,7 +361,7 @@ construct_list(gpointer key, gpointer value, gpointer user_data)
 
 	gchar *tip = g_markup_escape_text(key, strlen(key));
 	gtk_list_store_append (store, &iter);
-	full_name = lookup_feed_folder(key);
+	full_name = lookup_feed_folder_raw(key);
 	name = g_path_get_basename(full_name);
 	full_path = g_build_filename(
 			lookup_main_folder(),

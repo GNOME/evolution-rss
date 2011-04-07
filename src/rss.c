@@ -3942,6 +3942,21 @@ lookup_feed_folder(gchar *folder)
 	return res;
 }
 
+//
+//lookups feed folder name
+//this can be different from the default if folder was renamed
+//
+
+gchar *
+lookup_feed_folder_raw(gchar *folder)
+{
+	gchar *new_folder = g_hash_table_lookup(
+				rf->reversed_feed_folders, folder);
+	/* replace remaining dots with spaces - dots aren't supported since evo's Maildir migration*/
+	gchar *res = g_strdup(new_folder ? new_folder : folder);
+	return res;
+}
+
 gchar *
 lookup_chn_name_by_url(gchar *url)
 {
