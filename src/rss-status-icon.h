@@ -16,10 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+typedef struct {
+	gchar *chn_name;
+	gchar *title;
+} StatusText;
+
 void icon_activated (GtkStatusIcon *icon, gpointer pnotify);
 gboolean button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
 void create_status_icon(void);
 gboolean flicker_stop(gpointer user_data);
-void flaten_status(gpointer msg, gpointer user_data);
+void flatten_status(StatusText *st, gchar **user_data);
 void toggle_window(void);
-void update_status_icon(const char *channel, gchar *title);
+void update_status_icon(GQueue *status);
+void update_status_icon_text(GQueue *status_msg, const char *channel, gchar *title);

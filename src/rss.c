@@ -247,7 +247,6 @@ gboolean browser_fetching = 0;	//mycall event could be triggered
 gint browser_fill = 0;	//how much data currently written to browser
 
 gchar *process_feed(RDF *r);
-gboolean display_feed(RDF *r);
 gchar *display_doc (RDF *r);
 gchar *display_comments (RDF *r, EMFormatHTML *format);
 void check_folders(void);
@@ -1686,7 +1685,8 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	if (button == 2)
 		gtk_menu_popup (
 			GTK_MENU (menu),
-			NULL, NULL, NULL, NULL,
+			NULL, NULL,
+			gtk_status_icon_position_menu, user_data,
 			0, GDK_CURRENT_TIME);
 #else
 	emp = em_popup_new("org.gnome.evolution.mail.formathtmldisplay.popup");
@@ -1703,9 +1703,10 @@ gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
 	menu = e_popup_create_menu_once((EPopup *)emp, NULL, 0);
 
 	if (button == 2)
-		gtk_menu_popup(
-			menu,
-			NULL, NULL, NULL, NULL,
+		gtk_menu_popup (
+			GTK_MENU (menu),
+			NULL, NULL,
+			gtk_status_icon_position_menu, user_data,
 			button,
 			gtk_get_current_event_time());
 #endif
@@ -3139,8 +3140,6 @@ add:
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
 		save_gconf_feed();
 
-//		if (feed->validate && !(rf->import && rf->display_cancel))
-//			display_feed(r);
 		g_idle_add(
 			(GSourceFunc)display_feed_async,
 			g_strdup(chn_name));
@@ -3160,8 +3159,6 @@ add:
 			xmlFreeDoc(r->cache);
 		if (r->type)
 			g_free(r->type);
-		if (r->uids)
-			g_array_free(r->uids, TRUE);
 		if (r)
 			g_free(r);
 		if (content)
@@ -3282,12 +3279,14 @@ setup_feed(add_feed *feed)
 void
 update_sr_message(void)
 {
-	if (flabel && farticle) {
-		gchar *fmsg = g_strdup_printf(
+	gchar *fmsg = NULL;
+	if (G_IS_OBJECT(rf->label) && farticle) {
+		fmsg = g_strdup_printf(
 				_("Getting message %d of %d"),
 				farticle,
 				ftotal);
-		gtk_label_set_text (GTK_LABEL (flabel), fmsg);
+		if (G_IS_OBJECT(rf->label))
+			gtk_label_set_text (GTK_LABEL (rf->label), fmsg);
 		g_free(fmsg);
 	}
 }
@@ -3470,7 +3469,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
 		goto out;
 
-
 	response = g_string_new_len(msg->body, msg->length);
 
 	g_print("feed %s\n", (gchar *)user_data);
@@ -3490,15 +3488,15 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			NULL, title, tmsg);
 		g_free(tmsg);
 		g_free(title);
-		goto cleanup;
+		goto out;
 	}
 
 	if (msg->status_code == SOUP_STATUS_CANCELLED)
-		goto cleanup;
+		goto out;
 
 	if (!deleted) {
 		if (!user_data || !lookup_key(user_data))
-			goto cleanup;
+			goto out;
 		r->uri =  g_hash_table_lookup(
 				rf->hr, lookup_key(user_data));
 
@@ -3519,18 +3517,14 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 					g_strdup(chn_name));
 				save_gconf_feed();
 				update_ttl(md5, r->ttl);
-				//save_data = user_data;
 				user_data = chn_name;
 			}
 			if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 				get_feed_age(r, user_data);
 		}
 	}
-	//ftotal+=r->total;
 	update_sr_message();
 	g_string_free(response, 1);
-
-//tout:
 
 	if (rf->sr_feed && !deleted) {
 		gchar *furl = g_markup_printf_escaped(
@@ -3564,15 +3558,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		rf->progress_bar = NULL;
 		rf->info = NULL;
 	}
-cleanup:if (r->cache)
-		xmlFreeDoc(r->cache);
-	if (r->type)
-		g_free(r->type);
-	if (r->version)
-		g_free(r->version);
-	if (r->uids)
-		g_array_free(r->uids, TRUE);
-	g_free(r);
 out:	if (chn_name) { //user_data
 		//not sure why it dies here
 		if (!rf->cancel && !rf->cancel_all)
@@ -4750,9 +4735,6 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
 	status_label = gtk_label_new (_("Waiting..."));
-//                status_label = e_clipped_label_new (
-//                    "www",
-//                  PANGO_WEIGHT_BOLD, 1.0);
 
 	gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 	gtk_misc_set_alignment (GTK_MISC (status_label), 0, .5);
@@ -4969,7 +4951,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 #endif
 			rss_soup_init();
 			d("init_gdbus()\n");
-			/*G D-BUS init*/
+			/*GD-BUS init*/
 			init_gdbus ();
 			prepare_hashes();
 			if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL))
@@ -5431,7 +5413,7 @@ process_attachments(create_feed *CF)
 		CFL = g_new0(cfl, 1);
 		CFL->url = l->data;
 		CFL->CF = CF;
-		d("attachment file:%s\n", l->data)
+		d("attachment file:%s\n", (gchar *)l->data)
 		CF->attachmentsqueue++;
 		download_unblocking(
 			CFL->url,
@@ -5475,7 +5457,8 @@ finish_attachment (SoupSession *soup_sess,
 		1,
 		user_data->file);
 #endif
-out:	fclose(user_data->file);
+out:	if (user_data->file)
+		fclose(user_data->file);
 
 	rf->enclist = g_list_remove(rf->enclist, user_data->url);
 	if (user_data->CF->attachmentsqueue)
@@ -5549,7 +5532,8 @@ finish_enclosure (SoupSession *soup_sess,
 		1,
 		CFL->file);
 #endif
-out:	fclose(CFL->file);
+out:	if (CFL->file)
+		fclose(CFL->file);
 	CF->efile = CFL->file;
 	CF->enclurl = CF->encl;
 	CF->encl = g_strdup(CFL->name);
@@ -5641,24 +5625,40 @@ process_feed(RDF *r)
 	return NULL;
 }
 
-gboolean
-display_feed(RDF *r)
+typedef struct {
+	RDF *r;
+	GQueue *status_msg;
+} AsyncData;
+
+void
+display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data);
+
+void
+display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data)
 {
-	r->feedid = update_channel(r);
-	if (r->maindate)
-		g_free(r->maindate);
-	g_array_free(r->item, TRUE);
-	g_free(r->feedid);
-	return 0;
+	GSimpleAsyncResult *simple;
+	AsyncData *asyncr;
+	GConfClient *client = gconf_client_get_default();
+
+	simple = G_SIMPLE_ASYNC_RESULT (result);
+	asyncr = g_simple_async_result_get_op_res_gpointer (simple);
+	if (gconf_client_get_bool (client, GCONF_KEY_STATUS_ICON, NULL)) {
+		update_status_icon(asyncr->status_msg);
+	}
+	g_object_unref(client);
 }
 
 gchar *
 display_doc (RDF *r)
 {
 	gchar *title = NULL;
-	if ((title = process_feed(r)))
-		display_feed(r);
-	return title;
+	if ((title = process_feed(r))) {
+		update_sr_message();
+		display_channel_items (r,
+			0,
+			G_PRIORITY_DEFAULT, display_doc_finish, status_msg);
+	}
+	return g_strdup(title);
 }
 
 void delete_oldest_article(CamelFolder *folder, guint unread);

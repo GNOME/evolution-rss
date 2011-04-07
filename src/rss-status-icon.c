@@ -25,9 +25,18 @@
 
 GtkStatusIcon *status_icon = NULL;
 gboolean winstatus;
-gchar *flat_status_msg;
 extern GtkWidget *evo_window;
 extern GQueue *status_msg;
+
+void status_text_free(StatusText *st);
+
+void
+status_text_free(StatusText *st)
+{
+	g_free(st->chn_name);
+	g_free(st->title);
+	g_free(st);
+}
 
 void
 icon_activated (GtkStatusIcon *icon, gpointer pnotify)
@@ -51,6 +60,8 @@ icon_activated (GtkStatusIcon *icon, gpointer pnotify)
 		g_free(folder_name);
 		rss_select_folder(real_name);
 	}
+	g_queue_foreach(status_msg, (GFunc)status_text_free, NULL);
+	status_msg = g_queue_new();
 }
 
 gboolean
@@ -102,19 +113,27 @@ flicker_stop(gpointer user_data)
 	return FALSE;
 }
 
-
 void
-flaten_status(gpointer msg, gpointer user_data)
+flatten_status(StatusText *st, gchar **user_data)
 {
-	if (strlen(msg)) {
-		if (flat_status_msg)
-			flat_status_msg = g_strconcat(
-						flat_status_msg,
-						msg,
+	gchar *temp = NULL;
+	if (strlen(st->chn_name)) {
+		gchar *total;
+		gchar *tchn, *ttit;
+		tchn = g_markup_escape_text (st->chn_name, -1);
+		ttit = g_markup_escape_text (st->title, -1);
+		total = g_strdup_printf("<b>%s</b>\n%s\n", tchn, ttit);
+		g_free(tchn);
+		g_free(ttit);
+		if (*user_data)
+			temp = g_strconcat(
+						*user_data,
+						total,
 						NULL);
 		else
-			flat_status_msg = g_strdup(msg);
+			temp = g_strdup(total);
 	}
+	*user_data = temp;
 }
 
 void
@@ -155,50 +174,56 @@ toggle_window(void)
 }
 
 void
-update_status_icon(const char *channel, gchar *title)
+update_status_icon(GQueue *status)
 {
-	gchar *total;
 	gchar *iconfile;
-	gchar *tchn, *ttit;
-	GConfClient *client = gconf_client_get_default();
-	if (gconf_client_get_bool (client, GCONF_KEY_STATUS_ICON, NULL)) {
-		tchn = g_markup_escape_text (channel, -1);
-		ttit = g_markup_escape_text (title, -1);
-		total = g_strdup_printf("<b>%s</b>\n%s\n", tchn, ttit);
-		g_free(tchn);
-		g_free(ttit);
-		create_status_icon();
-		iconfile = g_build_filename (EVOLUTION_ICONDIR,
+	StatusText *channel;
+	gchar *flat = NULL;
+	if (g_queue_is_empty(status))
+		return;
+	create_status_icon();
+	iconfile = g_build_filename (EVOLUTION_ICONDIR,
 			"rss-icon-unread.png",
 			NULL);
-		gtk_status_icon_set_from_file (
-			status_icon,
-			iconfile);
-		g_free(iconfile);
-		g_queue_push_tail(status_msg, total);
-		if (g_queue_get_length(status_msg) == 6)
-			g_queue_pop_head(status_msg);
-		g_queue_foreach(status_msg, flaten_status, flat_status_msg);
+	gtk_status_icon_set_from_file (
+		status_icon,
+		iconfile);
+	g_free(iconfile);
+	channel = g_queue_peek_tail(status);
+	g_queue_foreach(status, (GFunc)flatten_status, &flat);
+	if (flat)
 #if GTK_CHECK_VERSION (2,16,0)
-		gtk_status_icon_set_tooltip_markup (status_icon, flat_status_msg);
+		gtk_status_icon_set_tooltip_markup (status_icon, flat);
 #else
-		gtk_status_icon_set_tooltip (status_icon, flat_status_msg);
+		gtk_status_icon_set_tooltip (status_icon, flat);
 #endif
 #if GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 22
-		if (gconf_client_get_bool (client, GCONF_KEY_BLINK_ICON, NULL)
-		&& !gtk_status_icon_get_blinking(status_icon))
-			gtk_status_icon_set_blinking (status_icon, TRUE);
-		g_timeout_add(15 * 1000, flicker_stop, NULL);
+	if (gconf_client_get_bool (client, GCONF_KEY_BLINK_ICON, NULL)
+	&& !gtk_status_icon_get_blinking(status_icon))
+		gtk_status_icon_set_blinking (status_icon, TRUE);
+	g_timeout_add(15 * 1000, flicker_stop, NULL);
 #endif
-		gtk_status_icon_set_has_tooltip (status_icon, TRUE);
-		g_object_set_data_full (
-			G_OBJECT (status_icon), "uri",
-			lookup_feed_folder((gchar *)channel),
-			(GDestroyNotify) g_free);
-		g_free(flat_status_msg);
-//		g_free(total);
-		flat_status_msg = NULL;
+	gtk_status_icon_set_has_tooltip (status_icon, TRUE);
+	g_object_set_data_full (
+		G_OBJECT (status_icon), "uri",
+		lookup_feed_folder((gchar *)channel->chn_name),
+		(GDestroyNotify) g_free);
+	g_free(flat);
+}
+
+void
+update_status_icon_text(GQueue *status, const char *channel, gchar *title)
+{
+	StatusText *st = g_new0 (StatusText, 1);
+	st->chn_name = g_strdup(channel);
+	st->title = g_strdup(title);
+	g_queue_push_tail(status, st);
+	if (g_queue_get_length(status) == 6) {
+		StatusText *tmp = g_queue_peek_head(status);
+		g_free(tmp->chn_name);
+		g_free(tmp->title);
+		g_free(tmp);
+		g_queue_pop_head(status);
 	}
-	g_object_unref(client);
 }
 

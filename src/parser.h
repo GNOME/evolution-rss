@@ -21,7 +21,12 @@
 
 #include <mail/em-format-html.h>
 
-gchar *update_channel(RDF *r);
+void display_channel_items (RDF *r,
+	gint io_priority,
+	GCancellable *cancellable,
+	GAsyncReadyCallback callback,
+	gpointer user_data);
+
 xmlDoc *rss_html_url_decode(const char *html, int len);
 
 const char *layer_find (xmlNodePtr node,

@@ -44,7 +44,14 @@ extern int rss_verbose_debug;
 #include "misc.h"
 #include "network-soup.h"
 
+typedef struct {
+	RDF *r;
+	GQueue *status_msg;
+} AsyncData;
+
 extern GConfClient *rss_gconf;
+void asyncr_context_free(AsyncData *asyncr);
+GQueue *display_channel_items_sync(AsyncData *ayncr);
 
 /************ RDF Parser *******************/
 
@@ -1217,24 +1224,26 @@ refresh_mail_folder(CamelFolder *mail_folder)
 	camel_folder_thaw(mail_folder);
 }
 
-gchar *
-update_channel(RDF *r)
+GQueue *
+display_channel_items_sync(AsyncData *asyncr)
 {
 	FILE *fr, *fw;
-	guint i;
-	gchar *sender;
-	xmlNodePtr el;
-	gchar *subj;
-	create_feed *CF;
+	RDF *r = asyncr->r;
+	GQueue *status_msg = asyncr->status_msg;
+	GtkWidget *progress = r->progress;
 	gchar *chn_name = r->title;
 	gchar *url = r->uri;
 	GArray *item = r->item;
-	GtkWidget *progress = r->progress;
-	gchar *buf, *safes, *feed_dir, *feed_name;
-	gchar *msg, *safchn;
-	gboolean freeze = FALSE;
 	CamelFolder *mail_folder = NULL;
+	gchar *sender;
+	gboolean freeze = FALSE;
 	gchar *article_uid = NULL;
+	gchar *safes, *feed_dir, *feed_name;
+	gchar *msg, *safchn;
+	create_feed *CF;
+	gchar *subj;
+	xmlNodePtr el;
+	guint i;
 
 	safes = encode_rfc2047(chn_name);
 	safchn = g_strchomp (g_strdup(chn_name));
@@ -1243,19 +1252,18 @@ update_channel(RDF *r)
 	g_free(safes);
 
 	migrate_crc_md5(chn_name, url);
-	buf = gen_md5(url);
+	r->feedid = gen_md5(url);
 	feed_dir = rss_component_peek_base_directory();
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
 
-	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, buf);
+	feed_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", feed_dir, r->feedid);
 	g_free(feed_dir);
 
 	fr = fopen(feed_name, "r");
 	fw = fopen(feed_name, "a+");
 
 	for (i=0; NULL != (el = g_array_index(item, xmlNodePtr, i)); i++) {
-		update_sr_message();
 		update_progress_text(chn_name);
 		if (rf->cancel || rf->cancel_all || rf->display_cancel)
 			break;
@@ -1279,7 +1287,7 @@ update_channel(RDF *r)
 			r, &article_uid);
 		g_array_append_val(r->uids, article_uid);
 		if (!CF) continue;
-		CF->feedid = g_strdup(buf);
+		CF->feedid = g_strdup(r->feedid);
 		CF->sender = g_strdup(sender);
 		if (r->prefix)
 			CF->full_path = g_build_path(
@@ -1291,7 +1299,6 @@ update_channel(RDF *r)
 		if (!mail_folder) {
 			mail_folder = check_feed_folder(CF->full_path);
 		}
-
 		subj = g_strdup(CF->subj);
 
 		ftotal++;
@@ -1316,11 +1323,12 @@ update_channel(RDF *r)
 
 done:		farticle++;
 		d("put success()\n");
-		update_status_icon(chn_name, subj);
+		update_status_icon_text(status_msg, chn_name, subj);
 		g_free(subj);
 	}
 	if (freeze)
 		refresh_mail_folder(mail_folder);
+
 	if (mail_folder) {
 		if ((rf->import || feed_new)
 		&& (!rf->cancel && !rf->cancel_all && !rf->display_cancel)) {
@@ -1340,7 +1348,71 @@ done:		farticle++;
 	if (fw) fclose(fw);
 
 	g_free(feed_name);
-	return buf;
+	return status_msg;
+}
+
+static void
+display_channel_items_thread (GSimpleAsyncResult *simple,
+	GObject *object,
+	GCancellable *cancellable)
+{
+	AsyncData *asyncr;
+	GError *error = NULL;
+
+	asyncr = g_simple_async_result_get_op_res_gpointer (simple);
+	asyncr->status_msg = display_channel_items_sync(asyncr);
+
+	if (error != NULL) {
+		g_simple_async_result_set_from_error (simple, error);
+		g_error_free (error);
+	}
+}
+
+void
+asyncr_context_free(AsyncData *asyncr)
+{
+	d("free r-> components\n");
+	if (asyncr->r->maindate)
+		g_free(asyncr->r->maindate);
+	g_array_free(asyncr->r->item, TRUE);
+	g_free(asyncr->r->feedid);
+	if (asyncr->r->uids)
+		g_array_free(asyncr->r->uids, TRUE);
+	if (asyncr->r->cache)
+		xmlFreeDoc(asyncr->r->cache);
+	if (asyncr->r->type)
+		g_free(asyncr->r->type);
+	if (asyncr->r->version)
+		g_free(asyncr->r->version);
+	g_free(asyncr->r);
+	g_free(asyncr);
+}
+
+
+void
+display_channel_items (RDF *r,
+	gint io_priority,
+	GCancellable *cancellable,
+	GAsyncReadyCallback callback,
+	gpointer user_data)
+{
+	GSimpleAsyncResult *simple;
+	AsyncData *data;
+
+	data = g_new0(AsyncData, 1);
+	data->r = r;
+	data->status_msg = user_data;
+
+	simple = g_simple_async_result_new (
+		NULL, callback, user_data, display_channel_items);
+
+	g_simple_async_result_set_op_res_gpointer (
+		simple, data, (GDestroyNotify)asyncr_context_free);
+
+	g_simple_async_result_run_in_thread (
+		simple, display_channel_items_thread, io_priority, cancellable);
+
+	g_object_unref (simple);
 }
 
 gchar *
