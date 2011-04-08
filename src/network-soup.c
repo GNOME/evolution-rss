@@ -681,11 +681,11 @@ net_get_unblocking(gchar *url,
 	if (info) {
 		g_signal_connect(G_OBJECT(msg), "got_chunk",
 			G_CALLBACK(got_chunk_cb), info);	//FIXME Find a way to free this maybe weak_ref
+		soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
+		soup_message_add_header_handler (msg, "got_body",
+			"Location", G_CALLBACK (redirect_handler), info);
 	}
 
-	soup_message_set_flags (msg, SOUP_MESSAGE_NO_REDIRECT);
-	soup_message_add_header_handler (msg, "got_body",
-		"Location", G_CALLBACK (redirect_handler), soup_sess);
 
 	soup_session_queue_message (soup_sess, msg,
 		cb2, cbdata2);
