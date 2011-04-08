@@ -4189,41 +4189,43 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	if (!real_name)
 		real_name = name;
 
+	if (folder) {
 #if EVOLUTION_VERSION < 23191
-	camel_exception_init (&ex);
-	rss_delete_folders (store, full_path, &ex);
-	if (camel_exception_is_set (&ex)) {
+		camel_exception_init (&ex);
+		rss_delete_folders (store, full_path, &ex);
+		if (camel_exception_is_set (&ex)) {
 #else
-	rss_delete_folders (store, full_path, &error);
-	if (error != NULL) {
+		rss_delete_folders (store, full_path, &error);
+		if (error != NULL) {
 #endif
 #if EVOLUTION_VERSION < 22904
-		e_error_run(NULL,
-			"mail:no-delete-folder",
-			full_path,
+			e_error_run(NULL,
+				"mail:no-delete-folder",
+				full_path,
 #if EVOLUTION_VERSION < 23191
-			ex.desc,
+				ex.desc,
 #else
-			error->message,
+				error->message,
 #endif
-			NULL);
+				NULL);
 #else
-		e_alert_run_dialog_for_args(
-			e_shell_get_active_window (NULL),
-			"mail:no-delete-folder",
-			full_path,
+			e_alert_run_dialog_for_args(
+				e_shell_get_active_window (NULL),
+				"mail:no-delete-folder",
+				full_path,
 #if EVOLUTION_VERSION < 23191
-			ex.desc,
+				ex.desc,
 #else
-			error->message,
+				error->message,
 #endif
-			NULL);
+				NULL);
 #endif
 #if EVOLUTION_VERSION < 23191
-		camel_exception_clear (&ex);
+			camel_exception_clear (&ex);
 #else
-		g_clear_error(&error);
+			g_clear_error(&error);
 #endif
+		}
 	}
 	//also remove status file
 	tkey = g_hash_table_lookup(rf->hrname,
@@ -4245,10 +4247,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	tmp = g_strdup_printf("%s.fav", feed_name);
 	unlink(tmp);
 	g_free(tmp);
-out:	if (folder) {
-		d("print folder:%s\n", real_name);
-		remove_feed_hash(real_name);
-	}
+out:	remove_feed_hash(real_name);
 	delete_feed_folder_alloc(name);
 	g_free(name);
 	g_idle_add((GSourceFunc)store_redraw,

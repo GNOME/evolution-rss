@@ -1051,7 +1051,7 @@ rss_delete_folders (CamelStore *store,
 	if (!fi || camel_exception_is_set (ex))
 #else
 		flags, error);
-	if (!fi || error != NULL)
+	if (!fi || *error != NULL)
 #endif
 		return;
 
