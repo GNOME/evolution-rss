@@ -4243,15 +4243,17 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	real_name = g_hash_table_lookup(rf->feed_folders, name);
 	if (!real_name)
 		real_name = name;
-	rss_delete_folders (store, full_path, &error);
-	if (error != NULL) {
-		e_alert_run_dialog_for_args(
-			e_shell_get_active_window (NULL),
-			"mail:no-delete-folder",
-			full_path,
-			error->message,
-			NULL);
-		g_clear_error(&error);
+	if (folder) {
+		rss_delete_folders (store, full_path, &error);
+		if (error != NULL) {
+			e_alert_run_dialog_for_args(
+				e_shell_get_active_window (NULL),
+				"mail:no-delete-folder",
+				full_path,
+				error->message,
+				NULL);
+			g_clear_error(&error);
+		}
 	}
 	//also remove status file
 	tkey = g_hash_table_lookup(rf->hrname,
@@ -4273,10 +4275,7 @@ rss_delete_feed(gchar *full_path, gboolean folder)
 	tmp = g_strdup_printf("%s.fav", feed_name);
 	unlink(tmp);
 	g_free(tmp);
-out:	if (folder) {
-		d("print folder:%s\n", real_name);
-		remove_feed_hash(real_name);
-	}
+out:	remove_feed_hash(real_name);
 	delete_feed_folder_alloc(name);
 	g_free(name);
 	g_idle_add((GSourceFunc)store_redraw,

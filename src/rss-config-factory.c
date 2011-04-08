@@ -1125,7 +1125,7 @@ rss_delete_folders (CamelStore *store,
 		full_name,
 		flags, error);
 #endif
-	if (!fi || error != NULL)
+	if (!fi || *error != NULL)
 		return;
 
 	d("call rss_delete_rec()\n");
@@ -1342,10 +1342,8 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
 				GTK_TREE_VIEW(user_data));
 		if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
 			gtk_tree_model_get (
-				model,
-				&iter,
-				4,
-				&name,
+				model, &iter,
+				4, &name,
 				-1);
 			rss_delete_feed(name,
 				gconf_client_get_bool(
