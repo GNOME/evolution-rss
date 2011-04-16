@@ -395,7 +395,7 @@ update_progress_text(gchar *title)
 {
 	GtkWidget *label;
 
-	if (!rf->progress_bar)
+	if (!rf->progress_bar || !G_IS_OBJECT(rf->progress_bar))
 		return;
 
 	label = g_object_get_data((GObject *)rf->progress_bar, "label");
@@ -434,7 +434,8 @@ update_progress_bar(guint current)
 	gchar *what;
 	guint total;
 
-	g_return_if_fail(rf->progress_bar != NULL);
+	if (!rf->progress_bar || !G_IS_OBJECT(rf->progress_bar))
+		return;
 
 	total = GPOINTER_TO_INT(g_object_get_data(
 				(GObject *)rf->progress_bar,
@@ -956,34 +957,6 @@ rss_select_folder(gchar *folder_name)
 #endif
 #if EVOLUTION_VERSION < 29101
 	if (uri) g_free(uri);
-#endif
-#if 0 //kb//
-	CamelStore *store = rss_component_peek_local_store();
-	EMFolderTreeModel *model = mail_component_peek_tree_model(mail_component_peek());
-	gchar *real_name = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", lookup_main_folder(), folder_name);
-	CamelFolder *folder = camel_store_get_folder (store, real_name, 0, NULL);
-
-	g_print("real_name:%s\n", real_name);
-	char *uri = mail_tools_folder_to_url (folder);
-	g_print("uri:%s\n", uri);
-	g_print("selected:%s\n", em_folder_tree_model_get_selected (model));
-	em_folder_tree_model_set_selected (model, uri);
-	g_print("selected:%s\n", em_folder_tree_model_get_selected (model));
-//	 refresh_folder_tree (model, store);
-
-/*	MailComponent *mail_component = mail_component_peek();
-	MailComponentPrivate *priv = mail_component->priv;
-	EComponentView *cv = priv->component_view;
-	g_print("priv:%p", priv);
-	g_print("cv:%p", cv);*/
-//	void *el = g_object_get_data((GObject *)cv, "info-label");
-//      EMFolderView *emfv = g_object_get_data((GObject *)el, "folderview");
-//	EMFolderView *emfv = g_object_new(em_folder_view_get_type(), NULL);
-//	GtkWidget *po = (GtkWidget *)model.parent_object;
-//      em_folder_tree_set_selected ((EMFolderView *)po), uri, FALSE);
-//	camel_operation_end(NULL);
-	camel_object_unref (folder);
-	g_free(real_name);
 #endif
 }
 
@@ -3013,7 +2986,6 @@ finish_setup_feed(
 	d("content:\n%s\n", content->str);
 	root = xmlDocGetRootElement(doc);
 	taskbar_op_set_progress(tmsgkey, tmsg, 0.5);
-
 	if ((doc != NULL && root != NULL)
 		&& (strcasestr((char *)root->name, "rss")
 		|| strcasestr((char *)root->name, "rdf")
@@ -3193,7 +3165,7 @@ add:
 			}
 			g_warning("Searching FOR feeds broken\n");
 			//setup_feed(g_memdup(feed, sizeof(feed)));
-			goto out;
+			//goto out;
 		}
 	}
 
@@ -5027,7 +4999,7 @@ free_filter_uids (gpointer user_data, GObject *ex_msg)
 void
 create_mail(create_feed *CF)
 {
-	CamelFolder *mail_folder;
+	CamelFolder *mail_folder = NULL;
 	CamelMimeMessage *new = camel_mime_message_new();
 	CamelInternetAddress *addr;
 	CamelMessageInfo *info;
@@ -5047,6 +5019,8 @@ create_mail(create_feed *CF)
 	gint offset;
 
 	mail_folder = check_feed_folder(CF->full_path);
+	if (!mail_folder)
+		return;
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_ref(mail_folder);
 #else
@@ -5740,7 +5714,7 @@ void
 get_feed_age(RDF *r, gpointer name)
 {
 	CamelMessageInfo *info;
-	CamelFolder *folder;
+	CamelFolder *folder = NULL;
 	CamelStore *store = rss_component_peek_local_store();
 	CamelMimeMessage *message;
 	GPtrArray *uids;

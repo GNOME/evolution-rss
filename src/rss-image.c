@@ -439,7 +439,8 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	gint i=0, size;
 	gint *sizes;
 
-	g_return_val_if_fail(mod != NULL, FALSE);
+	if (!mod)
+		return FALSE;
 
 	pixbuf = gdk_pixbuf_new_from_file(img_file, NULL);
 
