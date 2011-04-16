@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAJOR_VERSION=0.2.1
+MAJOR_VERSION=0.2.90
 rm -Rf /tmp/evolution-rss
 git clone git://git.gnome.org/evolution-rss /tmp/evolution-rss
 cd /tmp/evolution-rss

@@ -365,7 +365,7 @@ rss_webkit_resolve_callback (SoupAddress *addr, guint status, gpointer data)
 			return;
 #endif
 			if (proxy_uri) {
-				dp("proxified %s with %s:%d\n", wknet->base, proxy_uri->host, proxy_uri->port);
+				d("proxified %s with %s:%d\n", wknet->base, proxy_uri->host, proxy_uri->port);
 			}
 		}
 	} else {

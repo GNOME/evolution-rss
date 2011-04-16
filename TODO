@@ -41,3 +41,5 @@
 	* default render engine broken again
 	* retest deleting a feed when fetching in progress
 	* detect rss-id changes (file changes) -> feeds downloaded all over again
+	* add evolution-rss.desktop file to integrate into browsers
+	* remove useless validation option
