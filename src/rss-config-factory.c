@@ -1715,6 +1715,7 @@ import_dialog_response(
 void
 import_one_feed(gchar *url, gchar *title, gchar *prefix)
 {
+	gchar *tmp;
 	add_feed *feed = g_new0(add_feed, 1);
 	feed->changed=0;
 	feed->add=1;
@@ -1722,7 +1723,14 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 	feed->validate = feed_validate;
 	feed->enabled = feed_enabled;
 	feed->feed_url = g_strdup(url);
-	feed->feed_name = decode_html_entities(title);
+	tmp = decode_html_entities(title);
+	if (strlen(tmp) > 40) {
+		gchar *t = tmp;
+		tmp = g_strndup(tmp, 40);
+		g_free(t);
+	}
+	feed->feed_name = sanitize_folder(tmp);
+	g_free(tmp);
 	feed->prefix = g_strdup(prefix);
 	rf->progress_bar = import_progress;
 	rf->progress_dialog = import_dialog;
