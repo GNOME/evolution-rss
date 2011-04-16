@@ -905,16 +905,10 @@ tree_walk (xmlNodePtr root, RDF *r)
 		r->image = (gchar *)layer_find(image->children, "url", NULL);
 
 	t = g_strdup(get_real_channel_name(r->uri, NULL));
-	//feed might be added with no validation
-	//so it could be named Untitled channel
-	//till validation process
-	if (t == NULL || !g_ascii_strncasecmp(t,
-			DEFAULT_NO_CHANNEL,
-			strlen(DEFAULT_NO_CHANNEL))) {
-
+	if (t == NULL) {
 		t = (gchar *)layer_find(channel->children,
 				"title",
-				DEFAULT_NO_CHANNEL);
+				g_strdup(DEFAULT_NO_CHANNEL));
 		t = decode_html_entities(t);
 		tmp = sanitize_folder(t);
 		g_free(t);
@@ -1298,6 +1292,8 @@ display_channel_items_sync(AsyncData *asyncr)
 
 		if (!mail_folder) {
 			mail_folder = check_feed_folder(CF->full_path);
+			if (!mail_folder)
+				goto out;
 		}
 		subj = g_strdup(CF->subj);
 
@@ -1342,7 +1338,7 @@ done:		farticle++;
 		camel_object_unref(mail_folder);
 #endif
 	}
-	g_free(sender);
+out:	g_free(sender);
 
 	if (fr) fclose(fr);
 	if (fw) fclose(fw);
