@@ -3491,6 +3491,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 				update_ttl(md5, r->ttl);
 				user_data = chn_name;
 			}
+			/*FIXME move this to display_doc feed display async  because
+			 * folder might not be there yet
+			 */
 			if (g_hash_table_lookup(rf->hrdel_feed, lookup_key(user_data)))
 				get_feed_age(r, user_data);
 		}
@@ -5613,11 +5616,6 @@ process_feed(RDF *r)
 	return NULL;
 }
 
-typedef struct {
-	RDF *r;
-	GQueue *status_msg;
-} AsyncData;
-
 void
 display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data);
 
@@ -5632,6 +5630,19 @@ display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data)
 	asyncr = g_simple_async_result_get_op_res_gpointer (simple);
 	if (gconf_client_get_bool (client, GCONF_KEY_STATUS_ICON, NULL)) {
 		update_status_icon(asyncr->status_msg);
+	}
+	if (asyncr->mail_folder) {
+		if ((rf->import || feed_new)
+			&& (!rf->cancel && !rf->cancel_all && !rf->display_cancel)) {
+				rss_select_folder(
+					(gchar *)camel_folder_get_full_name(asyncr->mail_folder));
+				if (feed_new) feed_new = FALSE;
+			}
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref(asyncr->mail_folder);
+#else
+		camel_object_unref(asyncr->mail_folder);
+#endif
 	}
 	g_object_unref(client);
 }

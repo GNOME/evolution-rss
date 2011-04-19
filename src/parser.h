@@ -21,6 +21,12 @@
 
 #include <mail/em-format-html.h>
 
+typedef struct {
+	RDF *r;
+	CamelFolder *mail_folder;
+	GQueue *status_msg;
+} AsyncData;
+
 void display_channel_items (RDF *r,
 	gint io_priority,
 	GCancellable *cancellable,

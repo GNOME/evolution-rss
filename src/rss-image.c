@@ -435,7 +435,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	EMFolderTreeModel *mod = (EMFolderTreeModel *)tree_store;
 	struct _EMFolderTreeModelStoreInfo *si;
 	CamelStore *store = rss_component_peek_local_store();
-	CamelFolderInfo *rssi;
+	CamelFolderInfo *rssi = NULL;
 	gint i=0, size;
 	gint *sizes;
 

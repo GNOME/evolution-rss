@@ -44,11 +44,6 @@ extern int rss_verbose_debug;
 #include "misc.h"
 #include "network-soup.h"
 
-typedef struct {
-	RDF *r;
-	GQueue *status_msg;
-} AsyncData;
-
 extern GConfClient *rss_gconf;
 void asyncr_context_free(AsyncData *asyncr);
 GQueue *display_channel_items_sync(AsyncData *ayncr);
@@ -185,6 +180,7 @@ xml_parse_sux (const char *buf, int len)
 
 	g_return_val_if_fail (buf != NULL, NULL);
 	mime_type = g_content_type_guess(NULL, (guchar *)buf, len, NULL);
+	g_print("mime:%s\n", mime_type);
 	//feeding parsed anything other than xml results in blocking delays
 	//it's possible we can relax parser by using xmlErrorFunc
 	//UPDATE: add text/* - but exclude text/html I've seen huge delays because of this
@@ -1326,17 +1322,7 @@ done:		farticle++;
 		refresh_mail_folder(mail_folder);
 
 	if (mail_folder) {
-		if ((rf->import || feed_new)
-		&& (!rf->cancel && !rf->cancel_all && !rf->display_cancel)) {
-			rss_select_folder(
-				(gchar *)camel_folder_get_full_name(mail_folder));
-			if (feed_new) feed_new = FALSE;
-		}
-#if (DATASERVER_VERSION >= 2031001)
-		g_object_unref(mail_folder);
-#else
-		camel_object_unref(mail_folder);
-#endif
+		asyncr->mail_folder = mail_folder;
 	}
 out:	g_free(sender);
 
