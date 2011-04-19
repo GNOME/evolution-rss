@@ -79,6 +79,8 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	struct _copy_folder_data *cfd = data;
 	CamelStore *fromstore = NULL, *tostore = NULL;
 	CamelStore *local_store;
+	CamelService *service;
+	CamelProvider *provider;
 	const gchar *tobase = NULL;
 	CamelURL *url;
 	GError *local_error = NULL;
@@ -122,8 +124,11 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		goto fail;
 	}
 
+	service = CAMEL_SERVICE (tostore);
+	provider = camel_service_get_provider (service);
+
 	url = camel_url_new (uri, NULL);
-	if (((CamelService *)tostore)->provider->url_flags & CAMEL_URL_FRAGMENT_IS_PATH)
+	if (provider->url_flags & CAMEL_URL_FRAGMENT_IS_PATH)
 		tobase = url->fragment;
 	else if (url->path && url->path[0])
 		tobase = url->path+1;
