@@ -411,6 +411,7 @@ update_progress_text(gchar *title)
 	}
 }
 
+#ifdef HAVE_WEBKIT
 void
 rss_webkit_load_string(gchar *str, gchar *base, gchar *encoding)
 {
@@ -423,6 +424,7 @@ rss_webkit_load_string(gchar *str, gchar *base, gchar *encoding)
 	if (strncmp(base, "file:///fake", 12))
 		webkit_set_history(base);
 }
+#endif
 
 void
 update_progress_bar(guint current);
@@ -456,11 +458,15 @@ update_progress_bar(guint current)
 void
 browser_write(gchar *string, gint length, gchar *base)
 {
-	WEBKITNET *wknet;
-	gchar *str = string;
 	guint engine = fallback_engine();
+#if defined(HAVE_GECKO) || defined (HAVE_WEBKIT)
 	xmlDoc *src = (xmlDoc *)parse_html(base, string, length);
 	gchar *encoding =  (gchar *)htmlGetMetaEncoding(src);
+	gchar *str = string;
+#endif
+#ifdef HAVE_WEBKIT
+	WEBKITNET *wknet;
+#endif
 	switch (engine) {
 	case 2:
 #ifdef HAVE_GECKO
@@ -504,8 +510,11 @@ void
 browser_stream_write(CamelStream *stream, gchar *base)
 {
 	GString *str = g_string_new(NULL);
-	gchar *line, *encoding;
+	gchar *line;
+#ifdef HAVE_WEBKIT
+	gchar *encoding;
 	xmlDoc *src;
+#endif
 
 	CamelStream *in = camel_stream_buffer_new(stream, CAMEL_STREAM_BUFFER_READ);
 #if (DATASERVER_VERSION >= 2033001)
@@ -518,10 +527,10 @@ browser_stream_write(CamelStream *stream, gchar *base)
 		g_free(tmp);
 		line = NULL;
 	}
-	src = (xmlDoc *)parse_html(base, str->str, str->len);
-	encoding =  (gchar *)htmlGetMetaEncoding(src);
 #ifdef HAVE_WEBKIT
 #if (WEBKIT_VERSION >= 1001001)
+	src = (xmlDoc *)parse_html(base, str->str, str->len);
+	encoding =  (gchar *)htmlGetMetaEncoding(src);
 	webkit_web_view_load_string(
 		WEBKIT_WEB_VIEW(rf->mozembed),
 		str->str,
@@ -976,8 +985,9 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 static void
 back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-	guint engine;
-	engine = fallback_engine();
+#if defined(HAVE_GECKO) || defined(HAVE_WEBKIT)
+	guint engine = fallback_engine();
+#endif
 #ifdef	HAVE_GECKO
 	if (engine == 2)
 		gtk_moz_embed_go_back((GtkMozEmbed *)rf->mozembed);
@@ -992,8 +1002,9 @@ back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 static void
 forward_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-	guint engine;
-	engine = fallback_engine();
+#if defined(HAVE_GECKO) || defined(HAVE_WEBKIT)
+	guint engine = fallback_engine();
+#endif
 #ifdef	HAVE_GECKO
 	if (engine == 2)
 		gtk_moz_embed_go_forward((GtkMozEmbed *)rf->mozembed);
@@ -1009,8 +1020,9 @@ void stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 void
 stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
-	guint engine;
-	engine = fallback_engine();
+#if defined(HAVE_GECKO) || defined(HAVE_WEBKIT)
+	guint engine = fallback_engine();
+#endif
 #ifdef	HAVE_GECKO
 	if (engine == 2)
 		gtk_moz_embed_stop_load((GtkMozEmbed *)rf->mozembed);
@@ -2124,7 +2136,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *comments = NULL;
 	gchar *category = NULL;
 	GdkPixbuf *pixbuf = NULL;
-	guint engine = 0;
 	int size;
 	CamelDataWrapper *dw = camel_data_wrapper_new();
 	CamelMimePart *part = camel_mime_part_new();
@@ -2247,8 +2258,8 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format)) {
-		engine = fallback_engine();
 #ifdef HAVE_RENDERKIT
+		guint engine = fallback_engine();
 		if (engine && engine != 10) {
 			char *classid = g_strdup_printf(
 					"org-gnome-rss-controls-%d",
@@ -2269,11 +2280,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			pobj->stopbut =  button2;
 			pobj->backbut = button3;
 			pobj->forwbut = button4;
-//			camel_stream_printf (t->stream,
-//				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-//				frame_colour & 0xffffff,
-//				content_colour & 0xffffff,
-//				text_colour & 0xffffff);
 			camel_stream_printf(t->stream,
 				"<table style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\" cellpadding=1 cellspacing=0><tr><td align=center>",
 				frame_colour & 0xffffff,
