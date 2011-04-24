@@ -970,6 +970,30 @@ process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 	return g_strdup(text);
 }
 
+static void
+saxCharacters (void *user_data, const xmlChar *string, int len)
+{
+	GString *buffer = (GString *)user_data;
+	g_string_append_len(buffer, (gchar *)string, len);
+}
+
+GString*
+rss_strip_html (gchar *string)
+{
+	htmlParserCtxtPtr       ctxt;
+	htmlSAXHandlerPtr       sax;
+	GString *buffer = g_string_new(NULL);
+
+	sax = g_new0 (htmlSAXHandler, 1);
+	sax->characters = saxCharacters;
+	ctxt = htmlCreatePushParserCtxt
+		(sax, buffer, string, strlen (string), "", XML_CHAR_ENCODING_UTF8);
+	htmlParseChunk (ctxt, string, 0, 1);
+	htmlFreeParserCtxt (ctxt);
+	g_free (sax);
+	return buffer;
+}
+
 create_feed *
 parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 {
@@ -1058,6 +1082,12 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 				q = g_strdup(layer_find (top, "author",
 					layer_find (top, "creator", NULL)));	//this catches dc:creator too. wrong!
 			}
+			if (q) {
+				GString *s = rss_strip_html(q);
+				q = s->str;
+				g_string_free(s, 0);
+			}
+
 			//we might end with a subject containing nothing but spaces
 			if (q) g_strstrip (q);
 
