@@ -34,6 +34,7 @@ void display_channel_items (RDF *r,
 	gpointer user_data);
 
 xmlDoc *rss_html_url_decode(const char *html, int len);
+GString *rss_strip_html (gchar *string);
 
 const char *layer_find (xmlNodePtr node,
 			const char *match,
