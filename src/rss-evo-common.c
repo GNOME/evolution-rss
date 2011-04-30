@@ -79,7 +79,7 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	struct _copy_folder_data *cfd = data;
 	CamelStore *fromstore = NULL, *tostore = NULL;
 	CamelStore *local_store;
-	CamelService *service;
+	CamelService *service = NULL;
 	CamelProvider *provider;
 	const gchar *tobase = NULL;
 	CamelURL *url;
@@ -93,9 +93,17 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	local_store = e_mail_local_get_store ();
 	session = e_mail_backend_get_session (backend);
 
-	fromstore = camel_session_get_store (
-		CAMEL_SESSION (session), cfd->fi->uri, &local_error);
-	if (fromstore == NULL) {
+	url = camel_url_new (cfd->fi->uri, &local_error);
+	if (url != NULL) {
+		service = camel_session_get_service_by_url (
+			CAMEL_SESSION (session), url, CAMEL_PROVIDER_STORE);
+		camel_url_free (url);
+	}
+
+	if (service != NULL)
+		camel_service_connect_sync (service, &local_error);
+
+	if (local_error != NULL) {
 		e_mail_backend_submit_alert (
 			backend, cfd->delete ?
 				"mail:no-move-folder-notexist" :
@@ -105,6 +113,10 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		goto fail;
 	}
 
+	g_return_if_fail (CAMEL_IS_STORE (service));
+
+	fromstore = CAMEL_STORE (service);
+
 	if (cfd->delete && fromstore == local_store && rss_emfu_is_special_local_folder (cfd->fi->full_name)) {
 		e_mail_backend_submit_alert (
 			backend, "mail:no-rename-special-folder",
@@ -112,9 +124,17 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		goto fail;
 	}
 
-	tostore = camel_session_get_store (
-		CAMEL_SESSION (session), uri, &local_error);
-	if (tostore == NULL) {
+	url = camel_url_new (uri, &local_error);
+	if (url != NULL) {
+		service = camel_session_get_service_by_url (
+			CAMEL_SESSION (session), url, CAMEL_PROVIDER_STORE);
+		camel_url_free (url);
+	}
+
+	if (service != NULL)
+		camel_service_connect_sync (service, &local_error);
+
+	if (local_error != NULL) {
 		e_mail_backend_submit_alert (
 			backend, cfd->delete ?
 				"mail:no-move-folder-to-notexist" :
@@ -124,7 +144,9 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		goto fail;
 	}
 
-	service = CAMEL_SERVICE (tostore);
+	g_return_if_fail (CAMEL_IS_STORE (service));
+
+	tostore = CAMEL_STORE (service);
 	provider = camel_service_get_provider (service);
 
 	url = camel_url_new (uri, NULL);
@@ -140,10 +162,6 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 
 	camel_url_free (url);
 fail:
-	if (fromstore)
-		g_object_unref (fromstore);
-	if (tostore)
-		g_object_unref (tostore);
 
 	g_clear_error (&local_error);
 
