@@ -4917,7 +4917,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 	//	textdomain (GETTEXT_PACKAGE);
 		rss_gconf = gconf_client_get_default();
 		upgrade = 1;
-		d = getenv("RSS_VERBOSE_DEBUG");
+		d = getenv("RSS_DEBUG");
 		if (d)
 			rss_verbose_debug = atoi(d);
 
