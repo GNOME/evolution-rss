@@ -271,7 +271,7 @@ rep_check_cb (GtkWidget *widget, gpointer data)
 			g_source_remove(rf->rc_id);
 		rf->rc_id = g_timeout_add (
 				60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)data),
-				(GtkFunction) update_articles,
+				(GSourceFunc) update_articles,
 				(gpointer)1);
 		}
 }
@@ -290,7 +290,7 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 			g_source_remove(rf->rc_id);
 		rf->rc_id = g_timeout_add (
 			60 * 1000 * gtk_spin_button_get_value((GtkSpinButton *)widget),
-			(GtkFunction) update_articles,
+			(GSourceFunc) update_articles,
 			(gpointer)1);
 	}
 }

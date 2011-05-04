@@ -879,7 +879,7 @@ network_timeout(void)
 
 	nettime_id = g_timeout_add (
 				(guint)(timeout)*1000,
-				(GtkFunction) timeout_soup,
+				(GSourceFunc) timeout_soup,
 				0);
 }
 
@@ -4439,7 +4439,7 @@ custom_fetch_feed(gpointer key, gpointer value, gpointer user_data)
 			}
 			time_id = g_timeout_add (
 					ttl * 60 * 1000 * ttl_multiply,
-					(GtkFunction) custom_update_articles,
+					(GSourceFunc) custom_update_articles,
 					cdata);
 			g_hash_table_replace(custom_timeout,
 				g_strdup(lookup_key(key)),
@@ -4649,7 +4649,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 		//as I don't know how to set this I'll setup a 10 secs timeout
 		//and return false for disableation
 		g_timeout_add (3 * 1000,
-			(GtkFunction) update_articles,
+			(GSourceFunc) update_articles,
 			0);
 	}
 	timeout = gconf_client_get_float(
@@ -4658,7 +4658,7 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 			NULL);
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_REP_CHECK, NULL)) {
 		rf->rc_id = g_timeout_add (60 * 1000 * timeout,
-				(GtkFunction) update_articles,
+				(GSourceFunc) update_articles,
 				(gpointer)1);
 	}
 	custom_feed_timeout();
