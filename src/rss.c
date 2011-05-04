@@ -341,8 +341,6 @@ statuscb(NetStatusType status, gpointer statusdata, gpointer data)
 			progress = (NetStatusProgress*)statusdata;
 			if (progress->current > 0 && progress->total > 0) {
 				fraction = (float)progress->current / progress->total;
-				while (gtk_events_pending ())
-				gtk_main_iteration ();
 			if (rf->cancel_all) break;
 #ifndef EVOLUTION_2_12
 		if (rf->progress_dialog  && 0 <= fraction && 1 >= fraction) {
@@ -568,8 +566,6 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 			fraction = (float)progress->current / progress->total;
 			d("%.2f%% ", fraction);
 		}
-		while (gtk_events_pending())
-			gtk_main_iteration ();
 		break;
 	default:
 		g_warning("unhandled network status %d\n", status);
@@ -976,8 +972,6 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #else
 	em_format_redraw((EMFormat *)pobject);
 #endif
-//	while (gtk_events_pending ())
-//           gtk_main_iteration ();
 }
 
 
@@ -3762,9 +3756,6 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 		em_format_redraw((EMFormat *)user_data);
 #endif
 	}
-
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
 }
 
 static void
