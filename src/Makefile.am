@@ -89,7 +89,7 @@ SOURCES+=	gecko-utils.cpp
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(DATASERVER_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(NO_UNDEFINED_LIBS)
+liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(DATASERVER_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(DBUS_LIBS) $(NO_UNDEFINED_LIBS)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 #$(GECKO_RPATH)
 
