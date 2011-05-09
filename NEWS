@@ -1,3 +1,19 @@
+Evolution-RSS 0.2.5
+------------------------------
+
+Miscellaneous Fixes:
+Fix export function
+Improve debug output
+Fix deleting folder contents
+Make opml filter default when exporting
+Add default export file name
+
+Bug fixes:
+Bug 648559 - evolution RSS plugin wont accept any feeds
+Bug 648490 - arXiv rss feeds: from not shown properly
+Bug 647142 - crash when adding a new feed
+Bug 644100 - Crash when exporting feeds
+
 Evolution-RSS 0.2.4
 ------------------------------
 
