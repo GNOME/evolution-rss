@@ -78,6 +78,7 @@ static guint feed_html = 0;
 guint ccurrent = 0, ctotal = 0;
 GList *flist = NULL;
 gchar *strbuf;
+GString *spacer = NULL;
 GtkWidget *import_progress;
 GtkWidget *import_dialog = NULL;
 
@@ -2514,10 +2515,14 @@ create_outline_feeds(
 	if (!strcmp(user_data, dir)) {
 		gchar *url = g_hash_table_lookup(rf->hr, uid);
 		gchar *url_esc = g_markup_escape_text(url, strlen(url));
+		gchar *key_esc = g_markup_escape_text(key, strlen(key));
 		tmp = g_strdup_printf(
-		"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
-			key, key, key, url_esc, url_esc);
+			"%s<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"rss\" xmlUrl=\"%s\" htmlUrl=\"%s\"/>\n",
+			spacer->str, key_esc, key_esc, key_esc, url_esc, url_esc);
 		strbuf = append_buffer(strbuf, tmp);
+		g_free(key_esc);
+		g_free(url_esc);
+		g_free(tmp);
 	}
 out:	g_free(dir);
 }
@@ -2528,11 +2533,9 @@ append_buffer(gchar *result, gchar *str)
 	if (result != NULL) {
 		gchar *r = result;
 		result = g_strconcat(result, str, NULL);
-//		g_free(str);
 		g_free(r);
 	} else {
 		result = g_strdup(str);
-		g_free(str);
 	}
 	return result;
 }
@@ -2609,7 +2612,7 @@ create_xml(GtkWidget *progress)
 		gen_folder_list,
 		NULL);
 
-	if (list) {
+	if (flist) {
 		list = flist;
 		tmp = list->data;
 		//generate mssing parents
@@ -2620,37 +2623,48 @@ create_xml(GtkWidget *progress)
 		list = flist;
 		//get parents into main list
 		for (p = g_list_first(p); p != NULL; p = g_list_next(p)) {
-			if (!g_list_find_custom(list, p->data, (GCompareFunc)strcmp)) {
+			if (!g_list_find_custom(list, p->data, (GCompareFunc)g_ascii_strcasecmp)) {
 				list = g_list_append(list, p->data);
 			}
 		}
-		list = flist;
-		list = flist = g_list_sort(list, (GCompareFunc)strcmp);
-	} else
-		flist = g_list_append(flist, get_main_folder());
+		list = g_list_sort(list, (GCompareFunc)g_ascii_strcasecmp);
+	} else {
+		list = g_list_append(list, get_main_folder());
+	}
+	spacer = g_string_new(NULL);
 
-	list = flist;
+
 	tmp = list->data;
-	strbuf = g_strdup_printf(
-		"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"folder\">\n",
-		tmp, tmp, tmp);
-	result = append_buffer(result, strbuf);
 	strbuf = create_folder_feeds(tmp);
 	result = append_buffer(result, strbuf);
+	g_free(strbuf);
 	while ((list = g_list_next(list))) {
-top:		if (!strncmp(tmp, list->data, strlen(tmp))) {
+top:		if (!tmp) break;
+		if (!g_ascii_strncasecmp(tmp, list->data, strlen(tmp))) {
+			gchar *tname, *ttmp;
 			g_queue_push_tail(acc, tmp);
+			ttmp = g_strconcat(tmp, "/", NULL);
+			d("cutter:%s\n", ttmp);
+			d("data:%s\n", (gchar *)list->data);
+			tname = strextr((gchar *)list->data, ttmp);
 			strbuf = g_strdup_printf(
-				"<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"folder\">\n",
-				(gchar *)list->data,
-				(gchar *)list->data,
-				(gchar *)list->data);
+					"%s<outline title=\"%s\" text=\"%s\" description=\"%s\" type=\"folder\">\n",
+					spacer->str, tname, tname, tname);
+			g_free(tname);
+			g_free(ttmp);
+			g_string_append(spacer, "    ");
 			result = append_buffer(result, strbuf);
+			g_free(strbuf);
 			strbuf = create_folder_feeds(list->data);
 			result = append_buffer(result, strbuf);
+			g_free(strbuf);
 		} else {
+			gchar *tname;
+			g_string_truncate(spacer, strlen(spacer->str)-4);
+			tname = g_strdup_printf("%s</outline>\n", spacer->str);
 			result = append_buffer_string(
-					result, (gchar *)"</outline>\n");
+					result, tname);
+			g_free(tname);
 			tmp = g_queue_pop_tail(acc);
 			goto top;
 		}
@@ -2664,9 +2678,15 @@ top:		if (!strncmp(tmp, list->data, strlen(tmp))) {
 	g_free(what);
 
 	}
-	for (i=1;i<=g_queue_get_length(acc)+1;i++)
+	for (i=1;i<=g_queue_get_length(acc);i++) {
+		gchar *tname;
+		g_string_truncate(spacer, strlen(spacer->str)-4);
+		tname = g_strdup_printf("%s</outline>\n", spacer->str);
 		result = append_buffer_string(
-				result, (gchar *)"</outline>\n");
+				result, tname);
+		g_free(tname);
+	}
+	g_string_free(spacer, TRUE);
 	return result;
 }
 
