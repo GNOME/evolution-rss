@@ -2607,7 +2607,7 @@ top:		if (!tmp) break;
 		} else {
 			gchar *tname;
 			g_string_truncate(spacer, strlen(spacer->str)-4);
-			tname = g_strdup_printf("%s</outline>\n", spacer->str, NULL);
+			tname = g_strdup_printf("%s</outline>\n", spacer->str);
 			result = append_buffer_string(
 					result, tname);
 			g_free(tname);
@@ -2627,7 +2627,7 @@ top:		if (!tmp) break;
 	for (i=1;i<=g_queue_get_length(acc);i++) {
 		gchar *tname;
 		g_string_truncate(spacer, strlen(spacer->str)-4);
-		tname = g_strdup_printf("%s</outline>\n", spacer->str, NULL);
+		tname = g_strdup_printf("%s</outline>\n", spacer->str);
 		result = append_buffer_string(
 				result, tname);
 		g_free(tname);
