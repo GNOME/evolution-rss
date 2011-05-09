@@ -2653,7 +2653,6 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	gchar *iconfile;
 #endif
 
-	main_folder = get_main_folder();
 	if (t->folder_name == NULL
 	  || g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
 		goto out;
