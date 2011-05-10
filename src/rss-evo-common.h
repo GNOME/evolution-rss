@@ -24,7 +24,12 @@
 #include <libedataserver/e-proxy.h>
 
 struct _copy_folder_data {
+#if EVOLUTION_VERSION >= 30101
+	CamelStore *source_store;
+	gchar *source_folder_name;
+#else
 	CamelFolderInfo *fi;
+#endif
 	gboolean delete;
 };
 

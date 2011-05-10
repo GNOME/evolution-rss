@@ -47,6 +47,9 @@
 #include <misc/e-preferences-window.h>
 #include <mail/e-mail-local.h>
 #include <mail/em-folder-selector.h>
+#if EVOLUTION_VERSION >= 30101
+#include <mail/e-mail-folder-utils.h>
+#endif
 
 #include <mail/em-utils.h>
 #include <shell/e-shell.h>
@@ -446,12 +449,17 @@ folder_cb (GtkWidget *widget, gpointer data)
 {
 	EMailBackend *backend;
 	EMailSession *session;
+#if EVOLUTION_VERSION >= 30101
+	const gchar *folderinfo;
+#else
 	CamelFolderInfo *folderinfo;
+#endif
 	GtkWidget *folder_tree;
 	GtkWidget *dialog;
 	GtkWindow *window;
 	const gchar *uri;
 	struct _copy_folder_data *cfd;
+	GError *error = NULL;
 
 	EMailReader *reader;
 	EShellContent *shell_content;
@@ -484,11 +492,28 @@ folder_cb (GtkWidget *widget, gpointer data)
 			EM_FOLDER_SELECTOR (dialog),
 			uri);
 
+#if EVOLUTION_VERSION >= 30101
+	folderinfo = em_folder_tree_get_selected_uri ((EMFolderTree *)folder_tree);
+#else
 	folderinfo = em_folder_tree_get_selected_folder_info ((EMFolderTree *)folder_tree);
+#endif
 
 	cfd = g_malloc (sizeof (*cfd));
+#if EVOLUTION_VERSION < 30101
 	cfd->fi = folderinfo;
+#endif
 	cfd->delete = 1;
+
+	e_mail_folder_uri_parse (
+               CAMEL_SESSION (session), folderinfo,
+               &cfd->source_store, &cfd->source_folder_name, &error);
+
+       if (error != NULL) {
+               g_warning ("%s", error->message);
+               g_error_free (error);
+               g_free (cfd);
+               return;
+       }
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK) {
 		gchar *tmp;

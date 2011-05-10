@@ -23,9 +23,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <mail/e-mail-local.h>
+#if EVOLUTION_VERSION >= 30101
+#include <mail/e-mail-folder-utils.h>
+#endif
 #include <mail/e-mail-reader.h>
 #include <mail/em-folder-utils.h>
 #include <libedataserver/e-proxy.h>
+
 
 #ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>
@@ -64,6 +68,7 @@ struct _EProxyPrivate {
 	enum ProxyType type;
 };
 
+
 gboolean
 rss_emfu_is_special_local_folder (const gchar *name)
 {
@@ -77,7 +82,10 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 {
 	EMailSession *session;
 	struct _copy_folder_data *cfd = data;
-	CamelStore *fromstore = NULL, *tostore = NULL;
+#if EVOLUTION_VERSION < 30101
+	CamelStore *fromstore = NULL;
+#endif
+	CamelStore *tostore = NULL;
 	CamelStore *local_store;
 	CamelService *service = NULL;
 	CamelProvider *provider;
@@ -85,14 +93,23 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	CamelURL *url;
 	GError *local_error = NULL;
 
+#if EVOLUTION_VERSION >= 30101
+	if (uri == NULL)
+		goto fail;
+#else
 	if (uri == NULL) {
 		g_free (cfd);
 		return;
 	}
+#endif
 
 	local_store = e_mail_local_get_store ();
 	session = e_mail_backend_get_session (backend);
 
+#if EVOLUTION_VERSION >= 30101
+	service = CAMEL_SERVICE (cfd->source_store);
+	camel_service_connect_sync (service, &local_error);
+#else
 	url = camel_url_new (cfd->fi->uri, &local_error);
 	if (url != NULL) {
 		service = camel_session_get_service_by_url (
@@ -102,25 +119,40 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 
 	if (service != NULL)
 		camel_service_connect_sync (service, &local_error);
+#endif
+
 
 	if (local_error != NULL) {
 		e_mail_backend_submit_alert (
 			backend, cfd->delete ?
 				"mail:no-move-folder-notexist" :
 				"mail:no-copy-folder-notexist",
+#if EVOLUTION_VERSION >= 30101
+			cfd->source_folder_name, uri,
+#else
 			cfd->fi->full_name, uri,
+#endif
 			local_error->message, NULL);
 		goto fail;
 	}
 
 	g_return_if_fail (CAMEL_IS_STORE (service));
 
+#if EVOLUTION_VERSION >= 30101
+	if (cfd->delete && cfd->source_store == local_store &&
+		rss_emfu_is_special_local_folder (cfd->source_folder_name)) {
+#else
 	fromstore = CAMEL_STORE (service);
 
 	if (cfd->delete && fromstore == local_store && rss_emfu_is_special_local_folder (cfd->fi->full_name)) {
+#endif
 		e_mail_backend_submit_alert (
 			backend, "mail:no-rename-special-folder",
+#if EVOLUTION_VERSION >= 30101
+			cfd->source_folder_name, NULL);
+#else
 			cfd->fi->full_name, NULL);
+#endif
 		goto fail;
 	}
 
@@ -139,7 +171,11 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 			backend, cfd->delete ?
 				"mail:no-move-folder-to-notexist" :
 				"mail:no-copy-folder-to-notexist",
+#if EVOLUTION_VERSION >= 30101
+			cfd->source_folder_name, uri,
+#else
 			cfd->fi->full_name, uri,
+#endif
 			local_error->message, NULL);
 		goto fail;
 	}
@@ -158,7 +194,12 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		tobase = "";
 
 	em_folder_utils_copy_folders (
-		fromstore, cfd->fi->full_name, tostore, tobase, cfd->delete);
+#if EVOLUTION_VERSION >= 30101
+		cfd->source_store, cfd->source_folder_name,
+#else
+		fromstore, cfd->fi->full_name,
+#endif
+		tostore, tobase, cfd->delete);
 
 	camel_url_free (url);
 fail:

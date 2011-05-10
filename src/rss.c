@@ -50,6 +50,9 @@ int rss_verbose_debug = 0;
 #include <mail/em-event.h>
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
+#if EVOLUTION_VERSION >= 30101
+#include <mail/e-mail-folder-utils.h>
+#endif
 
 #if EVOLUTION_VERSION < 22900 //kb//
 #include <e-util/e-error.h>
@@ -3964,10 +3967,14 @@ lookup_uri_by_folder_name(gchar *name)
 	folder = camel_store_get_folder (store, name, 0, NULL);
 #endif
 	if (!folder) return NULL;
+#if EVOLUTION_VERSION >= 30101
+	uri = e_mail_folder_uri_from_folder (folder);
+#else
 #if EVOLUTION_VERSION >= 29101
 	uri = (gchar *)camel_folder_get_uri (folder);
 #else
 	uri = mail_tools_folder_to_url (folder);
+#endif
 #endif
 	return uri;
 }
@@ -4268,7 +4275,11 @@ static void
 store_folder_deleted(CamelObject *o, void *event_data, void *data)
 {
 	CamelFolderInfo *info = event_data;
+#if (DATASERVER_VERSION >= 3001001)
+	d("Folder deleted '%s' full '%s'\n", info->display_name, info->full_name);
+#else
 	d("Folder deleted '%s' full '%s'\n", info->name, info->full_name);
+#endif
 	rss_delete_feed(info->full_name, 1);
 }
 
