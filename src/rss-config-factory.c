@@ -459,7 +459,9 @@ folder_cb (GtkWidget *widget, gpointer data)
 	GtkWindow *window;
 	const gchar *uri;
 	struct _copy_folder_data *cfd;
+#if EVOLUTION_VERSION >= 30101
 	GError *error = NULL;
+#endif
 
 	EMailReader *reader;
 	EShellContent *shell_content;
@@ -504,16 +506,18 @@ folder_cb (GtkWidget *widget, gpointer data)
 #endif
 	cfd->delete = 1;
 
+#if EVOLUTION_VERSION >= 30101
 	e_mail_folder_uri_parse (
-               CAMEL_SESSION (session), folderinfo,
-               &cfd->source_store, &cfd->source_folder_name, &error);
+		CAMEL_SESSION (session), folderinfo,
+		&cfd->source_store, &cfd->source_folder_name, &error);
 
-       if (error != NULL) {
-               g_warning ("%s", error->message);
-               g_error_free (error);
-               g_free (cfd);
-               return;
-       }
+	if (error != NULL) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+		g_free (cfd);
+		return;
+	}
+#endif
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK) {
 		gchar *tmp;
