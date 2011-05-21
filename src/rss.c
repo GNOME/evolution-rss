@@ -213,6 +213,9 @@ struct _org_gnome_rss_controls_pobject {
 	guint counter;		//general counter for carring various numbers
 };
 
+GtkWidget *RSS_BTN_BACK;
+GtkWidget *RSS_BTN_FORW;
+GtkWidget *RSS_BTN_STOP;
 GtkWidget *evo_window;
 GHashTable *icons = NULL;
 #if (DATASERVER_VERSION >= 2023001)
@@ -1742,6 +1745,10 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 	gboolean online;
 	guint engine = fallback_engine();
 
+	po->stopbut = RSS_BTN_STOP;
+	po->forwbut = RSS_BTN_FORW;
+	po->backbut = RSS_BTN_BACK;
+
 #ifdef HAVE_WEBKIT
 	if (engine == 1) {
 		rf->mozembed = (GtkWidget *)webkit_web_view_new();
@@ -1925,10 +1932,16 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
 	GtkWidget *label3 = gtk_label_new ("");
 	GtkWidget *button, *button2, *button3, *button4, *button5;
+	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
 	gboolean online;
 
+	RSS_BTN_STOP = gtk_button_new_from_stock (GTK_STOCK_STOP);
+	RSS_BTN_FORW = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+	RSS_BTN_BACK = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
+	po->stopbut = RSS_BTN_STOP;
+	po->forwbut = RSS_BTN_FORW;
+	po->backbut = RSS_BTN_BACK;
 
-	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
 	gtk_widget_show (label3);
 	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
@@ -2152,7 +2165,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	struct _org_gnome_rss_controls_pobject *pobj;
 	gpointer is_html;
 	gchar *classid, *tmp;
-	GtkWidget *button2, *button3, *button4;
 	xmlDoc *src;
 	xmlChar *wid;
 	GByteArray *buffer;
@@ -2250,13 +2262,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		t->stream,
 		"<object classid=%s></object>\n",
 		classid);
-	//pre-create stop button as we need it to control it later
-	button3 = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
-	pobj->backbut = button3;
-	button4 = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
-	pobj->forwbut = button4;
-	button2 = gtk_button_new_from_stock (GTK_STOCK_STOP);
-	pobj->stopbut = button2;
 	g_free (classid);
 
 
@@ -2280,9 +2285,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			pobj->format = (EMFormatHTML *)t->format;
 			pobj->object.free = free_rss_browser;
 			pobj->part = t->part;
-			pobj->stopbut =  button2;
-			pobj->backbut = button3;
-			pobj->forwbut = button4;
 			camel_stream_printf(t->stream,
 				"<table style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\" cellpadding=1 cellspacing=0><tr><td align=center>",
 				frame_colour & 0xffffff,
