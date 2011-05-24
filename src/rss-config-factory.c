@@ -454,13 +454,16 @@ folder_cb (GtkWidget *widget, gpointer data)
 #else
 	CamelFolderInfo *folderinfo;
 #endif
-	GtkWidget *folder_tree;
 	GtkWidget *dialog;
 	GtkWindow *window;
 	const gchar *uri;
 	struct _copy_folder_data *cfd;
 #if EVOLUTION_VERSION >= 30101
 	GError *error = NULL;
+	EMFolderSelector *selector;
+	EMFolderTree *folder_tree;
+#else
+	GtkWidget *folder_tree;
 #endif
 
 	EMailReader *reader;
@@ -476,23 +479,44 @@ folder_cb (GtkWidget *widget, gpointer data)
 
 	window = e_mail_reader_get_window (reader);
 
-	folder_tree = em_folder_tree_new (session);
-	emu_restore_folder_tree_state (EM_FOLDER_TREE (folder_tree));
-
-	em_folder_tree_set_excluded (
-		EM_FOLDER_TREE (folder_tree),
-		EMFT_EXCLUDE_NOSELECT | EMFT_EXCLUDE_VIRTUAL |
-		EMFT_EXCLUDE_VTRASH);
-
 	dialog = em_folder_selector_new (
-			window, EM_FOLDER_TREE (folder_tree),
+			window,
+#if EVOLUTION_VERSION >= 30101
+			backend,
+#else
+			EM_FOLDER_TREE (folder_tree),
+#endif
 			EM_FOLDER_SELECTOR_CAN_CREATE,
 			_("Move to Folder"), NULL, _("M_ove"));
 
+#if EVOLUTION_VERSION >= 30101
+	selector = EM_FOLDER_SELECTOR (dialog);
+	folder_tree = em_folder_selector_get_folder_tree (selector);
+#else
+	folder_tree = em_folder_tree_new (session);
+	emu_restore_folder_tree_state (EM_FOLDER_TREE (folder_tree));
+#endif
+
+	em_folder_tree_set_excluded (
+#if EVOLUTION_VERSION >= 30101
+		folder_tree,
+		EMFT_EXCLUDE_NOSELECT |
+		EMFT_EXCLUDE_VIRTUAL |
+#else
+		EM_FOLDER_TREE (folder_tree),
+		EMFT_EXCLUDE_NOSELECT | EMFT_EXCLUDE_VIRTUAL |
+#endif
+		EMFT_EXCLUDE_VTRASH);
+
 	if ((uri = lookup_uri_by_folder_name(text)))
+#if EVOLUTION_VERSION >= 30101
+		em_folder_tree_set_selected (
+			folder_tree, uri, FALSE);
+#else
 		em_folder_selector_set_selected (
 			EM_FOLDER_SELECTOR (dialog),
 			uri);
+#endif
 
 #if EVOLUTION_VERSION >= 30101
 	folderinfo = em_folder_tree_get_selected_uri ((EMFolderTree *)folder_tree);
