@@ -1,5 +1,10 @@
 ACLOCAL_AMFLAGS = -I m4
 
+desktop_in_files = evolution-rss.desktop.in
+desktopdir = $(datadir)/applications
+desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
+
 INTLTOOL =                      \
 	intltool-extract.in     \
 	intltool-merge.in       \
@@ -15,6 +20,7 @@ EXTRA_DIST = \
 	FAQ
 
 DISTCLEANFILES = \
+	evolution-rss.desktop \
 	intltool-extract \
 	intltool-merge \
 	intltool-update

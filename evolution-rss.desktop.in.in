@@ -1,0 +1,19 @@
+
+[Desktop Entry]
+Name=Evolution RSS
+_GenericName=Evolution RSS Reader
+_Comment=Evolution plugin that enables Evolution Mail to display rss feeds.
+Exec=@prefix@/bin/evolution-import-rss
+Icon=evolution
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Network;News;
+#NoDisplay=true
+#OnlyShowIn=News;
+Version=@VERSION@
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=evolution-rss
+X-GNOME-Bugzilla-Component=BugBuddyBugs
+X-GNOME-Bugzilla-Version=@VERSION@
+X-Desktop-File-Install-Version=0.18

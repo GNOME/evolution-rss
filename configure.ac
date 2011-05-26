@@ -407,6 +407,7 @@ AC_SUBST(IMAGESDIR_IN_SERVER_FILE)
 # Generated files from automake
 AC_CONFIG_FILES([
 Makefile
+evolution-rss.desktop.in
 evolution-rss.spec
 src/Makefile
 po/Makefile.in

@@ -32,6 +32,7 @@
 #include <gio/gio.h>
 
 #define d(x)
+#define EVOLUTION "evolution&"
 
 #define DBUS_PATH "/org/gnome/evolution/mail/rss"
 #define RSS_DBUS_SERVICE "org.gnome.evolution.mail.rss"
@@ -41,6 +42,8 @@
 
 //evolution ping roud-trip time in ms, somebody suggest a real value here
 #define EVOLUTION_PING_TIMEOUT 5000
+
+#define run(x) G_STMT_START { g_message ("%s", x); system (x); } G_STMT_END
 
 static GDBusConnection *connection = NULL;
 
@@ -185,8 +188,8 @@ no_evo_cb (gpointer user_data)
 	if (!evo_running) {
 		g_print("no evolution running!\n");
 		g_print("trying to start...\n");
-		system("evolution&");
-		g_usleep(30);
+		run(EVOLUTION);
+		sleep(30);
 		send_dbus_ping ();
 	}
 	return FALSE;
@@ -243,7 +246,7 @@ main (int argc, char *argv[])
 	feed = argv[1];
 	if (!feed) {
 		g_print("Syntax: %s URL\n", argv[0]);
-		return 0;
+		feed = "";
 	}
 
 	g_type_init ();
@@ -286,8 +289,8 @@ main (int argc, char *argv[])
 	g_main_loop_run(loop);
 
 	while (!evo_running && i < 2) {
-		system("evolution&");
-		g_print("fireing evolution...\n");
+		run(EVOLUTION);
+		g_print("Starting evolution...\n");
 		g_usleep(30);
 		send_dbus_ping ();
 		g_timeout_add (EVOLUTION_PING_TIMEOUT, err_evo_cb, GINT_TO_POINTER(i++));

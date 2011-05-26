@@ -1,7 +1,11 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
+evolution-rss.desktop
 src/dbus.c
 src/evolution-rss.schemas.in.in
+src/evolution-import-rss.c
+src/fetch.c
+src/file-gio.c
 src/network-soup.c
 src/notification.c
 src/org-gnome-evolution-rss.eplug.xml
@@ -9,10 +13,13 @@ src/org-gnome-evolution-rss.error.xml
 src/org-gnome-evolution-rss.xml
 src/rss.c
 src/rss.h
+src/rss-cache.c
 src/rss-config.c
 src/rss-config-factory.c
+src/rss-evo-common.c
 src/rss-html-rendering.ui
 src/rss-image.c
+src/rss-icon-factory.c
+src/rss-status-icon.c
 src/rss-main.ui
 src/parser.c
-
