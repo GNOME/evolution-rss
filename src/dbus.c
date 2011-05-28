@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2009  Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2011  Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,13 +36,46 @@ extern int rss_verbose_debug;
 #include "notification.h"
 #include "dbus.h"
 
-#define DBUS_PATH "/org/gnome/evolution/mail/rss"
-#define RSS_DBUS_SERVICE "org.gnome.evolution.mail.rss"
-//#define DBUS_INTERFACE "org.gnome.evolution.mail.rss.in"
-#define DBUS_INTERFACE "org.gnome.evolution.mail.rss"
-#define DBUS_REPLY_INTERFACE "org.gnome.evolution.mail.rss.out"
+#define RSS_DBUS_PATH "/org/gnome/feed/Reader"
+#define RSS_DBUS_SERVICE "org.gnome.feed.Reader"
+#define RSS_DBUS_INTERFACE "org.gnome.feed.Reader"
+
+gboolean subscribe_method(gchar *url);
+
+static void
+method_call_cb (GDBusConnection       *connection,
+		const gchar           *sender,
+		const gchar           *object_path,
+		const gchar           *interface_name,
+		const gchar           *method_name,
+		GVariant              *parameters,
+		GDBusMethodInvocation *invocation,
+		gpointer               user_data);
 
 static GDBusConnection *connection = NULL;
+
+static GDBusNodeInfo *nodeinfo = NULL;
+
+static const gchar introspection_xml[] =
+	"<node name='/org/gnome/feed/Reader'>"
+		"<interface name='org.gnome.feed.Reader'>"
+			"<method name='Ping'>"
+				"<arg name='result' type='b' direction='out'/>"
+			"</method>"
+			"<method name='Subscribe'>"
+				"<arg name='url' type='s'/>"
+				"<arg name='result' type='b' direction='out'/>"
+			"</method>"
+		"</interface>"
+	"</node>";
+
+static const GDBusInterfaceVTable vtable =
+{
+	method_call_cb,
+	NULL,
+	NULL
+};
+
 static gboolean enabled = FALSE;
 
 extern rssfeed *rf;
@@ -55,6 +88,45 @@ reinit_dbus (gpointer user_data)
 
 	/* keep trying to re-establish dbus connection */
 
+	return TRUE;
+}
+
+gboolean
+subscribe_method(gchar *url)
+{
+	add_feed *feed = g_new0(add_feed, 1);
+	feed->feed_url = url;
+	feed->add=1;
+	feed->enabled=feed->validate=1;
+	feed->fetch_html = 0;
+	if (feed->feed_url && strlen(feed->feed_url)) {
+		g_print("New Feed received: %s\n", url);
+		feed->feed_url = sanitize_url(feed->feed_url);
+		d("sanitized feed URL: %s\n", feed->feed_url);
+		if (g_hash_table_find(rf->hr, check_if_match, feed->feed_url)) {
+			rss_error(NULL, NULL, _("Error adding feed."),
+				_("Feed already exists!"));
+				//return FALSE;
+				/* we return true here since org.gnome.feed.Reader
+				 * doesn't support status */
+				return TRUE;
+		}
+		if (setup_feed(feed)) {
+			gchar *msg = g_strdup_printf(_("Importing URL: %s"),
+					feed->feed_url);
+			taskbar_push_message(msg);
+			g_free(msg);
+		}
+		if (rf->treeview)
+			store_redraw(GTK_TREE_VIEW(rf->treeview));
+		save_gconf_feed();
+#if (DATASERVER_VERSION >= 2033001)
+		camel_operation_pop_message (NULL);
+#else
+	camel_operation_end(NULL);
+#endif
+	}
+	g_free(url);
 	return TRUE;
 }
 
@@ -71,78 +143,66 @@ connection_closed_cb (GDBusConnection *pconnection,
 }
 
 static void
-signal_cb (GDBusConnection *connection,
-		const gchar *sender_name,
-		const gchar *object_path,
-		const gchar *interface_name,
-		const gchar *signal_name,
-		GVariant *parameters,
-		gpointer user_data)
+method_call_cb (GDBusConnection       *connection,
+		const gchar           *sender,
+		const gchar           *object_path,
+		const gchar           *interface_name,
+		const gchar           *method_name,
+		GVariant              *parameters,
+		GDBusMethodInvocation *invocation,
+		gpointer               user_data)
 {
-	if (g_strcmp0 (interface_name, DBUS_INTERFACE) != 0
-	|| g_strcmp0 (object_path, DBUS_PATH) != 0)
-		return;
-
-	d("interface:%s!\n", interface_name);
-	d("path:%s!\n", object_path);
-	d("signal_name:%s!\n", signal_name);
-
-
-	if (!g_strcmp0 (signal_name, "import")) {
-		gchar *url = NULL;
-		add_feed *feed = g_new0(add_feed, 1);
+	gchar *url;
+	gboolean res = FALSE;
+	d("method:%s\n", method_name);
+	if (!g_strcmp0 (method_name, "Subscribe")) {
 		g_variant_get (parameters, "(s)", &url);
-		feed->feed_url = url;
-		feed->add=1;
-		feed->enabled=feed->validate=1;
-		feed->fetch_html = 0;
-		if (feed->feed_url && strlen(feed->feed_url)) {
-			g_print("New Feed received: %s\n", url);
-			feed->feed_url = sanitize_url(feed->feed_url);
-			d("sanitized feed URL: %s\n", feed->feed_url);
-			if (g_hash_table_find(rf->hr, check_if_match, feed->feed_url)) {
-				rss_error(NULL, NULL, _("Error adding feed."),
-					_("Feed already exists!"));
-					return;
-			}
-			if (setup_feed(feed)) {
-				gchar *msg = g_strdup_printf(_("Importing URL: %s"),
-						feed->feed_url);
-				taskbar_push_message(msg);
-				g_free(msg);
-			}
-			if (rf->treeview)
-				store_redraw(GTK_TREE_VIEW(rf->treeview));
-			save_gconf_feed();
-#if (DATASERVER_VERSION >= 2033001)
-			camel_operation_pop_message (NULL);
-#else
-		camel_operation_end(NULL);
-#endif
-		}
-		g_free(url);
+		res = subscribe_method(url);
+		g_dbus_method_invocation_return_value (invocation,
+			g_variant_new ("(b)", res));
 	}
-
-	if (!g_strcmp0 (signal_name, "ping")) {
-		GDBusMessage *message;
-		GVariantBuilder *builder;
-		GError *error = NULL;
-		d("Ping! received from %s\n", interface_name);
-
-		if (!(message = g_dbus_message_new_signal (DBUS_PATH, DBUS_INTERFACE, "pong")))
-			return;
-		d("Sending Pong! back\n");
-		builder = g_variant_builder_new (G_VARIANT_TYPE_TUPLE);
-		g_variant_builder_add(builder, "s", "ponging");
-		g_dbus_message_set_body (message, g_variant_builder_end (builder));
-		g_dbus_connection_send_message (connection, message,
-			G_DBUS_SEND_MESSAGE_FLAGS_NONE, NULL, &error);
-		g_object_unref (message);
-		if (error) {
-			g_debug ("Error while sending ping-request: %s", error->message);
-			g_error_free (error);
-		}
+	if (!g_strcmp0 (method_name, "Ping")) {
+		g_dbus_method_invocation_return_value (invocation,
+			g_variant_new ("(b)", TRUE));
 	}
+}
+
+static void
+on_bus_acquired (GDBusConnection *connection,
+		const gchar     *name,
+		gpointer         user_data)
+{
+	guint reg_id;
+	GError     *error = NULL;
+	nodeinfo = g_dbus_node_info_new_for_xml (introspection_xml,
+				NULL);
+
+	reg_id = g_dbus_connection_register_object (connection,
+		RSS_DBUS_PATH,
+		nodeinfo->interfaces[0],
+		&vtable,
+		NULL, NULL,
+		&error);
+	if (!reg_id) {
+		g_printerr ("Failed to register bus object: %s\n", error->message);
+		g_error_free (error);
+	}
+}
+
+static void
+on_name_acquired (GDBusConnection *connection,
+		const gchar     *name,
+		gpointer         user_data)
+{
+	d("Name aquired.\n");
+}
+
+static void
+on_name_lost (GDBusConnection *connection,
+		const gchar     *name,
+		gpointer         user_data)
+{
+	d("Name lost.\n");
 }
 
 gboolean
@@ -161,25 +221,15 @@ init_gdbus (void)
 	g_signal_connect (connection, "closed",
 		G_CALLBACK (connection_closed_cb), NULL);
 
-	if (!g_dbus_connection_signal_subscribe (
-		connection,
-		NULL,
+	g_bus_own_name (G_BUS_TYPE_SESSION,
 		RSS_DBUS_SERVICE,
-/*		DBUS_INTERFACE,*/
+		G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT,
+		on_bus_acquired,
+		on_name_acquired,
+		on_name_lost,
 		NULL,
-		DBUS_PATH,
-		NULL,
-		G_DBUS_SIGNAL_FLAGS_NONE,
-		signal_cb,
-		NULL,
-		NULL)) {
-			g_warning ("%s: Failed to subscribe for a signal", G_STRFUNC);
-			goto fail;
-		}
+		NULL);
+
 	return FALSE;
-
-
-fail:	g_object_unref(connection);
-	return TRUE;
 }
 
