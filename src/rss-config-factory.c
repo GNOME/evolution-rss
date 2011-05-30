@@ -449,6 +449,8 @@ folder_cb (GtkWidget *widget, gpointer data)
 {
 	EMailBackend *backend;
 	EMailSession *session;
+	CamelStore *store = NULL;
+	gchar *folder_name = NULL;
 #if EVOLUTION_VERSION >= 30101
 	const gchar *folderinfo;
 #else
@@ -549,9 +551,18 @@ folder_cb (GtkWidget *widget, gpointer data)
 		uri = em_folder_selector_get_selected_uri (
 			EM_FOLDER_SELECTOR (dialog));
 		rss_emfu_copy_folder_selected (backend, uri, cfd);
+#if EVOLUTION_VERSION >= 30101
+		e_mail_folder_uri_parse (
+			CAMEL_SESSION(session), uri,
+			&store, &folder_name, NULL);
+#endif
 		tmp = g_build_path(G_DIR_SEPARATOR_S,
-				em_utils_folder_name_from_uri(uri),
-				name, NULL);
+#if EVOLUTION_VERSION >= 30101
+			folder_name,
+#else
+			em_utils_folder_name_from_uri(uri),
+#endif
+			name, NULL);
 		g_free(name);
 		gtk_label_set_text(GTK_LABEL(data), tmp);
 		g_free(tmp);
