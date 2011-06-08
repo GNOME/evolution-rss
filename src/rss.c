@@ -73,7 +73,9 @@ int rss_verbose_debug = 0;
 #endif
 #include <shell/e-shell.h>
 #include <shell/e-shell-view.h>
+#if EVOLUTION_VERSION < 30101
 #include <misc/e-popup-menu.h>
+#endif
 #endif
 
 #include <mail/mail-tools.h>
