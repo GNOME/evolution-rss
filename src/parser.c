@@ -175,12 +175,16 @@ xml_parse_sux (const char *buf, int len)
 	xmlParserCtxtPtr ctxt;
 	xmlDoc *doc = NULL;
 	gchar *mime_type;
+	gboolean uncertain;
 
 	rsserror = FALSE;
 
 	g_return_val_if_fail (buf != NULL, NULL);
-	mime_type = g_content_type_guess(NULL, (guchar *)buf, len, NULL);
-	g_print("mime:%s\n", mime_type);
+	/* we might be forced to lower detection buffer size as
+	 * application/ is often misdetected as text/html
+	 */
+	mime_type = g_content_type_guess(NULL, (guchar *)buf, 100, &uncertain);
+	dp("mime:%s, uncertain:%d\n", mime_type, uncertain);
 	//feeding parsed anything other than xml results in blocking delays
 	//it's possible we can relax parser by using xmlErrorFunc
 	//UPDATE: add text/* - but exclude text/html I've seen huge delays because of this
