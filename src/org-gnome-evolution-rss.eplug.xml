@@ -20,11 +20,6 @@ HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Fi
 +URL+</_description>
 	<author name="Lucian Langa" email="cooly@gnome.eu.org"/>
 	<hook class="org.gnome.evolution.shell.events:1.0">
-		<event id="started.done"
-			handle="get_shell"
-			target="shell"/>
-	</hook>
-	<hook class="org.gnome.evolution.shell.events:1.0">
 		<event id="upgrade.done"
 			handle="org_gnome_cooly_rss_startup"
 			target="upgrade"/>

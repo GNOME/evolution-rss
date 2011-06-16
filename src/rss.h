@@ -509,9 +509,6 @@ finish_update_feed_image (
 	SoupMessage *msg,
 	gpointer user_data);
 #endif
-//#if EVOLUTION_VERSION >= 22900
-void get_shell(void *ep, ESEventTargetShell *t);
-//#endif
 void rss_finalize(void);
 gboolean check_update_feed_image(gchar *key);
 void update_main_folder(gchar *new_name);

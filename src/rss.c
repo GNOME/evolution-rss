@@ -4539,15 +4539,6 @@ struct _EShell {
 typedef struct _EShell EShell;
 #endif
 
-void get_shell(void *ep, ESEventTargetShell *t)
-{
-#if EVOLUTION_VERSION < 22900 //KB//
-	EShell *shell = t->shell;
-	EShellPrivate *priv = (EShellPrivate *)shell->priv;
-	evo_window = (GtkWidget *)priv->windows;
-#endif
-}
-
 #if EVOLUTION_VERSION < 22900 //KB
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
