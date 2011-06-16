@@ -11,7 +11,6 @@ Type=Application
 Categories=Network;News;
 #NoDisplay=true
 #OnlyShowIn=News;
-Version=@VERSION@
 X-GNOME-Bugzilla-Bugzilla=GNOME
 X-GNOME-Bugzilla-Product=evolution-rss
 X-GNOME-Bugzilla-Component=BugBuddyBugs
