@@ -1,6 +1,6 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
-evolution-rss.desktop
+evolution-rss.desktop.in.in
 src/dbus.c
 src/evolution-rss.schemas.in.in
 src/evolution-import-rss.c

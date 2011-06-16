@@ -103,20 +103,6 @@ schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
 %.schemas.in: %.schemas.in.in
 	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
 
-server_in_files = GNOME_Evolution_RSS.server.in.in
-
-if HAVE_BONOBO
-server_DATA = $(server_in_files:.server.in.in=_$(EVOLUTION_EXEC_VERSION).server)
-	touch $(top_srcdir)/po/POTFILES.skip
-	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.skip
-	sed -i -e 's!^#src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
-	echo 'src/GNOME_Evolution_RSS.server.in.in' >> $(top_srcdir)/po/POTFILES.in
-else
-	sed -i -e 's!^#src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
-	sed -i -e 's!^src\/GNOME_Evolution_RSS.server.in.in!!g' $(top_srcdir)/po/POTFILES.in
-	echo 'src/GNOME_Evolution_RSS.server.in.in' > $(top_srcdir)/po/POTFILES.skip
-endif
-
 @EVO_SERVER_RULE@
 @INTLTOOL_SERVER_RULE@
 @INTLTOOL_SCHEMAS_RULE@
@@ -154,18 +140,16 @@ ui_DATA =                    \
 	rss-main.ui		\
 	rss-html-rendering.ui
 
-BUILT_SOURCES	= $(server_DATA)
+#BUILT_SOURCES	= $(server_DATA)
 CLEANFILES	= $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.eplug	\
 	org-gnome-evolution-rss.error   \
-	GNOME_Evolution_RSS.server.in	\
 	evolution-rss.schemas		\
 	evolution-rss.schemas.in	\
 	$(schema_DATA)
 
 EXTRA_DIST =					\
 	$(ui_DATA)				\
-	$(server_in_files)			\
 	$(schema_in_files)			\
 	rss.h network.h				\
 	network-soup.c				\
