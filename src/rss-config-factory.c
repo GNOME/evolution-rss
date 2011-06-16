@@ -450,9 +450,9 @@ folder_cb (GtkWidget *widget, gpointer data)
 {
 	EMailBackend *backend;
 	EMailSession *session;
+#if EVOLUTION_VERSION >= 30101
 	CamelStore *store = NULL;
 	gchar *folder_name = NULL;
-#if EVOLUTION_VERSION >= 30101
 	const gchar *folderinfo;
 #else
 	CamelFolderInfo *folderinfo;
