@@ -33,7 +33,7 @@
 #include <gio/gio.h>
 
 #define d(x)
-#define EVOLUTION "/opt/gnome-dev/bin/evolution&"
+#define EVOLUTION EVOLUTION_BINDIR"/bin/evolution&"
 
 #define RSS_DBUS_PATH "/org/gnome/feed/Reader"
 #define RSS_DBUS_SERVICE "org.gnome.feed.Reader"
