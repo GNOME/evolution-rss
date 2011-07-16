@@ -2156,10 +2156,9 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	gchar *category = NULL;
 	GdkPixbuf *pixbuf = NULL;
 	int size;
-	CamelDataWrapper *dw = camel_data_wrapper_new();
-	CamelMimePart *part = camel_mime_part_new();
 	CamelMimePart *message;
 	CamelStream *fstream = camel_stream_mem_new();
+	GString *fbuffer = g_string_new(NULL);
 	CamelStreamMem *stream = (CamelStreamMem *)camel_stream_mem_new();
 	CamelDataWrapper *mcontent;
 	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
@@ -2295,8 +2294,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 				frame_colour & 0xffffff,
 				frame_colour & 0xffffff,
 				text_colour & 0xffffff);
-			camel_stream_write_string (t->stream, str, NULL, NULL);
-			g_free (str);
 			str = g_strdup_printf (
 				"<object classid=%s></object></td></tr></table>",//</div>\n",
 				classid);
@@ -2495,16 +2492,14 @@ pixdone:			g_free(real_image);
 		feed_file = g_strdup(tmp_path);
 #endif
 
-		str = g_strdup_printf (
+		g_string_append_printf (fbuffer,
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
 			frame_colour & 0xffffff,
 			content_colour & 0xEDECEB & 0xffffff,
 			text_colour & 0xffffff);
-		camel_stream_write_string (fstream, str, NULL, NULL);
-		g_free (str);
 		if (g_file_test(tmp_path, G_FILE_TEST_EXISTS)){
 			if ((pixbuf = gdk_pixbuf_new_from_file(tmp_path, NULL))) {
-				str = g_strdup_printf (
+				g_string_append_printf (fbuffer,
 					"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
 					"<img height=16 src=%s>"
 					"<b><font size=+1><a href=%s>%s</a></font></b></div>",
@@ -2513,8 +2508,6 @@ pixdone:			g_free(real_image);
 					feed_file,
 					website,
 					subject);
-				camel_stream_write_string (fstream, str, NULL, NULL);
-				g_free (str);
 				g_object_unref(pixbuf);
 				g_free(feed_file);
 				goto render_body;
@@ -2530,47 +2523,39 @@ pixdone:			g_free(real_image);
 		iconfile = g_strdup(tmp_file);
 #endif
 		g_free(tmp_file);
-		str = g_strdup_printf (
+		g_string_append_printf (fbuffer,
 			"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
 			"<img height=16 src=%s>"
 			"<b><font size=+1><a href=%s>%s</a></font></b></div>",
 			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
 			iconfile, website, subject);
-		camel_stream_write_string (fstream, str, NULL, NULL);
-		g_free (str);
 		g_free(iconfile);
 		g_free(feed_file);
 
 render_body:	if (category) {
-			str = g_strdup_printf (
+			g_string_append_printf (fbuffer,
 				"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
 				"<b><font size=-1>Posted under: %s</font></b></div>",
 				content_colour & 0xEDECEB & 0xffffff,
 				text_colour & 0xffffff,
 				category);
-			camel_stream_write_string (fstream, str, NULL, NULL);
-			g_free (str);
 		}
-		str = g_strdup_printf (
+		g_string_append_printf (fbuffer,
 			"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
 			"%s</div>",
 			frame_colour & 0xffffff,
 			content_colour & 0xffffff,
 			text_colour & 0xffffff,
 			buff);
-		camel_stream_write_string (fstream, str, NULL, NULL);
-		g_free (str);
 		if (comments && gconf_client_get_bool (rss_gconf,
 						GCONF_KEY_SHOW_COMMENTS,
 						NULL)) {
 			if (commstream) {
-				str = g_strdup_printf (
+				g_string_append_printf (fbuffer,
 					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
 					frame_colour & 0xffffff,
 					content_colour & 0xEDECEB & 0xffffff,
 					text_colour & 0xffffff);
-				camel_stream_write_string (fstream, str, NULL, NULL);
-				g_free (str);
 				result = print_comments(comments, commstream, (EMFormatHTML *)t->format);
 				g_free(commstream);
 				rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
@@ -2586,19 +2571,15 @@ render_body:	if (category) {
 				pobj->website = g_strdup(comments);
 				//this might not be needed but we want to make sure po->html is destroyed
 				pobj->object.free = free_rss_controls;
-				str = g_strdup_printf (
+				g_string_append_printf (fbuffer,
 					"<object height=25 classid=%s></object>", rfrclsid);
-				camel_stream_write_string (fstream, str, NULL, NULL);
-				g_free (str);
 				if (result && strlen(result)) {
-					str = g_strdup_printf (
+					g_string_append_printf (fbuffer,
 					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
 						frame_colour & 0xffffff,
 						content_colour & 0xffffff,
 						text_colour & 0xffffff,
 						result);
-					camel_stream_write_string (fstream, str, NULL, NULL);
-					g_free (str);
 					g_free(result);
 				}
 				g_free(rfrclsid);
@@ -2608,38 +2589,14 @@ render_body:	if (category) {
 						rf->hr, g_strstrip(feedid)));
 				fetch_comments(comments, g_strdup(uri), (EMFormatHTML *)t->format);
 			}
-			camel_stream_write_string (fstream, "</div>", NULL, NULL);
+			g_string_append (fbuffer, "</div>");
 		}
-		camel_stream_write_string (fstream, "</div>", NULL, NULL);
+		g_string_append (fbuffer, "</div>");
 	}
-
-	//this is required for proper charset rendering when html
-#if (DATASERVER_VERSION >= 2033001)
-	camel_data_wrapper_construct_from_stream_sync (dw, fstream, NULL, NULL);
-#else
-	camel_data_wrapper_construct_from_stream (dw, fstream, NULL);
-#endif
-#if EVOLUTION_VERSION >= 23100
-	camel_medium_set_content((CamelMedium *)part, dw);
-#else
-	camel_medium_set_content_object((CamelMedium *)part, dw);
-#endif
-#if EVOLUTION_VERSION >= 23300
-	em_format_format_text((EMFormat *)t->format,
-				(CamelStream *)t->stream,
-				(CamelDataWrapper *)part, NULL);
-#else
-	em_format_format_text((EMFormat *)t->format,
-				(CamelStream *)t->stream,
-				(CamelDataWrapper *)part);
-#endif
+	camel_stream_write (t->stream, fbuffer->str, fbuffer->len, NULL, NULL);
 #if (DATASERVER_VERSION >= 2031001)
-	g_object_unref(dw);
-	g_object_unref(part);
 	g_object_unref(fstream);
 #else
-	camel_object_unref(dw);
-	camel_object_unref(part);
 	camel_object_unref(fstream);
 #endif
 	g_free(buff);
@@ -5172,9 +5129,8 @@ create_mail(create_feed *CF)
 	camel_content_type_set_param (type, "format", "flowed");
 	camel_data_wrapper_set_mime_type_field (rtext, type);
 	camel_content_type_unref (type);
-	stream = camel_stream_mem_new ();
-	// w/out an format argument this throws and seg fault
-	camel_stream_write_string (stream, CF->body, NULL, NULL);
+	stream = (CamelStream *)
+			camel_stream_mem_new_with_buffer ((gchar *) CF->body, strlen(CF->body));
 #if (DATASERVER_VERSION >= 2033001)
 	/*FIXME may block */
 	camel_data_wrapper_construct_from_stream_sync (rtext, stream, NULL, NULL);
