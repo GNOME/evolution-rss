@@ -792,10 +792,10 @@ net_get_unblocking(gchar *url,
 	}
 
 	g_signal_connect (soup_sess, "authenticate",
-		G_CALLBACK (authenticate), (gpointer)mainurl?mainurl:url);
+		G_CALLBACK (authenticate), (gpointer)mainurl?mainurl:g_strdup(url));
 #if LIBSOUP_VERSION < 2003000
 	g_signal_connect (soup_sess, "reauthenticate",
-		G_CALLBACK (reauthenticate), (gpointer)mainurl?mainurl:url);
+		G_CALLBACK (reauthenticate), (gpointer)mainurl?mainurl:g_strdup(url));
 #endif
 
 	/* Queue an async HTTP request */
@@ -849,8 +849,6 @@ net_get_unblocking(gchar *url,
 ////	g_object_add_weak_pointer (G_OBJECT(msg), (gpointer)info);
 	g_object_weak_ref (G_OBJECT(msg), unblock_free, soup_sess);
 //	g_object_weak_ref (G_OBJECT(soup_sess), unblock_free, soup_sess);
-	if (mainurl)
-		g_free(mainurl);
 	return TRUE;
 }
 

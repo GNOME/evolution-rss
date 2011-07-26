@@ -689,6 +689,7 @@ user_pass_cb(RSS_AUTH *auth_info, gint response, GtkDialog *dialog)
 			auth_info->session, auth_info->message);
 	}
 out:	gtk_widget_destroy(GTK_WIDGET(dialog));
+	g_free(auth_info->url);
 	g_free(auth_info);
 
 }
