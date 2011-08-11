@@ -43,4 +43,4 @@
 	* detect rss-id changes (file changes) -> feeds downloaded all over again
 	* add evolution-rss.desktop file to integrate into browsers
 	* remove useless validation option
-	* checkbox - autodisable broken feeds
+	* checkbox - autodisable broken feeds - apply dyn penalty
