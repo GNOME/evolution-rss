@@ -465,7 +465,7 @@ folder_cb (GtkWidget *widget, gpointer data)
 	GError *error = NULL;
 	EMFolderSelector *selector;
 	EMFolderTree *folder_tree;
-#if EVOLUTION_VERSION >= 30101
+#if EVOLUTION_VERSION >= 30105
 	EMFolderTreeModel *model;
 #endif
 #else
@@ -485,14 +485,14 @@ folder_cb (GtkWidget *widget, gpointer data)
 
 	window = e_mail_reader_get_window (reader);
 
-#if EVOLUTION_VERSION >= 30103
+#if EVOLUTION_VERSION >= 30105
 	model = em_folder_tree_model_get_default ();
 #endif
 	dialog = em_folder_selector_new (
 			window,
 #if EVOLUTION_VERSION >= 30101
 			backend,
-#if EVOLUTION_VERSION >= 30103
+#if EVOLUTION_VERSION >= 30105
 			model,
 #endif
 #else
