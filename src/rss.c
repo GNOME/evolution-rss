@@ -3399,13 +3399,10 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			NET_ERROR_GENERIC,
 			"%s",
 			soup_status_get_phrase(msg->status_code));
-		tmsg = g_strdup_printf("\n%s\n%s",
-			(gchar *)user_data,
-			(gchar *)err->message);
-		rss_error(user_data,
-			NULL,
-			_("Error fetching feed."),
-			tmsg);
+		tmsg = g_strdup_printf(_("Error fetching feed: %s"),
+			(gchar *)user_data);
+		rss_error(user_data, NULL, tmsg,
+			err->message);
 		g_free(tmsg);
 		goto out;
 	}
@@ -3458,13 +3455,16 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	r->cache = xml_parse_sux (response->str, response->len);
 	if (rsserror) {
 		gchar *title = g_strdup_printf(
-				_("Error while parsing feed %s"),
+				_("Error while parsing feed: %s"),
 				(gchar *)user_data);
 		xmlError *err = xmlGetLastError();
 		gchar *tmsg = g_strdup(
 				err ? err->message : _("illegal content type!"));
-		rss_error(user_data,
-			NULL, title, tmsg);
+		/* xmlGetLastError inserts unwanted \n at the end of error message
+ 		 * find a better way to get rid of those
+ 		 */
+		g_strdelimit(tmsg, "\n", ' ');
+		rss_error(user_data, NULL, title, tmsg);
 		g_free(tmsg);
 		g_free(title);
 		goto out;
@@ -3564,13 +3564,12 @@ display_feed_async(gpointer key)
 			&err);		// because we might lose it if
 					// feed gets deleted
 	if (err) {
-		msg = g_strdup_printf("\n%s\n%s",
-				(gchar *)key,
-				err->message);
+		msg = g_strdup_printf(_("Error fetching feed: %s"),
+				(gchar *)key);
 		rss_error(key,
 			NULL,
-			_("Error fetching feed."),
-			msg);
+			msg,
+			err->message);
 			g_free(msg);
 	}
 	return FALSE;
@@ -3603,13 +3602,12 @@ fetch_one_feed(gpointer key, gpointer value, gpointer user_data)
 						// feed gets deleted
 		if (err) {
 			rf->feed_queue--;
-			msg = g_strdup_printf("\n%s\n%s",
-					(gchar *)key,
-					err->message);
+			msg = g_strdup_printf(_("Error fetching feed: %s"),
+					(gchar *)key);
 			rss_error(key,
 				NULL,
-				_("Error fetching feed."),
-				msg);
+				msg,
+				err->message);
 			g_free(msg);
 		}
 		return TRUE;
@@ -3801,9 +3799,9 @@ fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream)
 	comments_session = g_slist_append(comments_session, comm_sess);
 
 	if (err) {
-		gchar *msg = g_strdup_printf("\n%s\n%s",
-				url, err->message);
-		rss_error(url, NULL, _("Error fetching feed."), msg);
+		gchar *msg = g_strdup_printf(_("Error fetching feed: %s"),
+				url);
+		rss_error(url, NULL, msg, err->message);
 		g_free(msg);
 	}
 }
@@ -4404,13 +4402,13 @@ custom_update_articles(CDATA *cdata)
 			&err);                // because we might lose it if
 			if (err) {
 				rf->feed_queue--;
-				msg = g_strdup_printf("\n%s\n%s",
-					(char *)cdata->key, err->message);
+				msg = g_strdup_printf(_("Error fetching feed: %s"),
+					(char *)cdata->key);
 				rss_error(
 					cdata->key,
 					NULL,
-					_("Error fetching feed."),
-					msg);
+					msg,
+					err->message);
 				g_free(msg);
 			}
 		} else if (rf->cancel && !rf->feed_queue) {

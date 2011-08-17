@@ -21,7 +21,7 @@
   <error id="feederr" type="error">
 	<primary>{0}</primary>
 	<secondary>{1}</secondary>
-    <button stock="gtk-ok" response="GTK_RESPONSE_OK"/>
+	<button _label="_Dismiss" response="GTK_RESPONSE_OK"/>
   </error>
 
 <error type="question" id="ask-delete-feed" default="GTK_RESPONSE_CANCEL">

@@ -84,8 +84,15 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 		if (!g_hash_table_lookup(rf->error_hash, key)) {
 #if (EVOLUTION_VERSION >= 22900) //kb//
 			shell = e_shell_get_default ();
+#if (EVOLUTION_VERSION >= 30101)
+			gpointer alert = e_alert_new ("org-gnome-evolution-rss:feederr",
+						error, msg, NULL);
+			e_shell_submit_alert (shell, alert);
+			goto out;
+#endif
 			windows = e_shell_get_watched_windows (shell);
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
+
 
 #if (EVOLUTION_VERSION >= 29102)
 			backend = (EMailBackend *)e_shell_get_backend_by_name (shell, "mail");
