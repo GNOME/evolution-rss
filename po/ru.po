@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss trunk\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-16 18:57+0000\n"
-"PO-Revision-Date: 2011-07-27 22:15+0300\n"
+"POT-Creation-Date: 2011-08-17 05:35+0000\n"
+"PO-Revision-Date: 2011-08-22 22:22+0300\n"
 "Last-Translator: Yuri Myasoedov <omerta13@yandex.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -26,24 +26,23 @@ msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
 msgstr "Модуль Evolution, который позволяет просматривать rss-ленты."
 
 #: ../src/dbus.c:108
-#: ../src/rss.c:3176
-#: ../src/rss-config-factory.c:1101
-#: ../src/rss-config-factory.c:1641
-#: ../src/rss-config-factory.c:1808
+#: ../src/rss.c:3169
+#: ../src/rss-config-factory.c:1110
+#: ../src/rss-config-factory.c:1650
+#: ../src/rss-config-factory.c:1817
 msgid "Error adding feed."
 msgstr "Не удалось добавить ленту."
 
 #: ../src/dbus.c:109
-#: ../src/rss.c:3177
-#: ../src/rss-config-factory.c:1102
-#: ../src/rss-config-factory.c:1642
-#: ../src/rss-config-factory.c:1809
+#: ../src/rss.c:3170
+#: ../src/rss-config-factory.c:1111
+#: ../src/rss-config-factory.c:1651
+#: ../src/rss-config-factory.c:1818
 msgid "Feed already exists!"
 msgstr "Лента уже существует!"
 
 #: ../src/dbus.c:116
 #, c-format
-#| msgid "Importing feeds..."
 msgid "Importing URL: %s"
 msgstr "Импортирование URL: %s"
 
@@ -84,7 +83,6 @@ msgid "Contains list of the currently setup feeds."
 msgstr "Содержит список настроенных лент."
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-#| msgid "When deleting a folder also remove rename feed alocation."
 msgid "Deleting feed entry will also remove feed folder."
 msgstr "Удаление ленты приведёт к удалению папки для ленты."
 
@@ -129,9 +127,6 @@ msgid "Evolution will download all feed enclosures a feed article may contain."
 msgstr "Evolution будет загружать все вложения, которые может содержать статья."
 
 #: ../src/evolution-rss.schemas.in.in.h:21
-#| msgid ""
-#| "Evolution will show artile's summary instead of article's webpage. "
-#| "Sumarry can also be html."
 msgid "Evolution will show article's summary instead of article's webpage. Summary can also be html."
 msgstr "Evolution будет показывать сводку по статье вместо веб-страницы. Сводка также может быть в формате html."
 
@@ -148,7 +143,6 @@ msgid "Hostname of the proxy server"
 msgstr "Имя узла прокси-сервера"
 
 #: ../src/evolution-rss.schemas.in.in.h:25
-#| msgid "Hostname of the proxy server."
 msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Имя узла прокси-сервера, используемого для лент и содержимого."
 
@@ -205,7 +199,6 @@ msgid "Network proxy requires authentication."
 msgstr "Требуется ли проверять подлинность на прокси-сервере."
 
 #: ../src/evolution-rss.schemas.in.in.h:39
-#| msgid "Network timeout"
 msgid "Network queue size"
 msgstr "Размер сетевой очереди"
 
@@ -234,7 +227,6 @@ msgid "Proxy server user"
 msgstr "Пользователь прокси-сервера"
 
 #: ../src/evolution-rss.schemas.in.in.h:46
-#| msgid "Remove Rename Folder"
 msgid "Remove feed folder"
 msgstr "Удалить папку для лент"
 
@@ -251,12 +243,10 @@ msgid "Set to true to have a program specified in command handle RSS URLs"
 msgstr "Установите, чтобы включить обработку URL в RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:50
-#| msgid "Show article's summary"
 msgid "Show articles comments"
 msgstr "Показывать комментарии к статьям"
 
 #: ../src/evolution-rss.schemas.in.in.h:51
-#| msgid "The port number for proxy server."
 msgid "The port number for proxy server used for feeds and content."
 msgstr "Номер порта прокси-сервера, используемого для лент и содержимого."
 
@@ -285,7 +275,6 @@ msgid "Use a custom font size instead of system defaults."
 msgstr "Использовать другой размер шрифта вместо размера по умолчанию."
 
 #: ../src/evolution-rss.schemas.in.in.h:58
-#| msgid "Use a proxy server to fetch articles"
 msgid "Use a proxy server to fetch articles and content."
 msgstr "Использовать прокси-сервер для получения статей и содержимого."
 
@@ -297,30 +286,13 @@ msgstr "Использовать другой шрифт"
 msgid "Use proxy server"
 msgstr "Использовать прокси-сервер"
 
-#: ../src/notification.c:401
-#: ../src/rss.c:3357
+#: ../src/notification.c:408
+#: ../src/rss.c:3350
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Загрузка статей (включено %d)"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
-#| msgid ""
-#| "Evolution RSS Reader Plugin.\n"
-#| "\n"
-#| "This plugin adds RSS Feeds support for evolution mail. RSS support was "
-#| "built upon the somewhat existing RSS support in evolution-1.4 branch. The "
-#| "motivation behind this was to have RSS in same place as mails, at this "
-#| "moment I do not see the point having a separate RSS reader since a RSS "
-#| "Article is like an email message.\n"
-#| "\n"
-#| "Evolution RSS can display article using summary view or HTML view. \n"
-#| "\n"
-#| "HTML can be displayed using the following engines: gtkHTML, Apple's "
-#| "Webkit or Firefox/Gecko.\n"
-#| "\n"
-#| "<b>Version: evolution-rss +VERSION+</b>\n"
-#| "\n"
-#| "+URL+"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
@@ -347,18 +319,16 @@ msgstr ""
 "+URL+"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:12
-#| msgid "Size:"
 msgid "Size"
 msgstr "Размер"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
-#| msgid "Delete feed?"
 msgid "Delete \"{0}\"?"
 msgstr "Удалить «0»?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:2
 msgid "Reading RSS Feeds..."
-msgstr "Чтение RSS-лент..."
+msgstr "Чтение RSS-лент…"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "Really delete feed '{0}' ?"
@@ -367,6 +337,10 @@ msgstr "Действительно удалить ленту «0»?"
 #: ../src/org-gnome-evolution-rss.error.xml.h:4
 msgid "Updating Feeds..."
 msgstr "Обновление лент…"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "_Dismiss"
+msgstr "_Отклонить"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
 msgid "Setup RSS"
@@ -385,204 +359,196 @@ msgid "_Read RSS"
 msgstr "_Читать RSS"
 
 #: ../src/rss.c:379
-#: ../src/rss.c:3521
+#: ../src/rss.c:3514
 msgid "Feed"
 msgstr "Лента"
 
 #: ../src/rss.c:459
-#: ../src/rss-config-factory.c:2741
-#: ../src/rss-config-factory.c:2915
+#: ../src/rss-config-factory.c:2750
+#: ../src/rss-config-factory.c:2924
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% выполнено"
 
-#: ../src/rss.c:708
-#| msgid "Enter User/Pass for Feed"
+#: ../src/rss.c:709
 msgid "Enter User/Pass for feed"
 msgstr "Введите имя пользователя и пароль для ленты"
 
-#: ../src/rss.c:764
+#: ../src/rss.c:765
 msgid "Enter your username and password for:"
 msgstr "Введите имя пользователя и пароль:"
 
-#: ../src/rss.c:782
-#| msgid "Username:"
+#: ../src/rss.c:783
 msgid "Username: "
 msgstr "Имя пользователя:"
 
-#: ../src/rss.c:803
+#: ../src/rss.c:804
 msgid "Password: "
 msgstr "Пароль: "
 
-#: ../src/rss.c:840
-#| msgid "Remember password"
+#: ../src/rss.c:841
 msgid "_Remember this password"
 msgstr "_Запомнить этот пароль"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:945
-#| msgid "Canceling..."
+#: ../src/rss.c:946
 msgid "Cancelling..."
 msgstr "Отмена…"
 
-#: ../src/rss.c:1110
-#| msgid "Importing feeds..."
+#: ../src/rss.c:1111
 msgid "Formatting Message..."
 msgstr "Форматирование сообщения…"
 
-#: ../src/rss.c:1334
+#: ../src/rss.c:1335
 msgid "_Copy"
 msgstr "_Копировать"
 
-#: ../src/rss.c:1335
+#: ../src/rss.c:1336
 msgid "Select _All"
 msgstr "_Выделить всё"
 
-#: ../src/rss.c:1337
-#: ../src/rss.c:1348
+#: ../src/rss.c:1338
+#: ../src/rss.c:1349
 msgid "Zoom _In"
 msgstr "У_величить"
 
-#: ../src/rss.c:1338
-#: ../src/rss.c:1349
+#: ../src/rss.c:1339
+#: ../src/rss.c:1350
 msgid "Zoom _Out"
 msgstr "У_меньшить"
 
-#: ../src/rss.c:1339
-#: ../src/rss.c:1350
+#: ../src/rss.c:1340
+#: ../src/rss.c:1351
 msgid "_Normal Size"
 msgstr "О_бычный размер"
 
-#: ../src/rss.c:1341
+#: ../src/rss.c:1342
 msgid "_Open Link"
 msgstr "_Открыть ссылку"
 
-#: ../src/rss.c:1342
-#: ../src/rss.c:1356
+#: ../src/rss.c:1343
+#: ../src/rss.c:1357
 msgid "_Copy Link Location"
 msgstr "_Копировать адрес ссылки"
 
-#: ../src/rss.c:1352
+#: ../src/rss.c:1353
 msgid "_Print..."
 msgstr "_Печать…"
 
-#: ../src/rss.c:1353
+#: ../src/rss.c:1354
 msgid "Save _As"
 msgstr "_Сохранить как"
 
-#: ../src/rss.c:1355
+#: ../src/rss.c:1356
 msgid "_Open Link in Browser"
 msgstr "_Открыть в браузере"
 
-#: ../src/rss.c:1459
-#: ../src/rss.c:1642
+#: ../src/rss.c:1460
+#: ../src/rss.c:1643
 msgid "Click to open"
 msgstr "Щёлкните, чтобы открыть"
 
-#: ../src/rss.c:1914
-#| msgid "Complete"
+#: ../src/rss.c:1915
 msgid "Comments"
 msgstr "Комментарии"
 
-#: ../src/rss.c:1919
+#: ../src/rss.c:1920
 msgid "Refresh"
 msgstr "Обновить"
 
-#: ../src/rss.c:1938
+#: ../src/rss.c:1939
 msgid "Feed view"
 msgstr "Отображение ленты"
 
-#: ../src/rss.c:1953
+#: ../src/rss.c:1954
 msgid "Show Summary"
 msgstr "Показать сводку"
 
-#: ../src/rss.c:1954
+#: ../src/rss.c:1955
 msgid "Show Full Text"
 msgstr "Показать полный текст"
 
-#: ../src/rss.c:2348
+#: ../src/rss.c:2357
 msgid "Posted under"
 msgstr "Категория"
 
-#: ../src/rss.c:2680
-#| msgid "Error fetching feed."
+#: ../src/rss.c:2673
 msgid "Fetching feed"
 msgstr "Загрузка ленты"
 
-#: ../src/rss.c:2983
-#| msgid "Unamed feed"
+#: ../src/rss.c:2976
 msgid "Unnamed feed"
 msgstr "Безымянная лента"
 
-#: ../src/rss.c:2984
-#| msgid "Error while fetching feed."
+#: ../src/rss.c:2977
 msgid "Error while setting up feed."
 msgstr "Во время настройки ленты произошла ошибка."
 
-#: ../src/rss.c:3188
-#: ../src/rss.c:3258
+#: ../src/rss.c:3181
+#: ../src/rss.c:3251
 msgid "Error while fetching feed."
 msgstr "Во время загрузки ленты произошла ошибка."
 
-#: ../src/rss.c:3189
+#: ../src/rss.c:3182
 msgid "Invalid Feed"
 msgstr "Некорректная лента"
 
-#: ../src/rss.c:3231
+#: ../src/rss.c:3224
 #, c-format
-#| msgid "Add Feed"
 msgid "Adding feed %s"
 msgstr "Добавление ленты %s"
 
-#: ../src/rss.c:3257
+#: ../src/rss.c:3250
 msgid "Unamed feed"
 msgstr "Безымянная лента"
 
-#: ../src/rss.c:3271
+#: ../src/rss.c:3264
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Получение сообщения %d из %d"
 
-#: ../src/rss.c:3377
+#: ../src/rss.c:3370
 msgid "Complete."
 msgstr "Завершено."
 
-#: ../src/rss.c:3414
-#: ../src/rss.c:3579
-#: ../src/rss.c:3618
-#: ../src/rss.c:3813
-#: ../src/rss.c:4419
-msgid "Error fetching feed."
-msgstr "Ошибка загрузки ленты"
+#: ../src/rss.c:3402
+#: ../src/rss.c:3567
+#: ../src/rss.c:3605
+#: ../src/rss.c:3802
+#: ../src/rss.c:4405
+#, c-format
+#| msgid "Error fetching feed."
+msgid "Error fetching feed: %s"
+msgstr "Ошибка загрузки ленты: %s"
 
-#: ../src/rss.c:3425
+#: ../src/rss.c:3415
 msgid "Canceled."
 msgstr "Отменено."
 
-#: ../src/rss.c:3468
+#: ../src/rss.c:3458
 #, c-format
-#| msgid "Error while parsing feed."
-msgid "Error while parsing feed %s"
-msgstr "Ошибка разбора ленты %s"
+#| msgid "Error while parsing feed %s"
+msgid "Error while parsing feed: %s"
+msgstr "Ошибка разбора ленты: %s"
 
-#: ../src/rss.c:3472
+#: ../src/rss.c:3462
 msgid "illegal content type!"
 msgstr "Недопустимый тип содержимого!"
 
-#: ../src/rss.c:3530
+#: ../src/rss.c:3523
 msgid "Complete"
 msgstr "Завершено"
 
-#: ../src/rss.c:3660
+#: ../src/rss.c:3651
 msgid "Formatting error."
 msgstr "Ошибка форматирования."
 
-#: ../src/rss.c:4696
+#: ../src/rss.c:4678
 msgid "No RSS feeds configured!"
 msgstr "Не настроено ни одной ленты RSS!"
 
-#: ../src/rss.c:4748
+#: ../src/rss.c:4730
 msgid "Waiting..."
 msgstr "Ожидание…"
 
@@ -607,7 +573,6 @@ msgid "Mozilla"
 msgstr "Mozilla"
 
 #: ../src/rss-config-factory.c:415
-#| msgid "day(s)"
 msgid "day"
 msgid_plural "days"
 msgstr[0] "день"
@@ -615,134 +580,128 @@ msgstr[1] "дня"
 msgstr[2] "дней"
 
 #: ../src/rss-config-factory.c:430
-#| msgid "message(s)"
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "сообщение"
 msgstr[1] "сообщения"
 msgstr[2] "сообщений"
 
-#: ../src/rss-config-factory.c:493
-#| msgid "Remove Rename Folder"
+#: ../src/rss-config-factory.c:502
 msgid "Move to Folder"
 msgstr "Переместить в папку"
 
-#: ../src/rss-config-factory.c:493
+#: ../src/rss-config-factory.c:502
 msgid "M_ove"
 msgstr "П_ереместить"
 
-#: ../src/rss-config-factory.c:633
+#: ../src/rss-config-factory.c:642
 msgid "Edit Feed"
 msgstr "Изменить ленту"
 
-#: ../src/rss-config-factory.c:635
+#: ../src/rss-config-factory.c:644
 msgid "Add Feed"
 msgstr "Добавить ленту"
 
-#: ../src/rss-config-factory.c:1080
-#: ../src/rss-config-factory.c:1613
+#: ../src/rss-config-factory.c:1089
+#: ../src/rss-config-factory.c:1622
 #, no-c-format
 msgid "0% done"
 msgstr "выполнено 0%"
 
-#: ../src/rss-config-factory.c:1452
+#: ../src/rss-config-factory.c:1461
 msgid "Disable"
 msgstr "Выключить"
 
-#: ../src/rss-config-factory.c:1452
+#: ../src/rss-config-factory.c:1461
 msgid "Enable"
 msgstr "Включить"
 
-#: ../src/rss-config-factory.c:1504
+#: ../src/rss-config-factory.c:1513
 msgid "Remove folder contents"
 msgstr "Удалить содержимое папки"
 
-#: ../src/rss-config-factory.c:1873
-#| msgid "Import"
+#: ../src/rss-config-factory.c:1882
 msgid "Import error."
 msgstr "Ошибка импортирования."
 
-#: ../src/rss-config-factory.c:1874
+#: ../src/rss-config-factory.c:1883
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Неверный файл или файл не содержит лент."
 
-#: ../src/rss-config-factory.c:1879
-#| msgid "Import"
+#: ../src/rss-config-factory.c:1888
 msgid "Importing"
 msgstr "Импортирование"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:1902
-#: ../src/rss-config-factory.c:2790
-#: ../src/rss-config-factory.c:2950
+#: ../src/rss-config-factory.c:1911
+#: ../src/rss-config-factory.c:2799
+#: ../src/rss-config-factory.c:2959
 msgid "Please wait"
 msgstr "Подождите"
 
-#: ../src/rss-config-factory.c:2212
-#: ../src/rss-config-factory.c:3070
-#: ../src/rss-config-factory.c:3133
+#: ../src/rss-config-factory.c:2221
+#: ../src/rss-config-factory.c:3079
+#: ../src/rss-config-factory.c:3142
 msgid "All Files"
 msgstr "Все файлы"
 
-#: ../src/rss-config-factory.c:2223
-#: ../src/rss-config-factory.c:3154
+#: ../src/rss-config-factory.c:2232
+#: ../src/rss-config-factory.c:3163
 msgid "OPML Files"
 msgstr "Файлы OPML"
 
-#: ../src/rss-config-factory.c:2234
-#: ../src/rss-config-factory.c:3143
+#: ../src/rss-config-factory.c:2243
+#: ../src/rss-config-factory.c:3152
 msgid "XML Files"
 msgstr "Файлы XML"
 
-#: ../src/rss-config-factory.c:2249
+#: ../src/rss-config-factory.c:2258
 msgid "Show article's summary"
 msgstr "Показывать описание статей"
 
-#: ../src/rss-config-factory.c:2262
+#: ../src/rss-config-factory.c:2271
 msgid "Feed Enabled"
 msgstr "Лента включена"
 
-#: ../src/rss-config-factory.c:2275
+#: ../src/rss-config-factory.c:2284
 msgid "Validate feed"
 msgstr "Проверить ленту"
 
-#: ../src/rss-config-factory.c:2332
+#: ../src/rss-config-factory.c:2341
 msgid "Select import file"
 msgstr "Выберите файл для импорта"
 
-#: ../src/rss-config-factory.c:2415
+#: ../src/rss-config-factory.c:2424
 msgid "Select file to export"
 msgstr "Выберите файл для экспортирования"
 
-#: ../src/rss-config-factory.c:2773
+#: ../src/rss-config-factory.c:2782
 msgid "Exporting feeds..."
 msgstr "Экспортирование лент…"
 
-#: ../src/rss-config-factory.c:2837
-#: ../src/rss-config-factory.c:2845
+#: ../src/rss-config-factory.c:2846
+#: ../src/rss-config-factory.c:2854
 msgid "Error exporting feeds!"
 msgstr "Ошибка экспортирования лент!"
 
-#: ../src/rss-config-factory.c:2926
-#| msgid "Importing feeds..."
+#: ../src/rss-config-factory.c:2935
 msgid "Importing cookies..."
 msgstr "Импортирование cookies…"
 
-#: ../src/rss-config-factory.c:3006
-#| msgid "Select file to export"
+#: ../src/rss-config-factory.c:3015
 msgid "Select file to import"
 msgstr "Выберите файл для импортирования"
 
-#: ../src/rss-config-factory.c:3076
+#: ../src/rss-config-factory.c:3085
 msgid "Mozilla/Netscape Format"
 msgstr "Формат Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:3082
+#: ../src/rss-config-factory.c:3091
 msgid "Firefox new Format"
 msgstr "Новый формат Firefox"
 
-#: ../src/rss-config-factory.c:3192
-#: ../src/rss-config-factory.c:3197
+#: ../src/rss-config-factory.c:3201
+#: ../src/rss-config-factory.c:3206
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -750,7 +709,7 @@ msgstr ""
 "Не настроено ни одной ленты RSS!\n"
 "Экспорт невозможен."
 
-#: ../src/rss-config-factory.c:3333
+#: ../src/rss-config-factory.c:3342
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -760,20 +719,19 @@ msgstr ""
 "для отображения страниц HTML необходимо установить пакеты для разработки с \n"
 "использованием соответствующих библиотек и пересобрать evolution-rss."
 
-#: ../src/rss-config-factory.c:3843
+#: ../src/rss-config-factory.c:3852
 msgid "Enabled"
 msgstr "Включено"
 
-#: ../src/rss-config-factory.c:3870
+#: ../src/rss-config-factory.c:3879
 msgid "Feed Name"
 msgstr "Название ленты"
 
-#: ../src/rss-config-factory.c:3883
+#: ../src/rss-config-factory.c:3892
 msgid "Type"
 msgstr "Тип"
 
-#: ../src/rss-config-factory.c:4140
-#| msgid "News and Blogs"
+#: ../src/rss-config-factory.c:4149
 msgid "News And Blogs"
 msgstr "Новости и блоги"
 
@@ -783,7 +741,6 @@ msgid "No Information"
 msgstr "Нет информации"
 
 #: ../src/parser.c:1151
-#| msgid "No Information"
 msgid "No information"
 msgstr "Нет информации"
 
