@@ -1909,7 +1909,11 @@ org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb,
 {
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) pobject;
+#if GTK_MAJOR_VERSION < 3
 	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+#else
+	GtkWidget *hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+#endif
 	GtkWidget *button;
 
 	gchar *mem = g_strdup_printf("%s(%d):",  _("Comments"), po->counter);
@@ -1932,8 +1936,13 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 {
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) pobject;
+#if GTK_MAJOR_VERSION < 3
 	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
 	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
+#else
+	GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
+	GtkWidget *hbox2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+#endif
 	GtkWidget *label3 = gtk_label_new ("");
 	GtkWidget *button, *button2, *button3, *button4, *button5;
 	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));

@@ -1497,7 +1497,11 @@ remove_feed_dialog(gchar *msg)
 #endif
 	gtk_widget_show (dialog_vbox1);
 
+#if GTK_MAJOR_VERSION < 3
 	vbox1 = gtk_vbox_new (FALSE, 10);
+#else
+	vbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
+#endif
 	gtk_widget_show (vbox1);
 	gtk_box_pack_start (
 		GTK_BOX (dialog_vbox1),
@@ -2253,7 +2257,11 @@ decorate_import_fs (gpointer data)
 	gtk_file_filter_add_pattern (filter, "*.xml");
 	gtk_file_chooser_set_filter(data, filter);
 
+#if GTK_MAJOR_VERSION < 3
 	vbox1 = gtk_vbox_new (FALSE, 0);
+#else
+	vbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+#endif
 	checkbutton1 = gtk_check_button_new_with_mnemonic (
 			_("Show article's summary"));
 	gtk_widget_show (checkbutton1);
@@ -3531,7 +3539,11 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_FEED_ICON);
 
+#if GTK_MAJOR_VERSION < 3
 	hbox = gtk_vbox_new (FALSE, 0);
+#else
+	hbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+#endif
 
 	gtk_box_pack_start (
 		GTK_BOX (hbox),
