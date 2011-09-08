@@ -4392,8 +4392,9 @@ custom_update_articles(CDATA *cdata)
 		network_timeout();
 		// check if we're enabled and no cancelation signal pending
 		// and no imports pending
-		dp("cdata->key:%s\n", (gchar *)cdata->key);
-		if (g_hash_table_lookup(rf->hre, lookup_key(cdata->key))
+		// cdata->key might be missing here if user delete the feed
+		// meanwhile
+		if (lookup_key(cdata->key) && g_hash_table_lookup(rf->hre, lookup_key(cdata->key))
 		&& !rf->cancel && !rf->import) {
 			d("\nFetching: %s..%s\n",
 				(char *)g_hash_table_lookup(rf->hr,
