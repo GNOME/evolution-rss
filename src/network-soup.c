@@ -181,7 +181,6 @@ static gboolean
 remove_if_match (gpointer key, gpointer value, gpointer user_data)
 {
 	if (value == user_data) {
-		g_hash_table_remove(rf->key_session, key);
 		return TRUE;
 	} else
 		return FALSE;
@@ -203,9 +202,8 @@ unblock_free (gpointer user_data, GObject *ex_msg)
 	g_hash_table_destroy(rf->abort_session);
 	rf->abort_session = g_hash_table_new(g_direct_hash, g_direct_equal);
 	g_hash_table_foreach(rf->session, construct_abort, NULL);
-	g_hash_table_find(rf->key_session,
-		remove_if_match,
-		user_data);
+	g_hash_table_foreach_remove(rf->key_session,
+			remove_if_match, user_data);
 	//this has been moved to soup-internal
 	/*gboolean prune = soup_session_try_prune_connection (user_data);
 	if (prune)
@@ -1113,9 +1111,8 @@ abort_soup_sess(gpointer key, gpointer value, gpointer user_data)
 {
 	if (key && SOUP_IS_SESSION(key)) {
 		soup_session_abort(key);
-		g_hash_table_find(rf->key_session,
-			remove_if_match,
-			user_data);
+		g_hash_table_foreach_remove(rf->key_session,
+			remove_if_match, user_data);
 	}
 	return TRUE;
 }
