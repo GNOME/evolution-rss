@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evolution-rss&component=general\n"
-"POT-Creation-Date: 2011-02-21 22:44+0000\n"
-"PO-Revision-Date: 2011-02-23 12:15+0700\n"
+"product=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-09-12 20:06+0000\n"
+"PO-Revision-Date: 2011-09-16 23:15+0700\n"
 "Last-Translator: Akom Chotiphantawanon <knight2000@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -17,17 +17,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../src/dbus.c:104 ../src/rss.c:3167 ../src/rss-config-factory.c:1019
-#: ../src/rss-config-factory.c:1557 ../src/rss-config-factory.c:1716
+#: ../evolution-rss.desktop.in.in.h:1
+msgid "Evolution RSS Reader"
+msgstr "เครื่องมืออ่าน RSS ของ Evolution"
+
+#: ../evolution-rss.desktop.in.in.h:2
+msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
+msgstr "ปลั๊กอิน Evolution ที่ทำให้โปรแกรมเมล Evolution สามารถแสดงข่าวป้อน RSS ได้"
+
+#: ../src/dbus.c:108 ../src/rss.c:3178 ../src/rss-config-factory.c:1110
+#: ../src/rss-config-factory.c:1654 ../src/rss-config-factory.c:1821
 msgid "Error adding feed."
 msgstr "เกิดข้อผิดพลาดขณะเพิ่มข่าวป้อน"
 
-#: ../src/dbus.c:105 ../src/rss.c:3168 ../src/rss-config-factory.c:1020
-#: ../src/rss-config-factory.c:1558 ../src/rss-config-factory.c:1717
+#: ../src/dbus.c:109 ../src/rss.c:3179 ../src/rss-config-factory.c:1111
+#: ../src/rss-config-factory.c:1655 ../src/rss-config-factory.c:1822
 msgid "Feed already exists!"
 msgstr "มีข่าวป้อนนี้อยู่แล้ว!"
 
-#: ../src/dbus.c:109
+#: ../src/dbus.c:116
 #, c-format
 msgid "Importing URL: %s"
 msgstr "กำลังนำเข้า URL: %s"
@@ -277,7 +285,7 @@ msgstr "ใช้แบบอักษรกำหนดเอง"
 msgid "Use proxy server"
 msgstr "ใช้พร็อกซีเซิร์ฟเวอร์"
 
-#: ../src/notification.c:394 ../src/rss.c:3346
+#: ../src/notification.c:411 ../src/rss.c:3359
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "กำลังดึงข้อมูลข่าวป้อน (เปิดใช้อยู่ %d รายการ)"
@@ -338,6 +346,10 @@ msgstr "ยืนยันที่จะลบข่าวป้อน '{0}' �
 msgid "Updating Feeds..."
 msgstr "กำลังปรับข้อมูลข่าวป้อน..."
 
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "_Dismiss"
+msgstr "เ_ลิก"
+
 #: ../src/org-gnome-evolution-rss.xml.h:1
 msgid "Setup RSS"
 msgstr "ตั้งค่า RSS"
@@ -354,326 +366,327 @@ msgstr "ปรับข้อมูลข่าวป้อน RSS"
 msgid "_Read RSS"
 msgstr "_อ่าน RSS"
 
-#: ../src/rss.c:366 ../src/rss.c:3515
+#: ../src/rss.c:379 ../src/rss.c:3523
 msgid "Feed"
 msgstr "ข่าวป้อน"
 
-#: ../src/rss.c:430 ../src/rss-config-factory.c:2636
-#: ../src/rss-config-factory.c:2804
+#: ../src/rss.c:459 ../src/rss-config-factory.c:2758
+#: ../src/rss-config-factory.c:2932
 #, c-format
 msgid "%2.0f%% done"
 msgstr "เสร็จแล้ว %2.0f%%"
 
-#: ../src/rss.c:660
+#: ../src/rss.c:709
 msgid "Enter User/Pass for feed"
 msgstr "ป้อนผู้ใช้/รหัสผ่านสำหรับข่าวป้อน"
 
-#: ../src/rss.c:716
+#: ../src/rss.c:765
 msgid "Enter your username and password for:"
 msgstr "ป้อนชื่อผู้ใช้และรหัสผ่านของคุณสำหรับ:"
 
-#: ../src/rss.c:734
+#: ../src/rss.c:783
 msgid "Username: "
 msgstr "ชื่อผู้ใช้: "
 
-#: ../src/rss.c:756
+#: ../src/rss.c:804
 msgid "Password: "
 msgstr "รหัสผ่าน: "
 
-#: ../src/rss.c:794
+#: ../src/rss.c:841
 msgid "_Remember this password"
 msgstr "_จำรหัสผ่านนี้ไว้"
 
 #. e_clipped_label_set_text (
 #. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:900
+#: ../src/rss.c:946
 msgid "Cancelling..."
 msgstr "กำลังยกเลิก..."
 
-#: ../src/rss.c:1092
+#: ../src/rss.c:1111
 msgid "Formatting Message..."
 msgstr "กำลังจัดข้อความ..."
 
-#: ../src/rss.c:1316
+#: ../src/rss.c:1335
 msgid "_Copy"
 msgstr "_คัดลอก"
 
-#: ../src/rss.c:1317
+#: ../src/rss.c:1336
 msgid "Select _All"
 msgstr "เลือกทั้ง_หมด"
 
-#: ../src/rss.c:1319 ../src/rss.c:1330
+#: ../src/rss.c:1338 ../src/rss.c:1349
 msgid "Zoom _In"
 msgstr "ซูมเ_ข้า"
 
-#: ../src/rss.c:1320 ../src/rss.c:1331
+#: ../src/rss.c:1339 ../src/rss.c:1350
 msgid "Zoom _Out"
 msgstr "ซูม_ออก"
 
-#: ../src/rss.c:1321 ../src/rss.c:1332
+#: ../src/rss.c:1340 ../src/rss.c:1351
 msgid "_Normal Size"
 msgstr "ขนาด_ปกติ"
 
-#: ../src/rss.c:1323
+#: ../src/rss.c:1342
 msgid "_Open Link"
 msgstr "เ_ปิดลิงก์"
 
-#: ../src/rss.c:1324 ../src/rss.c:1338
+#: ../src/rss.c:1343 ../src/rss.c:1357
 msgid "_Copy Link Location"
 msgstr "_คัดลอกตำแหน่งลิงก์"
 
-#: ../src/rss.c:1334
+#: ../src/rss.c:1353
 msgid "_Print..."
 msgstr "_พิมพ์..."
 
-#: ../src/rss.c:1335
+#: ../src/rss.c:1354
 msgid "Save _As"
 msgstr "บันทึกเป็_น"
 
-#: ../src/rss.c:1337
+#: ../src/rss.c:1356
 msgid "_Open Link in Browser"
 msgstr "เ_ปิดลิงก์ในเบราว์เซอร์"
 
-#: ../src/rss.c:1437 ../src/rss.c:1620
+#: ../src/rss.c:1460 ../src/rss.c:1643
 msgid "Click to open"
 msgstr "คลิกเพื่อเปิด"
 
-#: ../src/rss.c:1886
+#: ../src/rss.c:1919
 msgid "Comments"
 msgstr "ความคิดเห็น"
 
-#: ../src/rss.c:1891
+#: ../src/rss.c:1924
 msgid "Refresh"
 msgstr "เรียกใหม่"
 
-#: ../src/rss.c:1913
+#: ../src/rss.c:1948
 msgid "Feed view"
 msgstr "มุมมองข่าวป้อน"
 
-#: ../src/rss.c:1919
+#: ../src/rss.c:1963
 msgid "Show Summary"
 msgstr "แสดงข้อมูลสรุป"
 
-#: ../src/rss.c:1920
+#: ../src/rss.c:1964
 msgid "Show Full Text"
 msgstr "แสดงข้อความเต็ม"
 
-#: ../src/rss.c:2329
+#: ../src/rss.c:2366
 msgid "Posted under"
 msgstr "โพสต์ในหมวด"
 
-#: ../src/rss.c:2664
+#: ../src/rss.c:2682
 msgid "Fetching feed"
 msgstr "กำลังดึงข้อมูลข่าวป้อน"
 
-#: ../src/rss.c:2968
+#: ../src/rss.c:2985
 msgid "Unnamed feed"
 msgstr "ข่าวป้อนไม่มีชื่อ"
 
-#: ../src/rss.c:2969
+#: ../src/rss.c:2986
 msgid "Error while setting up feed."
 msgstr "เกิดข้อผิดพลาดขณะตั้งค่าข่าวป้อน"
 
-#: ../src/rss.c:3179 ../src/rss.c:3249
+#: ../src/rss.c:3190 ../src/rss.c:3260
 msgid "Error while fetching feed."
 msgstr "เกิดข้อผิดพลาดขณะดึงข้อมูลข่าวป้อน"
 
-#: ../src/rss.c:3180
+#: ../src/rss.c:3191
 msgid "Invalid Feed"
 msgstr "ข่าวป้อนไม่ถูกต้อง"
 
-#: ../src/rss.c:3222
+#: ../src/rss.c:3233
 #, c-format
 msgid "Adding feed %s"
 msgstr "กำลังเพิ่มข่าวป้อน %s"
 
-#: ../src/rss.c:3248
+#: ../src/rss.c:3259
 msgid "Unamed feed"
 msgstr "ข่าวป้อนไม่มีชื่อ"
 
-#: ../src/rss.c:3261
+#: ../src/rss.c:3273
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "กำลังอ่านข้อความที่ %d จาก %d"
 
-#: ../src/rss.c:3366
+#: ../src/rss.c:3379
 msgid "Complete."
 msgstr "เสร็จสมบูรณ์"
 
-#: ../src/rss.c:3403 ../src/rss.c:3582 ../src/rss.c:3621 ../src/rss.c:3819
-#: ../src/rss.c:4397
-msgid "Error fetching feed."
-msgstr "เกิดข้อผิดพลาดขณะดึงข้อมูลข่าวป้อน"
+#: ../src/rss.c:3411 ../src/rss.c:3576 ../src/rss.c:3614 ../src/rss.c:3811
+#: ../src/rss.c:4415
+#, c-format
+msgid "Error fetching feed: %s"
+msgstr "เกิดข้อผิดพลาดขณะดึงข้อมูลข่าวป้อน: %s"
 
-#: ../src/rss.c:3414
+#: ../src/rss.c:3424
 msgid "Canceled."
 msgstr "ยกเลิก"
 
-#: ../src/rss.c:3461
+#: ../src/rss.c:3467
 #, c-format
-msgid "Error while parsing feed %s"
-msgstr "เกิดข้อผิดพลาดขณะแจงข่าวป้อน %s"
+msgid "Error while parsing feed: %s"
+msgstr "เกิดข้อผิดพลาดขณะแจงข่าวป้อน: %s"
 
-#: ../src/rss.c:3465
+#: ../src/rss.c:3471
 msgid "illegal content type!"
 msgstr "ชนิดของเนื้อหาไม่ถูกต้อง"
 
-#: ../src/rss.c:3524
+#: ../src/rss.c:3532
 msgid "Complete"
 msgstr "เสร็จสมบูรณ์"
 
-#: ../src/rss.c:3663
+#: ../src/rss.c:3660
 msgid "Formatting error."
 msgstr "เกิดข้อผิดพลาดในการจัดหน้า"
 
-#: ../src/rss.c:4674
+#: ../src/rss.c:4688
 msgid "No RSS feeds configured!"
 msgstr "ไม่มีข่าวป้อน RSS ที่ตั้งค่าไว้!"
 
-#: ../src/rss.c:4726
+#: ../src/rss.c:4740
 msgid "Waiting..."
 msgstr "กำลังรอ..."
 
-#: ../src/rss.h:52
+#: ../src/rss.h:54
 msgid "News and Blogs"
 msgstr "ข่าวและบล็อก"
 
-#: ../src/rss.h:54
+#: ../src/rss.h:56
 msgid "Untitled channel"
 msgstr "ช่องข่าวไม่มีชื่อ"
 
-#: ../src/rss-config-factory.c:177
+#: ../src/rss-config-factory.c:180
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:178
+#: ../src/rss-config-factory.c:181
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:179
+#: ../src/rss-config-factory.c:182
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:390
+#: ../src/rss-config-factory.c:415
 msgid "day"
 msgid_plural "days"
 msgstr[0] "วัน"
 
-#: ../src/rss-config-factory.c:405
+#: ../src/rss-config-factory.c:430
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "ข้อความ"
 
-#: ../src/rss-config-factory.c:461
+#: ../src/rss-config-factory.c:502
 msgid "Move to Folder"
 msgstr "ย้ายไปยังโฟลเดอร์"
 
-#: ../src/rss-config-factory.c:461
+#: ../src/rss-config-factory.c:502
 msgid "M_ove"
 msgstr "_ย้าย"
 
-#: ../src/rss-config-factory.c:549
+#: ../src/rss-config-factory.c:642
 msgid "Edit Feed"
 msgstr "แก้ไขข่าวป้อน"
 
-#: ../src/rss-config-factory.c:551
+#: ../src/rss-config-factory.c:644
 msgid "Add Feed"
 msgstr "เพิ่มข่าวป้อน"
 
 # no-c-format
-#: ../src/rss-config-factory.c:996 ../src/rss-config-factory.c:1530
+#: ../src/rss-config-factory.c:1089 ../src/rss-config-factory.c:1626
 #, no-c-format
 msgid "0% done"
 msgstr "เสร็จแล้ว 0%"
 
-#: ../src/rss-config-factory.c:1370
+#: ../src/rss-config-factory.c:1461
 msgid "Disable"
 msgstr "ปิดการใช้งาน"
 
-#: ../src/rss-config-factory.c:1370
+#: ../src/rss-config-factory.c:1461
 msgid "Enable"
 msgstr "เปิดใช้"
 
-#: ../src/rss-config-factory.c:1421
+#: ../src/rss-config-factory.c:1517
 msgid "Remove folder contents"
 msgstr "ลบเนื้อหาโฟลเดอร์"
 
-#: ../src/rss-config-factory.c:1783
+#: ../src/rss-config-factory.c:1886
 msgid "Import error."
 msgstr "เกิดข้อผิดพลาดในการนำเข้า"
 
-#: ../src/rss-config-factory.c:1784
+#: ../src/rss-config-factory.c:1887
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "แฟ้มไม่ถูกต้องหรือแฟ้มนี้ไม่มีข่าวป้อนใดๆ"
 
-#: ../src/rss-config-factory.c:1789
+#: ../src/rss-config-factory.c:1892
 msgid "Importing"
 msgstr "กำลังนำเข้า"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:1812 ../src/rss-config-factory.c:2679
-#: ../src/rss-config-factory.c:2841
+#: ../src/rss-config-factory.c:1915 ../src/rss-config-factory.c:2807
+#: ../src/rss-config-factory.c:2967
 msgid "Please wait"
 msgstr "กรุณารอสักครู่"
 
-#: ../src/rss-config-factory.c:2126 ../src/rss-config-factory.c:2961
-#: ../src/rss-config-factory.c:3023
+#: ../src/rss-config-factory.c:2225 ../src/rss-config-factory.c:3087
+#: ../src/rss-config-factory.c:3150
 msgid "All Files"
 msgstr "ทุกแฟ้ม"
 
-#: ../src/rss-config-factory.c:2137 ../src/rss-config-factory.c:3033
+#: ../src/rss-config-factory.c:2236 ../src/rss-config-factory.c:3171
 msgid "OPML Files"
 msgstr "แฟ้ม OPML"
 
-#: ../src/rss-config-factory.c:2148 ../src/rss-config-factory.c:3040
+#: ../src/rss-config-factory.c:2247 ../src/rss-config-factory.c:3160
 msgid "XML Files"
 msgstr "แฟ้ม XML"
 
-#: ../src/rss-config-factory.c:2163
+#: ../src/rss-config-factory.c:2266
 msgid "Show article's summary"
 msgstr "แสดงข้อมูลสรุปของบทความ"
 
-#: ../src/rss-config-factory.c:2176
+#: ../src/rss-config-factory.c:2279
 msgid "Feed Enabled"
 msgstr "เปิดใช้ข่าวป้อน"
 
-#: ../src/rss-config-factory.c:2189
+#: ../src/rss-config-factory.c:2292
 msgid "Validate feed"
 msgstr "ตรวจความถูกต้องของข่าวป้อน"
 
-#: ../src/rss-config-factory.c:2246
+#: ../src/rss-config-factory.c:2349
 msgid "Select import file"
 msgstr "เลือกแฟ้มนำเข้า"
 
-#: ../src/rss-config-factory.c:2329
+#: ../src/rss-config-factory.c:2432
 msgid "Select file to export"
 msgstr "เลือกแฟ้มที่จะส่งออก"
 
-#: ../src/rss-config-factory.c:2662
+#: ../src/rss-config-factory.c:2790
 msgid "Exporting feeds..."
 msgstr "กำลังส่งออกข่าวป้อน..."
 
-#: ../src/rss-config-factory.c:2726 ../src/rss-config-factory.c:2734
+#: ../src/rss-config-factory.c:2854 ../src/rss-config-factory.c:2862
 msgid "Error exporting feeds!"
 msgstr "เกิดข้อผิดพลาดขณะส่งออกข่าวป้อน!"
 
-#: ../src/rss-config-factory.c:2817
+#: ../src/rss-config-factory.c:2943
 msgid "Importing cookies..."
 msgstr "กำลังนำเข้าคุกกี้..."
 
-#: ../src/rss-config-factory.c:2897
+#: ../src/rss-config-factory.c:3023
 msgid "Select file to import"
 msgstr "เลือกแฟ้มที่จะนำเข้า"
 
-#: ../src/rss-config-factory.c:2967
+#: ../src/rss-config-factory.c:3093
 msgid "Mozilla/Netscape Format"
 msgstr "รูปแบบของ Mozilla/Netscape Format"
 
-#: ../src/rss-config-factory.c:2973
+#: ../src/rss-config-factory.c:3099
 msgid "Firefox new Format"
 msgstr "รูปแบบใหม่ของ Firefox"
 
-#: ../src/rss-config-factory.c:3076 ../src/rss-config-factory.c:3081
+#: ../src/rss-config-factory.c:3209 ../src/rss-config-factory.c:3214
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -681,7 +694,7 @@ msgstr ""
 "ไม่มีข่าวป้อน RSS ที่ตั้งค่าไว้!\n"
 "ไม่สามารถส่งออกได้"
 
-#: ../src/rss-config-factory.c:3214
+#: ../src/rss-config-factory.c:3350
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -691,28 +704,28 @@ msgstr ""
 "ในการแสดงผล คุณต้องติดตั้งแพกเกจ devel ของ firefox หรือ webkit \n"
 "แล้วคอมไพล์ evolution-rss ใหม่ เพื่อให้ตรวจพบและเรียกใช้แพกเกจเหล่านั้น"
 
-#: ../src/rss-config-factory.c:3723
+#: ../src/rss-config-factory.c:3864
 msgid "Enabled"
 msgstr "เปิดใช้"
 
-#: ../src/rss-config-factory.c:3750
+#: ../src/rss-config-factory.c:3891
 msgid "Feed Name"
 msgstr "ชื่อข่าวป้อน"
 
-#: ../src/rss-config-factory.c:3763
+#: ../src/rss-config-factory.c:3904
 msgid "Type"
 msgstr "ชนิด"
 
-#: ../src/rss-config-factory.c:4019
+#: ../src/rss-config-factory.c:4161
 msgid "News And Blogs"
 msgstr "ข่าวและบล็อก"
 
 #. ATOM
-#: ../src/parser.c:1008
+#: ../src/parser.c:1052
 msgid "No Information"
 msgstr "ไม่มีข้อมูล"
 
-#: ../src/parser.c:1102
+#: ../src/parser.c:1151
 msgid "No information"
 msgstr "ไม่มีข้อมูล"
 
@@ -920,9 +933,6 @@ msgstr "ไม่มีข้อมูล"
 
 #~ msgid "Evolution Feeds Control"
 #~ msgstr "การควบคุมข่าวป้อนของ Evolution"
-
-#~ msgid "Evolution RSS Reader"
-#~ msgstr "เครื่องมืออ่าน RSS ของ Evolution"
 
 #~ msgid "Manage your RDF,RSS,ATOM feeds here"
 #~ msgstr "จัดการข่าวป้อน RDF,RSS,ATOM ของคุณที่นี่"
