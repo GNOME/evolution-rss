@@ -77,6 +77,9 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 #if (EVOLUTION_VERSION >= 30101)
 	gpointer alert;
 #endif
+#if (EVOLUTION_VERSION >= 30101)
+	GtkApplication *application;
+#endif
 
 	if (name)
 		msg = g_strdup_printf("\n%s\n%s", name, emsg);
@@ -93,7 +96,12 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 			e_shell_submit_alert (shell, alert);
 			goto out;
 #endif
+#if (EVOLUTION_VERSION >= 30301)
+			application = GTK_APPLICATION(shell);
+			windows = gtk_application_get_windows (application);
+#else
 			windows = e_shell_get_watched_windows (shell);
+#endif
 			parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
 
@@ -158,7 +166,12 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 	if (!rf->errdialog) {
 #if (EVOLUTION_VERSION >= 22900) //kb//
 		shell = e_shell_get_default ();
+#if (EVOLUTION_VERSION >= 30301)
+		application = GTK_APPLICATION(shell);
+		windows = gtk_application_get_windows (application);
+#else
 		windows = e_shell_get_watched_windows (shell);
+#endif
 		parent = (windows != NULL) ? GTK_WINDOW (windows->data) : NULL;
 
 		ed  = e_alert_dialog_new_for_args(parent,
