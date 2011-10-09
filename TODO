@@ -44,3 +44,4 @@
 	* add evolution-rss.desktop file to integrate into browsers
 	* remove useless validation option
 	* checkbox - autodisable broken feeds - apply dyn penalty
+	* fix loading images before send (in preview mode)

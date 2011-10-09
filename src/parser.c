@@ -76,14 +76,14 @@ rss_html_url_decode(const char *html, int len)
 	while ((doc = (xmlDoc *)html_find((xmlNode *)doc, (gchar *)"img"))) {
 		if ((url = (gchar *)xmlGetProp((xmlNodePtr)doc, (xmlChar *)"src"))) {
 			if (strstr(url, "img:")) {
-					gchar *tmp = decode_image_cache_filename(url);
-					duri = g_strconcat("file://", tmp, NULL);
-					g_free(tmp);
+				gchar *tmp = decode_image_cache_filename(url);
+				duri = g_strconcat("file://", tmp, NULL);
+				g_free(tmp);
+				xmlSetProp(
+					(xmlNodePtr)doc,
+					(xmlChar *)"src",
+					(xmlChar *)duri);
 			}
-			xmlSetProp(
-				(xmlNodePtr)doc,
-				(xmlChar *)"src",
-				(xmlChar *)duri);
 			xmlFree(url);
 		}
 	}

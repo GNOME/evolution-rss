@@ -2147,9 +2147,10 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 	if (doc) {
 		htmlDocDumpMemory(doc, &buff, &size);
 		xmlFree(doc);
-	}
+		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
+	} else
+		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)text, length);
 
-	gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
 #endif
 }
 
