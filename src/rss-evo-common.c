@@ -242,7 +242,9 @@ rss_ep_need_proxy_http (EProxy* proxy, const gchar * host, SoupAddress *addr)
 	if (rss_ep_is_in_ignored (proxy, host))
 		return FALSE;
 
+#ifdef HAVE_LIBSOUP_GNOME
 	so_addr = soup_address_get_sockaddr (addr, &addr_len);
+#endif
 
 	if (!so_addr)
 		return TRUE;
