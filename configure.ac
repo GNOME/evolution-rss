@@ -1,7 +1,7 @@
 AC_INIT([evolution-rss],[0.2.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss])
 AC_CONFIG_SRCDIR(src)
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([1.10 dist-xz no-dist-gzip -Wall -Werror foreign])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])

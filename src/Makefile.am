@@ -1,7 +1,7 @@
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install
 
-INCLUDES =							\
+AM_CPPFLAGS =							\
 	-I$(top_srcdir)						\
 	$(RENDER_CFLAGS)					\
 	$(LIBSOUP_GNOME_CFLAGS)					\
@@ -21,7 +21,7 @@ INCLUDES =							\
 	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
 
 if ! HAVE_XPCOM_GLUE
-INCLUDES += -DGECKO_HOME=\""$(GECKO_HOME)"\"
+AM_CPPFLAGS += -DGECKO_HOME=\""$(GECKO_HOME)"\"
 endif
 
 RSS_MENU = \

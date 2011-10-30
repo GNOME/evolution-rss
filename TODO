@@ -45,3 +45,4 @@
 	* remove useless validation option
 	* checkbox - autodisable broken feeds - apply dyn penalty
 	* fix loading images before send (in preview mode)
+	* do not stack multiple feed eror on top of eachother
