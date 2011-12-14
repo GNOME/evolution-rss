@@ -3871,10 +3871,18 @@ rss_component_peek_base_directory(void)
 CamelStore *
 rss_component_peek_local_store(void)
 {
-#if (EVOLUTION_VERSION < 22900) //kb//
-	return mail_component_peek_local_store(NULL);
-#else
+#if (EVOLUTION_VERSION < 30303)
 	return e_mail_local_get_store();
+#else
+	EMailBackend *backend;
+	EMailSession *session;
+	EShellBackend *shell_backend;
+
+	shell_backend = e_shell_view_get_shell_backend (rss_shell_view);
+
+	backend = E_MAIL_BACKEND (shell_backend);
+	session = e_mail_backend_get_session (backend);
+	return e_mail_session_get_local_store (session);
 #endif
 }
 

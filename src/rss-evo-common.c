@@ -104,8 +104,12 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	}
 #endif
 
-	local_store = e_mail_local_get_store ();
 	session = e_mail_backend_get_session (backend);
+#if (EVOLUTION_VERSION < 30303)
+	local_store = e_mail_local_get_store ();
+#else
+	local_store = e_mail_session_get_local_store (session);
+#endif
 
 #if EVOLUTION_VERSION >= 30101
 	service = CAMEL_SERVICE (cfd->source_store);
