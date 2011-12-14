@@ -2666,7 +2666,7 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	folder_name = t->uri;
 #endif
 	if (folder_name == NULL
-	  || g_ascii_strncasecmp(folder_name, main_folder, strlen(main_folder)))
+			|| g_ascii_strncasecmp(folder_name, main_folder, strlen(main_folder)))
 		goto out;
 	if (!g_ascii_strcasecmp(folder_name, main_folder))
 		goto out;
@@ -2707,7 +2707,8 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 		single_pending = FALSE;
 	}
 	g_free(name);
-out:	return;
+out:	g_free(main_folder);
+	return;
 }
 
 void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t);
@@ -2717,7 +2718,6 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	gchar *rss_folder, *ofolder, *key;
 	gchar *main_folder = get_main_folder();
 
-	main_folder = get_main_folder();
 	if (t->folder_name == NULL
 	  || g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
 		goto out;
@@ -2735,7 +2735,6 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	g_free(rss_folder);
 	if (!key)
 		goto normal;
-
 
 	if (!evolution_store)
 		evolution_store = t->store;

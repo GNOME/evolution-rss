@@ -2573,13 +2573,13 @@ gen_folder_list(gpointer key, gpointer value, gpointer user)
 			folder = g_build_path(G_DIR_SEPARATOR_S, mf, tmp, NULL);
 		else
 			folder = g_strdup(mf);
-		g_free(mf);
 		g_free(tmp);
 		if (!g_list_find_custom(flist, folder, (GCompareFunc)strcmp)) {
 			d("append folder:%s\n", folder);
 			flist = g_list_append(flist, folder);
 		}
 	}
+	g_free(mf);
 }
 
 void
@@ -2647,11 +2647,12 @@ create_folder_feeds(gchar *folder)
 {
 	gchar *tf;
 	GList *names;
+	gchar *mf = get_main_folder();
 	GHashTable *nhash = g_hash_table_new(
 				g_str_hash,
 				g_str_equal);
 	strbuf = NULL;
-	if (folder && strcmp(folder, get_main_folder()))
+	if (folder && strcmp(folder, mf))
 		tf = extract_main_folder(folder);
 	else {
 		tf = g_strdup(".");
@@ -2672,6 +2673,7 @@ create_folder_feeds(gchar *folder)
 		rf->reversed_feed_folders,
 		(GHFunc)create_outline_feeds, tf);
 	g_free(tf);
+	g_free(mf);
 	return strbuf;
 }
 
@@ -2711,7 +2713,9 @@ create_xml(GtkWidget *progress)
 		}
 		list = g_list_sort(list, (GCompareFunc)g_ascii_strcasecmp);
 	} else {
-		list = g_list_append(list, get_main_folder());
+		gchar *mf = get_main_folder();
+		list = g_list_append(list, mf);
+		g_free(mf);
 	}
 	spacer = g_string_new(NULL);
 
@@ -3607,8 +3611,8 @@ void rss_folder_factory_commit (EPlugin *epl, EConfigTarget *target)
 #endif
 
 	if (folder == NULL
-	|| g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
-	|| !g_ascii_strcasecmp(folder, main_folder))
+			|| g_ascii_strncasecmp(folder, main_folder, strlen(main_folder))
+			|| !g_ascii_strcasecmp(folder, main_folder))
 		return;
 
 	key = lookup_key(ofolder);
