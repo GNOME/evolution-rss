@@ -23,7 +23,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#if (EVOLUTION_VERSION < 30303)
 #include <mail/e-mail-local.h>
+#endif
 #if EVOLUTION_VERSION >= 30101
 #include <mail/e-mail-folder-utils.h>
 #endif

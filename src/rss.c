@@ -66,7 +66,9 @@ int rss_verbose_debug = 0;
 #else
 #include <e-util/e-alert-dialog.h> //remove//
 #include <glib/gi18n.h>
+#if EVOLUTION_VERSION < 30303
 #include <mail/e-mail-local.h>
+#endif
 #if EVOLUTION_VERSION >= 29101
 #include <mail/e-mail-session.h>
 #else
