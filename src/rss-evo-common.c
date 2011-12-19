@@ -120,6 +120,15 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		CAMEL_SESSION (session), cfd->fi->uri, &local_error);
 	if (fromstore == NULL) {
 #endif
+#if EVOLUTION_VERSION >= 30303
+		e_alert_submit (
+			e_mail_backend_get_alert_sink (backend),
+			cfd->delete ?
+				"mail:no-move-folder-notexist" :
+				"mail:no-copy-folder-notexist",
+			cfd->source_folder_name, uri,
+			local_error->message, NULL);
+#else
 		e_mail_backend_submit_alert (
 			backend, cfd->delete ?
 				"mail:no-move-folder-notexist" :
@@ -130,6 +139,7 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 			cfd->fi->full_name, uri,
 #endif
 			local_error->message, NULL);
+#endif
 		goto fail;
 	}
 
@@ -143,12 +153,19 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 
 	if (cfd->delete && fromstore == local_store && rss_emfu_is_special_local_folder (cfd->fi->full_name)) {
 #endif
+#if EVOLUTION_VERSION >= 30303
+		e_alert_submit (
+			e_mail_backend_get_alert_sink (backend),
+			"mail:no-rename-special-folder",
+			cfd->source_folder_name, NULL);
+#else
 		e_mail_backend_submit_alert (
 			backend, "mail:no-rename-special-folder",
 #if EVOLUTION_VERSION >= 30101
 			cfd->source_folder_name, NULL);
 #else
 			cfd->fi->full_name, NULL);
+#endif
 #endif
 		goto fail;
 	}
@@ -170,6 +187,15 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		CAMEL_SESSION (session), uri, &local_error);
 	if (tostore == NULL) {
 #endif
+#if EVOLUTION_VERSION >= 30303
+		e_alert_submit (
+			e_mail_backend_get_alert_sink (backend),
+			cfd->delete ?
+				"mail:no-move-folder-to-notexist" :
+				"mail:no-copy-folder-to-notexist",
+			cfd->source_folder_name, uri,
+			local_error->message, NULL);
+#else
 		e_mail_backend_submit_alert (
 			backend, cfd->delete ?
 				"mail:no-move-folder-to-notexist" :
@@ -180,6 +206,7 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 			cfd->fi->full_name, uri,
 #endif
 			local_error->message, NULL);
+#endif
 		goto fail;
 	}
 

@@ -107,9 +107,16 @@ rss_error(gpointer key, gchar *name, gchar *error, gchar *emsg)
 
 #if (EVOLUTION_VERSION >= 29102)
 			backend = (EMailBackend *)e_shell_get_backend_by_name (shell, "mail");
+#if (EVOLUTION_VERSION >= 30303)
+			e_alert_submit (
+				e_mail_backend_get_alert_sink (backend),
+				"org-gnome-evolution-rss:feederr",
+				error, msg, NULL);
+#else
 			e_mail_backend_submit_alert (
 				backend, "org-gnome-evolution-rss:feederr",
 				error, msg, NULL);
+#endif
 #else
 			ed = e_alert_dialog_new_for_args(parent,
 				"org-gnome-evolution-rss:feederr",
