@@ -51,9 +51,6 @@ int rss_verbose_debug = 0;
 #include <mail/em-event.h>
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
-#if EVOLUTION_VERSION >= 30101
-#include <mail/e-mail-folder-utils.h>
-#endif
 
 #if EVOLUTION_VERSION < 22900 //kb//
 #include <e-util/e-error.h>
@@ -69,9 +66,7 @@ int rss_verbose_debug = 0;
 #if EVOLUTION_VERSION < 30303
 #include <mail/e-mail-local.h>
 #endif
-#if EVOLUTION_VERSION >= 29101
-#include <mail/e-mail-session.h>
-#else
+#if EVOLUTION_VERSION < 29101
 #include <mail/mail-session.h>
 #endif
 #include <shell/e-shell.h>
@@ -81,8 +76,21 @@ int rss_verbose_debug = 0;
 #endif
 #endif
 
+#if EVOLUTION_VERSION >= 30305
+#include <libemail-engine/mail-tools.h>
+#include <libemail-engine/mail-ops.h>
+#include <libemail-engine/e-mail-session.h>
+#include <libemail-engine/e-mail-folder-utils.h>
+#else
+#if EVOLUTION_VERSION >= 30101
+#include <mail/e-mail-folder-utils.h>
+#endif
 #include <mail/mail-tools.h>
 #include <mail/mail-ops.h>
+#if EVOLUTION_VERSION >= 29101
+#include <mail/e-mail-session.h>
+#endif
+#endif
 
 #include <mail/em-format-html.h>
 #include <mail/em-format-hook.h>

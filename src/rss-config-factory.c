@@ -50,8 +50,12 @@
 #include <mail/e-mail-local.h>
 #endif
 #include <mail/em-folder-selector.h>
+#if EVOLUTION_VERSION >= 30305
+#include <libemail-engine/e-mail-folder-utils.h>
+#else
 #if EVOLUTION_VERSION >= 30101
 #include <mail/e-mail-folder-utils.h>
+#endif
 #endif
 
 #include <mail/em-utils.h>

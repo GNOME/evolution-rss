@@ -26,8 +26,12 @@
 #if (EVOLUTION_VERSION < 30303)
 #include <mail/e-mail-local.h>
 #endif
+#if EVOLUTION_VERSION >= 30305
+#include <libemail-engine/e-mail-folder-utils.h>
+#else
 #if EVOLUTION_VERSION >= 30101
 #include <mail/e-mail-folder-utils.h>
+#endif
 #endif
 #include <mail/e-mail-reader.h>
 #include <mail/em-folder-utils.h>

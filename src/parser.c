@@ -25,7 +25,11 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
 #include <libxml/debugXML.h>
+#if EVOLUTION_VERSION >= 30305
+#include <libemail-engine/mail-ops.h>
+#else
 #include <mail/mail-ops.h>
+#endif
 #include <mail/em-format-html.h>
 #if (DATASERVER_VERSION >= 2031001)
 #include <camel/camel.h>
