@@ -4177,6 +4177,9 @@ init_rss_prefs(void)
 		"page-rss",
 		"rss",
 		_("News And Blogs"),
+#if EVOLUTION_VERSION >= 30390
+		NULL,
+#endif
 		(EPreferencesWindowCreatePageFn)rss_config_control_new,
 		800);
 }
