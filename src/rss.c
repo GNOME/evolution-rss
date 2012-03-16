@@ -2157,14 +2157,16 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 	 */
 	text = gtkhtml_editor_get_text_html ((GtkhtmlEditor *)t->composer, &length);
 
-	doc = rss_html_url_decode(text, strlen(text));
+	doc = rss_html_url_decode(text, length);
 	if (doc) {
 		htmlDocDumpMemory(doc, &buff, &size);
-		xmlFree(doc);
+		xmlFreeDoc(doc);
 		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
+		xmlFree (buff);
 	} else
 		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)text, length);
 
+	g_free (text);
 #endif
 }
 

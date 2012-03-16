@@ -120,32 +120,6 @@ typedef struct {
 	GtkWidget   *import;
 } UIData;
 
-typedef struct _setupfeed {
-	GtkBuilder *gui;
-	GtkWidget *treeview;
-	GtkWidget *add_feed;
-	GtkWidget
-		*check1,
-		*check2,
-		*check3,
-		*check4,
-		*check5,
-		*check6,
-		*check7;
-	GtkWidget *spin;
-	GtkWidget *enclsize;
-	GtkWidget *use_proxy;
-	GtkWidget *host_proxy;
-	GtkWidget *port_proxy;
-	GtkWidget *proxy_details;
-	GtkWidget *details;
-	GtkWidget *import;
-	GtkWidget *import_fs;
-	GtkWidget *export_fs;
-	GtkWidget *export;
-	GtkWidget *combo_hbox;
-} setupfeed;
-
 void font_cb(GtkWidget *widget, GtkWidget *data);
 static void feeds_dialog_edit(GtkDialog *d, gpointer data);
 void decorate_import_cookies_fs (gpointer data);
@@ -3833,7 +3807,19 @@ rss_config_control_new (void)
 	GtkWidget *control_widget;
 	GtkWidget *button1, *button2, *button3;
 	gchar *uifile;
-	setupfeed *sf;
+	GtkBuilder *gui;
+	GtkWidget
+		*check1,
+		*check2,
+		*check3,
+		*check4,
+		*check5,
+		*check6,
+		*check7;
+	GtkWidget *spin;
+	GtkWidget *enclsize;
+	GtkWidget *import;
+	GtkWidget *export;
 	GtkListStore  *store;
 	GtkTreeIter    iter;
 	GtkCellRenderer *cell;
@@ -3845,27 +3831,24 @@ rss_config_control_new (void)
 	GConfClient *client = gconf_client_get_default();
 
 	d("rf->%p\n", rf);
-	sf = g_new0(setupfeed, 1);
-
 	uifile = g_build_filename (
 			EVOLUTION_UIDIR,
 			"rss-main.ui",
 			NULL);
-	sf->gui = gtk_builder_new ();
-	if (!gtk_builder_add_from_file (sf->gui, uifile, &error)) {
+	gui = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (gui, uifile, &error)) {
 		g_warning ("Couldn't load builder file: %s", error->message);
 		g_error_free (error);
 	}
 	g_free (uifile);
 
 	treeview = (GtkTreeView *)gtk_builder_get_object(
-					sf->gui,
+					gui,
 					"feeds-treeview");
 	rf->treeview = (GtkWidget *)treeview;
-	sf->treeview = (GtkWidget *)treeview;
 
 	gtk_tree_view_set_rules_hint (
-		GTK_TREE_VIEW (treeview),
+		treeview,
 		TRUE);
 
 	store = gtk_list_store_new (
@@ -3877,7 +3860,7 @@ rss_config_control_new (void)
 			G_TYPE_STRING);
 
 	gtk_tree_view_set_model (
-		GTK_TREE_VIEW (treeview),
+		treeview,
 		(GtkTreeModel *)store);
 
 	cell = gtk_cell_renderer_toggle_new ();
@@ -3896,7 +3879,7 @@ rss_config_control_new (void)
 	gtk_tree_view_column_set_resizable(column, FALSE);
 	gtk_tree_view_column_set_max_width (column, 70);
 	gtk_tree_view_append_column (
-		GTK_TREE_VIEW (treeview),
+		treeview,
 		column);
 	cell = gtk_cell_renderer_text_new ();
 	g_object_set (
@@ -3918,7 +3901,7 @@ rss_config_control_new (void)
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_append_column (
-		GTK_TREE_VIEW (treeview),
+		treeview,
 		column);
 	gtk_tree_view_column_set_sort_column_id (column, 1);
 	gtk_tree_view_column_clicked(column);
@@ -3932,11 +3915,11 @@ rss_config_control_new (void)
 	gtk_tree_view_column_set_min_width(column, 111);
 //	gtk_tree_view_column_set_min_width (column, -1);
 	gtk_tree_view_append_column (
-		GTK_TREE_VIEW (treeview),
+		treeview,
 		column);
 	gtk_tree_view_column_set_sort_column_id (column, 2);
 	gtk_tree_view_set_search_column (
-		GTK_TREE_VIEW (treeview),
+		treeview,
 		2);
 	gtk_tree_view_set_search_column(treeview, 1);
 #if GTK_CHECK_VERSION (2,12,0)
@@ -3947,7 +3930,7 @@ rss_config_control_new (void)
 		g_hash_table_foreach(rf->hrname, construct_list, store);
 
 	//make sure something (first row) is selected
-	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+	selection = gtk_tree_view_get_selection(treeview);
 	if (gtk_tree_model_iter_nth_child(
 		GTK_TREE_MODEL(store),
 		&iter,
@@ -3956,13 +3939,13 @@ rss_config_control_new (void)
 		gtk_tree_selection_select_iter(selection, &iter);
 
 	gtk_tree_view_columns_autosize (treeview);
-	g_signal_connect((gpointer) treeview,
+	g_signal_connect (treeview,
 		"row_activated",
 		G_CALLBACK(treeview_row_activated),
 		treeview);
 
 	button1 = GTK_WIDGET (gtk_builder_get_object(
-			sf->gui,
+			gui,
 			"feed-add-button"));
 	g_signal_connect(
 		button1,
@@ -3971,7 +3954,7 @@ rss_config_control_new (void)
 		treeview);
 
 	button2 = GTK_WIDGET (gtk_builder_get_object(
-			sf->gui,
+			gui,
 			"feed-edit-button"));
 	g_signal_connect(
 		button2,
@@ -3980,7 +3963,7 @@ rss_config_control_new (void)
 		treeview);
 
 	button3 = GTK_WIDGET (gtk_builder_get_object(
-			sf->gui,
+			gui,
 			"feed-delete-button"));
 	g_signal_connect(
 		button3,
@@ -3989,141 +3972,140 @@ rss_config_control_new (void)
 		treeview);
 
 
-	rf->preferences = GTK_WIDGET (gtk_builder_get_object(sf->gui, "rss-config-control"));
-	sf->add_feed = GTK_WIDGET (gtk_builder_get_object(sf->gui, "add-feed-dialog"));
-	sf->check1 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "checkbutton1"));
-	sf->check2 = GTK_WIDGET (gtk_builder_get_object(sf->gui, "checkbutton2"));
-	sf->check3 = GTK_WIDGET (
+	rf->preferences = GTK_WIDGET (gtk_builder_get_object(gui, "rss-config-control"));
+	check1 = GTK_WIDGET (gtk_builder_get_object(gui, "checkbutton1"));
+	check2 = GTK_WIDGET (gtk_builder_get_object(gui, "checkbutton2"));
+	check3 = GTK_WIDGET (
 			gtk_builder_get_object(
-				sf->gui,
+				gui,
 				"checkbutton3"));
-	sf->check4 = GTK_WIDGET (
+	check4 = GTK_WIDGET (
 			gtk_builder_get_object(
-				sf->gui,
+				gui,
 				"checkbutton4"));
-	sf->check5 = GTK_WIDGET (
+	check5 = GTK_WIDGET (
 			gtk_builder_get_object(
-				sf->gui,
+				gui,
 				"checkbutton5"));
-	sf->check6 = GTK_WIDGET (
+	check6 = GTK_WIDGET (
 			gtk_builder_get_object(
-				sf->gui,
+				gui,
 				"checkbuttonS6"));
-	sf->check7 = GTK_WIDGET (
+	check7 = GTK_WIDGET (
 			gtk_builder_get_object(
-				sf->gui,
+				gui,
 				"checkbutton9"));
-	sf->spin = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton1"));
-	sf->enclsize = GTK_WIDGET (gtk_builder_get_object(sf->gui, "spinbutton2"));
+	spin = GTK_WIDGET (gtk_builder_get_object(gui, "spinbutton1"));
+	enclsize = GTK_WIDGET (gtk_builder_get_object(gui, "spinbutton2"));
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sf->check1),
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check1),
 		gconf_client_get_bool(client, GCONF_KEY_REP_CHECK, NULL));
 
 	adj = gconf_client_get_float(client, GCONF_KEY_REP_CHECK_TIMEOUT, NULL);
 	if (adj)
-		gtk_spin_button_set_value((GtkSpinButton *)sf->spin, adj);
+		gtk_spin_button_set_value((GtkSpinButton *)spin, adj);
 	g_signal_connect(
-		sf->check1,
+		check1,
 		"clicked",
 		G_CALLBACK(rep_check_cb),
-		sf->spin);
+		spin);
 	g_signal_connect(
-		sf->spin,
+		spin,
 		"value-changed",
 		G_CALLBACK(rep_check_timeout_cb),
-		sf->check1);
+		check1);
 
 	size = gconf_client_get_float(client, GCONF_KEY_ENCLOSURE_SIZE, NULL);
 	if (size)
-		gtk_spin_button_set_value((GtkSpinButton *)sf->enclsize, size);
+		gtk_spin_button_set_value((GtkSpinButton *)enclsize, size);
 	g_signal_connect(
-		sf->check7,
+		check7,
 		"clicked",
 		G_CALLBACK(enclosure_limit_cb),
-		sf->enclsize);
+		enclsize);
 	g_signal_connect(
-		sf->enclsize,
+		enclsize,
 		"value-changed",
 		G_CALLBACK(enclosure_size_cb),
-		sf->check7);
+		check7);
 
 	gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (sf->check2),
+		GTK_TOGGLE_BUTTON (check2),
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_START_CHECK,
 			NULL));
-	g_signal_connect(sf->check2,
+	g_signal_connect(check2,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_START_CHECK);
 	gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (sf->check3),
+		GTK_TOGGLE_BUTTON (check3),
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_DISPLAY_SUMMARY,
 			NULL));
-	g_signal_connect(sf->check3,
+	g_signal_connect(check3,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_DISPLAY_SUMMARY);
 	gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (sf->check4),
+		GTK_TOGGLE_BUTTON (check4),
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_SHOW_COMMENTS,
 			NULL));
-	g_signal_connect(sf->check4,
+	g_signal_connect(check4,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_SHOW_COMMENTS);
 	gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (sf->check5),
+		GTK_TOGGLE_BUTTON (check5),
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_SEARCH_RSS,
 			NULL));
-	g_signal_connect(sf->check5,
+	g_signal_connect(check5,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_SEARCH_RSS);
 	gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (sf->check6),
+		GTK_TOGGLE_BUTTON (check6),
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_DOWNLOAD_ENCLOSURES,
 			NULL));
-	g_signal_connect(sf->check6,
+	g_signal_connect(check6,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_DOWNLOAD_ENCLOSURES);
 	gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (sf->check7),
+		GTK_TOGGLE_BUTTON (check7),
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_ENCLOSURE_LIMIT,
 			NULL));
-	g_signal_connect(sf->check7,
+	g_signal_connect(check7,
 		"clicked",
 		G_CALLBACK(start_check_cb),
 		(gpointer)GCONF_KEY_ENCLOSURE_LIMIT);
 
-	sf->import = GTK_WIDGET (gtk_builder_get_object(sf->gui, "import"));
-	sf->export = GTK_WIDGET (gtk_builder_get_object(sf->gui, "export"));
+	import = GTK_WIDGET (gtk_builder_get_object(gui, "import"));
+	export = GTK_WIDGET (gtk_builder_get_object(gui, "export"));
 	g_signal_connect(
-		sf->import,
+		import,
 		"clicked",
 		G_CALLBACK(import_cb),
-		sf->import);
+		import);
 	g_signal_connect(
-		sf->export,
+		export,
 		"clicked",
 		G_CALLBACK(export_cb),
-		sf->export);
+		export);
 
 	control_widget = GTK_WIDGET (
 				gtk_builder_get_object(
-					sf->gui,
+					gui,
 					"feeds-notebook"));
 	g_object_ref (control_widget);
 
@@ -4131,6 +4113,7 @@ rss_config_control_new (void)
 		GTK_CONTAINER (gtk_widget_get_parent(control_widget)),
 		control_widget);
 	g_object_unref(client);
+	g_object_unref (gui);
 
 #if EVOLUTION_VERSION < 22900 //kb//
 	return evolution_config_control_new (control_widget);
