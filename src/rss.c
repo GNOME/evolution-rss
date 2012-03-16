@@ -61,7 +61,11 @@ int rss_verbose_debug = 0;
 #include <misc/e-activity-handler.h>
 #include <bonobo/bonobo-shlib-factory.h>
 #else
+#if (EVOLUTION_VERSION >= 30391) //kb//
+#include <libevolution-utils/e-alert-dialog.h>
+#else
 #include <e-util/e-alert-dialog.h> //remove//
+#endif
 #include <glib/gi18n.h>
 #if EVOLUTION_VERSION < 30303
 #include <mail/e-mail-local.h>

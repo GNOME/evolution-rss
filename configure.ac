@@ -86,7 +86,7 @@ if test "$EVOLUTION_BASE_VERSION_S" = "-3.0"; then
 	LIBGTK_VERSION=3
 	LIBGTK_REQUIRED=2.99.3
 	EVOLUTION_REQUIRED=2.91.6
-	EVOLUTION_ADDITIONAL="libemail-utils libemail-engine"
+	EVOLUTION_ADDITIONAL="libemail-utils libemail-engine libevolution-utils"
 fi
 
 PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,

@@ -44,7 +44,11 @@
 #include <e-util/e-error.h>
 #include <shell/evolution-config-control.h>
 #else
+#if (EVOLUTION_VERSION >= 30391)
+#include <libevolution-utils/e-alert-dialog.h>
+#else
 #include <e-util/e-alert-dialog.h>
+#endif
 #include <misc/e-preferences-window.h>
 #if EVOLUTION_VERSION <  30303
 #include <mail/e-mail-local.h>
