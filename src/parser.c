@@ -81,7 +81,11 @@ rss_html_url_decode(const char *html, int len)
 		if ((url = (gchar *)xmlGetProp((xmlNodePtr)doc, (xmlChar *)"src"))) {
 			if (strstr(url, "img:")) {
 				gchar *tmp = decode_image_cache_filename(url);
+#if (EVOLUTION_VERSION < 30400)
 				duri = g_strconcat("file://", tmp, NULL);
+#else
+				duri = g_strconcat("evo-file://", tmp, NULL);
+#endif
 				g_free(tmp);
 				xmlSetProp(
 					(xmlNodePtr)doc,
@@ -959,6 +963,9 @@ process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
 #if (EVOLUTION_VERSION >= 23000)
 						g_free(name);
 						name = g_filename_to_uri (tname, NULL, NULL);
+#if (EVOLUTION_VERSION < 30400)
+						name = g_strconcat("evo-", name, NULL);
+#endif
 						g_free(tname);
 #else
 						name = tname;

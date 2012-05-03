@@ -46,6 +46,11 @@ gsize pixfilelen;
 extern GHashTable *icons;
 GHashTable *missing;
 
+#if (EVOLUTION_VERSION >= 30400)
+#include <mail/e-mail-reader.h>
+extern EShellView *rss_shell_view;
+#endif
+
 void
 #if LIBSOUP_VERSION < 2003000
 finish_image_feedback (SoupMessage *msg, FEED_IMAGE *user_data);
@@ -314,11 +319,25 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 		}
 	g_free(mime_type);
 
-	if (user_data->data == current_pobject)
+	if (user_data->data == current_pobject) {
+		EShellContent *shell_content;
+		EMailReader *reader;
+		EMailDisplay *display;
+
+		g_print("rEdraw\n");
+		g_print("p:%p\n", rss_shell_view);
+		shell_content = e_shell_view_get_shell_content (rss_shell_view);
+		reader = E_MAIL_READER (shell_content);
+		display = e_mail_reader_get_mail_display (reader);
+		//e_mail_display_reload (display);
+		e_mail_display_load_images(display);
+//		em_format_redraw(display);
+//		e_web_view_reload (E_WEB_VIEW(display));
+	}
 #if EVOLUTION_VERSION >= 23190
-		em_format_queue_redraw((EMFormat *)user_data->data);
+		//em_format_queue_redraw((EMFormat *)user_data->data);
 #else
-		em_format_redraw((EMFormat *)user_data->data);
+		//em_format_redraw((EMFormat *)user_data->data);
 #endif
 	g_free(user_data->url);
 	g_free(user_data);
@@ -579,6 +598,9 @@ verify_image(gchar *uri, EMFormatHTML *format)
 {
 	gchar *nurl, *turl;
 	gchar *feed_dir, *name;
+#if (EVOLUTION_VERSION >= 30400)
+	gchar *tmp = NULL;
+#endif
 	gchar *scheme, *tname;
 	gchar *result = NULL;
 	gchar *duri = NULL;
@@ -637,7 +659,13 @@ out:	if (!g_file_test(duri, G_FILE_TEST_EXISTS)) {
 				tname = decode_image_cache_filename(name);
 				g_free(name);
 #if (EVOLUTION_VERSION >= 23000)
+#if (EVOLUTION_VERSION < 30400)
 				result = g_filename_to_uri (tname, NULL, NULL);
+#else
+				tmp = g_filename_to_uri (tname, NULL, NULL);
+				result = g_strconcat("evo-", tmp, NULL);
+				g_free(tmp);
+#endif
 #else
 				result = g_strdup(tname);
 #endif
@@ -660,14 +688,22 @@ out:	if (!g_file_test(duri, G_FILE_TEST_EXISTS)) {
  * http://git.gnome.org/browse/evolution/commit/?id=d9deaf9bbc7fd9d0c72d5cf9b1981e3a56ed1162
  */
 #if (EVOLUTION_VERSION >= 23000)
+#if (EVOLUTION_VERSION < 30400)
 		return g_filename_to_uri(duri?duri:uri, NULL, NULL);
+#else
+		return g_strconcat("evo-file://", duri?duri:uri, NULL);
+#endif
 #else
 		return duri?duri:uri;
 #endif
 	}
 fail:
 #if (EVOLUTION_VERSION >= 23000)
+#if (EVOLUTION_VERSION < 30400)
 			result = g_filename_to_uri (pixfile, NULL, NULL);
+#else
+			result = g_strconcat("evo-file://", pixfile, NULL);
+#endif
 #else
 			result = g_strdup(pixfile);
 #endif

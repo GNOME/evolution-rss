@@ -96,8 +96,11 @@ int rss_verbose_debug = 0;
 #endif
 #endif
 
-#include <mail/em-format-html.h>
+#if EVOLUTION_VERSION >= 30400
 #include <mail/em-format-hook.h>
+#endif
+
+//#include <mail/em-format-html.h>
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -211,6 +214,7 @@ typedef struct CFL {
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
+#if 0
 struct _org_gnome_rss_controls_pobject {
 	EMFormatHTMLPObject object;
 
@@ -227,7 +231,30 @@ struct _org_gnome_rss_controls_pobject {
 	gchar *mem;
 	guint chandler;		//content handler_id
 	guint sh_handler;		//size handler_id for horizontal
-	guint counter;		//general counter for carring various numbers
+	guint counter;		//general counter for carring various number
+};
+#endif
+
+typedef struct _EMFormatRSSControlsPURI EMFormatRSSControlsPURI;
+
+struct _EMFormatRSSControlsPURI {
+
+	EMFormatPURI puri;
+
+        EMFormatHTML *format;
+        GtkWidget *html;
+        GtkWidget *container;
+        GtkWidget *forwbut;             //browser forward button
+        GtkWidget *backbut;             //browser back button
+        GtkWidget *stopbut;             //browser stop button
+        CamelStream *stream;
+        gchar *website;
+        guint is_html;
+        gchar *mem;
+        guint chandler;         //content handler_id
+        guint sh_handler;               //size handler_id for horizontal
+        guint counter;          //general counter for carring various number
+	xmlChar *buff;
 };
 
 GtkWidget *RSS_BTN_BACK;
@@ -285,7 +312,7 @@ void fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream);
 guint fallback_engine(void);
 
 gchar *print_comments(gchar *url, gchar *stream, EMFormatHTML *format);
-static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
+//static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
 #ifdef HAVE_WEBKIT
 void webkit_set_history(gchar *base);
@@ -993,6 +1020,7 @@ rss_select_folder(gchar *folder_name)
 #endif
 }
 
+/*
 static void
 summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
@@ -1003,9 +1031,22 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #else
 	em_format_redraw((EMFormat *)pobject);
 #endif
+}*/
+
+static void
+summary_cb (GtkWidget *button, EMFormatPURI *puri)
+{
+	rf->cur_format = rf->cur_format^1;
+	rf->chg_format = 1;
+//#if EVOLUTION_VERSION >= 23190
+//	em_format_queue_redraw((EMFormat *)puri);
+//#else
+	em_format_redraw((EMFormat *)puri);
+//#endif
 }
 
 
+#if 0
 static void
 back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
@@ -1056,6 +1097,7 @@ stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 		webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
 #endif
 }
+#endif
 
 void
 reload_cb (GtkWidget *button, gpointer data)
@@ -1106,6 +1148,7 @@ void
 rss_browser_update_content (
 	GtkWidget *widget, GtkAllocation *event, gpointer data)
 {
+#if 0
 	struct _org_gnome_rss_controls_pobject *po = data;
 	CamelStream *stream = NULL;
 	UB *fi;
@@ -1163,6 +1206,7 @@ rss_browser_update_content (
 				}
 			}
 	}
+#endif
 }
 
 #ifdef HAVE_GECKO
@@ -1445,6 +1489,7 @@ webkit_history_status (WebKitWebView *view,
 		GParamSpec *spec,
 		GtkWidget *data)
 {
+#if 0
 	struct _org_gnome_rss_controls_pobject *po =
 			(struct _org_gnome_rss_controls_pobject *) data;
 	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
@@ -1461,6 +1506,7 @@ webkit_history_status (WebKitWebView *view,
 				gtk_widget_set_sensitive(po->backbut, TRUE);
 		break;
 	}
+#endif
 }
 #endif
 
@@ -1751,7 +1797,55 @@ rss_get_mail_session(void)
 }
 #endif
 
+static GtkWidget *
+org_gnome_rss_browser (EMFormat *emf,
+                                     EMFormatPURI *puri,
+                                     GCancellable *cancellable)
+{
+        GtkWidget *box;
+        EMFormatRSSControlsPURI *po = (EMFormatRSSControlsPURI *) puri;
+
+	GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
+	GtkWidget *hbox2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+
+	GtkWidget *label3 = gtk_label_new ("");
+	GtkWidget *button, *button2, *button3, *button4, *button5;
+	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Fefdslkajed view"));
+
+	RSS_BTN_STOP = gtk_button_new_from_stock (GTK_STOCK_STOP);
+	RSS_BTN_FORW = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+	RSS_BTN_BACK = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
+	po->stopbut = RSS_BTN_STOP;
+	po->forwbut = RSS_BTN_FORW;
+	po->backbut = RSS_BTN_BACK;
+
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
+	gtk_widget_show (label3);
+	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
+
+	button = gtk_button_new_with_label(
+				rf->cur_format ? _("Show Summary") :
+						_("Show Full Text"));
+
+	gtk_button_set_image (
+		GTK_BUTTON (button),
+		gtk_image_new_from_icon_name (
+			rf->cur_format ? "text-x-generic" : "text-html",
+			GTK_ICON_SIZE_BUTTON));
+
+	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
+	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), po);
+	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
+	gtk_widget_show_all (button);
+
+
+	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+	gtk_widget_show_all (vbox);
+	return vbox;
+}
+
 #ifdef HAVE_RENDERKIT
+#if 0
 static gboolean
 org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
@@ -1917,6 +2011,7 @@ org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject
 }
 #endif
 
+#if 0
 static gboolean
 org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb,
 			EMFormatHTMLPObject *pobject)
@@ -1944,7 +2039,52 @@ org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb,
 		gtk_container_add ((GtkContainer *) eb, hbox);
 	return TRUE;
 }
+#endif
 
+static GtkWidget *
+org_gnome_rss_controls (EMFormat *emf,
+			EMFormatPURI *puri,
+			GCancellable *cancellable)
+{
+	GtkWidget *box;
+	EMFormatRSSControlsPURI *po = (EMFormatRSSControlsPURI *) puri;
+#if GTK_MAJOR_VERSION < 3
+	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
+	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
+#else
+	GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
+	GtkWidget *hbox2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+#endif
+	GtkWidget *label3 = gtk_label_new ("");
+	GtkWidget *button, *button2, *button3, *button4, *button5;
+	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
+
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
+	gtk_widget_show (label3);
+	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
+
+	button = gtk_button_new_with_label(
+				rf->cur_format ? _("Show Summary") :
+						_("Show Full Text"));
+
+	gtk_button_set_image (
+		GTK_BUTTON (button),
+		gtk_image_new_from_icon_name (
+			rf->cur_format ? "text-x-generic" : "text-html",
+			GTK_ICON_SIZE_BUTTON));
+
+	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
+	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), po);
+	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
+	gtk_widget_show_all (button);
+
+	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+	gtk_widget_show_all (vbox);
+
+	return vbox;
+}
+
+#if 0
 static gboolean
 org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
 {
@@ -2062,6 +2202,8 @@ org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobjec
 
 	return TRUE;
 }
+#endif
+#endif
 
 void
 cancel_comments_session(SoupSession *sess)
@@ -2070,6 +2212,7 @@ cancel_comments_session(SoupSession *sess)
 	soup_session_abort(sess);
 }
 
+#if (EVOLUTION_VERSION < 30400)
 void free_rss_controls(EMFormatHTMLPObject *o);
 
 void
@@ -2137,6 +2280,7 @@ free_rss_browser(EMFormatHTMLPObject *o)
 	g_free(po->website);
 	browser_fetching = 0;
 }
+#endif
 
 
 void org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t);
@@ -2170,6 +2314,57 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 #endif
 }
 
+static void
+write_rss_controls (EMFormat *emf,
+			EMFormatPURI *puri,
+			CamelStream *stream,
+			EMFormatWriterInfo *info,
+			GCancellable *cancellable)
+{
+	gchar *str = g_strdup_printf (
+		"<object type=\"application/x-org-gnome-rss-controls\" "
+			"height=\"auto\" data=\"%s\" id=\"%s\"></object>",
+		puri->uri, puri->uri);
+	camel_stream_write_string (stream, str, cancellable, NULL);
+
+	g_free (str);
+}
+
+static void
+write_rss_content (EMFormat *emf,
+			EMFormatPURI *puri,
+			CamelStream *stream,
+			EMFormatWriterInfo *info,
+			GCancellable *cancellable)
+{
+	EMFormatRSSControlsPURI *po = (EMFormatRSSControlsPURI *) puri;
+	camel_stream_write_string (stream, po->buff, cancellable, NULL);
+
+}
+
+static void
+write_rss_error (EMFormat *emf,
+			EMFormatPURI *puri,
+			CamelStream *stream,
+			EMFormatWriterInfo *info,
+			GCancellable *cancellable)
+{
+	gchar *str = g_strdup_printf (
+		"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
+		frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
+	camel_stream_write_string (stream, str, NULL, NULL);
+	g_free (str);
+	camel_stream_write_string (stream,
+		"<div style=\"border: solid 0px; padding: 4px;\">\n",
+		NULL, NULL);
+	camel_stream_write_string (stream,
+		"<h3>Formatting error!</h3>"
+		"Feed article corrupted! Cannot format article.",
+		NULL, NULL);
+	camel_stream_write_string (stream, "</div></div>", NULL, NULL);
+}
+
+
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t);
 
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
@@ -2191,7 +2386,12 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
 	gchar *rfrclsid, *addr, *subject, *result;
 	const char *website;
+#if (EVOLUTION_VERSION < 30400)
 	struct _org_gnome_rss_controls_pobject *pobj;
+#else
+	EMFormatRSSControlsPURI *pobj;
+	gint len;
+#endif
 	gpointer is_html;
 	gchar *classid, *tmp;
 	xmlDoc *src;
@@ -2274,16 +2474,17 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	if (rf->chg_format)
 		rf->chg_format = 0;
 
+#if (EVOLUTION_VERSION < 30400)
 	classid = g_strdup_printf ("org-gnome-rss-controls-%d",
 			org_gnome_rss_controls_counter_id);
 	org_gnome_rss_controls_counter_id++;
 	pobj = (struct _org_gnome_rss_controls_pobject *)
-		em_format_html_add_pobject (
-			(EMFormatHTML *) t->format,
-			sizeof(*pobj),
-			classid,
-			message,
-			(EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
+			em_format_html_add_pobject (
+				(EMFormatHTML *) t->format,
+				sizeof(*pobj),
+				classid,
+				message,
+				(EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
 	pobj->is_html = GPOINTER_TO_INT(is_html);
 	pobj->website = g_strstrip(g_strdup((gchar *)website));
 	pobj->stream = t->stream;
@@ -2294,12 +2495,29 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 	camel_stream_write_string (t->stream, str, NULL, NULL);
 	g_free(str);
 	g_free (classid);
+#else
+	len = t->part_id->len;
+	g_string_append (t->part_id, ".org-gnome-rss-controls");
+	pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
+			t->format, sizeof (EMFormatRSSControlsPURI),
+			t->part, t->part_id->str);
+	pobj->puri.widget_func = org_gnome_rss_controls;
+	pobj->puri.write_func = write_rss_controls;
+	pobj->puri.part = g_object_ref (t->part);
+	pobj->puri.is_attachment = FALSE;
+	pobj->website = g_strstrip(g_strdup((gchar *)website));
+	pobj->is_html = GPOINTER_TO_INT(is_html);
+	pobj->buff = str;
+	em_format_add_puri (t->format, (EMFormatPURI *) pobj);
+	g_string_truncate (t->part_id, len);
+#endif
 
 
 	if (rf->cur_format || (feedid && is_html && rf->cur_format)) {
 #ifdef HAVE_RENDERKIT
 		guint engine = fallback_engine();
 		if (engine && engine != 10) {
+#if (EVOLUTION_VERSION < 30400)
 			char *classid = g_strdup_printf(
 					"org-gnome-rss-controls-%d",
 					org_gnome_rss_controls_counter_id);
@@ -2311,8 +2529,6 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 					classid,
 					message,
 					(EMFormatHTMLPObjectFunc)org_gnome_rss_browser);
-			pobj->website = g_strstrip(g_strdup((gchar *)website));
-			pobj->is_html = GPOINTER_TO_INT(is_html);
 			pobj->format = (EMFormatHTML *)t->format;
 			pobj->object.free = free_rss_browser;
 			pobj->part = t->part;
@@ -2327,9 +2543,26 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 			camel_stream_write_string (t->stream, str, NULL, NULL);
 			g_free (str);
 			g_free (classid);
+#else
+			len = t->part_id->len;
+			g_string_append (t->part_id, ".org-gnome-rss-browser");
+			pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
+				t->format, sizeof (EMFormatRSSControlsPURI),
+				t->part, t->part_id->str);
+			pobj->puri.widget_func = org_gnome_rss_browser;
+			pobj->puri.write_func = write_rss_content;
+			pobj->puri.part = g_object_ref (t->part);
+			pobj->puri.is_attachment = FALSE;
+			pobj->website = g_strstrip(g_strdup((gchar *)website));
+			pobj->is_html = GPOINTER_TO_INT(is_html);
+			pobj->buff = str;
+			em_format_add_puri (t->format, (EMFormatPURI *) pobj);
+			g_string_truncate (t->part_id, len);
+#endif
 			goto out;
 		}
 #endif
+#if 0
 		//replace with unblocking
 		content = fetch_blocking(addr, NULL, NULL, textcb, NULL, &err);
 		if (err) {
@@ -2395,18 +2628,19 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 		g_free (str);
 
 		g_string_free(content, 1);
+#endif
 	} else {
 		gchar *wids;
 		xmlDoc *src;
 		guint width;
 		GtkWidget *obj;
-#if EVOLUTION_VERSION >= 23103
-		EWebView *web_view;
-		web_view = em_format_html_get_web_view (emfh);
-		obj = (GtkWidget *)web_view;
-#else
-		obj = (GtkWidget *)emfh->html;
-#endif
+//#if EVOLUTION_VERSION >= 23103
+//		EWebView *web_view;
+//		web_view = em_format_html_get_web_view (emfh);
+//		obj = (GtkWidget *)web_view;
+//#else
+//		obj = (GtkWidget *)emfh->html;
+//#endif
 
 		d("normal html rendering\n");
 		buffer = g_byte_array_new ();
@@ -2454,7 +2688,7 @@ void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
 						(xmlChar *)"src");
 				gchar *real_image = verify_image(
 							(gchar *)url,
-							emfh);
+							t->format);
 				if (real_image) {
 					xmlSetProp(
 						doc,
@@ -2515,6 +2749,7 @@ pixdone:			g_free(real_image);
 		g_free(feed_dir);
 #if EVOLUTION_VERSION >= 23000
 		feed_file = g_filename_to_uri(tmp_path, NULL, NULL);
+		feed_file = g_strconcat("evo-file://", tmp_path, NULL);
 #else
 		feed_file = g_strdup(tmp_path);
 #endif
@@ -2546,6 +2781,7 @@ pixdone:			g_free(real_image);
 				NULL);
 #if EVOLUTION_VERSION >= 23000
 		iconfile = g_filename_to_uri(tmp_file, NULL, NULL);
+		iconfile = g_strconcat("evo-file://", tmp_file, NULL);
 #else
 		iconfile = g_strdup(tmp_file);
 #endif
@@ -2574,7 +2810,7 @@ render_body:	if (category) {
 			content_colour & 0xffffff,
 			text_colour & 0xffffff,
 			buff);
-		if (comments && gconf_client_get_bool (rss_gconf,
+/*		if (comments && gconf_client_get_bool (rss_gconf,
 						GCONF_KEY_SHOW_COMMENTS,
 						NULL)) {
 			if (commstream) {
@@ -2617,10 +2853,25 @@ render_body:	if (category) {
 				fetch_comments(comments, g_strdup(uri), (EMFormatHTML *)t->format);
 			}
 			g_string_append (fbuffer, "</div>");
-		}
+		}*/
 		g_string_append (fbuffer, "</div>");
+//#endif
 	}
+#if (EVOLUTION_VERSION < 30400)
 	camel_stream_write (t->stream, fbuffer->str, fbuffer->len, NULL, NULL);
+#else
+	len = t->part_id->len;
+	g_string_append (t->part_id, ".org-gnome-rss-content");
+	pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
+		t->format, sizeof (EMFormatRSSControlsPURI),
+		t->part, t->part_id->str);
+	pobj->puri.write_func = write_rss_content;
+	pobj->puri.part = g_object_ref (t->part);
+	pobj->puri.is_attachment = FALSE;
+	pobj->buff = fbuffer->str;
+	em_format_add_puri (t->format, (EMFormatPURI *) pobj);
+	g_string_truncate (t->part_id, len);
+#endif
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref(fstream);
 #else
@@ -2633,6 +2884,7 @@ out:	if (addr)
 		g_free(addr);
 	return;
 fmerror:
+#if (EVOLUTION_VERSION < 30400)
 	str = g_strdup_printf (
 		"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
 		frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
@@ -2643,9 +2895,21 @@ fmerror:
 		NULL, NULL);
 	camel_stream_write_string (t->stream,
 		"<h3>Formatting error!</h3>"
-                "Feed article corrupted! Cannot format article.",
+		"Feed article corrupted! Cannot format article.",
 		NULL, NULL);
 	camel_stream_write_string (t->stream, "</div></div>", NULL, NULL);
+#else
+	len = t->part_id->len;
+	g_string_append (t->part_id, ".org-gnome-rss-error");
+	pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
+		t->format, sizeof (EMFormatRSSControlsPURI),
+		t->part, t->part_id->str);
+	pobj->puri.write_func = write_rss_error;
+	pobj->puri.part = g_object_ref (t->part);
+	pobj->puri.is_attachment = FALSE;
+	em_format_add_puri (t->format, (EMFormatPURI *) pobj);
+	g_string_truncate (t->part_id, len);
+#endif
 	return;
 }
 
@@ -3751,13 +4015,14 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_da
 
 	if (reload && !rf->cur_format) {
 #if EVOLUTION_VERSION >= 23190
-		em_format_queue_redraw((EMFormat *)user_data);
+		//em_format_queue_redraw((EMFormat *)user_data);
 #else
 		em_format_redraw((EMFormat *)user_data);
 #endif
 	}
 }
 
+#if 0
 static void
 refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 {
@@ -3767,6 +4032,7 @@ refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 	em_format_redraw((EMFormat *)pobject);
 #endif
 }
+#endif
 
 gchar *
 print_comments(gchar *url, gchar *stream, EMFormatHTML *format)
