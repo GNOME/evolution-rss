@@ -1810,7 +1810,7 @@ org_gnome_rss_browser (EMFormat *emf,
 
 	GtkWidget *label3 = gtk_label_new ("");
 	GtkWidget *button, *button2, *button3, *button4, *button5;
-	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Fefdslkajed view"));
+	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
 
 	RSS_BTN_STOP = gtk_button_new_from_stock (GTK_STOCK_STOP);
 	RSS_BTN_FORW = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
