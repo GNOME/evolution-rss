@@ -89,9 +89,6 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 {
 	EMailSession *session;
 	struct _copy_folder_data *cfd = data;
-#if EVOLUTION_VERSION < 30101
-	CamelStore *fromstore = NULL;
-#endif
 	CamelStore *tostore = NULL;
 	CamelStore *local_store;
 	CamelService *service = NULL;
@@ -100,15 +97,8 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	CamelURL *url;
 	GError *local_error = NULL;
 
-#if EVOLUTION_VERSION >= 30101
 	if (uri == NULL)
 		goto fail;
-#else
-	if (uri == NULL) {
-		g_free (cfd);
-		return;
-	}
-#endif
 
 	session = e_mail_backend_get_session (backend);
 #if (EVOLUTION_VERSION < 30303)
@@ -117,15 +107,14 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	local_store = e_mail_session_get_local_store (session);
 #endif
 
-#if EVOLUTION_VERSION >= 30101
 	service = CAMEL_SERVICE (cfd->source_store);
-	camel_service_connect_sync (service, &local_error);
-	if (local_error != NULL) {
+
+#if EVOLUTION_VERSION >= 30501
+	camel_service_connect_sync (service, NULL, &local_error);
 #else
-	fromstore = camel_session_get_store (
-		CAMEL_SESSION (session), cfd->fi->uri, &local_error);
-	if (fromstore == NULL) {
+	camel_service_connect_sync (service, &local_error);
 #endif
+	if (local_error != NULL) {
 #if EVOLUTION_VERSION >= 30303
 		e_alert_submit (
 			e_mail_backend_get_alert_sink (backend),
@@ -139,11 +128,7 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 			backend, cfd->delete ?
 				"mail:no-move-folder-notexist" :
 				"mail:no-copy-folder-notexist",
-#if EVOLUTION_VERSION >= 30101
 			cfd->source_folder_name, uri,
-#else
-			cfd->fi->full_name, uri,
-#endif
 			local_error->message, NULL);
 #endif
 		goto fail;
@@ -151,14 +136,8 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 
 	g_return_if_fail (CAMEL_IS_STORE (service));
 
-#if EVOLUTION_VERSION >= 30101
 	if (cfd->delete && cfd->source_store == local_store &&
 		rss_emfu_is_special_local_folder (cfd->source_folder_name)) {
-#else
-	fromstore = CAMEL_STORE (service);
-
-	if (cfd->delete && fromstore == local_store && rss_emfu_is_special_local_folder (cfd->fi->full_name)) {
-#endif
 #if EVOLUTION_VERSION >= 30303
 		e_alert_submit (
 			e_mail_backend_get_alert_sink (backend),
@@ -167,16 +146,11 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 #else
 		e_mail_backend_submit_alert (
 			backend, "mail:no-rename-special-folder",
-#if EVOLUTION_VERSION >= 30101
 			cfd->source_folder_name, NULL);
-#else
-			cfd->fi->full_name, NULL);
-#endif
 #endif
 		goto fail;
 	}
 
-#if EVOLUTION_VERSION >= 30101
 	url = camel_url_new (uri, &local_error);
 	if (url != NULL) {
 		service = camel_session_get_service_by_url (
@@ -185,14 +159,13 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 	}
 
 	if (service != NULL)
+#if EVOLUTION_VERSION >= 30501
+		camel_service_connect_sync (service, NULL, &local_error);
+#else
 		camel_service_connect_sync (service, &local_error);
+#endif
 
 	if (local_error != NULL) {
-#else
-	tostore = camel_session_get_store (
-		CAMEL_SESSION (session), uri, &local_error);
-	if (tostore == NULL) {
-#endif
 #if EVOLUTION_VERSION >= 30303
 		e_alert_submit (
 			e_mail_backend_get_alert_sink (backend),
@@ -206,23 +179,15 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 			backend, cfd->delete ?
 				"mail:no-move-folder-to-notexist" :
 				"mail:no-copy-folder-to-notexist",
-#if EVOLUTION_VERSION >= 30101
 			cfd->source_folder_name, uri,
-#else
-			cfd->fi->full_name, uri,
-#endif
 			local_error->message, NULL);
 #endif
 		goto fail;
 	}
 
-#if EVOLUTION_VERSION >= 30101
 	g_return_if_fail (CAMEL_IS_STORE (service));
 
 	tostore = CAMEL_STORE (service);
-#else
-	service = CAMEL_SERVICE (tostore);
-#endif
 	provider = camel_service_get_provider (service);
 
 	url = camel_url_new (uri, NULL);
@@ -234,21 +199,11 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 		tobase = "";
 
 	em_folder_utils_copy_folders (
-#if EVOLUTION_VERSION >= 30101
 		cfd->source_store, cfd->source_folder_name,
-#else
-		fromstore, cfd->fi->full_name,
-#endif
 		tostore, tobase, cfd->delete);
 
 	camel_url_free (url);
 fail:
-#if EVOLUTION_VERSION < 30101
-	if (fromstore)
-		g_object_unref (fromstore);
-	if (tostore)
-		g_object_unref (tostore);
-#endif
 
 	g_clear_error (&local_error);
 
