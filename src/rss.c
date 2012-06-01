@@ -5009,7 +5009,9 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	row+=2;
 	t->row = row;
 
+#if EVOLUTION_VERSION < 30501
 	gtk_table_resize(GTK_TABLE(t->table), t->row, 4);
+#endif
 
 	pretty_url = g_strdup ("RSS");
 	label = gtk_label_new (NULL);
@@ -5032,6 +5034,7 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 	gtk_misc_set_alignment (GTK_MISC (status_label), 0, .5);
 
+#if EVOLUTION_VERSION < 30501
 	gtk_table_attach (
 		GTK_TABLE (t->table), recv_icon,
 		0, 1, row, row+2, 0, 0, 0, 0);
@@ -5047,6 +5050,19 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	gtk_table_attach (
 		GTK_TABLE (t->table), status_label,
 		1, 2, row+1, row+2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+#else
+	gtk_widget_set_hexpand (label, TRUE);
+	gtk_widget_set_halign (label, GTK_ALIGN_FILL);
+
+	gtk_widget_set_hexpand (status_label, TRUE);
+	gtk_widget_set_halign (status_label, GTK_ALIGN_FILL);
+
+	gtk_grid_attach (t->grid, recv_icon, 0, row, 1, 2);
+	gtk_grid_attach (t->grid, label, 1, row, 1, 1);
+	gtk_grid_attach (t->grid, progress_bar, 2, row, 1, 1);
+	gtk_grid_attach (t->grid, cancel_button, 3, row, 1, 1);
+	gtk_grid_attach (t->grid, status_label, 1, row + 1, 2, 1);
+#endif
 
 	g_signal_connect (
 			cancel_button, "clicked",
