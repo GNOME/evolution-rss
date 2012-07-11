@@ -19,10 +19,14 @@
  * vim: tabstop=4 shiftwidth=4 noexpandtab :
  */
 
-
+#if (DATASERVER_VERSION > 3005001)
+#include <libedataserver/libedataserver.h>
+#else
 #if (DATASERVER_VERSION >= 2023001)
 #include <libedataserver/e-proxy.h>
 #endif
+#endif
+
 #include <libsoup/soup.h>
 #ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>

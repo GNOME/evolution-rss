@@ -24,7 +24,12 @@
 #include <camel/camel-data-cache.h>
 #include <camel/camel-file-utils.h>
 #endif
+
+#if (DATASERVER_VERSION > 3005001)
+#include <libedataserver/libedataserver.h>
+#else
 #include <libedataserver/e-data-server-util.h>
+#endif
 
 #include "rss.h"
 #include "rss-cache.h"

@@ -20,9 +20,21 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <camel/camel.h>
+
+#if (DATASERVER_VERSION > 3005001)
+#include <libedataserver/libedataserver.h>
+#else
 #include <libedataserver/e-data-server-util.h>
+#endif
+
 #include <mail/em-folder-tree.h>
+
+#if (EVOLUTION_VERSION > 30501)
+#include <em-format/e-mail-formatter.h>
+#else
 #include <mail/em-format-html.h>
+#endif
+
 #include <sys/time.h>
 #include <string.h>
 
@@ -594,7 +606,8 @@ file_is_image(gchar *image, gboolean cleanup)
  * because we could end up with wrong file as image
  */
 gchar *
-verify_image(gchar *uri, EMFormatHTML *format)
+//verify_image(gchar *uri, EMFormatHTML *format)
+verify_image(gchar *uri, EMailFormatter *format)
 {
 	gchar *nurl, *turl;
 	gchar *feed_dir, *name;

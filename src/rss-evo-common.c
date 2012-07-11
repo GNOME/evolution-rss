@@ -35,7 +35,14 @@
 #endif
 #include <mail/e-mail-reader.h>
 #include <mail/em-folder-utils.h>
+
+#if (DATASERVER_VERSION > 3005001)
+#include <libedataserver/libedataserver.h>
+#else
+#if (DATASERVER_VERSION >= 2023001)
 #include <libedataserver/e-proxy.h>
+#endif
+#endif
 
 
 #ifdef HAVE_LIBSOUP_GNOME

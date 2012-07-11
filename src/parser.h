@@ -20,7 +20,11 @@
 #ifndef __PARSER_H__
 #define __PARSER_H__
 
+#if (EVOLUTION_VERSION > 30501)
+#include <em-format/e-mail-formatter.h>
+#else
 #include <mail/em-format-html.h>
+#endif
 
 typedef struct {
 	RDF *r;
@@ -105,7 +109,8 @@ gchar *media_rss(xmlNode *node, gchar *search, gchar *fail);
 gchar *dublin_core_rss(xmlNode *node, gchar *fail);
 void syndication_rss(void);
 gchar *wfw_rss(xmlNode *node, gchar *fail);
-gchar *process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format);
+//gchar *process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format);
+gchar *process_images(gchar *text, gchar *link, gboolean decode, EMailFormatter *format);
 
 #endif /*__RSS_H__*/
 

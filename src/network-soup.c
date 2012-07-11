@@ -30,8 +30,12 @@
 #include <libsoup/soup-gnome-features.h>
 #endif
 
+#if (DATASERVER_VERSION > 3005001)
+#include <libedataserver/libedataserver.h>
+#else
 #if (DATASERVER_VERSION >= 2023001)
 #include <libedataserver/e-proxy.h>
+#endif
 #endif
 
 extern int rss_verbose_debug;

@@ -22,7 +22,11 @@
 
 #include <mail/e-mail-backend.h>
 #include <camel/camel.h>
+#if EVOLUTION_VERSION > 30501
+#include <libedataserver/libedataserver.h>
+#else
 #include <libedataserver/e-proxy.h>
+#endif
 
 struct _copy_folder_data {
 #if EVOLUTION_VERSION >= 30101

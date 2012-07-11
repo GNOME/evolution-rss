@@ -96,11 +96,14 @@ int rss_verbose_debug = 0;
 #endif
 #endif
 
+#if (EVOLUTION_VERSION > 30501)
+#include <em-format/e-mail-formatter.h>
+#else
+#include <mail/em-format-html.h>
 #if EVOLUTION_VERSION >= 30400
 #include <mail/em-format-hook.h>
 #endif
-
-//#include <mail/em-format-html.h>
+#endif
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -239,9 +242,12 @@ typedef struct _EMFormatRSSControlsPURI EMFormatRSSControlsPURI;
 
 struct _EMFormatRSSControlsPURI {
 
-	EMFormatPURI puri;
+	//EMFormatPURI puri;
+	EMailPart puri;
 
-        EMFormatHTML *format;
+	//EMFormatHTML *format;
+	EMailFormatter *format;
+
         GtkWidget *html;
         GtkWidget *container;
         GtkWidget *forwbut;             //browser forward button
@@ -298,7 +304,8 @@ gint browser_fill = 0;	//how much data currently written to browser
 
 gchar *process_feed(RDF *r);
 gchar *display_doc (RDF *r);
-gchar *display_comments (RDF *r, EMFormatHTML *format);
+//gchar *display_comments (RDF *r, EMFormatHTML *format);
+gchar *display_comments (RDF *r, EMailFormatter *format);
 void check_folders(void);
 CamelMimePart *file_to_message(const char *name);
 void check_feed_age(void);
@@ -307,11 +314,14 @@ gboolean display_feed_async(gpointer key);
 gboolean fetch_one_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean fetch_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean custom_fetch_feed(gpointer key, gpointer value, gpointer user_data);
-void fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream);
+//void fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream);
+void fetch_comments(gchar *url, gchar *mainurl, EMailFormatter *stream);
 
 guint fallback_engine(void);
 
-gchar *print_comments(gchar *url, gchar *stream, EMFormatHTML *format);
+//gchar *print_comments(gchar *url, gchar *stream, EMFormatHTML *format);
+gchar *print_comments(gchar *url, gchar *stream, EMailFormatter *format);
+
 //static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
 #ifdef HAVE_WEBKIT
@@ -1034,14 +1044,15 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 }*/
 
 static void
-summary_cb (GtkWidget *button, EMFormatPURI *puri)
+//summary_cb (GtkWidget *button, EMFormatPURI *puri)
+summary_cb (GtkWidget *button, EMailPart *puri)
 {
 	rf->cur_format = rf->cur_format^1;
 	rf->chg_format = 1;
 //#if EVOLUTION_VERSION >= 23190
 //	em_format_queue_redraw((EMFormat *)puri);
 //#else
-	em_format_redraw((EMFormat *)puri);
+	//em_format_redraw((EMFormat *)puri);
 //#endif
 }
 
@@ -1799,8 +1810,9 @@ rss_get_mail_session(void)
 
 static GtkWidget *
 org_gnome_rss_browser (EMFormat *emf,
-                                     EMFormatPURI *puri,
-                                     GCancellable *cancellable)
+					//EMFormatPURI *puri,
+					EMailPart *puri,
+					GCancellable *cancellable)
 {
         GtkWidget *box;
         EMFormatRSSControlsPURI *po = (EMFormatRSSControlsPURI *) puri;
@@ -2043,7 +2055,8 @@ org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb,
 
 static GtkWidget *
 org_gnome_rss_controls (EMFormat *emf,
-			EMFormatPURI *puri,
+			//EMFormatPURI *puri,
+			EMailPart *puri,
 			GCancellable *cancellable)
 {
 	GtkWidget *box;
@@ -2316,7 +2329,8 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 
 static void
 write_rss_controls (EMFormat *emf,
-			EMFormatPURI *puri,
+			//EMFormatPURI *puri,
+			EMailPart *puri,
 			CamelStream *stream,
 			EMFormatWriterInfo *info,
 			GCancellable *cancellable)
@@ -2332,7 +2346,8 @@ write_rss_controls (EMFormat *emf,
 
 static void
 write_rss_content (EMFormat *emf,
-			EMFormatPURI *puri,
+			//EMFormatPURI *puri,
+			EMailPart *puri,
 			CamelStream *stream,
 			EMFormatWriterInfo *info,
 			GCancellable *cancellable)
@@ -2344,7 +2359,8 @@ write_rss_content (EMFormat *emf,
 
 static void
 write_rss_error (EMFormat *emf,
-			EMFormatPURI *puri,
+			//EMFormatPURI *puri,
+			EMailPart *puri,
 			CamelStream *stream,
 			EMFormatWriterInfo *info,
 			GCancellable *cancellable)
@@ -3984,14 +4000,16 @@ void
 #if LIBSOUP_VERSION < 2003000
 finish_comments (SoupMessage *msg, EMFormatHTML *user_data);
 #else
-finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data);
+//finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data);
+finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMailFormatter *user_data);
 #endif
 
 void
 #if LIBSOUP_VERSION < 2003000
 finish_comments (SoupMessage *msg, EMFormatHTML *user_data)
 #else
-finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data)
+//finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMFormatHTML *user_data)
+finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMailFormatter *user_data)
 #endif
 {
 	guint reload=0;
@@ -4035,7 +4053,8 @@ refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #endif
 
 gchar *
-print_comments(gchar *url, gchar *stream, EMFormatHTML *format)
+//print_comments(gchar *url, gchar *stream, EMFormatHTML *format)
+print_comments(gchar *url, gchar *stream, EMailFormatter *format)
 {
 	RDF *r = NULL;
 	xmlDocPtr doc;
@@ -4064,7 +4083,8 @@ print_comments(gchar *url, gchar *stream, EMFormatHTML *format)
 
 
 void
-fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream)
+//fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream)
+fetch_comments(gchar *url, gchar *mainurl, EMailFormatter *stream)
 {
 	GError *err = NULL;
 	SoupSession *comm_sess = NULL;
@@ -5645,11 +5665,12 @@ file_to_message(const char *filename)
 #else
 	camel_object_unref(content);
 #endif
-
+#if 0
 #if EVOLUTION_VERSION < 22900
 	type = em_utils_snoop_type(msg);
 #else
 	type = em_format_snoop_type(msg);
+#endif
 #endif
 	if (type)
 		camel_data_wrapper_set_mime_type((CamelDataWrapper *)msg, type);
@@ -5903,7 +5924,7 @@ update_comments(RDF *r)
 }
 
 gchar *
-display_comments (RDF *r, EMFormatHTML *format)
+display_comments (RDF *r, EMailFormatter *format)
 {
 	gchar *tmp;
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);

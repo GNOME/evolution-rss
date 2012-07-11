@@ -30,13 +30,24 @@
 #else
 #include <mail/mail-ops.h>
 #endif
+
+#if (EVOLUTION_VERSION > 30501)
+#include <em-format/e-mail-formatter.h>
+#else
 #include <mail/em-format-html.h>
+#endif
+
 #if (DATASERVER_VERSION >= 2031001)
 #include <camel/camel.h>
 #else
 #include <camel/camel-url.h>
 #endif
+
+#if (DATASERVER_VERSION > 3005001)
+#include <libedataserver/libedataserver.h>
+#else
 #include <libedataserver/e-data-server-util.h>
+#endif
 
 extern int rss_verbose_debug;
 
@@ -49,7 +60,7 @@ extern int rss_verbose_debug;
 #include "misc.h"
 #include "network-soup.h"
 
-extern GConfClient *rss_gconf;
+//extern GConfClient *rss_gconf;
 void asyncr_context_free(AsyncData *asyncr);
 GQueue *display_channel_items_sync(AsyncData *ayncr);
 
@@ -945,7 +956,8 @@ tree_walk (xmlNodePtr root, RDF *r)
 static const char *html_const[4] = {"img", "a", NULL};
 
 gchar *
-process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
+//process_images(gchar *text, gchar *link, gboolean decode, EMFormatHTML *format)
+process_images(gchar *text, gchar *link, gboolean decode, EMailFormatter *format)
 {
 	xmlChar *buff = NULL;
 	guint size = 0;
@@ -1339,6 +1351,7 @@ display_channel_items_sync(AsyncData *asyncr)
 		subj = g_strdup(CF->subj);
 
 		ftotal++;
+#if 0
 		if (gconf_client_get_bool(rss_gconf, GCONF_KEY_DOWNLOAD_ENCLOSURES, NULL)) {
 			if (CF->encl) {
 				process_enclosure(CF);
@@ -1348,6 +1361,7 @@ display_channel_items_sync(AsyncData *asyncr)
 				goto done;
 			}
 		}
+#endif
 
 		if (!freeze) {
 			camel_folder_freeze(mail_folder);

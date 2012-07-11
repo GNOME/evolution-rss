@@ -44,7 +44,8 @@ finish_create_icon_stream (SoupSession *soup_sess,
 	SoupMessage *msg, FEED_IMAGE *user_data);
 #endif
 
-gchar *verify_image(gchar *uri, EMFormatHTML *format);
+//gchar *verify_image(gchar *uri, EMFormatHTML *format);
+gchar *verify_image(gchar *uri, EMailFormatter *format);
 
 void
 #if LIBSOUP_VERSION < 2003000
