@@ -1860,6 +1860,7 @@ rss_get_mail_session(void)
 }
 #endif
 
+#if 0
 static GtkWidget *
 org_gnome_rss_browser (EMFormat *emf,
 					//EMFormatPURI *puri,
@@ -1907,6 +1908,7 @@ org_gnome_rss_browser (EMFormat *emf,
 	gtk_widget_show_all (vbox);
 	return vbox;
 }
+#endif
 
 #ifdef HAVE_RENDERKIT
 #if 0
@@ -2105,6 +2107,7 @@ org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb,
 }
 #endif
 
+#if 0
 static GtkWidget *
 org_gnome_rss_controls (EMFormat *emf,
 			//EMFormatPURI *puri,
@@ -2148,6 +2151,7 @@ org_gnome_rss_controls (EMFormat *emf,
 
 	return vbox;
 }
+#endif
 
 #if 0
 static gboolean
@@ -2379,6 +2383,7 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 #endif
 }
 
+#if 0
 static void
 write_rss_controls (EMFormat *emf,
 			//EMFormatPURI *puri,
@@ -2395,7 +2400,9 @@ write_rss_controls (EMFormat *emf,
 
 	g_free (str);
 }
+#endif
 
+#if 0
 static void
 write_rss_content (EMFormat *emf,
 			//EMFormatPURI *puri,
@@ -2408,7 +2415,9 @@ write_rss_content (EMFormat *emf,
 	camel_stream_write_string (stream, po->buff, cancellable, NULL);
 
 }
+#endif
 
+#if 0
 static void
 write_rss_error (EMFormat *emf,
 			//EMFormatPURI *puri,
@@ -2431,8 +2440,10 @@ write_rss_error (EMFormat *emf,
 		NULL, NULL);
 	camel_stream_write_string (stream, "</div></div>", NULL, NULL);
 }
+#endif
 
 
+#if 0
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t);
 
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
@@ -2980,6 +2991,7 @@ fmerror:
 #endif
 	return;
 }
+#endif
 
 #if EVOLUTION_VERSION < 22900 //kb//
 void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t);
