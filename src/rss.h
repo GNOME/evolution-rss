@@ -133,7 +133,9 @@ typedef struct _rssfeed {
 	GtkWidget       *feed_dialog;
 	GtkWidget       *progress_dialog;
 	GtkWidget       *progress_bar;
+#if EVOLUTION_VERSION < 30504
 	GtkWidget       *label;
+#endif
 	GtkWidget       *sr_feed;		//s&r upper text (feed)
 	GtkWidget       *treeview;
 	GtkWidget       *edbutton;
@@ -308,7 +310,9 @@ struct _send_info {
 	send_state_t state;
 	GtkWidget *progress_bar;
 	GtkWidget *cancel_button;
+#if EVOLUTION_VERSION < 30504
 	GtkWidget *status_label;
+#endif
 
 	int again;              /* need to run send again */
 

@@ -191,7 +191,6 @@ int rss_verbose_debug = 0;
 #include "parser.h"
 
 int pop = 0;
-GtkWidget *flabel;
 //#define RSS_DEBUG 1
 guint nettime_id = 0;
 guint force_update = 0;
@@ -1013,11 +1012,15 @@ static void
 receive_cancel(GtkButton *button, struct _send_info *info)
 {
 	if (info->state == SEND_ACTIVE) {
+#if EVOLUTION_VERSION < 30504
 		if (info->status_label)
 			gtk_label_set_markup (GTK_LABEL (info->status_label),
-//                        e_clipped_label_set_text (
-//                              E_CLIPPED_LABEL (info->status_label),
 				_("Cancelling..."));
+#else
+		if (info->progress_bar)
+			gtk_progress_bar_set_text (info->progress_bar,
+				_("Cancelling..."));
+#endif
 		info->state = SEND_CANCELLED;
 		readrss_dialog_cb(NULL, NULL);
 	}
@@ -3668,6 +3671,7 @@ void
 update_sr_message(void)
 {
 	gchar *fmsg = NULL;
+#if EVOLUTION_VERSION < 30504
 	if (G_IS_OBJECT(rf->label) && farticle) {
 		fmsg = g_strdup_printf(
 				_("Getting message %d of %d"),
@@ -3675,6 +3679,15 @@ update_sr_message(void)
 				ftotal);
 		if (G_IS_OBJECT(rf->label))
 			gtk_label_set_text (GTK_LABEL (rf->label), fmsg);
+#else
+	if (G_IS_OBJECT(rf->progress_bar) && farticle) {
+		fmsg = g_strdup_printf(
+				_("Getting message %d of %d"),
+				farticle,
+				ftotal);
+		if (G_IS_OBJECT(rf->progress_bar))
+			gtk_progress_bar_set_text (rf->progress_bar, fmsg);
+#endif
 		g_free(fmsg);
 	}
 }
@@ -3775,8 +3788,13 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		rf->autoupdate = FALSE;
 		farticle=0;
 		ftotal=0;
+#if EVOLUTION_VERSION < 30504
 		if(rf->label && rf->info) {
 			gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete."));
+#else
+		if(rf->progress_bar && rf->info) {
+			gtk_progress_bar_set_text (GTK_LABEL (rf->progress_bar), _("Complete."));
+#endif
 			if (rf->info->cancel_button)
 				gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 			gtk_progress_bar_set_fraction(
@@ -3791,8 +3809,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			}
 			//clean data that might hang on rf struct
 			rf->sr_feed = NULL;
+#if EVOLUTION_VERSION < 30504
 			rf->label = NULL;
-			flabel = NULL;
+#endif
 			rf->progress_bar = NULL;
 			rf->info = NULL;
 		}
@@ -3817,11 +3836,17 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	}
 
 	if (rf->cancel) {
+#if EVOLUTION_VERSION < 30504
 		if(rf->label && rf->feed_queue == 0 && rf->info) {
-			farticle=0;
-			ftotal=0;
 			gtk_label_set_markup (GTK_LABEL (rf->label),
 				_("Canceled."));
+#else
+		if(rf->progress_bar && rf->feed_queue == 0 && rf->info) {
+			gtk_progress_bar_set_text (rf->progress_bar,
+				_("Canceled."));
+#endif
+			farticle=0;
+			ftotal=0;
 		if (rf->info->cancel_button)
 			gtk_widget_set_sensitive(rf->info->cancel_button,
 				FALSE);
@@ -3840,8 +3865,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		taskbar_op_finish(NULL);
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
+#if EVOLUTION_VERSION < 30504
 		rf->label = NULL;
-		flabel = NULL;
+#endif
 		rf->progress_bar = NULL;
 		rf->info = NULL;
 		}
@@ -3926,10 +3952,15 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		gtk_label_set_justify(GTK_LABEL (rf->sr_feed), GTK_JUSTIFY_LEFT);
 		g_free(furl);
 	}
+#if EVOLUTION_VERSION < 30504
 	if(rf->label && rf->feed_queue == 0 && rf->info) {
+		gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete"));
+#else
+	if(rf->progress_bar && rf->feed_queue == 0 && rf->info) {
+		gtk_progress_bar_set_text (rf->progress_bar, _("Complete"));
+#endif
 		farticle=0;
 		ftotal=0;
-		gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete"));
 		if (rf->info->cancel_button)
 			gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
 
@@ -3944,8 +3975,9 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		taskbar_op_finish(NULL);
 		//clean data that might hang on rf struct
 		rf->sr_feed = NULL;
+#if EVOLUTION_VERSION < 30504
 		rf->label = NULL;
-		flabel = NULL;
+#endif
 		rf->progress_bar = NULL;
 		rf->info = NULL;
 	}
@@ -5123,8 +5155,6 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 		NULL);
 
 	info = g_malloc0 (sizeof (*info));
-//        info->type = type;
-//
 	info->uri = g_strdup("feed"); //g_stddup
 
 #if (DATASERVER_VERSION >= 2033001)
@@ -5135,13 +5165,11 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	info->cancel = camel_operation_new (my_op_status, info);
 #endif
 	info->state = SEND_ACTIVE;
-//        info->timeout_id = g_timeout_add (STATUS_TIMEOUT, operation_status_timeout, info);
-//
 	g_hash_table_insert (data->active, info->uri, info);
-//        list = g_list_prepend (list, info);
 
 	recv_icon = gtk_image_new_from_stock (
 			"rss-main", GTK_ICON_SIZE_LARGE_TOOLBAR);
+	gtk_widget_set_valign (recv_icon, GTK_ALIGN_START);
 
 	row = t->row;
 	row+=2;
@@ -5165,9 +5193,16 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 
 	progress_bar = gtk_progress_bar_new ();
 
-	cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	gtk_progress_bar_set_show_text (
+		GTK_PROGRESS_BAR (progress_bar), TRUE);
+	gtk_progress_bar_set_text (
+		GTK_PROGRESS_BAR (progress_bar),
+		_("Waiting..."));
+	gtk_widget_set_margin_bottom (progress_bar, 12);
 
-	status_label = gtk_label_new (_("Waiting..."));
+	cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	gtk_widget_set_valign (cancel_button, GTK_ALIGN_END);
+	gtk_widget_set_margin_bottom (cancel_button, 12);
 
 	gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 	gtk_misc_set_alignment (GTK_MISC (status_label), 0, .5);
@@ -5192,14 +5227,10 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	gtk_widget_set_hexpand (label, TRUE);
 	gtk_widget_set_halign (label, GTK_ALIGN_FILL);
 
-	gtk_widget_set_hexpand (status_label, TRUE);
-	gtk_widget_set_halign (status_label, GTK_ALIGN_FILL);
-
 	gtk_grid_attach (t->grid, recv_icon, 0, row, 1, 2);
 	gtk_grid_attach (t->grid, label, 1, row, 1, 1);
-	gtk_grid_attach (t->grid, progress_bar, 2, row, 1, 1);
-	gtk_grid_attach (t->grid, cancel_button, 3, row, 1, 1);
-	gtk_grid_attach (t->grid, status_label, 1, row + 1, 2, 1);
+	gtk_grid_attach (t->grid, progress_bar, 1, row + 1, 1, 1);
+	gtk_grid_attach (t->grid, cancel_button, 2, row, 1, 2);
 #endif
 
 	g_signal_connect (
@@ -5207,15 +5238,16 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 			G_CALLBACK (receive_cancel), info);
 
 	info->progress_bar = progress_bar;
+#if EVOLUTION_VERSION < 30504
 	info->status_label = status_label;
+	rf->label = status_label;
+#endif
 	info->cancel_button = cancel_button;
 	info->data = (struct _send_data *)t->data;
 	rf->info = info;
 
 	rf->progress_bar = progress_bar;
 	rf->sr_feed	= label;
-	rf->label	= status_label;
-	flabel		= status_label;
 	if (!rf->pending && !rf->feed_queue) {
 		rf->pending = TRUE;
 		check_folders();
