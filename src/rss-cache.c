@@ -137,7 +137,11 @@ rss_cache_get_filename(gchar *url)
 #if DATASERVER_VERSION <= 2025004
 	return data_cache_path(cache, FALSE, HTTP_CACHE_PATH, url);
 #else
+#if EVOLUTION_VERSION < 30504
 	return camel_data_cache_get_filename(cache, HTTP_CACHE_PATH, url, NULL);
+#else
+	return camel_data_cache_get_filename(cache, HTTP_CACHE_PATH, url);
+#endif
 #endif
 }
 

@@ -30,6 +30,9 @@
 #else
 #include <mail/mail-ops.h>
 #endif
+#if EVOLUTION_VERSION >= 30505
+#include <mail/e-mail-reader-utils.h>
+#endif
 
 #if (EVOLUTION_VERSION > 30501)
 #include <em-format/e-mail-formatter.h>
@@ -1255,13 +1258,22 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 
 }
 
+extern EShellView *rss_shell_view;
 void
 refresh_mail_folder(CamelFolder *mail_folder);
 
 void
 refresh_mail_folder(CamelFolder *mail_folder)
 {
+#if EVOLUTION_VERSION < 30505
 	mail_refresh_folder(mail_folder, NULL, NULL);
+#else
+	EShellContent *shell_content;
+	EMailReader *reader;
+	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	reader = E_MAIL_READER (shell_content);
+	e_mail_reader_refresh_folder(reader, mail_folder);
+#endif
 #if (DATASERVER_VERSION >= 2033001)
 		camel_folder_synchronize (mail_folder, FALSE, G_PRIORITY_DEFAULT,
 			NULL, NULL, NULL);
