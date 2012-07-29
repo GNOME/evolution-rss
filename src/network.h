@@ -1,5 +1,5 @@
 /* Evolution RSS Reader Plugin
- * Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org>
+ * Copyright (C) 2007-2012 Lucian Langa <cooly@gnome.eu.org>
  *
  * This progronam is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #include <glib.h>
 
+#if EVOLUTION_VERSION < 30304
 #define GCONF_KEY_USE_PROXY "/apps/evolution/evolution-rss/use_proxy"
 #define GCONF_KEY_HOST_PROXY "/apps/evolution/evolution-rss/host_proxy"
 #define GCONF_KEY_PORT_PROXY "/apps/evolution/evolution-rss/port_proxy"
@@ -67,23 +68,14 @@
 #define KEY_GCONF_SYS_AUTOCONFIG_URL    PATH_GCONF_SYS_PROXY "/autoconfig_url"
 
 #define RIGHT_KEY(sufix) (proxy_type == PROXY_TYPE_SYSTEM ? KEY_GCONF_SYS_ ## sufix : KEY_GCONF_EVO_ ## sufix)
+#else
+#define RSS_CONF_SCHEMA "org.gnome.evolution.plugin.evolution-rss"
+#define CONF_SCHEMA_EVO_NETWORK "org.gnome.evolution.shell.network-config"
+#define CONF_EVO_PROXY_TYPE	"proxy-type"
+#define CONF_NETWORK_TIMEOUT "network-timeout"
+#define CONF_DOWNLOAD_QUEUE_SIZE "network-queue-size"
+#endif
 
-
-/*#define GCONF_E_SHELL_NETWORK_CONFIG_PATH "/apps/evolution/shell/network_config/"
-
-#define GCONF_E_HTTP_HOST_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "http_host"
-#define GCONF_E_HTTP_PORT_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "http_port"
-#define GCONF_E_HTTPS_HOST_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "secure_host"
-#define GCONF_E_HTTPS_PORT_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "secure_port"
-#define GCONF_E_SOCKS_HOST_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "socks_host"
-#define GCONF_E_SOCKS_PORT_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "socks_port"
-#define GCONF_E_IGNORE_HOSTS_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "ignore_hosts"
-#define GCONF_E_USE_AUTH_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "use_authentication"
-#define GCONF_E_PROXY_TYPE_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "proxy_type"
-#define GCONF_E_AUTH_USER_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "authentication_user"
-#define GCONF_E_AUTH_PWD_KEY  GCONF_E_SHELL_NETWORK_CONFIG_PATH "authentication_password"
-#define GCONF_E_USE_PROXY_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "use_http_proxy"
-#define GCONF_E_AUTOCONFIG_URL_KEY GCONF_E_SHELL_NETWORK_CONFIG_PATH "autoconfig_url"*/
 
 enum ProxyType {
 	PROXY_TYPE_SYSTEM = 0,

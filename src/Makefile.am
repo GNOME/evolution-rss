@@ -105,34 +105,18 @@ schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
 	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
 
 @EVO_SERVER_RULE@
-@INTLTOOL_SERVER_RULE@
-@INTLTOOL_SCHEMAS_RULE@
 
-if GCONF_SCHEMAS_INSTALL
+gsettings_SCHEMAS =                            \
+	org.gnome.evolution.plugin.evolution-rss.gschema.xml
 
-install-data-local:
-	rm -f $(PLUGIN_INSTALL_DIR)/*gnome-cooly*
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA)
+@INTLTOOL_XML_NOMERGE_RULE@
 
-uninstall-local:
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-uninstall-rule $(schema_DATA)
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/remove_folder
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/pass_proxy
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/startup_check
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/rep_check
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/rep_check_timeout
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/auth_proxy
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/host_proxy
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/html_render
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/use_proxy
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/user_proxy
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/port_proxy
-	$(GCONFTOOL) -u /apps/evolution/evolution-rss/display_summary
-	$(GCONFTOOL) -u /gnome/url-handlers/feed/command
-	$(GCONFTOOL) -u /gnome/url-handlers/feed/enabled
-	$(GCONFTOOL) -u /gnome/url-handlers/feed/need-terminal
-
+if HAVE_GSETTINGS
+@GSETTINGS_RULES@
 endif
+
+convertdir = $(datadir)/GConf/gsettings
+convert_DATA = evolution-rss.convert
 
 
 DISTCLEANFILES = $(schema_DATA)
@@ -147,11 +131,12 @@ CLEANFILES	= $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.error   \
 	evolution-rss.schemas		\
 	evolution-rss.schemas.in	\
-	$(schema_DATA)
+	$(gsettings_SCHEMAS)
 
 EXTRA_DIST =					\
 	$(ui_DATA)				\
-	$(schema_in_files)			\
+	$(convert_DATA)                         \
+	$(gsettings_SCHEMAS:.xml=.xml.in.in)    \
 	rss.h network.h				\
 	network-soup.c				\
 	network-soup.h				\

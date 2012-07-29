@@ -38,6 +38,8 @@ AM_MAINTAINER_MODE
 dnl make sure we keep ACLOCAL_FLAGS around for maintainer builds to work
 AC_SUBST(ACLOCAL_AMFLAGS, "\${ACLOCAL_FLAGS}")
 
+GLIB_GSETTINGS
+
 IT_PROG_INTLTOOL([0.35.0])
 
 AC_PROG_CC
@@ -312,6 +314,13 @@ dnl GConf stuff
 dnl ***********
 AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
 AM_GCONF_SOURCE_2
+
+dnl ***************
+dnl Gsettings stuff
+dnl ***************
+PKG_CHECK_MODULES(GSETTINGS, glib-2.0 >= 2.26, HAVE_GSETTINGS=yes, HAVE_GSETTINGS=no)
+AM_CONDITIONAL(HAVE_GSETTINGS, [test "xHAVE_GSETTINGS" = "xyes"])
+AC_SUBST(HAVE_GSETTINGS)
 
 dnl ********************
 dnl extract soup version

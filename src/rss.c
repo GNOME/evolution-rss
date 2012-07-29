@@ -80,6 +80,10 @@ int rss_verbose_debug = 0;
 #endif
 #endif
 
+#if EVOLUTION_VERSION >= 30505
+#include <mail/e-mail-reader-utils.h>
+#endif
+
 #if EVOLUTION_VERSION >= 30305
 #include <libemail-engine/mail-tools.h>
 #include <libemail-engine/mail-ops.h>
@@ -285,7 +289,11 @@ rssfeed *rf = NULL;
 guint upgrade = 0;	// set to 2 when initailization successfull
 guint count = 0;
 gchar *buffer = NULL;
+#if EVOLUTION_VERSION < 30304
 GConfClient *rss_gconf;
+#else
+GSettings *settings;
+#endif
 
 gboolean inhibit_read = FALSE;	//prevent mail selection when deleting folder
 gboolean delete_op = FALSE;	//delete in progress
@@ -679,8 +687,13 @@ download_chunk(
 		}
 		progress = (NetStatusProgress*)statusdata;
 		if (progress->current > 0 && progress->total > 0) {
+#if EVOLUTION_VERSION < 30304
 			guint encl_max_size = (gint)gconf_client_get_float(
 				rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
+#else
+			guint encl_max_size = g_settings_get_double(
+				settings, CONF_ENCLOSURE_SIZE);
+#endif
 			if (progress->total > encl_max_size * 1024) { //TOLERANCE!!!
 				cancel_active_op((gpointer)CFL->file);
 				return;
@@ -962,12 +975,22 @@ void
 network_timeout(void)
 {
 	float timeout;
+#if EVOLUTION_VERSION < 30304
+	rss_gconf = gconf_client_get_default();
+#else
+	settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 
 	if (nettime_id)
 		g_source_remove(nettime_id);
 
+#if EVOLUTION_VERSION < 30304
 	timeout = gconf_client_get_float(
 			rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
+#else
+	timeout = g_settings_get_double(
+			settings, CONF_NETWORK_TIMEOUT);
+#endif
 
 	if (!timeout)
 		timeout = NETWORK_MIN_TIMEOUT;
@@ -1252,31 +1275,60 @@ webkit_set_preferences(void)
 	agstr = g_strdup_printf("Evolution/%s; Evolution-RSS/%s",
 			EVOLUTION_VERSION_STRING, VERSION);
 	g_object_set (settings, "user-agent", agstr,  NULL);
+#if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (rss_gconf,
 			GCONF_KEY_CUSTOM_FONT, NULL)) {
+#else
+	if (g_settings_get_boolean (settings, CONF_CUSTOM_FONT)) {
+#endif
 		g_object_set (settings, "minimum-font-size",
+#if EVOLUTION_VERSION < 30304
 			(gint)gconf_client_get_float(rss_gconf,
 				GCONF_KEY_MIN_FONT_SIZE, NULL),
+#else
+			(gint)g_settings_get_double(settings,
+				CONF_MIN_FONT_SIZE),
+#endif
 			NULL);
 		g_object_set (settings, "minimum-logical-font-size",
+#if EVOLUTION_VERSION < 30304
 			(gint)gconf_client_get_float(rss_gconf,
 				GCONF_KEY_MIN_FONT_SIZE, NULL),
+#else
+			(gint)g_settings_get_double(settings,
+				CONF_MIN_FONT_SIZE),
+#endif
 			NULL);
 	}
 #if (WEBKIT_VERSION >= 1001022)
 	g_object_set (settings, "enable-page-cache", TRUE, NULL);
 	//g_object_set (settings, "auto-resize-window", TRUE, NULL);
 	g_object_set (settings, "enable-plugins",
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(rss_gconf,
 			GCONF_KEY_EMBED_PLUGIN, NULL),
+#else
+		g_settings_get_boolean(settings,
+			CONF_EMBED_PLUGIN),
+#endif
 		NULL);
 	g_object_set (settings, "enable-java-applet",
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(rss_gconf,
 			GCONF_KEY_HTML_JAVA, NULL),
+#else
+		g_settings_get_boolean(settings,
+			CONF_HTML_JAVA),
+#endif
 		NULL);
 	g_object_set (settings, "enable-scripts",
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(rss_gconf,
 			GCONF_KEY_HTML_JS, NULL),
+#else
+		g_settings_get_boolean(settings,
+			CONF_HTML_JS),
+#endif
 		NULL);
 #endif
 	webkit_web_view_set_full_content_zoom(
@@ -2947,11 +2999,37 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 	gboolean online;
 #if EVOLUTION_VERSION > 22900 //kb//
 	CamelFolder *folder;
+#if EVOLUTION_VERSION >= 30505
+	CamelStore *selected_store = NULL;
+	gchar *selected_folder_name = NULL;
+	gboolean has_selection;
+#endif
 	EMFolderTree *folder_tree;
 	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(
 					shell_view);
 	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
+#if EVOLUTION_VERSION < 30505
 	folder = em_folder_tree_get_selected_folder (folder_tree);
+#else
+	has_selection = em_folder_tree_get_selected(
+			folder_tree, &selected_store, &selected_folder_name);
+
+	/* Sanity checks */
+	g_warn_if_fail (
+		(has_selection && selected_store != NULL) ||
+		(!has_selection && selected_store == NULL));
+	g_warn_if_fail (
+		(has_selection && selected_folder_name != NULL) ||
+		(!has_selection && selected_folder_name == NULL));
+
+	if (has_selection) {
+		folder = camel_store_get_folder_sync (
+				selected_store, selected_folder_name,
+				CAMEL_STORE_FOLDER_INFO_FAST, NULL, NULL);
+		g_object_unref (selected_store);
+		g_free (selected_folder_name);
+	}
+#endif
 	g_return_if_fail (folder != NULL);
 #if (DATASERVER_VERSION >= 2031001)
 	folder_name = (gchar *)camel_folder_get_full_name(folder);
@@ -3014,6 +3092,12 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 	gchar *rss_folder, *ofolder, *key;
 	gchar *main_folder = get_main_folder();
 
+#if EVOLUTION_VERSION < 30304
+	rss_gconf = gconf_client_get_default();
+#else
+	settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
+
 	if (t->folder_name == NULL
 	  || g_ascii_strncasecmp(t->folder_name, main_folder, strlen(main_folder)))
 		goto out;
@@ -3036,7 +3120,11 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 		evolution_store = t->store;
 
 	if (!(g_hash_table_lookup(icons, key))) {
+#if EVOLUTION_VERSION < 30304
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
+#else
+		if (g_settings_get_boolean (settings, CONF_FEED_ICON)) {
+#endif
 //			if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 			// unfortunately e_icon_factory_get_icon return broken image in case of error
 			// we use gdk_pixbuf_new_from_file to test the validity of the image file
@@ -3453,7 +3541,11 @@ add:
 	}
 
 	//search for a feed entry
+#if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_SEARCH_RSS, NULL)) {
+#else
+	if (g_settings_get_boolean (settings, CONF_SEARCH_RSS)) {
+#endif
 		dp("searching new feed\n");
 		rssurl = search_rss(content->str, content->len);
 		if (rssurl) {
@@ -4861,19 +4953,33 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 #endif
 {
 	gdouble timeout;
+#if EVOLUTION_VERSION < 30304
+	rss_gconf = gconf_client_get_default();
+#else
+	settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 
+#if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
+#else
+	if (g_settings_get_boolean (settings, CONF_START_CHECK)) {
+#endif
 		//as I don't know how to set this I'll setup a 10 secs timeout
 		//and return false for disableation
 		g_timeout_add (3 * 1000,
 			(GSourceFunc) update_articles,
 			0);
 	}
+#if EVOLUTION_VERSION < 30304
 	timeout = gconf_client_get_float(
 			rss_gconf,
 			GCONF_KEY_REP_CHECK_TIMEOUT,
 			NULL);
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_REP_CHECK, NULL)) {
+#else
+	timeout = g_settings_get_double(settings, CONF_REP_CHECK_TIMEOUT);
+	if (g_settings_get_boolean (settings, CONF_REP_CHECK)) {
+#endif
 		rf->rc_id = g_timeout_add (60 * 1000 * timeout,
 				(GSourceFunc) update_articles,
 				(gpointer)1);
@@ -5146,8 +5252,12 @@ guint
 fallback_engine(void)
 {
 #ifdef HAVE_RENDERKIT
+#if EVOLUTION_VERSION < 30304
 	guint engine = gconf_client_get_int(
 			rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
+#else
+	guint engine = g_settings_get_int(settings, CONF_HTML_RENDER);
+#endif
 #if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
 	engine = 0;
 #endif
@@ -5249,7 +5359,11 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	//	textdomain (GETTEXT_PACKAGE);
+#if EVOLUTION_VERSION < 30304
 		rss_gconf = gconf_client_get_default();
+#else
+		settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 		upgrade = 1;
 		d = getenv("RSS_DEBUG");
 		if (d)
@@ -5283,21 +5397,34 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 			/*GD-BUS init*/
 			init_gdbus ();
 			prepare_hashes();
+#if EVOLUTION_VERSION < 30304
 			if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL))
+#else
+			if (g_settings_get_boolean (settings, CONF_STATUS_ICON))
+#endif
 				create_status_icon();
 			//there is no shutdown for e-plugin yet.
 			atexit(rss_finalize);
+#if EVOLUTION_VERSION < 30304
 			render = GPOINTER_TO_INT(
 				gconf_client_get_int(rss_gconf,
 						GCONF_KEY_HTML_RENDER,
 						NULL));
+#else
+			render = g_settings_get_int(settings, CONF_HTML_RENDER);
+#endif
 
 			if (!render) {	// set render just in case it was forced in configure
 				render = RENDER_N;
+#if EVOLUTION_VERSION < 30304
 				gconf_client_set_int(
 					rss_gconf,
 					GCONF_KEY_HTML_RENDER,
 					render, NULL);
+#else
+				g_settings_set_int(settings,
+					CONF_HTML_RENDER, render);
+#endif
 			}
 #ifdef HAVE_GECKO
 			if (2 == render)
@@ -5593,8 +5720,15 @@ create_mail(create_feed *CF)
 //		g_object_weak_ref((GObject *)filter_uids, free_filter_uids, NULL);
 	}
 	//FIXME too lasy to write a separate function
-	if (!rf->import)
+	if (!rf->import) {
+#if EVOLUTION_VERSION < 30505
 		mail_refresh_folder(mail_folder, NULL, NULL);
+#else
+		EShellContent *shell_content = e_shell_view_get_shell_content (rss_shell_view);
+		EMailReader *reader = E_MAIL_READER (shell_content);
+		e_mail_reader_refresh_folder(reader, mail_folder);
+#endif
+	}
 #if (DATASERVER_VERSION >= 2031001)
 	g_object_unref(rtext);
 	g_object_unref(new);
@@ -5964,11 +6098,19 @@ display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data)
 {
 	GSimpleAsyncResult *simple;
 	AsyncData *asyncr;
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+#else
+	settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 
 	simple = G_SIMPLE_ASYNC_RESULT (result);
 	asyncr = g_simple_async_result_get_op_res_gpointer (simple);
+#if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (client, GCONF_KEY_STATUS_ICON, NULL)) {
+#else
+	if (g_settings_get_boolean (settings, CONF_STATUS_ICON)) {
+#endif
 		update_status_icon(asyncr->status_msg);
 	}
 	if (asyncr->mail_folder) {
@@ -5984,7 +6126,11 @@ display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data)
 		camel_object_unref(asyncr->mail_folder);
 #endif
 	}
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 gchar *

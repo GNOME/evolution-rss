@@ -27,7 +27,9 @@
 #include <glib.h>
 #include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
+#if EVOLUTION_VERSION < 30304
 #include <gconf/gconf-client.h>
+#endif
 #include <gdk/gdkkeysyms.h>
 
 #if (DATASERVER_VERSION >= 2031001)
@@ -172,47 +174,75 @@ render_engine_changed (GtkComboBox *dropdown, GCallback *user_data)
 	int id = gtk_combo_box_get_active (dropdown);
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	GConfClient *client;
+#if EVOLUTION_VERSION < 30304
+	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 
 	model = gtk_combo_box_get_model (dropdown);
 	if (id == -1 || !gtk_tree_model_iter_nth_child (model, &iter, NULL, id))
 		return;
 	if (!id) id = 10;
 
-	client = gconf_client_get_default();
+#if EVOLUTION_VERSION < 30304
 	gconf_client_set_int(client, GCONF_KEY_HTML_RENDER, id, NULL);
+#else
+	g_settings_set_int(settings, CONF_HTML_RENDER, id);
+#endif
 #ifdef HAVE_GECKO
 	if (id == 2)
 		rss_mozilla_init();
 #endif
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 static void
 start_check_cb(GtkWidget *widget, gpointer data)
 {
-	GConfClient *client;
+#if EVOLUTION_VERSION < 30304
+	GConfClient *client = gconf_client_get_default();
 	gboolean active = gtk_toggle_button_get_active (
 				GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
-	client = gconf_client_get_default();
 	gconf_client_set_bool (client, data, active, NULL);
 	g_object_unref(client);
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+	gboolean active = gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (widget));
+	/* Save the new setting */
+	g_settings_set_boolean (settings, data, active);
+	g_object_unref(settings);
+#endif
 }
 
 void
 accept_cookies_cb(GtkWidget *widget, GtkWidget *data)
 {
-	GConfClient *client;
+#if EVOLUTION_VERSION < 30304
+	GConfClient *client = gconf_client_get_default();
 	gboolean active = gtk_toggle_button_get_active (
 				GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
-	client = gconf_client_get_default();
 	gconf_client_set_bool (
 		client,
 		GCONF_KEY_ACCEPT_COOKIES, active, NULL);
 	gtk_widget_set_sensitive(data, active);
 	g_object_unref(client);
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+	gboolean active = gtk_toggle_button_get_active (
+				GTK_TOGGLE_BUTTON (widget));
+	/* Save the new setting */
+	g_settings_set_boolean (settings, CONF_ACCEPT_COOKIES, active);
+	gtk_widget_set_sensitive(data, active);
+	g_object_unref(settings);
+#endif
 }
 
 static void
@@ -257,26 +287,39 @@ treeview_row_activated(GtkTreeView *treeview,
 static void
 rep_check_cb (GtkWidget *widget, gpointer data)
 {
-	GConfClient *client;
+#if EVOLUTION_VERSION < 30304
+	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 	gboolean active =
 		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
-	client = gconf_client_get_default();
+#if EVOLUTION_VERSION < 30304
 	gconf_client_set_bool (client,
-		GCONF_KEY_REP_CHECK,
-		active,
-		NULL);
+		GCONF_KEY_REP_CHECK, active, NULL);
+#else
+	g_settings_set_boolean (settings,
+		CONF_REP_CHECK, active);
+#endif
 	//if we already have a timeout set destroy it first
 	if (rf->rc_id && !active)
 		g_source_remove(rf->rc_id);
 	if (active) {
 			gtk_spin_button_update((GtkSpinButton *)data);
 			//we have to make sure we have a timeout value
+#if EVOLUTION_VERSION < 30304
 			if (!gconf_client_get_float(client, GCONF_KEY_REP_CHECK_TIMEOUT, NULL))
 				gconf_client_set_float (client,
 					GCONF_KEY_REP_CHECK_TIMEOUT,
 					gtk_spin_button_get_value((GtkSpinButton *)data),
 					NULL);
+#else
+			if (!g_settings_get_double(settings, CONF_REP_CHECK_TIMEOUT))
+				g_settings_set_double (settings,
+					CONF_REP_CHECK_TIMEOUT,
+					gtk_spin_button_get_value((GtkSpinButton *)data));
+#endif
 		if (rf->rc_id)
 			g_source_remove(rf->rc_id);
 		rf->rc_id = g_timeout_add (
@@ -284,52 +327,90 @@ rep_check_cb (GtkWidget *widget, gpointer data)
 				(GSourceFunc) update_articles,
 				(gpointer)1);
 	}
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 static void
 enclosure_limit_cb (GtkWidget *widget, gpointer data)
 {
-	GConfClient *client;
+#if EVOLUTION_VERSION < 30304
+	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 	gboolean active =
 		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
-	client = gconf_client_get_default();
+#if EVOLUTION_VERSION < 30304
 	gconf_client_set_bool (client,
 		GCONF_KEY_ENCLOSURE_LIMIT,
 		active,
 		NULL);
+#else
+	g_settings_set_boolean (settings, CONF_ENCLOSURE_LIMIT, active);
+#endif
 	if (active) {
 		//we have to make sure we have a timeout value
+#if EVOLUTION_VERSION < 30304
 		if (!gconf_client_get_float(client, GCONF_KEY_ENCLOSURE_SIZE, NULL))
 				gconf_client_set_float (client,
 					GCONF_KEY_ENCLOSURE_SIZE,
 					gtk_spin_button_get_value((GtkSpinButton *)data),
 					NULL);
+#else
+		if (!g_settings_get_double(settings, CONF_ENCLOSURE_SIZE))
+				g_settings_set_double (settings,
+					CONF_ENCLOSURE_SIZE,
+					gtk_spin_button_get_value((GtkSpinButton *)data));
+#endif
 	}
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 static void
 enclosure_size_cb (GtkWidget *widget, gpointer data)
 {
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
 	gconf_client_set_float (client,
 		GCONF_KEY_ENCLOSURE_SIZE,
 		gtk_spin_button_get_value((GtkSpinButton*)widget),
 		NULL);
 	g_object_unref(client);
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+	g_settings_set_double (settings, CONF_ENCLOSURE_SIZE,
+		gtk_spin_button_get_value((GtkSpinButton*)widget));
+	g_object_unref(settings);
+#endif
 }
 
 static void
 rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 {
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data));
+#if EVOLUTION_VERSION < 30304
 	gconf_client_set_float (client,
 		GCONF_KEY_REP_CHECK_TIMEOUT,
 		gtk_spin_button_get_value((GtkSpinButton*)widget),
 		NULL);
+#else
+	g_settings_set_double (settings, CONF_REP_CHECK_TIMEOUT,
+		gtk_spin_button_get_value((GtkSpinButton*)widget));
+#endif
 	if (active) {
 		if (rf->rc_id)
 			g_source_remove(rf->rc_id);
@@ -338,7 +419,11 @@ rep_check_timeout_cb (GtkWidget *widget, gpointer data)
 			(GSourceFunc) update_articles,
 			(gpointer)1);
 	}
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 static void
@@ -1402,7 +1487,11 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
 	gchar *name;
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 	if (response == GTK_RESPONSE_OK) {
 		selection =
 			gtk_tree_view_get_selection(
@@ -1413,10 +1502,14 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
 				4, &name,
 				-1);
 			rss_delete_feed(name,
+#if EVOLUTION_VERSION < 30304
 				gconf_client_get_bool(
 					client,
 					GCONF_KEY_REMOVE_FOLDER,
 					NULL));
+#else
+				g_settings_get_boolean(settings, CONF_REMOVE_FOLDER));
+#endif
 			g_free(name);
 		}
 		store_redraw(GTK_TREE_VIEW(rf->treeview));
@@ -1424,7 +1517,11 @@ delete_response(GtkWidget *selector, guint response, gpointer user_data)
 	}
 	gtk_widget_destroy(selector);
 	rf->import = 0;
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 void
@@ -1465,7 +1562,11 @@ remove_feed_dialog(gchar *msg)
 	GtkWidget *vbox1;
 	GtkWidget *checkbutton1;
 	GtkWidget *dialog_action_area1;
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 
 #if EVOLUTION_VERSION < 22904
 	dialog1 = e_error_new(
@@ -1510,14 +1611,22 @@ remove_feed_dialog(gchar *msg)
 	gtk_widget_show (checkbutton1);
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (checkbutton1),
+#if EVOLUTION_VERSION < 30304
 	gconf_client_get_bool(
 		client,
 		GCONF_KEY_REMOVE_FOLDER, NULL));
+#else
+	g_settings_get_boolean(settings, CONF_REMOVE_FOLDER));
+#endif
 	g_signal_connect(
 		checkbutton1,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_REMOVE_FOLDER);
+#else
+		(gpointer)CONF_REMOVE_FOLDER);
+#endif
 	gtk_box_pack_start (
 		GTK_BOX (vbox1),
 		checkbutton1,
@@ -1534,7 +1643,11 @@ remove_feed_dialog(gchar *msg)
 	gtk_button_box_set_layout (
 		GTK_BUTTON_BOX (dialog_action_area1),
 		GTK_BUTTONBOX_END);
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 	return dialog1;
 }
 
@@ -3224,6 +3337,7 @@ export_cb (GtkWidget *widget, gpointer data)
 static void
 spin_update_cb (GtkWidget *widget, gchar *key)
 {
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
 	gconf_client_set_float (
 		client,
@@ -3231,6 +3345,12 @@ spin_update_cb (GtkWidget *widget, gchar *key)
 		gtk_spin_button_get_value((GtkSpinButton*)widget),
 		NULL);
 	g_object_unref(client);
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+	g_settings_set_double (settings, key,
+		gtk_spin_button_get_value((GtkSpinButton*)widget));
+	g_object_unref(settings);
+#endif
 }
 
 static void
@@ -3247,15 +3367,27 @@ destroy_ui_data (gpointer data)
 void
 font_cb(GtkWidget *widget, GtkWidget *data)
 {
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 	gboolean active = 1-gtk_toggle_button_get_active (
 				GTK_TOGGLE_BUTTON (widget));
 	/* Save the new setting to gconf */
-	gconf_client_set_bool (
-		client,
+#if EVOLUTION_VERSION < 30304
+	gconf_client_set_bool (client,
 		GCONF_KEY_CUSTOM_FONT, active, NULL);
+#else
+	g_settings_set_boolean (settings,
+		CONF_CUSTOM_FONT, active);
+#endif
 	gtk_widget_set_sensitive(data, active);
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 GtkWidget *e_plugin_lib_get_configure_widget (EPlugin *epl);
@@ -3278,7 +3410,11 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	gchar *toplevel[] = {(gchar *)"settingsbox", NULL};
 	GtkAdjustment *adjustment;
 	GtkWidget *widget1, *widget2;
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default ();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 
 	uifile = g_build_filename (EVOLUTION_UIDIR,
 		"rss-html-rendering.ui",
@@ -3310,9 +3446,13 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		renderer,
 		"text", 0,
 		NULL);
+#if EVOLUTION_VERSION < 30304
 	render = GPOINTER_TO_INT(gconf_client_get_int(client,
 		GCONF_KEY_HTML_RENDER,
 		NULL));
+#else
+	render = g_settings_get_int(settings, CONF_HTML_RENDER);
+#endif
 
 	switch (render) {
 		case 10:
@@ -3366,9 +3506,13 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 			gtk_builder_get_object(
 				ui->xml, "fontsetting"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget2),
-		1-gconf_client_get_bool (
+#if EVOLUTION_VERSION < 30304
+		1 - gconf_client_get_bool (
 			client,
 			GCONF_KEY_CUSTOM_FONT, NULL));
+#else
+		1 - g_settings_get_boolean (settings, CONF_CUSTOM_FONT));
+#endif
 	g_object_set(widget1, "sensitive", (gboolean)1-gtk_toggle_button_get_active (
 			GTK_TOGGLE_BUTTON (widget2)), NULL);
 	g_signal_connect (
@@ -3391,10 +3535,14 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	gtk_spin_button_set_adjustment(
 		(GtkSpinButton *)ui->minfont,
 		adjustment);
+#if EVOLUTION_VERSION < 30304
 	adj = gconf_client_get_float(
 			client,
 			GCONF_KEY_MIN_FONT_SIZE,
 			NULL);
+#else
+	adj = g_settings_get_double(settings, CONF_MIN_FONT_SIZE);
+#endif
 	if (adj)
 		gtk_spin_button_set_value(
 			(GtkSpinButton *)ui->minfont, adj);
@@ -3402,50 +3550,87 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		ui->minfont,
 		"changed",
 		G_CALLBACK(spin_update_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_MIN_FONT_SIZE);
+#else
+		(gpointer)CONF_MIN_FONT_SIZE);
+#endif
 	g_signal_connect(
 		ui->minfont,
 		"value-changed",
 		G_CALLBACK(spin_update_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_MIN_FONT_SIZE);
+#else
+		(gpointer)CONF_MIN_FONT_SIZE);
+#endif
 
 	ui->check = GTK_WIDGET (
 		gtk_builder_get_object(ui->xml, "enable_java"));
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (ui->check),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client, GCONF_KEY_HTML_JAVA, NULL));
+#else
+		g_settings_get_boolean(settings, CONF_HTML_JAVA));
+#endif
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_HTML_JAVA);
+#else
+		(gpointer)CONF_HTML_JAVA);
+#endif
 
 	ui->check = GTK_WIDGET (
 			gtk_builder_get_object(ui->xml, "image_resize"));
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (ui->check),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client, GCONF_KEY_IMAGE_RESIZE, NULL));
+#else
+		g_settings_get_boolean(settings, CONF_IMAGE_RESIZE));
+#endif
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_IMAGE_RESIZE);
+#else
+		(gpointer)CONF_IMAGE_RESIZE);
+#endif
 
 	ui->check = GTK_WIDGET (
 			gtk_builder_get_object(ui->xml, "enable_js"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(client, GCONF_KEY_HTML_JS, NULL));
+#else
+		g_settings_get_boolean(settings, CONF_HTML_JS));
+#endif
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_HTML_JS);
+#else
+		(gpointer)CONF_HTML_JS);
+#endif
 
 	ui->check = GTK_WIDGET (
 			gtk_builder_get_object(ui->xml, "accept_cookies"));
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (ui->check),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client, GCONF_KEY_ACCEPT_COOKIES, NULL));
+#else
+		g_settings_get_boolean(
+			settings, CONF_ACCEPT_COOKIES));
+#endif
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(accept_cookies_cb),
@@ -3479,17 +3664,26 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 	gtk_spin_button_set_adjustment(
 		(GtkSpinButton *)ui->nettimeout,
 		adjustment);
+#if EVOLUTION_VERSION < 30304
 	adj = gconf_client_get_float(
 			client,
 			GCONF_KEY_NETWORK_TIMEOUT,
 			NULL);
+#else
+	adj = g_settings_get_double(settings, CONF_NETWORK_TIMEOUT);
+#endif
 	if (adj < NETWORK_MIN_TIMEOUT) {
 		adj = NETWORK_MIN_TIMEOUT;
+#if EVOLUTION_VERSION < 30304
 		gconf_client_set_float (
 			client,
 			GCONF_KEY_NETWORK_TIMEOUT,
 			adj,
 			NULL);
+#else
+		g_settings_set_double (
+			settings, CONF_NETWORK_TIMEOUT, adj);
+#endif
 	}
 	if (adj)
 		gtk_spin_button_set_value(
@@ -3498,42 +3692,75 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		ui->nettimeout,
 		"changed",
 		G_CALLBACK(spin_update_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_NETWORK_TIMEOUT);
+#else
+		(gpointer)CONF_NETWORK_TIMEOUT);
+#endif
 	g_signal_connect(
 		ui->nettimeout,
 		"value-changed",
 		G_CALLBACK(spin_update_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_NETWORK_TIMEOUT);
+#else
+		(gpointer)CONF_NETWORK_TIMEOUT);
+#endif
 
 	//feed notification
 	ui->check = GTK_WIDGET (
 			gtk_builder_get_object(ui->xml, "status_icon"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ui->check),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client, GCONF_KEY_STATUS_ICON, NULL));
+#else
+		g_settings_get_boolean(settings, CONF_STATUS_ICON));
+#endif
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_STATUS_ICON);
+#else
+		(gpointer)CONF_STATUS_ICON);
+#endif
 	ui->check = GTK_WIDGET (
 			gtk_builder_get_object(ui->xml, "blink_icon"));
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (ui->check),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client, GCONF_KEY_BLINK_ICON, NULL));
+#else
+		g_settings_get_boolean(
+			settings, CONF_BLINK_ICON));
+#endif
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_BLINK_ICON);
+#else
+		(gpointer)CONF_BLINK_ICON);
+#endif
 	ui->check = GTK_WIDGET (
 			gtk_builder_get_object(ui->xml, "feed_icon"));
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (ui->check),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(client, GCONF_KEY_FEED_ICON, NULL));
+#else
+		g_settings_get_boolean(settings, CONF_FEED_ICON));
+#endif
 	g_signal_connect(ui->check,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_FEED_ICON);
+#else
+		(gpointer)CONF_FEED_ICON);
+#endif
 
 #if GTK_MAJOR_VERSION < 3
 	hbox = gtk_vbox_new (FALSE, 0);
@@ -3553,7 +3780,11 @@ e_plugin_lib_get_configure_widget (EPlugin *epl)
 		"ui-data",
 		ui,
 		destroy_ui_data);
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 
 	return hbox;
 }
@@ -3828,7 +4059,11 @@ rss_config_control_new (void)
 	GtkTreeViewColumn *column;
 	gdouble adj, size;
 	GError* error = NULL;
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
 
 	d("rf->%p\n", rf);
 	uifile = g_build_filename (
@@ -3843,8 +4078,7 @@ rss_config_control_new (void)
 	g_free (uifile);
 
 	treeview = (GtkTreeView *)gtk_builder_get_object(
-					gui,
-					"feeds-treeview");
+					gui, "feeds-treeview");
 	rf->treeview = (GtkWidget *)treeview;
 
 	gtk_tree_view_set_rules_hint (
@@ -3999,9 +4233,17 @@ rss_config_control_new (void)
 	enclsize = GTK_WIDGET (gtk_builder_get_object(gui, "spinbutton2"));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check1),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(client, GCONF_KEY_REP_CHECK, NULL));
+#else
+		g_settings_get_boolean(settings, CONF_REP_CHECK));
+#endif
 
+#if EVOLUTION_VERSION < 30304
 	adj = gconf_client_get_float(client, GCONF_KEY_REP_CHECK_TIMEOUT, NULL);
+#else
+	adj = g_settings_get_double(settings, CONF_REP_CHECK_TIMEOUT);
+#endif
 	if (adj)
 		gtk_spin_button_set_value((GtkSpinButton *)spin, adj);
 	g_signal_connect(
@@ -4015,7 +4257,11 @@ rss_config_control_new (void)
 		G_CALLBACK(rep_check_timeout_cb),
 		check1);
 
+#if EVOLUTION_VERSION < 30304
 	size = gconf_client_get_float(client, GCONF_KEY_ENCLOSURE_SIZE, NULL);
+#else
+	size = g_settings_get_double(settings, CONF_ENCLOSURE_SIZE);
+#endif
 	if (size)
 		gtk_spin_button_set_value((GtkSpinButton *)enclsize, size);
 	g_signal_connect(
@@ -4031,64 +4277,112 @@ rss_config_control_new (void)
 
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (check2),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_START_CHECK,
 			NULL));
+#else
+		g_settings_get_boolean(settings, CONF_START_CHECK));
+#endif
 	g_signal_connect(check2,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_START_CHECK);
+#else
+		(gpointer)CONF_START_CHECK);
+#endif
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (check3),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_DISPLAY_SUMMARY,
 			NULL));
+#else
+		g_settings_get_boolean(settings, CONF_DISPLAY_SUMMARY));
+#endif
 	g_signal_connect(check3,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_DISPLAY_SUMMARY);
+#else
+		(gpointer)CONF_DISPLAY_SUMMARY);
+#endif
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (check4),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_SHOW_COMMENTS,
 			NULL));
+#else
+		g_settings_get_boolean(settings, CONF_SHOW_COMMENTS));
+#endif
 	g_signal_connect(check4,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_SHOW_COMMENTS);
+#else
+		(gpointer)CONF_SHOW_COMMENTS);
+#endif
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (check5),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_SEARCH_RSS,
 			NULL));
+#else
+		g_settings_get_boolean(settings, CONF_SEARCH_RSS));
+#endif
 	g_signal_connect(check5,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_SEARCH_RSS);
+#else
+		(gpointer)CONF_SEARCH_RSS);
+#endif
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (check6),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_DOWNLOAD_ENCLOSURES,
 			NULL));
+#else
+		g_settings_get_boolean(settings, CONF_DOWNLOAD_ENCLOSURES));
+#endif
 	g_signal_connect(check6,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_DOWNLOAD_ENCLOSURES);
+#else
+		(gpointer)CONF_DOWNLOAD_ENCLOSURES);
+#endif
 	gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (check7),
+#if EVOLUTION_VERSION < 30304
 		gconf_client_get_bool(
 			client,
 			GCONF_KEY_ENCLOSURE_LIMIT,
 			NULL));
+#else
+		g_settings_get_boolean(settings, CONF_ENCLOSURE_LIMIT));
+#endif
 	g_signal_connect(check7,
 		"clicked",
 		G_CALLBACK(start_check_cb),
+#if EVOLUTION_VERSION < 30304
 		(gpointer)GCONF_KEY_ENCLOSURE_LIMIT);
+#else
+		(gpointer)CONF_ENCLOSURE_LIMIT);
+#endif
 
 	import = GTK_WIDGET (gtk_builder_get_object(gui, "import"));
 	export = GTK_WIDGET (gtk_builder_get_object(gui, "export"));
@@ -4112,7 +4406,11 @@ rss_config_control_new (void)
 	gtk_container_remove (
 		GTK_CONTAINER (gtk_widget_get_parent(control_widget)),
 		control_widget);
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 	g_object_unref (gui);
 
 #if EVOLUTION_VERSION < 22900 //kb//

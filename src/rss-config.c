@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2012 Lucian Langa <cooly@gnome.eu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +17,10 @@
  * 02110-1301 USA
  */
 
+#if EVOLUTION_VERSION < 30503
 #include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
+#endif
 #include <glib.h>
 #include <glib/gi18n-lib.h>
 #include <stdio.h>
@@ -379,47 +381,88 @@ prepare_feed(gpointer key, gpointer value, gpointer user_data)
 void
 load_gconf_feed(void)
 {
-	GSList *list, *l = NULL;
 	char *uid;
+	guint i;
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+	GSList *list, *l = NULL;
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+	gchar **list;
+#endif
 
+#if EVOLUTION_VERSION < 30304
 	list = gconf_client_get_list (client,
 		"/apps/evolution/evolution-rss/feeds",
 		GCONF_VALUE_STRING, NULL);
 	for (l = list; l; l = l->next) {
 		uid = feeds_uid_from_xml (l->data);
+#else
+	list = g_settings_get_strv (settings, "feeds");
+	for (i = 0; list && list[i]; i++) {
+		uid = feeds_uid_from_xml (list[i]);
+
+#endif
 		if (!uid)
 			continue;
 
+#if EVOLUTION_VERSION < 30304
 		feed_new_from_xml (l->data);
+#else
+		feed_new_from_xml (list[i]);
+#endif
 
 		g_free (uid);
 	}
+#if EVOLUTION_VERSION < 30304
 	g_slist_foreach(list, (GFunc) g_free, NULL);
 	g_slist_free(list);
+#endif
+#if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 void
 save_gconf_feed(void)
 {
+#if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
+#else
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+	GPtrArray *d = g_ptr_array_new();
+	GSList *l;
+#endif
 	g_hash_table_foreach(rf->hrname, prepare_feed, NULL);
 
-	gconf_client_set_list (
-		client,
+#if EVOLUTION_VERSION < 30304
+	gconf_client_set_list (client,
 		"/apps/evolution/evolution-rss/feeds",
-		GCONF_VALUE_STRING,
-		rss_list,
-		NULL);
+		GCONF_VALUE_STRING, rss_list, NULL);
+#else
+	l = rss_list;
+	while (l) {
+		g_ptr_array_add(d, l->data);
+		l = l->next;
+	}
+	g_ptr_array_add (d, NULL);
+	g_settings_set_strv (settings, "feeds", (const gchar * const *)d->pdata);
+	g_ptr_array_free (d, FALSE);
+#endif
 
 	while (rss_list) {
 		g_free (rss_list->data);
 		rss_list = g_slist_remove (rss_list, rss_list->data);
 	}
 
+#if EVOLUTION_VERSION < 30304
 	gconf_client_suggest_sync (client, NULL);
 	g_object_unref(client);
+#else
+	g_object_unref(settings);
+#endif
 }
 
 

@@ -1,5 +1,5 @@
 /*  Evolution RSS Reader Plugin
- *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2012 Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,9 @@
 #endif
 
 #include <string.h>
+#if EVOLUTION_VERSION < 30503
 #include <gconf/gconf-client.h>
+#endif
 #ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>
 #include <libsoup/soup-gnome-features.h>
@@ -55,7 +57,11 @@ SoupCookieJar *rss_soup_jar = NULL;
 #endif
 gint proxy_type = 0;
 extern rssfeed *rf;
+#if EVOLUTION_VERSION < 30304
 extern GConfClient *rss_gconf;
+#else
+GSettings *settings;
+#endif
 extern SoupSession *webkit_session;
 #if (DATASERVER_VERSION >= 2023001)
 EProxy *proxy;
@@ -231,8 +237,13 @@ void
 proxify_webkit_session_async(EProxy *proxy, WEBKITNET *wknet)
 {
 	SoupURI *proxy_uri = NULL, *su;
+#if EVOLUTION_VERSION < 30304
 	gint ptype = gconf_client_get_int (
 			rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+#else
+	GSettings *settings = g_settings_new(CONF_SCHEMA_EVO_NETWORK);
+	gint ptype = g_settings_get_int(settings, CONF_EVO_PROXY_TYPE);
+#endif
 
 	switch (ptype) {
 #ifndef HAVE_LIBSOUP_GNOME
@@ -289,8 +300,14 @@ void
 proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 {
 	SoupURI *proxy_uri = NULL;
+#if EVOLUTION_VERSION < 30304
 	gint ptype = gconf_client_get_int (
 			rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+#else
+	GSettings *settings = g_settings_new(CONF_SCHEMA_EVO_NETWORK);
+	gint ptype = g_settings_get_int (
+			settings, CONF_EVO_PROXY_TYPE);
+#endif
 
 	switch (ptype) {
 #ifndef HAVE_LIBSOUP_GNOME
@@ -395,8 +412,14 @@ void
 proxify_session_async(EProxy *proxy, STNET *stnet)
 {
 	SoupURI *proxy_uri = NULL, *su;
+#if EVOLUTION_VERSION < 30304
 	gint ptype = gconf_client_get_int (
 			rss_gconf, KEY_GCONF_EVO_PROXY_TYPE, NULL);
+#else
+	GSettings *settings = g_settings_new(CONF_SCHEMA_EVO_NETWORK);
+	gint ptype = g_settings_get_int (
+			settings, CONF_EVO_PROXY_TYPE);
+#endif
 
 	switch (ptype) {
 #ifndef HAVE_LIBSOUP_GNOME
@@ -978,10 +1001,16 @@ net_queue_dispatcher(void)
 		g_queue_get_length(rf->stqueue),
 		net_queue_run_count);
 
+#if EVOLUTION_VERSION < 30304
 	if (qlen && net_queue_run_count < gconf_client_get_int (
 						rss_gconf,
 						GCONF_KEY_DOWNLOAD_QUEUE_SIZE,
 						NULL)) {
+#else
+	if (qlen && net_queue_run_count < g_settings_get_int (
+						settings,
+						CONF_DOWNLOAD_QUEUE_SIZE)) {
+#endif
 		net_queue_run_count++;
 		_stnet = g_queue_pop_head(rf->stqueue);
 		soup_session_queue_message (
@@ -1187,8 +1216,14 @@ sync_gecko_cookies(void)
 void
 rss_soup_init(void)
 {
+	settings = g_settings_new(RSS_CONF_SCHEMA);
+
 #if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME)
+#if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_ACCEPT_COOKIES, NULL)) {
+#else
+	if (g_settings_get_boolean (settings, CONF_ACCEPT_COOKIES)) {
+#endif
 		gchar *feed_dir = rss_component_peek_base_directory();
 		gchar *cookie_path = g_build_path(
 					G_DIR_SEPARATOR_S,

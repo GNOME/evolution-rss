@@ -180,6 +180,7 @@ typedef struct _rssfeed {
 	GList		*enclist;		// network downloads tracking
 } rssfeed;
 
+#if EVOLUTION_VERSION < 30304
 #define GCONF_KEY_DISPLAY_SUMMARY "/apps/evolution/evolution-rss/display_summary"
 #define GCONF_KEY_START_CHECK "/apps/evolution/evolution-rss/startup_check"
 #define GCONF_KEY_CUSTOM_FONT "/apps/evolution/evolution-rss/custom_font"
@@ -201,6 +202,30 @@ typedef struct _rssfeed {
 #define GCONF_KEY_ACCEPT_COOKIES "/apps/evolution/evolution-rss/accept_cookies"
 #define GCONF_KEY_IMAGE_RESIZE "/apps/evolution/evolution-rss/image_resize"
 #define GCONF_KEY_SEARCH_RSS "/apps/evolution/evolution-rss/search_rss"
+#else
+#define RSS_CONF_SCHEMA "org.gnome.evolution.plugin.evolution-rss"
+#define CONF_DISPLAY_SUMMARY "display-summary"
+#define CONF_ACCEPT_COOKIES "accept-cookies"
+#define CONF_DOWNLOAD_ENCLOSURES "download-enclosures"
+#define CONF_ENCLOSURE_LIMIT "enclosure-limit"
+#define CONF_ENCLOSURE_SIZE "enclosure-size"
+#define CONF_REMOVE_FOLDER "remove-folder"
+#define CONF_CUSTOM_FONT "custom-font"
+#define CONF_MIN_FONT_SIZE "min-font-size"
+#define CONF_HTML_RENDER "html-render"
+#define CONF_HTML_JS "html-js"
+#define CONF_HTML_JAVA "html-java"
+#define CONF_EMBED_PLUGIN "embed-plugin"
+#define CONF_STATUS_ICON "status-icon"
+#define CONF_BLINK_ICON "blink-icon"
+#define CONF_START_CHECK "startup-check"
+#define CONF_REP_CHECK "rep-check"
+#define CONF_REP_CHECK_TIMEOUT "rep-check-timeout"
+#define CONF_IMAGE_RESIZE "image-resize"
+#define CONF_SEARCH_RSS "search-rss"
+#define CONF_FEED_ICON "feed-icon"
+#define CONF_SHOW_COMMENTS "show-comments"
+#endif
 
 enum {
 	RSS_FEED,
