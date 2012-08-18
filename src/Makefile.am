@@ -98,11 +98,11 @@ evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(EVOLUTION_RSS_EPLUGIN_LIBS)
 
 
-schemadir	= $(GCONF_SCHEMA_FILE_DIR)
-schema_in_files = evolution-rss.schemas.in.in
-schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
-%.schemas.in: %.schemas.in.in
-	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
+#schemadir	= $(GCONF_SCHEMA_FILE_DIR)
+#schema_in_files = evolution-rss.schemas.in.in
+#schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
+#%.schemas.in: %.schemas.in.in
+#	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
 
 @EVO_SERVER_RULE@
 
@@ -129,14 +129,12 @@ ui_DATA =                    \
 CLEANFILES	= $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.eplug	\
 	org-gnome-evolution-rss.error   \
-	evolution-rss.schemas		\
-	evolution-rss.schemas.in	\
 	$(gsettings_SCHEMAS)
 
 EXTRA_DIST =					\
 	$(ui_DATA)				\
 	$(convert_DATA)                         \
-	$(gsettings_SCHEMAS:.xml=.xml.in.in)    \
+	$(gsettings_SCHEMAS:.xml=.xml.in)    \
 	rss.h network.h				\
 	network-soup.c				\
 	network-soup.h				\

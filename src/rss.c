@@ -2446,6 +2446,13 @@ write_rss_error (EMFormat *emf,
 #endif
 
 
+void org_gnome_cooly_format_rss(void *ep, void *t);
+
+void org_gnome_cooly_format_rss(void *ep, void *t)
+{
+	g_print("format_rss()\n");
+}
+
 #if 0
 void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t);
 
