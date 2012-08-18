@@ -160,8 +160,14 @@ rss_emfu_copy_folder_selected (EMailBackend *backend,
 
 	url = camel_url_new (uri, &local_error);
 	if (url != NULL) {
+#if EVOLUTION_VERSION >= 30505
+		service = camel_session_ref_service_by_url(
+			CAMEL_SESSION (session), url, CAMEL_PROVIDER_STORE);
+#else
 		service = camel_session_get_service_by_url (
 			CAMEL_SESSION (session), url, CAMEL_PROVIDER_STORE);
+#endif
+
 		camel_url_free (url);
 	}
 
