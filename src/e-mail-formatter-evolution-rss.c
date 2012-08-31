@@ -128,13 +128,13 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 static const gchar *
 emfe_evolution_rss_get_display_name (EMailFormatterExtension *extension)
 {
-	return _("Tet Highlght");
+	return _("Text Highlighting");
 }
 
 static const gchar *
 emfe_evolution_rss_get_description (EMailFormatterExtension *extension)
 {
-	return _("Syntx hihlighting of mail parts");
+	return _("Syntax highlighting of mail parts");
 }
 
 static const gchar **
