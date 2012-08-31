@@ -380,6 +380,9 @@ AC_SUBST(uidir)
 privlibdir='${libdir}'/evolution/$EVOLUTION_EXEC_VERSION
 AC_SUBST(privlibdir)
 
+moduledir="$privlibdir/modules"
+AC_SUBST(moduledir)
+
 dnl Win32
 AC_MSG_CHECKING([for Win32])
 case "$host" in

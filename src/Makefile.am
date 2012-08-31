@@ -92,17 +92,47 @@ endif
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
 liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(DATASERVER_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(DBUS_LIBS) $(NO_UNDEFINED_LIBS)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
-#$(GECKO_RPATH)
 
 evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(EVOLUTION_RSS_EPLUGIN_LIBS)
 
+module_LTLIBRARIES = evolution-module-rss.la
 
-#schemadir	= $(GCONF_SCHEMA_FILE_DIR)
-#schema_in_files = evolution-rss.schemas.in.in
-#schema_DATA	= $(schema_in_files:.schemas.in.in=.schemas)
-#%.schemas.in: %.schemas.in.in
-#	sed -e "s#\@bindir\@#@bindir@#g" $< > $@
+evolution_module_rss_la_SOURCES =		\
+	rss.c					\
+	fetch.c					\
+	file-gio.c				\
+	network-soup.c				\
+	misc.c					\
+	notification.c				\
+	parser.c				\
+	rss-config.c				\
+	rss-config-factory.c			\
+	rss-cache.c				\
+	rss-evo-common.c			\
+	rss-image.c				\
+	rss-formater.c				\
+	rss-status-icon.c			\
+	rss-icon-factory.c			\
+	dbus.c					\
+	e-mail-parser-evolution-rss.c		\
+	e-mail-parser-evolution-rss.h		\
+	e-mail-formatter-evolution-rss.c	\
+	e-mail-formatter-evolution-rss.h	\
+	evolution-module-rss.c
+
+
+
+evolution_module_rss_la_CPPFLAGS =			\
+        $(AM_CPPFLAGS)					\
+        -I$(top_srcdir)					\
+        -DEVOLUTION_PRIVDATADIR=\""$(privdatadir)"\"	\
+        -DG_LOG_DOMAIN=\"evolution-module-rss\"		\
+        $(EVOLUTION_RSS_EPLUGIN_LIBS)
+
+evolution_module_rss_la_LDFLAGS =		\
+        -avoid-version -module $(NO_UNDEFINED)
+
 
 @EVO_SERVER_RULE@
 
@@ -119,22 +149,24 @@ convertdir = $(datadir)/GConf/gsettings
 convert_DATA = evolution-rss.convert
 
 
-DISTCLEANFILES = $(schema_DATA)
+DISTCLEANFILES = $(schema_DATA)			\
+	evolution-rss.desktop.in		\
+	$(gsettings_SCHEMAS:.xml=.xml.in)
 
-ui_DATA =                    \
+ui_DATA =			\
 	rss-main.ui		\
 	rss-html-rendering.ui
 
-#BUILT_SOURCES	= $(server_DATA)
 CLEANFILES	= $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.eplug	\
 	org-gnome-evolution-rss.error   \
-	$(gsettings_SCHEMAS)
+	$(gsettings_SCHEMAS)		\
+	$(gsettings_SCHEMAS:.xml=.xml.in)
 
 EXTRA_DIST =					\
 	$(ui_DATA)				\
 	$(convert_DATA)                         \
-	$(gsettings_SCHEMAS:.xml=.xml.in)    \
+	$(gsettings_SCHEMAS:.xml=.xml.in)	\
 	rss.h network.h				\
 	network-soup.c				\
 	network-soup.h				\
@@ -143,6 +175,10 @@ EXTRA_DIST =					\
 	debug.h					\
 	dbus.c					\
 	dbus.h					\
+	e-mail-formatter-parser-rss.c		\
+	e-mail-formatter-parser-rss.h		\
+	e-mail-formatter-evolution-rss.c	\
+	e-mail-formatter-evolution-rss.h	\
 	fetch.c					\
 	fetch.h					\
 	file-gio.c				\
@@ -159,6 +195,8 @@ EXTRA_DIST =					\
 	rss-config-factory.h			\
 	rss-evo-common.c			\
 	rss-evo-common.h			\
+	rss-formatter.c				\
+	rss-formatter.h				\
 	rss-icon-factory.c			\
 	rss-icon-factory.h			\
 	rss-status-icon.c			\

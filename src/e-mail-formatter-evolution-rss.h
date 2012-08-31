@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2009 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2012 Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,19 +17,16 @@
  *  02110-1301 USA
  */
 
-#include <e-util/e-icon-factory.h>
+#ifndef EM_FORMATTER_EVOLUTION_RSS_H
+#define EM_FORMATTER_EVOLUTION_RSS_H
 
-#define RSS_TEXT_HTML "rss-text-html"
-#define RSS_TEXT_HTML_FILE "rss-text-html.png"
+#include <glib-object.h>
 
-#define RSS_TEXT_GENERIC "rss-text-generic"
-#define RSS_TEXT_GENERIC_FILE "rss-text-x-generic.png"
+G_BEGIN_DECLS
 
-#define RSS_MAIN "rss-main"
-#define RSS_MAIN_FILE "rss-24.png"
+void    e_mail_formatter_evolution_rss_type_register (GTypeModule *type_module);
 
-GdkPixbuf *rss_build_icon(const gchar *icon_name,
-			GtkIconSize icon_size);
-void rss_build_stock_images(void);
-void rss_append_folder_icons(gchar *key);
+G_END_DECLS
+
+#endif /* EM_FORMATTER_EVOLUTION_RSS_H */
 

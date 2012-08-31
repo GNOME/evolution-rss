@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2012 Lucian Langa <cooly@gnome.eu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,6 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA
  */
+
+
+#include <mail/e-mail-reader.h>
 
 typedef struct _FEED_IMAGE {
 	gchar *img_file;
@@ -44,8 +47,7 @@ finish_create_icon_stream (SoupSession *soup_sess,
 	SoupMessage *msg, FEED_IMAGE *user_data);
 #endif
 
-//gchar *verify_image(gchar *uri, EMFormatHTML *format);
-gchar *verify_image(gchar *uri, EMailFormatter *format);
+gchar *verify_image(gchar *uri, EMailDisplay *format);
 
 void
 #if LIBSOUP_VERSION < 2003000

@@ -55,12 +55,10 @@ extern rssfeed *rf;
 gchar *pixfile;
 char *pixfilebuf;
 gsize pixfilelen;
-extern GHashTable *icons;
 GHashTable *missing;
 
 #if (EVOLUTION_VERSION >= 30400)
 #include <mail/e-mail-reader.h>
-extern EShellView *rss_shell_view;
 #endif
 
 void
@@ -306,6 +304,7 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 {
 	CamelStream *stream = NULL;
 	gchar *mime_type;
+	d("finish_image_feedback()");
 	stream = rss_cache_add(user_data->url);
 	finish_image(soup_sess, msg, stream);
 	if (!missing)
@@ -330,27 +329,7 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 				GINT_TO_POINTER(1));
 		}
 	g_free(mime_type);
-
-	if (user_data->data == current_pobject) {
-		EShellContent *shell_content;
-		EMailReader *reader;
-		EMailDisplay *display;
-
-		g_print("rEdraw\n");
-		g_print("p:%p\n", rss_shell_view);
-		shell_content = e_shell_view_get_shell_content (rss_shell_view);
-		reader = E_MAIL_READER (shell_content);
-		display = e_mail_reader_get_mail_display (reader);
-		//e_mail_display_reload (display);
-		e_mail_display_load_images(display);
-//		em_format_redraw(display);
-//		e_web_view_reload (E_WEB_VIEW(display));
-	}
-#if EVOLUTION_VERSION >= 23190
-		//em_format_queue_redraw((EMFormat *)user_data->data);
-#else
-		//em_format_redraw((EMFormat *)user_data->data);
-#endif
+	e_mail_display_load_images(user_data->data);
 	g_free(user_data->url);
 	g_free(user_data);
 }
@@ -504,8 +483,7 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 		}
 		icon = rss_build_icon (img_file, GTK_ICON_SIZE_MENU);
 		d("icon:%p\n", icon);
-		g_hash_table_insert(icons,
-			g_strdup(key), GINT_TO_POINTER(1));
+		rss_append_folder_icons(g_strdup(key));
 		sizes = gtk_icon_theme_get_icon_sizes(
 				gtk_icon_theme_get_default(),
 				"mail-read"); //will mail-read always be there?
@@ -606,8 +584,7 @@ file_is_image(gchar *image, gboolean cleanup)
  * because we could end up with wrong file as image
  */
 gchar *
-//verify_image(gchar *uri, EMFormatHTML *format)
-verify_image(gchar *uri, EMailFormatter *format)
+verify_image(gchar *uri, EMailDisplay *format)
 {
 	gchar *nurl, *turl;
 	gchar *feed_dir, *name;

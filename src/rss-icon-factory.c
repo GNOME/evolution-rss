@@ -22,6 +22,8 @@
 
 #include <rss.h>
 
+extern GHashTable *icons;
+
 typedef struct {
 	const char *stock_id;
 	const char *icon;
@@ -90,6 +92,8 @@ rss_build_stock_images(void)
 }
 
 void
-init_rss_builtin_images(void)
+rss_append_folder_icons(gchar *key)
 {
+	g_hash_table_insert(icons,
+		key, GINT_TO_POINTER(1));
 }

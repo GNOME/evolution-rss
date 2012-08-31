@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2012 Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -331,10 +331,6 @@ gchar *print_comments(gchar *url, gchar *stream, EMailFormatter *format);
 
 //static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
-#ifdef HAVE_WEBKIT
-void webkit_set_history(gchar *base);
-void rss_webkit_load_string(gchar *str, gchar *base, gchar *encoding);
-#endif
 gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
 
@@ -478,21 +474,6 @@ update_progress_text(gchar *title)
 	}
 }
 
-#ifdef HAVE_WEBKIT
-void
-rss_webkit_load_string(gchar *str, gchar *base, gchar *encoding)
-{
-	webkit_web_view_load_string(
-		WEBKIT_WEB_VIEW(rf->mozembed),
-		str,
-		"text/html",
-		encoding,
-		base);
-	if (strncmp(base, "file:///fake", 12))
-		webkit_set_history(base);
-}
-#endif
-
 void
 update_progress_bar(guint current);
 
@@ -521,126 +502,6 @@ update_progress_bar(guint current)
 	}
 }
 
-
-void
-browser_write(gchar *string, gint length, gchar *base)
-{
-	guint engine = fallback_engine();
-#if defined(HAVE_GECKO) || defined (HAVE_WEBKIT)
-	xmlDoc *src = (xmlDoc *)parse_html(base, string, length);
-	gchar *encoding =  (gchar *)htmlGetMetaEncoding(src);
-	gchar *str = string;
-#endif
-#ifdef HAVE_WEBKIT
-	WEBKITNET *wknet;
-#endif
-	switch (engine) {
-	case 2:
-#ifdef HAVE_GECKO
-	gtk_moz_embed_open_stream((GtkMozEmbed *)rf->mozembed,
-			base, "text/html");
-	while (length > 0) {
-		if (length > 4096) {
-			gtk_moz_embed_append_data(
-				(GtkMozEmbed *)rf->mozembed,
-				str, 4096);
-			str+=4096;
-		} else
-			gtk_moz_embed_append_data(
-				(GtkMozEmbed *)rf->mozembed,
-				str, length);
-	length-=4096;
-	}
-	gtk_moz_embed_close_stream((GtkMozEmbed *)rf->mozembed);
-#endif
-	break;
-	case 1:
-#ifdef HAVE_WEBKIT
-#if (DATASERVER_VERSION >= 2023001)
-
-		wknet = g_new0(WEBKITNET, 1);
-		wknet->base = base;
-		wknet->encoding = encoding;
-		wknet->str = str;
-		wknet->cb = rss_webkit_load_string;
-		proxify_webkit_session_async(proxy, wknet);
-#endif
-#endif
-		break;
-	}
-}
-
-void
-browser_stream_write(CamelStream *stream, gchar *base);
-
-void
-browser_stream_write(CamelStream *stream, gchar *base)
-{
-	GString *str = g_string_new(NULL);
-	gchar *line;
-#ifdef HAVE_WEBKIT
-	gchar *encoding;
-	xmlDoc *src;
-#endif
-
-	CamelStream *in = camel_stream_buffer_new(stream, CAMEL_STREAM_BUFFER_READ);
-#if (DATASERVER_VERSION >= 2033001)
-	while ((line = camel_stream_buffer_read_line((CamelStreamBuffer *)in, NULL,  NULL))) {
-#else
-	while ((line = camel_stream_buffer_read_line((CamelStreamBuffer *)in, NULL))) {
-#endif
-		gchar *tmp = line;
-		g_string_append(str, line);
-		g_free(tmp);
-		line = NULL;
-	}
-#ifdef HAVE_WEBKIT
-#if (WEBKIT_VERSION >= 1001001)
-	src = (xmlDoc *)parse_html(base, str->str, str->len);
-	encoding =  (gchar *)htmlGetMetaEncoding(src);
-	webkit_web_view_load_string(
-		WEBKIT_WEB_VIEW(rf->mozembed),
-		str->str,
-		"text/html",
-		encoding,
-		base);
-#else
-	webkit_web_view_load_html_string(
-		WEBKIT_WEB_VIEW(rf->mozembed),
-		str->str,
-		base);
-#endif
-#endif
-	g_string_free(str, 1);
-#if (DATASERVER_VERSION >= 2031001)
-	g_object_unref(in);
-#else
-	camel_object_unref(in);
-#endif
-#ifdef HAVE_WEBKIT
-	webkit_set_history(base);
-#endif
-}
-
-static void
-browsercb(NetStatusType status, gpointer statusdata, gpointer data)
-{
-	//NetStatusProgress *progress = (NetStatusProgress*)statusdata;
-	switch (status) {
-	case NET_STATUS_PROGRESS:
-#if 0
-//		g_print("chunk:%s\n", progress->chunk);
-		g_print("total:%d\n", progress->total);
-		g_print("curent:%d\n", progress->current);
-		g_print("-------------- chunk: %d =============\n", GPOINTER_TO_INT(progress->chunksize));
-		//browser_write(progress->chunk, progress->chunksize, data);
-//		browser_fill+=progress->chunksize;
-#endif
-	break;
-	default:
-		g_warning("unhandled network status %d\n", status);
-	}
-}
 
 void
 textcb(NetStatusType status, gpointer statusdata, gpointer data)
@@ -1018,7 +879,7 @@ receive_cancel(GtkButton *button, struct _send_info *info)
 				_("Cancelling..."));
 #else
 		if (info->progress_bar)
-			gtk_progress_bar_set_text (info->progress_bar,
+			gtk_progress_bar_set_text ((GtkProgressBar *)info->progress_bar,
 				_("Cancelling..."));
 #endif
 		info->state = SEND_CANCELLED;
@@ -1069,95 +930,6 @@ summary_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
 #endif
 }*/
 
-static void
-//summary_cb (GtkWidget *button, EMFormatPURI *puri)
-summary_cb (GtkWidget *button, EMailPart *puri)
-{
-	rf->cur_format = rf->cur_format^1;
-	rf->chg_format = 1;
-//#if EVOLUTION_VERSION >= 23190
-//	em_format_queue_redraw((EMFormat *)puri);
-//#else
-	//em_format_redraw((EMFormat *)puri);
-//#endif
-}
-
-
-#if 0
-static void
-back_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
-{
-#if defined(HAVE_GECKO) || defined(HAVE_WEBKIT)
-	guint engine = fallback_engine();
-#endif
-#ifdef	HAVE_GECKO
-	if (engine == 2)
-		gtk_moz_embed_go_back((GtkMozEmbed *)rf->mozembed);
-#endif
-#ifdef HAVE_WEBKIT
-	if (engine == 1) {
-		webkit_web_view_go_back (WEBKIT_WEB_VIEW(rf->mozembed));
-	}
-#endif
-}
-
-static void
-forward_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
-{
-#if defined(HAVE_GECKO) || defined(HAVE_WEBKIT)
-	guint engine = fallback_engine();
-#endif
-#ifdef	HAVE_GECKO
-	if (engine == 2)
-		gtk_moz_embed_go_forward((GtkMozEmbed *)rf->mozembed);
-#endif
-#ifdef HAVE_WEBKIT
-	if (engine == 1)
-		webkit_web_view_go_forward(WEBKIT_WEB_VIEW(rf->mozembed));
-#endif
-}
-
-void stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
-
-void
-stop_cb (GtkWidget *button, EMFormatHTMLPObject *pobject)
-{
-#if defined(HAVE_GECKO) || defined(HAVE_WEBKIT)
-	guint engine = fallback_engine();
-#endif
-#ifdef	HAVE_GECKO
-	if (engine == 2)
-		gtk_moz_embed_stop_load((GtkMozEmbed *)rf->mozembed);
-#endif
-#ifdef HAVE_WEBKIT
-	if (engine == 1)
-		webkit_web_view_stop_loading(WEBKIT_WEB_VIEW(rf->mozembed));
-#endif
-}
-#endif
-
-void
-reload_cb (GtkWidget *button, gpointer data)
-{
-	guint engine = fallback_engine();
-	switch (engine) {
-		case 2:
-#ifdef	HAVE_GECKO
-	gtk_moz_embed_stop_load((GtkMozEmbed *)rf->mozembed);
-	gtk_moz_embed_load_url ((GtkMozEmbed *)rf->mozembed, data);
-#endif
-		break;
-		case 1:
-#ifdef	HAVE_WEBKIT
-#if (WEBKIT_VERSION >= 1000003)
-	webkit_web_view_reload_bypass_cache(WEBKIT_WEB_VIEW(rf->mozembed));
-#else
-	webkit_web_view_reload(WEBKIT_WEB_VIEW(rf->mozembed));
-#endif
-#endif
-		break;
-	}
-}
 
 typedef struct _UB {
 	CamelStream *stream;
@@ -1178,74 +950,6 @@ rss_browser_set_hsize (GtkAdjustment *adj, gpointer data)
 #endif
 }
 
-void rss_browser_update_content (
-	GtkWidget *widget, GtkAllocation *event, gpointer data);
-
-void
-rss_browser_update_content (
-	GtkWidget *widget, GtkAllocation *event, gpointer data)
-{
-#if 0
-	struct _org_gnome_rss_controls_pobject *po = data;
-	CamelStream *stream = NULL;
-	UB *fi;
-
-	if (GTK_IS_WIDGET(widget)) {
-		if (rf->mozembed)
-			if (
-#if GTK_CHECK_VERSION (2,19,7)
-			gtk_widget_get_realized(rf->mozembed)
-#else
-			GTK_WIDGET_REALIZED(rf->mozembed)
-#endif
-			) {
-				if (!browser_fetching) {
-					gchar *msg = g_strdup_printf(
-							"<h5>%s</h5>",
-							_("Formatting Message..."));
-//					browser_write(
-//						msg, strlen(msg),
-//						(gchar *)"file:///fakefile#index");
-					g_free(msg);
-					browser_fetching=1;
-					fi = g_new0(UB, 1);
-					stream = rss_cache_get(po->website);
-					if (!stream) {
-						d("HTTP cache miss\n");
-						stream = rss_cache_add(po->website);
-						fi->create = 1;
-					fi->stream = stream;
-					fi->url = g_strdup(po->website);
-					fetch_unblocking(
-						po->website,
-						browsercb,
-						po->website,
-						(gpointer)finish_website,
-						fi,
-						1,
-						NULL);
-					/*FIXME free fi*/
-					} else {
-						d("cache read\n");
-						fi->create = 0;
-						browser_stream_write(stream, po->website);
-#if (DATASERVER_VERSION >= 2033001)
-						camel_stream_close (stream, NULL, NULL);
-#else
-						camel_stream_close (stream, NULL);
-#endif
-#if (DATASERVER_VERSION >= 2031001)
-						g_object_unref(stream);
-#else
-						camel_object_unref(stream);
-#endif
-					}
-				}
-			}
-	}
-#endif
-}
-
 #ifdef HAVE_GECKO
 void
 rss_mozilla_init(void)
@@ -1258,6 +962,7 @@ rss_mozilla_init(void)
 }
 #endif
 
+#if 0
 void
 webkit_set_preferences(void)
 {
@@ -1340,6 +1045,7 @@ webkit_set_preferences(void)
 #endif
 #endif
 }
+#endif
 
 void
 gecko_set_preferences(void)
@@ -1492,359 +1198,6 @@ rss_menu_items_free(EPopup *ep, GSList *items, void *data)
 #endif
 #endif
 
-#ifdef HAVE_WEBKIT
-#if (WEBKIT_VERSION >= 1001007)
-static void
-webkit_net_status (WebKitWebView *view,
-		GParamSpec *spec,
-		GtkWidget *data)
-{
-	GtkAllocation alloc;
-	GtkRequisition req;
-	gint width, w;
-	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
-	switch (status) {
-		case WEBKIT_LOAD_FINISHED:
-			gtk_widget_set_sensitive(data, FALSE);
-			if (rf->mozembed) {
-				gtk_widget_get_allocation(rf->mozembed, &alloc);
-				width = alloc.width;
-				if (resize_pane_hsize+14 > width && width != 1) {
-					gtk_widget_set_size_request(rf->mozembed,
-						-1, -1);
-#if GTK_MAJOR_VERSION < 3
-					gtk_widget_size_request(rf->mozembed, &req);
-#else
-					gtk_widget_get_preferred_size(rf->mozembed, &req, NULL);
-#endif
-
-					if (req.width < resize_pane_hsize+14)
-						w = resize_pane_hsize-14;
-					else
-						w = req.width;
-
-					gtk_widget_set_size_request(rf->mozembed,
-						w, req.height);
-				}
-			}
-		break;
-		default:
-			gtk_widget_set_sensitive(data, TRUE);
-		break;
-	}
-}
-
-#endif
-
-
-void
-webkit_set_history(gchar *base)
-{
-	WebKitWebBackForwardList *back_forward_list =
-		webkit_web_view_get_back_forward_list (WEBKIT_WEB_VIEW(rf->mozembed));
-	WebKitWebHistoryItem *item =
-		webkit_web_history_item_new_with_data(base, "Untitled");
-#if (WEBKIT_VERSION >= 1001001)
-	webkit_web_back_forward_list_add_item(back_forward_list, item);
-#endif
-}
-
-#if (WEBKIT_VERSION >= 1001007)
-static void
-webkit_history_status (WebKitWebView *view,
-		GParamSpec *spec,
-		GtkWidget *data)
-{
-#if 0
-	struct _org_gnome_rss_controls_pobject *po =
-			(struct _org_gnome_rss_controls_pobject *) data;
-	WebKitLoadStatus status = webkit_web_view_get_load_status (view);
-	switch (status) {
-		case WEBKIT_LOAD_COMMITTED:
-		default:
-			if (!webkit_web_view_can_go_forward(view))
-				gtk_widget_set_sensitive(po->forwbut, FALSE);
-			else
-				gtk_widget_set_sensitive(po->forwbut, TRUE);
-			if (!webkit_web_view_can_go_back(view))
-				gtk_widget_set_sensitive(po->backbut, FALSE);
-			else
-				gtk_widget_set_sensitive(po->backbut, TRUE);
-		break;
-	}
-#endif
-}
-#endif
-
-gboolean
-webkit_over_link(WebKitWebView *web_view,
-		gchar         *title,
-		gchar         *uri,
-		gpointer       user_data)
-{
-	if (uri) {
-		gchar *msg = g_strdup_printf("%s %s", _("Click to open"), uri);
-		taskbar_push_message(msg);
-		g_free(msg);
-	} else
-		taskbar_pop_message();
-	return TRUE;
-}
-
-static void
-embed_zoom_in_cb (GtkWidget *w,
-			gpointer *data)
-{
-	webkit_web_view_zoom_in((WebKitWebView*)rf->mozembed);
-}
-
-static void
-embed_zoom_out_cb (GtkWidget *w,
-			gpointer *data)
-{
-	webkit_web_view_zoom_out((WebKitWebView *)rf->mozembed);
-}
-
-static void
-embed_zoom_100_cb (GtkWidget *w,
-			gpointer *data)
-{
-	webkit_web_view_set_zoom_level((WebKitWebView *)rf->mozembed, 1);
-}
-
-gboolean
-webkit_click (GtkEntry *entry,
-		GtkMenu *menu,
-		gpointer user_data)
-{
-	GtkWidget *separator, *menuitem;
-	separator = gtk_separator_menu_item_new ();
-	gtk_widget_show (separator);
-	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 2);
-	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_IN, NULL);
-	g_signal_connect(menuitem, "activate",
-		(GCallback)embed_zoom_in_cb, NULL);
-	gtk_widget_set_sensitive (menuitem, TRUE);
-	gtk_widget_show (menuitem);
-	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 3);
-	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_OUT, NULL);
-	g_signal_connect(menuitem, "activate",
-		(GCallback)embed_zoom_out_cb, NULL);
-	gtk_widget_set_sensitive (menuitem, TRUE);
-	gtk_widget_show (menuitem);
-	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 4);
-	menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_100, NULL);
-	g_signal_connect(menuitem, "activate",
-		(GCallback)embed_zoom_100_cb, NULL);
-	gtk_widget_set_sensitive (menuitem, TRUE);
-	gtk_widget_show (menuitem);
-	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menuitem, 5);
-	separator = gtk_separator_menu_item_new ();
-	gtk_widget_show (separator);
-	gtk_menu_shell_insert (GTK_MENU_SHELL (menu), separator, 6);
-	return TRUE;
-}
-
-#ifdef HAVE_WEBKIT
-void webkit_hook_actions(void);
-
-void
-webkit_hook_actions(void)
-{
-#if EVOLUTION_VERSION >= 22900
-	EShellWindow *shell_window;
-	GtkAction *action;
-	const char *action_name;
-
-	shell_window = e_shell_view_get_shell_window (rss_shell_view);
-
-	action_name = "mail-zoom-in";
-	action = e_shell_window_get_action (shell_window, action_name);
-	g_signal_connect (
-		action, "activate",
-		G_CALLBACK (embed_zoom_in_cb), NULL);
-	action_name = "mail-zoom-out";
-	action = e_shell_window_get_action (shell_window, action_name);
-	g_signal_connect (
-		action, "activate",
-		G_CALLBACK (embed_zoom_out_cb), NULL);
-	action_name = "mail-zoom-100";
-	action = e_shell_window_get_action (shell_window, action_name);
-	g_signal_connect (
-		action, "activate",
-		G_CALLBACK (embed_zoom_100_cb), NULL);
-#endif
-}
-#endif
-
-#if 0
-#if EVOLUTION_VERSION >= 22900
-#include <shell/e-shell-view.h>
-#include <shell/e-shell-searchbar.h>
-
-static void
-action_search_cb (EShellView *shell,
-			GtkWidget *sb)
-{
-//	g_signal_connect_swapped (
-//		search_bar, "changed",
-//		G_CALLBACK (em_format_redraw), priv->html_display);
-		g_print("my search\n");
-//	g_print("search:%s\n", e_shell_searchbar_get_search_text(sb));
-}
-
-void
-rss_search_bar_hook(void)
-{
-	EShellContent *shell_content;
-	EMailReader *reader;
-	GtkAction *action;
-	EShellSearchbar *search_bar;
-	gchar *action_name;
-	EShellView *shell_view;
-	EShellWindow *shell_window;
-
-	CamelFolder *folder;
-	EMFolderTree *folder_tree;
-	EShellSidebar *shell_sidebar = e_shell_view_get_shell_sidebar(
-					rss_shell_view);
-
-
-	shell_content = e_shell_view_get_shell_content (rss_shell_view);
-	reader = E_MAIL_READER (shell_content);
-
-//	action_name = "mail-find";
-//	action = e_mail_reader_get_action (reader, action_name);
-//	g_signal_connect_swapped (
-//		action, "activate",
-//		G_CALLBACK (action_search_cb), reader);
-	search_bar = e_shell_view_get_searchbar(rss_shell_view);
-	//search_bar = e_shell_content_get_searchbar(shell_content);
-	shell_view = e_shell_searchbar_get_shell_view (search_bar);
-//	g_signal_connect_after (
-//		"execute-search", "activate",
-//		G_CALLBACK (action_search_cb), search_bar);
-	shell_window = e_shell_view_get_shell_window (rss_shell_view);
-	g_signal_connect_after (
-			search_bar,
-			"expose-event",
-		G_CALLBACK (action_search_cb),
-		rss_shell_view);
-	e_shell_view_clear_search(shell_view);
-
-//	g_signal_connect (
-//		search_bar, "execute-search",
-//		G_CALLBACK (action_search_cb), search_bar);
-
-}
-#endif
-#endif
-
-#endif
-
-#ifdef HAVE_GECKO
-void gecko_net_start(GtkMozEmbed *mozembed, GtkWidget *data);
-
-void
-gecko_net_start(GtkMozEmbed *mozembed, GtkWidget *data)
-{
-	gtk_widget_set_sensitive(data, TRUE);
-}
-
-void gecko_net_stop(GtkMozEmbed *mozembed, GtkWidget *data);
-
-void
-gecko_net_stop(GtkMozEmbed *mozembed, GtkWidget *data)
-{
-	gtk_widget_set_sensitive(data, FALSE);
-}
-
-gboolean gecko_over_link(GtkMozEmbed *mozembed);
-
-gboolean
-gecko_over_link(GtkMozEmbed *mozembed)
-{
-	gchar *link = gtk_moz_embed_get_link_message(mozembed);
-	if (link && strlen(link)) {
-		gchar *msg = g_strdup_printf("%s %s", _("Click to open"), link);
-		g_free(link);
-		taskbar_push_message(msg);
-		g_free(msg);
-	} else
-		taskbar_pop_message();
-	return FALSE;
-}
-
-gboolean gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data);
-
-gboolean
-gecko_click(GtkMozEmbed *mozembed, gpointer dom_event, gpointer user_data)
-{
-	gint button;
-	GtkMenu *menu;
-	gchar *link = NULL;
-#if EVOLUTION_VERSION < 22900
-	EMPopup *emp = NULL;
-	GSList *menus = NULL;
-	gint i=0, menu_size;
-#endif
-
-	if (-1 == (button = gecko_get_mouse_event_button (dom_event))) {
-		g_warning ("Cannot determine mouse button!\n");
-		return FALSE;
-	}
-
-	link = gtk_moz_embed_get_link_message((GtkMozEmbed *)rf->mozembed);
-
-#if EVOLUTION_VERSION >= 22900
-	menu = e_popup_menu_create_with_domain (
-			rss_menu_items,
-			0,
-			(guint32)(strlen(link) ? 3:4),
-			link,
-			GETTEXT_PACKAGE);
-	if (button == 2)
-		gtk_menu_popup (
-			GTK_MENU (menu),
-			NULL, NULL,
-			gtk_status_icon_position_menu, user_data,
-			0, GDK_CURRENT_TIME);
-#else
-	emp = em_popup_new("org.gnome.evolution.mail.formathtmldisplay.popup");
-	menu_size=sizeof(rss_menu_items)/sizeof(rss_menu_items[0]);
-	if (strlen(link))
-		i+=9;
-	else
-		menu_size-=2;
-
-	for (; i<menu_size; i++)
-		menus = g_slist_prepend(menus, &rss_menu_items[i]);
-
-	e_popup_add_items((EPopup *)emp, menus, NULL, rss_menu_items_free, link);
-	menu = e_popup_create_menu_once((EPopup *)emp, NULL, 0);
-
-	if (button == 2)
-		gtk_menu_popup (
-			GTK_MENU (menu),
-			NULL, NULL,
-			gtk_status_icon_position_menu, user_data,
-			button,
-			gtk_get_current_event_time());
-#endif
-
-	/*normal click let event pass normally*/
-	if (button == 0)
-		gtk_moz_embed_load_url((GtkMozEmbed *)rf->mozembed, link);
-	return FALSE;
-}
-#endif
-
-gboolean
-show_webkit(GtkWidget *webkit)
-{
-	gtk_widget_show_all(webkit);
-	return FALSE;
-}
 
 #if EVOLUTION_VERSION >= 29101
 EMailSession*
@@ -1861,420 +1214,6 @@ rss_get_mail_session(void)
 	backend = e_mail_reader_get_backend (reader);
 	return e_mail_backend_get_session (backend);
 }
-#endif
-
-#if 0
-static GtkWidget *
-org_gnome_rss_browser (EMFormat *emf,
-					//EMFormatPURI *puri,
-					EMailPart *puri,
-					GCancellable *cancellable)
-{
-        GtkWidget *box;
-        EMFormatRSSControlsPURI *po = (EMFormatRSSControlsPURI *) puri;
-
-	GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
-	GtkWidget *hbox2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-
-	GtkWidget *label3 = gtk_label_new ("");
-	GtkWidget *button, *button2, *button3, *button4, *button5;
-	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
-
-	RSS_BTN_STOP = gtk_button_new_from_stock (GTK_STOCK_STOP);
-	RSS_BTN_FORW = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
-	RSS_BTN_BACK = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
-	po->stopbut = RSS_BTN_STOP;
-	po->forwbut = RSS_BTN_FORW;
-	po->backbut = RSS_BTN_BACK;
-
-	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
-	gtk_widget_show (label3);
-	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
-
-	button = gtk_button_new_with_label(
-				rf->cur_format ? _("Show Summary") :
-						_("Show Full Text"));
-
-	gtk_button_set_image (
-		GTK_BUTTON (button),
-		gtk_image_new_from_icon_name (
-			rf->cur_format ? "text-x-generic" : "text-html",
-			GTK_ICON_SIZE_BUTTON));
-
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
-	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), po);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
-	gtk_widget_show_all (button);
-
-
-	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
-	gtk_widget_show_all (vbox);
-	return vbox;
-}
-#endif
-
-#ifdef HAVE_RENDERKIT
-#if 0
-static gboolean
-org_gnome_rss_browser (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
-{
-	struct _org_gnome_rss_controls_pobject *po =
-			(struct _org_gnome_rss_controls_pobject *) pobject;
-	EMFormat *myf = (EMFormat *)efh;
-	gint width, height;
-	GtkAdjustment *adj;
-	gboolean online;
-	guint engine = fallback_engine();
-
-	po->stopbut = RSS_BTN_STOP;
-	po->forwbut = RSS_BTN_FORW;
-	po->backbut = RSS_BTN_BACK;
-
-#ifdef HAVE_WEBKIT
-	if (engine == 1) {
-		rf->mozembed = (GtkWidget *)webkit_web_view_new();
-		webkit_set_preferences();
-		g_signal_connect (
-			rf->mozembed,
-			"populate-popup",
-			G_CALLBACK (webkit_click),
-			NULL);
-		g_signal_connect (
-			rf->mozembed,
-			"hovering-over-link",
-			G_CALLBACK (webkit_over_link),
-			NULL);
-
-//add zoom level
-#if (WEBKIT_VERSION >= 1001007)
-		g_signal_connect (
-			rf->mozembed,
-			"notify::load-status",
-			G_CALLBACK(webkit_net_status),
-			po->stopbut);
-#endif
-	}
-#if (WEBKIT_VERSION >= 1001007)
-		g_signal_connect (
-			rf->mozembed,
-			"notify::load-status",
-			G_CALLBACK(webkit_history_status),
-			po);
-#endif
-#endif
-
-#ifdef HAVE_GECKO
-	if (engine == 2) {
-		rss_mozilla_init();	//in case we fail this is a failover
-		rf->mozembed = gtk_moz_embed_new();
-		d("mozembed=%p at %s:%d\n", rf->mozembed, __FILE__, __LINE__);
-		gecko_set_preferences();
-
-		/* FIXME add all those profile shits */
-		gtk_scrolled_window_add_with_viewport(
-				GTK_SCROLLED_WINDOW(moz),
-				GTK_WIDGET(rf->mozembed));
-		gtk_scrolled_window_set_shadow_type (
-				GTK_SCROLLED_WINDOW(moz),
-				GTK_SHADOW_ETCHED_IN);
-		g_signal_connect (rf->mozembed,
-				"dom_mouse_click",
-				G_CALLBACK(gecko_click),
-				moz);
-		g_signal_connect (
-				rf->mozembed,
-				"link_message",
-				G_CALLBACK(gecko_over_link),
-				moz);
-		g_signal_connect (
-				rf->mozembed,
-				"net_start",
-				G_CALLBACK(gecko_net_start),
-				po->stopbut);
-		g_signal_connect (
-				rf->mozembed,
-				"net_stop",
-				G_CALLBACK(gecko_net_stop),
-				po->stopbut);
-	}
-#endif
-
-#if EVOLUTION_VERSION >= 29101
-	online =  camel_session_get_online (
-			CAMEL_SESSION(rss_get_mail_session()));
-#else
-#if (DATASERVER_VERSION >= 2031002)
-	online =  camel_session_get_online (session);
-#else
-	online =  camel_session_is_online (session);
-#endif
-#endif
-
-#ifdef HAVE_WEBKIT
-	if (engine == 1) {
-		d("Render engine Webkit\n");
-		if (!online)
-			webkit_web_view_open(
-				WEBKIT_WEB_VIEW(rf->mozembed),
-				"about:blank");
-	}
-#endif
-
-#ifdef HAVE_GECKO
-	if (engine == 2) {
-		d("Render engine Gecko\n");
-		if (!online) {
-			gtk_moz_embed_stop_load(
-				(GtkMozEmbed *)rf->mozembed);
-			gtk_moz_embed_load_url (
-				(GtkMozEmbed *)rf->mozembed, "about:blank");
-		}
-	}
-#endif
-
-
-	//aparently webkit will hang if its not run from the main thread when compiled
-	//with soup
-	//this is as ugly as can be
-	if (engine == 1)
-		g_idle_add((GSourceFunc)show_webkit, rf->mozembed);
-	if (engine == 2)
-		gtk_widget_show_all(rf->mozembed);
-
-	gtk_container_add ((GtkContainer *) eb, rf->mozembed);
-	//appears distroying webkit's parent window results in crash
-	g_object_ref(eb);
-	po->container = eb;
-	rf->headers_mode = myf->mode;
-
-#if EVOLUTION_VERSION >= 23103
-	po->html = (GtkWidget *)em_format_html_get_web_view (efh);
-#else
-	po->html = GTK_WIDGET(efh->html);
-#endif
-
-	adj = gtk_scrolled_window_get_vadjustment(
-		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
-#if GTK_CHECK_VERSION (2,14,0)
-	height = (int)gtk_adjustment_get_page_size(adj);
-#else
-	height = (int)(adj->page_size);
-#endif
-	adj = gtk_scrolled_window_get_hadjustment(
-		(GtkScrolledWindow *)gtk_widget_get_parent(po->html));
-#if GTK_CHECK_VERSION (2,14,0)
-	width = (int)gtk_adjustment_get_page_size(adj);
-#else
-	width = (int)(adj->page_size);
-#endif
-	gtk_widget_set_size_request(rf->mozembed, width-14, height);
-	po->sh_handler = g_signal_connect(adj,
-		"changed",
-		G_CALLBACK(rss_browser_set_hsize),
-		NULL);
-	po->chandler = g_signal_connect(rf->mozembed,//efh->html,
-		"size_allocate",
-		G_CALLBACK(rss_browser_update_content),
-		po);
-	return TRUE;
-}
-#endif
-
-#if 0
-static gboolean
-org_gnome_rss_rfrcomm (EMFormatHTML *efh, void *eb,
-			EMFormatHTMLPObject *pobject)
-{
-	struct _org_gnome_rss_controls_pobject *po =
-			(struct _org_gnome_rss_controls_pobject *) pobject;
-#if GTK_MAJOR_VERSION < 3
-	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-#else
-	GtkWidget *hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-#endif
-	GtkWidget *button;
-
-	gchar *mem = g_strdup_printf("%s(%d):",  _("Comments"), po->counter);
-	GtkWidget *label = gtk_link_button_new_with_label(po->website, mem);
-	gtk_widget_show (label);
-	g_free(mem);
-	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-	button = gtk_button_new_with_label(_("Refresh"));
-	gtk_widget_show (button);
-	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, TRUE, 0);
-	gtk_widget_show(hbox);
-	g_signal_connect (button, "clicked", G_CALLBACK(refresh_cb), efh);
-	if (GTK_IS_WIDGET(eb))
-		gtk_container_add ((GtkContainer *) eb, hbox);
-	return TRUE;
-}
-#endif
-
-#if 0
-static GtkWidget *
-org_gnome_rss_controls (EMFormat *emf,
-			//EMFormatPURI *puri,
-			EMailPart *puri,
-			GCancellable *cancellable)
-{
-	GtkWidget *box;
-	EMFormatRSSControlsPURI *po = (EMFormatRSSControlsPURI *) puri;
-#if GTK_MAJOR_VERSION < 3
-	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
-	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
-#else
-	GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
-	GtkWidget *hbox2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-#endif
-	GtkWidget *label3 = gtk_label_new ("");
-	GtkWidget *button, *button2, *button3, *button4, *button5;
-	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
-
-	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
-	gtk_widget_show (label3);
-	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
-
-	button = gtk_button_new_with_label(
-				rf->cur_format ? _("Show Summary") :
-						_("Show Full Text"));
-
-	gtk_button_set_image (
-		GTK_BUTTON (button),
-		gtk_image_new_from_icon_name (
-			rf->cur_format ? "text-x-generic" : "text-html",
-			GTK_ICON_SIZE_BUTTON));
-
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
-	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), po);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
-	gtk_widget_show_all (button);
-
-	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
-	gtk_widget_show_all (vbox);
-
-	return vbox;
-}
-#endif
-
-#if 0
-static gboolean
-org_gnome_rss_controls (EMFormatHTML *efh, void *eb, EMFormatHTMLPObject *pobject)
-{
-	struct _org_gnome_rss_controls_pobject *po =
-			(struct _org_gnome_rss_controls_pobject *) pobject;
-#if GTK_MAJOR_VERSION < 3
-	GtkWidget *vbox = gtk_vbox_new (TRUE, 1);
-	GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
-#else
-	GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
-	GtkWidget *hbox2 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-#endif
-	GtkWidget *label3 = gtk_label_new ("");
-	GtkWidget *button, *button2, *button3, *button4, *button5;
-	gchar *mem = g_strdup_printf(" <b>%s: </b>", _("Feed view"));
-	gboolean online;
-
-	RSS_BTN_STOP = gtk_button_new_from_stock (GTK_STOCK_STOP);
-	RSS_BTN_FORW = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
-	RSS_BTN_BACK = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
-	po->stopbut = RSS_BTN_STOP;
-	po->forwbut = RSS_BTN_FORW;
-	po->backbut = RSS_BTN_BACK;
-
-	gtk_label_set_markup_with_mnemonic(GTK_LABEL(label3), mem);
-	gtk_widget_show (label3);
-	gtk_box_pack_start (GTK_BOX (hbox2), label3, TRUE, TRUE, 0);
-
-	button = gtk_button_new_with_label(
-				rf->cur_format ? _("Show Summary") :
-						_("Show Full Text"));
-
-	gtk_button_set_image (
-		GTK_BUTTON (button),
-		gtk_image_new_from_icon_name (
-			rf->cur_format ? "text-x-generic" : "text-html",
-			GTK_ICON_SIZE_BUTTON));
-
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
-	g_signal_connect (button, "clicked", G_CALLBACK(summary_cb), efh);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
-	gtk_widget_show_all (button);
-
-#if EVOLUTION_VERSION >= 29101
-	online =  camel_session_get_online (
-			CAMEL_SESSION(rss_get_mail_session()));
-#else
-#if (DATASERVER_VERSION >= 2031002)
-	online =  camel_session_get_online (session);
-#else
-	online =  camel_session_is_online (session);
-#endif
-#endif
-
-	if (rf->cur_format) {
-		button4 = po->backbut;
-		g_signal_connect (
-			button4,
-			"clicked",
-			G_CALLBACK(back_cb),
-			efh);
-		gtk_button_set_relief(GTK_BUTTON(button4), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button4, online);
-		gtk_widget_show (button4);
-		gtk_box_pack_start (
-			GTK_BOX (hbox2),
-			button4,
-			TRUE, TRUE, 0);
-		button5 = po->forwbut;
-		g_signal_connect (
-			button5,
-			"clicked",
-			G_CALLBACK(forward_cb),
-			efh);
-		gtk_button_set_relief(GTK_BUTTON(button5), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button5, online);
-		gtk_widget_show (button5);
-		gtk_box_pack_start (GTK_BOX (hbox2), button5, TRUE, TRUE, 0);
-		button2 = po->stopbut;
-		g_signal_connect (
-			button2,
-			"clicked",
-			G_CALLBACK(stop_cb),
-			efh);
-		gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button2, online);
-		gtk_widget_show (button2);
-		gtk_box_pack_start (GTK_BOX (hbox2), button2, TRUE, TRUE, 0);
-		button3 = gtk_button_new_from_stock (GTK_STOCK_REFRESH);
-		g_signal_connect (
-			button3,
-			"clicked",
-			G_CALLBACK(reload_cb),
-			po->website);
-		gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button3, online);
-		gtk_widget_show (button3);
-		gtk_box_pack_start (GTK_BOX (hbox2), button3, TRUE, TRUE, 0);
-	}
-	gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
-	gtk_widget_show_all (vbox);
-
-//		int width = vbox->allocation.width;
-//		int height = vbox->allocation.height;
-
-	if (GTK_IS_WIDGET(eb))
-		gtk_container_add ((GtkContainer *) eb, vbox);
-//	GtkHTMLEmbedded *myeb = eb;
-//	gtk_widget_size_request(myeb->widget, &req);
-//	g_print("BOX ww:%d,hh%d\n", myeb->width, myeb->height);
-//	g_print("BOX ww:%d,hh%d\n", width, height);
-
-	po->html = vbox;
-	po->mem = mem;
-
-	return TRUE;
-}
-#endif
 #endif
 
 void
@@ -2445,563 +1384,6 @@ write_rss_error (EMFormat *emf,
 }
 #endif
 
-
-void org_gnome_cooly_format_rss(void *ep, void *t);
-
-void org_gnome_cooly_format_rss(void *ep, void *t)
-{
-	g_print("format_rss()\n");
-}
-
-#if 0
-void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t);
-
-void org_gnome_cooly_format_rss(void *ep, EMFormatHookTarget *t)	//camelmimepart
-{
-	GError *err = NULL;
-	GString *content;
-	xmlChar *buff = NULL;
-	CamelContentType *type;
-	gchar *feedid = NULL;
-	gchar *comments = NULL;
-	gchar *category = NULL;
-	GdkPixbuf *pixbuf = NULL;
-	int size;
-	CamelMimePart *message;
-	CamelStream *fstream = camel_stream_mem_new();
-	GString *fbuffer = g_string_new(NULL);
-	CamelStreamMem *stream = (CamelStreamMem *)camel_stream_mem_new();
-	CamelDataWrapper *mcontent;
-	EMFormatHTML *emfh = (EMFormatHTML *)t->format;
-	gchar *rfrclsid, *addr, *subject, *result;
-	const char *website;
-#if (EVOLUTION_VERSION < 30400)
-	struct _org_gnome_rss_controls_pobject *pobj;
-#else
-	EMFormatRSSControlsPURI *pobj;
-	gint len;
-#endif
-	gpointer is_html;
-	gchar *classid, *tmp;
-	xmlDoc *src;
-	xmlChar *wid;
-	GByteArray *buffer;
-	GdkPixbuf *pix;
-	gchar *feed_dir, *feed_file, *iconfile;
-	gchar *tmp_path, *tmp_file;
-	gchar *str;
-#if EVOLUTION_VERSION >= 22900 //kb//
-	GdkColor color;
-#endif
-	GtkAllocation alloc;
-
-	current_pobject = t->format;
-	d("Formatting...\n");
-
-	message = CAMEL_IS_MIME_MESSAGE(t->part) ?
-			t->part :
-			(CamelMimePart *)t->format->message;
-
-	/* force loading of images even if mail images disabled */
-	/* //KB// */
-	//emfh->load_http_now = TRUE;
-	/* assuming 0xffffff will ruin dark themes */
-#if EVOLUTION_VERSION < 22900 //kb//
-	frame_colour = emfh->frame_colour;// ? emfh->frame_colour: 0xffffff;
-	content_colour = emfh->content_colour;// ? emfh->content_colour: 0xffffff;
-	text_colour = emfh->text_colour;// ? emfh->text_colour: 0xffffff;
-#else
-
-	em_format_html_get_color(
-				emfh,
-				EM_FORMAT_HTML_COLOR_FRAME,
-				&color);
-	frame_colour = e_color_to_value(&color);
-
-	em_format_html_get_color(
-				emfh,
-				EM_FORMAT_HTML_COLOR_CONTENT,
-				&color);
-	content_colour = e_color_to_value(&color);
-
-	em_format_html_get_color(
-				emfh,
-				EM_FORMAT_HTML_COLOR_TEXT,
-				&color);
-	text_colour = e_color_to_value(&color);
-#endif
-
-	type = camel_mime_part_get_content_type(message);
-	website = camel_medium_get_header (
-			CAMEL_MEDIUM (message), "Website");
-	if (!website)
-		goto fmerror;
-	addr = (gchar *)camel_header_location_decode(website);
-	feedid  = (gchar *)camel_medium_get_header(
-			CAMEL_MEDIUM(message), "RSS-ID");
-	comments  = (gchar *)camel_medium_get_header (
-				CAMEL_MEDIUM(message),
-				"X-Evolution-rss-comments");
-	category  = (gchar *)camel_medium_get_header(
-				CAMEL_MEDIUM(message),
-				"X-Evolution-rss-category");
-	subject = camel_header_decode_string(
-			camel_medium_get_header (CAMEL_MEDIUM (message),
-			"Subject"), NULL);
-
-	is_html = NULL;
-	if (feedid)
-		is_html =  g_hash_table_lookup(
-				rf->hrh,
-				g_strstrip(feedid)); //feedid is modified
-	if (comments)
-		comments = g_strstrip(comments);
-
-	if (!rf->chg_format)
-		rf->cur_format = GPOINTER_TO_INT(is_html);
-
-	if (rf->chg_format)
-		rf->chg_format = 0;
-
-#if (EVOLUTION_VERSION < 30400)
-	classid = g_strdup_printf ("org-gnome-rss-controls-%d",
-			org_gnome_rss_controls_counter_id);
-	org_gnome_rss_controls_counter_id++;
-	pobj = (struct _org_gnome_rss_controls_pobject *)
-			em_format_html_add_pobject (
-				(EMFormatHTML *) t->format,
-				sizeof(*pobj),
-				classid,
-				message,
-				(EMFormatHTMLPObjectFunc)org_gnome_rss_controls);
-	pobj->is_html = GPOINTER_TO_INT(is_html);
-	pobj->website = g_strstrip(g_strdup((gchar *)website));
-	pobj->stream = t->stream;
-	pobj->object.free = free_rss_controls;
-	str = g_strdup_printf (
-		"<object classid=%s></object>\n",
-		classid);
-	camel_stream_write_string (t->stream, str, NULL, NULL);
-	g_free(str);
-	g_free (classid);
-#else
-	len = t->part_id->len;
-	g_string_append (t->part_id, ".org-gnome-rss-controls");
-	pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
-			t->format, sizeof (EMFormatRSSControlsPURI),
-			t->part, t->part_id->str);
-	pobj->puri.widget_func = org_gnome_rss_controls;
-	pobj->puri.write_func = write_rss_controls;
-	pobj->puri.part = g_object_ref (t->part);
-	pobj->puri.is_attachment = FALSE;
-	pobj->website = g_strstrip(g_strdup((gchar *)website));
-	pobj->is_html = GPOINTER_TO_INT(is_html);
-	pobj->buff = str;
-	em_format_add_puri (t->format, (EMFormatPURI *) pobj);
-	g_string_truncate (t->part_id, len);
-#endif
-
-
-	if (rf->cur_format || (feedid && is_html && rf->cur_format)) {
-#ifdef HAVE_RENDERKIT
-		guint engine = fallback_engine();
-		if (engine && engine != 10) {
-#if (EVOLUTION_VERSION < 30400)
-			char *classid = g_strdup_printf(
-					"org-gnome-rss-controls-%d",
-					org_gnome_rss_controls_counter_id);
-			org_gnome_rss_controls_counter_id++;
-			pobj = (struct _org_gnome_rss_controls_pobject *)
-				em_format_html_add_pobject(
-					(EMFormatHTML *) t->format,
-					sizeof(*pobj),
-					classid,
-					message,
-					(EMFormatHTMLPObjectFunc)org_gnome_rss_browser);
-			pobj->format = (EMFormatHTML *)t->format;
-			pobj->object.free = free_rss_browser;
-			pobj->part = t->part;
-			str = g_strdup_printf (
-				"<table style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\" cellpadding=1 cellspacing=0><tr><td align=center>",
-				frame_colour & 0xffffff,
-				frame_colour & 0xffffff,
-				text_colour & 0xffffff);
-			str = g_strdup_printf (
-				"<object classid=%s></object></td></tr></table>",//</div>\n",
-				classid);
-			camel_stream_write_string (t->stream, str, NULL, NULL);
-			g_free (str);
-			g_free (classid);
-#else
-			len = t->part_id->len;
-			g_string_append (t->part_id, ".org-gnome-rss-browser");
-			pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
-				t->format, sizeof (EMFormatRSSControlsPURI),
-				t->part, t->part_id->str);
-			pobj->puri.widget_func = org_gnome_rss_browser;
-			pobj->puri.write_func = write_rss_content;
-			pobj->puri.part = g_object_ref (t->part);
-			pobj->puri.is_attachment = FALSE;
-			pobj->website = g_strstrip(g_strdup((gchar *)website));
-			pobj->is_html = GPOINTER_TO_INT(is_html);
-			pobj->buff = str;
-			em_format_add_puri (t->format, (EMFormatPURI *) pobj);
-			g_string_truncate (t->part_id, len);
-#endif
-			goto out;
-		}
-#endif
-#if 0
-		//replace with unblocking
-		content = fetch_blocking(addr, NULL, NULL, textcb, NULL, &err);
-		if (err) {
-			//we do not need to setup a pop error menu since we're in
-			//formatting process. But instead display mail body an error
-			//such proxy error or transport error
-			str = g_strdup_printf (
-				"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-				frame_colour & 0xffffff,
-				content_colour & 0xffffff,
-				text_colour & 0xffffff);
-			camel_stream_write_string (t->stream, str, NULL, NULL);
-			g_free (str);
-			camel_stream_write_string (t->stream, "<div style=\"border: solid 0px; padding: 4px;\">\n", NULL, NULL);
-			camel_stream_write_string (t->stream, "<h3>Error!</h3>", NULL, NULL);
-			camel_stream_write_string (t->stream, err->message, NULL, NULL);
-			camel_stream_write_string (t->stream, "</div>", NULL, NULL);
-			goto out;
-		}
-
-		tmp = decode_utf8_entities(content->str);
-		src = (xmlDoc *)parse_html(addr, tmp, strlen(tmp));
-
-		if (src) {
-			htmlDocDumpMemory(src, &buff, &size);
-			d("htmlDocDumpMemory:%s\n", buff);
-			xmlFree(src);
-		} else
-			goto out;
-
-		str = g_strdup_printf (
-			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-			frame_colour & 0xffffff,
-			content_colour & 0xffffff,
-			text_colour & 0xffffff);
-		camel_stream_write_string (fstream, str, NULL, NULL);
-		g_free (str);
-		str = g_strdup_printf (
-			"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-			"<b><font size=+1><a href=%s>%s</a></font></b></div>",
-			content_colour & 0xEDECEB & 0xffffff,
-			text_colour & 0xffffff,
-			website, subject);
-		camel_stream_write_string (fstream, str, NULL, NULL);
-		g_free (str);
-		if (category) {
-			str = g_strdup_printf (
-				"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-				"<b><font size=-1>%s: %s</font></b></div>",
-				content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-				_("Posted under"), category);
-			camel_stream_write_string (fstream, str, NULL, NULL);
-			g_free (str);
-		}
-		str = g_strdup_printf (
-				"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-				"%s</div>",
-				frame_colour & 0xffffff,
-				content_colour & 0xffffff,
-				text_colour & 0xffffff,
-				buff);
-		camel_stream_write_string (fstream, str, NULL, NULL);
-		g_free (str);
-
-		g_string_free(content, 1);
-#endif
-	} else {
-		gchar *wids;
-		xmlDoc *src;
-		guint width;
-		GtkWidget *obj;
-//#if EVOLUTION_VERSION >= 23103
-//		EWebView *web_view;
-//		web_view = em_format_html_get_web_view (emfh);
-//		obj = (GtkWidget *)web_view;
-//#else
-//		obj = (GtkWidget *)emfh->html;
-//#endif
-
-		d("normal html rendering\n");
-		buffer = g_byte_array_new ();
-		camel_stream_mem_set_byte_array (stream, buffer);
-#if EVOLUTION_VERSION >= 23100
-		mcontent = camel_medium_get_content(
-				CAMEL_MEDIUM(t->part));
-#else
-		mcontent = camel_medium_get_content_object(
-				CAMEL_MEDIUM(t->part));
-#endif
-#if DATASERVER_VERSION >= 2033001
-		camel_data_wrapper_write_to_stream_sync (
-			mcontent,
-			(CamelStream *)stream,
-			NULL, NULL);
-#else
-		camel_data_wrapper_write_to_stream (
-			mcontent,
-			(CamelStream *)stream,
-			NULL);
-#endif
-		g_byte_array_append (buffer, (unsigned char *)"", 1);
-		if (camel_content_type_is(type, "text", "evolution-rss-feed")) {	//old evolution-rss content type
-			tmp = decode_utf8_entities((gchar *)(buffer->data));
-		} else
-			tmp = g_strdup((gchar *)(buffer->data));
-
-#if GTK_CHECK_VERSION (2,18,0)
-		gtk_widget_get_allocation(obj, &alloc);
-#else
-		alloc.width = obj->allocation.width;;
-#endif
-		width = alloc.width - 56;
-		wids = g_strdup_printf("%d", width);
-		src = (xmlDoc *)parse_html_sux(
-				tmp,
-				strlen(tmp));
-		if (src) {
-			xmlNode *doc = (xmlNode *)src;
-			while ((doc = html_find(doc, (gchar *)"img"))) {
-				int real_width = 0;
-				xmlChar *url = xmlGetProp(
-						doc,
-						(xmlChar *)"src");
-				gchar *real_image = verify_image(
-							(gchar *)url,
-							t->format);
-				if (real_image) {
-					xmlSetProp(
-						doc,
-						(xmlChar *)"src",
-						(xmlChar *)real_image);
-				}
-				if (gconf_client_get_bool (rss_gconf,
-					GCONF_KEY_IMAGE_RESIZE, NULL) && real_image) {
-					pix = gdk_pixbuf_new_from_file(
-						(const char *)real_image+7, //skip scheme part
-						(GError **)NULL);
-					if (pix)
-						real_width = gdk_pixbuf_get_width(pix);
-
-					d("real_image:%s\n", real_image);
-					d("width:%d\n", width);
-					d("real_width:%d\n", real_width);
-
-					wid = xmlGetProp(
-						doc,
-						(xmlChar *)"width");
-					if (wid) {
-						if (atof((const char *)wid) > width)
-							xmlSetProp(
-								doc,
-								(xmlChar *)"width",
-								(xmlChar *)wids);
-						g_free(wid);
-						goto pixdone;
-					} else if (real_width > width) {
-						xmlSetProp(
-							doc,
-							(xmlChar *)"width",
-							(xmlChar *)wids);
-					}
-pixdone:			g_free(real_image);
-				}
-			}
-			xmlDocDumpMemory(src, &buff, (int*)&size);
-			xmlFree(src);
-		}
-		g_free(wids);
-
-		g_byte_array_free (buffer, 1);
-#if (DATASERVER_VERSION >= 2031001)
-		g_object_unref(stream);
-#else
-		camel_object_unref(stream);
-#endif
-	//	char *buff = decode_html_entities(buffer2);
-///		buff=tmp;
-
-		feed_dir = rss_component_peek_base_directory();
-		tmp_file = g_strconcat(feedid, ".img", NULL);
-		tmp_path = g_build_path(G_DIR_SEPARATOR_S,
-				feed_dir, tmp_file, NULL);
-		g_free(tmp_file);
-		g_free(feed_dir);
-#if EVOLUTION_VERSION >= 23000
-		feed_file = g_filename_to_uri(tmp_path, NULL, NULL);
-		feed_file = g_strconcat("evo-file://", tmp_path, NULL);
-#else
-		feed_file = g_strdup(tmp_path);
-#endif
-
-		g_string_append_printf (fbuffer,
-			"<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 2px; color: #%06x;\">",
-			frame_colour & 0xffffff,
-			content_colour & 0xEDECEB & 0xffffff,
-			text_colour & 0xffffff);
-		if (g_file_test(tmp_path, G_FILE_TEST_EXISTS)){
-			if ((pixbuf = gdk_pixbuf_new_from_file(tmp_path, NULL))) {
-				g_string_append_printf (fbuffer,
-					"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-					"<img height=16 src=%s>"
-					"<b><font size=+1><a href=%s>%s</a></font></b></div>",
-					content_colour & 0xEDECEB & 0xffffff,
-					text_colour & 0xffffff,
-					feed_file,
-					website,
-					subject);
-				g_object_unref(pixbuf);
-				g_free(feed_file);
-				goto render_body;
-			}
-		g_free(tmp_path);
-		}
-		tmp_file = g_build_filename (EVOLUTION_ICONDIR,
-				"rss-16.png",
-				NULL);
-#if EVOLUTION_VERSION >= 23000
-		iconfile = g_filename_to_uri(tmp_file, NULL, NULL);
-		iconfile = g_strconcat("evo-file://", tmp_file, NULL);
-#else
-		iconfile = g_strdup(tmp_file);
-#endif
-		g_free(tmp_file);
-		g_string_append_printf (fbuffer,
-			"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-			"<img height=16 src=%s>"
-			"<b><font size=+1><a href=%s>%s</a></font></b></div>",
-			content_colour & 0xEDECEB & 0xffffff, text_colour & 0xffffff,
-			iconfile, website, subject);
-		g_free(iconfile);
-		g_free(feed_file);
-
-render_body:	if (category) {
-			g_string_append_printf (fbuffer,
-				"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-				"<b><font size=-1>Posted under: %s</font></b></div>",
-				content_colour & 0xEDECEB & 0xffffff,
-				text_colour & 0xffffff,
-				category);
-		}
-		g_string_append_printf (fbuffer,
-			"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
-			"%s</div>",
-			frame_colour & 0xffffff,
-			content_colour & 0xffffff,
-			text_colour & 0xffffff,
-			buff);
-/*		if (comments && gconf_client_get_bool (rss_gconf,
-						GCONF_KEY_SHOW_COMMENTS,
-						NULL)) {
-			if (commstream) {
-				g_string_append_printf (fbuffer,
-					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">",
-					frame_colour & 0xffffff,
-					content_colour & 0xEDECEB & 0xffffff,
-					text_colour & 0xffffff);
-				result = print_comments(comments, commstream, (EMFormatHTML *)t->format);
-				g_free(commstream);
-				rfrclsid = g_strdup_printf ("org-gnome-rss-controls-%d",
-					org_gnome_rss_controls_counter_id);
-				org_gnome_rss_controls_counter_id++;
-				pobj = (struct _org_gnome_rss_controls_pobject *)
-							em_format_html_add_pobject ((EMFormatHTML *) t->format,
-									sizeof(*pobj),
-									rfrclsid,
-									message,
-									(EMFormatHTMLPObjectFunc)org_gnome_rss_rfrcomm);
-				pobj->counter = commcnt;
-				pobj->website = g_strdup(comments);
-				//this might not be needed but we want to make sure po->html is destroyed
-				pobj->object.free = free_rss_controls;
-				g_string_append_printf (fbuffer,
-					"<object height=25 classid=%s></object>", rfrclsid);
-				if (result && strlen(result)) {
-					g_string_append_printf (fbuffer,
-					"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s",
-						frame_colour & 0xffffff,
-						content_colour & 0xffffff,
-						text_colour & 0xffffff,
-						result);
-					g_free(result);
-				}
-				g_free(rfrclsid);
-				commstream = NULL;
-			} else {
-				gchar *uri =  g_strdup(g_hash_table_lookup(
-						rf->hr, g_strstrip(feedid)));
-				fetch_comments(comments, g_strdup(uri), (EMFormatHTML *)t->format);
-			}
-			g_string_append (fbuffer, "</div>");
-		}*/
-		g_string_append (fbuffer, "</div>");
-//#endif
-	}
-#if (EVOLUTION_VERSION < 30400)
-	camel_stream_write (t->stream, fbuffer->str, fbuffer->len, NULL, NULL);
-#else
-	len = t->part_id->len;
-	g_string_append (t->part_id, ".org-gnome-rss-content");
-	pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
-		t->format, sizeof (EMFormatRSSControlsPURI),
-		t->part, t->part_id->str);
-	pobj->puri.write_func = write_rss_content;
-	pobj->puri.part = g_object_ref (t->part);
-	pobj->puri.is_attachment = FALSE;
-	pobj->buff = fbuffer->str;
-	em_format_add_puri (t->format, (EMFormatPURI *) pobj);
-	g_string_truncate (t->part_id, len);
-#endif
-#if (DATASERVER_VERSION >= 2031001)
-	g_object_unref(fstream);
-#else
-	camel_object_unref(fstream);
-#endif
-	g_free(buff);
-	g_free(subject);
-
-out:	if (addr)
-		g_free(addr);
-	return;
-fmerror:
-#if (EVOLUTION_VERSION < 30400)
-	str = g_strdup_printf (
-		"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-		frame_colour & 0xffffff, content_colour & 0xffffff, text_colour & 0xffffff);
-	camel_stream_write_string (t->stream, str, NULL, NULL);
-	g_free (str);
-	camel_stream_write_string (t->stream,
-		"<div style=\"border: solid 0px; padding: 4px;\">\n",
-		NULL, NULL);
-	camel_stream_write_string (t->stream,
-		"<h3>Formatting error!</h3>"
-		"Feed article corrupted! Cannot format article.",
-		NULL, NULL);
-	camel_stream_write_string (t->stream, "</div></div>", NULL, NULL);
-#else
-	len = t->part_id->len;
-	g_string_append (t->part_id, ".org-gnome-rss-error");
-	pobj = (EMFormatRSSControlsPURI *) em_format_puri_new (
-		t->format, sizeof (EMFormatRSSControlsPURI),
-		t->part, t->part_id->str);
-	pobj->puri.write_func = write_rss_error;
-	pobj->puri.part = g_object_ref (t->part);
-	pobj->puri.is_attachment = FALSE;
-	em_format_add_puri (t->format, (EMFormatPURI *) pobj);
-	g_string_truncate (t->part_id, len);
-#endif
-	return;
-}
-#endif
 
 #if EVOLUTION_VERSION < 22900 //kb//
 void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t);
@@ -3693,7 +2075,7 @@ update_sr_message(void)
 				farticle,
 				ftotal);
 		if (G_IS_OBJECT(rf->progress_bar))
-			gtk_progress_bar_set_text (rf->progress_bar, fmsg);
+			gtk_progress_bar_set_text ((GtkProgressBar *)rf->progress_bar, fmsg);
 #endif
 		g_free(fmsg);
 	}
@@ -3800,7 +2182,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 			gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete."));
 #else
 		if(rf->progress_bar && rf->info) {
-			gtk_progress_bar_set_text (GTK_LABEL (rf->progress_bar), _("Complete."));
+			gtk_progress_bar_set_text ((GtkProgressBar *)(rf->progress_bar), _("Complete."));
 #endif
 			if (rf->info->cancel_button)
 				gtk_widget_set_sensitive(rf->info->cancel_button, FALSE);
@@ -3849,7 +2231,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 				_("Canceled."));
 #else
 		if(rf->progress_bar && rf->feed_queue == 0 && rf->info) {
-			gtk_progress_bar_set_text (rf->progress_bar,
+			gtk_progress_bar_set_text ((GtkProgressBar *)rf->progress_bar,
 				_("Canceled."));
 #endif
 			farticle=0;
@@ -3964,7 +2346,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		gtk_label_set_markup (GTK_LABEL (rf->label), _("Complete"));
 #else
 	if(rf->progress_bar && rf->feed_queue == 0 && rf->info) {
-		gtk_progress_bar_set_text (rf->progress_bar, _("Complete"));
+		gtk_progress_bar_set_text ((GtkProgressBar *)rf->progress_bar, _("Complete"));
 #endif
 		farticle=0;
 		ftotal=0;
@@ -4097,9 +2479,9 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	d("browser fill:%d\n", (int)browser_fill);
 	if (!response->len) {
 		tmsg = g_strdup(_("Formatting error."));
-		browser_write(
-			tmsg, strlen(tmsg),
-			(gchar *)"file:///fakefile#index");
+		//browser_write(
+		//	tmsg, strlen(tmsg),
+		//	(gchar *)"file:///fakefile#index");
 		//g_free(tmsg);
 		if (ub->create) {
 			//stream remove
@@ -4133,7 +2515,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 		len = strlen(response->str);
 		*str+= browser_fill;
 		len-= browser_fill;
-		browser_write(str, len, ub->url);
+		//browser_write(str, len, ub->url);
 		g_string_free(response, 1);
 	}
 	browser_fill = 0;
@@ -5086,6 +3468,27 @@ check_folders(void)
 #endif
 }
 
+void
+refresh_mail_folder(CamelFolder *mail_folder)
+{
+#if EVOLUTION_VERSION < 30505
+        mail_refresh_folder(mail_folder, NULL, NULL);
+#else
+        EShellContent *shell_content;
+        EMailReader *reader;
+        shell_content = e_shell_view_get_shell_content (rss_shell_view);
+        reader = E_MAIL_READER (shell_content);
+        e_mail_reader_refresh_folder(reader, mail_folder);
+#endif
+#if (DATASERVER_VERSION >= 2033001)
+                camel_folder_synchronize (mail_folder, FALSE, G_PRIORITY_DEFAULT,
+                        NULL, NULL, NULL);
+#else
+        camel_folder_sync(mail_folder, FALSE, NULL);
+#endif
+        camel_folder_thaw(mail_folder);
+}
+
 gboolean
 check_if_enabled (gpointer key, gpointer value, gpointer user_data)
 {
@@ -5140,7 +3543,7 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	struct _send_info *info;
 	struct _send_data *data = (struct _send_data *)t->data;
 
-	GtkWidget *label,*progress_bar, *cancel_button, *status_label;
+	GtkWidget *label,*progress_bar, *cancel_button;
 	GtkWidget *recv_icon;
 	gchar *pretty_url;
 	guint row;
@@ -5212,7 +3615,7 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	gtk_widget_set_margin_bottom (cancel_button, 12);
 
 	gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
-	gtk_misc_set_alignment (GTK_MISC (status_label), 0, .5);
+	//gtk_misc_set_alignment (GTK_MISC (status_label), 0, .5);
 
 #if EVOLUTION_VERSION < 30501
 	gtk_table_attach (
@@ -5227,17 +3630,17 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	gtk_table_attach (
 		GTK_TABLE (t->table), cancel_button,
 		3, 4, row, row+2, 0, 0, 0, 0);
-	gtk_table_attach (
-		GTK_TABLE (t->table), status_label,
-		1, 2, row+1, row+2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	//gtk_table_attach (
+	//	GTK_TABLE (t->table), status_label,
+	//	1, 2, row+1, row+2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 #else
 	gtk_widget_set_hexpand (label, TRUE);
 	gtk_widget_set_halign (label, GTK_ALIGN_FILL);
 
-	gtk_grid_attach (t->grid, recv_icon, 0, row, 1, 2);
-	gtk_grid_attach (t->grid, label, 1, row, 1, 1);
-	gtk_grid_attach (t->grid, progress_bar, 1, row + 1, 1, 1);
-	gtk_grid_attach (t->grid, cancel_button, 2, row, 1, 2);
+	gtk_grid_attach ((GtkGrid *)t->grid, recv_icon, 0, row, 1, 2);
+	gtk_grid_attach ((GtkGrid *)t->grid, label, 1, row, 1, 1);
+	gtk_grid_attach ((GtkGrid *)t->grid, progress_bar, 1, row + 1, 1, 1);
+	gtk_grid_attach ((GtkGrid *)t->grid, cancel_button, 2, row, 1, 2);
 #endif
 
 	g_signal_connect (
@@ -5245,10 +3648,10 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 			G_CALLBACK (receive_cancel), info);
 
 	info->progress_bar = progress_bar;
-#if EVOLUTION_VERSION < 30504
-	info->status_label = status_label;
-	rf->label = status_label;
-#endif
+//#if EVOLUTION_VERSION < 30504
+//	info->status_label = status_label;
+//	rf->label = status_label;
+//#endif
 	info->cancel_button = cancel_button;
 	info->data = (struct _send_data *)t->data;
 	rf->info = info;
@@ -5378,12 +3781,6 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 		"activate",
 		G_CALLBACK (quit_cb),
 		rss_shell_view);
-#if EVOLUTION_VERSION >= 22900
-/*	rss_search_bar_hook();*/
-#ifdef HAVE_WEBKIT
-	webkit_hook_actions();
-#endif
-#endif
 	rss_hooks_init();
 	return TRUE;
 }

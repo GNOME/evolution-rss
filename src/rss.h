@@ -461,6 +461,7 @@ void cancel_comments_session(SoupSession *sess);
 gchar *search_rss(char *buffer, int len);
 void prepare_hashes(void);
 void update_ttl(gpointer key, guint value);
+void refresh_mail_folder(CamelFolder *mail_folder);
 gboolean check_chn_name(gchar *chn_name);
 void
 #if LIBSOUP_VERSION < 2003000
@@ -552,6 +553,7 @@ void free_filter_uids (gpointer user_data, GObject *ex_msg);
 void quit_cb(void *ep, EShellView *shell_view);
 #endif
 void rebase_feeds(gchar *old_name, gchar *new_name);
+
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);
