@@ -9,6 +9,7 @@ src/fetch.c
 src/file-gio.c
 src/network-soup.c
 src/notification.c
+src/org.gnome.evolution.plugin.evolution-rss.gschema.xml.in
 src/org-gnome-evolution-rss.eplug.xml
 src/org-gnome-evolution-rss.error.xml
 src/org-gnome-evolution-rss.xml
