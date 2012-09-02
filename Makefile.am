@@ -21,6 +21,7 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = \
 	evolution-rss.desktop \
+	evolution-rss.desktop.in \
 	intltool-extract \
 	intltool-merge \
 	intltool-update

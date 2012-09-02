@@ -133,7 +133,6 @@ evolution_module_rss_la_CPPFLAGS =			\
 evolution_module_rss_la_LDFLAGS =		\
         -avoid-version -module $(NO_UNDEFINED)
 
-
 @EVO_SERVER_RULE@
 
 gsettings_SCHEMAS =                            \
@@ -151,7 +150,7 @@ convert_DATA = evolution-rss.convert
 
 DISTCLEANFILES = $(schema_DATA)			\
 	evolution-rss.desktop.in		\
-	$(gsettings_SCHEMAS:.xml=.xml.in)
+	$(gsettings_SCHEMAS:.xml)
 
 ui_DATA =			\
 	rss-main.ui		\
@@ -161,7 +160,7 @@ CLEANFILES	= $(BUILT_SOURCES)	\
 	org-gnome-evolution-rss.eplug	\
 	org-gnome-evolution-rss.error   \
 	$(gsettings_SCHEMAS)		\
-	$(gsettings_SCHEMAS:.xml=.xml.in)
+	$(gsettings_SCHEMAS:.xml)
 
 EXTRA_DIST =					\
 	$(ui_DATA)				\
