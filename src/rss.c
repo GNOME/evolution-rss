@@ -52,19 +52,8 @@ int rss_verbose_debug = 0;
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
 
-#if EVOLUTION_VERSION < 22900 //kb//
-#include <e-util/e-error.h>
-#include <mail/em-popup.h>
-#include <mail/em-folder-view.h>
-#include <mail/em-format.h>
-#include <mail/mail-component.h>
-#include <misc/e-activity-handler.h>
-#include <bonobo/bonobo-shlib-factory.h>
-#else
-#if (EVOLUTION_VERSION >= 30391) //kb//
+#if (EVOLUTION_VERSION >= 30391)
 #include <libevolution-utils/e-alert-dialog.h>
-#else
-#include <e-util/e-alert-dialog.h> //remove//
 #endif
 #include <glib/gi18n.h>
 #if EVOLUTION_VERSION < 30303
@@ -77,7 +66,6 @@ int rss_verbose_debug = 0;
 #include <shell/e-shell-view.h>
 #if EVOLUTION_VERSION < 30101
 #include <misc/e-popup-menu.h>
-#endif
 #endif
 
 #if EVOLUTION_VERSION >= 30505
@@ -1385,17 +1373,9 @@ write_rss_error (EMFormat *emf,
 #endif
 
 
-#if EVOLUTION_VERSION < 22900 //kb//
-void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t);
-#else
 void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view);
-#endif
 
-#if EVOLUTION_VERSION < 22900 //kb//
-void org_gnome_cooly_folder_refresh(void *ep, EMEventTargetFolder *t)
-#else
 void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
-#endif
 {
 	gchar *folder_name;
 	gchar *main_folder = get_main_folder();
@@ -2111,19 +2091,6 @@ finish_feed (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	g_free(rfmsg);
 }
 
-#if EVOLUTION_VERSION < 22900 //kb//
-struct _MailComponentPrivate {
-	GMutex *lock;
-
-	/* states/data used during shutdown */
-#if EVOLUTION_VERSION >= 22801
-	enum { MC_QUIT_NOT_START, MC_QUIT_START, MC_QUIT_SYNC, MC_QUIT_THREADS } quit_state;
-#else
-	enum { MC_QUIT_START, MC_QUIT_SYNC, MC_QUIT_THREADS } quit_state;
-#endif
-};
-#endif
-
 void
 generic_finish_feed(rfMessage *msg, gpointer user_data)
 {
@@ -2143,16 +2110,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	//so we need to test for the presence of key
 	if (!key)
 		deleted = 1;
-
-#if EVOLUTION_VERSION < 22900 //kb//
-#if EVOLUTION_VERSION > 22801
-	if (mc->priv->quit_state != MC_QUIT_NOT_START) {
-#else
-	if (mc->priv->quit_state != -1) {
-#endif
-		rf->cancel_all=1;
-	}
-#endif
 
 	d("taskbar_op_finish() queue:%d\n", rf->feed_queue);
 
@@ -2655,15 +2612,6 @@ update_articles(gboolean disabler)
 	gboolean online =  camel_session_is_online (session);
 #endif
 #endif
-#if EVOLUTION_VERSION < 22900 //kb//
-	MailComponent *mc = mail_component_peek ();
-#if EVOLUTION_VERSION > 22801
-	if (mc->priv->quit_state != MC_QUIT_NOT_START)
-#else
-	if (mc->priv->quit_state != -1)
-#endif
-		rf->cancel=1;
-#endif
 
 	if (!rf->pending && !rf->feed_queue && !rf->cancel_all && online) {
 		g_print("Reading RSS articles...\n");
@@ -2683,16 +2631,8 @@ update_articles(gboolean disabler)
 gchar *
 rss_component_peek_base_directory(void)
 {
-#if (EVOLUTION_VERSION >= 22900) //kb//
 	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
-//		em_utils_get_data_dir());
 		mail_session_get_data_dir ());
-#else
-	MailComponent *component = mail_component_peek();
-/* http://bugzilla.gnome.org/show_bug.cgi?id=513951 */
-	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
-		mail_component_peek_base_directory (component));
-#endif
 }
 
 CamelStore *

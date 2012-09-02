@@ -494,12 +494,8 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 				icon);
 		g_free(sizes);
 
-#if EVOLUTION_VERSION < 22900 //kb//
-		si = g_hash_table_lookup (mod->store_hash, store);
-#else
 		si = em_folder_tree_model_lookup_store_info (
 			EM_FOLDER_TREE_MODEL (mod), store);
-#endif
 		row = g_hash_table_lookup (si->full_hash, full_name);
 		if (!row) goto out;
 		path = gtk_tree_row_reference_get_path (row);

@@ -41,20 +41,18 @@
 
 #include <mail/em-config.h>
 
-#if EVOLUTION_VERSION < 22900 //kb//
-#include <bonobo/bonobo-shlib-factory.h>
-#include <e-util/e-error.h>
-#include <shell/evolution-config-control.h>
-#else
 #if (EVOLUTION_VERSION >= 30391)
 #include <libevolution-utils/e-alert-dialog.h>
 #else
 #include <e-util/e-alert-dialog.h>
 #endif
+
 #include <misc/e-preferences-window.h>
+
 #if EVOLUTION_VERSION <  30303
 #include <mail/e-mail-local.h>
 #endif
+
 #include <mail/em-folder-selector.h>
 #if EVOLUTION_VERSION >= 30305
 #include <libemail-engine/e-mail-folder-utils.h>
@@ -64,10 +62,10 @@
 #endif
 #endif
 
+
 #include <mail/em-utils.h>
 #include <shell/e-shell.h>
 #include <shell/e-shell-view.h>
-#endif
 
 
 #ifdef HAVE_LIBSOUP_GNOME
@@ -4008,27 +4006,14 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 out:	return NULL;
 }
 
-/*=============*
- * BONOBO part *
- *=============*/
-
-#if EVOLUTION_VERSION < 22900
-EvolutionConfigControl *
-#else
 GtkWidget *
-#endif
 #if EVOLUTION_VERSION >= 23106
 rss_config_control_new (EShell *shell);
 #else
 rss_config_control_new (void);
 #endif
 
-//kb//
-#if EVOLUTION_VERSION < 22900
-EvolutionConfigControl *
-#else
 GtkWidget *
-#endif
 #if EVOLUTION_VERSION >= 23106
 rss_config_control_new (EShell *shell)
 #else
@@ -4413,11 +4398,7 @@ rss_config_control_new (void)
 #endif
 	g_object_unref (gui);
 
-#if EVOLUTION_VERSION < 22900 //kb//
-	return evolution_config_control_new (control_widget);
-#else
 	return control_widget;
-#endif
 }
 
 #if EVOLUTION_VERSION < 22900

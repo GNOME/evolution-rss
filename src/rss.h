@@ -30,12 +30,8 @@
 
 #include <gtk/gtk.h>
 #include <libsoup/soup.h>
-#if EVOLUTION_VERSION < 22900 //kb//
-#include <mail/mail-component.h>
-#else
 #include <shell/e-shell.h>
 #include <shell/e-shell-view.h>
-#endif
 #include <shell/es-event.h>
 
 #if (DATASERVER_VERSION >= 2031001)
