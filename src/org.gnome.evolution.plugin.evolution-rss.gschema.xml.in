@@ -1,0 +1,149 @@
+<schemalist>
+  <schema path="/org/gnome/evolution/plugin/rss/" id="org.gnome.evolution.plugin.evolution-rss" gettext-domain="evolution">
+    <key name="auth-proxy" type="b">
+      <default>false</default>
+      <summary>Proxy requires authentication</summary>
+      <description>Network proxy requires authentication.</description>
+    </key>
+    <key name="display-summary" type="b">
+      <default>true</default>
+      <summary>Display article's summary</summary>
+      <description>Evolution will show article's summary instead of article's webpage. Summary can also be html.</description>
+    </key>
+    <key name="feeds" type="as">
+      <default>[]</default>
+      <summary>Feeds list</summary>
+      <description>Contains list of the currently setup feeds.</description>
+    </key>
+    <key name="host-proxy" type="s">
+      <default>''</default>
+      <summary>Hostname of the proxy server</summary>
+      <description>Hostname of the proxy server used for feeds and content.</description>
+    </key>
+    <key name="html-render" type="i">
+      <default>0</default>
+      <summary>Html render</summary>
+      <description>Type HTML Render used to display html pages.</description>
+    </key>
+    <key name="custom-font" type="b">
+      <default>false</default>
+      <summary>Use custom font</summary>
+      <description>Use a custom font size instead of system defaults.</description>
+    </key>
+    <key name="min-font-size" type="d">
+      <default>12</default>
+      <summary>Minimum font size</summary>
+      <description>The size of the font used in full text preview.</description>
+    </key>
+    <key name="network-timeout" type="d">
+      <default>300</default>
+      <summary>Network timeout</summary>
+      <description>Interval in seconds before a conection is dropped.</description>
+    </key>
+    <key name="network-queue-size" type="i">
+      <default>5</default>
+      <summary>Network queue size</summary>
+      <description>How many simultaneous downloads.</description>
+    </key>
+    <key name="html-js" type="b">
+      <default>true</default>
+      <summary>JavaScript Enabled</summary>
+      <description>JavaScript Enabled</description>
+    </key>
+    <key name="html-java" type="b">
+      <default>true</default>
+      <summary>Java Enabled</summary>
+      <description>Java Enabled</description>
+    </key>
+    <key name="accept-cookies" type="b">
+      <default>true</default>
+      <summary>Accepts Cookies</summary>
+      <description>Evolution RSS will accept cookies from articles you browse.</description>
+    </key>
+    <key name="image-resize" type="b">
+      <default>true</default>
+      <summary>Automaticaly Resize Images</summary>
+      <description>Evolution RSS will automatically resize images larger than displayed area.</description>
+    </key>
+    <key name="search-rss" type="b">
+      <default>false</default>
+      <summary>Scan web pages for RSS</summary>
+      <description>Evolution RSS will scan web pages for rss content</description>
+    </key>
+    <key name="download-enclosures" type="b">
+      <default>true</default>
+      <summary>Download enclosures</summary>
+      <description>Evolution will download all feed enclosures a feed article may contain.</description>
+    </key>
+    <key name="enclosure-limit" type="b">
+      <default>false</default>
+      <summary>Limit enclosure size</summary>
+      <description>Limit maximum enclosure size evolution will download.</description>
+    </key>
+    <key name="enclosure-size" type="d">
+      <default>1024</default>
+      <summary>Max enclosure size</summary>
+      <description>Limit maximum enclosure size evolution will download.</description>
+    </key>
+    <key name="status-icon" type="b">
+      <default>false</default>
+      <summary>Enable Status Icon</summary>
+      <description>Enable status icon in notification area</description>
+    </key>
+    <key name="blink-icon" type="b">
+      <default>false</default>
+      <summary>Blink Status Icon</summary>
+      <description>Blink status icon when new article received</description>
+    </key>
+    <key name="feed-icon" type="b">
+      <default>true</default>
+      <summary>Enable Feed Icon</summary>
+      <description>Display feed icon on feed folder</description>
+    </key>
+    <key name="pass-proxy" type="s">
+      <default>''</default>
+      <summary>Password for proxy server</summary>
+      <description>If the proxy server requires authentication. This is the password field.</description>
+    </key>
+    <key name="port-proxy" type="i">
+      <default>3128</default>
+      <summary>Proxy server port</summary>
+      <description>The port number for proxy server used for feeds and content.</description>
+    </key>
+    <key name="remove-folder" type="b">
+      <default>true</default>
+      <summary>Remove feed folder</summary>
+      <description>Deleting feed entry will also remove feed folder.</description>
+    </key>
+    <key name="rep-check" type="b">
+      <default>false</default>
+      <summary>Check New articles</summary>
+      <description>Auto check for new articles.</description>
+    </key>
+    <key name="rep-check-timeout" type="d">
+      <default>60</default>
+      <summary>New articles timeout</summary>
+      <description>Frequency to check for new articles (in minutes).</description>
+    </key>
+    <key name="startup-check" type="b">
+      <default>false</default>
+      <summary>Checks articles on startup</summary>
+      <description>Check for new articles everytime Evolution is started.</description>
+    </key>
+    <key name="show-comments" type="b">
+      <default>true</default>
+      <summary>Show articles comments</summary>
+      <description>If a feed article has comments, it will be displayed.</description>
+    </key>
+    <key name="use-proxy" type="b">
+      <default>false</default>
+      <summary>Use proxy server</summary>
+      <description>Use a proxy server to fetch articles and content.</description>
+    </key>
+    <key name="user-proxy" type="s">
+      <default>''</default>
+      <summary>Proxy server user</summary>
+      <description>The username to use for proxy server authentication.</description>
+    </key>
+  </schema>
+</schemalist>

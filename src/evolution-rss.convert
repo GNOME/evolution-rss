@@ -1,0 +1,29 @@
+[org.gnome.evolution]
+version = /apps/evolution/version
+last-upgraded-version = /apps/evolution/last_version
+
+[org.gnome.evolution.plugin.evolution-rss]
+display-summary = /apps/evolution/plugin/evolution-rss/display_summary
+accept-cookies = /apps/evolution/plugin/evolution-rss/accept_cookies
+download-enclosures = /apps/evolution/plugin/evolution-rss/download_enclosures
+enclosure-limit = /apps/evolution/plugin/evolution-rss/enclosure_limit
+enclosure-size = /apps/evolution/plugin/evolution-rss/enclosure_size
+remove-folder = /apps/evolution/plugin/evolution-rss/remove_folder
+custom-font = /apps/evolution/plugin/evolution-rss/custom_font
+min-font-size = /apps/evolution/plugin/evolution-rss/min_font_size
+html-render = /apps/evolution/plugin/evolution-rss/html_render
+html-js = /apps/evolution/plugin/evolution-rss/html_js
+html-java = /apps/evolution/plugin/evolution-rss/html_java
+embed-plugin = /apps/evolution/plugin/evolution-rss/embed_plugin
+status-icon = /apps/evolution/plugin/evolution-rss/status_icon
+blink-icon = /apps/evolution/plugin/evolution-rss/blink_icon
+startup-check = /apps/evolution/plugin/evolution-rss/startup_check
+rep-check = /apps/evolution/plugin/evolution-rss/rep_check
+rep-check-timeout = /apps/evolution/plugin/evolution-rss/rep_check_timeout
+image-resize = /apps/evolution/plugin/evolution-rss/image_resize
+search-rss = /apps/evolution/plugin/evolution-rss/search_rss
+feed-icon = /apps/evolution/plugin/evolution-rss/feed_icon
+show-comments = /apps/evolution/plugin/evolution-rss/show_comments
+network-timeout = /apps/evolution/plugin/evolution-rss/network_timeout
+network-queue-size = /apps/evolution/plugin/evolution-rss/network_queue_size
+feeds = /apps/evolution/plugin/evolution-rss/feeds
