@@ -28,7 +28,7 @@
 #include "parser.h"
 #include "rss-image.h"
 
-#include "rss-formater.h"
+#include "rss-formatter.h"
 
 extern int rss_verbose_debug;
 extern EShellView *rss_shell_view;

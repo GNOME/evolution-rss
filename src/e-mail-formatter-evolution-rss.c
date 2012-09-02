@@ -34,7 +34,7 @@
 #include <X11/Xlib.h>
 #include <camel/camel.h>
 
-#include "rss-formater.h"
+#include "rss-formatter.h"
 
 
 typedef struct _EMailFormatterRSS EMailFormatterRSS;

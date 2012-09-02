@@ -111,7 +111,7 @@ evolution_module_rss_la_SOURCES =		\
 	rss-cache.c				\
 	rss-evo-common.c			\
 	rss-image.c				\
-	rss-formater.c				\
+	rss-formatter.c				\
 	rss-status-icon.c			\
 	rss-icon-factory.c			\
 	dbus.c					\
@@ -174,8 +174,8 @@ EXTRA_DIST =					\
 	debug.h					\
 	dbus.c					\
 	dbus.h					\
-	e-mail-formatter-parser-rss.c		\
-	e-mail-formatter-parser-rss.h		\
+	e-mail-parser-evolution-rss.c		\
+	e-mail-parser-evolution-rss.h		\
 	e-mail-formatter-evolution-rss.c	\
 	e-mail-formatter-evolution-rss.h	\
 	fetch.c					\
