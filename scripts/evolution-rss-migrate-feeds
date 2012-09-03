@@ -1,4 +1,6 @@
 #!/bin/bash
+# Migrates the evolution rss feeds stored in gconf to dconf
+# requies GConf2
 
 a=""
 IFS=
