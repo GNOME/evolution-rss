@@ -201,7 +201,7 @@ typedef struct _rssfeed {
 #define GCONF_KEY_IMAGE_RESIZE "/apps/evolution/evolution-rss/image_resize"
 #define GCONF_KEY_SEARCH_RSS "/apps/evolution/evolution-rss/search_rss"
 #else
-#define RSS_CONF_SCHEMA "org.gnome.evolution.plugin.evolution-rss"
+#define RSS_CONF_SCHEMA "org.gnome.evolution.plugin.rss"
 #define CONF_DISPLAY_SUMMARY "display-summary"
 #define CONF_ACCEPT_COOKIES "accept-cookies"
 #define CONF_DOWNLOAD_ENCLOSURES "download-enclosures"
