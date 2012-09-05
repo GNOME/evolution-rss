@@ -69,7 +69,6 @@
 
 #define RIGHT_KEY(sufix) (proxy_type == PROXY_TYPE_SYSTEM ? KEY_GCONF_SYS_ ## sufix : KEY_GCONF_EVO_ ## sufix)
 #else
-#define RSS_CONF_SCHEMA "org.gnome.evolution.plugin.evolution-rss"
 #define CONF_SCHEMA_EVO_NETWORK "org.gnome.evolution.shell.network-config"
 #define CONF_EVO_PROXY_TYPE	"proxy-type"
 #define CONF_NETWORK_TIMEOUT "network-timeout"

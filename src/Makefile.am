@@ -112,6 +112,7 @@ evolution_module_rss_la_SOURCES =		\
 	rss-evo-common.c			\
 	rss-image.c				\
 	rss-formatter.c				\
+	rss-formatter.h				\
 	rss-status-icon.c			\
 	rss-icon-factory.c			\
 	dbus.c					\
