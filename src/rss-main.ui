@@ -326,7 +326,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label_webkits">
-                        <property name="label" translatable="yes">label</property>
+                        <property name="label">label</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
