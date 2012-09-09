@@ -32,6 +32,7 @@
 extern rssfeed *rf;
 
 GSList *rss_list = NULL;
+static gchar *rss_main_folder = NULL;
 
 static gboolean
 xml_set_content (xmlNodePtr node, char **val)
@@ -599,6 +600,9 @@ get_main_folder(void)
 	gchar *feed_file;
 	gchar *feed_dir = rss_component_peek_base_directory();
 
+	if (rss_main_folder)
+		goto out;
+
 	if (!g_file_test(feed_dir, G_FILE_TEST_EXISTS))
 		g_mkdir_with_parents (feed_dir, 0755);
 	feed_file = g_strdup_printf("%s" G_DIR_SEPARATOR_S "main_folder", feed_dir);
@@ -608,12 +612,14 @@ get_main_folder(void)
 		if (f && fgets(mf, 511, f) != NULL) {
 			fclose(f);
 			g_free(feed_file);
-			return g_strdup(mf);
+			rss_main_folder = g_strdup(mf);
+			goto out;
 		}
 		fclose(f);
 	}
 	g_free(feed_file);
-	return g_strdup(DEFAULT_FEEDS_FOLDER);
+	rss_main_folder = g_strdup(DEFAULT_FEEDS_FOLDER);
+out: 	return g_strdup(rss_main_folder);
 }
 
 void
