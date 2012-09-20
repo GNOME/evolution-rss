@@ -1,13 +1,14 @@
 # evolution-rss' Portuguese translation
 # Copyright © 2009 evolution-rss
 # This file is distributed under the same license as the evolution-rss package.
-# António Lima <amrlima@gmail.com>, 2009, 2010, 2011.
+# António Lima <amrlima@gmail.com>, 2009, 2010, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-04 02:49+0100\n"
-"PO-Revision-Date: 2011-09-02 22:30+0000\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product"
+"=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-09-02 19:13+0000\n"
+"PO-Revision-Date: 2012-09-13 21:59+0000\n"
 "Last-Translator: António Lima <amrlima@gmail.com>\n"
 "Language-Team: gnome_pt@yahoogroups.com\n"
 "Language: pt\n"
@@ -15,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8 bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.0\n"
+"X-Generator: Virtaal 0.7.1\n"
 "X-Project-Style: gnome\n"
 "X-Poedit-Language: Portuguese\n"
 "X-Poedit-Country: PORTUGAL\n"
@@ -28,13 +29,13 @@ msgstr "Leitor de RSS do Evolution"
 msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
 msgstr "Plugin que permite o Evolution Mail apresentar fontes rss."
 
-#: ../src/dbus.c:108 ../src/rss.c:3178 ../src/rss-config-factory.c:1110
-#: ../src/rss-config-factory.c:1654 ../src/rss-config-factory.c:1821
+#: ../src/dbus.c:108 ../src/rss.c:1950 ../src/rss-config-factory.c:1185
+#: ../src/rss-config-factory.c:1757 ../src/rss-config-factory.c:1924
 msgid "Error adding feed."
 msgstr "Erro ao adicionar fonte."
 
-#: ../src/dbus.c:109 ../src/rss.c:3179 ../src/rss-config-factory.c:1111
-#: ../src/rss-config-factory.c:1655 ../src/rss-config-factory.c:1822
+#: ../src/dbus.c:109 ../src/rss.c:1951 ../src/rss-config-factory.c:1186
+#: ../src/rss-config-factory.c:1758 ../src/rss-config-factory.c:1925
 msgid "Feed already exists!"
 msgstr "A fonte já existe!"
 
@@ -43,92 +44,28 @@ msgstr "A fonte já existe!"
 msgid "Importing URL: %s"
 msgstr "A importar URL: %s"
 
+#: ../src/e-mail-formatter-evolution-rss.c:131
+#| msgid "Evolution RSS Reader"
+msgid "Evolution-RSS"
+msgstr "Evolution-RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:137
+msgid "Displaying rss feed arcticles"
+msgstr "Apresentar artigos de fontes rss"
+
 #: ../src/evolution-rss.schemas.in.in.h:1
-msgid "Accepts Cookies"
-msgstr "Aceitar Cookies"
+msgid "Proxy requires authentication"
+msgstr "Proxy requer autenticação"
 
 #: ../src/evolution-rss.schemas.in.in.h:2
-msgid "Auto check for new articles."
-msgstr "Verificar por novos artigos automaticamente."
+msgid "Network proxy requires authentication."
+msgstr "Proxy de rede requer autenticação."
 
 #: ../src/evolution-rss.schemas.in.in.h:3
-msgid "Automaticaly Resize Images"
-msgstr "Redimensionar Imagens Automaticamente"
-
-#: ../src/evolution-rss.schemas.in.in.h:4
-msgid "Blink Status Icon"
-msgstr "Piscar Ícone de Estado"
-
-#: ../src/evolution-rss.schemas.in.in.h:5
-msgid "Blink status icon when new article received"
-msgstr "Piscar ícone de estado ao receber novo artigo"
-
-#: ../src/evolution-rss.schemas.in.in.h:6
-msgid "Check New articles"
-msgstr "Verificar Novos Artigos"
-
-#: ../src/evolution-rss.schemas.in.in.h:7
-msgid "Check for new articles everytime Evolution is started."
-msgstr "Verificar por novos artigos de cada vez que o Evolution é iniciado."
-
-#: ../src/evolution-rss.schemas.in.in.h:8
-msgid "Checks articles on startup"
-msgstr "Verificar artigos ao iniciar "
-
-#: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Contains list of the currently setup feeds."
-msgstr "Contém uma lista das fontes actualmente configuradas."
-
-#: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Deleting feed entry will also remove feed folder."
-msgstr "Apagar a entrada de fonte também irá remover a pasta de fonte."
-
-#: ../src/evolution-rss.schemas.in.in.h:11
 msgid "Display article's summary"
 msgstr "Apresentar resumo do artigo"
 
-#: ../src/evolution-rss.schemas.in.in.h:12
-msgid "Display feed icon on feed folder"
-msgstr "Apresentar o ícone de fonte na pasta de fonte"
-
-#: ../src/evolution-rss.schemas.in.in.h:13
-msgid "Download enclosures"
-msgstr "Transferir componentes"
-
-#: ../src/evolution-rss.schemas.in.in.h:14
-msgid "Enable Feed Icon"
-msgstr "Apresentar Ícone da Fonte"
-
-#: ../src/evolution-rss.schemas.in.in.h:15
-msgid "Enable Status Icon"
-msgstr "Apresentar Ícone de Estado"
-
-#: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Enable status icon in notification area"
-msgstr "Apresentar ícone de estado na área de notificação"
-
-#: ../src/evolution-rss.schemas.in.in.h:17
-msgid "Evolution RSS will accept cookies from articles you browse."
-msgstr "O Evolution RSS irá aceitar cookies de artigos que navegue."
-
-#: ../src/evolution-rss.schemas.in.in.h:18
-msgid ""
-"Evolution RSS will automatically resize images larger than displayed area."
-msgstr ""
-"O Evolution RSS irá redimensionar automaticamente imagens maiores do que a "
-"área de apresentação"
-
-#: ../src/evolution-rss.schemas.in.in.h:19
-msgid "Evolution RSS will scan web pages for rss content"
-msgstr "O Evolution RSS irá procurar conteúdo rss nas páginas web"
-
-#: ../src/evolution-rss.schemas.in.in.h:20
-msgid "Evolution will download all feed enclosures a feed article may contain."
-msgstr ""
-"O Evolution irá transferir todos os componentes de fonte que um item de "
-"fonte poderá conter."
-
-#: ../src/evolution-rss.schemas.in.in.h:21
+#: ../src/evolution-rss.schemas.in.in.h:4
 msgid ""
 "Evolution will show article's summary instead of article's webpage. Summary "
 "can also be html."
@@ -136,171 +73,244 @@ msgstr ""
 "O Evolution irá apresentar o resumo do artigo em vez da página web do "
 "artigo. O resumo também pode ser html."
 
-#: ../src/evolution-rss.schemas.in.in.h:22
+#: ../src/evolution-rss.schemas.in.in.h:5
 msgid "Feeds list"
 msgstr "Lista de fontes"
 
-#: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Frequency to check for new articles (in minutes)."
-msgstr "Frequência de verificação de novos artigos (em minutos)."
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Contém uma lista das fontes actualmente configuradas."
 
-#: ../src/evolution-rss.schemas.in.in.h:24
+#: ../src/evolution-rss.schemas.in.in.h:7
 msgid "Hostname of the proxy server"
 msgstr "Nome da máquina do servidor proxy"
 
-#: ../src/evolution-rss.schemas.in.in.h:25
+#: ../src/evolution-rss.schemas.in.in.h:8
 msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Nome da máquina do servidor proxy utilizado para fontes e conteúdo."
 
-#: ../src/evolution-rss.schemas.in.in.h:26
-msgid "How many simultaneous downloads."
-msgstr "Quantas transferências simultâneas."
-
-#: ../src/evolution-rss.schemas.in.in.h:27
-msgid "How to handle RSS URLs"
-msgstr "Como gerir com URLs RSS"
-
-#: ../src/evolution-rss.schemas.in.in.h:28
+#: ../src/evolution-rss.schemas.in.in.h:9
 msgid "Html render"
 msgstr "Renderização html"
 
+#: ../src/evolution-rss.schemas.in.in.h:10
+msgid "Type HTML Render used to display html pages."
+msgstr "Tipo de Renderização HTML utilizada para apresentar páginas html."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Utilizar fonte personalizada"
+
+#: ../src/evolution-rss.schemas.in.in.h:12
+msgid "Use a custom font size instead of system defaults."
+msgstr ""
+"Utilizar um tamanho de fonte personalizada em vez do tamanho por omissão do "
+"sistema."
+
+#: ../src/evolution-rss.schemas.in.in.h:13
+msgid "Minimum font size"
+msgstr "Tamanho mínimo de fonte"
+
+#: ../src/evolution-rss.schemas.in.in.h:14
+msgid "The size of the font used in full text preview."
+msgstr "O tamanho da fonte utilizada na visualização do texto completo."
+
+#: ../src/evolution-rss.schemas.in.in.h:15
+msgid "Network timeout"
+msgstr "Tempo limite de rede"
+
+#: ../src/evolution-rss.schemas.in.in.h:16
+msgid "Interval in seconds before a conection is dropped."
+msgstr "Intervalo em segundos antes de desistir uma ligação."
+
+#: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Tamanho da fila de rede"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Quantas transferências simultâneas."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "JavaScript Activo"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Java Activo"
+
+#: ../src/evolution-rss.schemas.in.in.h:21
+msgid "Accepts Cookies"
+msgstr "Aceitar Cookies"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "O Evolution RSS irá aceitar cookies de artigos que navegue."
+
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automaticaly Resize Images"
+msgstr "Redimensionar Imagens Automaticamente"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"O Evolution RSS irá redimensionar automaticamente imagens maiores do que a "
+"área de apresentação"
+
+#: ../src/evolution-rss.schemas.in.in.h:25
+msgid "Scan web pages for RSS"
+msgstr "Procurar conteúdos RSS em páginas web"
+
+#: ../src/evolution-rss.schemas.in.in.h:26
+msgid "Evolution RSS will scan web pages for rss content"
+msgstr "O Evolution RSS irá procurar conteúdo rss nas páginas web"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "Transferir componentes"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr ""
+"O Evolution irá transferir todos os componentes de fonte que um item de "
+"fonte poderá conter."
+
 #: ../src/evolution-rss.schemas.in.in.h:29
-msgid "If a feed article has comments, it will be displayed."
-msgstr "Se um artigo de fonte tiver comentários, será apresentado."
+msgid "Limit enclosure size"
+msgstr "Limitar tamanho de componente"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size evolution will download."
+msgstr "Limitar o tamanho máximo de componente que o Evolution irá transferir."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "Tamanho máximo de componente"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Apresentar Ícone de Estado"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Apresentar ícone de estado na área de notificação"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Piscar Ícone de Estado"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Piscar ícone de estado ao receber novo artigo"
+
+#: ../src/evolution-rss.schemas.in.in.h:36
+msgid "Enable Feed Icon"
+msgstr "Apresentar Ícone da Fonte"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Apresentar o ícone de fonte na pasta de fonte"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Senha para servidor proxy"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
 msgid ""
 "If the proxy server requires authentication. This is the password field."
 msgstr "Se o servidor proxy requer autenticação. Este é o campo de senha."
 
-#: ../src/evolution-rss.schemas.in.in.h:31
-msgid "Interval in seconds before a conection is dropped."
-msgstr "Intervalo em segundos antes de desistir uma ligação."
-
-#: ../src/evolution-rss.schemas.in.in.h:32
-msgid "Java Enabled"
-msgstr "Java Activo"
-
-#: ../src/evolution-rss.schemas.in.in.h:33
-msgid "JavaScript Enabled"
-msgstr "JavaScript Activo"
-
-#: ../src/evolution-rss.schemas.in.in.h:34
-msgid "Limit enclosure size"
-msgstr "Limitar tamanho de componente"
-
-#: ../src/evolution-rss.schemas.in.in.h:35
-msgid "Limit maximum enclosure size evolution will download."
-msgstr "Limitar o tamanho máximo de componente que o Evolution irá transferir."
-
-#: ../src/evolution-rss.schemas.in.in.h:36
-msgid "Max enclosure size"
-msgstr "Tamanho máximo de componente"
-
-#: ../src/evolution-rss.schemas.in.in.h:37
-msgid "Minimum font size"
-msgstr "Tamanho mínimo de fonte"
-
-#: ../src/evolution-rss.schemas.in.in.h:38
-msgid "Network proxy requires authentication."
-msgstr "Proxy de rede requer autenticação."
-
-#: ../src/evolution-rss.schemas.in.in.h:39
-msgid "Network queue size"
-msgstr "Tamanho da fila de rede"
-
 #: ../src/evolution-rss.schemas.in.in.h:40
-msgid "Network timeout"
-msgstr "Tempo limite de rede"
-
-#: ../src/evolution-rss.schemas.in.in.h:41
-msgid "New articles timeout"
-msgstr "Tempo limite de novos artigos"
-
-#: ../src/evolution-rss.schemas.in.in.h:42
-msgid "Password for proxy server"
-msgstr "Senha para servidor proxy"
-
-#: ../src/evolution-rss.schemas.in.in.h:43
-msgid "Proxy requires authentication"
-msgstr "Proxy requer autenticação"
-
-#: ../src/evolution-rss.schemas.in.in.h:44
 msgid "Proxy server port"
 msgstr "Porta de servidor proxy"
 
-#: ../src/evolution-rss.schemas.in.in.h:45
-msgid "Proxy server user"
-msgstr "Utilizador do servidor proxy"
+#: ../src/evolution-rss.schemas.in.in.h:41
+msgid "The port number for proxy server used for feeds and content."
+msgstr ""
+"O número de porta para o servidor proxy utilizado para fontes e conteúdos."
 
-#: ../src/evolution-rss.schemas.in.in.h:46
+#: ../src/evolution-rss.schemas.in.in.h:42
 msgid "Remove feed folder"
 msgstr "Remover pasta de fontes"
 
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "Apagar a entrada de fonte também irá remover a pasta de fonte."
+
+#: ../src/evolution-rss.schemas.in.in.h:44
+msgid "Check New articles"
+msgstr "Verificar Novos Artigos"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Verificar por novos artigos automaticamente."
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Tempo limite de novos artigos"
+
 #: ../src/evolution-rss.schemas.in.in.h:47
-msgid "Run program in terminal"
-msgstr "Executar programa na consola"
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Frequência de verificação de novos artigos (em minutos)."
 
 #: ../src/evolution-rss.schemas.in.in.h:48
-msgid "Scan web pages for RSS"
-msgstr "Procurar conteúdos RSS em páginas web"
+msgid "Checks articles on startup"
+msgstr "Verificar artigos ao iniciar "
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Set to true to have a program specified in command handle RSS URLs"
-msgstr ""
-"Definir como true para ter um programa especificado no comando para gestão "
-"de URLs RSS"
+msgid "Check for new articles everytime Evolution is started."
+msgstr "Verificar por novos artigos de cada vez que o Evolution é iniciado."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
 msgid "Show articles comments"
 msgstr "Apresentar comentários dos artigos"
 
 #: ../src/evolution-rss.schemas.in.in.h:51
-msgid "The port number for proxy server used for feeds and content."
-msgstr ""
-"O número de porta para o servidor proxy utilizado para fontes e conteúdos."
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Se um artigo de fonte tiver comentários, será apresentado."
 
 #: ../src/evolution-rss.schemas.in.in.h:52
-msgid "The size of the font used in full text preview."
-msgstr "O tamanho da fonte utilizada na visualização do texto completo."
+msgid "Use proxy server"
+msgstr "Utilizar servidor proxy"
 
 #: ../src/evolution-rss.schemas.in.in.h:53
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Utilizar um servidor proxy para obter artigos e conteúdos."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Utilizador do servidor proxy"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
 msgid "The username to use for proxy server authentication."
 msgstr "O nome de utilizador a utilizar para a autenticação no servidor proxy."
 
-#: ../src/evolution-rss.schemas.in.in.h:54
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "Como gerir com URLs RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr ""
+"Definir como true para ter um programa especificado no comando para gestão "
+"de URLs RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for rss feed uris"
+msgstr "Gestor de URL para uris de fontes rss"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Executar programa na consola"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
 msgid "True if the program to handle this URL should be run in a terminal"
 msgstr ""
 "True se o programa utilizado para gerir este URL deve ser executado numa "
 "consola"
 
-#: ../src/evolution-rss.schemas.in.in.h:55
-msgid "Type HTML Render used to display html pages."
-msgstr "Tipo de Renderização HTML utilizada para apresentar páginas html."
-
-#: ../src/evolution-rss.schemas.in.in.h:56
-msgid "URL handler for rss feed uris"
-msgstr "Gestor de URL para uris de fontes rss"
-
-#: ../src/evolution-rss.schemas.in.in.h:57
-msgid "Use a custom font size instead of system defaults."
-msgstr ""
-"Utilizar um tamanho de fonte personalizada em vez do tamanho por omissão do "
-"sistema."
-
-#: ../src/evolution-rss.schemas.in.in.h:58
-msgid "Use a proxy server to fetch articles and content."
-msgstr "Utilizar um servidor proxy para obter artigos e conteúdos."
-
-#: ../src/evolution-rss.schemas.in.in.h:59
-msgid "Use custom font"
-msgstr "Utilizar fonte personalizada"
-
-#: ../src/evolution-rss.schemas.in.in.h:60
-msgid "Use proxy server"
-msgstr "Utilizar servidor proxy"
-
-#: ../src/notification.c:408 ../src/rss.c:3359
+#: ../src/notification.c:294 ../src/rss.c:2118
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "A Obter Fontes (%d activas)"
@@ -347,363 +357,330 @@ msgid "Size"
 msgstr "Tamanho"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
-msgid "Delete \"{0}\"?"
-msgstr "Apagar \"{0}\"?"
-
-#: ../src/org-gnome-evolution-rss.error.xml.h:2
 msgid "Reading RSS Feeds..."
 msgstr "A Ler Fontes RSS..."
 
-#: ../src/org-gnome-evolution-rss.error.xml.h:3
-msgid "Really delete feed '{0}' ?"
-msgstr "Tem a certeza que quer apagar '{0}' ?"
-
-#: ../src/org-gnome-evolution-rss.error.xml.h:4
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
 msgid "Updating Feeds..."
 msgstr "A Actualizar Fontes..."
 
-#: ../src/org-gnome-evolution-rss.error.xml.h:5
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "_Dismiss"
 msgstr "_Dispensar"
 
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete \"{0}\"?"
+msgstr "Apagar \"{0}\"?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "Really delete feed '{0}' ?"
+msgstr "Tem a certeza que quer apagar '{0}' ?"
+
 #: ../src/org-gnome-evolution-rss.xml.h:1
-msgid "Setup RSS"
-msgstr "Configurar RSS"
-
-#: ../src/org-gnome-evolution-rss.xml.h:2
-msgid "Setup RSS feeds"
-msgstr "Configurar fontes RSS"
-
-#: ../src/org-gnome-evolution-rss.xml.h:3
 msgid "Update RSS feeds"
 msgstr "Actualizar fontes RSS"
 
-#: ../src/org-gnome-evolution-rss.xml.h:4
+#: ../src/org-gnome-evolution-rss.xml.h:2
 msgid "_Read RSS"
 msgstr "Le_r RSS"
 
-#: ../src/rss.c:379 ../src/rss.c:3523
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "Configurar fontes RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "Configurar RSS"
+
+#. ATOM
+#: ../src/parser.c:1078
+msgid "No Information"
+msgstr "Nenhuma Informação"
+
+#: ../src/parser.c:1177
+msgid "No information"
+msgstr "Nenhuma Informação"
+
+#: ../src/rss.c:421 ../src/rss.c:2295
 msgid "Feed"
 msgstr "Fonte"
 
-#: ../src/rss.c:459 ../src/rss-config-factory.c:2758
-#: ../src/rss-config-factory.c:2932
+#: ../src/rss.c:486 ../src/rss-config-factory.c:2865
+#: ../src/rss-config-factory.c:3039
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% concluído"
 
-#: ../src/rss.c:709
+#: ../src/rss.c:621
 msgid "Enter User/Pass for feed"
 msgstr "Digite Utilizador/Senha para a fonte"
 
-#: ../src/rss.c:765
+#: ../src/rss.c:677
 msgid "Enter your username and password for:"
 msgstr "Introduza o seu nome de utilizador e senha para:"
 
-#: ../src/rss.c:783
+#: ../src/rss.c:695
 msgid "Username: "
 msgstr "Nome de Utilizador:"
 
-#: ../src/rss.c:804
+#: ../src/rss.c:716 ../src/rss-main.ui.h:38
 msgid "Password: "
 msgstr "Senha:"
 
-#: ../src/rss.c:841
+#: ../src/rss.c:753
 msgid "_Remember this password"
 msgstr "_Recordar esta senha"
 
-#. e_clipped_label_set_text (
-#. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:946
+#: ../src/rss.c:867 ../src/rss.c:871
 msgid "Cancelling..."
 msgstr "A Cancelar..."
 
-#: ../src/rss.c:1111
-msgid "Formatting Message..."
-msgstr "A Formatar Mensagem..."
-
-#: ../src/rss.c:1335
+#: ../src/rss.c:1153
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../src/rss.c:1336
+#: ../src/rss.c:1154
 msgid "Select _All"
 msgstr "Seleccionar _Todos"
 
-#: ../src/rss.c:1338 ../src/rss.c:1349
+#: ../src/rss.c:1156 ../src/rss.c:1167
 msgid "Zoom _In"
 msgstr "_Aumentar o Zoom"
 
-#: ../src/rss.c:1339 ../src/rss.c:1350
+#: ../src/rss.c:1157 ../src/rss.c:1168
 msgid "Zoom _Out"
 msgstr "Reduzir o Z_oom"
 
-#: ../src/rss.c:1340 ../src/rss.c:1351
+#: ../src/rss.c:1158 ../src/rss.c:1169
 msgid "_Normal Size"
 msgstr "Tamanho _Normal"
 
-#: ../src/rss.c:1342
+#: ../src/rss.c:1160
 msgid "_Open Link"
 msgstr "_Abrir Ligação"
 
-#: ../src/rss.c:1343 ../src/rss.c:1357
+#: ../src/rss.c:1161 ../src/rss.c:1175
 msgid "_Copy Link Location"
 msgstr "_Copiar Endereço da Ligação"
 
-#: ../src/rss.c:1353
+#: ../src/rss.c:1171
 msgid "_Print..."
 msgstr "Im_primir"
 
-#: ../src/rss.c:1354
+#: ../src/rss.c:1172
 msgid "Save _As"
 msgstr "Guardar _Como"
 
-#: ../src/rss.c:1356
+#: ../src/rss.c:1174
 msgid "_Open Link in Browser"
 msgstr "_Abrir Ligação no Navegador"
 
-#: ../src/rss.c:1460 ../src/rss.c:1643
-msgid "Click to open"
-msgstr "Clique para abrir"
-
-#: ../src/rss.c:1919
-msgid "Comments"
-msgstr "Comentários"
-
-#: ../src/rss.c:1924
-msgid "Refresh"
-msgstr "Actualizar"
-
-#: ../src/rss.c:1948
-msgid "Feed view"
-msgstr "Vista de fonte"
-
-#: ../src/rss.c:1963
-msgid "Show Summary"
-msgstr "Apresentar Resumo"
-
-#: ../src/rss.c:1964
-msgid "Show Full Text"
-msgstr "Apresentar Texto Completo"
-
-#: ../src/rss.c:2366
-msgid "Posted under"
-msgstr "Publicado em"
-
-#: ../src/rss.c:2682
+#: ../src/rss.c:1441
 msgid "Fetching feed"
 msgstr "A obter fonte"
 
-#: ../src/rss.c:2985
+#: ../src/rss.c:1753
 msgid "Unnamed feed"
 msgstr "Fonte sem nome"
 
-#: ../src/rss.c:2986
+#: ../src/rss.c:1754
 msgid "Error while setting up feed."
 msgstr "Erro ao configurar fonte."
 
-#: ../src/rss.c:3190 ../src/rss.c:3260
+#: ../src/rss.c:1962 ../src/rss.c:2032
 msgid "Error while fetching feed."
 msgstr "Erro ao obter fonte."
 
-#: ../src/rss.c:3191
+#: ../src/rss.c:1963
 msgid "Invalid Feed"
 msgstr "Fonte Inválida"
 
-#: ../src/rss.c:3233
+#: ../src/rss.c:2005
 #, c-format
 msgid "Adding feed %s"
 msgstr "A adicionar fonte %s"
 
-#: ../src/rss.c:3259
+#: ../src/rss.c:2031
 msgid "Unamed feed"
 msgstr "Fonte sem nome"
 
-#: ../src/rss.c:3273
+#: ../src/rss.c:2046 ../src/rss.c:2054
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "A obter mensagem %d de %d"
 
-#: ../src/rss.c:3379
+#: ../src/rss.c:2139 ../src/rss.c:2142
 msgid "Complete."
 msgstr "Terminado."
 
-#: ../src/rss.c:3411 ../src/rss.c:3576 ../src/rss.c:3614 ../src/rss.c:3811
-#: ../src/rss.c:4414
+#: ../src/rss.c:2176 ../src/rss.c:2354 ../src/rss.c:2392 ../src/rss.c:2595
+#: ../src/rss.c:3190
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Erro ao obter fonte: %s"
 
-#: ../src/rss.c:3424
+#: ../src/rss.c:2188 ../src/rss.c:2192
 msgid "Canceled."
 msgstr "Cancelado."
 
-#: ../src/rss.c:3467
+#: ../src/rss.c:2239
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Erro ao processar fonte: %s"
 
-#: ../src/rss.c:3471
+#: ../src/rss.c:2243
 msgid "illegal content type!"
 msgstr "tipo de conteúdo inválido!"
 
-#: ../src/rss.c:3532
+#: ../src/rss.c:2303 ../src/rss.c:2306
 msgid "Complete"
 msgstr "Terminado"
 
-#: ../src/rss.c:3660
+#: ../src/rss.c:2438
 msgid "Formatting error."
 msgstr "Erro de formatação."
 
-#: ../src/rss.c:4687
+#: ../src/rss.c:3498
 msgid "No RSS feeds configured!"
 msgstr "Nenhuma fonte RSS configurada!"
 
-#: ../src/rss.c:4739
+#: ../src/rss.c:3550
 msgid "Waiting..."
 msgstr "A aguardar..."
 
-#: ../src/rss.h:54
-msgid "News and Blogs"
-msgstr "Notícias e Blogs"
-
-#: ../src/rss.h:56
-msgid "Untitled channel"
-msgstr "Canal sem nome"
-
-#: ../src/rss-config-factory.c:180
+#: ../src/rss-config-factory.c:164
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:181
+#: ../src/rss-config-factory.c:165
 msgid "WebKit"
 msgstr "Webkit"
 
-#: ../src/rss-config-factory.c:182
+#: ../src/rss-config-factory.c:166
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:415
+#: ../src/rss-config-factory.c:482
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dia"
 msgstr[1] "dias"
 
-#: ../src/rss-config-factory.c:430
+#: ../src/rss-config-factory.c:497
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "mensagem"
 msgstr[1] "mensagens"
 
-#: ../src/rss-config-factory.c:502
+#: ../src/rss-config-factory.c:563 ../src/rss-config-factory.c:576
 msgid "Move to Folder"
 msgstr "Mover para Pasta"
 
-#: ../src/rss-config-factory.c:502
+#: ../src/rss-config-factory.c:563 ../src/rss-config-factory.c:576
 msgid "M_ove"
 msgstr "M_over"
 
-#: ../src/rss-config-factory.c:642
+#: ../src/rss-config-factory.c:717
 msgid "Edit Feed"
 msgstr "Editar Fonte"
 
-#: ../src/rss-config-factory.c:644
+#: ../src/rss-config-factory.c:719
 msgid "Add Feed"
 msgstr "Adicionar Fonte"
 
-#: ../src/rss-config-factory.c:1089 ../src/rss-config-factory.c:1626
+#: ../src/rss-config-factory.c:1164 ../src/rss-config-factory.c:1729
 #, no-c-format
 msgid "0% done"
 msgstr "0% terminado"
 
-#: ../src/rss-config-factory.c:1461
+#: ../src/rss-config-factory.c:1548
 msgid "Disable"
 msgstr "Desactivar"
 
-#: ../src/rss-config-factory.c:1461
+#: ../src/rss-config-factory.c:1548
 msgid "Enable"
 msgstr "Activar"
 
-#: ../src/rss-config-factory.c:1517
+#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:41
 msgid "Remove folder contents"
 msgstr "Remover conteúdos da pasta"
 
-#: ../src/rss-config-factory.c:1886
+#: ../src/rss-config-factory.c:1989
 msgid "Import error."
 msgstr "Erro de importação."
 
-#: ../src/rss-config-factory.c:1887
+#: ../src/rss-config-factory.c:1990
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Ficheiro inválido ou este não contém qualquer fonte."
 
-#: ../src/rss-config-factory.c:1892
+#: ../src/rss-config-factory.c:1995
 msgid "Importing"
 msgstr "A importar"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:1915 ../src/rss-config-factory.c:2807
-#: ../src/rss-config-factory.c:2967
+#: ../src/rss-config-factory.c:2018 ../src/rss-config-factory.c:2914
+#: ../src/rss-config-factory.c:3074
 msgid "Please wait"
 msgstr "Por favor, aguarde"
 
-#: ../src/rss-config-factory.c:2225 ../src/rss-config-factory.c:3087
-#: ../src/rss-config-factory.c:3150
+#: ../src/rss-config-factory.c:2328 ../src/rss-config-factory.c:3194
+#: ../src/rss-config-factory.c:3257
 msgid "All Files"
 msgstr "Todos os Ficheiros"
 
-#: ../src/rss-config-factory.c:2236 ../src/rss-config-factory.c:3171
+#: ../src/rss-config-factory.c:2339 ../src/rss-config-factory.c:3278
 msgid "OPML Files"
 msgstr "Ficheiros OPML"
 
-#: ../src/rss-config-factory.c:2247 ../src/rss-config-factory.c:3160
+#: ../src/rss-config-factory.c:2350 ../src/rss-config-factory.c:3267
 msgid "XML Files"
 msgstr "Ficheiros XML"
 
-#: ../src/rss-config-factory.c:2266
+#: ../src/rss-config-factory.c:2369
 msgid "Show article's summary"
 msgstr "Apresentar resumo do artigo"
 
-#: ../src/rss-config-factory.c:2279
+#: ../src/rss-config-factory.c:2382
 msgid "Feed Enabled"
 msgstr "Fonte Activa"
 
-#: ../src/rss-config-factory.c:2292
+#: ../src/rss-config-factory.c:2395
 msgid "Validate feed"
 msgstr "Validar fonte"
 
-#: ../src/rss-config-factory.c:2349
+#: ../src/rss-config-factory.c:2452 ../src/rss-main.ui.h:39
 msgid "Select import file"
 msgstr "Seleccionar ficheiro a importar"
 
-#: ../src/rss-config-factory.c:2432
+#: ../src/rss-config-factory.c:2535 ../src/rss-main.ui.h:42
 msgid "Select file to export"
 msgstr "Seleccionar ficheiro a exportar"
 
-#: ../src/rss-config-factory.c:2790
+#: ../src/rss-config-factory.c:2897
 msgid "Exporting feeds..."
 msgstr "A exportar fontes..."
 
-#: ../src/rss-config-factory.c:2854 ../src/rss-config-factory.c:2862
+#: ../src/rss-config-factory.c:2961 ../src/rss-config-factory.c:2969
 msgid "Error exporting feeds!"
 msgstr "Erro ao exportar fontes!"
 
-#: ../src/rss-config-factory.c:2943
+#: ../src/rss-config-factory.c:3050
 msgid "Importing cookies..."
 msgstr "A importar cookies..."
 
-#: ../src/rss-config-factory.c:3023
+#: ../src/rss-config-factory.c:3130
 msgid "Select file to import"
 msgstr "Seleccionar ficheiro a importar"
 
-#: ../src/rss-config-factory.c:3093
+#: ../src/rss-config-factory.c:3200
 msgid "Mozilla/Netscape Format"
 msgstr "Formato Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:3099
+#: ../src/rss-config-factory.c:3206
 msgid "Firefox new Format"
 msgstr "Novo formato Firefox"
 
-#: ../src/rss-config-factory.c:3209 ../src/rss-config-factory.c:3214
+#: ../src/rss-config-factory.c:3316 ../src/rss-config-factory.c:3321
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -711,7 +688,7 @@ msgstr ""
 "Nenhuma fonte RSS configurada!\n"
 "Incapaz de exportar."
 
-#: ../src/rss-config-factory.c:3350
+#: ../src/rss-config-factory.c:3484
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -722,30 +699,332 @@ msgstr ""
 "do firefox ou webkit instalados e o evolution-rss deve ser recompilado para "
 "ver esses pacotes."
 
-#: ../src/rss-config-factory.c:3864
+#: ../src/rss-config-factory.c:4088 ../src/rss-main.ui.h:46
 msgid "Enabled"
 msgstr "Activo"
 
-#: ../src/rss-config-factory.c:3891
+#: ../src/rss-config-factory.c:4115
 msgid "Feed Name"
 msgstr "Nome da Fonte"
 
-#: ../src/rss-config-factory.c:3904
+#: ../src/rss-config-factory.c:4128
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/rss-config-factory.c:4161
+#: ../src/rss-config-factory.c:4445
 msgid "News And Blogs"
 msgstr "Notícias e Blogs"
 
-#. ATOM
-#: ../src/parser.c:1052
-msgid "No Information"
-msgstr "Nenhuma Informação"
+#: ../src/rss.h:50
+msgid "News and Blogs"
+msgstr "Notícias e Blogs"
 
-#: ../src/parser.c:1151
-msgid "No information"
-msgstr "Nenhuma Informação"
+#: ../src/rss.h:52
+msgid "Untitled channel"
+msgstr "Canal sem nome"
+
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Motor: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Utilizar as mesmas fontes que outras aplicações"
+
+#: ../src/rss-html-rendering.ui.h:3
+#| msgid "Minimum font size"
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Tamanho mínimo de fonte:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Bloquear janelas pop-up"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Activar Java"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "Activar Javascript"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Aceitar cookies de páginas"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Importar Cookies"
+
+#: ../src/rss-html-rendering.ui.h:9
+msgid "Automatically resize images"
+msgstr "Redimensionar imagens automaticamente"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Tempo limite de rede:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "segundos"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>Renderização HTML</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Apresentar ícone na área de notificação"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Apresentar ícone da fonte"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Notificação de Artigo</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "minutos"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "horas"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "dias"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Tabela de Certificados"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Adicionar"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "_Editar"
+
+#: ../src/rss-main.ui.h:8
+#| msgid "Importing"
+msgid "I_mport"
+msgstr "I_mportar"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "E_xportar"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Fontes"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Motor:"
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Activar Plugins"
+
+#: ../src/rss-main.ui.h:15
+msgid "label"
+msgstr "etiqueta"
+
+#: ../src/rss-main.ui.h:16
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:17
+#| msgid "<span weight=\"bold\">Settings</span>"
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Arranque</span>"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles every"
+msgstr "Verificar por novos artigos a cada"
+
+#: ../src/rss-main.ui.h:19
+msgid "Check for new articles at startup"
+msgstr "Verificar por novos artigos ao iniciar"
+
+#: ../src/rss-main.ui.h:20
+#| msgid "<span weight=\"bold\">Settings</span>"
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Apresentação das fontes</span>"
+
+#: ../src/rss-main.ui.h:21
+msgid "By default show article summary instead of webpage"
+msgstr "Apresentar por omissão o sumário do artigo em vez da página web"
+
+#: ../src/rss-main.ui.h:22
+msgid "Scan for feed inside webpages"
+msgstr "Procurar por fonte nas páginas"
+
+#: ../src/rss-main.ui.h:23
+#| msgid "<span weight=\"bold\">Settings</span>"
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Componentes das fontes</span>"
+
+#: ../src/rss-main.ui.h:24
+msgid "Show article comments"
+msgstr "Apresentar comentários do artigo"
+
+#: ../src/rss-main.ui.h:25
+#| msgid "Download enclosures"
+msgid "Download feed enclosures"
+msgstr "Transferir componentes das fontes"
+
+#: ../src/rss-main.ui.h:26
+#| msgid "Download enclosures"
+msgid "Do not download enclosures that exceeds"
+msgstr "Não transferir componentes das fontes que excedam"
+
+#: ../src/rss-main.ui.h:27
+#| msgid "0 KB"
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:28
+msgid "Setup"
+msgstr "Configuração"
+
+#: ../src/rss-main.ui.h:29
+msgid "Use Proxy"
+msgstr "Utilizar Proxy"
+
+#: ../src/rss-main.ui.h:30
+msgid "HTTP proxy:"
+msgstr "Proxy HTTP:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Port:"
+msgstr "Porta:"
+
+#: ../src/rss-main.ui.h:32
+msgid "Details"
+msgstr "Detalhes"
+
+#: ../src/rss-main.ui.h:33
+msgid "No proxy for:"
+msgstr "Nenhum proxy para:"
+
+#: ../src/rss-main.ui.h:34
+msgid "Network"
+msgstr "Rede"
+
+#: ../src/rss-main.ui.h:35
+msgid "HTTP Proxy Details"
+msgstr "Detalhes de Proxy HTTP"
+
+#: ../src/rss-main.ui.h:36
+msgid "Use authentication"
+msgstr "Utilizar autenticação"
+
+#: ../src/rss-main.ui.h:37
+msgid "Username:"
+msgstr "Nome de Utilizador:"
+
+#: ../src/rss-main.ui.h:40
+msgid "Delete feed?"
+msgstr "Apagar fonte?"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Nome da Fonte:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "<b>Feed URL:</b>"
+msgstr "<b>URL da Fonte:</b>"
+
+#: ../src/rss-main.ui.h:45
+msgid "<b>Location:</b>"
+msgstr "<b>Localização:</b>"
+
+#: ../src/rss-main.ui.h:47
+msgid "Validate"
+msgstr "Validar"
+
+#: ../src/rss-main.ui.h:48
+#| msgid "Show Full Text"
+msgid "Show feed full text"
+msgstr "Apresentar texto completo da fonte"
+
+#: ../src/rss-main.ui.h:49
+msgid "General"
+msgstr "Geral"
+
+#: ../src/rss-main.ui.h:50
+msgid "Use global update interval"
+msgstr "Utilizar o intervalo global de actualização"
+
+#: ../src/rss-main.ui.h:51
+msgid "Update in"
+msgstr "Actualizar em"
+
+#: ../src/rss-main.ui.h:52
+msgid "Do no update feed"
+msgstr "Não actualizar fonte"
+
+#: ../src/rss-main.ui.h:53
+msgid "Update"
+msgstr "Actualizar"
+
+#: ../src/rss-main.ui.h:54
+msgid "Do not delete feeds"
+msgstr "Não apagar fontes"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete all but the last"
+msgstr "Apagar todos excepto o último"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles older than"
+msgstr "Apagar artigos mais antigos do que"
+
+#: ../src/rss-main.ui.h:57
+msgid "Delete articles that are no longer in the feed"
+msgstr "Apagar artigos que já não se encontram na fonte"
+
+#: ../src/rss-main.ui.h:58
+msgid "Always delete unread articles"
+msgstr "Apagar sempre os artigos não lidos"
+
+#: ../src/rss-main.ui.h:59
+msgid "Storage"
+msgstr "Armazenamento"
+
+#: ../src/rss-main.ui.h:60
+msgid "Authentication"
+msgstr "Autenticação"
+
+#: ../src/rss-main.ui.h:61
+msgid "<b>Advanced options</b>"
+msgstr "<b>Opções avançadas</b>"
+
+#~ msgid "Formatting Message..."
+#~ msgstr "A Formatar Mensagem..."
+
+#~ msgid "Click to open"
+#~ msgstr "Clique para abrir"
+
+#~ msgid "Comments"
+#~ msgstr "Comentários"
+
+#~ msgid "Refresh"
+#~ msgstr "Actualizar"
+
+#~ msgid "Feed view"
+#~ msgstr "Vista de fonte"
+
+#~ msgid "Show Summary"
+#~ msgstr "Apresentar Resumo"
+
+#~ msgid "Posted under"
+#~ msgstr "Publicado em"
 
 #~ msgid "New feed imported: %s"
 #~ msgstr "Nova fonte importada: %s"
@@ -770,185 +1049,11 @@ msgstr "Nenhuma Informação"
 #~ msgid "Importing feeds..."
 #~ msgstr "A importar fontes..."
 
-#~ msgid "<b>Article Notification</b>"
-#~ msgstr "<b>Notificação de Artigo</b>"
-
-#~ msgid "<b>Engine: </b>"
-#~ msgstr "<b>Motor: </b>"
-
-#~ msgid "<b>HTML Rendering</b>"
-#~ msgstr "<b>Renderização HTML</b>"
-
-#~ msgid "<b>Network timeout:</b>"
-#~ msgstr "<b>Tempo limite de rede:</b>"
-
-#~ msgid "Accept cookies from sites"
-#~ msgstr "Aceitar cookies de páginas"
-
-#~ msgid "Automatically resize images"
-#~ msgstr "Redimensionar imagens automaticamente"
-
 #~ msgid "Blink icon in notification area"
 #~ msgstr "Piscar ícone na área de notificação"
 
-#~ msgid "Block pop-up windows"
-#~ msgstr "Bloquear janelas pop-up"
-
-#~ msgid "Enable Java"
-#~ msgstr "Activar Java"
-
-#~ msgid "Enable JavaScript"
-#~ msgstr "Activar Javascript"
-
-#~ msgid "Import Cookies"
-#~ msgstr "Importar Cookies"
-
-#~ msgid "Show feed icon"
-#~ msgstr "Apresentar ícone da fonte"
-
-#~ msgid "Show icon in notification area"
-#~ msgstr "Apresentar ícone na área de notificação"
-
-#~ msgid "seconds"
-#~ msgstr "segundos"
-
-#~ msgid "<b>Advanced options</b>"
-#~ msgstr "<b>Opções avançadas</b>"
-
-#~ msgid "<b>Feed Name: </b>"
-#~ msgstr "<b>Nome da Fonte:</b>"
-
-#~ msgid "<b>Feed URL:</b>"
-#~ msgstr "<b>URL da Fonte:</b>"
-
-#~ msgid "<b>Location:</b>"
-#~ msgstr "<b>Localização:</b>"
-
-#~ msgid "<span weight=\"bold\">Settings</span>"
-#~ msgstr "<span weight=\"bold\">Definições</span>"
-
-#~ msgid "Always delete unread articles"
-#~ msgstr "Apagar sempre os artigos não lidos"
-
-#~ msgid "Authentication"
-#~ msgstr "Autenticação"
-
-#~ msgid "By default show article summary instead of webpage"
-#~ msgstr "Apresentar por omissão o sumário do artigo em vez da página web"
-
-#~ msgid "Certificates Table"
-#~ msgstr "Tabela de Certificados"
-
-#~ msgid "Check for new articles at startup"
-#~ msgstr "Verificar por novos artigos ao iniciar"
-
-#~ msgid "Check for new articles every"
-#~ msgstr "Verificar por novos artigos a cada"
-
-#~ msgid "Delete all but the last"
-#~ msgstr "Apagar todos excepto o último"
-
-#~ msgid "Delete articles older than"
-#~ msgstr "Apagar artigos mais antigos do que"
-
-#~ msgid "Delete articles that are no longer in the feed"
-#~ msgstr "Apagar artigos que já não se encontram na fonte"
-
-#~ msgid "Delete feed?"
-#~ msgstr "Apagar fonte?"
-
-#~ msgid "Details"
-#~ msgstr "Detalhes"
-
 #~ msgid "Display only feed summary"
 #~ msgstr "Apenas apresentar resumo da fonte"
-
-#~ msgid "Do no update feed"
-#~ msgstr "Não actualizar fonte"
-
-#~ msgid "Do not delete feeds"
-#~ msgstr "Não apagar fontes"
-
-#~ msgid "E_xport"
-#~ msgstr "E_xportar"
-
-#~ msgid "Enable Plugins"
-#~ msgstr "Activar Plugins"
-
-#~ msgid "Engine: "
-#~ msgstr "Motor:"
-
-#~ msgid "Feeds"
-#~ msgstr "Fontes"
-
-#~ msgid "General"
-#~ msgstr "Geral"
-
-#~ msgid "HTML"
-#~ msgstr "HTML"
-
-#~ msgid "HTTP Proxy Details"
-#~ msgstr "Detalhes de Proxy HTTP"
-
-#~ msgid "HTTP proxy:"
-#~ msgstr "Proxy HTTP:"
-
-#~ msgid "Network"
-#~ msgstr "Rede"
-
-#~ msgid "No proxy for:"
-#~ msgstr "Nenhum proxy para:"
-
-#~ msgid "Port:"
-#~ msgstr "Porta:"
-
-#~ msgid "Scan for feed inside webpages"
-#~ msgstr "Procurar por fonte nas páginas"
-
-#~ msgid "Setup"
-#~ msgstr "Configuração"
-
-#~ msgid "Show article comments"
-#~ msgstr "Apresentar comentários do artigo"
-
-#~ msgid "Storage"
-#~ msgstr "Armazenamento"
-
-#~ msgid "Update"
-#~ msgstr "Actualizar"
-
-#~ msgid "Update in"
-#~ msgstr "Actualizar em"
-
-#~ msgid "Use Proxy"
-#~ msgstr "Utilizar Proxy"
-
-#~ msgid "Use authentication"
-#~ msgstr "Utilizar autenticação"
-
-#~ msgid "Use global update interval"
-#~ msgstr "Utilizar o intervalo global de actualização"
-
-#~ msgid "Username:"
-#~ msgstr "Nome de Utilizador:"
-
-#~ msgid "Validate"
-#~ msgstr "Validar"
-
-#~ msgid "_Add"
-#~ msgstr "_Adicionar"
-
-#~ msgid "_Edit"
-#~ msgstr "_Editar"
-
-#~ msgid "hours"
-#~ msgstr "horas"
-
-#~ msgid "label"
-#~ msgstr "etiqueta"
-
-#~ msgid "minutes"
-#~ msgstr "minutos"
 
 #~ msgid "Evolution Feeds Control"
 #~ msgstr "Controlo de Fontes do Evolution"
@@ -977,6 +1082,3 @@ msgstr "Nenhuma Informação"
 
 #~ msgid "Overwrite file?"
 #~ msgstr "Sobrepor Ficheiro?"
-
-#~ msgid "0 KB"
-#~ msgstr "0 KB"
