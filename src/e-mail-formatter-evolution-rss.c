@@ -134,7 +134,7 @@ emfe_evolution_rss_get_display_name (EMailFormatterExtension *extension)
 static const gchar *
 emfe_evolution_rss_get_description (EMailFormatterExtension *extension)
 {
-	return _("Displaying rss feed arcticles");
+	return _("Displaying RSS feed arcticles");
 }
 
 static const gchar **

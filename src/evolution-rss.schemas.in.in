@@ -25,7 +25,7 @@
         <short>Display article's summary</short>
         <long>
     	    Evolution will show article's summary instead of article's
-    	    webpage. Summary can also be html.
+    	    webpage. Summary can also be HTML.
         </long>
       </locale>
     </schema>
@@ -66,7 +66,7 @@
       <type>int</type>
       <default>0</default>
       <locale name="C">
-        <short>Html render</short>
+        <short>HTML render</short>
         <long>
     	    Type HTML Render used to display html pages.
         </long>
@@ -194,7 +194,7 @@
 	<locale name="C">
 		<short>Scan web pages for RSS</short>
 		<long>
-			Evolution RSS will scan web pages for rss content
+			Evolution RSS will scan web pages for RSS content
 		</long>
 	</locale>
 </schema>
@@ -222,7 +222,7 @@
 	<locale name="C">
 		<short>Limit enclosure size</short>
 		<long>
-			Limit maximum enclosure size evolution will download.
+			Limit maximum enclosure size Evolution will download.
 		</long>
 	</locale>
 </schema>
@@ -236,7 +236,7 @@
 	<locale name="C">
 		<short>Max enclosure size</short>
 		<long>
-			Limit maximum enclosure size evolution will download.
+			Limit maximum enclosure size Evolution will download.
 		</long>
 	</locale>
 </schema>
@@ -292,8 +292,8 @@
       <locale name="C">
         <short>Password for proxy server</short>
         <long>
-    	    If the proxy server requires authentication.
-    	    This is the password field.
+    	    If the proxy server requires authentication,
+    	    this is the password field.
         </long>
       </locale>
     </schema>
@@ -430,8 +430,8 @@
      <type>string</type>
      <default>@bindir@/evolution-import-rss %s</default>
      <locale name="C">
-       <short>URL handler for rss feed uris</short>
-       <long>URL handler for rss feed uris</long>
+       <short>URL handler for RSS feed uris</short>
+       <long>URL handler for RSS feed uris</long>
      </locale>
     </schema>
 

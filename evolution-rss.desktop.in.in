@@ -2,7 +2,7 @@
 [Desktop Entry]
 Name=Evolution RSS
 _GenericName=Evolution RSS Reader
-_Comment=Evolution plugin that enables Evolution Mail to display rss feeds.
+_Comment=Evolution plugin that enables Evolution Mail to display RSS feeds.
 Exec=@prefix@/bin/evolution-import-rss
 Icon=evolution
 StartupNotify=true
