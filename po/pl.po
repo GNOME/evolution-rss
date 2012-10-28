@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-02 21:59+0200\n"
-"PO-Revision-Date: 2012-09-02 22:00+0200\n"
+"POT-Creation-Date: 2012-10-28 20:24+0100\n"
+"PO-Revision-Date: 2012-10-28 20:25+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -28,7 +28,7 @@ msgid "Evolution RSS Reader"
 msgstr "Czytnik kanałów RSS Evolution"
 
 #: ../evolution-rss.desktop.in.in.h:2
-msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
 msgstr ""
 "Wtyczka dla programu Evolution umożliwiająca wyświetlanie kanałów RSS w "
 "kliencie poczty."
@@ -53,7 +53,7 @@ msgid "Evolution-RSS"
 msgstr "Czytnik kanałów RSS dla programu Evolution"
 
 #: ../src/e-mail-formatter-evolution-rss.c:137
-msgid "Displaying rss feed arcticles"
+msgid "Displaying RSS feed arcticles"
 msgstr "Wyświetlanie artykułów kanałów RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
@@ -70,8 +70,8 @@ msgstr "Wyświetlanie podsumowania artykułu"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
 msgid ""
-"Evolution will show article's summary instead of article's webpage. Summary "
-"can also be html."
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
 msgstr ""
 "Wyświetlanie podsumowania artykułu zamiast jego strony WWW. Podsumowanie "
 "może być w formacie HTML."
@@ -93,11 +93,11 @@ msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Nazwa komputera serwera pośrednika używanego dla kanałów i treści."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Html render"
+msgid "HTML render"
 msgstr "Mechanizm wyświetlania formatu HTML"
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Type HTML Render used to display html pages."
+msgid "Type HTML Render used to display HTML pages."
 msgstr "Mechanizm renderujący format HTML używany do wyświetlania stron HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:11
@@ -121,7 +121,7 @@ msgid "Network timeout"
 msgstr "Czas oczekiwania na sieć"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Interval in seconds before a conection is dropped."
+msgid "Interval in seconds before a connection is dropped."
 msgstr "Czas w sekundach, zanim połączenie zostanie zerwane."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
@@ -149,7 +149,7 @@ msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "Akceptowanie ciasteczek z przeglądanych artykułów."
 
 #: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Automaticaly Resize Images"
+msgid "Automatically Resize Images"
 msgstr "Automatyczne zmienianie rozmiaru obrazów"
 
 #: ../src/evolution-rss.schemas.in.in.h:24
@@ -163,8 +163,8 @@ msgid "Scan web pages for RSS"
 msgstr "Skanowanie stron WWW pod kątem kanałów RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
-msgid "Evolution RSS will scan web pages for rss content"
-msgstr "Skanowanie stron WWW pod kątm treści RSS"
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Skanowanie stron WWW pod kątem treści RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "Download enclosures"
@@ -179,7 +179,7 @@ msgid "Limit enclosure size"
 msgstr "Ograniczenie rozmiaru załączników"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
-msgid "Limit maximum enclosure size evolution will download."
+msgid "Limit maximum enclosure size Evolution will download."
 msgstr "Ogranicza maksymalny rozmiar pobieranych załączników."
 
 #: ../src/evolution-rss.schemas.in.in.h:31
@@ -216,7 +216,7 @@ msgstr "Hasło dla serwera pośrednika"
 
 #: ../src/evolution-rss.schemas.in.in.h:39
 msgid ""
-"If the proxy server requires authentication. This is the password field."
+"If the proxy server requires authentication, this is the password field."
 msgstr "Pole hasła, jeśli serwer pośrednika wymaga uwierzytelnienia."
 
 #: ../src/evolution-rss.schemas.in.in.h:40
@@ -256,7 +256,7 @@ msgid "Checks articles on startup"
 msgstr "Sprawdzanie artykułów po uruchomieniu"
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Check for new articles everytime Evolution is started."
+msgid "Check for new articles every time Evolution is started."
 msgstr "Sprawdzanie nowych artykułów po uruchomieniu programu."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
@@ -294,8 +294,8 @@ msgstr ""
 "przez program podany w poleceniu"
 
 #: ../src/evolution-rss.schemas.in.in.h:58
-msgid "URL handler for rss feed uris"
-msgstr "Obsługa adresu URL dla kanałów RSS"
+msgid "URL handler for RSS feed URIs"
+msgstr "Obsługa adresów URL dla adresów URI kanałów RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
@@ -316,10 +316,10 @@ msgstr "Pobieranie kanałów (włączonych: %d)"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
-"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
 "upon the somewhat existing RSS support in evolution-1.4 branch. The "
 "motivation behind this was to have RSS in same place as mails, at this "
-"moment I do not see the point having a separate RSS reader since a RSS "
+"moment I do not see the point in having a separate RSS reader since a RSS "
 "Article is like an email message.\n"
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
@@ -419,7 +419,7 @@ msgstr "Proszę wprowadzić nazwę użytkownika i hasło dla:"
 msgid "Username: "
 msgstr "Nazwa użytkownika: "
 
-#: ../src/rss.c:716 ../src/rss-main.ui.h:38
+#: ../src/rss.c:716 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Hasło: "
 
@@ -475,7 +475,7 @@ msgstr "_Otwórz odnośnik w przeglądarce"
 msgid "Fetching feed"
 msgstr "Pobieranie kanału"
 
-#: ../src/rss.c:1753
+#: ../src/rss.c:1753 ../src/rss.c:2031
 msgid "Unnamed feed"
 msgstr "Kanał bez nazwy"
 
@@ -495,10 +495,6 @@ msgstr "Nieprawidłowy kanał"
 #, c-format
 msgid "Adding feed %s"
 msgstr "Dodawanie kanału %s"
-
-#: ../src/rss.c:2031
-msgid "Unamed feed"
-msgstr "Kanał bez nazwy"
 
 #: ../src/rss.c:2046 ../src/rss.c:2054
 #, c-format
@@ -599,7 +595,7 @@ msgstr "Wyłącz"
 msgid "Enable"
 msgstr "Włącz"
 
-#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:41
+#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Usuń zawartość katalogu"
 
@@ -646,11 +642,11 @@ msgstr "Włączony kanał"
 msgid "Validate feed"
 msgstr "Sprawdź kanał"
 
-#: ../src/rss-config-factory.c:2452 ../src/rss-main.ui.h:39
+#: ../src/rss-config-factory.c:2452 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Wybór pliku do zaimportowania"
 
-#: ../src/rss-config-factory.c:2535 ../src/rss-main.ui.h:42
+#: ../src/rss-config-factory.c:2535 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Wybór pliku do wyeksportowania"
 
@@ -827,108 +823,108 @@ msgid "Enable Plugins"
 msgstr "Obsługa wtyczek"
 
 #: ../src/rss-main.ui.h:15
-msgid "label"
-msgstr "etykieta"
-
-#: ../src/rss-main.ui.h:16
 msgid "HTML"
 msgstr "HTML"
 
-#: ../src/rss-main.ui.h:17
+#: ../src/rss-main.ui.h:16
 msgid "<span weight=\"bold\">Start up</span>"
 msgstr "<span weight=\"bold\">Uruchamianie</span>"
 
-#: ../src/rss-main.ui.h:18
+#: ../src/rss-main.ui.h:17
 msgid "Check for new articles every"
 msgstr "Sprawdzanie nowych artykułów co"
 
-#: ../src/rss-main.ui.h:19
+#: ../src/rss-main.ui.h:18
 msgid "Check for new articles at startup"
 msgstr "Sprawdzanie nowych artykułów po uruchomieniu"
 
-#: ../src/rss-main.ui.h:20
+#: ../src/rss-main.ui.h:19
 msgid "<span weight=\"bold\">Feed display</span>"
 msgstr "<span weight=\"bold\">Wyświetlanie kanału</span>"
 
-#: ../src/rss-main.ui.h:21
+#: ../src/rss-main.ui.h:20
 msgid "By default show article summary instead of webpage"
 msgstr "Domyślnie wyświetlanie podsumowania artykułu zamiast strony WWW"
 
-#: ../src/rss-main.ui.h:22
+#: ../src/rss-main.ui.h:21
 msgid "Scan for feed inside webpages"
 msgstr "Skanowanie kanałów na stronach WWW"
 
-#: ../src/rss-main.ui.h:23
+#: ../src/rss-main.ui.h:22
 msgid "<span weight=\"bold\">Feed enclosures</span>"
 msgstr "<span weight=\"bold\">Załączniki kanałów</span>"
 
-#: ../src/rss-main.ui.h:24
+#: ../src/rss-main.ui.h:23
 msgid "Show article comments"
 msgstr "Wyświetlanie komentarzy artykułów"
 
-#: ../src/rss-main.ui.h:25
+#: ../src/rss-main.ui.h:24
 msgid "Download feed enclosures"
 msgstr "Pobieranie załączników kanałów"
 
-#: ../src/rss-main.ui.h:26
+#: ../src/rss-main.ui.h:25
 msgid "Do not download enclosures that exceeds"
 msgstr "Bez pobierania załączników przekraczających"
 
-#: ../src/rss-main.ui.h:27
+#: ../src/rss-main.ui.h:26
 msgid "KB"
 msgstr "KB"
 
-#: ../src/rss-main.ui.h:28
+#: ../src/rss-main.ui.h:27
 msgid "Setup"
 msgstr "Ustawienia"
 
-#: ../src/rss-main.ui.h:29
+#: ../src/rss-main.ui.h:28
 msgid "Use Proxy"
 msgstr "Użycie pośrednika"
 
-#: ../src/rss-main.ui.h:30
+#: ../src/rss-main.ui.h:29
 msgid "HTTP proxy:"
 msgstr "Pośrednik HTTP:"
 
-#: ../src/rss-main.ui.h:31
+#: ../src/rss-main.ui.h:30
 msgid "Port:"
 msgstr "Port:"
 
-#: ../src/rss-main.ui.h:32
+#: ../src/rss-main.ui.h:31
 msgid "Details"
 msgstr "Szczegóły"
 
-#: ../src/rss-main.ui.h:33
+#: ../src/rss-main.ui.h:32
 msgid "No proxy for:"
 msgstr "Bez pośrednika dla:"
 
-#: ../src/rss-main.ui.h:34
+#: ../src/rss-main.ui.h:33
 msgid "Network"
 msgstr "Sieć"
 
-#: ../src/rss-main.ui.h:35
+#: ../src/rss-main.ui.h:34
 msgid "HTTP Proxy Details"
 msgstr "Szczegóły pośrednika HTTP"
 
-#: ../src/rss-main.ui.h:36
+#: ../src/rss-main.ui.h:35
 msgid "Use authentication"
 msgstr "Użycie uwierzytelniania"
 
-#: ../src/rss-main.ui.h:37
+#: ../src/rss-main.ui.h:36
 msgid "Username:"
 msgstr "Nazwa użytkownika:"
 
-#: ../src/rss-main.ui.h:40
+#: ../src/rss-main.ui.h:39
 msgid "Delete feed?"
 msgstr "Usunąć kanał?"
 
-#: ../src/rss-main.ui.h:43
+#: ../src/rss-main.ui.h:42
 msgid "<b>Feed Name: </b>"
 msgstr "<b>Nazwa kanału: </b>"
 
-#: ../src/rss-main.ui.h:44
+#: ../src/rss-main.ui.h:43
 msgid "<b>Feed URL:</b>"
 msgstr "<b>Adres URL kanału:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "label"
+msgstr "etykieta"
 
 #: ../src/rss-main.ui.h:45
 msgid "<b>Location:</b>"
