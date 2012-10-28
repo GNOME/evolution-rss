@@ -2028,7 +2028,7 @@ setup_feed(add_feed *feed)
 		g_print("setup_feed() -> err:%s\n", err->message);
 		tmpkey = gen_md5(feed->feed_url);
 		rss_error(tmpkey,
-			feed->feed_name ? feed->feed_name: _("Unamed feed"),
+			feed->feed_name ? feed->feed_name: _("Unnamed feed"),
 			_("Error while fetching feed."),
 			err->message);
 		g_free(tmpkey);
