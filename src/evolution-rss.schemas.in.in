@@ -25,7 +25,7 @@
         <short>Display article's summary</short>
         <long>
     	    Evolution will show article's summary instead of article's
-    	    webpage. Summary can also be HTML.
+    	    web page. Summary can also be HTML.
         </long>
       </locale>
     </schema>
@@ -68,7 +68,7 @@
       <locale name="C">
         <short>HTML render</short>
         <long>
-    	    Type HTML Render used to display html pages.
+    	    Type HTML Render used to display HTML pages.
         </long>
       </locale>
     </schema>
@@ -110,7 +110,7 @@
       <locale name="C">
         <short>Network timeout</short>
         <long>
-    	    Interval in seconds before a conection is dropped.
+    	    Interval in seconds before a connection is dropped.
         </long>
       </locale>
     </schema>
@@ -178,7 +178,7 @@
 	<type>bool</type>
 	<default>true</default>
 	<locale name="C">
-		<short>Automaticaly Resize Images</short>
+		<short>Automatically Resize Images</short>
 		<long>
 			Evolution RSS will automatically resize images larger than displayed area.
 		</long>
@@ -363,7 +363,7 @@
       <locale name="C">
         <short>Checks articles on startup</short>
         <long>
-    	    Check for new articles everytime Evolution is started.
+    	    Check for new articles every time Evolution is started.
         </long>
       </locale>
     </schema>
@@ -430,8 +430,8 @@
      <type>string</type>
      <default>@bindir@/evolution-import-rss %s</default>
      <locale name="C">
-       <short>URL handler for RSS feed uris</short>
-       <long>URL handler for RSS feed uris</long>
+       <short>URL handler for RSS feed URIs</short>
+       <long>URL handler for RSS feed URIs</long>
      </locale>
     </schema>
 
