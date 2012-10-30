@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the evolution-rss package.
 #
 # Andrej Žnidaršič <andrej.znidarsic@gmail.com>, 2010.
+# Matej Urbančič <mateju@svn.gnome.org>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-09 14:25+0000\n"
-"PO-Revision-Date: 2012-09-15 20:27+0100\n"
+"POT-Creation-Date: 2012-10-29 12:06+0000\n"
+"PO-Revision-Date: 2012-10-30 08:21+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -23,11 +24,11 @@ msgstr ""
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
-msgstr "Bralnik virov RSS Evolution"
+msgstr "Bralnik virov Evolution RSS"
 
 #: ../evolution-rss.desktop.in.in.h:2
-msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
-msgstr "Vstavek Evolution, ki Pošti Evolution omogoči prikaz virov rss."
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr "Vstavek Evolution, ki programu omogoči prikaz virov RSS."
 
 #: ../src/dbus.c:108
 #: ../src/rss.c:1950
@@ -55,8 +56,8 @@ msgid "Evolution-RSS"
 msgstr "Bralnik virov Evolution-RSS"
 
 #: ../src/e-mail-formatter-evolution-rss.c:137
-msgid "Displaying rss feed arcticles"
-msgstr "Prikaz vsebin vira RSS"
+msgid "Displaying RSS feed arcticles"
+msgstr "Prikazovanje virov prispevkov RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Proxy requires authentication"
@@ -68,11 +69,11 @@ msgstr "Posredniški strežnik omrežja zahteva overitev."
 
 #: ../src/evolution-rss.schemas.in.in.h:3
 msgid "Display article's summary"
-msgstr "Pokaži povzetek članka"
+msgstr "Pokaži povzetek prispevka"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
-msgid "Evolution will show article's summary instead of article's webpage. Summary can also be html."
-msgstr "Prikazan bo povzetek članka namesto spletne strani članka. Povzetek je lahko v zapisu html."
+msgid "Evolution will show article's summary instead of article's web page. Summary can also be HTML."
+msgstr "Prikazan bo povzetek prispevka namesto spletne strani prispevka. Povzetek je lahko v zapisu HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:5
 msgid "Feeds list"
@@ -91,11 +92,11 @@ msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Ime gostitelja posredniškega strežnika uporabljenega za vire in vsebino."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Html render"
+msgid "HTML render"
 msgstr "Izrisovalnik HTML"
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Type HTML Render used to display html pages."
+msgid "Type HTML Render used to display HTML pages."
 msgstr "Vrsta izrisovalnika HTML za prikaz strani html."
 
 #: ../src/evolution-rss.schemas.in.in.h:11
@@ -119,7 +120,7 @@ msgid "Network timeout"
 msgstr "Zakasnitev omrežja"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Interval in seconds before a conection is dropped."
+msgid "Interval in seconds before a connection is dropped."
 msgstr "Časovni razmik v sekundah pred preklicem povezave."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
@@ -144,11 +145,11 @@ msgstr "Sprejmi piškotke"
 
 #: ../src/evolution-rss.schemas.in.in.h:22
 msgid "Evolution RSS will accept cookies from articles you browse."
-msgstr "Evolution RSS bo sprejel piškote iz prebrskanih člankov."
+msgstr "Evolution RSS bo sprejel piškote iz prebrskanih prispevkov."
 
 #: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Automaticaly Resize Images"
-msgstr "Samodejno spreminjanje velikosti slik"
+msgid "Automatically Resize Images"
+msgstr "Samodejno prilagodi velikost slik"
 
 #: ../src/evolution-rss.schemas.in.in.h:24
 msgid "Evolution RSS will automatically resize images larger than displayed area."
@@ -156,11 +157,11 @@ msgstr "Evolution RSS bo samodejno spremenil velikost slik večjih kot prikazano
 
 #: ../src/evolution-rss.schemas.in.in.h:25
 msgid "Scan web pages for RSS"
-msgstr "Preiskovanje spletnih strani za RSS"
+msgstr "Preiskovanje spletnih strani za vire RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
-msgid "Evolution RSS will scan web pages for rss content"
-msgstr "Evolution RSS bo preiskal spletne strani za rss vsebino"
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution RSS bo preiskal spletne strani za vsebino RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "Download enclosures"
@@ -168,15 +169,15 @@ msgstr "Prejmi priloge"
 
 #: ../src/evolution-rss.schemas.in.in.h:28
 msgid "Evolution will download all feed enclosures a feed article may contain."
-msgstr "Evolution bo prejel vse priloge virov, ki jih lahko vsebuje članek virov."
+msgstr "Evolution bo prejel vse priloge virov, ki jih lahko vsebuje prispevek virov."
 
 #: ../src/evolution-rss.schemas.in.in.h:29
 msgid "Limit enclosure size"
 msgstr "Omeji velikost priloge"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
-msgid "Limit maximum enclosure size evolution will download."
-msgstr "Omeji največjo velikost priloge, ki jo bo evolution prejel."
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Omeji največjo velikost priloge, ki jo bo evolution samodejno prejel."
 
 #: ../src/evolution-rss.schemas.in.in.h:31
 msgid "Max enclosure size"
@@ -196,7 +197,7 @@ msgstr "Utripajoča ikona stanja"
 
 #: ../src/evolution-rss.schemas.in.in.h:35
 msgid "Blink status icon when new article received"
-msgstr "Utripanje ikone stanja, ko prispejo novi članki"
+msgstr "Utripanje ikone stanja, ko prispejo novi prispevki"
 
 #: ../src/evolution-rss.schemas.in.in.h:36
 msgid "Enable Feed Icon"
@@ -211,8 +212,8 @@ msgid "Password for proxy server"
 msgstr "Geslo za posredniški strežnik"
 
 #: ../src/evolution-rss.schemas.in.in.h:39
-msgid "If the proxy server requires authentication. This is the password field."
-msgstr "V primeru, da posredniški strežnik zahteva overitev. To je polje gesla."
+msgid "If the proxy server requires authentication, this is the password field."
+msgstr "V primeru, da posredniški strežnik zahteva overitev, je to polje gesla."
 
 #: ../src/evolution-rss.schemas.in.in.h:40
 msgid "Proxy server port"
@@ -232,35 +233,35 @@ msgstr "Izbris vnosa vira bo odstranil tudi mapo vira."
 
 #: ../src/evolution-rss.schemas.in.in.h:44
 msgid "Check New articles"
-msgstr "Preveri nove članke"
+msgstr "Preveri nove prispevke"
 
 #: ../src/evolution-rss.schemas.in.in.h:45
 msgid "Auto check for new articles."
-msgstr "Samodejno preveri za nove članke."
+msgstr "Samodejno preveri za nove prispevke."
 
 #: ../src/evolution-rss.schemas.in.in.h:46
 msgid "New articles timeout"
-msgstr "Zakasnitev novih člankov"
+msgstr "Zakasnitev novih prispevkov"
 
 #: ../src/evolution-rss.schemas.in.in.h:47
 msgid "Frequency to check for new articles (in minutes)."
-msgstr "Čas med preverjanji za nove članke (v minutah)."
+msgstr "Čas med preverjanji za nove prispevke (v minutah)."
 
 #: ../src/evolution-rss.schemas.in.in.h:48
 msgid "Checks articles on startup"
-msgstr "Preveri članke ob zagonu"
+msgstr "Preveri prispevke ob zagonu"
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Check for new articles everytime Evolution is started."
-msgstr "Preveri za nove članke ob vsakem zagonu programa Evolution."
+msgid "Check for new articles every time Evolution is started."
+msgstr "Preveri za nove prispevke ob vsakem zagonu programa Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
 msgid "Show articles comments"
-msgstr "Prikaz opomb članka"
+msgstr "Prikaz opomb prispevka"
 
 #: ../src/evolution-rss.schemas.in.in.h:51
 msgid "If a feed article has comments, it will be displayed."
-msgstr "V primeru da ima članek vira opombe, bodo prikazane"
+msgstr "Pri prispevkih virov, ki imajo opombe, bodo te prikazane."
 
 #: ../src/evolution-rss.schemas.in.in.h:52
 msgid "Use proxy server"
@@ -268,7 +269,7 @@ msgstr "Uporaba posredniškega strežnika"
 
 #: ../src/evolution-rss.schemas.in.in.h:53
 msgid "Use a proxy server to fetch articles and content."
-msgstr "Uporaba posredniškega strežnika za pridobivanje člankov in vsebine."
+msgstr "Uporaba posredniškega strežnika za pridobivanje prispevkov in vsebine."
 
 #: ../src/evolution-rss.schemas.in.in.h:54
 msgid "Proxy server user"
@@ -284,11 +285,11 @@ msgstr "Kako upravljati z naslovi URL RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:57
 msgid "Set to true to have a program specified in command handle RSS URLs"
-msgstr "Izbrana možnost omogoča, da program določen v ukazu upravlja z naslovi URI "
+msgstr "Izbrana možnost omogoča, da program, določen v ukazu, upravlja z naslovi URI "
 
 #: ../src/evolution-rss.schemas.in.in.h:58
-msgid "URL handler for rss feed uris"
-msgstr "Upravljalnik naslovov URL za naslove uri rss virov"
+msgid "URL handler for RSS feed URIs"
+msgstr "Upravljalnik naslovov URL za naslove URI virov RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
@@ -308,7 +309,7 @@ msgstr "Pridobivanje virov (%d omogočeno)"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
-"This plugin adds RSS Feeds support for evolution mail. RSS support was built upon the somewhat existing RSS support in evolution-1.4 branch. The motivation behind this was to have RSS in same place as mails, at this moment I do not see the point having a separate RSS reader since a RSS Article is like an email message.\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built upon the somewhat existing RSS support in evolution-1.4 branch. The motivation behind this was to have RSS in same place as mails, at this moment I do not see the point in having a separate RSS reader since a RSS Article is like an email message.\n"
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
 "\n"
@@ -320,9 +321,9 @@ msgid ""
 msgstr ""
 "Vstavek Evolution bralnika RSS .\n"
 "\n"
-"Vstavek omogoča prejemanje virov RSS preko elektronske pošte. Podpora RSS je bila izgrajena na deloma obstoječi podpori RSS v veji evolution-1.4. Cilj je bil imeti RSS na istem mestu kot pošto, saj trenutno ni vidieti smisla v ločenem RSS bralniku, ker je članek RSS podoben sporočilu e-pošte.\n"
+"Vstavek omogoča prejemanje virov RSS preko elektronske pošte. Podpora RSS je bila izgrajena na deloma obstoječi podpori RSS v veji evolution-1.4. Takratni cilj je bil objavljanje RSS na istem mestu kot pošto, saj ni utemeljenega razloga za razvoj ločenega bralnik RSS. Podobnost med objavami RSS in elektronsko pošto je prevelika.\n"
 "\n"
-"Evolution RSS lahko prikaže članek v pogledu povzetka ali pogledu HTML.\n"
+"Evolution RSS lahko prikaže prispevek v pogledu povzetka ali pogledu HTML.\n"
 "\n"
 "HTML je lahko prikazan z uporabo naslednjih pogonov: gtkHTML, Apple-ov Webkit ali Firefox/Gecko.\n"
 "\n"
@@ -466,6 +467,7 @@ msgid "Fetching feed"
 msgstr "Pridobivanje vira"
 
 #: ../src/rss.c:1753
+#: ../src/rss.c:2031
 msgid "Unnamed feed"
 msgstr "Neimenovan vir"
 
@@ -486,10 +488,6 @@ msgstr "Neveljaven vir"
 #, c-format
 msgid "Adding feed %s"
 msgstr "Dodajanje vira %s"
-
-#: ../src/rss.c:2031
-msgid "Unamed feed"
-msgstr "Neimenovan vir"
 
 #: ../src/rss.c:2046
 #: ../src/rss.c:2054
@@ -644,7 +642,7 @@ msgstr "Datoteke XML"
 
 #: ../src/rss-config-factory.c:2369
 msgid "Show article's summary"
-msgstr "Pokaži povzetek članka"
+msgstr "Pokaži povzetek prispevka"
 
 #: ../src/rss-config-factory.c:2382
 msgid "Feed Enabled"
@@ -695,7 +693,7 @@ msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
 msgstr ""
-"RSS vir ni nastavljen!\n"
+"Vir RSS ni nastavljen!\n"
 "Ni mogoče izvoziti."
 
 #: ../src/rss-config-factory.c:3484
@@ -704,9 +702,9 @@ msgid ""
 "as renders you need firefox or webkit devel package \n"
 "installed and evolution-rss should be recompiled to see those packages."
 msgstr ""
-"Opomba: za uporabo Mozille (Firefox) ali Apple Webkit-a\n"
-"za izrisovanje namestite firefox ali paket webkit devel\n"
-"in ponovno prevedite evolution-rss, tako da bo videl te pakete."
+"Opomba: za uporabo Mozille (Firefox) ali vmesnika Apple Webkit\n"
+"za izrisovanje, je treba namestiti brskalnik ali paket webkit devel\n"
+"in ponovno kodno prevesti evolution-rss za podporo tej vrsti paketov."
 
 #: ../src/rss-config-factory.c:4088
 #: ../src/rss-main.ui.h:46
@@ -793,7 +791,7 @@ msgstr "Pokaži ikono vira"
 
 #: ../src/rss-html-rendering.ui.h:15
 msgid "<b>Article Notification</b>"
-msgstr "<b>Obvestilo o članku<b>"
+msgstr "<b>Obvestilo o prispevku<b>"
 
 #. to translators: label part of Check for new articles every X minutes" message
 #: ../src/rss-main.ui.h:2
@@ -850,11 +848,11 @@ msgstr "<span weight=\"bold\">Zagon</span>"
 
 #: ../src/rss-main.ui.h:17
 msgid "Check for new articles every"
-msgstr "Samodejno preveri za nove članke vsakih"
+msgstr "Samodejno preveri za nove prispevke vsakih"
 
 #: ../src/rss-main.ui.h:18
 msgid "Check for new articles at startup"
-msgstr "Preveri za nove članke ob zagonu"
+msgstr "Preveri za nove prispevke ob zagonu"
 
 #: ../src/rss-main.ui.h:19
 msgid "<span weight=\"bold\">Feed display</span>"
@@ -874,7 +872,7 @@ msgstr "<span weight=\"bold\">Priloženi viri</span>"
 
 #: ../src/rss-main.ui.h:23
 msgid "Show article comments"
-msgstr "Prikaži opombe članka"
+msgstr "Prikaži opombe prispevka"
 
 #: ../src/rss-main.ui.h:24
 msgid "Download feed enclosures"
@@ -1008,3 +1006,5 @@ msgstr "Overitev"
 msgid "<b>Advanced options</b>"
 msgstr "<b>Napredne možnosti<b>"
 
+#~ msgid "Unamed feed"
+#~ msgstr "Neimenovan vir"
