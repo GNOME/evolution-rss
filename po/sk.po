@@ -1,0 +1,1131 @@
+# Slovak translation for evolution-rss.
+# Copyright (C) 2012 Free Software Foundation, Inc.
+# This file is distributed under the same license as the evolution-rss package.
+# Marián Čavojský <cavo+gnomel10n@cavo.sk>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-10-28 19:26+0000\n"
+"PO-Revision-Date: 2012-11-04 21:04+0000\n"
+"Last-Translator: Marián Čavojský <cavo+gnomel10n@cavo.sk>\n"
+"Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
+
+# dal by som Evolution - citacka RSS
+#: ../evolution-rss.desktop.in.in.h:1
+#, fuzzy
+msgid "Evolution RSS Reader"
+msgstr "Čítačka RSS pre Evolution"
+
+#: ../evolution-rss.desktop.in.in.h:2
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr ""
+"Zásuvný modul, ktorý umožňuje poštovému klientovi Evolution zobrazovanie "
+"informačných kanálov RSS."
+
+#: ../src/dbus.c:108 ../src/rss.c:1950 ../src/rss-config-factory.c:1185
+#: ../src/rss-config-factory.c:1757 ../src/rss-config-factory.c:1924
+msgid "Error adding feed."
+msgstr "Chyba pri pridávaní informačného kanála."
+
+#: ../src/dbus.c:109 ../src/rss.c:1951 ../src/rss-config-factory.c:1186
+#: ../src/rss-config-factory.c:1758 ../src/rss-config-factory.c:1925
+msgid "Feed already exists!"
+msgstr "Informačný kanál už existuje!"
+
+#: ../src/dbus.c:116
+#, c-format
+msgid "Importing URL: %s"
+msgstr "Importuje sa URL: %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:131
+msgid "Evolution-RSS"
+msgstr "RSS pre Evolution"
+
+#: ../src/e-mail-formatter-evolution-rss.c:137
+msgid "Displaying RSS feed arcticles"
+msgstr ""
+
+#: ../src/evolution-rss.schemas.in.in.h:1
+msgid "Proxy requires authentication"
+msgstr "Proxy server vyžaduje overenie totožnosti"
+
+# PM: rozmýšľam či by nebolo vhodné v popisoch proxy prekladať ako sprodkovateľský server, každý nevie čo je to proxy (je to tu viackrát)
+# MČ: ja by som to neprekladal. Ak to bude čítať človek čo tomu nerozumie, tak určite bude volať nejakému sieťarovi alebo administrátorovi siete, ktorý sa asi z názvu „sprostredkovateľský server“ veľa nedozvie a oznámi: také nevedieme. Hlavne keď i firefox používa pojem proxy server.
+# PK: necha lby som len proxy
+#: ../src/evolution-rss.schemas.in.in.h:2
+#, fuzzy
+msgid "Network proxy requires authentication."
+msgstr ""
+"Sieťový sprostredkovateľský (proxy) server vyžaduje overenie totožnosti."
+
+# PK: toto je len 1 clanok
+#: ../src/evolution-rss.schemas.in.in.h:3
+#, fuzzy
+msgid "Display article's summary"
+msgstr "Zobraziť zhrnutie článkov"
+
+#: ../src/evolution-rss.schemas.in.in.h:4
+#, fuzzy
+msgid ""
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
+msgstr ""
+"Evolution bude zobrazovať zhrnutie článkov namiesto webovej stránky článkov. "
+"Zhrnutie môže byť taktiež v HTML."
+
+#: ../src/evolution-rss.schemas.in.in.h:5
+msgid "Feeds list"
+msgstr "Zoznam informačných kanálov"
+
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Obsahuje zoznam aktuálne nastavených informačných kanálov."
+
+#: ../src/evolution-rss.schemas.in.in.h:7
+msgid "Hostname of the proxy server"
+msgstr "Názov hostiteľa proxy servera"
+
+#: ../src/evolution-rss.schemas.in.in.h:8
+#, fuzzy
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr ""
+"Názov hostiteľa sprostredkovateľského (proxy) servera používaného pre "
+"informačné kanály a obsah."
+
+# MČ: gecko, webkit, ...
+# PK: Program na vykreslenie HTML
+#: ../src/evolution-rss.schemas.in.in.h:9
+#, fuzzy
+msgid "HTML render"
+msgstr "Zobrazovač HTML"
+
+#: ../src/evolution-rss.schemas.in.in.h:10
+#, fuzzy
+msgid "Type HTML Render used to display HTML pages."
+msgstr "Napíšte zobrazovač HTML, ktorý sa použije pri zobrazení stránok HTML."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Použiť vlastné písmo"
+
+#: ../src/evolution-rss.schemas.in.in.h:12
+msgid "Use a custom font size instead of system defaults."
+msgstr ""
+"Použije vlastné nastavenie veľkosti písma namiesto písma predvoleného "
+"systémom."
+
+#: ../src/evolution-rss.schemas.in.in.h:13
+msgid "Minimum font size"
+msgstr "Minimálna veľkosť písma"
+
+#: ../src/evolution-rss.schemas.in.in.h:14
+msgid "The size of the font used in full text preview."
+msgstr "Veľkosť písma použitého v náhľade celého textu."
+
+#: ../src/evolution-rss.schemas.in.in.h:15
+msgid "Network timeout"
+msgstr "Časový limit pre sieť"
+
+# PK: pripojenia
+#: ../src/evolution-rss.schemas.in.in.h:16
+#, fuzzy
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Interval v sekundách pred zahodením sieťového spojenia."
+
+#: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Veľkosť sieťového radu"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Množstvo súbežných sťahovaní."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "Povolený JavaScript"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Povolená Java"
+
+# PK: Prijimat
+#: ../src/evolution-rss.schemas.in.in.h:21
+#, fuzzy
+msgid "Accepts Cookies"
+msgstr "Prijať cookies"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Evolution RSS bude prijímať cookies z prezeraných článkov."
+
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automatically Resize Images"
+msgstr "Automaticky meniť veľkosť obrázkov"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"Evolution RSS bude automaticky meniť veľkosť obrázkov, ktoré sa nezmestia do "
+"zobrazovaného priestoru."
+
+# PK: skor najst RSS vo webovych strankach
+#: ../src/evolution-rss.schemas.in.in.h:25
+#, fuzzy
+msgid "Scan web pages for RSS"
+msgstr "Prehľadať webové stránky pre RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:26
+#, fuzzy
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr ""
+"Evolution RSS bude prehľadávať webové stránky a hľadať na nich RSS obsah"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "Sťahovať prílohy"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr ""
+"Evolution bude sťahovať všetky prílohy informačných kanálov, ktoré články "
+"môžu obsahovať. "
+
+#: ../src/evolution-rss.schemas.in.in.h:29
+msgid "Limit enclosure size"
+msgstr "Obmedzenie veľkosti prílohy"
+
+#: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr ""
+"Obmedzenie maximálnej veľkosti prílohy, ktorú ešte Evolution bude sťahovať."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "Maximálna veľkosť prílohy"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Povoliť stavovú ikonu"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Povolí stavovú ikonu v oblasti upozornení"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Blikajúca stavová ikona"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Pri prijatí nového článku, stavová ikona bude blikať"
+
+# PK: preco nie informacneho? tu je dost miesta nie
+#: ../src/evolution-rss.schemas.in.in.h:36
+#, fuzzy
+msgid "Enable Feed Icon"
+msgstr "Povoliť ikonu kanála"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Zobraziť ikonu informačného kanála na jeho priečinku"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Heslo pre proxy server"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
+#, fuzzy
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr ""
+"Ak sprostredkovateľský (proxy) server vyžaduje overenie totožnosti, toto je "
+"pole pre heslo."
+
+#: ../src/evolution-rss.schemas.in.in.h:40
+msgid "Proxy server port"
+msgstr "Port proxy servera"
+
+#: ../src/evolution-rss.schemas.in.in.h:41
+#, fuzzy
+msgid "The port number for proxy server used for feeds and content."
+msgstr ""
+"Číslo portu sprostredkovateľského (proxy) servera použitého pre informačné "
+"kanály a obsah."
+
+#: ../src/evolution-rss.schemas.in.in.h:42
+msgid "Remove feed folder"
+msgstr "Odstrániť priečinok kanála"
+
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr ""
+"Zrušenie položky informačného kanála bude znamenať aj zrušenie "
+"prislúchajúceho priečinka."
+
+# PK: na nove
+#: ../src/evolution-rss.schemas.in.in.h:44
+#, fuzzy
+msgid "Check New articles"
+msgstr "Kontrolovať nové články"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Automaticky kontrolovať prítomnosť nových článkov."
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Časový limit nových článkov"
+
+#: ../src/evolution-rss.schemas.in.in.h:47
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Ako často sa bude kontrolovať prítomnosť nových článkov (v minutách)."
+
+# PK: kontrolovat na nove clanky pri spusteni
+#: ../src/evolution-rss.schemas.in.in.h:48
+#, fuzzy
+msgid "Checks articles on startup"
+msgstr "Zisťovať články pri štarte"
+
+#: ../src/evolution-rss.schemas.in.in.h:49
+msgid "Check for new articles every time Evolution is started."
+msgstr "Zistí prítomnosť nových článkov pri každom spustení programu Evolution."
+
+#: ../src/evolution-rss.schemas.in.in.h:50
+msgid "Show articles comments"
+msgstr "Zobraziť komentáre ku článku"
+
+#: ../src/evolution-rss.schemas.in.in.h:51
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Ak informačný kanál obsahuje komentáre, tak budú zobrazené."
+
+#: ../src/evolution-rss.schemas.in.in.h:52
+msgid "Use proxy server"
+msgstr "Použiť proxy server"
+
+#: ../src/evolution-rss.schemas.in.in.h:53
+#, fuzzy
+msgid "Use a proxy server to fetch articles and content."
+msgstr ""
+"Použiť sprostredkovateľský (proxy) server na získanie článkov a obsahu."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Používateľ proxy servera"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
+#, fuzzy
+msgid "The username to use for proxy server authentication."
+msgstr ""
+"Používateľské meno pre overenie totožnosti na sprostredkovateľskom (proxy) "
+"serveri."
+
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "Ako manipulovať s adresami URL pre RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr "Povoliť vlastné nastavenie príkazu na spracovanie adries URL pre RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for RSS feed URIs"
+msgstr "Príkaz na spracovanie adries informačných kanálov RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Spustiť program v termináli"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
+msgid "True if the program to handle this URL should be run in a terminal"
+msgstr ""
+"Ak je true, tak bude program na spracovanie URL spustený v termináli"
+
+# PM: tu by mal byť asi plural forms
+# PK: nahlas bug
+#: ../src/notification.c:294 ../src/rss.c:2118
+#, fuzzy, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Získavanie informačných kanálov (povolených %d)"
+
+# PK: informacnych kanalov
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+#, fuzzy
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point in having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view.\n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Zásuvný modul Čítačka RSS pre Evolution\n"
+"\n"
+"Tento zásuvný modul doplňuje poštovému klientovi Evolution podporu čítania "
+"RSS kanálov. Podpora RSS bola vybudovaná na existujúcej podpore vo vetve "
+"evolution-1.4. Motiváciou bolo mať RSS na tom istom mieste ako poštu a v "
+"tomto okamžiku nevidím dôvod mať oddelenú čítačku RSS, keď RSS článok je "
+"vlastne ako poštová spáva.\n"
+"\n"
+"RSS Evolution môže zobraziť články použitím zobrazenia zhrnutia alebo "
+"zobrazenia HTML.\n"
+"\n"
+"HTML môže byť zobrazené použitím nasledujúcich strojov: gtkHTML, Webkit od "
+"Apple alebo Firefox/Gecko.\n"
+"\n"
+"<b>Verzia: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "Veľkosť"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "Čítanie informačných kanálov RSS…"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "Aktualizácia informačných kanálov…"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "_Dismiss"
+msgstr "_Zahodiť"
+
+# PM: prečo nie odstrániť?
+# MČ: RSS beriem ako predplatné časopisu. Predplatné sa ruší, ale dá sa aj tak.
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete \"{0}\"?"
+msgstr "Zrušiť „{0}“?"
+
+# PK: preco nie informacny kanal?
+# PM: prečo nie odstrániť?
+# MČ: RSS beriem ako predplatné časopisu. Predplatné sa ruší, ale dá sa aj tak.
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+#, fuzzy
+msgid "Really delete feed '{0}' ?"
+msgstr "Naozaj chcete zrušiť kanál „{0}“ ?"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Update RSS feeds"
+msgstr "Aktualizuje informačné kanály RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "_Read RSS"
+msgstr "Čítať _RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "Nastavuje informačné kanály RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "Nastaviť RSS"
+
+#. ATOM
+#: ../src/parser.c:1078
+msgid "No Information"
+msgstr "Žiadne informácie"
+
+#: ../src/parser.c:1177
+msgid "No information"
+msgstr "Žiadne informácie"
+
+#: ../src/rss.c:421 ../src/rss.c:2295
+msgid "Feed"
+msgstr "Informačný kanál"
+
+#: ../src/rss.c:486 ../src/rss-config-factory.c:2865
+#: ../src/rss-config-factory.c:3039
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% dokončených"
+
+#: ../src/rss.c:621
+msgid "Enter User/Pass for feed"
+msgstr "Zadanie používateľa/hesla pre informačný kanál"
+
+#: ../src/rss.c:677
+msgid "Enter your username and password for:"
+msgstr "Zadajte vaše používateľské meno a heslo pre:"
+
+#: ../src/rss.c:695
+msgid "Username: "
+msgstr "Používateľské meno: "
+
+#: ../src/rss.c:716 ../src/rss-main.ui.h:37
+msgid "Password: "
+msgstr "Heslo: "
+
+#: ../src/rss.c:753
+msgid "_Remember this password"
+msgstr "_Zapamätať toto heslo"
+
+#: ../src/rss.c:867 ../src/rss.c:871
+msgid "Cancelling..."
+msgstr "Ruší sa…"
+
+#: ../src/rss.c:1153
+msgid "_Copy"
+msgstr "_Kopírovať"
+
+#: ../src/rss.c:1154
+msgid "Select _All"
+msgstr "_Vybrať všetko"
+
+#: ../src/rss.c:1156 ../src/rss.c:1167
+msgid "Zoom _In"
+msgstr "_Zväčšiť"
+
+#: ../src/rss.c:1157 ../src/rss.c:1168
+msgid "Zoom _Out"
+msgstr "Zme_nšiť"
+
+#: ../src/rss.c:1158 ../src/rss.c:1169
+msgid "_Normal Size"
+msgstr "Normálna _veľkosť"
+
+#: ../src/rss.c:1160
+msgid "_Open Link"
+msgstr "_Otvoriť odkaz"
+
+#: ../src/rss.c:1161 ../src/rss.c:1175
+msgid "_Copy Link Location"
+msgstr "_Kopírovať umiestnenie odkazu"
+
+#: ../src/rss.c:1171
+msgid "_Print..."
+msgstr "_Tlačiť…"
+
+#: ../src/rss.c:1172
+msgid "Save _As"
+msgstr "Uložiť _ako"
+
+#: ../src/rss.c:1174
+msgid "_Open Link in Browser"
+msgstr "_Otvoriť odkaz v prehliadači"
+
+# MČ: „Fetching feed: %s“
+# PM: inde fetching preberanie a inde zasa fetch získať v iných moduloch prevažuje získať ale poslal som to do ML k download lebo myslím že to súvisí
+# MČ: tu naozaj záleží len na dohode, ak sa to v rozumnom čase nevyrieši (nedohodneme sa konsenzom), tak nech to začleňovateľ označí fuzzy, aby sa na to nezabudlo.
+# PK: ziskava sa
+#: ../src/rss.c:1441
+#, fuzzy
+msgid "Fetching feed"
+msgstr "Získavanie kanála"
+
+#: ../src/rss.c:1753 ../src/rss.c:2031
+msgid "Unnamed feed"
+msgstr "Informačný kanál bez názvu"
+
+#: ../src/rss.c:1754
+msgid "Error while setting up feed."
+msgstr "Chyba počas nastavovania informačného kanála."
+
+#: ../src/rss.c:1962 ../src/rss.c:2032
+msgid "Error while fetching feed."
+msgstr "Chyba počas získavania informačného kanála."
+
+#: ../src/rss.c:1963
+msgid "Invalid Feed"
+msgstr "Neplatný informačný kanál"
+
+# PM: a tu prečo nie pridáva sa alebo pridanie? Kde to je? Dobré by bolo ku všetkým reťazcom nechávať poznámku kde čo je ľahšie sa to bude kontrolovať.
+# MČ: Ak som správne pochopil kód, tak sa vypisuje do status-u a/alebo do notifikácie počas pridávania, možno by bolo vhodnejšie „Pridáva sa“, určite nie „Pridanie“
+# PK: zauzivany tvar je PRidava sa
+#: ../src/rss.c:2005
+#, fuzzy, c-format
+msgid "Adding feed %s"
+msgstr "Pridávanie informačného kanála %s"
+
+# PK: Ziskava sa sprava %d. z %d
+#: ../src/rss.c:2046 ../src/rss.c:2054
+#, fuzzy, c-format
+msgid "Getting message %d of %d"
+msgstr "Získavanie správy %d z %d"
+
+#: ../src/rss.c:2139 ../src/rss.c:2142
+msgid "Complete."
+msgstr "Dokončené."
+
+# PK: informacneho
+#: ../src/rss.c:2176 ../src/rss.c:2354 ../src/rss.c:2392 ../src/rss.c:2595
+#: ../src/rss.c:3190
+#, fuzzy, c-format
+msgid "Error fetching feed: %s"
+msgstr "Chyba pri získavaní kanála: %s"
+
+#: ../src/rss.c:2188 ../src/rss.c:2192
+msgid "Canceled."
+msgstr "Prerušené."
+
+#: ../src/rss.c:2239
+#, fuzzy, c-format
+msgid "Error while parsing feed: %s"
+msgstr "Chyba počas spracovania kanála: %s"
+
+#: ../src/rss.c:2243
+msgid "illegal content type!"
+msgstr "neplatný typ obsahu!"
+
+#: ../src/rss.c:2303 ../src/rss.c:2306
+msgid "Complete"
+msgstr "Dokončené"
+
+#: ../src/rss.c:2438
+msgid "Formatting error."
+msgstr "Chyba formátovania."
+
+#: ../src/rss.c:3498
+msgid "No RSS feeds configured!"
+msgstr "Nie sú nakonfigurované žiadne informačné kanály RSS"
+
+#: ../src/rss.c:3550
+msgid "Waiting..."
+msgstr "Čaká sa…"
+
+#: ../src/rss-config-factory.c:164
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:165
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:166
+msgid "Mozilla"
+msgstr "Mozilla"
+
+# MČ: spin button: číslo bude zobrazené
+#: ../src/rss-config-factory.c:482
+msgid "day"
+msgid_plural "days"
+msgstr[0] "dní"
+msgstr[1] "deň"
+msgstr[2] "dni"
+
+# MČ: spin button: číslo bude zobrazené
+#: ../src/rss-config-factory.c:497
+msgid "message"
+msgid_plural "messages"
+msgstr[0] "správ"
+msgstr[1] "správa"
+msgstr[2] "správy"
+
+# window title
+#: ../src/rss-config-factory.c:563 ../src/rss-config-factory.c:576
+msgid "Move to Folder"
+msgstr "Presun do priečinka"
+
+#: ../src/rss-config-factory.c:563 ../src/rss-config-factory.c:576
+msgid "M_ove"
+msgstr "_Presunúť"
+
+# window title
+#: ../src/rss-config-factory.c:717
+msgid "Edit Feed"
+msgstr "Upravovanie informačného kanála"
+
+# window title
+#: ../src/rss-config-factory.c:719
+msgid "Add Feed"
+msgstr "Pridávanie informačného kanála"
+
+# PK: dokoncenych?
+#: ../src/rss-config-factory.c:1164 ../src/rss-config-factory.c:1729
+#, fuzzy, no-c-format
+msgid "0% done"
+msgstr "0% dokončené"
+
+# button
+#: ../src/rss-config-factory.c:1548
+msgid "Disable"
+msgstr "Zakázať"
+
+# button
+#: ../src/rss-config-factory.c:1548
+msgid "Enable"
+msgstr "Povoliť"
+
+# check button
+#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:40
+msgid "Remove folder contents"
+msgstr "Odstrániť obsah priečinka"
+
+#: ../src/rss-config-factory.c:1989
+msgid "Import error."
+msgstr "Chyba pri importe."
+
+#: ../src/rss-config-factory.c:1990
+msgid "Invalid file or this file does not contain any feeds."
+msgstr ""
+"Súbor je neplatný, alebo tento súbor neobsahuje žiadne informačné kanály."
+
+# MČ: „Importing: filename“
+#: ../src/rss-config-factory.c:1995
+msgid "Importing"
+msgstr "Importuje sa"
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss-config-factory.c:2018 ../src/rss-config-factory.c:2914
+#: ../src/rss-config-factory.c:3074
+msgid "Please wait"
+msgstr "Čakajte, prosím"
+
+#: ../src/rss-config-factory.c:2328 ../src/rss-config-factory.c:3194
+#: ../src/rss-config-factory.c:3257
+msgid "All Files"
+msgstr "Všetky súbory"
+
+#: ../src/rss-config-factory.c:2339 ../src/rss-config-factory.c:3278
+msgid "OPML Files"
+msgstr "Súbory OPML"
+
+#: ../src/rss-config-factory.c:2350 ../src/rss-config-factory.c:3267
+msgid "XML Files"
+msgstr "Súbory XML"
+
+#: ../src/rss-config-factory.c:2369
+msgid "Show article's summary"
+msgstr "Zobraziť súhrn článku"
+
+#: ../src/rss-config-factory.c:2382
+msgid "Feed Enabled"
+msgstr "Informačný kanál povolený"
+
+#: ../src/rss-config-factory.c:2395
+msgid "Validate feed"
+msgstr "Overovať informačný kanál"
+
+# window title
+#: ../src/rss-config-factory.c:2452 ../src/rss-main.ui.h:38
+msgid "Select import file"
+msgstr "Výber súboru na import"
+
+# window title
+#: ../src/rss-config-factory.c:2535 ../src/rss-main.ui.h:41
+msgid "Select file to export"
+msgstr "Výber súboru na export"
+
+# PM: nemá byť exportuje sa?
+# MČ: Malo by sa to vypísať v alert okne, ale nepodarilo sa mi nájsť či v titulku, alebo vo vnútri.
+# PK: neni to titulok
+#: ../src/rss-config-factory.c:2897
+msgid "Exporting feeds..."
+msgstr "Exportujú sa informačné kanály…"
+
+#: ../src/rss-config-factory.c:2961 ../src/rss-config-factory.c:2969
+msgid "Error exporting feeds!"
+msgstr "Chyba pri exporte informačných kanálov!"
+
+# PM: Nemá byť importuje sa?
+# MČ: Malo by sa to vypísať v alert okne, ale nepodarilo sa mi nájsť či v titulku, alebo vo vnútri.
+#: ../src/rss-config-factory.c:3050
+msgid "Importing cookies..."
+msgstr "Importujú sa cookies…"
+
+# window title
+#: ../src/rss-config-factory.c:3130
+msgid "Select file to import"
+msgstr "Výber súboru na import"
+
+# MČ: filter na súbory cookies
+#: ../src/rss-config-factory.c:3200
+msgid "Mozilla/Netscape Format"
+msgstr "Formát programu Mozilla/Netscape"
+
+# MČ: filter na súbory cookies
+#: ../src/rss-config-factory.c:3206
+msgid "Firefox new Format"
+msgstr "Nový formát programu Firefox"
+
+#: ../src/rss-config-factory.c:3316 ../src/rss-config-factory.c:3321
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"Nie je nakonfigurovaný žiadny informačný kanál RSS!\n"
+"Nemožno exportovať."
+
+#: ../src/rss-config-factory.c:3484
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Poznámka: Ak chcete používať program Mozilla (Firefox) alebo Apple WebKit \n"
+"ako zobrazovače, potrebujete mať vývojové balíky programu firefox, alebo webkit \n"
+"nainštalované a evolution-rss musí byť prekompilovaný tak, aby tieto balíky "
+"videl."
+
+# názov stĺpca
+#: ../src/rss-config-factory.c:4088 ../src/rss-main.ui.h:46
+msgid "Enabled"
+msgstr "Povolený"
+
+# názov stĺpca
+#: ../src/rss-config-factory.c:4115
+msgid "Feed Name"
+msgstr "Názov kanála"
+
+# názov stĺpca
+#: ../src/rss-config-factory.c:4128
+msgid "Type"
+msgstr "Typ"
+
+#: ../src/rss-config-factory.c:4445
+msgid "News And Blogs"
+msgstr "Novinky a blogy"
+
+#: ../src/rss.h:50
+msgid "News and Blogs"
+msgstr "Novinky a blogy"
+
+#: ../src/rss.h:52
+msgid "Untitled channel"
+msgstr "Nepomenovaný kanál"
+
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr ""
+
+#: ../src/rss-html-rendering.ui.h:3
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Minimálna veľkosť písma:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr ""
+
+# button
+#: ../src/rss-html-rendering.ui.h:5
+#, fuzzy
+#| msgid "Enable"
+msgid "Enable Java"
+msgstr "Povoliť"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr ""
+
+#: ../src/rss-html-rendering.ui.h:7
+#, fuzzy
+#| msgid "Accepts Cookies"
+msgid "Accept cookies from sites"
+msgstr "Prijať cookies"
+
+#: ../src/rss-html-rendering.ui.h:8
+#, fuzzy
+#| msgid "Importing cookies..."
+msgid "Import Cookies"
+msgstr "Importovanie cookies..."
+
+#: ../src/rss-html-rendering.ui.h:9
+#, fuzzy
+#| msgid "Automaticaly Resize Images"
+msgid "Automatically resize images"
+msgstr "Automaticky meniť veľkosť obrázkov"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Časový limmit pre sieť:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr ""
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr ""
+
+#: ../src/rss-html-rendering.ui.h:13
+#, fuzzy
+#| msgid "Enable status icon in notification area"
+msgid "Show icon in notification area"
+msgstr "Povolená stavová ikona v oblasti upozornení"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr ""
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr ""
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr ""
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr ""
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr ""
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr ""
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr ""
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr ""
+
+# MČ: „Importing: filename“
+#: ../src/rss-main.ui.h:8
+#, fuzzy
+#| msgid "Importing"
+msgid "I_mport"
+msgstr "Importuje sa"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr ""
+
+#: ../src/rss-main.ui.h:10
+#, fuzzy
+#| msgid "Feed"
+msgid "Feeds"
+msgstr "Informačný kanál"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr ""
+
+# button
+#: ../src/rss-main.ui.h:14
+#, fuzzy
+#| msgid "Enable"
+msgid "Enable Plugins"
+msgstr "Povoliť"
+
+#: ../src/rss-main.ui.h:15
+#, fuzzy
+#| msgid "GtkHTML"
+msgid "HTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr ""
+
+#: ../src/rss-main.ui.h:17
+#, fuzzy
+#| msgid "Auto check for new articles."
+msgid "Check for new articles every"
+msgstr "Automaticky kontrolovať prítomnosť nových článkov."
+
+#: ../src/rss-main.ui.h:18
+#, fuzzy
+#| msgid "Checks articles on startup"
+msgid "Check for new articles at startup"
+msgstr "Kontrlola článkov pri štarte"
+
+#: ../src/rss-main.ui.h:19
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr ""
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr ""
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr ""
+
+#: ../src/rss-main.ui.h:22
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr ""
+
+#: ../src/rss-main.ui.h:23
+#, fuzzy
+#| msgid "Show articles comments"
+msgid "Show article comments"
+msgstr "Zobraziť komentáre ku článku"
+
+#: ../src/rss-main.ui.h:24
+#, fuzzy
+#| msgid "Download enclosures"
+msgid "Download feed enclosures"
+msgstr "Sťahovať prílohy"
+
+#: ../src/rss-main.ui.h:25
+#, fuzzy
+#| msgid "Download enclosures"
+msgid "Do not download enclosures that exceeds"
+msgstr "Sťahovať prílohy"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr ""
+
+#: ../src/rss-main.ui.h:27
+#, fuzzy
+#| msgid "Setup RSS"
+msgid "Setup"
+msgstr "Nastaviť RSS"
+
+#: ../src/rss-main.ui.h:28
+#, fuzzy
+#| msgid "Use proxy server"
+msgid "Use Proxy"
+msgstr "Použiť proxy server"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr ""
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr ""
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr ""
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr ""
+
+#: ../src/rss-main.ui.h:33
+#, fuzzy
+#| msgid "Network timeout"
+msgid "Network"
+msgstr "Časový limmit pre sieť"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr ""
+
+#: ../src/rss-main.ui.h:35
+#, fuzzy
+#| msgid "Proxy requires authentication"
+msgid "Use authentication"
+msgstr "Proxy vyžaduje overenie totožnosti"
+
+#: ../src/rss-main.ui.h:36
+#, fuzzy
+#| msgid "Username: "
+msgid "Username:"
+msgstr "Používateľské meno: "
+
+#: ../src/rss-main.ui.h:39
+#, fuzzy
+#| msgid "Delete \"{0}\"?"
+msgid "Delete feed?"
+msgstr "Zrušiť „{0}“?"
+
+# názov stĺpca
+#: ../src/rss-main.ui.h:42
+#, fuzzy
+#| msgid "Feed Name"
+msgid "<b>Feed Name: </b>"
+msgstr "Názov kanála"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr ""
+
+#: ../src/rss-main.ui.h:44
+msgid "label"
+msgstr ""
+
+#: ../src/rss-main.ui.h:45
+msgid "<b>Location:</b>"
+msgstr ""
+
+#: ../src/rss-main.ui.h:47
+#, fuzzy
+#| msgid "Validate feed"
+msgid "Validate"
+msgstr "Overovať informačný kanál"
+
+# button
+#: ../src/rss-main.ui.h:48
+#, fuzzy
+#| msgid "Show Full Text"
+msgid "Show feed full text"
+msgstr "Zobraziť celý text"
+
+#: ../src/rss-main.ui.h:49
+msgid "General"
+msgstr ""
+
+#: ../src/rss-main.ui.h:50
+msgid "Use global update interval"
+msgstr ""
+
+#: ../src/rss-main.ui.h:51
+msgid "Update in"
+msgstr ""
+
+#: ../src/rss-main.ui.h:52
+#, fuzzy
+#| msgid "Update RSS feeds"
+msgid "Do no update feed"
+msgstr "Aktualizovať informačné kanály RSS"
+
+#: ../src/rss-main.ui.h:53
+msgid "Update"
+msgstr ""
+
+#: ../src/rss-main.ui.h:54
+msgid "Do not delete feeds"
+msgstr ""
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete all but the last"
+msgstr ""
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles older than"
+msgstr ""
+
+#: ../src/rss-main.ui.h:57
+msgid "Delete articles that are no longer in the feed"
+msgstr ""
+
+#: ../src/rss-main.ui.h:58
+msgid "Always delete unread articles"
+msgstr ""
+
+#: ../src/rss-main.ui.h:59
+msgid "Storage"
+msgstr ""
+
+#: ../src/rss-main.ui.h:60
+msgid "Authentication"
+msgstr "Overenie totožnosti"
+
+#: ../src/rss-main.ui.h:61
+msgid "<b>Advanced options</b>"
+msgstr ""
