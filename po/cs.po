@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-02 19:13+0000\n"
+"POT-Creation-Date: 2012-10-28 19:26+0000\n"
 "PO-Revision-Date: 2012-09-06 10:42+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
@@ -28,8 +28,8 @@ msgid "Evolution RSS Reader"
 msgstr "Čtečka RSS pro Evolution"
 
 #: ../evolution-rss.desktop.in.in.h:2
-msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
-msgstr "Zásuvný modul do aplikace Evolution umožňující zobrazovat kanály rss."
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr "Zásuvný modul do aplikace Evolution umožňující zobrazovat kanály RSS."
 
 #: ../src/dbus.c:108 ../src/rss.c:1950 ../src/rss-config-factory.c:1185
 #: ../src/rss-config-factory.c:1757 ../src/rss-config-factory.c:1924
@@ -51,7 +51,7 @@ msgid "Evolution-RSS"
 msgstr "Evolution-RSS"
 
 #: ../src/e-mail-formatter-evolution-rss.c:137
-msgid "Displaying rss feed arcticles"
+msgid "Displaying RSS feed arcticles"
 msgstr "Zobrazení článků v kanále RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
@@ -68,11 +68,11 @@ msgstr "Zobrazit shrnutí článku"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
 msgid ""
-"Evolution will show article's summary instead of article's webpage. Summary "
-"can also be html."
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
 msgstr ""
 "Evolution bude zobrazovat shrnutí článku místo webové stránky článku. "
-"Shrnutí muže být také v html."
+"Shrnutí muže být také v HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:5
 msgid "Feeds list"
@@ -91,13 +91,13 @@ msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Název počítače s proxy serverem používaným pro kanály a obsah."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Html render"
+msgid "HTML render"
 msgstr "Vykreslování HTML"
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Type HTML Render used to display html pages."
+msgid "Type HTML Render used to display HTML pages."
 msgstr ""
-"Zapište vykreslovací jádro HTML, který se má použít pro zobrazení stránek "
+"Zadejte vykreslovací jádro HTML, který se má použít pro zobrazení stránek "
 "HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:11
@@ -122,7 +122,7 @@ msgid "Network timeout"
 msgstr "Časový limit sítě"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Interval in seconds before a conection is dropped."
+msgid "Interval in seconds before a connection is dropped."
 msgstr "Interval v sekundách před tím, než je připojení zahozeno."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
@@ -150,7 +150,7 @@ msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "RSS pro Evolution bude přijímat cookies z článků, kterými procházíte."
 
 #: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Automaticaly Resize Images"
+msgid "Automatically Resize Images"
 msgstr "Automaticky měnit velikost obrázků"
 
 #: ../src/evolution-rss.schemas.in.in.h:24
@@ -165,7 +165,7 @@ msgid "Scan web pages for RSS"
 msgstr "Vyhledat na webových stránkách RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
-msgid "Evolution RSS will scan web pages for rss content"
+msgid "Evolution RSS will scan web pages for RSS content"
 msgstr ""
 "Čtečka RSS pro Evolution bude prohledávat webové stránky, aby nalezla obsah "
 "s RSS"
@@ -185,7 +185,7 @@ msgid "Limit enclosure size"
 msgstr "Omezení velikosti přílohy"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
-msgid "Limit maximum enclosure size evolution will download."
+msgid "Limit maximum enclosure size Evolution will download."
 msgstr ""
 "Omezení maximální velikosti přílohy, kterou bude aplikace Evolution stahovat."
 
@@ -223,7 +223,7 @@ msgstr "Heslo pro proxy server"
 
 #: ../src/evolution-rss.schemas.in.in.h:39
 msgid ""
-"If the proxy server requires authentication. This is the password field."
+"If the proxy server requires authentication, this is the password field."
 msgstr ""
 "Pokud proxy server vyžaduje ověření totožnosti. Toto je pole pro heslo."
 
@@ -264,7 +264,7 @@ msgid "Checks articles on startup"
 msgstr "Kontrolovat články při spuštění"
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Check for new articles everytime Evolution is started."
+msgid "Check for new articles every time Evolution is started."
 msgstr "Zkontrolovat nové články pokaždé, když se spustí Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
@@ -303,7 +303,7 @@ msgstr ""
 "pomocí příkazů."
 
 #: ../src/evolution-rss.schemas.in.in.h:58
-msgid "URL handler for rss feed uris"
+msgid "URL handler for RSS feed URIs"
 msgstr "Ovladač URL pro adresy URI kanálů RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
@@ -325,10 +325,10 @@ msgstr "Stahování kanálů (%d povoleno)"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
-"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
 "upon the somewhat existing RSS support in evolution-1.4 branch. The "
 "motivation behind this was to have RSS in same place as mails, at this "
-"moment I do not see the point having a separate RSS reader since a RSS "
+"moment I do not see the point in having a separate RSS reader since a RSS "
 "Article is like an email message.\n"
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
@@ -428,7 +428,7 @@ msgstr "Zadejte své uživatelské jméno a heslo pro:"
 msgid "Username: "
 msgstr "Jméno uživatele:"
 
-#: ../src/rss.c:716 ../src/rss-main.ui.h:38
+#: ../src/rss.c:716 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Heslo:"
 
@@ -484,7 +484,7 @@ msgstr "_Otevřít odkaz v prohlížeči"
 msgid "Fetching feed"
 msgstr "Probíhá stahování kanálu"
 
-#: ../src/rss.c:1753
+#: ../src/rss.c:1753 ../src/rss.c:2031
 msgid "Unnamed feed"
 msgstr "Nepojmenovaný kanál"
 
@@ -504,10 +504,6 @@ msgstr "Neplatný kanál"
 #, c-format
 msgid "Adding feed %s"
 msgstr "Probíhá přidávání kanálu %s"
-
-#: ../src/rss.c:2031
-msgid "Unamed feed"
-msgstr "Nepojmenovaný kanál"
 
 #: ../src/rss.c:2046 ../src/rss.c:2054
 #, c-format
@@ -608,7 +604,7 @@ msgstr "Zakázat"
 msgid "Enable"
 msgstr "Povolit"
 
-#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:41
+#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Odstranit obsah složky"
 
@@ -655,11 +651,11 @@ msgstr "Kanál povolen"
 msgid "Validate feed"
 msgstr "Validovat kanál"
 
-#: ../src/rss-config-factory.c:2452 ../src/rss-main.ui.h:39
+#: ../src/rss-config-factory.c:2452 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Vyberte soubor k importování"
 
-#: ../src/rss-config-factory.c:2535 ../src/rss-main.ui.h:42
+#: ../src/rss-config-factory.c:2535 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Vyberte soubor k exportování"
 
@@ -835,108 +831,108 @@ msgid "Enable Plugins"
 msgstr "Povolit zásuvné moduly"
 
 #: ../src/rss-main.ui.h:15
-msgid "label"
-msgstr ""
-
-#: ../src/rss-main.ui.h:16
 msgid "HTML"
 msgstr "HTML"
 
-#: ../src/rss-main.ui.h:17
+#: ../src/rss-main.ui.h:16
 msgid "<span weight=\"bold\">Start up</span>"
 msgstr "<span weight=\"bold\">Spuštění</span>"
 
-#: ../src/rss-main.ui.h:18
+#: ../src/rss-main.ui.h:17
 msgid "Check for new articles every"
 msgstr "Kontrolovat nové články každých "
 
-#: ../src/rss-main.ui.h:19
+#: ../src/rss-main.ui.h:18
 msgid "Check for new articles at startup"
 msgstr "Kontrolovat nové články při spuštění"
 
-#: ../src/rss-main.ui.h:20
+#: ../src/rss-main.ui.h:19
 msgid "<span weight=\"bold\">Feed display</span>"
 msgstr "<span weight=\"bold\">Zobrazení kanálu</span>"
 
-#: ../src/rss-main.ui.h:21
+#: ../src/rss-main.ui.h:20
 msgid "By default show article summary instead of webpage"
 msgstr "Jako výchozí zobrazovat místo webové stránky souhrn článku"
 
-#: ../src/rss-main.ui.h:22
+#: ../src/rss-main.ui.h:21
 msgid "Scan for feed inside webpages"
 msgstr "Hledat kanály v rámci webových stránek"
 
-#: ../src/rss-main.ui.h:23
+#: ../src/rss-main.ui.h:22
 msgid "<span weight=\"bold\">Feed enclosures</span>"
 msgstr "<span weight=\"bold\">Přílohy kanálů</span>"
 
-#: ../src/rss-main.ui.h:24
+#: ../src/rss-main.ui.h:23
 msgid "Show article comments"
 msgstr "Zobrazovat komentáře článků"
 
-#: ../src/rss-main.ui.h:25
+#: ../src/rss-main.ui.h:24
 msgid "Download feed enclosures"
 msgstr "Stahovat přílohy kanálů"
 
-#: ../src/rss-main.ui.h:26
+#: ../src/rss-main.ui.h:25
 msgid "Do not download enclosures that exceeds"
 msgstr "Nestahovat přílohy, které překročí"
 
-#: ../src/rss-main.ui.h:27
+#: ../src/rss-main.ui.h:26
 msgid "KB"
 msgstr "kB"
 
-#: ../src/rss-main.ui.h:28
+#: ../src/rss-main.ui.h:27
 msgid "Setup"
 msgstr "Nastavení"
 
-#: ../src/rss-main.ui.h:29
+#: ../src/rss-main.ui.h:28
 msgid "Use Proxy"
 msgstr "Používat proxy"
 
-#: ../src/rss-main.ui.h:30
+#: ../src/rss-main.ui.h:29
 msgid "HTTP proxy:"
 msgstr "Proxy HTTP:"
 
-#: ../src/rss-main.ui.h:31
+#: ../src/rss-main.ui.h:30
 msgid "Port:"
 msgstr "Port:"
 
-#: ../src/rss-main.ui.h:32
+#: ../src/rss-main.ui.h:31
 msgid "Details"
 msgstr "Podrobnosti"
 
-#: ../src/rss-main.ui.h:33
+#: ../src/rss-main.ui.h:32
 msgid "No proxy for:"
 msgstr "Bez proxy pro:"
 
-#: ../src/rss-main.ui.h:34
+#: ../src/rss-main.ui.h:33
 msgid "Network"
 msgstr "Síť"
 
-#: ../src/rss-main.ui.h:35
+#: ../src/rss-main.ui.h:34
 msgid "HTTP Proxy Details"
 msgstr "Podrobnosti o proxy HTTP"
 
-#: ../src/rss-main.ui.h:36
+#: ../src/rss-main.ui.h:35
 msgid "Use authentication"
 msgstr "Používat autentizaci"
 
-#: ../src/rss-main.ui.h:37
+#: ../src/rss-main.ui.h:36
 msgid "Username:"
 msgstr "Jméno uživatele:"
 
-#: ../src/rss-main.ui.h:40
+#: ../src/rss-main.ui.h:39
 msgid "Delete feed?"
 msgstr "Smazat kanál?"
 
-#: ../src/rss-main.ui.h:43
+#: ../src/rss-main.ui.h:42
 msgid "<b>Feed Name: </b>"
 msgstr "<b>Název kanálu:</b>"
 
-#: ../src/rss-main.ui.h:44
+#: ../src/rss-main.ui.h:43
 msgid "<b>Feed URL:</b>"
 msgstr "<b>Adresa URL kanálu:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "label"
+msgstr ""
 
 #: ../src/rss-main.ui.h:45
 msgid "<b>Location:</b>"
