@@ -32,49 +32,67 @@
 #include <libebackend/libebackend.h>
 
 
-typedef struct _EMailParserRSS {
-	EExtension parent;
-} EMailParserRSS;
-
-typedef struct _EMailParserRSSClass {
-	EExtensionClass parent_class;
-} EMailParserRSSClass;
+typedef EMailParserExtension EMailParserRSS;
+typedef EMailParserExtensionClass EMailParserRSSClass;
 
 GType e_mail_parser_evolution_rss_get_type (void);
-static void e_mail_parser_mail_extension_interface_init (EMailExtensionInterface *iface);
-static void e_mail_parser_parser_extension_interface_init (EMailParserExtensionInterface *iface);
 
-G_DEFINE_DYNAMIC_TYPE_EXTENDED (
+G_DEFINE_DYNAMIC_TYPE (
 	EMailParserRSS,
 	e_mail_parser_evolution_rss,
-	E_TYPE_EXTENSION,
-	0,
-	G_IMPLEMENT_INTERFACE_DYNAMIC (
-		E_TYPE_MAIL_EXTENSION,
-		e_mail_parser_mail_extension_interface_init)
-	G_IMPLEMENT_INTERFACE_DYNAMIC (
-		E_TYPE_MAIL_PARSER_EXTENSION,
-		e_mail_parser_parser_extension_interface_init));
+	E_TYPE_MAIL_PARSER_EXTENSION)
 
 static const gchar* pser_mime_types[] = { "x-evolution/evolution-rss-feed", NULL };
 
-static GSList *
+typedef struct _EMailPartRSS EMailPartRSS;
+
+struct _EMailPartRSS {
+	EMailPart parent;
+};
+
+static gboolean
 empe_evolution_rss_parse (EMailParserExtension *extension,
 				EMailParser *parser,
 				CamelMimePart *part,
 				GString *part_id,
-				GCancellable *cancellable)
+				GCancellable *cancellable,
+				GQueue *out_mail_queue)
 {
-	GSList *parts = e_mail_parser_parse_part_as (
-			parser, part, part_id, "application/vnd.evolution.attachment", cancellable);
+	EMailPartRSS *mail_part;
+	GQueue work_queue = G_QUEUE_INIT;
+	gint len;
 
-	return parts;
+	len = part_id->len;
+
+	mail_part = (EMailPartRSS *) e_mail_part_subclass_new (
+		part, part_id->str, sizeof (EMailPartRSS),
+		NULL);
+	mail_part->parent.mime_type = camel_content_type_simple (
+		camel_mime_part_get_content_type (part));
+	g_string_truncate (part_id, len);
+
+	g_queue_push_tail (&work_queue, mail_part);
+	e_queue_transfer (&work_queue, out_mail_queue);
+
+	return TRUE;
 }
 
-static const gchar **
-empe_rss_mime_types (EMailExtension *extension)
+static void
+e_mail_parser_evolution_rss_class_init (EMailParserExtensionClass *class)
 {
-	return pser_mime_types;
+	class->mime_types = pser_mime_types;
+	class->parse = empe_evolution_rss_parse;
+}
+
+void
+e_mail_parser_evolution_rss_class_finalize (EMailParserExtensionClass *class)
+{
+}
+
+static void
+e_mail_parser_evolution_rss_init (EMailParserExtension *parser)
+{
+
 }
 
 void
@@ -82,52 +100,3 @@ e_mail_parser_evolution_rss_type_register (GTypeModule *type_module)
 {
 	e_mail_parser_evolution_rss_register_type (type_module);
 }
-
-static void
-e_mail_parser_mail_extension_interface_init (EMailExtensionInterface *iface)
-{
-	iface->mime_types = empe_rss_mime_types;
-}
-
-static void
-e_mail_parser_parser_extension_interface_init (EMailParserExtensionInterface *iface)
-{
-	iface->parse = empe_evolution_rss_parse;
-}
-
-static void
-e_mail_parser_evolution_rss_constructed (GObject *object)
-{
-	EExtensible *extensible;
-	EMailExtensionRegistry *reg;
-
-	extensible = e_extension_get_extensible (E_EXTENSION (object));
-	reg = E_MAIL_EXTENSION_REGISTRY (extensible);
-
-	e_mail_extension_registry_add_extension (reg, E_MAIL_EXTENSION (object));
-}
-
-static void
-e_mail_parser_evolution_rss_class_init (EMailParserRSSClass *class)
-{
-	GObjectClass *object_class;
-	EExtensionClass *extension_class;
-
-	object_class = G_OBJECT_CLASS (class);
-	object_class->constructed = e_mail_parser_evolution_rss_constructed;
-
-	extension_class = E_EXTENSION_CLASS (class);
-	extension_class->extensible_type = E_TYPE_MAIL_PARSER_EXTENSION_REGISTRY;
-}
-
-void
-e_mail_parser_evolution_rss_class_finalize (EMailParserRSSClass *class)
-{
-}
-
-static void
-e_mail_parser_evolution_rss_init (EMailParserRSS *parser)
-{
-
-}
-

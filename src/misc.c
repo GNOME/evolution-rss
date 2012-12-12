@@ -664,5 +664,23 @@ sanitize_path_separator(gchar *str)
 #endif
 }
 
+void
+textcb(NetStatusType status, gpointer statusdata, gpointer data)
+{
+        NetStatusProgress *progress;
+        float fraction = 0;
+        switch (status) {
+        case NET_STATUS_PROGRESS:
+                progress = (NetStatusProgress*)statusdata;
+                if (progress->current > 0 && progress->total > 0) {
+                        fraction = (float)progress->current / progress->total;
+                        d("%.2f%% ", fraction);
+                }
+                break;
+        default:
+                g_warning("unhandled network status %d\n", status);
+        }
+}
+
 #endif
 

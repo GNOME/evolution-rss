@@ -165,6 +165,7 @@ int rss_verbose_debug = 0;
 #include "rss.h"
 #include "rss-config.h"
 #include "rss-cache.h"
+#include "rss-formatter.h"
 #include "rss-image.h"
 #include "parser.h"
 #include "network-soup.h"
@@ -491,6 +492,7 @@ update_progress_bar(guint current)
 }
 
 
+#if 0
 void
 textcb(NetStatusType status, gpointer statusdata, gpointer data)
 {
@@ -508,6 +510,7 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 		g_warning("unhandled network status %d\n", status);
 	}
 }
+#endif
 
 void
 download_chunk(
@@ -2626,13 +2629,6 @@ update_articles(gboolean disabler)
 		rf->pending = FALSE;
 	}
 	return disabler;
-}
-
-gchar *
-rss_component_peek_base_directory(void)
-{
-	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
-		mail_session_get_data_dir ());
 }
 
 CamelStore *

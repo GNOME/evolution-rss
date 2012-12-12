@@ -490,10 +490,7 @@ finish_feed (
 	gpointer user_data);
 #endif
 void generic_finish_feed(rfMessage *msg, gpointer user_data);
-void textcb(
-	NetStatusType status,
-	gpointer statusdata,
-	gpointer data);
+//void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 
 void download_chunk(
 	NetStatusType status,
@@ -514,7 +511,6 @@ void populate_reversed(
 	gpointer key,
 	gpointer value,
 	GHashTable *hash);
-gchar *rss_component_peek_base_directory(void);
 CamelStore *rss_component_peek_local_store(void);
 void custom_feed_timeout(void);
 CamelFolder *check_feed_folder(gchar *folder_name);

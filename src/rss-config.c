@@ -28,6 +28,7 @@
 
 #include "misc.h"
 #include "rss-config.h"
+#include "rss-formatter.h"
 
 extern rssfeed *rf;
 

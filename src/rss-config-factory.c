@@ -77,6 +77,7 @@ extern int rss_verbose_debug;
 extern EShellView *rss_shell_view;
 
 #include "rss.h"
+#include "rss-formatter.h"
 #include "misc.h"
 #include "parser.h"
 #include "rss-config.h"

@@ -131,6 +131,7 @@ evolution_module_rss_la_CPPFLAGS =			\
         -DG_LOG_DOMAIN=\"evolution-module-rss\"		\
         $(EVOLUTION_RSS_EPLUGIN_LIBS)
 
+
 evolution_module_rss_la_LDFLAGS =		\
         -avoid-version -module $(NO_UNDEFINED)
 

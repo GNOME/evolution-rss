@@ -52,5 +52,6 @@ void feed_remove_status_line(gchar *file_name, gchar *needle);
 void write_feed_status_line(gchar *file, gchar *needle);
 void dup_auth_data(gchar *origurl, gchar *url);
 void sanitize_path_separator(gchar *);
+void textcb(NetStatusType status, gpointer statusdata, gpointer data);
 
 #endif

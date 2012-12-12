@@ -46,6 +46,7 @@ extern int rss_verbose_debug;
 #include "network.h"
 #include "network-soup.h"
 #include "rss.h"
+#include "rss-formatter.h"
 #include "misc.h"
 
 #define USE_PROXY FALSE

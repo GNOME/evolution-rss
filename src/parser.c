@@ -57,6 +57,7 @@ extern int rss_verbose_debug;
 #include "fetch.h"
 #include "rss.h"
 #include "rss-config.h"
+#include "rss-formatter.h"
 #include "rss-image.h"
 #include "rss-status-icon.h"
 #include "parser.h"

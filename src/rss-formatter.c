@@ -32,6 +32,7 @@
 
 extern int rss_verbose_debug;
 extern EShellView *rss_shell_view;
+extern rssfeed *rf;
 
 gchar *
 rss_process_feed(gchar *feed, guint len)
@@ -109,5 +110,73 @@ pixdone:                        g_free(real_image);
 	result = g_strdup((gchar *)buff);
 	xmlFree(buff);
 	return result;
+}
+
+#include <libxml/HTMLtree.h>
+#include <string.h>
+
+gchar *
+rss_process_website(gchar *content, gchar *website)
+{
+	gchar *tmp = decode_utf8_entities(content);
+	xmlDoc *src = (xmlDoc *)parse_html(website, tmp, strlen(tmp));
+	xmlChar *buff = NULL;
+	int size;
+
+	if (src) {
+		htmlDocDumpMemory(src, &buff, &size);
+		d("htmlDocDumpMemory:%s\n", buff);
+		xmlFree(src);
+		return buff;
+	}
+	return NULL;
+}
+
+gboolean
+rss_get_current_view(void)
+{
+	return rf->cur_format;
+}
+
+void
+rss_set_current_view(gboolean value)
+{
+	rf->cur_format = value;
+}
+
+gboolean
+rss_get_changed_view(void)
+{
+	return rf->chg_format;
+}
+
+void
+rss_set_changed_view(gboolean value)
+{
+	rf->chg_format = value;
+}
+
+gboolean
+rss_get_is_html(gchar *feedid)
+{
+	return g_hash_table_lookup(rf->hrh, feedid); //feedid is modified
+}
+
+EMailDisplay *
+rss_get_display(void)
+{
+	EMailReader *reader;
+	EShellContent *shell_content;
+
+	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	reader = E_MAIL_READER (shell_content);
+	return e_mail_reader_get_mail_display (reader);
+}
+
+gchar *
+rss_component_peek_base_directory(void)
+{
+	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
+		mail_session_get_data_dir ());
 }
 
