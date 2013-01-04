@@ -30,7 +30,6 @@
 #else
 #include <camel/camel-mime-utils.h>
 #endif
-#include <e-util/e-mktemp.h>
 
 
 #include "rss.h"

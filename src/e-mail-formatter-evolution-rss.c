@@ -105,7 +105,6 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	gboolean is_html = NULL;
 	gchar *feed_dir, *tmp_file, *tmp_path, *iconfile;
 	GdkPixbuf *pixbuf;
-	g_print("in formatter\n");
 
 	CamelContentType *ct = camel_mime_part_get_content_type (part->part);
 	if (ct) {

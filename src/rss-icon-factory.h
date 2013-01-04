@@ -17,7 +17,7 @@
  *  02110-1301 USA
  */
 
-#include <e-util/e-icon-factory.h>
+#include <e-util/e-util.h>
 
 #define RSS_TEXT_HTML "rss-text-html"
 #define RSS_TEXT_HTML_FILE "rss-text-html.png"

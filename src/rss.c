@@ -44,9 +44,7 @@ int rss_verbose_debug = 0;
 #include <camel/camel-medium.h>
 #endif
 
-#include <e-util/e-icon-factory.h>
 #include <e-util/e-util.h>
-#include <e-util/e-mktemp.h>
 
 #include <mail/em-event.h>
 #include <mail/em-utils.h>

@@ -18,7 +18,6 @@
  */
 
 #include <rss-icon-factory.h>
-#include <e-util/e-icon-factory.h>
 
 #include <rss.h>
 
