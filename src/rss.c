@@ -50,9 +50,6 @@ int rss_verbose_debug = 0;
 #include <mail/em-utils.h>
 #include <mail/em-folder-tree.h>
 
-#if (EVOLUTION_VERSION >= 30391)
-#include <libevolution-utils/e-alert-dialog.h>
-#endif
 #include <glib/gi18n.h>
 #if EVOLUTION_VERSION < 30303
 #include <mail/e-mail-local.h>

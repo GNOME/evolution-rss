@@ -23,12 +23,6 @@
 
 #include <mail/em-utils.h>
 
-#if (EVOLUTION_VERSION >= 30391) //kb//
-#include <libevolution-utils/e-alert-dialog.h>
-#else
-#include <e-util/e-alert-dialog.h>
-#endif
-
 #include <shell/e-shell-taskbar.h>
 #include <shell/e-shell-view.h>
 
