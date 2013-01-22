@@ -1849,6 +1849,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
 	gchar *name, *feed_name;
+	gchar *tmp_feed_name;
 	gpointer key;
 	add_feed *feed = NULL;
 
@@ -1860,13 +1861,23 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 			&iter,
 			3, &feed_name,
 			-1);
-		key = lookup_key(feed_name);
-		name = g_hash_table_lookup(rf->hr, key);
-		if (name) {
-			feed = create_dialog_add(name, feed_name);
-			if (feed->dialog)
-				gtk_widget_destroy(feed->dialog);
-			process_dialog_edit(feed, name, feed_name);
+		/* seems we get the data from gtk_tree with html entities already translated
+		 * so instead of adding versioned defs we fallback to decoding html entities
+		 * in case key is not found, and in case that fails too we exit gracefully
+		 */
+		if (!(key = lookup_key(feed_name))) {
+			tmp_feed_name = feed_name;
+			feed_name = decode_entities(feed_name);
+			g_free(tmp_feed_name);
+			key = lookup_key(feed_name);
+		}
+		if (key) {
+			if (name = g_hash_table_lookup(rf->hr, key)) {
+				feed = create_dialog_add(name, feed_name);
+				if (feed->dialog)
+					gtk_widget_destroy(feed->dialog);
+				process_dialog_edit(feed, name, feed_name);
+			}
 		}
 		if (feed && feed->feed_url)
 			store_redraw(GTK_TREE_VIEW(rf->treeview));
