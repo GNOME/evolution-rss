@@ -24,7 +24,6 @@
 #include <em-format/e-mail-part-utils.h>
 #include <e-util/e-util.h>
 
-#include <shell/e-shell-settings.h>
 #include <shell/e-shell.h>
 
 #include <libebackend/libebackend.h>
