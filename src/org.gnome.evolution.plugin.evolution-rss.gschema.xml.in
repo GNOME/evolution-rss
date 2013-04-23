@@ -135,6 +135,11 @@
       <summary>Show articles comments</summary>
       <description>If a feed article has comments, it will be displayed.</description>
     </key>
+    <key name="show-xml-errors" type="b">
+      <default>false</default>
+      <summary>Report xml errors</summary>
+      <description>Print xml errors in the feeds</description>
+    </key>
     <key name="use-proxy" type="b">
       <default>false</default>
       <summary>Use proxy server</summary>

@@ -2233,6 +2233,10 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	xmlSubstituteEntitiesDefaultValue = 1;
 	r->cache = xml_parse_sux (response->str, response->len);
 	if (rsserror) {
+		GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
+		if (!g_settings_get_boolean (settings,
+			CONF_SHOW_XML_ERRORS))
+				goto out;
 		gchar *title = g_strdup_printf(
 				_("Error while parsing feed: %s"),
 				(gchar *)user_data);
