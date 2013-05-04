@@ -1,6 +1,3 @@
-[org.gnome.evolution]
-version = /apps/evolution/version
-
 [org.gnome.evolution.plugin.rss]
 display-summary = /apps/evolution/evolution-rss/display_summary
 accept-cookies = /apps/evolution/evolution-rss/accept_cookies
