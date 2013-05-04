@@ -273,9 +273,9 @@ guint upgrade = 0;	// set to 2 when initailization successfull
 guint count = 0;
 gchar *buffer = NULL;
 #if EVOLUTION_VERSION < 30304
-GConfClient *rss_gconf;
+static GConfClient *rss_gconf;
 #else
-GSettings *settings;
+static GSettings *rss_settings;
 #endif
 
 gboolean inhibit_read = FALSE;	//prevent mail selection when deleting folder
@@ -538,7 +538,7 @@ download_chunk(
 				rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
 #else
 			guint encl_max_size = g_settings_get_double(
-				settings, CONF_ENCLOSURE_SIZE);
+				rss_settings, CONF_ENCLOSURE_SIZE);
 #endif
 			if (progress->total > encl_max_size * 1024) { //TOLERANCE!!!
 				cancel_active_op((gpointer)CFL->file);
@@ -824,7 +824,7 @@ network_timeout(void)
 #if EVOLUTION_VERSION < 30304
 	rss_gconf = gconf_client_get_default();
 #else
-	settings = g_settings_new(RSS_CONF_SCHEMA);
+	rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
 
 	if (nettime_id)
@@ -835,7 +835,7 @@ network_timeout(void)
 			rss_gconf, GCONF_KEY_NETWORK_TIMEOUT, NULL);
 #else
 	timeout = g_settings_get_double(
-			settings, CONF_NETWORK_TIMEOUT);
+			rss_settings, CONF_NETWORK_TIMEOUT);
 #endif
 
 	if (!timeout)
@@ -973,14 +973,14 @@ webkit_set_preferences(void)
 	if (gconf_client_get_bool (rss_gconf,
 			GCONF_KEY_CUSTOM_FONT, NULL)) {
 #else
-	if (g_settings_get_boolean (settings, CONF_CUSTOM_FONT)) {
+	if (g_settings_get_boolean (rss_settings, CONF_CUSTOM_FONT)) {
 #endif
 		g_object_set (settings, "minimum-font-size",
 #if EVOLUTION_VERSION < 30304
 			(gint)gconf_client_get_float(rss_gconf,
 				GCONF_KEY_MIN_FONT_SIZE, NULL),
 #else
-			(gint)g_settings_get_double(settings,
+			(gint)g_settings_get_double(rss_settings,
 				CONF_MIN_FONT_SIZE),
 #endif
 			NULL);
@@ -989,7 +989,7 @@ webkit_set_preferences(void)
 			(gint)gconf_client_get_float(rss_gconf,
 				GCONF_KEY_MIN_FONT_SIZE, NULL),
 #else
-			(gint)g_settings_get_double(settings,
+			(gint)g_settings_get_double(rss_settings,
 				CONF_MIN_FONT_SIZE),
 #endif
 			NULL);
@@ -1002,7 +1002,7 @@ webkit_set_preferences(void)
 		gconf_client_get_bool(rss_gconf,
 			GCONF_KEY_EMBED_PLUGIN, NULL),
 #else
-		g_settings_get_boolean(settings,
+		g_settings_get_boolean(rss_settings,
 			CONF_EMBED_PLUGIN),
 #endif
 		NULL);
@@ -1011,7 +1011,7 @@ webkit_set_preferences(void)
 		gconf_client_get_bool(rss_gconf,
 			GCONF_KEY_HTML_JAVA, NULL),
 #else
-		g_settings_get_boolean(settings,
+		g_settings_get_boolean(rss_settings,
 			CONF_HTML_JAVA),
 #endif
 		NULL);
@@ -1020,7 +1020,7 @@ webkit_set_preferences(void)
 		gconf_client_get_bool(rss_gconf,
 			GCONF_KEY_HTML_JS, NULL),
 #else
-		g_settings_get_boolean(settings,
+		g_settings_get_boolean(rss_settings,
 			CONF_HTML_JS),
 #endif
 		NULL);
@@ -1477,7 +1477,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 #if EVOLUTION_VERSION < 30304
 	rss_gconf = gconf_client_get_default();
 #else
-	settings = g_settings_new(RSS_CONF_SCHEMA);
+	rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
 
 	if (t->folder_name == NULL
@@ -1505,7 +1505,7 @@ void org_gnome_cooly_folder_icon(void *ep, EMEventTargetCustomIcon *t)
 #if EVOLUTION_VERSION < 30304
 		if (gconf_client_get_bool (rss_gconf, GCONF_KEY_FEED_ICON, NULL)) {
 #else
-		if (g_settings_get_boolean (settings, CONF_FEED_ICON)) {
+		if (g_settings_get_boolean (rss_settings, CONF_FEED_ICON)) {
 #endif
 //			if (g_file_test(feed_file, G_FILE_TEST_EXISTS)) {
 			// unfortunately e_icon_factory_get_icon return broken image in case of error
@@ -1926,7 +1926,7 @@ add:
 #if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_SEARCH_RSS, NULL)) {
 #else
-	if (g_settings_get_boolean (settings, CONF_SEARCH_RSS)) {
+	if (g_settings_get_boolean (rss_settings, CONF_SEARCH_RSS)) {
 #endif
 		dp("searching new feed\n");
 		rssurl = search_rss(content->str, content->len);
@@ -3324,13 +3324,13 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 #if EVOLUTION_VERSION < 30304
 	rss_gconf = gconf_client_get_default();
 #else
-	settings = g_settings_new(RSS_CONF_SCHEMA);
+	rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
 
 #if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_START_CHECK, NULL)) {
 #else
-	if (g_settings_get_boolean (settings, CONF_START_CHECK)) {
+	if (g_settings_get_boolean (rss_settings, CONF_START_CHECK)) {
 #endif
 		//as I don't know how to set this I'll setup a 10 secs timeout
 		//and return false for disableation
@@ -3345,8 +3345,8 @@ void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
 			NULL);
 	if (gconf_client_get_bool (rss_gconf, GCONF_KEY_REP_CHECK, NULL)) {
 #else
-	timeout = g_settings_get_double(settings, CONF_REP_CHECK_TIMEOUT);
-	if (g_settings_get_boolean (settings, CONF_REP_CHECK)) {
+	timeout = g_settings_get_double(rss_settings, CONF_REP_CHECK_TIMEOUT);
+	if (g_settings_get_boolean (rss_settings, CONF_REP_CHECK)) {
 #endif
 		rf->rc_id = g_timeout_add (60 * 1000 * timeout,
 				(GSourceFunc) update_articles,
@@ -3645,7 +3645,7 @@ fallback_engine(void)
 	guint engine = gconf_client_get_int(
 			rss_gconf, GCONF_KEY_HTML_RENDER, NULL);
 #else
-	guint engine = g_settings_get_int(settings, CONF_HTML_RENDER);
+	guint engine = g_settings_get_int(rss_settings, CONF_HTML_RENDER);
 #endif
 #if !defined(HAVE_GECKO) && !defined (HAVE_WEBKIT)
 	engine = 0;
@@ -3744,7 +3744,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 #if EVOLUTION_VERSION < 30304
 		rss_gconf = gconf_client_get_default();
 #else
-		settings = g_settings_new(RSS_CONF_SCHEMA);
+		rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
 		upgrade = 1;
 		d = getenv("RSS_DEBUG");
@@ -3782,7 +3782,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 #if EVOLUTION_VERSION < 30304
 			if (gconf_client_get_bool (rss_gconf, GCONF_KEY_STATUS_ICON, NULL))
 #else
-			if (g_settings_get_boolean (settings, CONF_STATUS_ICON))
+			if (g_settings_get_boolean (rss_settings, CONF_STATUS_ICON))
 #endif
 				create_status_icon();
 			//there is no shutdown for e-plugin yet.
@@ -3793,7 +3793,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 						GCONF_KEY_HTML_RENDER,
 						NULL));
 #else
-			render = g_settings_get_int(settings, CONF_HTML_RENDER);
+			render = g_settings_get_int(rss_settings, CONF_HTML_RENDER);
 #endif
 
 			if (!render) {	// set render just in case it was forced in configure
@@ -3804,7 +3804,7 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 					GCONF_KEY_HTML_RENDER,
 					render, NULL);
 #else
-				g_settings_set_int(settings,
+				g_settings_set_int(rss_settings,
 					CONF_HTML_RENDER, render);
 #endif
 			}
@@ -4483,7 +4483,7 @@ display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data)
 #if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
 #else
-	settings = g_settings_new(RSS_CONF_SCHEMA);
+	rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
 
 	simple = G_SIMPLE_ASYNC_RESULT (result);
@@ -4491,7 +4491,7 @@ display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data)
 #if EVOLUTION_VERSION < 30304
 	if (gconf_client_get_bool (client, GCONF_KEY_STATUS_ICON, NULL)) {
 #else
-	if (g_settings_get_boolean (settings, CONF_STATUS_ICON)) {
+	if (g_settings_get_boolean (rss_settings, CONF_STATUS_ICON)) {
 #endif
 		update_status_icon(asyncr->status_msg);
 	}
@@ -4511,7 +4511,7 @@ display_doc_finish (GObject *o, GAsyncResult *result, gpointer user_data)
 #if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
 #else
-	g_object_unref(settings);
+	g_object_unref(rss_settings);
 #endif
 }
 
