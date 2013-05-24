@@ -35,6 +35,7 @@
 
 #include "misc.h"
 #include "rss-formatter.h"
+#include "e-mail-part-rss.h"
 
 
 typedef EMailFormatterExtension EMailFormatterRSS;
@@ -98,20 +99,21 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	gchar *str;
 	GByteArray *ba;
 	gchar *src;
-	CamelMimePart *message = (CamelMimePart *)part->part;
+	CamelMimePart *message = e_mail_part_ref_mime_part (part);
 	gchar *website, *subject, *category, *feedid, *comments;
 	guint32 frame_col, cont_col, text_col;
 	gboolean is_html = NULL;
 	gchar *feed_dir, *tmp_file, *tmp_path, *iconfile;
 	GdkPixbuf *pixbuf;
 
-	CamelContentType *ct = camel_mime_part_get_content_type (part->part);
+
+	CamelContentType *ct = camel_mime_part_get_content_type (message);
 	if (ct) {
 		if (!camel_content_type_is (ct, "x-evolution", "evolution-rss-feed"))
 			return FALSE;
 	}
 
-	dw = camel_medium_get_content (CAMEL_MEDIUM (part->part));
+	dw = camel_medium_get_content (CAMEL_MEDIUM (message));
 	if (!dw) {
 		return FALSE;
 	}
@@ -119,7 +121,8 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	str = g_strdup_printf (
 		"<object type=\"application/vnd.evolution.attachment\" "
 		"height=\"0\" width=\"100%%\" data=\"%s\" id=\"%s\"></object>",
-		part->id, part->id);
+		e_mail_part_get_id(part),
+		e_mail_part_get_id(part));
 	camel_stream_write_string (
 		stream, str, cancellable, NULL);
 	gchar *h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));

@@ -116,6 +116,8 @@ evolution_module_rss_la_SOURCES =		\
 	rss-status-icon.c			\
 	rss-icon-factory.c			\
 	dbus.c					\
+	e-mail-part-rss.c			\
+	e-mail-part-rss.h			\
 	e-mail-parser-evolution-rss.c		\
 	e-mail-parser-evolution-rss.h		\
 	e-mail-formatter-evolution-rss.c	\

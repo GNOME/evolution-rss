@@ -22,14 +22,15 @@
 #include <glib/gi18n.h>
 #include <camel/camel.h>
 
-#include "e-mail-parser-evolution-rss.h"
-
 #include <em-format/e-mail-extension-registry.h>
 #include <em-format/e-mail-parser-extension.h>
 #include <em-format/e-mail-part.h>
 #include <em-format/e-mail-part-utils.h>
 
 #include <libebackend/libebackend.h>
+
+#include "e-mail-parser-evolution-rss.h"
+#include "e-mail-part-rss.h"
 
 
 typedef EMailParserExtension EMailParserRSS;
@@ -44,12 +45,6 @@ G_DEFINE_DYNAMIC_TYPE (
 
 static const gchar* pser_mime_types[] = { "x-evolution/evolution-rss-feed", NULL };
 
-typedef struct _EMailPartRSS EMailPartRSS;
-
-struct _EMailPartRSS {
-	EMailPart parent;
-};
-
 static gboolean
 empe_evolution_rss_parse (EMailParserExtension *extension,
 				EMailParser *parser,
@@ -58,17 +53,14 @@ empe_evolution_rss_parse (EMailParserExtension *extension,
 				GCancellable *cancellable,
 				GQueue *out_mail_queue)
 {
-	EMailPartRSS *mail_part;
+	EMailPart *mail_part;
 	GQueue work_queue = G_QUEUE_INIT;
 	gint len;
 
 	len = part_id->len;
 
-	mail_part = (EMailPartRSS *) e_mail_part_subclass_new (
-		part, part_id->str, sizeof (EMailPartRSS),
-		NULL);
-	mail_part->parent.mime_type = camel_content_type_simple (
-		camel_mime_part_get_content_type (part));
+	mail_part = e_mail_part_rss_new(part, part_id->str);
+
 	g_string_truncate (part_id, len);
 
 	g_queue_push_tail (&work_queue, mail_part);
