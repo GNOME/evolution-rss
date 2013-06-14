@@ -126,7 +126,6 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	camel_stream_write_string (
 		stream, str, cancellable, NULL);
 	gchar *h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
-	g_print("h:%s\n\n\n\n", h);
 
 	website = camel_medium_get_header (
 			CAMEL_MEDIUM (message), "Website");
@@ -168,11 +167,11 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		}
 	}
 
-	frame_col = e_color_to_value ((GdkColor *)
+	frame_col = e_rgba_to_value (
 			e_mail_formatter_get_color (formatter, E_MAIL_FORMATTER_COLOR_FRAME));
-	cont_col = e_color_to_value ((GdkColor *)
+	cont_col = e_rgba_to_value ((GdkColor *)
 			e_mail_formatter_get_color (formatter, E_MAIL_FORMATTER_COLOR_CONTENT));
-	text_col = e_color_to_value ((GdkColor *)
+	text_col = e_rgba_to_value ((GdkColor *)
 			e_mail_formatter_get_color (formatter, E_MAIL_FORMATTER_COLOR_TEXT));
 
 	if (!is_html && !rss_get_current_view()) {
