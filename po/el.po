@@ -3,49 +3,69 @@
 # This file is distributed under the same license as the GNOME package.
 # Kostas Papadimas <pkst@gnome.org>, 2010.
 # Georgios Stefanakis <george.stefanakis@gmail.com>, 2010.
-#
+# Dimitris Spingos <dmtrs32@gmail.com>, 2013.
+# Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Evolution RSS\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-03 14:56+0000\n"
-"PO-Revision-Date: 2012-06-29 16:54+0200\n"
-"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
-"Language-Team: Greek <team@gnome.gr>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product"
+"=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-12-14 22:07+0000\n"
+"PO-Revision-Date: 2013-07-12 12:23+0300\n"
+"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"Language-Team: team@gnome.gr\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
+"X-Project-Style: gnome\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
-msgstr "Προβολέας ροών του Evolution"
+msgstr "Αναγνώστης RSS του Evolution"
 
 #: ../evolution-rss.desktop.in.in.h:2
-msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
-msgstr "Πρόσθετο του Evolution που επιτρέπει στο Evolution Mail να εμφανίζει ροές rss."
+#| msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr ""
+"Πρόσθετο του Evolution που επιτρέπει στο Evolution Mail να εμφανίζει ροές "
+"RSS."
 
-#: ../src/dbus.c:108
-#: ../src/rss.c:3458
-#: ../src/rss-config-factory.c:1102
-#: ../src/rss-config-factory.c:1646
-#: ../src/rss-config-factory.c:1813
+#: ../src/dbus.c:108 ../src/rss.c:1953 ../src/rss-config-factory.c:1186
+#: ../src/rss-config-factory.c:1758 ../src/rss-config-factory.c:1925
 msgid "Error adding feed."
 msgstr "Σφάλμα κατά την προσθήκη ροής."
 
-#: ../src/dbus.c:109
-#: ../src/rss.c:3459
-#: ../src/rss-config-factory.c:1103
-#: ../src/rss-config-factory.c:1647
-#: ../src/rss-config-factory.c:1814
+#: ../src/dbus.c:109 ../src/rss.c:1954 ../src/rss-config-factory.c:1187
+#: ../src/rss-config-factory.c:1759 ../src/rss-config-factory.c:1926
 msgid "Feed already exists!"
 msgstr "Η ροή υπάρχει ήδη!"
 
 #: ../src/dbus.c:116
 #, c-format
-#| msgid "Importing"
 msgid "Importing URL: %s"
 msgstr "Εισαγωγή URL: %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:301
+#: ../src/e-mail-formatter-evolution-rss.c:307
+msgid "Show Summary"
+msgstr "Προβολή σύνοψης"
+
+#: ../src/e-mail-formatter-evolution-rss.c:302
+#: ../src/e-mail-formatter-evolution-rss.c:308
+msgid "Show Full Text"
+msgstr "Προβολή πλήρους κειμένου"
+
+#: ../src/e-mail-formatter-evolution-rss.c:323
+#| msgid "Evolution RSS Reader"
+msgid "Evolution-RSS"
+msgstr "RSS του Evolution"
+
+#: ../src/e-mail-formatter-evolution-rss.c:324
+msgid "Displaying RSS feed arcticles"
+msgstr "Εμφάνιση άρθρων ροής RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Proxy requires authentication"
@@ -60,8 +80,15 @@ msgid "Display article's summary"
 msgstr "Εμφάνιση περίληψης άρθρου"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
-msgid "Evolution will show article's summary instead of article's webpage. Summary can also be html."
-msgstr "Το Evolution θα εμφανίζει την περίληψη του άρθρου αντί για τον ιστότοπό του. Η περίληψη μπορεί επίσης να είναι και HTML."
+#| msgid ""
+#| "Evolution will show article's summary instead of article's webpage. "
+#| "Summary can also be html."
+msgid ""
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
+msgstr ""
+"Το Evolution θα εμφανίζει την περίληψη του άρθρου αντί για τον ιστότοπό του. "
+"Η περίληψη μπορεί επίσης να είναι και HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:5
 msgid "Feeds list"
@@ -77,15 +104,21 @@ msgstr "Όνομα συστήματος του διακομιστή διαμεσ
 
 #: ../src/evolution-rss.schemas.in.in.h:8
 msgid "Hostname of the proxy server used for feeds and content."
-msgstr "Όνομα συστήματος του διακομιστή διαμεσολάβησης που χρησιμοποιείται για τα αρχεία ροής και το περιεχόμενο."
+msgstr ""
+"Όνομα συστήματος του διακομιστή διαμεσολάβησης που χρησιμοποιείται για τα "
+"αρχεία ροής και το περιεχόμενο."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Html render"
-msgstr "Εμφάνιση HTML"
+#| msgid "Html render"
+msgid "HTML render"
+msgstr "Σχεδίαση HTML"
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Type HTML Render used to display html pages."
-msgstr "Ο τύπος Εμφάνισης HTML που θα χρησιμοποιείται για να προβάλλονται οι σελίδες HTML."
+#| msgid "Type HTML Render used to display html pages."
+msgid "Type HTML Render used to display HTML pages."
+msgstr ""
+"Ο τύπος σχεδίασης HTML που θα χρησιμοποιείται για να προβάλλονται οι σελίδες "
+"HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:11
 msgid "Use custom font"
@@ -93,7 +126,9 @@ msgstr "Χρήση προσαρμοσμένης γραμματοσειράς"
 
 #: ../src/evolution-rss.schemas.in.in.h:12
 msgid "Use a custom font size instead of system defaults."
-msgstr "Χρησιμοποιήστε μια προσαρμοσμένη γραμματοσειρά αντί για την προεπιλεγμένη του συστήματος."
+msgstr ""
+"Χρησιμοποιήστε μια προσαρμοσμένη γραμματοσειρά αντί για την προεπιλεγμένη "
+"του συστήματος."
 
 #: ../src/evolution-rss.schemas.in.in.h:13
 msgid "Minimum font size"
@@ -101,15 +136,18 @@ msgstr "Ελάχιστο μέγεθος γραμματοσειράς"
 
 #: ../src/evolution-rss.schemas.in.in.h:14
 msgid "The size of the font used in full text preview."
-msgstr "Το μέγεθος της γραμματοσειράς που χρησιμοποιείται στην πλήρη προεπισκόπιση του κειμένου."
+msgstr ""
+"Το μέγεθος της γραμματοσειράς που χρησιμοποιείται στην πλήρη προεπισκόπιση "
+"του κειμένου."
 
 #: ../src/evolution-rss.schemas.in.in.h:15
 msgid "Network timeout"
 msgstr "Λήξη χρόνου δικτύου"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Interval in seconds before a conection is dropped."
-msgstr "Χρονικό διάστημα σε δευτερόλεπτα προτού ακυρωθεί μια σύνδεση."
+#| msgid "Interval in seconds before a conection is dropped."
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Χρόνος σε δευτερόλεπτα προτού απορριφθεί μια σύνδεση."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
 msgid "Network queue size"
@@ -136,20 +174,25 @@ msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "Το Evolution RSS θα δέχεται cookies από άρθρα που διαβάζετε."
 
 #: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Automaticaly Resize Images"
-msgstr "Αυτόματη αλλαγή μεγέθους εικόνας"
+#| msgid "Automaticaly Resize Images"
+msgid "Automatically Resize Images"
+msgstr "Αυτόματη αυξομείωση εικόνων"
 
 #: ../src/evolution-rss.schemas.in.in.h:24
-msgid "Evolution RSS will automatically resize images larger than displayed area."
-msgstr "Το Evolution RSS θα αλλάζει, αυτόματα το μέγεθος των εικόνων που είναι μεγαλύτερες από την περιοχή απεικόνισης."
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"Το Evolution RSS θα αλλάζει, αυτόματα το μέγεθος των εικόνων που είναι "
+"μεγαλύτερες από την περιοχή απεικόνισης."
 
 #: ../src/evolution-rss.schemas.in.in.h:25
 msgid "Scan web pages for RSS"
 msgstr "Σάρωση ιστοσελίδας για RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
-msgid "Evolution RSS will scan web pages for rss content"
-msgstr "Το Evolution RSS θα ψάχνει αυτόματα τις ιστοσελίδες για περιεχόμενο rss"
+#| msgid "Evolution RSS will scan web pages for rss content"
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Το Evolution RSS θα σαρώσει τις ιστοσελίδες για περιεχόμενο RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "Download enclosures"
@@ -157,15 +200,18 @@ msgstr "Λήψη των συνημμένων"
 
 #: ../src/evolution-rss.schemas.in.in.h:28
 msgid "Evolution will download all feed enclosures a feed article may contain."
-msgstr "Το Evolution θα κατεβάσει όλα τα συνημμένα ροής που μπορεί να περιέχει ένα άρθρο."
+msgstr ""
+"Το Evolution θα κατεβάσει όλα τα συνημμένα ροής που μπορεί να περιέχει ένα "
+"άρθρο."
 
 #: ../src/evolution-rss.schemas.in.in.h:29
 msgid "Limit enclosure size"
 msgstr "Όριο μεγέθους συνημμένου"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
-msgid "Limit maximum enclosure size evolution will download."
-msgstr "Το μέγιστο μεγέθος των συνημμένων που θα κατεβάσει το evolution."
+#| msgid "Limit maximum enclosure size evolution will download."
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Το μέγιστο όριο μεγέθους συνημμένων που θα μεταφορτώσει το Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:31
 msgid "Max enclosure size"
@@ -200,8 +246,13 @@ msgid "Password for proxy server"
 msgstr "Κωδικός διακομιστή διαμεσολάβησης"
 
 #: ../src/evolution-rss.schemas.in.in.h:39
-msgid "If the proxy server requires authentication. This is the password field."
-msgstr "Αν ο διακομιστής διαμεσολάβησης απαιτεί πιστοποίηση. Αυτό είναι το πεδίο κωδικού."
+#| msgid ""
+#| "If the proxy server requires authentication. This is the password field."
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr ""
+"Αν ο διακομιστής μεσολάβησης απαιτεί πιστοποίηση, αυτό είναι το πεδίο "
+"κωδικού πρόσβασης."
 
 #: ../src/evolution-rss.schemas.in.in.h:40
 msgid "Proxy server port"
@@ -209,7 +260,9 @@ msgstr "Θύρα διακομιστή διαμεσολάβησης"
 
 #: ../src/evolution-rss.schemas.in.in.h:41
 msgid "The port number for proxy server used for feeds and content."
-msgstr "Ο αριθμός θύρας για το διακομιστή διαμεσολάβησης που χρησιμοποιείται για τα αρχεία ροής και το περιεχόμενο."
+msgstr ""
+"Ο αριθμός θύρας για το διακομιστή διαμεσολάβησης που χρησιμοποιείται για τα "
+"αρχεία ροής και το περιεχόμενο."
 
 #: ../src/evolution-rss.schemas.in.in.h:42
 msgid "Remove feed folder"
@@ -240,8 +293,9 @@ msgid "Checks articles on startup"
 msgstr "Ελέγχει τα άρθρα κατά την εκκίνηση"
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Check for new articles everytime Evolution is started."
-msgstr "Έλεγχος για νέα άρθρα κατά την εκκίνηση του Evolution."
+#| msgid "Check for new articles everytime Evolution is started."
+msgid "Check for new articles every time Evolution is started."
+msgstr "Έλεγχος για νέα άρθρα κάθε φορά που ξεκινά το Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
 msgid "Show articles comments"
@@ -249,7 +303,7 @@ msgstr "Προβολή σχολίων άρθρου"
 
 #: ../src/evolution-rss.schemas.in.in.h:51
 msgid "If a feed article has comments, it will be displayed."
-msgstr "Άν ένα αρχείο έχει σχόλια, θα προβληθούν και αυτά"
+msgstr "Αν ένα άρθρο ροής έχει σχόλια, θα εμφανιστεί."
 
 #: ../src/evolution-rss.schemas.in.in.h:52
 msgid "Use proxy server"
@@ -257,7 +311,8 @@ msgstr "Χρήση διακομιστή διαμεσολάβησης"
 
 #: ../src/evolution-rss.schemas.in.in.h:53
 msgid "Use a proxy server to fetch articles and content."
-msgstr "Χρήση ενός διακομιστή διαμεσολάβησης για τη λήψη των άρθρων και περιεχομένου."
+msgstr ""
+"Χρήση ενός διακομιστή διαμεσολάβησης για τη λήψη των άρθρων και περιεχομένου."
 
 #: ../src/evolution-rss.schemas.in.in.h:54
 msgid "Proxy server user"
@@ -265,7 +320,9 @@ msgstr "Χρήστης διακομιστή διαμεσολάβησης"
 
 #: ../src/evolution-rss.schemas.in.in.h:55
 msgid "The username to use for proxy server authentication."
-msgstr "Το όνομα χρήστη που θα χρησιμοποιείται για την πιστοποίηση στο διακομιστή διαμεσολάβησης."
+msgstr ""
+"Το όνομα χρήστη που θα χρησιμοποιείται για την πιστοποίηση στο διακομιστή "
+"διαμεσολάβησης."
 
 #: ../src/evolution-rss.schemas.in.in.h:56
 msgid "How to handle RSS URLs"
@@ -273,11 +330,14 @@ msgstr "Τρόπος χειρισμού RSS URLs"
 
 #: ../src/evolution-rss.schemas.in.in.h:57
 msgid "Set to true to have a program specified in command handle RSS URLs"
-msgstr "Ορισμός σε true για να καθορίσετε ένα πρόγραμμα στην εντολή χειρισμού RSS URLs"
+msgstr ""
+"Ορισμός σε true για να καθορίσετε ένα πρόγραμμα στην εντολή χειρισμού RSS "
+"URLs"
 
 #: ../src/evolution-rss.schemas.in.in.h:58
-msgid "URL handler for rss feed uris"
-msgstr "Χειριστής URL για RSS uris"
+#| msgid "URL handler for rss feed uris"
+msgid "URL handler for RSS feed URIs"
+msgstr "Χειριστής URL για URIs τροφοδοσίες RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
@@ -285,35 +345,65 @@ msgstr "Εκτέλεση προγράμματος στο τερματικό"
 
 #: ../src/evolution-rss.schemas.in.in.h:60
 msgid "True if the program to handle this URL should be run in a terminal"
-msgstr "Αληθές, άν το πρόγραμμα που θα χειρίζεται αυτά τα URL θα πρέπει να τρέχει στο τερματικό"
+msgstr ""
+"Αληθές, άν το πρόγραμμα που θα χειρίζεται αυτά τα URL θα πρέπει να τρέχει "
+"στο τερματικό"
 
-#: ../src/notification.c:435
-#: ../src/rss.c:3639
+#: ../src/notification.c:294 ../src/rss.c:2121
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Λήψη ροών (%d ενεργοποιημένο)"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+#| msgid ""
+#| "Evolution RSS Reader Plugin.\n"
+#| "\n"
+#| "This plugin adds RSS Feeds support for evolution mail. RSS support was "
+#| "built upon the somewhat existing RSS support in evolution-1.4 branch. The "
+#| "motivation behind this was to have RSS in same place as mails, at this "
+#| "moment I do not see the point having a separate RSS reader since a RSS "
+#| "Article is like an email message.\n"
+#| "\n"
+#| "Evolution RSS can display article using summary view or HTML view.\n"
+#| "\n"
+#| "HTML can be displayed using the following engines: gtkHTML, Apple's "
+#| "Webkit or Firefox/Gecko.\n"
+#| "\n"
+#| "<b>Version: evolution-rss +VERSION+</b>\n"
+#| "\n"
+#| "+URL+"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
-"This plugin adds RSS Feeds support for evolution mail. RSS support was built upon the somewhat existing RSS support in evolution-1.4 branch. The motivation behind this was to have RSS in same place as mails, at this moment I do not see the point having a separate RSS reader since a RSS Article is like an email message.\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point in having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
 "\n"
-"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Firefox/Gecko.\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
 "\n"
 "<b>Version: evolution-rss +VERSION+</b>\n"
 "\n"
 "+URL+"
 msgstr ""
-"Πρόσθετη λειτουργία ανάγνωσης RSS του Evolution.\n"
+"Πρόσθετο ανάγνωσης RSS του Evolution.\n"
 "\n"
-"Αυτή η πρόσθετη λειτουργία προσθέτει υποστήριξη για Ροές RSS στην αλληλογραφία του Evolution. Η υποστήριξη για RSS δημιουργήθηκε πάνω στην ημιτελή υποστήριξη RSS στο evolution-1.4 branch. Το κίνητρο πίσω από αυτό ήταν να βρίσκονται τα RSS στο ίδιο σημείο με την αλληλογραφία, καθώς αυτή τη στιγμή δε φαίνεται να δικαιολογείται η ύπαρξη ενός ξεχωριστού προγράμματος ανάγνωσης RSS, μια που ένα άρθρο RSS είναι σαν ένα μήνυμα αλληλογραφίας.\n"
+"Αυτό το πρόσθετο προσθέτει υποστήριξη για Ροές RSS στην αλληλογραφία του "
+"Evolution. Η υποστήριξη για RSS δημιουργήθηκε πάνω στην ημιτελή υποστήριξη "
+"RSS στον κλάδο evolution-1.4. Το κίνητρο πίσω από αυτό ήταν να βρίσκονται τα "
+"RSS στο ίδιο σημείο με την αλληλογραφία, καθώς αυτή τη στιγμή δε φαίνεται "
+"να δικαιολογείται η ύπαρξη ενός ξεχωριστού  αναγνώστη RSS, μια που ένα άρθρο "
+"RSS είναι σαν ένα μήνυμα αλληλογραφίας.\n"
 "\n"
-"Το Evolution RSS μπορεί να εμφανίζει άρθρα χρησιμοποιώντας την προβολή περίληψης ή την προβολή HMTL.\n"
+"Το Evolution RSS μπορεί να εμφανίζει άρθρα χρησιμοποιώντας την προβολή "
+"περίληψης ή την προβολή HMTL.\n"
 "\n"
-"Η HTML μπορεί να προβληθεί χρησιμοποιώντας τις εξής μηχανές: την gtkHTML, την Webkit της Apple, ή την Gecko του Firefox.\n"
+"Η HTML μπορεί να προβληθεί χρησιμοποιώντας τις εξής μηχανές: την gtkHTML, "
+"την Webkit της Apple, ή την Gecko του Firefox.\n"
 "\n"
 "<b>Έκδοση: evolution-rss +VERSION+</b>\n"
 "\n"
@@ -359,360 +449,291 @@ msgstr "Ρύθμιση ροών RSS"
 msgid "Setup RSS"
 msgstr "Ρύθμιση RSS"
 
-#: ../src/rss.c:420
-#: ../src/rss.c:3803
+#. ATOM
+#: ../src/parser.c:1079
+msgid "No Information"
+msgstr "Χωρίς πληροφορίες"
+
+#: ../src/parser.c:1178
+msgid "No information"
+msgstr "Χωρίς πληροφορίες"
+
+#: ../src/rss.c:422 ../src/rss.c:2298
 msgid "Feed"
 msgstr "Ροή"
 
-#: ../src/rss.c:500
-#: ../src/rss-config-factory.c:2754
-#: ../src/rss-config-factory.c:2928
+#: ../src/rss.c:487 ../src/rss-config-factory.c:2866
+#: ../src/rss-config-factory.c:3040
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% ολοκληρώθηκε"
 
-#: ../src/rss.c:750
+#: ../src/rss.c:624
 msgid "Enter User/Pass for feed"
 msgstr "Εισάγετε το Χρήστη/Κωδικό για τη ροή"
 
-#: ../src/rss.c:806
-#| msgid ""
-#| "Enter your username and password for:\n"
-#| " '%s'"
+#: ../src/rss.c:680
 msgid "Enter your username and password for:"
 msgstr "Εισάγετε το όνομα χρήστη και τον κωδικό σας για:"
 
-#: ../src/rss.c:824
+#: ../src/rss.c:698
 msgid "Username: "
-msgstr "Όνομα χρήστη:"
+msgstr "Όνομα χρήστη: "
 
-#: ../src/rss.c:845
+#: ../src/rss.c:719 ../src/rss-main.ui.h:37
 msgid "Password: "
-msgstr "Κωδικός:"
+msgstr "Κωδικός: "
 
-#: ../src/rss.c:882
+#: ../src/rss.c:756
 msgid "_Remember this password"
 msgstr "Απομνημόνευση του _κωδικού"
 
-#. e_clipped_label_set_text (
-#. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:987
+#: ../src/rss.c:870 ../src/rss.c:874
 msgid "Cancelling..."
 msgstr "Ακυρώνω..."
 
-#: ../src/rss.c:1168
-msgid "Formatting Message..."
-msgstr "Γίνεται μορφοποίηση μηνύματος..."
-
-#: ../src/rss.c:1393
+#: ../src/rss.c:1156
 msgid "_Copy"
 msgstr "_Αντιγραφή"
 
-#: ../src/rss.c:1394
+#: ../src/rss.c:1157
 msgid "Select _All"
-msgstr "Επιλογή _Όλων"
+msgstr "Επιλογή Ό_λων"
 
-#: ../src/rss.c:1396
-#: ../src/rss.c:1407
+#: ../src/rss.c:1159 ../src/rss.c:1170
 msgid "Zoom _In"
 msgstr "_Μεγέθυνση"
 
-#: ../src/rss.c:1397
-#: ../src/rss.c:1408
+#: ../src/rss.c:1160 ../src/rss.c:1171
 msgid "Zoom _Out"
 msgstr "Σμί_κρυνση"
 
-#: ../src/rss.c:1398
-#: ../src/rss.c:1409
+#: ../src/rss.c:1161 ../src/rss.c:1172
 msgid "_Normal Size"
 msgstr "Κανονικό _μέγεθος"
 
-#: ../src/rss.c:1400
+#: ../src/rss.c:1163
 msgid "_Open Link"
 msgstr "Ά_νοιγμα συνδέσμου"
 
-#: ../src/rss.c:1401
-#: ../src/rss.c:1415
+#: ../src/rss.c:1164 ../src/rss.c:1178
 msgid "_Copy Link Location"
 msgstr "Αν_τιγραφή τοποθεσίας δεσμού"
 
-#: ../src/rss.c:1411
+#: ../src/rss.c:1174
 msgid "_Print..."
-msgstr "_Εκτύπωση…"
+msgstr "_Εκτύπωση..."
 
-#: ../src/rss.c:1412
+#: ../src/rss.c:1175
 msgid "Save _As"
 msgstr "Αποθήκευση _ως"
 
-#: ../src/rss.c:1414
+#: ../src/rss.c:1177
 msgid "_Open Link in Browser"
 msgstr "Άνοι_γμα συνδέσμου στον περιηγητή"
 
-#: ../src/rss.c:1520
-#: ../src/rss.c:1703
-msgid "Click to open"
-msgstr "Κλικ για άνοιγμα"
-
-#: ../src/rss.c:1813
-#: ../src/rss.c:2060
-#: ../src/rss.c:2102
-msgid "Feed view"
-msgstr "Προβολή ροής"
-
-#: ../src/rss.c:1827
-#: ../src/rss.c:2067
-#: ../src/rss.c:2117
-msgid "Show Summary"
-msgstr "Προβολή σύνοψης"
-
-#: ../src/rss.c:1828
-#: ../src/rss.c:2068
-#: ../src/rss.c:2118
-msgid "Show Full Text"
-msgstr "Προβολή πλήρους κειμένου"
-
-#: ../src/rss.c:2028
-msgid "Comments"
-msgstr "Σχόλια"
-
-#: ../src/rss.c:2033
-msgid "Refresh"
-msgstr "Ανανέωση"
-
-#: ../src/rss.c:2616
-msgid "Posted under"
-msgstr "Δημοσιεύθηκε κάτω από"
-
-#: ../src/rss.c:2963
+#: ../src/rss.c:1444
 msgid "Fetching feed"
 msgstr "Γίνεται λήψη ροής"
 
-#: ../src/rss.c:3265
+#: ../src/rss.c:1756 ../src/rss.c:2034
 msgid "Unnamed feed"
 msgstr "Ανώνυμη ροή"
 
-#: ../src/rss.c:3266
+#: ../src/rss.c:1757
 msgid "Error while setting up feed."
 msgstr "Σφάλμα κατά τη λήψη της ροής."
 
-#: ../src/rss.c:3470
-#: ../src/rss.c:3540
+#: ../src/rss.c:1965 ../src/rss.c:2035
 msgid "Error while fetching feed."
 msgstr "Σφάλμα κατά τη λήψη της ροής."
 
-#: ../src/rss.c:3471
+#: ../src/rss.c:1966
 msgid "Invalid Feed"
 msgstr "Άκυρη ροή"
 
-#: ../src/rss.c:3513
+#: ../src/rss.c:2008
 #, c-format
 msgid "Adding feed %s"
 msgstr "Προσθήκη ροής %s"
 
-#: ../src/rss.c:3539
-msgid "Unamed feed"
-msgstr "Ανώνυμη ροή"
-
-#: ../src/rss.c:3553
+#: ../src/rss.c:2049 ../src/rss.c:2057
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Λήψη μηνύματος %d από %d"
 
-#: ../src/rss.c:3659
+#: ../src/rss.c:2142 ../src/rss.c:2145
 msgid "Complete."
 msgstr "Ολοκληρώθηκε."
 
-#: ../src/rss.c:3691
-#: ../src/rss.c:3856
-#: ../src/rss.c:3894
-#: ../src/rss.c:4093
-#: ../src/rss.c:4705
+#: ../src/rss.c:2179 ../src/rss.c:2357 ../src/rss.c:2395 ../src/rss.c:2598
+#: ../src/rss.c:3186
 #, c-format
-#| msgid "Error fetching feed."
 msgid "Error fetching feed: %s"
 msgstr "Σφάλμα κατά τη λήψη της ροής: %s"
 
-#: ../src/rss.c:3704
+#: ../src/rss.c:2191 ../src/rss.c:2195
 msgid "Canceled."
 msgstr "Ακυρώθηκε."
 
-#: ../src/rss.c:3747
+#: ../src/rss.c:2242
 #, c-format
-#| msgid "Error while parsing feed %s"
 msgid "Error while parsing feed: %s"
 msgstr "Σφάλμα κατά την ανάλυση της ροής: %s"
 
-#: ../src/rss.c:3751
+#: ../src/rss.c:2246
 msgid "illegal content type!"
 msgstr "Λανθασμένος τύπος περιεχομένου!"
 
-#: ../src/rss.c:3812
+#: ../src/rss.c:2306 ../src/rss.c:2309
 msgid "Complete"
 msgstr "Συμπληρώθηκε"
 
-#: ../src/rss.c:3940
+#: ../src/rss.c:2441
 msgid "Formatting error."
 msgstr "Σφάλμα μορφοποίησης."
 
-#: ../src/rss.c:4978
+#: ../src/rss.c:3494
 msgid "No RSS feeds configured!"
 msgstr "Δε ρυθμίστηκαν ροές RSS!"
 
-#: ../src/rss.c:5030
+#: ../src/rss.c:3546
 msgid "Waiting..."
-msgstr "Αναμονή…"
+msgstr "Αναμονή..."
 
-#: ../src/rss.h:54
-msgid "News and Blogs"
-msgstr "Ειδήσεις και ιστολόγια"
-
-#: ../src/rss.h:56
-msgid "Untitled channel"
-msgstr "Κανάλι χωρίς όνομα"
-
-#: ../src/rss-config-factory.c:164
+#: ../src/rss-config-factory.c:165
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:165
+#: ../src/rss-config-factory.c:166
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:166
+#: ../src/rss-config-factory.c:167
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:399
+#: ../src/rss-config-factory.c:483
 msgid "day"
 msgid_plural "days"
 msgstr[0] "ημέρες"
 msgstr[1] "ημέρες"
 
-#: ../src/rss-config-factory.c:414
+#: ../src/rss-config-factory.c:498
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "μηνύματα"
 msgstr[1] "μηνύματα"
 
-#: ../src/rss-config-factory.c:480
-#: ../src/rss-config-factory.c:493
-#| msgid "Remove feed folder"
+#: ../src/rss-config-factory.c:564 ../src/rss-config-factory.c:577
 msgid "Move to Folder"
 msgstr "Μετακίνηση στον φάκελο"
 
-#: ../src/rss-config-factory.c:480
-#: ../src/rss-config-factory.c:493
+#: ../src/rss-config-factory.c:564 ../src/rss-config-factory.c:577
 msgid "M_ove"
 msgstr "Μετα_κίνηση"
 
-#: ../src/rss-config-factory.c:634
+#: ../src/rss-config-factory.c:718
 msgid "Edit Feed"
 msgstr "Επεξεργασία ροής"
 
-#: ../src/rss-config-factory.c:636
+#: ../src/rss-config-factory.c:720
 msgid "Add Feed"
 msgstr "Προσθήκη ροής"
 
-#: ../src/rss-config-factory.c:1081
-#: ../src/rss-config-factory.c:1618
+#: ../src/rss-config-factory.c:1165 ../src/rss-config-factory.c:1730
 #, no-c-format
 msgid "0% done"
 msgstr "0% ολοκληρώθηκε"
 
-#: ../src/rss-config-factory.c:1453
+#: ../src/rss-config-factory.c:1549
 msgid "Disable"
 msgstr "Απενεργοποίηση"
 
-#: ../src/rss-config-factory.c:1453
+#: ../src/rss-config-factory.c:1549
 msgid "Enable"
 msgstr "Ενεργοποίηση"
 
-#: ../src/rss-config-factory.c:1509
+#: ../src/rss-config-factory.c:1609 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Διαγραφή περιεχομένων φακέλου"
 
-#: ../src/rss-config-factory.c:1878
+#: ../src/rss-config-factory.c:1990
 msgid "Import error."
 msgstr "Σφάλμα εισαγωγής."
 
-#: ../src/rss-config-factory.c:1879
+#: ../src/rss-config-factory.c:1991
 msgid "Invalid file or this file does not contain any feeds."
-msgstr "Μη έγκυρο αρχείο ή δεν πρόκειται για αρχείο εισαγωγής"
+msgstr "Άκυρο αρχείο ή αυτό το αρχείο δεν περιέχει ροές."
 
-#: ../src/rss-config-factory.c:1884
+#: ../src/rss-config-factory.c:1996
 msgid "Importing"
 msgstr "Γίνεται εισαγωγή"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:1907
-#: ../src/rss-config-factory.c:2803
-#: ../src/rss-config-factory.c:2963
+#: ../src/rss-config-factory.c:2019 ../src/rss-config-factory.c:2915
+#: ../src/rss-config-factory.c:3075
 msgid "Please wait"
 msgstr "Παρακαλώ περιμένετε"
 
-#: ../src/rss-config-factory.c:2217
-#: ../src/rss-config-factory.c:3083
-#: ../src/rss-config-factory.c:3146
+#: ../src/rss-config-factory.c:2329 ../src/rss-config-factory.c:3195
+#: ../src/rss-config-factory.c:3258
 msgid "All Files"
 msgstr "Όλα τα αρχεία"
 
-#: ../src/rss-config-factory.c:2228
-#: ../src/rss-config-factory.c:3167
+#: ../src/rss-config-factory.c:2340 ../src/rss-config-factory.c:3279
 msgid "OPML Files"
 msgstr "Αρχεία OPML"
 
-#: ../src/rss-config-factory.c:2239
-#: ../src/rss-config-factory.c:3156
+#: ../src/rss-config-factory.c:2351 ../src/rss-config-factory.c:3268
 msgid "XML Files"
 msgstr "Αρχεία XML"
 
-#: ../src/rss-config-factory.c:2258
+#: ../src/rss-config-factory.c:2370
 msgid "Show article's summary"
 msgstr "Προβολή σύνοψης άρθρου"
 
-#: ../src/rss-config-factory.c:2271
+#: ../src/rss-config-factory.c:2383
 msgid "Feed Enabled"
 msgstr "Ροή ενεργοποιημένη"
 
-#: ../src/rss-config-factory.c:2284
+#: ../src/rss-config-factory.c:2396
 msgid "Validate feed"
 msgstr "Επικύρωση ροής"
 
-#: ../src/rss-config-factory.c:2341
+#: ../src/rss-config-factory.c:2453 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Επιλογή αρχείου εισαγωγής"
 
-#: ../src/rss-config-factory.c:2424
+#: ../src/rss-config-factory.c:2536 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Επιλέξτε αρχείο για εξαγωγή"
 
-#: ../src/rss-config-factory.c:2786
+#: ../src/rss-config-factory.c:2898
 msgid "Exporting feeds..."
 msgstr "Εξαγωγή ροών..."
 
-#: ../src/rss-config-factory.c:2850
-#: ../src/rss-config-factory.c:2858
+#: ../src/rss-config-factory.c:2962 ../src/rss-config-factory.c:2970
 msgid "Error exporting feeds!"
 msgstr "Σφάλμα εξαγωγής ροών!"
 
-#: ../src/rss-config-factory.c:2939
+#: ../src/rss-config-factory.c:3051
 msgid "Importing cookies..."
 msgstr "Εισαγωγή cookies..."
 
-#: ../src/rss-config-factory.c:3019
+#: ../src/rss-config-factory.c:3131
 msgid "Select file to import"
 msgstr "Επιλέξτε αρχείο για εισαγωγή"
 
-#: ../src/rss-config-factory.c:3089
+#: ../src/rss-config-factory.c:3201
 msgid "Mozilla/Netscape Format"
 msgstr "Μορφή Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:3095
+#: ../src/rss-config-factory.c:3207
 msgid "Firefox new Format"
 msgstr "Νέα μορφή Firefox"
 
-#: ../src/rss-config-factory.c:3205
-#: ../src/rss-config-factory.c:3210
+#: ../src/rss-config-factory.c:3317 ../src/rss-config-factory.c:3322
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -720,40 +741,347 @@ msgstr ""
 "Δε ρυθμίστηκαν ροές RSS!\n"
 "Αδύνατη η εξαγωγή."
 
-#: ../src/rss-config-factory.c:3346
+#: ../src/rss-config-factory.c:3485
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
 "installed and evolution-rss should be recompiled to see those packages."
 msgstr ""
-"Σημείωση: Για να μπορείτε να χρησιμοποιήσετε το Mozilla (Firefox) ή το Apple Webkit\n"
+"Σημείωση: Για να μπορείτε να χρησιμοποιήσετε το Mozilla (Firefox) ή το Apple "
+"Webkit\n"
 "για την προβολή, χρειάζεστε τα πακέτα firefox ή webkit devel\n"
-"εγκατεστημένα και το evolution-rss πρέπει να μεταγλωττιστεί ξανά για να δει εκείνα τα πακέτα."
+"εγκατεστημένα και το evolution-rss πρέπει να μεταγλωττιστεί ξανά για να δει "
+"εκείνα τα πακέτα."
 
-#: ../src/rss-config-factory.c:3869
+#: ../src/rss-config-factory.c:4089 ../src/rss-main.ui.h:46
 msgid "Enabled"
 msgstr "Ενεργοποιημένο"
 
-#: ../src/rss-config-factory.c:3896
+#: ../src/rss-config-factory.c:4116
 msgid "Feed Name"
 msgstr "Όνομα ροής"
 
-#: ../src/rss-config-factory.c:3909
+#: ../src/rss-config-factory.c:4129
 msgid "Type"
 msgstr "Τύπος"
 
-#: ../src/rss-config-factory.c:4166
+#: ../src/rss-config-factory.c:4446
 msgid "News And Blogs"
 msgstr "Ειδήσεις και ιστολόγια"
 
-#. ATOM
-#: ../src/parser.c:1063
-msgid "No Information"
-msgstr "Χωρίς πληροφορίες"
+#: ../src/rss.h:50
+msgid "News and Blogs"
+msgstr "Ειδήσεις και ιστολόγια"
 
-#: ../src/parser.c:1162
-msgid "No information"
-msgstr "Χωρίς πληροφορίες"
+#: ../src/rss.h:52
+msgid "Untitled channel"
+msgstr "Κανάλι χωρίς όνομα"
+
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Μηχανή: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Χρήση των ίδιων γραμματοσειρών όπως οι άλλες εφαρμογές"
+
+#: ../src/rss-html-rendering.ui.h:3
+#| msgid "Minimum font size"
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Ελάχιστο μέγεθος γραμματοσειράς:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Μπλοκάρισμα αναδυόμενων παραθύρων"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Ενεργοποίηση Java"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "Ενεργοποίηση JavaScript"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Αποδέχεται Cookies από σελίδες"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Εισαγωγή cookies"
+
+#: ../src/rss-html-rendering.ui.h:9
+#| msgid "Automaticaly Resize Images"
+msgid "Automatically resize images"
+msgstr "Αυτόματη αυξομείωση εικόνων"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Λήξη χρόνου δικτύου:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "δευτερόλεπτα"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>Εμφάνιση HTML</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Εμφάνιση εικονιδίου στην περιοχή ειδοποίησης"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Εμφάνιση εικονιδίου ροής"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Ειδοποίηση άρθρου</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "λεπτά"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "ώρες"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "ημέρες"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Πίνακας πιστοποιητικών"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Προσθήκη"
+
+#: ../src/rss-main.ui.h:7
+#| msgid "Edit"
+msgid "_Edit"
+msgstr "_Επεξεργασία"
+
+#: ../src/rss-main.ui.h:8
+#| msgid "Importing"
+msgid "I_mport"
+msgstr "Ε_ισαγωγή"
+
+#: ../src/rss-main.ui.h:9
+#| msgid "Export"
+msgid "E_xport"
+msgstr "Ε_ξαγωγή"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Ροές"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Μηχανή: "
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Ενεργοποίηση πρόσθετων λειτουργιών"
+
+#: ../src/rss-main.ui.h:15
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+#| msgid "<span weight=\"bold\">Settings</span>"
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Εκκίνηση</span>"
+
+#: ../src/rss-main.ui.h:17
+msgid "Check for new articles every"
+msgstr "Έλεγχος για νέα άρθρα κάθε"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles at startup"
+msgstr "Έλεγχος για νέα άρθρα κατά την εκκίνηση"
+
+#: ../src/rss-main.ui.h:19
+#| msgid "<span weight=\"bold\">Settings</span>"
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Εμφάνιση ροής</span>"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr ""
+"Από προεπιλογή να εμφανίζεται η σύνοψη του άρθρου αντί για την ιστοσελίδα"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Σάρωση για ροή μέσα στις ιστοσελίδες"
+
+#: ../src/rss-main.ui.h:22
+#| msgid "<span weight=\"bold\">Settings</span>"
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Συνημμένα ροής</span>"
+
+#: ../src/rss-main.ui.h:23
+msgid "Show article comments"
+msgstr "Προβολή σχολίων άρθρου"
+
+#: ../src/rss-main.ui.h:24
+#| msgid "Download enclosures"
+msgid "Download feed enclosures"
+msgstr "Μεταφόρτωση συνημμένων ροής"
+
+#: ../src/rss-main.ui.h:25
+#| msgid "Download enclosures"
+msgid "Do not download enclosures that exceeds"
+msgstr "Να μην μεταφορτώνονται συνημμένα που ξεπερνούν"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:27
+msgid "Setup"
+msgstr "Ρύθμιση"
+
+#: ../src/rss-main.ui.h:28
+msgid "Use Proxy"
+msgstr "Χρήση διακομιστή διαμεσολάβησης"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "Διακομιστής διαμεσολάβησης HTTP:"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Θύρα:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Δεν υπάρχει διακομιστής διαμεσολάβησης για:"
+
+#: ../src/rss-main.ui.h:33
+msgid "Network"
+msgstr "Δίκτυο"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "Λεπτομέρειες διακομιστή διαμεσολάβησης HTTP"
+
+#: ../src/rss-main.ui.h:35
+msgid "Use authentication"
+msgstr "Χρήση πιστοποίησης"
+
+#: ../src/rss-main.ui.h:36
+msgid "Username:"
+msgstr "Όνομα χρήστη:"
+
+#: ../src/rss-main.ui.h:39
+msgid "Delete feed?"
+msgstr "Διαγραφή ροής;"
+
+#: ../src/rss-main.ui.h:42
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Όνομα ροής:</b>"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr "<b>URL ροής:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "label"
+msgstr "ετικέτα"
+
+#: ../src/rss-main.ui.h:45
+msgid "<b>Location:</b>"
+msgstr "<b>Τοποθεσία</b>"
+
+#: ../src/rss-main.ui.h:47
+msgid "Validate"
+msgstr "Επικύρωση"
+
+#: ../src/rss-main.ui.h:48
+#| msgid "Show Full Text"
+msgid "Show feed full text"
+msgstr "Εμφάνιση πλήρους κειμένου ροής"
+
+#: ../src/rss-main.ui.h:49
+msgid "General"
+msgstr "Γενικά"
+
+#: ../src/rss-main.ui.h:50
+msgid "Use global update interval"
+msgstr "Χρήση καθολικού χρονικοί μεσοδιαστήματος ανανεώσεων"
+
+#: ../src/rss-main.ui.h:51
+msgid "Update in"
+msgstr "Ανανέωσε σε"
+
+#: ../src/rss-main.ui.h:52
+msgid "Do no update feed"
+msgstr "Να μην ανανεώνεται η ροή"
+
+#: ../src/rss-main.ui.h:53
+msgid "Update"
+msgstr "Ανανέωση"
+
+#: ../src/rss-main.ui.h:54
+msgid "Do not delete feeds"
+msgstr "Να μη διαγράφονται οι ροές"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete all but the last"
+msgstr "Διαγραφή όλων εκτός το τελευταίο"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles older than"
+msgstr "Διαγραφή άρθρων παλαιότερων από"
+
+#: ../src/rss-main.ui.h:57
+msgid "Delete articles that are no longer in the feed"
+msgstr "Διαγραφή άρθρων που δεν υπάρχουν πια στη ροή"
+
+#: ../src/rss-main.ui.h:58
+msgid "Always delete unread articles"
+msgstr "Πάντα σβήσιμο των μη αναγνωσμένων άρθρων"
+
+#: ../src/rss-main.ui.h:59
+msgid "Storage"
+msgstr "Αποθήκευση"
+
+#: ../src/rss-main.ui.h:60
+msgid "Authentication"
+msgstr "Πιστοποίηση"
+
+#: ../src/rss-main.ui.h:61
+msgid "<b>Advanced options</b>"
+msgstr "<b>Προχωρημένες επιλογές</b>"
+
+#~ msgid "Formatting Message..."
+#~ msgstr "Γίνεται μορφοποίηση μηνύματος..."
+
+#~ msgid "Click to open"
+#~ msgstr "Κλικ για άνοιγμα"
+
+#~ msgid "Feed view"
+#~ msgstr "Προβολή ροής"
+
+#~ msgid "Comments"
+#~ msgstr "Σχόλια"
+
+#~ msgid "Refresh"
+#~ msgstr "Ανανέωση"
+
+#~ msgid "Posted under"
+#~ msgstr "Δημοσιεύθηκε κάτω από"
+
+#~ msgid "Unamed feed"
+#~ msgstr "Ανώνυμη ροή"
 
 #~ msgid "New feed imported: %s"
 #~ msgstr "Εισήχθηκε η νέα ροή: %s"
@@ -767,177 +1095,14 @@ msgstr "Χωρίς πληροφορίες"
 #~ msgid "Importing feeds..."
 #~ msgstr "Εισαγωγή ροών..."
 
-#~ msgid "<b>Article Notification</b>"
-#~ msgstr "<b>Ειδοποίηση άρθρου</b>"
-
-#~ msgid "<b>Engine: </b>"
-#~ msgstr "<b>Μηχανή: </b>"
-
-#~ msgid "<b>HTML Rendering</b>"
-#~ msgstr "<b>Εμφάνιση HTML</b>"
-
-#~ msgid "<b>Network timeout:</b>"
-#~ msgstr "<b>Λήξη χρόνου δικτύου:</b>"
-
-#~ msgid "Accept cookies from sites"
-#~ msgstr "Αποδέχεται Cookies από σελίδες"
-
 #~ msgid "Blink icon in notification area"
 #~ msgstr "Αναβόσβημα εικονιδίου στην περιοχή ειδοποίησης"
-
-#~ msgid "Block pop-up windows"
-#~ msgstr "Μπλοκάρισμα αναδυόμενων παραθύρων"
-
-#~ msgid "Enable Java"
-#~ msgstr "Ενεργοποίηση Java"
-
-#~ msgid "Enable JavaScript"
-#~ msgstr "Ενεργοποίηση JavaScript"
-
-#~ msgid "Import Cookies"
-#~ msgstr "Εισαγωγή cookies"
-
-#~ msgid "Show feed icon"
-#~ msgstr "Εμφάνιση εικονιδίου ροής"
-
-#~ msgid "Show icon in notification area"
-#~ msgstr "Εμφάνιση εικονιδίου στην περιοχή ειδοποίησης"
-
-#~ msgid "seconds"
-#~ msgstr "δευτερόλεπτα"
-
-#~ msgid "<b>Advanced options</b>"
-#~ msgstr "<b>Προχωρημένες επιλογές</b>"
-
-#~ msgid "<b>Feed Name: </b>"
-#~ msgstr "<b>Όνομα ροής:</b>"
-
-#~ msgid "<b>Feed URL:</b>"
-#~ msgstr "<b>URL ροής:</b>"
-
-#~ msgid "<b>Location:</b>"
-#~ msgstr "<b>Τοποθεσία</b>"
-
-#~ msgid "<span weight=\"bold\">Settings</span>"
-#~ msgstr "<span weight=\"bold\">Ρυθμίσεις</span>"
 
 #~ msgid "Add"
 #~ msgstr "Προσθήκη"
 
-#~ msgid "Always delete unread articles"
-#~ msgstr "Πάντα σβήσιμο των μη αναγνωσμένων άρθρων"
-
-#~ msgid "Authentication"
-#~ msgstr "Πιστοποίηση"
-
-#~ msgid "By default show article summary instead of webpage"
-#~ msgstr ""
-#~ "Από προεπιλογή να εμφανίζεται η σύνοψη του άρθρου αντί για την ιστοσελίδα"
-
-#~ msgid "Certificates Table"
-#~ msgstr "Πίνακας πιστοποιητικών"
-
-#~ msgid "Check for new articles at startup"
-#~ msgstr "Έλεγχος για νέα άρθρα κατά την εκκίνηση"
-
-#~ msgid "Check for new articles every"
-#~ msgstr "Έλεγχος για νέα άρθρα κάθε"
-
-#~ msgid "Delete all but the last"
-#~ msgstr "Διαγραφή όλων εκτός το τελευταίο"
-
-#~ msgid "Delete articles older than"
-#~ msgstr "Διαγραφή άρθρων παλαιότερων από"
-
-#~ msgid "Delete articles that are no longer in the feed"
-#~ msgstr "Διαγραφή άρθρων που δεν υπάρχουν πια στη ροή"
-
-#~ msgid "Delete feed?"
-#~ msgstr "Διαγραφή ροής;"
-
-#~ msgid "Details"
-#~ msgstr "Λεπτομέρειες"
-
 #~ msgid "Display only feed summary"
 #~ msgstr "Εμφανίζει μόνο τη σύνοψη της ροής"
-
-#~ msgid "Do no update feed"
-#~ msgstr "Να μην ανανεώνεται η ροή"
-
-#~ msgid "Do not delete feeds"
-#~ msgstr "Να μη διαγράφονται οι ροές"
-
-#~ msgid "Edit"
-#~ msgstr "Επεξεργασία"
-
-#~ msgid "Enable Plugins"
-#~ msgstr "Ενεργοποίηση πρόσθετων λειτουργιών"
-
-#~ msgid "Engine: "
-#~ msgstr "Μηχανή:"
-
-#~ msgid "Export"
-#~ msgstr "Εξαγωγή"
-
-#~ msgid "Feeds"
-#~ msgstr "Ροές"
-
-#~ msgid "General"
-#~ msgstr "Γενικά"
-
-#~ msgid "HTML"
-#~ msgstr "HTML"
-
-#~ msgid "HTTP Proxy Details"
-#~ msgstr "Λεπτομέρειες διακομιστή διαμεσολάβησης HTTP"
-
-#~ msgid "HTTP proxy:"
-#~ msgstr "Διακομιστής διαμεσολάβησης HTTP:"
-
-#~ msgid "Network"
-#~ msgstr "Δίκτυο"
-
-#~ msgid "No proxy for:"
-#~ msgstr "Δεν υπάρχει διακομιστής διαμεσολάβησης για:"
-
-#~ msgid "Port:"
-#~ msgstr "Θύρα:"
-
-#~ msgid "Setup"
-#~ msgstr "Ρύθμιση"
-
-#~ msgid "Show article comments"
-#~ msgstr "Προβολή σχολίων άρθρου"
-
-#~ msgid "Storage"
-#~ msgstr "Αποθήκευση"
-
-#~ msgid "Update"
-#~ msgstr "Ανανέωση"
-
-#~ msgid "Update in"
-#~ msgstr "Ανανέωσε σε"
-
-#~ msgid "Use Proxy"
-#~ msgstr "Χρήση διακομιστή διαμεσολάβησης"
-
-#~ msgid "Use authentication"
-#~ msgstr "Χρήση πιστοποίησης"
-
-#~ msgid "Use global update interval"
-#~ msgstr "Χρήση καθολικού χρονικοί μεσοδιαστήματος ανανεώσεων"
-
-#~ msgid "Username:"
-#~ msgstr "Όνομα χρήστη:"
-
-#~ msgid "Validate"
-#~ msgstr "Επικύρωση"
-
-#~ msgid "label"
-#~ msgstr "ετικέτα"
-
-#~ msgid "minutes"
-#~ msgstr "λεπτά"
 
 #~ msgid ""
 #~ "minutes\n"
