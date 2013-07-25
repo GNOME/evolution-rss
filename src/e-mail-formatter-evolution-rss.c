@@ -169,9 +169,9 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 
 	frame_col = e_rgba_to_value (
 			e_mail_formatter_get_color (formatter, E_MAIL_FORMATTER_COLOR_FRAME));
-	cont_col = e_rgba_to_value ((GdkColor *)
+	cont_col = e_rgba_to_value (
 			e_mail_formatter_get_color (formatter, E_MAIL_FORMATTER_COLOR_CONTENT));
-	text_col = e_rgba_to_value ((GdkColor *)
+	text_col = e_rgba_to_value (
 			e_mail_formatter_get_color (formatter, E_MAIL_FORMATTER_COLOR_TEXT));
 
 	if (!is_html && !rss_get_current_view()) {

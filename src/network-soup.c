@@ -1217,6 +1217,7 @@ sync_gecko_cookies(void)
 void
 rss_soup_init(void)
 {
+	g_print("soup init()\n");
 	settings = g_settings_new(RSS_CONF_SCHEMA);
 
 #if LIBSOUP_VERSION > 2026002 && defined(HAVE_LIBSOUP_GNOME)
