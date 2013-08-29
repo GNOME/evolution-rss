@@ -108,7 +108,9 @@ int rss_verbose_debug = 0;
 #include <glib.h>
 #include <gtk/gtk.h>
 
+#if (EVOLUTION_VERSION < 30905)
 #include <shell/es-event.h>
+#endif
 
 #ifdef HAVE_GTKHTMLEDITOR
 #include <editor/gtkhtml-editor.h>
@@ -3309,7 +3311,7 @@ struct _EShell {
 };
 typedef struct _EShell EShell;
 #endif
-
+#if (EVOLUTION_VERSION < 30905)
 #if EVOLUTION_VERSION < 22900 //KB
 void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t);
 
@@ -3318,6 +3320,11 @@ void org_gnome_cooly_rss_startup(void *ep, EMPopupTargetSelect *t)
 void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t);
 
 void org_gnome_cooly_rss_startup(void *ep, ESEventTargetUpgrade *t)
+#endif
+#else
+void org_gnome_cooly_rss_startup(void *ep, void *t);
+
+void org_gnome_cooly_rss_startup(void *ep, void *t)
 #endif
 {
 	gdouble timeout;
@@ -3737,6 +3744,10 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 {
 	char *d;
 	guint render;
+#if (EVOLUTION_VERSION >= 30905)
+	EShell *shell;
+	GApplication *app;
+#endif
 
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
@@ -3817,6 +3828,9 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 #endif
 		}
 		upgrade = 2; //init done
+#if (EVOLUTION_VERSION >= 30905)
+		org_gnome_cooly_rss_startup(NULL, NULL);
+#endif
 	} else {
 		abort_all_soup();
 		printf("Plugin disabled\n");

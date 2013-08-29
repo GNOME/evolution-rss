@@ -32,7 +32,9 @@
 #include <libsoup/soup.h>
 #include <shell/e-shell.h>
 #include <shell/e-shell-view.h>
+#if (EVOLUTION_VERSION < 30905)
 #include <shell/es-event.h>
+#endif
 
 #if (DATASERVER_VERSION >= 2031001)
 #include <camel/camel.h>
