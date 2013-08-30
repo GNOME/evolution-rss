@@ -110,12 +110,12 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	CamelContentType *ct = camel_mime_part_get_content_type (message);
 	if (ct) {
 		if (!camel_content_type_is (ct, "x-evolution", "evolution-rss-feed"))
-			return FALSE;
+			goto fail;
 	}
 
 	dw = camel_medium_get_content (CAMEL_MEDIUM (message));
 	if (!dw) {
-		return FALSE;
+		goto fail;
 	}
 
 	str = g_strdup_printf (
@@ -232,7 +232,7 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			camel_stream_write_string (stream, "<h3>Error!</h3>", cancellable, NULL);
 			camel_stream_write_string (stream, err->message, cancellable, NULL);
 			camel_stream_write_string (stream, "</div>", cancellable, NULL);
-			return TRUE;
+			goto success;
 		}
 
 		gchar *buff = rss_process_website(content->str, website);
@@ -275,7 +275,11 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	g_idle_add((GSourceFunc)feed_async, hd);
 	}
 
+success:g_object_unref(message);
 	return TRUE;
+fail:
+	g_object_unref(message);
+	return FALSE;
 }
 
 static void
