@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the evolution-rss package.
 # Fran Diéguez <frandieguez@ubuntu.com>, 2009, 2010.
 # Xosé M. Lamas <correo.xmgz@gmail.com>, 2011.
-# Fran Dieguez <frandieguez@gnome.org>, 2011, 2012.
+# Fran Dieguez <frandieguez@gnome.org>, 2011, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-12 00:59+0200\n"
-"PO-Revision-Date: 2012-10-12 01:00+0200\n"
+"POT-Creation-Date: 2013-09-23 13:12+0200\n"
+"PO-Revision-Date: 2013-09-23 13:15+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -21,34 +21,44 @@ msgstr ""
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
-msgstr "Evolution Lector de RSS de"
+msgstr "Lector de RSS de Evolution"
 
 #: ../evolution-rss.desktop.in.in.h:2
-msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
-msgstr "Engadido do Evolution que lle permite mostrar fontes RSS."
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr "Engadido que lle permite a Evolution mostrar fontes RSS."
 
-#: ../src/dbus.c:108 ../src/rss.c:1950 ../src/rss-config-factory.c:1185
-#: ../src/rss-config-factory.c:1757 ../src/rss-config-factory.c:1924
+#: ../src/dbus.c:108 ../src/rss.c:1950 ../src/rss-config-factory.c:1178
+#: ../src/rss-config-factory.c:1750 ../src/rss-config-factory.c:1928
 msgid "Error adding feed."
-msgstr "Ocorreu un erro ao engadir a fonte."
+msgstr "Produciuse un erro ao engadir a fonte."
 
-#: ../src/dbus.c:109 ../src/rss.c:1951 ../src/rss-config-factory.c:1186
-#: ../src/rss-config-factory.c:1758 ../src/rss-config-factory.c:1925
+#: ../src/dbus.c:109 ../src/rss.c:1951 ../src/rss-config-factory.c:1179
+#: ../src/rss-config-factory.c:1751 ../src/rss-config-factory.c:1929
 msgid "Feed already exists!"
-msgstr "Xa existe o fornecedor"
+msgstr "Xa existe o fornecedor!"
 
 #: ../src/dbus.c:116
 #, c-format
 msgid "Importing URL: %s"
 msgstr "Importando URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:131
+#: ../src/e-mail-formatter-evolution-rss.c:301
+#: ../src/e-mail-formatter-evolution-rss.c:307
+msgid "Show Summary"
+msgstr "Mostrar resumo"
+
+#: ../src/e-mail-formatter-evolution-rss.c:302
+#: ../src/e-mail-formatter-evolution-rss.c:308
+msgid "Show Full Text"
+msgstr "Mostrar todo o texto"
+
+#: ../src/e-mail-formatter-evolution-rss.c:323
 msgid "Evolution-RSS"
 msgstr "Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:137
-msgid "Displaying rss feed arcticles"
-msgstr "Mostrando artigos do orixe rss"
+#: ../src/e-mail-formatter-evolution-rss.c:324
+msgid "Displaying RSS feed arcticles"
+msgstr "Mostrando artigos do fonte RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Proxy requires authentication"
@@ -64,10 +74,10 @@ msgstr "Mostrar o resumo do artigo"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
 msgid ""
-"Evolution will show article's summary instead of article's webpage. Summary "
-"can also be html."
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
 msgstr ""
-"Evolution mostrará o resumo do artigo no canto da páxina web do artigo. O "
+"Evolution mostrará o resumo do artigo no lugar da páxina web do artigo. O "
 "resumo tamén pode conter html."
 
 #: ../src/evolution-rss.schemas.in.in.h:5
@@ -87,12 +97,12 @@ msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Nome de equipo do servidor proxy empregado para as fontes e o contido."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Html render"
+msgid "HTML render"
 msgstr "Renderizador Html"
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Type HTML Render used to display html pages."
-msgstr "Escriba o renderizador HTML empregado para mostrar as páxinas html."
+msgid "Type HTML Render used to display HTML pages."
+msgstr "Escriba o renderizador HTML empregado para mostrar as páxinas HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:11
 msgid "Use custom font"
@@ -117,7 +127,7 @@ msgid "Network timeout"
 msgstr "Tempo de espera de rede superado"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Interval in seconds before a conection is dropped."
+msgid "Interval in seconds before a connection is dropped."
 msgstr "Intervalo en segundos antes de que a conexión sexa rexeitada."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
@@ -145,7 +155,7 @@ msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "Evolution RSS aceptará cookies dos artigos que navegue"
 
 #: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Automaticaly Resize Images"
+msgid "Automatically Resize Images"
 msgstr "Redimensionar imaxes automaticamente"
 
 #: ../src/evolution-rss.schemas.in.in.h:24
@@ -160,8 +170,8 @@ msgid "Scan web pages for RSS"
 msgstr "Analizar as páxinas web buscando RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
-msgid "Evolution RSS will scan web pages for rss content"
-msgstr "Evolution RSS analizara páxinas web para buscar contido RSS"
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution RSS analizara as páxinas web para buscar contido RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "Download enclosures"
@@ -178,7 +188,7 @@ msgid "Limit enclosure size"
 msgstr "Limitar tamaño dos compoñentes"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
-msgid "Limit maximum enclosure size evolution will download."
+msgid "Limit maximum enclosure size Evolution will download."
 msgstr "Limitar o tamaño máximo do compoñente que Evolution descargará."
 
 #: ../src/evolution-rss.schemas.in.in.h:31
@@ -215,9 +225,9 @@ msgstr "Contrasinal do servidor proxy"
 
 #: ../src/evolution-rss.schemas.in.in.h:39
 msgid ""
-"If the proxy server requires authentication. This is the password field."
+"If the proxy server requires authentication, this is the password field."
 msgstr ""
-"Se o servidor proxy require autenticación este é o campo de contrasinal."
+"Se o servidor proxy require autenticación, este é o campo de contrasinal."
 
 #: ../src/evolution-rss.schemas.in.in.h:40
 msgid "Proxy server port"
@@ -259,7 +269,7 @@ msgid "Checks articles on startup"
 msgstr " Comprobar artigos ao inicio"
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Check for new articles everytime Evolution is started."
+msgid "Check for new articles every time Evolution is started."
 msgstr "Comproba os novos artigos cada vez que inicia Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
@@ -297,8 +307,8 @@ msgstr ""
 "os URL de RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:58
-msgid "URL handler for rss feed uris"
-msgstr "Xestor de URL para o URI de fornecedores RSS"
+msgid "URL handler for RSS feed URIs"
+msgstr "Xestor de URL para os URI de fontes RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
@@ -310,7 +320,7 @@ msgstr ""
 "Verdadeiro se o programa para manipular esta URL debería executarse nunha "
 "terminal"
 
-#: ../src/notification.c:294 ../src/rss.c:2118
+#: ../src/notification.c:288 ../src/rss.c:2118
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "A obter as fontes (%d activadas)"
@@ -319,10 +329,10 @@ msgstr "A obter as fontes (%d activadas)"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
-"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
 "upon the somewhat existing RSS support in evolution-1.4 branch. The "
 "motivation behind this was to have RSS in same place as mails, at this "
-"moment I do not see the point having a separate RSS reader since a RSS "
+"moment I do not see the point in having a separate RSS reader since a RSS "
 "Article is like an email message.\n"
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
@@ -336,11 +346,12 @@ msgid ""
 msgstr ""
 "Engadido do Lector de RSS de Evolution.\n"
 "\n"
-"Este engadido engade compatibilidade con RSS no Evolution. A copatibilidade "
+"Este engadido engade compatibilidade con RSS en Evolution. A compatibilidade "
 "con RSS foi construído sobre a compatibilidade da rama evolution-1.4. A "
-"motivación que hai detrás disto é ter no mesmo lugar para os RSS e os mails, "
-"neste momento non vexo a razón de ter un lugar separado para o lector RSS xa "
-"que un atigo RSS non é máis que unha mensaxe de correo electrónico.\n"
+"motivación que hai detrás disto foi conseguir ter no mesmo lugar os RSS e os "
+"correos, neste momento non vexo a razón de ter un lugar separado para o "
+"lector RSS xa que un atigo RSS non é máis que unha mensaxe de correo "
+"electrónico.\n"
 "\n"
 "O RSS de Evolution pode mostrar artigos empregando a visualización en resumo "
 "ou visualización HTML. \n"
@@ -393,20 +404,20 @@ msgid "Setup RSS"
 msgstr "Configurar RSS"
 
 #. ATOM
-#: ../src/parser.c:1078
+#: ../src/parser.c:1079
 msgid "No Information"
 msgstr "Sen información"
 
-#: ../src/parser.c:1177
+#: ../src/parser.c:1178
 msgid "No information"
 msgstr "Sen información"
 
-#: ../src/rss.c:421 ../src/rss.c:2295
+#: ../src/rss.c:419 ../src/rss.c:2299
 msgid "Feed"
 msgstr "Fornecedor"
 
-#: ../src/rss.c:486 ../src/rss-config-factory.c:2865
-#: ../src/rss-config-factory.c:3039
+#: ../src/rss.c:484 ../src/rss-config-factory.c:2869
+#: ../src/rss-config-factory.c:3043
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% feito"
@@ -481,7 +492,7 @@ msgstr "A_brir ligazón no navegador"
 msgid "Fetching feed"
 msgstr "Obtendo fornecedor"
 
-#: ../src/rss.c:1753
+#: ../src/rss.c:1753 ../src/rss.c:2031
 msgid "Unnamed feed"
 msgstr "Fornecedor sen nome"
 
@@ -502,10 +513,6 @@ msgstr "Fornecedor non válido"
 msgid "Adding feed %s"
 msgstr "Engadindo o fornecedor %s"
 
-#: ../src/rss.c:2031
-msgid "Unamed feed"
-msgstr "Fornecedor sen nome"
-
 #: ../src/rss.c:2046 ../src/rss.c:2054
 #, c-format
 msgid "Getting message %d of %d"
@@ -515,8 +522,8 @@ msgstr "Obtendo a mensaxe %d de %d"
 msgid "Complete."
 msgstr "Completado."
 
-#: ../src/rss.c:2176 ../src/rss.c:2354 ../src/rss.c:2392 ../src/rss.c:2595
-#: ../src/rss.c:3190
+#: ../src/rss.c:2176 ../src/rss.c:2358 ../src/rss.c:2396 ../src/rss.c:2599
+#: ../src/rss.c:3187
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Produciuse un erro ao obter o fornecedor: %s"
@@ -525,164 +532,164 @@ msgstr "Produciuse un erro ao obter o fornecedor: %s"
 msgid "Canceled."
 msgstr "Cancelado."
 
-#: ../src/rss.c:2239
+#: ../src/rss.c:2243
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Produciuse un erro ao analizar o fornecedor: %s"
 
-#: ../src/rss.c:2243
+#: ../src/rss.c:2247
 msgid "illegal content type!"
 msgstr "Tipo de contido ilegal!"
 
-#: ../src/rss.c:2303 ../src/rss.c:2306
+#: ../src/rss.c:2307 ../src/rss.c:2310
 msgid "Complete"
 msgstr "Completa"
 
-#: ../src/rss.c:2438
+#: ../src/rss.c:2442
 msgid "Formatting error."
 msgstr "Erro de formatado."
 
-#: ../src/rss.c:3498
+#: ../src/rss.c:3500
 msgid "No RSS feeds configured!"
 msgstr "Non se configurou ningún fornecedor RSS!"
 
-#: ../src/rss.c:3550
+#: ../src/rss.c:3552
 msgid "Waiting..."
 msgstr "Gardando…"
 
-#: ../src/rss-config-factory.c:164
+#: ../src/rss-config-factory.c:157
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:165
+#: ../src/rss-config-factory.c:158
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:166
+#: ../src/rss-config-factory.c:159
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:482
+#: ../src/rss-config-factory.c:475
 msgid "day"
 msgid_plural "days"
 msgstr[0] "días"
 msgstr[1] "días"
 
-#: ../src/rss-config-factory.c:497
+#: ../src/rss-config-factory.c:490
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "mensaxes"
 msgstr[1] "mensaxes"
 
-#: ../src/rss-config-factory.c:563 ../src/rss-config-factory.c:576
+#: ../src/rss-config-factory.c:556 ../src/rss-config-factory.c:569
 msgid "Move to Folder"
 msgstr "Mover ao cartafol"
 
-#: ../src/rss-config-factory.c:563 ../src/rss-config-factory.c:576
+#: ../src/rss-config-factory.c:556 ../src/rss-config-factory.c:569
 msgid "M_ove"
 msgstr "M_over"
 
-#: ../src/rss-config-factory.c:717
+#: ../src/rss-config-factory.c:710
 msgid "Edit Feed"
 msgstr "Editar fonte"
 
-#: ../src/rss-config-factory.c:719
+#: ../src/rss-config-factory.c:712
 msgid "Add Feed"
 msgstr "Engadir fonte"
 
-#: ../src/rss-config-factory.c:1164 ../src/rss-config-factory.c:1729
+#: ../src/rss-config-factory.c:1157 ../src/rss-config-factory.c:1722
 #, no-c-format
 msgid "0% done"
 msgstr "0% feito"
 
-#: ../src/rss-config-factory.c:1548
+#: ../src/rss-config-factory.c:1541
 msgid "Disable"
 msgstr "Desactivar"
 
-#: ../src/rss-config-factory.c:1548
+#: ../src/rss-config-factory.c:1541
 msgid "Enable"
 msgstr "Activar"
 
-#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:40
+#: ../src/rss-config-factory.c:1601 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Eliminar os contidos do cartafol"
 
-#: ../src/rss-config-factory.c:1989
+#: ../src/rss-config-factory.c:1993
 msgid "Import error."
 msgstr "Produciuse un erro ao importar."
 
-#: ../src/rss-config-factory.c:1990
+#: ../src/rss-config-factory.c:1994
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "O ficheiro non é válido ou non contén ningún fornecedor."
 
-#: ../src/rss-config-factory.c:1995
+#: ../src/rss-config-factory.c:1999
 msgid "Importing"
 msgstr "Importando"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:2018 ../src/rss-config-factory.c:2914
-#: ../src/rss-config-factory.c:3074
+#: ../src/rss-config-factory.c:2022 ../src/rss-config-factory.c:2918
+#: ../src/rss-config-factory.c:3078
 msgid "Please wait"
 msgstr "Agarde"
 
-#: ../src/rss-config-factory.c:2328 ../src/rss-config-factory.c:3194
-#: ../src/rss-config-factory.c:3257
+#: ../src/rss-config-factory.c:2332 ../src/rss-config-factory.c:3198
+#: ../src/rss-config-factory.c:3261
 msgid "All Files"
 msgstr "Tódolos ficheiros"
 
-#: ../src/rss-config-factory.c:2339 ../src/rss-config-factory.c:3278
+#: ../src/rss-config-factory.c:2343 ../src/rss-config-factory.c:3282
 msgid "OPML Files"
 msgstr "Ficheiros OPML"
 
-#: ../src/rss-config-factory.c:2350 ../src/rss-config-factory.c:3267
+#: ../src/rss-config-factory.c:2354 ../src/rss-config-factory.c:3271
 msgid "XML Files"
 msgstr "Ficheiros XML"
 
-#: ../src/rss-config-factory.c:2369
+#: ../src/rss-config-factory.c:2373
 msgid "Show article's summary"
 msgstr "Mostrar resumo do artigo"
 
-#: ../src/rss-config-factory.c:2382
+#: ../src/rss-config-factory.c:2386
 msgid "Feed Enabled"
 msgstr "Fonte activa"
 
-#: ../src/rss-config-factory.c:2395
+#: ../src/rss-config-factory.c:2399
 msgid "Validate feed"
 msgstr "Validar fonte"
 
-#: ../src/rss-config-factory.c:2452 ../src/rss-main.ui.h:38
+#: ../src/rss-config-factory.c:2456 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Seleccione o ficheiro a importar"
 
-#: ../src/rss-config-factory.c:2535 ../src/rss-main.ui.h:41
+#: ../src/rss-config-factory.c:2539 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Seleccione o ficheiro para exportar"
 
-#: ../src/rss-config-factory.c:2897
+#: ../src/rss-config-factory.c:2901
 msgid "Exporting feeds..."
 msgstr "A exportar as fontes…"
 
-#: ../src/rss-config-factory.c:2961 ../src/rss-config-factory.c:2969
+#: ../src/rss-config-factory.c:2965 ../src/rss-config-factory.c:2973
 msgid "Error exporting feeds!"
 msgstr "Produciuse un erro ao exportar os fornecedores!"
 
-#: ../src/rss-config-factory.c:3050
+#: ../src/rss-config-factory.c:3054
 msgid "Importing cookies..."
 msgstr "Importando cookies…"
 
-#: ../src/rss-config-factory.c:3130
+#: ../src/rss-config-factory.c:3134
 msgid "Select file to import"
 msgstr "Seleccionar ficheiro para importar"
 
-#: ../src/rss-config-factory.c:3200
+#: ../src/rss-config-factory.c:3204
 msgid "Mozilla/Netscape Format"
 msgstr "Formato Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:3206
+#: ../src/rss-config-factory.c:3210
 msgid "Firefox new Format"
 msgstr "Novo formato de Firefox"
 
-#: ../src/rss-config-factory.c:3316 ../src/rss-config-factory.c:3321
+#: ../src/rss-config-factory.c:3320 ../src/rss-config-factory.c:3325
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -690,7 +697,7 @@ msgstr ""
 "Non hai fornecedores RSS configuradas!\n"
 "Non foi posíbel exportar nada."
 
-#: ../src/rss-config-factory.c:3484
+#: ../src/rss-config-factory.c:3488
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -700,27 +707,27 @@ msgstr ""
 "lectores debe ter os paquetes de desenvolvemento de Firefox ou Webkit \n"
 "instalados e debe recompilar Evolution-rss para ver eses paquetes."
 
-#: ../src/rss-config-factory.c:4088 ../src/rss-main.ui.h:46
+#: ../src/rss-config-factory.c:4092 ../src/rss-main.ui.h:46
 msgid "Enabled"
 msgstr "Activado"
 
-#: ../src/rss-config-factory.c:4115
+#: ../src/rss-config-factory.c:4119
 msgid "Feed Name"
 msgstr "Nome do fornecedor"
 
-#: ../src/rss-config-factory.c:4128
+#: ../src/rss-config-factory.c:4132
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/rss-config-factory.c:4445
+#: ../src/rss-config-factory.c:4449
 msgid "News And Blogs"
 msgstr "Novas e blogs"
 
-#: ../src/rss.h:50
+#: ../src/rss.h:52
 msgid "News and Blogs"
 msgstr "Novas e blogues"
 
-#: ../src/rss.h:52
+#: ../src/rss.h:54
 msgid "Untitled channel"
 msgstr "Fonte de título"
 
@@ -998,6 +1005,9 @@ msgstr "Autenticación"
 msgid "<b>Advanced options</b>"
 msgstr "<b>Opcións avanzadas</b>"
 
+#~ msgid "Unamed feed"
+#~ msgstr "Fornecedor sen nome"
+
 #~ msgid "Text Highlighting"
 #~ msgstr "Realzado de texto"
 
@@ -1018,9 +1028,6 @@ msgstr "<b>Opcións avanzadas</b>"
 
 #~ msgid "Feed view"
 #~ msgstr "Vista de fornecedores"
-
-#~ msgid "Show Summary"
-#~ msgstr "Mostrar resumo"
 
 #~ msgid "Posted under"
 #~ msgstr "Publicado baixo"
