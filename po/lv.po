@@ -1,39 +1,40 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2012.
+# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-03 14:56+0000\n"
-"PO-Revision-Date: 2012-05-14 00:00+0300\n"
+"POT-Creation-Date: 2013-07-25 21:36+0000\n"
+"PO-Revision-Date: 2013-10-03 13:54+0300\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"Language: lv\n"
-"X-Generator: Lokalize 1.4\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
 msgstr "Evolution RSS lasītājs"
 
 #: ../evolution-rss.desktop.in.in.h:2
-msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
-msgstr "Evolution spraudnis, kas ļauj Evolution pastam attēlot rss plūsmu."
+#| msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr "Evolution spraudnis, kas ļauj Evolution pastam attēlot RSS plūsmu."
 
-#: ../src/dbus.c:108 ../src/rss.c:3458 ../src/rss-config-factory.c:1102
-#: ../src/rss-config-factory.c:1646 ../src/rss-config-factory.c:1813
+#: ../src/dbus.c:108 ../src/rss.c:1948 ../src/rss-config-factory.c:1178
+#: ../src/rss-config-factory.c:1750 ../src/rss-config-factory.c:1928
 msgid "Error adding feed."
 msgstr "Kļūda, pievienojot plūsmu."
 
-#: ../src/dbus.c:109 ../src/rss.c:3459 ../src/rss-config-factory.c:1103
-#: ../src/rss-config-factory.c:1647 ../src/rss-config-factory.c:1814
+#: ../src/dbus.c:109 ../src/rss.c:1949 ../src/rss-config-factory.c:1179
+#: ../src/rss-config-factory.c:1751 ../src/rss-config-factory.c:1929
 msgid "Feed already exists!"
 msgstr "Plūsma jau eksistē!"
 
@@ -41,6 +42,25 @@ msgstr "Plūsma jau eksistē!"
 #, c-format
 msgid "Importing URL: %s"
 msgstr "Importē URL — %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:301
+#: ../src/e-mail-formatter-evolution-rss.c:307
+msgid "Show Summary"
+msgstr "Rādīt kopsavilkumu"
+
+#: ../src/e-mail-formatter-evolution-rss.c:302
+#: ../src/e-mail-formatter-evolution-rss.c:308
+msgid "Show Full Text"
+msgstr "Rādīt pilnu tekstu"
+
+#: ../src/e-mail-formatter-evolution-rss.c:323
+#| msgid "Evolution RSS Reader"
+msgid "Evolution-RSS"
+msgstr "Evolution RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:324
+msgid "Displaying RSS feed arcticles"
+msgstr "Attēlo RSS plūsmu rakstus"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Proxy requires authentication"
@@ -55,12 +75,15 @@ msgid "Display article's summary"
 msgstr "Rādīt raksta kopsavilkumu"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
+#| msgid ""
+#| "Evolution will show article's summary instead of article's webpage. "
+#| "Summary can also be html."
 msgid ""
-"Evolution will show article's summary instead of article's webpage. Summary "
-"can also be html."
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
 msgstr ""
 "Evolution rādīs raksta kopsavilkumu, nevis raksta tīmekļa vietni. "
-"Kopsavilkums arī var būt html formātā."
+"Kopsavilkums arī var būt HTML formātā."
 
 #: ../src/evolution-rss.schemas.in.in.h:5
 msgid "Feeds list"
@@ -79,12 +102,14 @@ msgid "Hostname of the proxy server used for feeds and content."
 msgstr "Starpniekservera, ko izmantos plūsmām un saturam, datora nosaukums."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Html render"
-msgstr "Html attēlotājs"
+#| msgid "Html render"
+msgid "HTML render"
+msgstr "HTML attēlotājs"
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Type HTML Render used to display html pages."
-msgstr "Kādu HTML attēlotāju izmantot, lai rādītu html lapas."
+#| msgid "Type HTML Render used to display html pages."
+msgid "Type HTML Render used to display HTML pages."
+msgstr "Kādu HTML attēlotāju izmantot, lai rādītu HTML lapas."
 
 #: ../src/evolution-rss.schemas.in.in.h:11
 msgid "Use custom font"
@@ -107,7 +132,8 @@ msgid "Network timeout"
 msgstr "Tīkla noildze"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Interval in seconds before a conection is dropped."
+#| msgid "Interval in seconds before a conection is dropped."
+msgid "Interval in seconds before a connection is dropped."
 msgstr "Intervāls sekundēs, pirms savienojums tiek nomests."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
@@ -135,7 +161,8 @@ msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "Evolution RSS pieņems sīkdatnes no rakstiem, ko jūs pārlūkojat."
 
 #: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Automaticaly Resize Images"
+#| msgid "Automaticaly Resize Images"
+msgid "Automatically Resize Images"
 msgstr "Automātiski mainīt attēlu izmērus"
 
 #: ../src/evolution-rss.schemas.in.in.h:24
@@ -150,8 +177,9 @@ msgid "Scan web pages for RSS"
 msgstr "Tīmekļa lapās meklēt RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
-msgid "Evolution RSS will scan web pages for rss content"
-msgstr "Evolution RSS skenēs tīmekļa lapas, meklējot rss saturu"
+#| msgid "Evolution RSS will scan web pages for rss content"
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution RSS skenēs tīmekļa lapas, meklējot RSS saturu"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "Download enclosures"
@@ -160,15 +188,17 @@ msgstr "Lejupielādēt ietvarus"
 #: ../src/evolution-rss.schemas.in.in.h:28
 msgid "Evolution will download all feed enclosures a feed article may contain."
 msgstr ""
-"Evolution lejupielādēs visus plūsmu ietvarus, ko varētu saturēt raksta plūsma."
+"Evolution lejupielādēs visus plūsmu ietvarus, ko varētu saturēt raksta "
+"plūsma."
 
 #: ../src/evolution-rss.schemas.in.in.h:29
 msgid "Limit enclosure size"
 msgstr "Ierobežot ietvara izmēru"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
-msgid "Limit maximum enclosure size evolution will download."
-msgstr "Ierobežot maksimālo ietvara izmēru, ko lejupielādēs evolution."
+#| msgid "Limit maximum enclosure size evolution will download."
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Ierobežot maksimālo ietvara izmēru, ko lejupielādēs Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:31
 msgid "Max enclosure size"
@@ -203,9 +233,11 @@ msgid "Password for proxy server"
 msgstr "Parole starpniekserverim"
 
 #: ../src/evolution-rss.schemas.in.in.h:39
+#| msgid ""
+#| "If the proxy server requires authentication. This is the password field."
 msgid ""
-"If the proxy server requires authentication. This is the password field."
-msgstr "Ja starpniekserveris pieprasa autentificēties. Šis ir paroles lauks."
+"If the proxy server requires authentication, this is the password field."
+msgstr "Ja starpniekserveris pieprasa autentificēties, šis ir paroles lauks."
 
 #: ../src/evolution-rss.schemas.in.in.h:40
 msgid "Proxy server port"
@@ -244,7 +276,8 @@ msgid "Checks articles on startup"
 msgstr "Pārbauda rakstus palaižoties"
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Check for new articles everytime Evolution is started."
+#| msgid "Check for new articles everytime Evolution is started."
+msgid "Check for new articles every time Evolution is started."
 msgstr "Pārbauda, vai ir jauni raksti katru reizi, kad palaižas Evolution."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
@@ -280,8 +313,9 @@ msgid "Set to true to have a program specified in command handle RSS URLs"
 msgstr "Uzstādiet kā patiesu, lai norādītā komanda apstrādātu RSS adreses"
 
 #: ../src/evolution-rss.schemas.in.in.h:58
-msgid "URL handler for rss feed uris"
-msgstr "URL apstrādātājs rss plūsmu uri adresēm"
+#| msgid "URL handler for rss feed uris"
+msgid "URL handler for RSS feed URIs"
+msgstr "URL apstrādātājs RSS plūsmu URI adresēm"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
@@ -291,19 +325,36 @@ msgstr "Palaist programmu terminālī"
 msgid "True if the program to handle this URL should be run in a terminal"
 msgstr "Patiess, ja adrešu apstrādes programma būtu jālaiž terminālī"
 
-#: ../src/notification.c:435 ../src/rss.c:3639
+#: ../src/notification.c:288 ../src/rss.c:2116
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Plūsmu saņemšana (%d aktivēti)"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+#| msgid ""
+#| "Evolution RSS Reader Plugin.\n"
+#| "\n"
+#| "This plugin adds RSS Feeds support for evolution mail. RSS support was "
+#| "built upon the somewhat existing RSS support in evolution-1.4 branch. The "
+#| "motivation behind this was to have RSS in same place as mails, at this "
+#| "moment I do not see the point having a separate RSS reader since a RSS "
+#| "Article is like an email message.\n"
+#| "\n"
+#| "Evolution RSS can display article using summary view or HTML view.\n"
+#| "\n"
+#| "HTML can be displayed using the following engines: gtkHTML, Apple's "
+#| "Webkit or Firefox/Gecko.\n"
+#| "\n"
+#| "<b>Version: evolution-rss +VERSION+</b>\n"
+#| "\n"
+#| "+URL+"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
-"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
 "upon the somewhat existing RSS support in evolution-1.4 branch. The "
 "motivation behind this was to have RSS in same place as mails, at this "
-"moment I do not see the point having a separate RSS reader since a RSS "
+"moment I do not see the point in having a separate RSS reader since a RSS "
 "Article is like an email message.\n"
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
@@ -317,7 +368,7 @@ msgid ""
 msgstr ""
 "Evolution RSS lasītāja spraudnis.\n"
 "\n"
-"Šis spraudnis pievieno RSS plūsmu atbalstu evolution pastam. RSS atbalsts  "
+"Šis spraudnis pievieno RSS plūsmu atbalstu Evolution pastam. RSS atbalsts  "
 "tika veidots uz jau esoša RSS atbalsta evolution-1.4 zarā. Šī darba "
 "motivācija bija salikt RSS un pastu vienuviet, šobrīd es neredzu jēgu turēt "
 "atsevišķu RSS lasītāju, jo RSS raksti it līdzīgi e-pasta vēstulēm.\n"
@@ -325,8 +376,8 @@ msgstr ""
 "Evolution RSS var attēlot rakstu, izmantojot kopsavilkuma saktu vai HTML "
 "skatu.\n"
 "\n"
-"HTML var attēlot ar kādu no šiem dziņiem: gtkHTML, Apple's Webkit "
-"vai Firefox/Gecko.\n"
+"HTML var attēlot ar kādu no šiem dziņiem: gtkHTML, Apple's Webkit vai "
+"Firefox/Gecko.\n"
 "\n"
 "<b>Versija: evolution-rss +VERSION+</b>\n"
 "\n"
@@ -372,330 +423,293 @@ msgstr "Iestatīt RSS plūsmas"
 msgid "Setup RSS"
 msgstr "Iestatīt RSS"
 
-#: ../src/rss.c:420 ../src/rss.c:3803
+#. ATOM
+#: ../src/parser.c:1079
+msgid "No Information"
+msgstr "Nav informācijas"
+
+#: ../src/parser.c:1178
+msgid "No information"
+msgstr "Nav informācijas"
+
+#: ../src/rss.c:417 ../src/rss.c:2297
 msgid "Feed"
 msgstr "Plūsma"
 
-#: ../src/rss.c:500 ../src/rss-config-factory.c:2754
-#: ../src/rss-config-factory.c:2928
+#: ../src/rss.c:482 ../src/rss-config-factory.c:2869
+#: ../src/rss-config-factory.c:3043
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% pabeigti"
 
-#: ../src/rss.c:750
+#: ../src/rss.c:619
 msgid "Enter User/Pass for feed"
 msgstr "Ievadiet plūsmas lietotājvārdu un paroli"
 
-#: ../src/rss.c:806
+#: ../src/rss.c:675
 msgid "Enter your username and password for:"
 msgstr "Ievadiet savu lietotāja vārdu un paroli šim:"
 
-#: ../src/rss.c:824
+#: ../src/rss.c:693
 msgid "Username: "
 msgstr "Lietotājvārds: "
 
-#: ../src/rss.c:845
+#: ../src/rss.c:714 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Parole: "
 
-#: ../src/rss.c:882
+#: ../src/rss.c:751
 msgid "_Remember this password"
 msgstr "Atce_rēties šo paroli"
 
-#. e_clipped_label_set_text (
-#. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:987
+#: ../src/rss.c:865 ../src/rss.c:869
 msgid "Cancelling..."
 msgstr "Atceļ..."
 
-#: ../src/rss.c:1168
-msgid "Formatting Message..."
-msgstr "Formatē vēstuli..."
-
-#: ../src/rss.c:1393
+#: ../src/rss.c:1151
 msgid "_Copy"
 msgstr "_Kopēt"
 
-#: ../src/rss.c:1394
+#: ../src/rss.c:1152
 msgid "Select _All"
 msgstr "Izvēlēties _visu"
 
-#: ../src/rss.c:1396 ../src/rss.c:1407
+#: ../src/rss.c:1154 ../src/rss.c:1165
 msgid "Zoom _In"
 msgstr "Tuv_ināt"
 
-#: ../src/rss.c:1397 ../src/rss.c:1408
+#: ../src/rss.c:1155 ../src/rss.c:1166
 msgid "Zoom _Out"
 msgstr "Tā_lināt"
 
-#: ../src/rss.c:1398 ../src/rss.c:1409
+#: ../src/rss.c:1156 ../src/rss.c:1167
 msgid "_Normal Size"
 msgstr "_Normāls izmērs"
 
-#: ../src/rss.c:1400
+#: ../src/rss.c:1158
 msgid "_Open Link"
 msgstr "_Atvērt saiti"
 
-#: ../src/rss.c:1401 ../src/rss.c:1415
+#: ../src/rss.c:1159 ../src/rss.c:1173
 msgid "_Copy Link Location"
 msgstr "_Kopēt saites vietu"
 
-#: ../src/rss.c:1411
+#: ../src/rss.c:1169
 msgid "_Print..."
 msgstr "_Drukāt..."
 
-#: ../src/rss.c:1412
+#: ../src/rss.c:1170
 msgid "Save _As"
 msgstr "S_aglabāt kā"
 
-#: ../src/rss.c:1414
+#: ../src/rss.c:1172
 msgid "_Open Link in Browser"
 msgstr "_Atvērt saiti pārlūkā"
 
-#: ../src/rss.c:1520 ../src/rss.c:1703
-msgid "Click to open"
-msgstr "Spiest, lai atvērtu"
-
-#: ../src/rss.c:1813 ../src/rss.c:2060 ../src/rss.c:2102
-msgid "Feed view"
-msgstr "Plūsmas skats"
-
-#: ../src/rss.c:1827 ../src/rss.c:2067 ../src/rss.c:2117
-msgid "Show Summary"
-msgstr "Rādīt kopsavilkumu"
-
-#: ../src/rss.c:1828 ../src/rss.c:2068 ../src/rss.c:2118
-msgid "Show Full Text"
-msgstr "Rādīt pilnu tekstu"
-
-#: ../src/rss.c:2028
-msgid "Comments"
-msgstr "Komentāri"
-
-#: ../src/rss.c:2033
-msgid "Refresh"
-msgstr "Atsvaidzināt"
-
-#: ../src/rss.c:2616
-msgid "Posted under"
-msgstr "Rakstīts zem"
-
-#: ../src/rss.c:2963
+#: ../src/rss.c:1439
 msgid "Fetching feed"
 msgstr "Saņem plūsmu"
 
-#: ../src/rss.c:3265
+#: ../src/rss.c:1751 ../src/rss.c:2029
 msgid "Unnamed feed"
 msgstr "Nenosaukta plūsma"
 
-#: ../src/rss.c:3266
+#: ../src/rss.c:1752
 msgid "Error while setting up feed."
 msgstr "Kļūda, iestatot plūsmu."
 
-#: ../src/rss.c:3470 ../src/rss.c:3540
+#: ../src/rss.c:1960 ../src/rss.c:2030
 msgid "Error while fetching feed."
 msgstr "Kļūda, saņemot plūsmu."
 
-#: ../src/rss.c:3471
+#: ../src/rss.c:1961
 msgid "Invalid Feed"
 msgstr "Nederīga plūsma"
 
-#: ../src/rss.c:3513
+#: ../src/rss.c:2003
 #, c-format
 msgid "Adding feed %s"
 msgstr "Pievieno plūsmu %s"
 
-#: ../src/rss.c:3539
-msgid "Unamed feed"
-msgstr "Nenosaukta plūsma"
-
-#: ../src/rss.c:3553
+#: ../src/rss.c:2044 ../src/rss.c:2052
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Saņem ziņojumu %d no %d"
 
-#: ../src/rss.c:3659
+#: ../src/rss.c:2137 ../src/rss.c:2140
 msgid "Complete."
 msgstr "Izpildīts."
 
-#: ../src/rss.c:3691 ../src/rss.c:3856 ../src/rss.c:3894 ../src/rss.c:4093
-#: ../src/rss.c:4705
+#: ../src/rss.c:2174 ../src/rss.c:2356 ../src/rss.c:2394 ../src/rss.c:2597
+#: ../src/rss.c:3185
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Kļūda, saņemot plūsmu — %s"
 
-#: ../src/rss.c:3704
+#: ../src/rss.c:2186 ../src/rss.c:2190
 msgid "Canceled."
 msgstr "Atcelts."
 
-#: ../src/rss.c:3747
+#: ../src/rss.c:2241
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Kļūda, apstrādājot plūsmu — %s"
 
-#: ../src/rss.c:3751
+#: ../src/rss.c:2245
 msgid "illegal content type!"
 msgstr "neatļauts satura tips!"
 
-#: ../src/rss.c:3812
+#: ../src/rss.c:2305 ../src/rss.c:2308
 msgid "Complete"
 msgstr "Izpildīts"
 
-#: ../src/rss.c:3940
+#: ../src/rss.c:2440
 msgid "Formatting error."
 msgstr "Formatēšanas kļūda."
 
-#: ../src/rss.c:4978
+#: ../src/rss.c:3493
 msgid "No RSS feeds configured!"
 msgstr "Nav konfigurētu RSS plūsmu"
 
-#: ../src/rss.c:5030
+#: ../src/rss.c:3545
 msgid "Waiting..."
 msgstr "Gaida..."
 
-#: ../src/rss.h:54
-msgid "News and Blogs"
-msgstr "Ziņas un blogi"
-
-#: ../src/rss.h:56
-msgid "Untitled channel"
-msgstr "Nenosaukts kanāls"
-
-#: ../src/rss-config-factory.c:164
+#: ../src/rss-config-factory.c:157
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:165
+#: ../src/rss-config-factory.c:158
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:166
+#: ../src/rss-config-factory.c:159
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:399
+#: ../src/rss-config-factory.c:475
 msgid "day"
 msgid_plural "days"
 msgstr[0] "diena"
 msgstr[1] " dienas"
 msgstr[2] "dienu"
 
-#: ../src/rss-config-factory.c:414
+#: ../src/rss-config-factory.c:490
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "ziņojums"
 msgstr[1] "ziņojumi"
 msgstr[2] "ziņojumu"
 
-#: ../src/rss-config-factory.c:480 ../src/rss-config-factory.c:493
+#: ../src/rss-config-factory.c:556 ../src/rss-config-factory.c:569
 msgid "Move to Folder"
 msgstr "Pārvietot uz mapi"
 
-#: ../src/rss-config-factory.c:480 ../src/rss-config-factory.c:493
+#: ../src/rss-config-factory.c:556 ../src/rss-config-factory.c:569
 msgid "M_ove"
 msgstr "Pār_vietot"
 
-#: ../src/rss-config-factory.c:634
+#: ../src/rss-config-factory.c:710
 msgid "Edit Feed"
 msgstr "Rediģēt plūsmu"
 
-#: ../src/rss-config-factory.c:636
+#: ../src/rss-config-factory.c:712
 msgid "Add Feed"
 msgstr "Pievienot plūsmu"
 
-#: ../src/rss-config-factory.c:1081 ../src/rss-config-factory.c:1618
+#: ../src/rss-config-factory.c:1157 ../src/rss-config-factory.c:1722
 #, no-c-format
 msgid "0% done"
 msgstr "0% pabeigti"
 
-#: ../src/rss-config-factory.c:1453
+#: ../src/rss-config-factory.c:1541
 msgid "Disable"
 msgstr "Deaktivēt"
 
-#: ../src/rss-config-factory.c:1453
+#: ../src/rss-config-factory.c:1541
 msgid "Enable"
 msgstr "Aktivēt"
 
-#: ../src/rss-config-factory.c:1509
+#: ../src/rss-config-factory.c:1601 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Izņemt mapes saturu"
 
-#: ../src/rss-config-factory.c:1878
+#: ../src/rss-config-factory.c:1993
 msgid "Import error."
 msgstr "Importēšanas kļūda."
 
-#: ../src/rss-config-factory.c:1879
+#: ../src/rss-config-factory.c:1994
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Nederīgs fails vai arī šis fails nesatur nevienu plūsmu."
 
-#: ../src/rss-config-factory.c:1884
+#: ../src/rss-config-factory.c:1999
 msgid "Importing"
 msgstr "Importē"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:1907 ../src/rss-config-factory.c:2803
-#: ../src/rss-config-factory.c:2963
+#: ../src/rss-config-factory.c:2022 ../src/rss-config-factory.c:2918
+#: ../src/rss-config-factory.c:3078
 msgid "Please wait"
 msgstr "Lūdzu, uzgaidiet"
 
-#: ../src/rss-config-factory.c:2217 ../src/rss-config-factory.c:3083
-#: ../src/rss-config-factory.c:3146
+#: ../src/rss-config-factory.c:2332 ../src/rss-config-factory.c:3198
+#: ../src/rss-config-factory.c:3261
 msgid "All Files"
 msgstr "Visi faili"
 
-#: ../src/rss-config-factory.c:2228 ../src/rss-config-factory.c:3167
+#: ../src/rss-config-factory.c:2343 ../src/rss-config-factory.c:3282
 msgid "OPML Files"
 msgstr "OPML faili"
 
-#: ../src/rss-config-factory.c:2239 ../src/rss-config-factory.c:3156
+#: ../src/rss-config-factory.c:2354 ../src/rss-config-factory.c:3271
 msgid "XML Files"
 msgstr "XML faili"
 
-#: ../src/rss-config-factory.c:2258
+#: ../src/rss-config-factory.c:2373
 msgid "Show article's summary"
 msgstr "Rādīt raksta kopsavilkumu"
 
-#: ../src/rss-config-factory.c:2271
+#: ../src/rss-config-factory.c:2386
 msgid "Feed Enabled"
 msgstr "Aktivēta plūsma"
 
-#: ../src/rss-config-factory.c:2284
+#: ../src/rss-config-factory.c:2399
 msgid "Validate feed"
 msgstr "Pārbaudīt plūsmu"
 
-#: ../src/rss-config-factory.c:2341
+#: ../src/rss-config-factory.c:2456 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Izvēlieties importēšanas failu"
 
-#: ../src/rss-config-factory.c:2424
+#: ../src/rss-config-factory.c:2539 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Izvēlieties failu, uz ko eksportēt"
 
-#: ../src/rss-config-factory.c:2786
+#: ../src/rss-config-factory.c:2901
 msgid "Exporting feeds..."
 msgstr "Eksportē plūsmas..."
 
-#: ../src/rss-config-factory.c:2850 ../src/rss-config-factory.c:2858
+#: ../src/rss-config-factory.c:2965 ../src/rss-config-factory.c:2973
 msgid "Error exporting feeds!"
 msgstr "Kļūda, eksportējot plūsmas!"
 
-#: ../src/rss-config-factory.c:2939
+#: ../src/rss-config-factory.c:3054
 msgid "Importing cookies..."
 msgstr "Importē sīkdatnes..."
 
-#: ../src/rss-config-factory.c:3019
+#: ../src/rss-config-factory.c:3134
 msgid "Select file to import"
 msgstr "Izvēlieties failu, ko importēt"
 
-#: ../src/rss-config-factory.c:3089
+#: ../src/rss-config-factory.c:3204
 msgid "Mozilla/Netscape Format"
 msgstr "Mozilla/Netscape formāts"
 
-#: ../src/rss-config-factory.c:3095
+#: ../src/rss-config-factory.c:3210
 msgid "Firefox new Format"
 msgstr "Firefox jaunais formāts"
 
-#: ../src/rss-config-factory.c:3205 ../src/rss-config-factory.c:3210
+#: ../src/rss-config-factory.c:3320 ../src/rss-config-factory.c:3325
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -703,7 +717,7 @@ msgstr ""
 "Nav konfigurētu RSS plūsmu!\n"
 "Nevar eksportēt."
 
-#: ../src/rss-config-factory.c:3346
+#: ../src/rss-config-factory.c:3488
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -713,28 +727,347 @@ msgstr ""
 "kā attēlotājus, jābūt uzinstalētām firefox vai webkit devel pakotnēm, \n"
 "un evolution-rss vajadzētu būt kompilētam tā, lai tas redz šīs pakotnes."
 
-#: ../src/rss-config-factory.c:3869
+#: ../src/rss-config-factory.c:4092 ../src/rss-main.ui.h:46
 msgid "Enabled"
 msgstr "Aktivēts"
 
-#: ../src/rss-config-factory.c:3896
+#: ../src/rss-config-factory.c:4119
 msgid "Feed Name"
 msgstr "Plūsmas nosaukums"
 
-#: ../src/rss-config-factory.c:3909
+#: ../src/rss-config-factory.c:4132
 msgid "Type"
 msgstr "Veids"
 
-#: ../src/rss-config-factory.c:4166
+#: ../src/rss-config-factory.c:4449
 msgid "News And Blogs"
 msgstr "Ziņas un blogi"
 
-#. ATOM
-#: ../src/parser.c:1063
-msgid "No Information"
-msgstr "Nav informācijas"
+#: ../src/rss.h:50
+msgid "News and Blogs"
+msgstr "Ziņas un blogi"
 
-#: ../src/parser.c:1162
-msgid "No information"
-msgstr "Nav informācijas"
+#: ../src/rss.h:52
+msgid "Untitled channel"
+msgstr "Nenosaukts kanāls"
 
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Dzinējs: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Lietot tos pašus fontus, ko citās lietotnēs"
+
+#: ../src/rss-html-rendering.ui.h:3
+#| msgid "Minimum font size"
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Minimālais fonta izmērs:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Bloķēt uznirstošos logus"
+
+#: ../src/rss-html-rendering.ui.h:5
+#| msgid "Enable"
+msgid "Enable Java"
+msgstr "Aktivēt Java"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "Aktivēt JavaScript"
+
+#: ../src/rss-html-rendering.ui.h:7
+#| msgid "Accepts Cookies"
+msgid "Accept cookies from sites"
+msgstr "Pieņem sīkdatnes no vietnēm"
+
+#: ../src/rss-html-rendering.ui.h:8
+#| msgid "Importing cookies..."
+msgid "Import Cookies"
+msgstr "Importēt sīkdatnes"
+
+#: ../src/rss-html-rendering.ui.h:9
+#| msgid "Automaticaly Resize Images"
+msgid "Automatically resize images"
+msgstr "Automātiski mainīt attēlu izmērus"
+
+#: ../src/rss-html-rendering.ui.h:10
+#| msgid "Network timeout"
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Tīkla noildze:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "sekundes"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML renderēšana</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+#| msgid "Enable status icon in notification area"
+msgid "Show icon in notification area"
+msgstr "Rādīt ikonu ziņojumu laukā"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Rādīt plūsmas ikonu"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Rakstu paziņojumi</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "minūtes"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "stundas"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "dienas"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Sertifikātu tabula"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Pievienot"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "R_ediģēt"
+
+#: ../src/rss-main.ui.h:8
+#| msgid "Importing"
+msgid "I_mport"
+msgstr "I_mportēt"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "E_ksportēt"
+
+#: ../src/rss-main.ui.h:10
+#| msgid "Feed"
+msgid "Feeds"
+msgstr "Plūsmas"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Dzinējs: "
+
+#: ../src/rss-main.ui.h:14
+#| msgid "Enable"
+msgid "Enable Plugins"
+msgstr "Aktivēt spraudņus"
+
+#: ../src/rss-main.ui.h:15
+#| msgid "GtkHTML"
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Palaišanās</span>"
+
+#: ../src/rss-main.ui.h:17
+#| msgid "Auto check for new articles."
+msgid "Check for new articles every"
+msgstr "Pārbauda, vai ir jauni raksti katras"
+
+#: ../src/rss-main.ui.h:18
+#| msgid "Checks articles on startup"
+msgid "Check for new articles at startup"
+msgstr "Pārbaudīt rakstus palaižoties"
+
+#: ../src/rss-main.ui.h:19
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Plūsmas attēlošana</span>"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr "Pēc noklusējuma rādīt raksta kopsavilkumu nevis tīmekļa vietni"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Meklēt plūsmas tīmekļa vietnēs"
+
+#: ../src/rss-main.ui.h:22
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Plūsmu ietvari</span>"
+
+#: ../src/rss-main.ui.h:23
+#| msgid "Show articles comments"
+msgid "Show article comments"
+msgstr "Rādīt rakstu komentārus"
+
+#: ../src/rss-main.ui.h:24
+#| msgid "Download enclosures"
+msgid "Download feed enclosures"
+msgstr "Lejupielādēt plūsmu ietvarus"
+
+#: ../src/rss-main.ui.h:25
+#| msgid "Download enclosures"
+msgid "Do not download enclosures that exceeds"
+msgstr "Nelejupielādēt ietvarus, kas pārsniedz"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:27
+#| msgid "Setup RSS"
+msgid "Setup"
+msgstr "Iestatījumi"
+
+#: ../src/rss-main.ui.h:28
+#| msgid "Use proxy server"
+msgid "Use Proxy"
+msgstr "Izmantot starpniekserveri"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "HTTP starpnieks:"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Ports:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Sīkāka informācija"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Šiem neizmantot starpnieku:"
+
+#: ../src/rss-main.ui.h:33
+#| msgid "Network timeout"
+msgid "Network"
+msgstr "Tīkls"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "HTTP starpnieka informācija"
+
+#: ../src/rss-main.ui.h:35
+#| msgid "Proxy requires authentication"
+msgid "Use authentication"
+msgstr "Izmantot autentifikāciju"
+
+#: ../src/rss-main.ui.h:36
+#| msgid "Username: "
+msgid "Username:"
+msgstr "Lietotājvārds:"
+
+#: ../src/rss-main.ui.h:39
+#| msgid "Delete \"{0}\"?"
+msgid "Delete feed?"
+msgstr "Dzēst plūsmu?"
+
+#: ../src/rss-main.ui.h:42
+#| msgid "Feed Name"
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Plūsmas nosaukums: </b>"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr "<b>Plūsmas URL:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "label"
+msgstr "etiķete"
+
+#: ../src/rss-main.ui.h:45
+msgid "<b>Location:</b>"
+msgstr "<b>Atrašanās vieta:</b>"
+
+#: ../src/rss-main.ui.h:47
+#| msgid "Validate feed"
+msgid "Validate"
+msgstr "Pārbaudīt"
+
+#: ../src/rss-main.ui.h:48
+#| msgid "Show Full Text"
+msgid "Show feed full text"
+msgstr "Rādīt plūsmas pilnu tekstu"
+
+#: ../src/rss-main.ui.h:49
+msgid "General"
+msgstr "Vispārīgi"
+
+#: ../src/rss-main.ui.h:50
+msgid "Use global update interval"
+msgstr "Lietot globālu atjaunināšanas intervālu"
+
+#: ../src/rss-main.ui.h:51
+msgid "Update in"
+msgstr "Atjaunināt"
+
+#: ../src/rss-main.ui.h:52
+#| msgid "Update RSS feeds"
+msgid "Do no update feed"
+msgstr "Neatjaunināt plūsmu"
+
+#: ../src/rss-main.ui.h:53
+msgid "Update"
+msgstr "Atjaunināt"
+
+#: ../src/rss-main.ui.h:54
+msgid "Do not delete feeds"
+msgstr "Nedzēst plūsmas"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete all but the last"
+msgstr "Dzēst visas, izņemot pēdējās"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles older than"
+msgstr "Dzēst rakstus, kas vecāki par"
+
+#: ../src/rss-main.ui.h:57
+msgid "Delete articles that are no longer in the feed"
+msgstr "Dzēst rakstus, kas vairs nav plūsmā"
+
+#: ../src/rss-main.ui.h:58
+msgid "Always delete unread articles"
+msgstr "Vienmēr dzēst nelasītos rakstus"
+
+#: ../src/rss-main.ui.h:59
+msgid "Storage"
+msgstr "Glabātuve"
+
+#: ../src/rss-main.ui.h:60
+#| msgid "Proxy requires authentication"
+msgid "Authentication"
+msgstr "Autentifikācija"
+
+#: ../src/rss-main.ui.h:61
+msgid "<b>Advanced options</b>"
+msgstr "<b>Paplašinātās opcijas</b>"
+
+#~ msgid "Formatting Message..."
+#~ msgstr "Formatē vēstuli..."
+
+#~ msgid "Click to open"
+#~ msgstr "Spiest, lai atvērtu"
+
+#~ msgid "Feed view"
+#~ msgstr "Plūsmas skats"
+
+#~ msgid "Comments"
+#~ msgstr "Komentāri"
+
+#~ msgid "Refresh"
+#~ msgstr "Atsvaidzināt"
+
+#~ msgid "Posted under"
+#~ msgstr "Rakstīts zem"
+
+#~ msgid "Unamed feed"
+#~ msgstr "Nenosaukta plūsma"
