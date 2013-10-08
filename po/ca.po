@@ -867,7 +867,7 @@ msgstr "Sense informació"
 #~ msgstr "Port:"
 
 #~ msgid "Setup"
-#~ msgstr "Conmfigura"
+#~ msgstr "Configura"
 
 #~ msgid "Show article comments"
 #~ msgstr "Mostra els comentaris de l'article"
