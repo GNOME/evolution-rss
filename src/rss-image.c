@@ -509,7 +509,11 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 				COL_STRING_ICON_NAME, key,
 				-1);
 		g_free(full_name);
+#if (DATASERVER_VERSION >= 3011001)
+		camel_folder_info_free (rssi);
+#else
 		camel_store_free_folder_info (store, rssi);
+#endif
 		g_object_unref(pixbuf);
 		result = TRUE;
 	}

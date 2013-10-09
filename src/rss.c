@@ -4134,7 +4134,11 @@ create_mail(create_feed *CF)
 	camel_object_unref(new);
 	camel_object_unref(mail_folder);
 #endif
+#if (DATASERVER_VERSION >= 3011001)
+	camel_message_info_unref(info);
+#else
 	camel_message_info_free(info);
+#endif
 	g_free(buf);
 }
 
@@ -4593,7 +4597,12 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 		}
 //		d("uid:%d j:%d/%d, absdate:%d, date:%s, imax:%d\n",
 //			i, j, q, min_date, ctime(&min_date), imax);
-out:		camel_message_info_free(info);
+out:
+#if (DATASERVER_VERSION >= 3011001)
+		camel_message_info_unref(info);
+#else
+		camel_message_info_free(info);
+#endif
 	}
 	camel_folder_freeze(folder);
 	if (min_date) {
@@ -4689,7 +4698,11 @@ get_feed_age(RDF *r, gpointer name)
 						feedid);
 					g_free(feed_name);
 				}
+#if (DATASERVER_VERSION >= 3011001)
+				camel_message_info_unref(info);
+#else
 				camel_folder_free_message_info(folder, info);
+#endif
 			}
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref (message);
@@ -4728,7 +4741,11 @@ get_feed_age(RDF *r, gpointer name)
 						}
 				}
 			}
+#if (DATASERVER_VERSION >= 3011001)
+			camel_message_info_unref(info);
+#else
 			camel_folder_free_message_info(folder, info);
+#endif
 		}
 		camel_folder_free_uids (folder, uids);
 #if (DATASERVER_VERSION >= 2033001)

@@ -1273,7 +1273,11 @@ rss_delete_folders (CamelStore *store,
 
 	d("call rss_delete_rec()\n");
 	rss_delete_rec (store, fi, error);
+#if (DATASERVER_VERSION >= 3011001)
+	camel_folder_info_free (fi);
+#else
 	camel_store_free_folder_info (store, fi);
+#endif
 }
 
 void
