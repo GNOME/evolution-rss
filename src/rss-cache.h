@@ -17,14 +17,24 @@
  * 02110-1301 USA
  */
 
+#ifndef RSS_CACHE_H
+#define RSS_CACHE_H
+
 #if (DATASERVER_VERSION >= 2031001)
 #include <camel/camel.h>
 #else
 #include <camel/camel-data-cache.h>
 #endif
 
+#if (DATASERVER_VERSION >= 3011002)
+#define RssCacheStream GIOStream
+#else
+#define RssCacheStream CamelStream
+#endif
+
 void rss_cache_init(void);
-CamelStream *rss_cache_get(gchar *url);
 gchar *rss_cache_get_filename(gchar *url);
 char* rss_cache_get_path(int create, const char *path);
-CamelStream* rss_cache_add(gchar *url);
+RssCacheStream *rss_cache_add(gchar *url);
+
+#endif /* RSS_CACHE_H */

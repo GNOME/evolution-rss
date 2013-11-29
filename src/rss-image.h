@@ -19,6 +19,7 @@
 
 
 #include <mail/e-mail-reader.h>
+#include <rss-cache.h>
 
 typedef struct _FEED_IMAGE {
 	gchar *img_file;
@@ -51,10 +52,10 @@ gchar *verify_image(gchar *uri, EMailDisplay *format);
 
 void
 #if LIBSOUP_VERSION < 2003000
-finish_image (SoupMessage *msg, CamelStream *user_data);
+finish_image (SoupMessage *msg, RssCacheStream *user_data);
 #else
 finish_image (SoupSession *soup_sess,
-	SoupMessage *msg, CamelStream *user_data);
+	SoupMessage *msg, RssCacheStream *user_data);
 #endif
 void
 #if LIBSOUP_VERSION < 2003000

@@ -67,6 +67,9 @@ int rss_verbose_debug = 0;
 #include <mail/e-mail-reader-utils.h>
 #endif
 
+#if EVOLUTION_VERSION >= 31102
+#include <libemail-engine/libemail-engine.h>
+#else
 #if EVOLUTION_VERSION >= 30305
 #include <libemail-engine/mail-tools.h>
 #include <libemail-engine/mail-ops.h>
@@ -80,6 +83,7 @@ int rss_verbose_debug = 0;
 #include <mail/mail-ops.h>
 #if EVOLUTION_VERSION >= 29101
 #include <mail/e-mail-session.h>
+#endif
 #endif
 #endif
 

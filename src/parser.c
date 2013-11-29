@@ -25,10 +25,15 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
 #include <libxml/debugXML.h>
+
+#if EVOLUTION_VERSION >= 31102
+#include <libemail-engine/libemail-engine.h>
+#else
 #if EVOLUTION_VERSION >= 30305
 #include <libemail-engine/mail-ops.h>
 #else
 #include <mail/mail-ops.h>
+#endif
 #endif
 #if EVOLUTION_VERSION >= 30505
 #include <mail/e-mail-reader-utils.h>

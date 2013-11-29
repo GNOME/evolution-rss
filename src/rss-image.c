@@ -303,7 +303,7 @@ finish_image_feedback (SoupMessage *msg, FEED_IMAGE *user_data)
 finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
 #endif
 {
-	CamelStream *stream = NULL;
+	RssCacheStream *stream = NULL;
 	gchar *mime_type;
 	d("finish_image_feedback()");
 	stream = rss_cache_add(user_data->url);
@@ -337,9 +337,102 @@ finish_image_feedback (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *use
 
 void
 #if LIBSOUP_VERSION < 2003000
-finish_image (SoupMessage *msg, CamelStream *user_data)
+finish_image (SoupMessage *msg, RssCacheStream *user_data)
 #else
-finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
+finish_image (SoupSession *soup_sess, SoupMessage *msg, RssCacheStream *user_data)
+#endif
+{
+	d("CODE:%d\n", msg->status_code);
+	// we might need to handle more error codes here
+	if (503 != msg->status_code && //handle this timedly fasion
+	    404 != msg->status_code && //NOT FOUND
+	    400 != msg->status_code && //bad request
+	      2 != msg->status_code && //STATUS_CANT_RESOLVE
+	      1 != msg->status_code && //TIMEOUT (CANCELLED) ?
+	      7 != msg->status_code && // STATUS_IO_ERROR
+#if LIBSOUP_VERSION < 2003000
+		msg->response.length) {	//ZERO SIZE
+#else
+		msg->response_body->length) { //ZERO SIZE
+#endif
+#if LIBSOUP_VERSION < 2003000
+		if (msg->response.body) {
+			camel_stream_write(user_data,
+				msg->response.body,
+				msg->response.length);
+#else
+		if (msg->response_body->data) {
+#if (DATASERVER_VERSION >= 3011002)
+			GOutputStream *out;
+
+			out = g_io_stream_get_output_stream (user_data);
+			g_output_stream_write_all (out, 
+				msg->response_body->data,
+				msg->response_body->length,
+				NULL,
+				NULL,
+				NULL);
+			g_output_stream_flush (out, NULL, NULL);
+			g_output_stream_close (out, NULL, NULL);
+#else
+#if (DATASERVER_VERSION >= 2033001)
+			camel_stream_write (user_data,
+				msg->response_body->data,
+				msg->response_body->length,
+				NULL,
+				NULL);
+			camel_stream_close(user_data, NULL, NULL);
+#else
+			camel_stream_write (user_data,
+				msg->response_body->data,
+				msg->response_body->length,
+				NULL);
+			camel_stream_close(user_data, NULL);
+#endif
+#endif
+#endif
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(user_data);
+#else
+			camel_object_unref(user_data);
+#endif
+		}
+	} else {
+#if (DATASERVER_VERSION >= 3011002)
+		GOutputStream *out;
+
+		out = g_io_stream_get_output_stream (user_data);
+		g_output_stream_write_all (out, 
+			msg->response_body->data,
+			msg->response_body->length,
+			NULL,
+			NULL,
+			NULL);
+		g_output_stream_flush (out, NULL, NULL);
+		g_output_stream_close (out, NULL, NULL);
+#else
+#if (DATASERVER_VERSION >= 2033001)
+		camel_stream_write (user_data, pixfilebuf, pixfilelen, NULL, NULL);
+		camel_stream_close (user_data, NULL, NULL);
+#else
+		camel_stream_write(user_data, pixfilebuf, pixfilelen, NULL);
+		camel_stream_close(user_data, NULL);
+#endif
+#endif
+
+#if (DATASERVER_VERSION >= 2031001)
+		g_object_unref(user_data);
+#else
+		camel_object_unref(user_data);
+#endif
+	}
+}
+
+static void
+#if LIBSOUP_VERSION < 2003000
+finish_image_camel (SoupMessage *msg, CamelStream *user_data)
+#else
+finish_image_camel (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 #endif
 {
 	d("CODE:%d\n", msg->status_code);
@@ -391,6 +484,7 @@ finish_image (SoupSession *soup_sess, SoupMessage *msg, CamelStream *user_data)
 		camel_stream_write(user_data, pixfilebuf, pixfilelen, NULL);
 		camel_stream_close(user_data, NULL);
 #endif
+
 #if (DATASERVER_VERSION >= 2031001)
 		g_object_unref(user_data);
 #else
@@ -412,7 +506,7 @@ finish_create_icon (SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_d
 		CamelStream *feed_fs = camel_stream_fs_new_with_name(
 					user_data->img_file,
 					O_RDWR|O_CREAT, 0666, NULL);
-		finish_image(soup_sess, msg, feed_fs);
+		finish_image_camel(soup_sess, msg, feed_fs);
 		display_folder_icon(evolution_store, user_data->key);
 	}
 	g_free(user_data->key);
@@ -428,7 +522,7 @@ finish_create_icon_stream (
 	SoupSession *soup_sess, SoupMessage *msg, FEED_IMAGE *user_data)
 #endif
 {
-	finish_image(soup_sess, msg, user_data->feed_fs);
+	finish_image_camel(soup_sess, msg, user_data->feed_fs);
 	display_folder_icon(evolution_store, user_data->key);
 	g_free(user_data->key);
 	g_free(user_data);
@@ -768,7 +862,7 @@ fetch_image_redraw(gchar *url, gchar *link, gpointer data)
 				1,
 				&err);
 		} else {
-			CamelStream *stream = rss_cache_add(intern);
+			RssCacheStream *stream = rss_cache_add(intern);
 			fetch_unblocking(tmpurl,
 				textcb,
 				NULL,

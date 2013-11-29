@@ -98,12 +98,6 @@ rss_cache_get_path(int create, const char *key)
 	return real;
 }
 
-CamelStream*
-rss_cache_get(gchar *url)
-{
-	return camel_data_cache_get(cache, HTTP_CACHE_PATH, url, NULL);
-}
-
 #if DATASERVER_VERSION <= 2025004
 #define CAMEL_DATA_CACHE_BITS (6)
 #define CAMEL_DATA_CACHE_MASK ((1<<CAMEL_DATA_CACHE_BITS)-1)
@@ -145,7 +139,7 @@ rss_cache_get_filename(gchar *url)
 #endif
 }
 
-CamelStream*
+RssCacheStream *
 rss_cache_add(gchar *url)
 {
 	return camel_data_cache_add(cache, HTTP_CACHE_PATH, url, NULL);
