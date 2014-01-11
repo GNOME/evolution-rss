@@ -539,7 +539,6 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 	GtkTreePath *path;
 	GtkTreeRowReference *row;
 	EMFolderTreeModel *mod = (EMFolderTreeModel *)tree_store;
-	struct _EMFolderTreeModelStoreInfo *si;
 	CamelStore *store = rss_component_peek_local_store();
 	CamelFolderInfo *rssi = NULL;
 	gint i=0, size;
@@ -589,9 +588,8 @@ display_folder_icon(GtkTreeStore *tree_store, gchar *key)
 				icon);
 		g_free(sizes);
 
-		si = em_folder_tree_model_lookup_store_info (
-			EM_FOLDER_TREE_MODEL (mod), store);
-		row = g_hash_table_lookup (si->full_hash, full_name);
+		row = em_folder_tree_model_get_row_reference (
+			EM_FOLDER_TREE_MODEL (mod), store, full_name);
 		if (!row) goto out;
 		path = gtk_tree_row_reference_get_path (row);
 		gtk_tree_model_get_iter (
