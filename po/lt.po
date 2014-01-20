@@ -1,0 +1,1001 @@
+# Lithuanian translation for evolution-rss.
+# Copyright (C) 2014 evolution-rss's COPYRIGHT HOLDER
+# This file is distributed under the same license as the evolution-rss package.
+# Aurimas Černius <aurisc4@gmail.com>, 2014.
+# FULL NAME <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2014-01-12 00:06+0000\n"
+"PO-Revision-Date: 2014-01-20 23:27+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#: ../evolution-rss.desktop.in.in.h:1
+msgid "Evolution RSS Reader"
+msgstr "Evolution RSS skaityklė"
+
+#: ../evolution-rss.desktop.in.in.h:2
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr ""
+"Evolutions įskiepis, leidžiantis Evolution pašto programoje rodyti RSS "
+"įrašus."
+
+#: ../src/dbus.c:108 ../src/rss.c:1954 ../src/rss-config-factory.c:1181
+#: ../src/rss-config-factory.c:1757 ../src/rss-config-factory.c:1935
+msgid "Error adding feed."
+msgstr "Klaida pridedant sklaidos kanalą."
+
+#: ../src/dbus.c:109 ../src/rss.c:1955 ../src/rss-config-factory.c:1182
+#: ../src/rss-config-factory.c:1758 ../src/rss-config-factory.c:1936
+msgid "Feed already exists!"
+msgstr "Sklaidos kanalas jau yra!"
+
+#: ../src/dbus.c:116
+#, c-format
+msgid "Importing URL: %s"
+msgstr "Importuojamas URL: %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:305
+#: ../src/e-mail-formatter-evolution-rss.c:311
+msgid "Show Summary"
+msgstr "Rodyti santrauką"
+
+#: ../src/e-mail-formatter-evolution-rss.c:306
+#: ../src/e-mail-formatter-evolution-rss.c:312
+msgid "Show Full Text"
+msgstr "Rodyti visą tekstą"
+
+#: ../src/e-mail-formatter-evolution-rss.c:327
+msgid "Evolution-RSS"
+msgstr "Evolution-RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:328
+msgid "Displaying RSS feed arcticles"
+msgstr "Rodomi RSS sklaidos kanalų straipsniai"
+
+#: ../src/evolution-rss.schemas.in.in.h:1
+msgid "Proxy requires authentication"
+msgstr "Tarpinis serveris reikalauja patvirtinti tapatybę"
+
+#: ../src/evolution-rss.schemas.in.in.h:2
+msgid "Network proxy requires authentication."
+msgstr "Tinklo tarpinis serveris reikalauja patvirtinti tapatybę."
+
+#: ../src/evolution-rss.schemas.in.in.h:3
+msgid "Display article's summary"
+msgstr "Rodyti straipsnio santrauką"
+
+#: ../src/evolution-rss.schemas.in.in.h:4
+msgid ""
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
+msgstr ""
+"Evolution rodys straipsnio santrauką vietoj straipsnio internetinio "
+"puslapio. Santrauka taip pat gali būti HTML."
+
+#: ../src/evolution-rss.schemas.in.in.h:5
+msgid "Feeds list"
+msgstr "Kanalų sąrašas"
+
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Turi šiuo metu nustatytų sklaidos kanalų sąrašą"
+
+#: ../src/evolution-rss.schemas.in.in.h:7
+msgid "Hostname of the proxy server"
+msgstr "Tarpinio serverio pavadinimas"
+
+#: ../src/evolution-rss.schemas.in.in.h:8
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr ""
+"Tarpinio serverio, naudojamo sklaidos kanalams ir turiniui, pavadinimas"
+
+#: ../src/evolution-rss.schemas.in.in.h:9
+msgid "HTML render"
+msgstr "HTML piešimas"
+
+#: ../src/evolution-rss.schemas.in.in.h:10
+msgid "Type HTML Render used to display HTML pages."
+msgstr "HTML piešimo tipas, naudojamas HTML puslapių rodymui."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Naudoti pasirinktinį šriftą"
+
+#: ../src/evolution-rss.schemas.in.in.h:12
+msgid "Use a custom font size instead of system defaults."
+msgstr "Naudoti pasirinktinį šrifto dydį vietoj sistemos numatytojo."
+
+#: ../src/evolution-rss.schemas.in.in.h:13
+msgid "Minimum font size"
+msgstr "Mažiausias šrifto dydis"
+
+#: ../src/evolution-rss.schemas.in.in.h:14
+msgid "The size of the font used in full text preview."
+msgstr "Šrifto dydis grynojo teksto peržiūrai."
+
+#: ../src/evolution-rss.schemas.in.in.h:15
+msgid "Network timeout"
+msgstr "Tinklo ryšio trukmė"
+
+#: ../src/evolution-rss.schemas.in.in.h:16
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Laiko tarpas sekundėmis iki ryšys yra nutraukiamas."
+
+#: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Tinklo eilės dydis"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Kiek parsiuntimų vienu metu."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "Leidžiamas JavaScript"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Leidžiama Java"
+
+#: ../src/evolution-rss.schemas.in.in.h:21
+msgid "Accepts Cookies"
+msgstr "Priimti slapukus"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Evolution RSS priims slapukus iš naršomų straipsnių."
+
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automatically Resize Images"
+msgstr "Automatiškai keisti paveikslėlių dydį"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"Evolution RSS automatiškai keis didesnių nei rodymo vieta paveikslėlių dydį."
+
+#: ../src/evolution-rss.schemas.in.in.h:25
+msgid "Scan web pages for RSS"
+msgstr "Ieškoti internetiniuose puslapiuose RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:26
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution RSS ieškos žiniatinkliuose RSS turinio"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "Parsiųsti priedus"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr ""
+"Evolution parsiųs visus sklaidos kanalo priedus, kuriuos gali turėti "
+"straipsnis."
+
+#: ../src/evolution-rss.schemas.in.in.h:29
+msgid "Limit enclosure size"
+msgstr "Riboti priedo dydį"
+
+#: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Riboti didžiausią parsiunčiamo priedo dydį."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "Didžiausias priedo dydis"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Įjungti būsenos piktogramą"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Įjungti būsenos piktogramą pranešimų vietoje"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Mirksinti būsenos piktogramą"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Mirksinti būsenos piktogramą, kai gaunamas naujas straipsnis"
+
+#: ../src/evolution-rss.schemas.in.in.h:36
+msgid "Enable Feed Icon"
+msgstr "Įjungti sklaidos kanalo piktogramą"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Rodyti sklaidos kanalo piktogramą jo aplanke"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Tarpinio serverio slaptažodis"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr ""
+"Jei tarpinis serveris reikalauja patvirtinti tapatybę, tai yra slaptažodžio "
+"laukas."
+
+#: ../src/evolution-rss.schemas.in.in.h:40
+msgid "Proxy server port"
+msgstr "Tarpinio serverio prievadas"
+
+#: ../src/evolution-rss.schemas.in.in.h:41
+msgid "The port number for proxy server used for feeds and content."
+msgstr "Tarpinio serverio prievado numeris, naudojamas kanalams ir turiniui."
+
+#: ../src/evolution-rss.schemas.in.in.h:42
+msgid "Remove feed folder"
+msgstr "Pašalinti kanalo aplanką"
+
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "Kanalo ištrynimas taip pat pašalins kanalo aplanką."
+
+#: ../src/evolution-rss.schemas.in.in.h:44
+msgid "Check New articles"
+msgstr "Tikrinti, ar yra naujų straipsnių"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Automatiškai tikrinti, ar yra naujų straipsnių"
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Naujų straipsnių tikrinimo intervalas"
+
+#: ../src/evolution-rss.schemas.in.in.h:47
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Kas kiek laiko tikrinti, ar yra naujų straipsnių (minutėmis)."
+
+#: ../src/evolution-rss.schemas.in.in.h:48
+msgid "Checks articles on startup"
+msgstr "Paleidžiant tikrina, ar yra naujų straipsnių"
+
+#: ../src/evolution-rss.schemas.in.in.h:49
+msgid "Check for new articles every time Evolution is started."
+msgstr ""
+"Kiekvieną kartą paleidžiant Evolution tikrinti, ar yra naujų straipsnių."
+
+#: ../src/evolution-rss.schemas.in.in.h:50
+msgid "Show articles comments"
+msgstr "Rodyti straipsnių komentarus"
+
+#: ../src/evolution-rss.schemas.in.in.h:51
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Jei straipsnis turi komentarų, jie bus rodomi."
+
+#: ../src/evolution-rss.schemas.in.in.h:52
+msgid "Use proxy server"
+msgstr "Naudoti tarpinį serverį"
+
+#: ../src/evolution-rss.schemas.in.in.h:53
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Naudoti tarpinį serverį straipsnių ir turinio parsiuntimui."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Tarpinio serverio naudotojas"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
+msgid "The username to use for proxy server authentication."
+msgstr "Naudotojo vardas tarpinio serverio tapatybės patvirtinimui."
+
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "Kaip apdoroti RSS URL"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr ""
+"Nustatyti teigiamą, kad RSS URL būtų apdorojami komandoje nurodyta programa"
+
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for RSS feed URIs"
+msgstr "URL apdorojimo programa RSS kanalo URI"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Paleisti programą terminale"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
+msgid "True if the program to handle this URL should be run in a terminal"
+msgstr "Teigiama, jei URL apdorojanti programa turi būti paleista terminale"
+
+#: ../src/notification.c:288 ../src/rss.c:2122
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Gaunami sklaidos kanalai (%d įjungta)"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point in having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view.\n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Evolution RSS skaityklės įskiepis.\n"
+"\n"
+"Šis įskiepis prideda RSS sklaidos kanalų palaikymą į Evolution paštą. RSS "
+"palaikymas buvo sukurtas naudojant dalinai esamą evolution-1.4 šakos RSS "
+"palaikymą. Motyvacija buvo turėti RSS toje pačioje vietoje kaip ir paštas, "
+"šiuo metu nematau priežasties turėti atskirą RSS skaityklę, kadangi RSS "
+"straipsnis yra lyg el. pašto laiškas.\n"
+"\n"
+"Evolution RSS gali rodyti straipsnį naudojant santraukos arba HTML vaizdą.\n"
+"\n"
+"HTML galima rodyti naudojant šiuos variklius: gtkHTML, Apple Webkit arba "
+"Firefox/Gecko.\n"
+"\n"
+"<b>Verisja: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "Dydis"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "Skaitomi RSS kanalai..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "Atnaujinami kanalai..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "_Dismiss"
+msgstr "_Pašalinti"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete \"{0}\"?"
+msgstr "Ištrinti „{0}“?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "Really delete feed '{0}' ?"
+msgstr "Tikrai ištrinti sklaidos kanalą „{0}“?"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Update RSS feeds"
+msgstr "Atnaujinami RSS kanalai"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "_Read RSS"
+msgstr "Skaityti _RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "Nustatyti RSS kanalus"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "Nustatyti RSS"
+
+#. ATOM
+#: ../src/parser.c:1084
+msgid "No Information"
+msgstr "Nėra informacijos"
+
+#: ../src/parser.c:1183
+msgid "No information"
+msgstr "Nėra informacijos"
+
+#: ../src/rss.c:423 ../src/rss.c:2303
+msgid "Feed"
+msgstr "Kanalas"
+
+#: ../src/rss.c:488 ../src/rss-config-factory.c:2876
+#: ../src/rss-config-factory.c:3050
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% atlikta"
+
+#: ../src/rss.c:625
+msgid "Enter User/Pass for feed"
+msgstr "Įveskite naudotoją/slaptažodį kanalui"
+
+#: ../src/rss.c:681
+msgid "Enter your username and password for:"
+msgstr "Įveskite savo naudotojo vardą ir slaptažodį kanalui:"
+
+#: ../src/rss.c:699
+msgid "Username: "
+msgstr "Naudotojo vardas: "
+
+#: ../src/rss.c:720 ../src/rss-main.ui.h:37
+msgid "Password: "
+msgstr "Slaptažodis: "
+
+#: ../src/rss.c:757
+msgid "_Remember this password"
+msgstr "Įsi_minti šį slaptažodį"
+
+#: ../src/rss.c:871 ../src/rss.c:875
+msgid "Cancelling..."
+msgstr "Atsisakoma..."
+
+#: ../src/rss.c:1157
+msgid "_Copy"
+msgstr "_Kopijuoti"
+
+#: ../src/rss.c:1158
+msgid "Select _All"
+msgstr "Žymėti _viską"
+
+#: ../src/rss.c:1160 ../src/rss.c:1171
+msgid "Zoom _In"
+msgstr "_Pritraukti"
+
+#: ../src/rss.c:1161 ../src/rss.c:1172
+msgid "Zoom _Out"
+msgstr "_Atitolinti"
+
+#: ../src/rss.c:1162 ../src/rss.c:1173
+msgid "_Normal Size"
+msgstr "Įprastinis _dydis"
+
+#: ../src/rss.c:1164
+msgid "_Open Link"
+msgstr "_Atverti saitą"
+
+#: ../src/rss.c:1165 ../src/rss.c:1179
+msgid "_Copy Link Location"
+msgstr "_Kopijuoti saito vietą"
+
+#: ../src/rss.c:1175
+msgid "_Print..."
+msgstr "S_pausdinti..."
+
+#: ../src/rss.c:1176
+msgid "Save _As"
+msgstr "Įrašyti _taip"
+
+#: ../src/rss.c:1178
+msgid "_Open Link in Browser"
+msgstr "_Atverti saitą naršyklėje"
+
+#: ../src/rss.c:1445
+msgid "Fetching feed"
+msgstr "Skaitomas kanalas"
+
+#: ../src/rss.c:1757 ../src/rss.c:2035
+msgid "Unnamed feed"
+msgstr "Nepavadintas kanalas"
+
+#: ../src/rss.c:1758
+msgid "Error while setting up feed."
+msgstr "Klaida nustatant sklaidos kanalą"
+
+#: ../src/rss.c:1966 ../src/rss.c:2036
+msgid "Error while fetching feed."
+msgstr "Klaida skaitant sklaidos kanalą."
+
+#: ../src/rss.c:1967
+msgid "Invalid Feed"
+msgstr "Netinkamas kanalas"
+
+#: ../src/rss.c:2009
+#, c-format
+msgid "Adding feed %s"
+msgstr "Pridedamas kanalas %s"
+
+#: ../src/rss.c:2050 ../src/rss.c:2058
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "Gaunamas pranešimas %d iš %d"
+
+#: ../src/rss.c:2143 ../src/rss.c:2146
+msgid "Complete."
+msgstr "Baigta."
+
+#: ../src/rss.c:2180 ../src/rss.c:2362 ../src/rss.c:2400 ../src/rss.c:2603
+#: ../src/rss.c:3191
+#, c-format
+msgid "Error fetching feed: %s"
+msgstr "Klaida skaitant kanalą: %s"
+
+#: ../src/rss.c:2192 ../src/rss.c:2196
+msgid "Canceled."
+msgstr "Atsisakyta."
+
+#: ../src/rss.c:2247
+#, c-format
+msgid "Error while parsing feed: %s"
+msgstr "Klaida skaitant kanalą: %s"
+
+#: ../src/rss.c:2251
+msgid "illegal content type!"
+msgstr "netinkamas turinio tipas!"
+
+#: ../src/rss.c:2311 ../src/rss.c:2314
+msgid "Complete"
+msgstr "Baigta"
+
+#: ../src/rss.c:2446
+msgid "Formatting error."
+msgstr "Formatavimo klaida."
+
+#: ../src/rss.c:3504
+msgid "No RSS feeds configured!"
+msgstr "Nėra nustatytų RSS kanalų!"
+
+#: ../src/rss.c:3556
+msgid "Waiting..."
+msgstr "Laukiama..."
+
+#: ../src/rss-config-factory.c:160
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:161
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:162
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:478
+msgid "day"
+msgid_plural "days"
+msgstr[0] "diena"
+msgstr[1] "dienos"
+msgstr[2] "dienų"
+
+#: ../src/rss-config-factory.c:493
+msgid "message"
+msgid_plural "messages"
+msgstr[0] "pranešimas"
+msgstr[1] "pranešimai"
+msgstr[2] "pranešimų"
+
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:572
+msgid "Move to Folder"
+msgstr "Perkelti į aplanką"
+
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:572
+msgid "M_ove"
+msgstr "Per_kelti"
+
+#: ../src/rss-config-factory.c:713
+msgid "Edit Feed"
+msgstr "Keisti kanalą"
+
+#: ../src/rss-config-factory.c:715
+msgid "Add Feed"
+msgstr "Pridėti kanalą"
+
+#: ../src/rss-config-factory.c:1160 ../src/rss-config-factory.c:1729
+#, no-c-format
+msgid "0% done"
+msgstr "0% atlikta"
+
+#: ../src/rss-config-factory.c:1548
+msgid "Disable"
+msgstr "Išjungti"
+
+#: ../src/rss-config-factory.c:1548
+msgid "Enable"
+msgstr "Įjungti"
+
+#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:40
+msgid "Remove folder contents"
+msgstr "Pašalinti aplanko turinį"
+
+#: ../src/rss-config-factory.c:2000
+msgid "Import error."
+msgstr "Importo klaida."
+
+#: ../src/rss-config-factory.c:2001
+msgid "Invalid file or this file does not contain any feeds."
+msgstr "Netinkamas failas arba šis failas neturi jokių kanalų."
+
+#: ../src/rss-config-factory.c:2006
+msgid "Importing"
+msgstr "Importuojama"
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss-config-factory.c:2029 ../src/rss-config-factory.c:2925
+#: ../src/rss-config-factory.c:3085
+msgid "Please wait"
+msgstr "Palaukite"
+
+#: ../src/rss-config-factory.c:2339 ../src/rss-config-factory.c:3205
+#: ../src/rss-config-factory.c:3268
+msgid "All Files"
+msgstr "Visi failai"
+
+#: ../src/rss-config-factory.c:2350 ../src/rss-config-factory.c:3289
+msgid "OPML Files"
+msgstr "OPML failai"
+
+#: ../src/rss-config-factory.c:2361 ../src/rss-config-factory.c:3278
+msgid "XML Files"
+msgstr "XML failai"
+
+#: ../src/rss-config-factory.c:2380
+msgid "Show article's summary"
+msgstr "Rodyti straipsnio santrauką"
+
+#: ../src/rss-config-factory.c:2393
+msgid "Feed Enabled"
+msgstr "Kanalas įjungtas"
+
+#: ../src/rss-config-factory.c:2406
+msgid "Validate feed"
+msgstr "Tikrinti kanalą"
+
+#: ../src/rss-config-factory.c:2463 ../src/rss-main.ui.h:38
+msgid "Select import file"
+msgstr "Pasirinkite importo failą"
+
+#: ../src/rss-config-factory.c:2546 ../src/rss-main.ui.h:41
+msgid "Select file to export"
+msgstr "Pasirinkite eksporto failą"
+
+#: ../src/rss-config-factory.c:2908
+msgid "Exporting feeds..."
+msgstr "Eksportuojami kanalai..."
+
+#: ../src/rss-config-factory.c:2972 ../src/rss-config-factory.c:2980
+msgid "Error exporting feeds!"
+msgstr "Klaida eksportuojant kanalus!"
+
+#: ../src/rss-config-factory.c:3061
+msgid "Importing cookies..."
+msgstr "Importuojami slapukai..."
+
+#: ../src/rss-config-factory.c:3141
+msgid "Select file to import"
+msgstr "Pasirinkite importuojamą failą"
+
+#: ../src/rss-config-factory.c:3211
+msgid "Mozilla/Netscape Format"
+msgstr "Mozilla/Netscape formatas"
+
+#: ../src/rss-config-factory.c:3217
+msgid "Firefox new Format"
+msgstr "Firefox naujasis formatas"
+
+#: ../src/rss-config-factory.c:3327 ../src/rss-config-factory.c:3332
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"Nėra nustatytų RSS kanalų!\n"
+"Nepavyko eksportuoti."
+
+#: ../src/rss-config-factory.c:3495
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Pastaba: norint naudoti Mozilla (Firefox) arba Apple Webkit kaip\n"
+"piešėjus jums reikia įdiegto firefox arba webkit kūrimo paketo \n"
+"ir evolution-rss turi būti perkompiliuotas, kad matytų tuos paketus."
+
+#: ../src/rss-config-factory.c:4099 ../src/rss-main.ui.h:46
+msgid "Enabled"
+msgstr "Įjungta"
+
+#: ../src/rss-config-factory.c:4126
+msgid "Feed Name"
+msgstr "Kanalo pavadinimas"
+
+#: ../src/rss-config-factory.c:4139
+msgid "Type"
+msgstr "Tipas"
+
+#: ../src/rss-config-factory.c:4456
+msgid "News And Blogs"
+msgstr "Naujienos ir tinklaraščiai"
+
+#: ../src/rss.h:52
+msgid "News and Blogs"
+msgstr "Naujienos ir tinklaraščiai"
+
+#: ../src/rss.h:54
+msgid "Untitled channel"
+msgstr "Nepavadintas kanalas"
+
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Variklis: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Naudoti tuos pačius šriftus, kaip ir kitos programos"
+
+#: ../src/rss-html-rendering.ui.h:3
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Mažiausias šrifto dydis:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Blokuoti iššokančius langus"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Įjungti Java"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "Įjungti JavaScript"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Priimti slapukus iš tinklapių"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Importuoti slapukus"
+
+#: ../src/rss-html-rendering.ui.h:9
+msgid "Automatically resize images"
+msgstr "Automatiškai keisti paveikslėlių dydžius"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Tinklo intervalas:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "sekundės"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML piešimas</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Rodyti piktogramą pranešimų vietoje"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Rodyti kanalo piktogramą"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Straipsnio įspėjimas</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "minutės"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "valandos"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "dienos"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Liudijimų lentelė"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Pridėti"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "_Keisti"
+
+#: ../src/rss-main.ui.h:8
+msgid "I_mport"
+msgstr "I_mportuoti"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "_Eksportuoti"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Kanalai"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Variklis:"
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Įjungti įskiepius"
+
+#: ../src/rss-main.ui.h:15
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Paleidimas</span>"
+
+#: ../src/rss-main.ui.h:17
+msgid "Check for new articles every"
+msgstr "Tikrinti, ar yra naujų straipsnių kas"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles at startup"
+msgstr "Paleidžiant tikrinti, ar yra naujų straipsnių"
+
+#: ../src/rss-main.ui.h:19
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Kanalų rodymas</span>"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr "Numatytai rodyti straipsnio santrauką vietoj žiniatinklio"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Žiniatinkliuose ieškoti kanalų"
+
+#: ../src/rss-main.ui.h:22
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Kanalų priedai</span>"
+
+#: ../src/rss-main.ui.h:23
+msgid "Show article comments"
+msgstr "Rodyti straipsnio komentarus"
+
+#: ../src/rss-main.ui.h:24
+msgid "Download feed enclosures"
+msgstr "Parsiųsti kanalo priedus"
+
+#: ../src/rss-main.ui.h:25
+msgid "Do not download enclosures that exceeds"
+msgstr "Neparsiųsti priedų, didesnių nei"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:27
+msgid "Setup"
+msgstr "Nustatyti"
+
+#: ../src/rss-main.ui.h:28
+msgid "Use Proxy"
+msgstr "Naudoti tarpinį serverį"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "HTTP tarpinis serveris:"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Prievadas:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Išsami informacija"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Nėra tarpinio serverio kanalui:"
+
+#: ../src/rss-main.ui.h:33
+msgid "Network"
+msgstr "Tinklas"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "HTTP tarpinio serverio išsami informacija"
+
+#: ../src/rss-main.ui.h:35
+msgid "Use authentication"
+msgstr "Naudoti tapatybės patvirtinimą"
+
+#: ../src/rss-main.ui.h:36
+msgid "Username:"
+msgstr "Naudotojo vardas:"
+
+#: ../src/rss-main.ui.h:39
+msgid "Delete feed?"
+msgstr "Ištrinti kanalą?"
+
+#: ../src/rss-main.ui.h:42
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Kanalo pavadinimas: </b>"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr "<b>Kanalo URL:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "label"
+msgstr "etiketė"
+
+#: ../src/rss-main.ui.h:45
+msgid "<b>Location:</b>"
+msgstr "<b>Vieta:</b>"
+
+#: ../src/rss-main.ui.h:47
+msgid "Validate"
+msgstr "Tikrinti"
+
+#: ../src/rss-main.ui.h:48
+msgid "Show feed full text"
+msgstr "Rodyti visą kanalo tekstą"
+
+#: ../src/rss-main.ui.h:49
+msgid "General"
+msgstr "Bendra"
+
+#: ../src/rss-main.ui.h:50
+msgid "Use global update interval"
+msgstr "Naudoti visuotinį atnaujinimo intervalą"
+
+#: ../src/rss-main.ui.h:51
+msgid "Update in"
+msgstr "Atnaujinti viduje"
+
+#: ../src/rss-main.ui.h:52
+msgid "Do no update feed"
+msgstr "Neatnaujinti kanalo"
+
+#: ../src/rss-main.ui.h:53
+msgid "Update"
+msgstr "Atnaujinti"
+
+#: ../src/rss-main.ui.h:54
+msgid "Do not delete feeds"
+msgstr "Netrinti kanalų"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete all but the last"
+msgstr "Trinti visus išskyrus paskutinį"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles older than"
+msgstr "Trinti straipsnius, senesnius nei"
+
+#: ../src/rss-main.ui.h:57
+msgid "Delete articles that are no longer in the feed"
+msgstr "Trinti straipsnius, kurių nebėra kanale"
+
+#: ../src/rss-main.ui.h:58
+msgid "Always delete unread articles"
+msgstr "Visada trinti neskaitytus straipsnius"
+
+#: ../src/rss-main.ui.h:59
+msgid "Storage"
+msgstr "Saugojimo vieta"
+
+#: ../src/rss-main.ui.h:60
+msgid "Authentication"
+msgstr "Tapatybės patvirtinimas"
+
+#: ../src/rss-main.ui.h:61
+msgid "<b>Advanced options</b>"
+msgstr "<b>Sudėtingesni nustatymai</b>"
