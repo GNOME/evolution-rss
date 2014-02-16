@@ -3027,7 +3027,7 @@ import_cookies(gchar *file)
 		fclose(f);
 		if (!g_ascii_strncasecmp(header, SQLITE_MAGIC, sizeof(SQLITE_MAGIC))) {
 #ifdef HAVE_LIBSOUP_GNOME
-			jar = soup_cookie_jar_sqlite_new(file, TRUE);
+			jar = soup_cookie_jar_db_new(file, TRUE);
 #else
 			g_print("Importing sqlite format requires libsoup-gnome\n");
 #endif

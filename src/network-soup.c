@@ -288,7 +288,7 @@ proxify_webkit_session_async(EProxy *proxy, WEBKITNET *wknet)
 	case 0:
 		soup_session_add_feature_by_type (
 			webkit_session,
-			SOUP_TYPE_PROXY_RESOLVER_GNOME);
+			SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
 		break;
 #endif
 	}
@@ -337,7 +337,7 @@ proxify_session(EProxy *proxy, SoupSession *session, gchar *uri)
 #ifdef HAVE_LIBSOUP_GNOME
 	case 0:
 		soup_session_add_feature_by_type (
-			session, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+			session, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
 		break;
 #endif
 	}
@@ -464,7 +464,7 @@ proxify_session_async(EProxy *proxy, STNET *stnet)
 #ifdef HAVE_LIBSOUP_GNOME
 	case 0:
 		soup_session_add_feature_by_type (
-			stnet->ss, SOUP_TYPE_PROXY_RESOLVER_GNOME);
+			stnet->ss, SOUP_TYPE_PROXY_RESOLVER_DEFAULT);
 		break;
 #endif
 	}
@@ -1241,7 +1241,7 @@ rss_soup_init(void)
 		g_free(feed_dir);
 
 		rss_soup_jar =
-			soup_cookie_jar_sqlite_new (cookie_path, FALSE);
+			soup_cookie_jar_db_new (cookie_path, FALSE);
 
 		if (!g_file_test(moz_cookie_path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_SYMLINK)) {
 			sync_gecko_cookies();
