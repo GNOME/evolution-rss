@@ -4453,7 +4453,7 @@ init_rss_prefs(void)
 		E_PREFERENCES_WINDOW (preferences_window),
 		"page-rss",
 		"rss",
-		_("News And Blogs"),
+		_("News and Blogs"),
 #if EVOLUTION_VERSION >= 30390
 		NULL,
 #endif
