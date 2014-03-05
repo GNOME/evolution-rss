@@ -1431,7 +1431,7 @@
                             <child>
                               <object class="GtkLabel" id="entry2">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">label</property>
+                                <property name="label">label</property>
                                 <property name="wrap">True</property>
                                 <property name="single_line_mode">True</property>
                               </object>
