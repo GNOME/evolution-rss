@@ -28,7 +28,6 @@ gchar *rss_process_feed(gchar *feed, guint len);
 gchar *rss_process_website(gchar *content, gchar *website);
 gboolean rss_get_current_view(void);
 void rss_set_current_view(gboolean value);
-gchar *rss_component_peek_base_directory(void);
 gboolean rss_get_changed_view(void);
 void rss_set_changed_view(gboolean value);
 gboolean rss_get_is_html(gchar *feedid);

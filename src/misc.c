@@ -31,6 +31,7 @@
 #include <camel/camel-mime-utils.h>
 #endif
 
+#include <mail/e-mail-reader-utils.h>
 
 #include "rss.h"
 #include "parser.h"
@@ -683,3 +684,9 @@ textcb(NetStatusType status, gpointer statusdata, gpointer data)
 
 #endif
 
+gchar *
+rss_component_peek_base_directory(void)
+{
+	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
+		mail_session_get_data_dir ());
+}

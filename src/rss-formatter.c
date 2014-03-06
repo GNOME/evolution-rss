@@ -172,11 +172,3 @@ rss_get_display(void)
 	reader = E_MAIL_READER (shell_content);
 	return e_mail_reader_get_mail_display (reader);
 }
-
-gchar *
-rss_component_peek_base_directory(void)
-{
-	return g_strdup_printf("%s" G_DIR_SEPARATOR_S "rss",
-		mail_session_get_data_dir ());
-}
-
