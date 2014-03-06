@@ -91,13 +91,23 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 				EMailFormatter *formatter,
 				EMailFormatterContext *context,
 				EMailPart *part,
+#if EVOLUTION_VERSION < 31191
 				CamelStream *stream,
+#else
+				GOutputStream *stream,
+#endif
 				GCancellable *cancellable)
 {
-	CamelStream *decoded_stream;
 	CamelDataWrapper *dw;
 	gchar *str;
+#if EVOLUTION_VERSION < 31191
+	CamelStream *decoded_stream;
 	GByteArray *ba;
+#else
+	GOutputStream *decoded_stream;
+	gpointer data;
+	gsize len;
+#endif
 	gchar *src;
 	CamelMimePart *message = e_mail_part_ref_mime_part (part);
 	gchar *website, *subject, *category, *feedid, *comments;
@@ -123,8 +133,13 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		"height=\"0\" width=\"100%%\" data=\"%s\" id=\"%s\"></object>",
 		e_mail_part_get_id(part),
 		e_mail_part_get_id(part));
+#if EVOLUTION_VERSION < 31191
 	camel_stream_write_string (
 		stream, str, cancellable, NULL);
+#else
+	g_output_stream_write_all(stream, str,
+		strlen(str), NULL, cancellable, NULL);
+#endif
 	gchar *h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
 
 	website = camel_medium_get_header (
@@ -189,25 +204,53 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			text_col & 0xffffff,
 			iconfile, website, subject);
 
+#if EVOLUTION_VERSION < 31191
 		camel_stream_write_string (
 			stream, str, cancellable, NULL);
+#else
+		g_output_stream_write_all(stream, str,
+			strlen(str), NULL, cancellable, NULL);
+#endif
 
+#if EVOLUTION_VERSION < 31191
 		decoded_stream = camel_stream_mem_new ();
+#else
+		decoded_stream = g_memory_output_stream_new_resizable ();
+#endif
 
 		e_mail_formatter_format_text (
 			formatter, part, decoded_stream, cancellable);
 
+#if EVOLUTION_VERSION < 31191
 		g_seekable_seek (G_SEEKABLE (decoded_stream), 0, G_SEEK_SET, cancellable, NULL);
 
 		ba = camel_stream_mem_get_byte_array (CAMEL_STREAM_MEM (decoded_stream));
 		src = rss_process_feed((gchar *)ba->data, ba->len);
+#else
+		data = g_memory_output_stream_get_data (
+				G_MEMORY_OUTPUT_STREAM (decoded_stream));
+		len = g_memory_output_stream_get_data_size (
+				G_MEMORY_OUTPUT_STREAM (decoded_stream));
+		src = rss_process_feed((gchar *)data, len);
+#endif
 
+#if EVOLUTION_VERSION < 31191
 		camel_stream_write_string(stream, src, cancellable, NULL);
+#else
+		g_output_stream_write_all(stream, src, strlen(src), NULL, cancellable, NULL);
+#endif
 		g_free(src);
 		g_object_unref (decoded_stream);
 
+#if EVOLUTION_VERSION < 31191
 		camel_stream_write_string (
 			stream, "</div></div>", cancellable, NULL);
+#else
+		gchar *tstr = g_strdup("</div></div>");
+		g_output_stream_write_all(stream, tstr,
+				strlen(tstr), NULL, cancellable, NULL);
+		g_free(tstr);
+#endif
 	} else {
 		GError *err = NULL;
 		gchar *str;
@@ -226,12 +269,27 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 				frame_col & 0xffffff,
 				cont_col & 0xffffff,
 				text_col & 0xffffff);
+#if EVOLUTION_VERSION < 31191
 			camel_stream_write_string (stream, str, cancellable, NULL);
-			g_free (str);
 			camel_stream_write_string (stream, "<div style=\"border: solid 0px; padding: 4px;\">\n", cancellable, NULL);
 			camel_stream_write_string (stream, "<h3>Error!</h3>", cancellable, NULL);
 			camel_stream_write_string (stream, err->message, cancellable, NULL);
 			camel_stream_write_string (stream, "</div>", cancellable, NULL);
+#else
+			g_output_stream_write_all(stream, str, strlen(str), NULL, cancellable, NULL);
+			gchar *tstr;
+			tstr = g_strdup("<div style=\"border: solid 0px; padding: 4px;\">\n");
+			g_output_stream_write_all(stream, tstr, strlen(tstr), NULL, cancellable, NULL);
+			g_free(tstr);
+			tstr = g_strdup("<h3>Error!</h3>");
+			g_output_stream_write_all(stream, tstr, strlen(tstr), NULL, cancellable, NULL);
+			g_free(tstr);
+			g_output_stream_write_all(stream, err->message, strlen(err->message), NULL, cancellable, NULL);
+			tstr = g_strdup("</div>");
+			g_output_stream_write_all(stream, tstr, strlen(tstr), NULL, cancellable, NULL);
+			g_free(tstr);
+#endif
+			g_free (str);
 			goto success;
 		}
 
