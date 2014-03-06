@@ -78,10 +78,17 @@ AC_SUBST(MINOR_VERSION)
 dnl Evolution plugin install directory
 AC_ARG_WITH(plugin-install-dir, [  --with-plugin-install-dir=PATH path to evolution plugin directory])
 if test "x$with_plugin_install_dir" = "x"; then
-        PLUGIN_INSTALL_DIR=`$PKG_CONFIG --variable=plugindir evolution-plugin$EVOLUTION_BASE_VERSION_S`
-        if test "x$PLUGIN_INSTALL_DIR" = "x"; then
-                AC_MSG_ERROR(Unable to find plugin directory)
-                break;
+	if test "$evolution_version_int" -ge "031191"; then
+		PLUGIN_INSTALL_DIR=`$PKG_CONFIG --variable=plugindir evolution-shell$EVOLUTION_BASE_VERSION_S`
+		if test "x$PLUGIN_INSTALL_DIR" = "x"; then
+			PLUGIN_INSTALL_DIR=`$PKG_CONFIG --variable=privlibdir evolution-shell$EVOLUTION_BASE_VERSION_S`/plugins
+		fi
+	else
+		PLUGIN_INSTALL_DIR=`$PKG_CONFIG --variable=plugindir evolution-plugin$EVOLUTION_BASE_VERSION_S`
+		if test "x$PLUGIN_INSTALL_DIR" = "x"; then
+			AC_MSG_ERROR(Unable to find plugin directory)
+			break;
+		fi
         fi
 fi
 AC_SUBST(PLUGIN_INSTALL_DIR)
@@ -97,7 +104,11 @@ fi
 AC_SUBST(ICON_DIR)
 
 dnl Evolution e-error install directory
-ERROR_DIR=`$PKG_CONFIG --variable=errordir evolution-plugin$EVOLUTION_BASE_VERSION_S`
+if test "$evolution_version_int" -ge "031191"; then
+	ERROR_DIR=`$PKG_CONFIG --variable=errordir evolution-shell$EVOLUTION_BASE_VERSION_S`
+else
+	ERROR_DIR=`$PKG_CONFIG --variable=errordir evolution-plugin$EVOLUTION_BASE_VERSION_S`
+fi
 if test "x$ERROR_DIR" = "x"; then
    AC_MSG_ERROR(Unable to find error file directory)
 fi
@@ -107,7 +118,7 @@ dnl test required for bonobo server installation
 dnl dnl user might specify wrong prefix or not specify at all
 AC_ARG_WITH(bonobo-servers-dir, [  --with-bonobo-servers-dir=PATH path to bonobo servers directory])
 if test "x$with_bonobo_servers_dir" = "x" ; then
-    BONOBO_LIBDIR=`$PKG_CONFIG --variable=libdir evolution-plugin$EVOLUTION_BASE_VERSION_S`
+    BONOBO_LIBDIR=`$PKG_CONFIG --variable=libdir evolution-shell$EVOLUTION_BASE_VERSION_S`
     if test "x$BONOBO_LIBDIR" = "x"; then
        AC_MSG_ERROR(Unable to find bonobo servers file directory)
     fi

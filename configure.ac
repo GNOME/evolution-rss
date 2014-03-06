@@ -1,7 +1,7 @@
 AC_INIT([evolution-rss],[0.3.95],[http://bugzilla.gnome.org/enter_bug.cgi?product=evolution-rss])
 AC_CONFIG_SRCDIR(src)
 
-AM_INIT_AUTOMAKE([1.10 dist-xz no-dist-gzip -Wall foreign])
+AM_INIT_AUTOMAKE([1.10 dist-xz no-dist-gzip -Wall -Wno-portability foreign])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -92,11 +92,17 @@ if test "$EVOLUTION_BASE_VERSION_S" = "-3.0"; then
 	EVOLUTION_ADDITIONAL="libemail-engine"
 fi
 
+EVOLUTION_PLUGIN_CHECK="evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED"
+
+if test "$evolution_version_int" -ge "31191"; then
+	EVOLUTION_PLUGIN_CHECK=
+fi
+
 PKG_CHECK_MODULES(EVOLUTION_RSS_EPLUGIN,
 [  glib-2.0 >= $LIBGLIB_REQUIRED dnl
    gtk+-$LIBGTK_VERSION.0 >= $LIBGTK_REQUIRED dnl
    libsoup$SOUP >= $LIBSOUP_REQUIRED dnl
-   evolution-plugin$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
+   $EVOLUTION_PLUGIN_CHECK dnl
    evolution-shell$EVOLUTION_BASE_VERSION_S >= $EVOLUTION_REQUIRED dnl
    $EVOLUTION_ADDITIONAL dnl
    libebook-1.2 dnl
