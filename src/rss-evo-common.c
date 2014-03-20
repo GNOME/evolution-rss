@@ -242,21 +242,28 @@ rss_ipv6_network_addr (const struct in6_addr *addr, const struct in6_addr *mask,
 gboolean
 rss_ep_need_proxy_http (EProxy* proxy, const gchar * host, SoupAddress *addr)
 {
+	SoupAddress *myaddr = NULL;
 	EProxyPrivate *priv = proxy->priv;
 	ProxyHostAddr *p_addr = NULL;
 	GSList *l;
-	gint addr_len;
-	struct sockaddr* so_addr = NULL;
+	guint status;
 
 	/* check for ignored first */
 	if (rss_ep_is_in_ignored (proxy, host))
 		return FALSE;
 
+	myaddr = soup_address_new (host, 0);
+        status = soup_address_resolve_sync (myaddr, NULL);
+        if (status == SOUP_STATUS_OK) {
+		gint addr_len;
+		struct sockaddr* so_addr = NULL;
+
 #ifdef HAVE_LIBSOUP_GNOME
-	so_addr = soup_address_get_sockaddr (addr, &addr_len);
+	so_addr = soup_address_get_sockaddr (myaddr, &addr_len);
 #endif
 
 	if (!so_addr)
+		g_object_unref (myaddr);
 		return TRUE;
 
 	if (so_addr->sa_family == AF_INET) {
@@ -307,8 +314,10 @@ rss_ep_need_proxy_http (EProxy* proxy, const gchar * host, SoupAddress *addr)
 			}
 		}
 	}
+	}
 
 	d(g_print ("%s needs a proxy to connect to internet\n", host));
+	g_object_unref (myaddr);
 	return TRUE;
 }
 
