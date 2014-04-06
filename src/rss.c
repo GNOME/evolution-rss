@@ -4124,9 +4124,7 @@ create_mail(create_feed *CF)
 #if EVOLUTION_VERSION < 30505
 		mail_refresh_folder(mail_folder, NULL, NULL);
 #else
-		EShellContent *shell_content = e_shell_view_get_shell_content (rss_shell_view);
-		EMailReader *reader = E_MAIL_READER (shell_content);
-		e_mail_reader_refresh_folder(reader, mail_folder);
+		camel_folder_refresh_info_sync(mail_folder, NULL, NULL);
 #endif
 	}
 #if (DATASERVER_VERSION >= 2031001)
