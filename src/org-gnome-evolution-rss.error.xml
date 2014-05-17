@@ -26,7 +26,7 @@
 
 <error type="question" id="ask-delete-feed" default="GTK_RESPONSE_CANCEL">
 	<_title>Delete "{0}"?</_title>
-	<_primary>Really delete feed '{0}' ?</_primary>
+	<_primary>Really delete feed '{0}'?</_primary>
 	<button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
 	<button stock="gtk-delete" response="GTK_RESPONSE_OK"/>
 </error>
