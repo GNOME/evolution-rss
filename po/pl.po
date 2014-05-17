@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-10 12:40+0100\n"
-"PO-Revision-Date: 2014-03-10 12:41+0100\n"
+"POT-Creation-Date: 2014-05-17 20:34+0200\n"
+"PO-Revision-Date: 2014-05-17 20:35+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -379,7 +379,7 @@ msgid "Delete \"{0}\"?"
 msgstr "Usunąć \"{0}\"?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-msgid "Really delete feed '{0}' ?"
+msgid "Really delete feed '{0}'?"
 msgstr "Na pewno usunąć kanał \"{0}\"?"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
