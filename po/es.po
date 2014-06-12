@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: evolution-rss.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-06 23:40+0000\n"
-"PO-Revision-Date: 2014-03-10 18:19+0100\n"
+"POT-Creation-Date: 2014-05-17 18:36+0000\n"
+"PO-Revision-Date: 2014-06-12 18:01+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Español <gnome-es-list@gnome.org>\n"
+"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"X-Generator: Gtranslator 2.91.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
@@ -390,7 +390,8 @@ msgid "Delete \"{0}\"?"
 msgstr "¿Eliminar proveedor «{0}»?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-msgid "Really delete feed '{0}' ?"
+#| msgid "Really delete feed '{0}' ?"
+msgid "Really delete feed '{0}'?"
 msgstr "¿Quiere eliminar el proveedor «{0}»?"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
@@ -963,7 +964,6 @@ msgid "Update in"
 msgstr "Actualizar en"
 
 #: ../src/rss-main.ui.h:51
-#| msgid "Do no update feed"
 msgid "Do not update feed"
 msgstr "No actualizar el proveedor"
 
