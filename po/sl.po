@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-01 16:59+0000\n"
-"PO-Revision-Date: 2014-04-01 22:27+0100\n"
+"POT-Creation-Date: 2014-06-23 16:42+0000\n"
+"PO-Revision-Date: 2014-06-23 22:34+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -381,7 +381,7 @@ msgid "Delete \"{0}\"?"
 msgstr "Ali naj se izbriše \"{0}\"?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-msgid "Really delete feed '{0}' ?"
+msgid "Really delete feed '{0}'?"
 msgstr "Ali naj se zares izbriše vir '{0}'?"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
