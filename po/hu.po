@@ -5,14 +5,15 @@
 # Gergely Szarka <gszarka@invitel.hu>, 2009.
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2010.
 # Balázs Úr <urbalazs at gmail dot com>, 2013, 2014.
+# Balázs Úr <urbalazs@gmail.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-06 23:40+0000\n"
-"PO-Revision-Date: 2014-03-16 11:24+0100\n"
-"Last-Translator: Balázs Úr <urbalazs at gmail dot com>\n"
+"POT-Creation-Date: 2014-05-17 18:36+0000\n"
+"PO-Revision-Date: 2014-06-30 23:55+0200\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <gnome at fsf dot hu>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -385,7 +386,8 @@ msgid "Delete \"{0}\"?"
 msgstr "Törli ezt: „{0}”?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-msgid "Really delete feed '{0}' ?"
+#| msgid "Really delete feed '{0}' ?"
+msgid "Really delete feed '{0}'?"
 msgstr "Valóban törli a következő hírforrást: „{0}”?"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
@@ -958,7 +960,6 @@ msgid "Update in"
 msgstr "Frissítés:"
 
 #: ../src/rss-main.ui.h:51
-#| msgid "Do no update feed"
 msgid "Do not update feed"
 msgstr "Ne frissítse a hírforrásokat"
 
