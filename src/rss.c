@@ -1298,20 +1298,42 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 	gsize length;
 	gchar *text;
 
+#if EVOLUTION_VERSION >= 31303
+	EHTMLEditor *editor;
+	EHTMLEditorView *view;
+
+	editor = e_msg_composer_get_editor (t->composer);
+	view = e_html_editor_get_view (editor);
+	text = e_html_editor_view_get_text_html (view);
+	length = strlen (text);
+#else
 	/* unfortunately e_msg_composer does not have raw get/set text body
 	 * so it is far easier using gtkhtml_editor_* functions rather than
 	 * procesing CamelMimeMessage or GByteArray
 	 */
 	text = gtkhtml_editor_get_text_html ((GtkhtmlEditor *)t->composer, &length);
+#endif
 
 	doc = rss_html_url_decode(text, length);
 	if (doc) {
 		htmlDocDumpMemory(doc, &buff, &size);
 		xmlFreeDoc(doc);
+#if EVOLUTION_VERSION >= 31303
+		editor = e_msg_composer_get_editor (t->composer);
+		view = e_html_editor_get_view (editor);
+		e_html_editor_view_set_text_html (editor, buff);
+#else
 		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
+#endif
 		xmlFree (buff);
 	} else
+#if EVOLUTION_VERSION >= 31303
+		editor = e_msg_composer_get_editor (t->composer);
+		view = e_html_editor_get_view (editor);
+		e_html_editor_view_set_text_html (editor, text);
+#else
 		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)text, length);
+#endif
 
 	g_free (text);
 #endif
