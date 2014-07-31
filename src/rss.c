@@ -4181,7 +4181,7 @@ get_real_channel_name(gchar *uri, gchar *failed)
 CamelMimePart *
 file_to_message(const char *filename)
 {
-	const char *type;
+	const char *type = NULL;
 	CamelStreamFs *file;
 	CamelMimePart *msg = camel_mime_part_new();
 	CamelDataWrapper *content;
