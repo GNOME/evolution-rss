@@ -1319,9 +1319,11 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 		htmlDocDumpMemory(doc, &buff, &size);
 		xmlFreeDoc(doc);
 #if EVOLUTION_VERSION >= 31303
+		g_free (text);
+		text = g_strndup ((gchar *) buff, size);
 		editor = e_msg_composer_get_editor (t->composer);
 		view = e_html_editor_get_view (editor);
-		e_html_editor_view_set_text_html (view, buff);
+		e_html_editor_view_set_text_html (view, text);
 #else
 		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
 #endif
