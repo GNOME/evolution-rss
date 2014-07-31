@@ -1,6 +1,7 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
 evolution-rss.desktop.in.in
+evolution-rss.metainfo.xml.in
 src/dbus.c
 src/e-mail-formatter-evolution-rss.c
 src/evolution-import-rss.c

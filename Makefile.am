@@ -5,6 +5,11 @@ desktopdir = $(datadir)/applications
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
+appdata_in_files = evolution-rss.metainfo.xml.in
+appdatadir = $(datadir)/appdata
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+@INTLTOOL_XML_RULE@
+
 INTLTOOL =                      \
 	intltool-extract.in     \
 	intltool-merge.in       \
@@ -22,6 +27,7 @@ EXTRA_DIST = \
 DISTCLEANFILES = \
 	evolution-rss.desktop \
 	evolution-rss.desktop.in \
+	evolution-rss.metainfo.xml \
 	intltool-extract \
 	intltool-merge \
 	intltool-update
