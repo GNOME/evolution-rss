@@ -552,11 +552,18 @@ folder_cb (GtkWidget *widget, gpointer data)
 	model = em_folder_tree_model_get_default ();
 #endif
 #if EVOLUTION_VERSION >= 30303
+#if EVOLUTION_VERSION >= 31301
+	dialog = em_folder_selector_new (window, model);
+	em_folder_selector_set_can_create (EM_FOLDER_SELECTOR (dialog), TRUE);
+	em_folder_selector_set_caption (EM_FOLDER_SELECTOR (dialog), _("Move to Folder"));
+	em_folder_selector_set_default_button_label (EM_FOLDER_SELECTOR (dialog), _("M_ove"));
+#else
 	dialog = em_folder_selector_new (
 			window,
 			model,
 			EM_FOLDER_SELECTOR_CAN_CREATE,
 			_("Move to Folder"), NULL, _("M_ove"));
+#endif
 #else
 	dialog = em_folder_selector_new (
 			window,
