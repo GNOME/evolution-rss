@@ -1326,15 +1326,7 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
 #endif
 		xmlFree (buff);
-	} else {
-#if EVOLUTION_VERSION >= 31303
-		editor = e_msg_composer_get_editor (t->composer);
-		view = e_html_editor_get_view (editor);
-		e_html_editor_view_set_text_html (view, text);
-#else
-		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)text, length);
-#endif
-	}
+	} /* Do not touch message body, if nothing changed */
 
 	g_free (text);
 #endif

@@ -89,6 +89,7 @@ rss_html_url_decode(const char *html, int len)
 	xmlDoc *doc = NULL;
 	gchar *url;
 	gchar *duri = NULL;
+	gboolean any_changed = FALSE;
 
 	src = (xmlDoc *)parse_html_sux(html, len);
 
@@ -106,6 +107,7 @@ rss_html_url_decode(const char *html, int len)
 #else
 				duri = g_strconcat("evo-file://", tmp, NULL);
 #endif
+				any_changed = TRUE;
 				g_free(tmp);
 				xmlSetProp(
 					(xmlNodePtr)doc,
@@ -115,6 +117,12 @@ rss_html_url_decode(const char *html, int len)
 			xmlFree(url);
 		}
 	}
+
+	if (!any_changed) {
+		xmlFreeDoc(src);
+		src = NULL;
+	}
+
 	return src;
 }
 
