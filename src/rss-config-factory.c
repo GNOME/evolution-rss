@@ -1886,7 +1886,7 @@ feeds_dialog_edit(GtkDialog *d, gpointer data)
 			key = lookup_key(feed_name);
 		}
 		if (key) {
-			if (name = g_hash_table_lookup(rf->hr, key)) {
+			if ((name = g_hash_table_lookup(rf->hr, key)) != NULL) {
 				feed = create_dialog_add(name, feed_name);
 				if (feed->dialog)
 					gtk_widget_destroy(feed->dialog);

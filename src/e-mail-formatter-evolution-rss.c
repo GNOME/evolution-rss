@@ -68,17 +68,22 @@ struct _HD {
 	gchar *current_html;
 	EMailFormatter *formatter;
 	gchar *header;
+#if EVOLUTION_VERSION < 31191
 	CamelStream *stream;
+#else
+	GOutputStream *stream;
+#endif
 };
 
-gboolean
+static gboolean
 feed_async(gpointer key)
 {
 	HD *hd = (HD *)key;
+	gchar *result;
 	e_mail_display_load_images(rss_get_display());
 	//gchar *header = e_mail_formatter_get_html_header (hd->formatter);
 	//camel_stream_write_string (hd->stream, header, NULL, NULL);
-	gchar *result = g_strconcat(hd->header,
+	result = g_strconcat(hd->header,
 			"www</body></html>", NULL);
 			//NULL);
 	g_print("header:%s\n", result);
@@ -100,6 +105,7 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 {
 	CamelDataWrapper *dw;
 	gchar *str;
+	gchar *h;
 #if EVOLUTION_VERSION < 31191
 	CamelStream *decoded_stream;
 	GByteArray *ba;
@@ -112,7 +118,7 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	CamelMimePart *message = e_mail_part_ref_mime_part (part);
 	gchar *website, *subject, *category, *feedid, *comments;
 	guint32 frame_col, cont_col, text_col;
-	gboolean is_html = NULL;
+	gboolean is_html = FALSE;
 	gchar *feed_dir, *tmp_file, *tmp_path, *iconfile;
 	GdkPixbuf *pixbuf;
 
@@ -140,9 +146,9 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	g_output_stream_write_all(stream, str,
 		strlen(str), NULL, cancellable, NULL);
 #endif
-	gchar *h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
+	h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
 
-	website = camel_medium_get_header (
+	website = (gchar *)camel_medium_get_header (
 			CAMEL_MEDIUM (message), "Website");
 	feedid  = (gchar *)camel_medium_get_header(
 				CAMEL_MEDIUM(message), "RSS-ID");
@@ -246,12 +252,15 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		camel_stream_write_string (
 			stream, "</div></div>", cancellable, NULL);
 #else
+		{
 		gchar *tstr = g_strdup("</div></div>");
 		g_output_stream_write_all(stream, tstr,
 				strlen(tstr), NULL, cancellable, NULL);
 		g_free(tstr);
+		}
 #endif
 	} else {
+		GString *content;
 		GError *err = NULL;
 		gchar *str;
 		HD *hd = g_malloc0(sizeof(*hd));
@@ -259,7 +268,7 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		hd->formatter = formatter;
 		hd->header = e_mail_formatter_get_html_header(formatter);
 		hd->stream = stream;
-		GString *content = fetch_blocking(website, NULL, NULL, textcb, NULL, &err);
+		content = fetch_blocking(website, NULL, NULL, textcb, NULL, &err);
 		if (err) {
 			//we do not need to setup a pop error menu since we're in
 			//formatting process. But instead display mail body an error
@@ -276,8 +285,9 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			camel_stream_write_string (stream, err->message, cancellable, NULL);
 			camel_stream_write_string (stream, "</div>", cancellable, NULL);
 #else
-			g_output_stream_write_all(stream, str, strlen(str), NULL, cancellable, NULL);
+			{
 			gchar *tstr;
+			g_output_stream_write_all(stream, str, strlen(str), NULL, cancellable, NULL);
 			tstr = g_strdup("<div style=\"border: solid 0px; padding: 4px;\">\n");
 			g_output_stream_write_all(stream, tstr, strlen(tstr), NULL, cancellable, NULL);
 			g_free(tstr);
@@ -288,13 +298,13 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			tstr = g_strdup("</div>");
 			g_output_stream_write_all(stream, tstr, strlen(tstr), NULL, cancellable, NULL);
 			g_free(tstr);
+			}
 #endif
 			g_free (str);
 			goto success;
 		}
 
-		gchar *buff = rss_process_website(content->str, website);
-		hd->content = buff;
+		hd->content = rss_process_website(content->str, website);
 
 	/*	str = g_strdup_printf (
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
@@ -362,13 +372,13 @@ emfe_evolution_rss_get_widget (EMailFormatterExtension *extension,
 
 	button = gtk_button_new_with_label (rss_get_current_view() ? _("Show Summary") :
 							_("Show Full Text"));
-	g_signal_connect (button, "clicked", set_view_cb, NULL);
+	g_signal_connect (button, "clicked", G_CALLBACK (set_view_cb), NULL);
 
 	gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (box), button, TRUE, TRUE, 0);
 	button = gtk_button_new_with_label (rss_get_current_view() ? _("Show Summary") :
 							_("Show Full Text"));
-	g_signal_connect (button, "clicked", set_view_cb, NULL);
+	g_signal_connect (button, "clicked", G_CALLBACK (set_view_cb), NULL);
 
 	gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (box), button, TRUE, TRUE, 0);

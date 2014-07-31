@@ -2256,15 +2256,18 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	xmlSubstituteEntitiesDefaultValue = 1;
 	r->cache = xml_parse_sux (response->str, response->len);
 	if (rsserror) {
+		gchar *title;
+		xmlError *err;
+		gchar *tmsg;
 		GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
 		if (!g_settings_get_boolean (settings,
 			CONF_SHOW_XML_ERRORS))
 				goto out;
-		gchar *title = g_strdup_printf(
+		title = g_strdup_printf(
 				_("Error while parsing feed: %s"),
 				(gchar *)user_data);
-		xmlError *err = xmlGetLastError();
-		gchar *tmsg = g_strdup(
+		err = xmlGetLastError();
+		tmsg = g_strdup(
 				err ? err->message : _("illegal content type!"));
 		/* xmlGetLastError inserts unwanted \n at the end of error message
  		 * find a better way to get rid of those
