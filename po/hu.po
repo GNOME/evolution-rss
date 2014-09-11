@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-05-17 18:36+0000\n"
-"PO-Revision-Date: 2014-06-30 23:55+0200\n"
+"POT-Creation-Date: 2014-07-31 07:25+0000\n"
+"PO-Revision-Date: 2014-09-11 19:51+0200\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <gnome at fsf dot hu>\n"
 "Language: \n"
@@ -32,13 +32,23 @@ msgstr ""
 "Evolution bővítmény, amely lehetővé teszi az Evolution levelező számára RSS "
 "hírforrások megjelenítését."
 
-#: ../src/dbus.c:108 ../src/rss.c:1954 ../src/rss-config-factory.c:1181
-#: ../src/rss-config-factory.c:1757 ../src/rss-config-factory.c:1935
+#: ../evolution-rss.metainfo.xml.in.h:1
+#| msgid "Evolution RSS Reader"
+msgid "RSS Reader"
+msgstr "RSS olvasó"
+
+#: ../evolution-rss.metainfo.xml.in.h:2
+#| msgid "Reading RSS Feeds..."
+msgid "Read RSS feeds"
+msgstr "RSS hírforrások olvasása"
+
+#: ../src/dbus.c:108 ../src/rss.c:1976 ../src/rss-config-factory.c:1188
+#: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
 msgid "Error adding feed."
 msgstr "Hiba a hírforrás hozzáadásakor."
 
-#: ../src/dbus.c:109 ../src/rss.c:1955 ../src/rss-config-factory.c:1182
-#: ../src/rss-config-factory.c:1758 ../src/rss-config-factory.c:1936
+#: ../src/dbus.c:109 ../src/rss.c:1977 ../src/rss-config-factory.c:1189
+#: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
 msgid "Feed already exists!"
 msgstr "A hírforrás már létezik!"
 
@@ -323,7 +333,7 @@ msgstr ""
 "Állítsa igazra, ha azt szeretné, hogy az ezen URL címeket kezelő program "
 "terminálban fusson"
 
-#: ../src/notification.c:288 ../src/rss.c:2122
+#: ../src/notification.c:288 ../src/rss.c:2144
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Hírforrások lekérése (%d engedélyezve)"
@@ -386,7 +396,6 @@ msgid "Delete \"{0}\"?"
 msgstr "Törli ezt: „{0}”?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-#| msgid "Really delete feed '{0}' ?"
 msgid "Really delete feed '{0}'?"
 msgstr "Valóban törli a következő hírforrást: „{0}”?"
 
@@ -415,12 +424,12 @@ msgstr "Nincs információ"
 msgid "No information"
 msgstr "Nincs információ"
 
-#: ../src/rss.c:423 ../src/rss.c:2303
+#: ../src/rss.c:423 ../src/rss.c:2325
 msgid "Feed"
 msgstr "Hírforrás"
 
-#: ../src/rss.c:488 ../src/rss-config-factory.c:2876
-#: ../src/rss-config-factory.c:3050
+#: ../src/rss.c:488 ../src/rss-config-factory.c:2883
+#: ../src/rss-config-factory.c:3057
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% kész"
@@ -489,72 +498,72 @@ msgstr "Menté_s másként"
 msgid "_Open Link in Browser"
 msgstr "Hivatkozás _megnyitása böngészőben"
 
-#: ../src/rss.c:1445
+#: ../src/rss.c:1467
 msgid "Fetching feed"
 msgstr "Hírforrás lekérése"
 
-#: ../src/rss.c:1757 ../src/rss.c:2035
+#: ../src/rss.c:1779 ../src/rss.c:2057
 msgid "Unnamed feed"
 msgstr "Névtelen hírforrás"
 
-#: ../src/rss.c:1758
+#: ../src/rss.c:1780
 msgid "Error while setting up feed."
 msgstr "Hiba a hírforrás beállításakor."
 
-#: ../src/rss.c:1966 ../src/rss.c:2036
+#: ../src/rss.c:1988 ../src/rss.c:2058
 msgid "Error while fetching feed."
 msgstr "Hiba a hírforrás lekérésekor."
 
-#: ../src/rss.c:1967
+#: ../src/rss.c:1989
 msgid "Invalid Feed"
 msgstr "Érvénytelen hírforrás"
 
-#: ../src/rss.c:2009
+#: ../src/rss.c:2031
 #, c-format
 msgid "Adding feed %s"
 msgstr "%s hírforrás hozzáadása"
 
-#: ../src/rss.c:2050 ../src/rss.c:2058
+#: ../src/rss.c:2072 ../src/rss.c:2080
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "%d/%d üzenet letöltése"
 
-#: ../src/rss.c:2143 ../src/rss.c:2146
+#: ../src/rss.c:2165 ../src/rss.c:2168
 msgid "Complete."
 msgstr "Kész."
 
-#: ../src/rss.c:2180 ../src/rss.c:2362 ../src/rss.c:2400 ../src/rss.c:2603
-#: ../src/rss.c:3191
+#: ../src/rss.c:2202 ../src/rss.c:2384 ../src/rss.c:2422 ../src/rss.c:2625
+#: ../src/rss.c:3213
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Hiba a hírforrás lekérésekor: %s"
 
-#: ../src/rss.c:2192 ../src/rss.c:2196
+#: ../src/rss.c:2214 ../src/rss.c:2218
 msgid "Canceled."
 msgstr "Megszakítva."
 
-#: ../src/rss.c:2247
+#: ../src/rss.c:2269
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Hiba a hírforrás feldolgozásakor: %s"
 
-#: ../src/rss.c:2251
+#: ../src/rss.c:2273
 msgid "illegal content type!"
 msgstr "érvénytelen tartalomtípus!"
 
-#: ../src/rss.c:2311 ../src/rss.c:2314
+#: ../src/rss.c:2333 ../src/rss.c:2336
 msgid "Complete"
 msgstr "Kész"
 
-#: ../src/rss.c:2446
+#: ../src/rss.c:2468
 msgid "Formatting error."
 msgstr "Formázási hiba."
 
-#: ../src/rss.c:3504
+#: ../src/rss.c:3526
 msgid "No RSS feeds configured!"
 msgstr "Nincs RSS hírforrás beállítva!"
 
-#: ../src/rss.c:3556
+#: ../src/rss.c:3578
 msgid "Waiting..."
 msgstr "Várakozás…"
 
@@ -582,115 +591,117 @@ msgid_plural "messages"
 msgstr[0] "üzenet"
 msgstr[1] "üzenet"
 
-#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:572
+#: ../src/rss-config-factory.c:558 ../src/rss-config-factory.c:565
+#: ../src/rss-config-factory.c:579
 msgid "Move to Folder"
 msgstr "Áthelyezés mappába"
 
-#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:572
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:565
+#: ../src/rss-config-factory.c:579
 msgid "M_ove"
 msgstr "Á_thelyezés"
 
-#: ../src/rss-config-factory.c:713
+#: ../src/rss-config-factory.c:720
 msgid "Edit Feed"
 msgstr "Hírforrás szerkesztése"
 
-#: ../src/rss-config-factory.c:715
+#: ../src/rss-config-factory.c:722
 msgid "Add Feed"
 msgstr "Hírforrás hozzáadása"
 
-#: ../src/rss-config-factory.c:1160 ../src/rss-config-factory.c:1729
+#: ../src/rss-config-factory.c:1167 ../src/rss-config-factory.c:1736
 #, no-c-format
 msgid "0% done"
 msgstr "0% kész"
 
-#: ../src/rss-config-factory.c:1548
+#: ../src/rss-config-factory.c:1555
 msgid "Disable"
 msgstr "Letiltás"
 
-#: ../src/rss-config-factory.c:1548
+#: ../src/rss-config-factory.c:1555
 msgid "Enable"
 msgstr "Engedélyezés"
 
-#: ../src/rss-config-factory.c:1608 ../src/rss-main.ui.h:40
+#: ../src/rss-config-factory.c:1615 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Mappatartalmak eltávolítása"
 
-#: ../src/rss-config-factory.c:2000
+#: ../src/rss-config-factory.c:2007
 msgid "Import error."
 msgstr "Importálási hiba."
 
-#: ../src/rss-config-factory.c:2001
+#: ../src/rss-config-factory.c:2008
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Érvénytelen fájl vagy ez a fájl nem tartalmaz semmilyen hírforrást."
 
-#: ../src/rss-config-factory.c:2006
+#: ../src/rss-config-factory.c:2013
 msgid "Importing"
 msgstr "Importálás"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:2029 ../src/rss-config-factory.c:2925
-#: ../src/rss-config-factory.c:3085
+#: ../src/rss-config-factory.c:2036 ../src/rss-config-factory.c:2932
+#: ../src/rss-config-factory.c:3092
 msgid "Please wait"
 msgstr "Kis türelmet"
 
-#: ../src/rss-config-factory.c:2339 ../src/rss-config-factory.c:3205
-#: ../src/rss-config-factory.c:3268
+#: ../src/rss-config-factory.c:2346 ../src/rss-config-factory.c:3212
+#: ../src/rss-config-factory.c:3275
 msgid "All Files"
 msgstr "Minden fájl"
 
-#: ../src/rss-config-factory.c:2350 ../src/rss-config-factory.c:3289
+#: ../src/rss-config-factory.c:2357 ../src/rss-config-factory.c:3296
 msgid "OPML Files"
 msgstr "OPML fájlok"
 
-#: ../src/rss-config-factory.c:2361 ../src/rss-config-factory.c:3278
+#: ../src/rss-config-factory.c:2368 ../src/rss-config-factory.c:3285
 msgid "XML Files"
 msgstr "XML fájlok"
 
-#: ../src/rss-config-factory.c:2380
+#: ../src/rss-config-factory.c:2387
 msgid "Show article's summary"
 msgstr "Cikk összefoglalójának megjelenítése"
 
-#: ../src/rss-config-factory.c:2393
+#: ../src/rss-config-factory.c:2400
 msgid "Feed Enabled"
 msgstr "Hírforrás engedélyezve"
 
-#: ../src/rss-config-factory.c:2406
+#: ../src/rss-config-factory.c:2413
 msgid "Validate feed"
 msgstr "Hírforrás ellenőrzése"
 
-#: ../src/rss-config-factory.c:2463 ../src/rss-main.ui.h:38
+#: ../src/rss-config-factory.c:2470 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Importfájl kiválasztása"
 
-#: ../src/rss-config-factory.c:2546 ../src/rss-main.ui.h:41
+#: ../src/rss-config-factory.c:2553 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Exportálandó fájl kiválasztása"
 
-#: ../src/rss-config-factory.c:2908
+#: ../src/rss-config-factory.c:2915
 msgid "Exporting feeds..."
 msgstr "Hírforrások exportálása…"
 
-#: ../src/rss-config-factory.c:2972 ../src/rss-config-factory.c:2980
+#: ../src/rss-config-factory.c:2979 ../src/rss-config-factory.c:2987
 msgid "Error exporting feeds!"
 msgstr "Hiba a hírforrások exportálásakor!"
 
-#: ../src/rss-config-factory.c:3061
+#: ../src/rss-config-factory.c:3068
 msgid "Importing cookies..."
 msgstr "Sütik importálása…"
 
-#: ../src/rss-config-factory.c:3141
+#: ../src/rss-config-factory.c:3148
 msgid "Select file to import"
 msgstr "Importálandó fájl kiválasztása"
 
-#: ../src/rss-config-factory.c:3211
+#: ../src/rss-config-factory.c:3218
 msgid "Mozilla/Netscape Format"
 msgstr "Mozilla/Netscape formátum"
 
-#: ../src/rss-config-factory.c:3217
+#: ../src/rss-config-factory.c:3224
 msgid "Firefox new Format"
 msgstr "Firefox új formátum"
 
-#: ../src/rss-config-factory.c:3327 ../src/rss-config-factory.c:3332
+#: ../src/rss-config-factory.c:3334 ../src/rss-config-factory.c:3339
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -698,7 +709,7 @@ msgstr ""
 "Nincs RSS hírforrás beállítva!\n"
 "Nem lehet exportálni."
 
-#: ../src/rss-config-factory.c:3495
+#: ../src/rss-config-factory.c:3502
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -709,19 +720,19 @@ msgstr ""
 "fejlesztői csomag telepítése és az evolution-rss programot újra kell "
 "fordítani, hogy lássa azokat a csomagokat."
 
-#: ../src/rss-config-factory.c:4099 ../src/rss-main.ui.h:45
+#: ../src/rss-config-factory.c:4106 ../src/rss-main.ui.h:45
 msgid "Enabled"
 msgstr "Engedélyezve"
 
-#: ../src/rss-config-factory.c:4126
+#: ../src/rss-config-factory.c:4133
 msgid "Feed Name"
 msgstr "Hírforrás neve"
 
-#: ../src/rss-config-factory.c:4139
+#: ../src/rss-config-factory.c:4146
 msgid "Type"
 msgstr "Típus"
 
-#: ../src/rss-config-factory.c:4456 ../src/rss.h:52
+#: ../src/rss-config-factory.c:4463 ../src/rss.h:52
 msgid "News and Blogs"
 msgstr "Hírek és blogok"
 
