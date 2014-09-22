@@ -377,13 +377,21 @@ serverdir="$BONOBO_LIBDIR/bonobo/servers"
 AC_SUBST(serverdir)
 fi
 
+if test $evolution_int_version -ge 31306; then
+privdatadir='${datadir}'/evolution
+else
 privdatadir='${datadir}'/evolution/$EVOLUTION_EXEC_VERSION
+fi
 AC_SUBST(privdatadir)
 
 uidir="$privdatadir/ui"
 AC_SUBST(uidir)
 
+if test $evolution_int_version -ge 31306; then
+privlibdir=`$PKG_CONFIG --variable=privlibdir evolution-shell-3.0`
+else
 privlibdir='${libdir}'/evolution/$EVOLUTION_EXEC_VERSION
+fi
 AC_SUBST(privlibdir)
 
 moduledir="$privlibdir/modules"
