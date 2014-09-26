@@ -130,8 +130,12 @@ evolution_module_rss_la_CPPFLAGS =			\
         $(AM_CPPFLAGS)					\
         -I$(top_srcdir)					\
         -DEVOLUTION_PRIVDATADIR=\""$(privdatadir)"\"	\
-        -DG_LOG_DOMAIN=\"evolution-module-rss\"		\
-        $(EVOLUTION_RSS_EPLUGIN_LIBS)
+        -DG_LOG_DOMAIN=\"evolution-module-rss\"
+
+evolution_module_rss_la_LIBADD =			\
+        $(EVOLUTION_RSS_EPLUGIN_LIBS)			\
+	$(DATASERVER_LIBS)
+
 
 
 evolution_module_rss_la_LDFLAGS =		\
