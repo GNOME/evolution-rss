@@ -30,7 +30,6 @@
 #include <libedataserver/libedataserver.h>
 
 #include <glib/gi18n-lib.h>
-#include <X11/Xlib.h>
 #include <camel/camel.h>
 
 #include "misc.h"
