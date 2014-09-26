@@ -55,6 +55,17 @@
 #include <libsoup/soup-gnome-features.h>
 #endif
 
+#ifdef G_OS_WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#ifdef HAVE_WSPIAPI_H
+#include <wspiapi.h>
+#endif
+
+#define IN6_ARE_ADDR_EQUAL(a,b) IN6_ADDR_EQUAL(a,b)
+
+#endif
+
 #define d(x)
 
 #include "rss-evo-common.h"
