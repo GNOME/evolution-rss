@@ -17,6 +17,7 @@ INTLTOOL =                      \
 
 EXTRA_DIST = \
 	$(INTLTOOL)		\
+	$(appdata_in_files)	\
 	autogen.sh		\
 	intltool-extract.in	\
 	intltool-merge.in	\
