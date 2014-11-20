@@ -261,7 +261,7 @@ get_port_from_uri(gchar *uri)
 	str = g_strsplit(uri, "://", 2);
 	str2 = g_strsplit(str[1], "/", 2);
 	str3 = g_strsplit(str2[0], ":", 2);
-	port = g_strdup(str3[1]);
+	port = *str3 ? g_strdup(str3[1]) : NULL;
 	g_strfreev(str);
 	g_strfreev(str2);
 	g_strfreev(str3);
