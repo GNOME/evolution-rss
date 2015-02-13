@@ -333,6 +333,7 @@ parse_html(char *url, const char *html, int len)
 		return NULL;
 	doc = src;
 	newbase = (gchar *)xmlGetProp(html_find((xmlNode *)doc, (gchar *)"base"), (xmlChar *)"href");
+
 	d("newbase:|%s|\n", newbase);
 	tmpdoc = (xmlDoc *)html_find((xmlNode *)doc, (gchar *)"base");
 	xmlUnlinkNode((xmlNode *)tmpdoc);
@@ -340,6 +341,7 @@ parse_html(char *url, const char *html, int len)
 	html_set_base((xmlNode *)doc, url, "img", "src", newbase);
 	html_set_base((xmlNode *)doc, url, "input", "src", newbase);
 	html_set_base((xmlNode *)doc, url, "link", "src", newbase);
+	html_set_base((xmlNode *)doc, url, "link", "href", newbase);
 	html_set_base((xmlNode *)doc, url, "body", "background", newbase);
 	html_set_base((xmlNode *)doc, url, "script", "src", newbase);
 /*      while (doc = html_find((xmlNode *)doc, "img"))
