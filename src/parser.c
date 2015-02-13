@@ -1,5 +1,5 @@
 /*  Evoution RSS Reader Plugin
- *  Copyright (C) 2007-2010 Lucian Langa <cooly@gnome.eu.org>
+ *  Copyright (C) 2007-2015 Lucian Langa <cooly@gnome.eu.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -69,7 +69,11 @@ extern int rss_verbose_debug;
 #include "misc.h"
 #include "network-soup.h"
 
-//extern GConfClient *rss_gconf;
+#if EVOLUTION_VERSION < 30304
+extern GConfClient *rss_gconf;
+#else
+static GSettings *rss_settings;
+#endif
 void asyncr_context_free(AsyncData *asyncr);
 GQueue *display_channel_items_sync(AsyncData *ayncr);
 
@@ -1354,8 +1358,16 @@ display_channel_items_sync(AsyncData *asyncr)
 		subj = g_strdup(CF->subj);
 
 		ftotal++;
-#if 0
+#if EVOLUTION_VERSION < 30304
+		GConfClient *client = gconf_client_get_default();
+#else
+		rss_settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
+#if EVOLUTION_VERSION < 30304
 		if (gconf_client_get_bool(rss_gconf, GCONF_KEY_DOWNLOAD_ENCLOSURES, NULL)) {
+#else
+		if (g_settings_get_boolean(rss_settings, CONF_DOWNLOAD_ENCLOSURES)) {
+#endif
 			if (CF->encl) {
 				process_enclosure(CF);
 				goto done;
@@ -1364,7 +1376,6 @@ display_channel_items_sync(AsyncData *asyncr)
 				goto done;
 			}
 		}
-#endif
 
 		if (!freeze) {
 			camel_folder_freeze(mail_folder);

@@ -540,6 +540,11 @@ download_chunk(
 		progress = (NetStatusProgress*)statusdata;
 		if (progress->current > 0 && progress->total > 0) {
 #if EVOLUTION_VERSION < 30304
+			rss_gconf = gconf_client_get_default();
+#else
+			rss_settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
+#if EVOLUTION_VERSION < 30304
 			guint encl_max_size = (gint)gconf_client_get_float(
 				rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
 #else
@@ -1304,7 +1309,11 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 
 	editor = e_msg_composer_get_editor (t->composer);
 	view = e_html_editor_get_view (editor);
+#if EVOLUTION_VERSION >= 31390
+	text = e_html_editor_view_get_text_html (view, NULL, NULL);
+#else
 	text = e_html_editor_view_get_text_html (view);
+#endif
 	length = strlen (text);
 #else
 	/* unfortunately e_msg_composer does not have raw get/set text body
