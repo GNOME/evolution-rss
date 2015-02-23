@@ -339,6 +339,7 @@ typedef struct CREATE_FEED {	/* used by create_mail function when called by unbl
 	gchar *encl;		//feed enclosure
 	gchar *enclurl;
 	GList *attachments;	//feed media files
+	GHashTable *attlengths;	//feed media files
 	GList *attachedfiles;	//list of downloaded media files
 	guint attachmentsqueue;	//list of downloaded media files
 	FILE *efile;		//enclosure file
@@ -500,8 +501,8 @@ void download_chunk(
 	gpointer statusdata,
 	gpointer data);
 
-void process_enclosure(create_feed *CF);
-void process_attachments(create_feed *CF);
+gboolean process_enclosure(create_feed *CF);
+gboolean process_attachments(create_feed *CF);
 
 #ifdef HAVE_GECKO
 void rss_mozilla_init(void);

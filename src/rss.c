@@ -3916,6 +3916,7 @@ create_mail(create_feed *CF)
 	GList *p, *l;
 	gchar *time_str, *buf;
 	gint offset;
+	guint c = 0;
 
 	mail_folder = check_feed_folder(CF->full_path);
 	if (!mail_folder)
@@ -4052,7 +4053,25 @@ create_mail(create_feed *CF)
 #else
 			camel_object_unref(part);
 #endif
+#if EVOLUTION_VERSION < 30304
+		GConfClient *client = gconf_client_get_default();
+#else
+		rss_settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
+		gdouble encl_max_size = g_settings_get_double(
+					rss_settings, CONF_ENCLOSURE_SIZE)*1024;
 		for (l = g_list_first(CF->attachedfiles); l != NULL; l = l->next) {
+			gdouble emax;
+			gchar *emaxstr = g_hash_table_lookup(CF->attlengths,
+						get_url_basename(l->data));
+			if (emaxstr)
+				emax = atof(emaxstr);
+			else
+				emax = 0;
+			if (emax > encl_max_size) {
+				continue;
+			}
+			c++;
 			msgp = file_to_message(l->data);
 			if (msgp) {
 				camel_multipart_add_part(mp, msgp);
@@ -4063,6 +4082,8 @@ create_mail(create_feed *CF)
 #endif
 			}
 		}
+		if (!c)
+			goto out;
 #if EVOLUTION_VERSION >= 23100
 		camel_medium_set_content((CamelMedium *)new, (CamelDataWrapper *)mp);
 #else
@@ -4112,6 +4133,7 @@ create_mail(create_feed *CF)
 		camel_object_unref(mp);
 #endif
 	} else
+out:
 #if EVOLUTION_VERSION >= 23100
 		camel_medium_set_content(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 #else
@@ -4292,11 +4314,14 @@ finish_attachment (
 	cfl *user_data);
 #endif
 
-void
+gboolean
 process_attachments(create_feed *CF)
 {
 	cfl *CFL;
 	GList *l = g_list_first(CF->attachments);
+	gchar *emaxstr = NULL;
+	gdouble emax;
+	guint proc = 0;
 
 	g_return_if_fail(CF->attachments != NULL);
 
@@ -4306,6 +4331,25 @@ process_attachments(create_feed *CF)
 		if (g_list_find_custom(rf->enclist, l->data,
 			(GCompareFunc)strcmp))
 			continue;
+		//don't queue download if it exceeds max allowed size
+#if EVOLUTION_VERSION < 30304
+		GConfClient *client = gconf_client_get_default();
+#else
+		rss_settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
+		gdouble encl_max_size = g_settings_get_double(
+					rss_settings, CONF_ENCLOSURE_SIZE)*1024;
+		if (CF->encl) {
+			emaxstr = g_hash_table_lookup(CF->attlengths, get_url_basename(CF->encl));
+		}
+		if (emaxstr)
+			emax = atof(emaxstr);
+		else
+			emax = 0;
+		if (emax > encl_max_size) {
+			continue;
+		}
+		proc++;
 		CFL = g_new0(cfl, 1);
 		CFL->url = l->data;
 		CFL->CF = CF;
@@ -4320,6 +4364,9 @@ process_attachments(create_feed *CF)
 			1,
 			NULL);
 	} while ((l = l->next));
+	if (proc)
+		return TRUE;
+	return FALSE;
 }
 
 
@@ -4378,27 +4425,44 @@ out:	if (user_data->file)
 				NULL);
 }
 
-void
+gboolean
 process_enclosure(create_feed *CF)
 {
 	cfl *CFL;
+	gdouble emax;
+	gchar *emaxstr;
 
 	if (g_list_find_custom(rf->enclist, CF->encl,
 			(GCompareFunc)strcmp)) {
-		return;
+		return TRUE; //assume true for now
 	}
-	d("enclosure file:%s\n", CF->encl)
-	CFL = g_new0(cfl, 1);
-	CFL->url = CF->encl;
-	CFL->CF = CF;
-	download_unblocking(
-		CF->encl,
-		download_chunk,
-		CFL,
-		(gpointer)finish_enclosure,
-		CFL,
-		1,
-		NULL);
+#if EVOLUTION_VERSION < 30304
+	GConfClient *client = gconf_client_get_default();
+#else
+	rss_settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
+	gdouble encl_max_size = g_settings_get_double(
+				rss_settings, CONF_ENCLOSURE_SIZE)*1024;
+	emaxstr = g_hash_table_lookup(CF->attlengths, get_url_basename(CF->encl));
+	if (emaxstr)
+		emax = atof(emaxstr);
+	else
+		emax = 0;
+	if (emax <= encl_max_size) {
+		d("enclosure file:%s\n", CF->encl)
+		CFL = g_new0(cfl, 1);
+		CFL->url = CF->encl;
+		CFL->CF = CF;
+		download_unblocking(
+			CF->encl,
+			download_chunk,
+			CFL,
+			(gpointer)finish_enclosure,
+			CFL,
+			1,
+			NULL);
+	} else
+		return FALSE;
 }
 
 void

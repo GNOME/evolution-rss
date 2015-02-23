@@ -1080,7 +1080,8 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 	gchar *qsafe, *tcat;
 	GList *category = NULL;
 	create_feed *CF;
-	GList *attachments = NULL;
+	GList *attachments = NULL, *attsizes = NULL, *l = NULL;
+	GHashTable *attlengths = NULL;
 	gchar *base = NULL, *main_date = NULL;
 
 	if (r) {
@@ -1220,10 +1221,20 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 		}
 		//handle attatchments (can be multiple)
 		attachments = layer_find_tag_prop(top, "media", "url");
-		if (!attachments)
+		attsizes = layer_find_tag_prop(top, "media", "fileSize");
+		if (!attachments) {
 			attachments = layer_query_find_all_prop (top,
 				"link", (xmlChar *)"rel",
 				"enclosure", (xmlChar *)"href");
+			attsizes = layer_query_find_all_prop (top,
+				"link", (xmlChar *)"rel",
+				"enclosure", (xmlChar *)"length");
+		}
+		attlengths = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+		for (l = g_list_first(attsizes); l != NULL; l = l->next) {
+			gchar *c = get_url_basename(g_list_first(attachments)->data);
+			g_hash_table_insert(attlengths, g_strdup(c), g_strdup(l->data));
+		}
 
 //                char *comments = g_strdup(layer_find (top, "comments", NULL));	//RSS,
 		comments = (gchar *)layer_find_ns_tag(top, "wfw", "commentRss", NULL); //add slash:comments
@@ -1262,6 +1273,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 		CF->website	= g_strdup(link);
 		CF->encl	= g_strdup(encl);
 		CF->attachments	= attachments;
+		CF->attlengths	= attlengths;
 		CF->comments	= g_strdup(comments);
 		CF->feed_fname  = g_strdup(feed_name);	//feed file name
 		CF->feed_uri	= g_strdup(feed);	//feed uri (uid!)
@@ -1369,11 +1381,11 @@ display_channel_items_sync(AsyncData *asyncr)
 		if (g_settings_get_boolean(rss_settings, CONF_DOWNLOAD_ENCLOSURES)) {
 #endif
 			if (CF->encl) {
-				process_enclosure(CF);
-				goto done;
+				if (process_enclosure(CF))
+					goto done;
 			} else if (g_list_length(CF->attachments)) {
-				process_attachments(CF);
-				goto done;
+				if (process_attachments(CF))
+					goto done;
 			}
 		}
 
