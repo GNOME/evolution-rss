@@ -4082,8 +4082,14 @@ create_mail(create_feed *CF)
 #endif
 			}
 		}
-		if (!c)
+		if (!c) {
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(mp);
+#else
+			camel_object_unref(mp);
+#endif
 			goto out;
+		}
 #if EVOLUTION_VERSION >= 23100
 		camel_medium_set_content((CamelMedium *)new, (CamelDataWrapper *)mp);
 #else
@@ -4121,6 +4127,13 @@ create_mail(create_feed *CF)
 #else
 			camel_object_unref(msgp);
 #endif
+		} else {
+#if (DATASERVER_VERSION >= 2031001)
+			g_object_unref(mp);
+#else
+			camel_object_unref(mp);
+#endif
+			goto out;
 		}
 #if EVOLUTION_VERSION >= 23100
 		camel_medium_set_content((CamelMedium *)new, (CamelDataWrapper *)mp);
