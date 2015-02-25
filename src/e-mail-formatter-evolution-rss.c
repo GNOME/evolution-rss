@@ -80,13 +80,8 @@ feed_async(gpointer key)
 	HD *hd = (HD *)key;
 	gchar *result;
 	e_mail_display_load_images(rss_get_display());
-	//gchar *header = e_mail_formatter_get_html_header (hd->formatter);
-	//camel_stream_write_string (hd->stream, header, NULL, NULL);
-	result = g_strconcat(hd->header,
-			"www</body></html>", NULL);
-			//NULL);
-	g_print("header:%s\n", result);
 	e_web_view_load_string (E_WEB_VIEW (rss_get_display()), hd->content);
+
 	return FALSE;
 }
 
@@ -133,24 +128,19 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		goto fail;
 	}
 
-	str = g_strdup_printf (
-		"<object type=\"application/vnd.evolution.attachment\" "
-		"height=\"0\" width=\"100%%\" data=\"%s\" id=\"%s\"></object>",
-		e_mail_part_get_id(part),
-		e_mail_part_get_id(part));
-#if EVOLUTION_VERSION < 31191
-	camel_stream_write_string (
-		stream, str, cancellable, NULL);
-#else
-	g_output_stream_write_all(stream, str,
-		strlen(str), NULL, cancellable, NULL);
-#endif
 	h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
 
 	website = (gchar *)camel_medium_get_header (
 			CAMEL_MEDIUM (message), "Website");
+	if (!website)
+		website = (gchar *)camel_medium_get_header (
+			CAMEL_MEDIUM (message), "X-evolution-rss-website");
+
 	feedid  = (gchar *)camel_medium_get_header(
 				CAMEL_MEDIUM(message), "RSS-ID");
+	if (!feedid)
+		feedid  = (gchar *)camel_medium_get_header(
+				CAMEL_MEDIUM(message), "X-evolution-rss-RSS-ID");
 	comments  = (gchar *)camel_medium_get_header (
 				CAMEL_MEDIUM(message),
 				"X-Evolution-rss-comments");
@@ -162,6 +152,10 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	subject = camel_header_decode_string(
 			camel_medium_get_header (CAMEL_MEDIUM (message),
 			"Subject"), NULL);
+	if (!subject)
+		subject = camel_header_decode_string(
+			camel_medium_get_header (CAMEL_MEDIUM (message),
+			"X-evolution-rss-subject"), NULL);
 
 	if (feedid)
 		is_html = rss_get_is_html(feedid);
@@ -208,6 +202,19 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			cont_col & 0xEDECEB & 0xffffff,
 			text_col & 0xffffff,
 			iconfile, website, subject);
+		if (category) {
+			gchar *fstr;
+			gchar *tmp = g_strdup_printf (
+				"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
+				"<b><font size=-1>%s: %s</font></b></div>",
+				cont_col & 0xEDECEB & 0xffffff,
+				text_col & 0xffffff,
+				_("Posted under"), category);
+			fstr = g_strconcat(str, tmp, NULL);
+			g_free (tmp);
+			g_free (str);
+			str = fstr;
+		}
 
 #if EVOLUTION_VERSION < 31191
 		camel_stream_write_string (
@@ -304,6 +311,7 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		}
 
 		hd->content = rss_process_website(content->str, website);
+		hd->website = website;
 
 	/*	str = g_strdup_printf (
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",

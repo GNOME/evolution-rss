@@ -4014,7 +4014,6 @@ create_mail(create_feed *CF)
 			CAMEL_MEDIUM(new),
 			"X-evolution-rss-category",
 			cats->str);
-		g_string_free(cats, TRUE);
 	}
 	rtext = camel_data_wrapper_new ();
 	type = camel_content_type_new ("x-evolution", "evolution-rss-feed");
@@ -4047,6 +4046,13 @@ create_mail(create_feed *CF)
 			camel_medium_set_content_object(
 				(CamelMedium *)part, (CamelDataWrapper *)rtext);
 #endif
+			camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-subject", safe_subj);
+			camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-website", CF->website);
+			camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-RSS-ID", CF->feedid);
+			if (CF->comments)
+				camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-coments", CF->comments);
+			if (CF->category)
+				camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-category", cats->str);
 			camel_multipart_add_part(mp, part);
 #if (DATASERVER_VERSION >= 2031001)
 			g_object_unref(part);
@@ -4112,6 +4118,13 @@ create_mail(create_feed *CF)
 		camel_medium_set_content_object(
 			(CamelMedium *)part, (CamelDataWrapper *)rtext);
 #endif
+		camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-subject", safe_subj);
+		camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-website", CF->website);
+		camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-RSS-ID", CF->feedid);
+		if (CF->comments)
+			camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-coments", CF->comments);
+		if (CF->category)
+			camel_medium_set_header((CamelMedium *)part, "X-evolution-rss-category", cats->str);
 
 		camel_multipart_add_part(mp, part);
 #if (DATASERVER_VERSION >= 2031001)
@@ -4152,6 +4165,7 @@ out:
 #else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 #endif
+	g_string_free(cats, TRUE);
 
 #if (DATASERVER_VERSION >= 2033001)
 	camel_folder_append_message_sync (mail_folder, new, info,
