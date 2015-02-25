@@ -4165,7 +4165,8 @@ out:
 #else
 		camel_medium_set_content_object(CAMEL_MEDIUM(new), CAMEL_DATA_WRAPPER(rtext));
 #endif
-	g_string_free(cats, TRUE);
+	if (CF->category)
+		g_string_free(cats, TRUE);
 
 #if (DATASERVER_VERSION >= 2033001)
 	camel_folder_append_message_sync (mail_folder, new, info,

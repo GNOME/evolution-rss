@@ -313,41 +313,7 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		hd->content = rss_process_website(content->str, website);
 		hd->website = website;
 
-	/*	str = g_strdup_printf (
-			"<div style=\"border: solid #%06x 1px; background-color: #%06x; color: #%06x;\">\n",
-			frame_col & 0xffffff,
-			cont_col & 0xffffff,
-			text_col & 0xffffff);
-		camel_stream_write_string (stream, str, NULL, NULL);
-		g_free (str);
-		str = g_strdup_printf (
-			"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-			"<b><font size=+1><a href=%s>%s</a></font></b></div>",
-			cont_col & 0xEDECEB & 0xffffff,
-			text_col & 0xffffff,
-			website, subject);
-		camel_stream_write_string (stream, str, NULL, NULL);
-		if (category) {
-			str = g_strdup_printf (
-				"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-				"<b><font size=-1>%s: %s</font></b></div>",
-				cont_col & 0xEDECEB & 0xffffff,
-				text_col & 0xffffff,
-				_("Posted under"), category);
-			camel_stream_write_string (stream, str, NULL, NULL);
-			g_free (str);
-		}
-
-		str = g_strdup_printf (
-			"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
-			"%s</div></div>",
-			frame_col & 0xffffff,
-			cont_col & 0xffffff,
-			text_col & 0xffffff,
-			buff);
-		camel_stream_write_string (stream, buff, NULL, NULL);*/
-//		g_free (str);
-	g_idle_add((GSourceFunc)feed_async, hd);
+		g_idle_add((GSourceFunc)feed_async, hd);
 	}
 
 success:g_object_unref(message);
