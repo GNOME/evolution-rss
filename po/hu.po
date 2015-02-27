@@ -4,15 +4,14 @@
 #
 # Gergely Szarka <gszarka@invitel.hu>, 2009.
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2010.
-# Balázs Úr <urbalazs at gmail dot com>, 2013, 2014.
-# Balázs Úr <urbalazs@gmail.com>, 2014.
+# Balázs Úr <urbalazs at gmail dot com>, 2013, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-07-31 07:25+0000\n"
-"PO-Revision-Date: 2014-09-11 19:51+0200\n"
+"POT-Creation-Date: 2015-02-25 19:08+0000\n"
+"PO-Revision-Date: 2015-02-28 00:49+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <gnome at fsf dot hu>\n"
 "Language: \n"
@@ -33,21 +32,19 @@ msgstr ""
 "hírforrások megjelenítését."
 
 #: ../evolution-rss.metainfo.xml.in.h:1
-#| msgid "Evolution RSS Reader"
 msgid "RSS Reader"
 msgstr "RSS olvasó"
 
 #: ../evolution-rss.metainfo.xml.in.h:2
-#| msgid "Reading RSS Feeds..."
 msgid "Read RSS feeds"
 msgstr "RSS hírforrások olvasása"
 
-#: ../src/dbus.c:108 ../src/rss.c:1976 ../src/rss-config-factory.c:1188
+#: ../src/dbus.c:108 ../src/rss.c:1980 ../src/rss-config-factory.c:1188
 #: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
 msgid "Error adding feed."
 msgstr "Hiba a hírforrás hozzáadásakor."
 
-#: ../src/dbus.c:109 ../src/rss.c:1977 ../src/rss-config-factory.c:1189
+#: ../src/dbus.c:109 ../src/rss.c:1981 ../src/rss-config-factory.c:1189
 #: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
 msgid "Feed already exists!"
 msgstr "A hírforrás már létezik!"
@@ -57,21 +54,25 @@ msgstr "A hírforrás már létezik!"
 msgid "Importing URL: %s"
 msgstr "URL importálása: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:363
-#: ../src/e-mail-formatter-evolution-rss.c:369
+#: ../src/e-mail-formatter-evolution-rss.c:212
+msgid "Posted under"
+msgstr "Beküldve mint"
+
+#: ../src/e-mail-formatter-evolution-rss.c:380
+#: ../src/e-mail-formatter-evolution-rss.c:386
 msgid "Show Summary"
 msgstr "Összefoglaló megjelenítése"
 
-#: ../src/e-mail-formatter-evolution-rss.c:364
-#: ../src/e-mail-formatter-evolution-rss.c:370
+#: ../src/e-mail-formatter-evolution-rss.c:381
+#: ../src/e-mail-formatter-evolution-rss.c:387
 msgid "Show Full Text"
 msgstr "Teljes szöveg megjelenítése"
 
-#: ../src/e-mail-formatter-evolution-rss.c:385
+#: ../src/e-mail-formatter-evolution-rss.c:402
 msgid "Evolution-RSS"
 msgstr "Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:386
+#: ../src/e-mail-formatter-evolution-rss.c:403
 msgid "Displaying RSS feed arcticles"
 msgstr "RSS hírforrás cikkek megjelenítése"
 
@@ -333,7 +334,7 @@ msgstr ""
 "Állítsa igazra, ha azt szeretné, hogy az ezen URL címeket kezelő program "
 "terminálban fusson"
 
-#: ../src/notification.c:288 ../src/rss.c:2144
+#: ../src/notification.c:288 ../src/rss.c:2148
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Hírforrások lekérése (%d engedélyezve)"
@@ -416,15 +417,15 @@ msgid "Setup RSS"
 msgstr "RSS beállítása"
 
 #. ATOM
-#: ../src/parser.c:1084
+#: ../src/parser.c:1099
 msgid "No Information"
 msgstr "Nincs információ"
 
-#: ../src/parser.c:1183
+#: ../src/parser.c:1198
 msgid "No information"
 msgstr "Nincs információ"
 
-#: ../src/rss.c:423 ../src/rss.c:2325
+#: ../src/rss.c:423 ../src/rss.c:2332
 msgid "Feed"
 msgstr "Hírforrás"
 
@@ -434,136 +435,136 @@ msgstr "Hírforrás"
 msgid "%2.0f%% done"
 msgstr "%2.0f%% kész"
 
-#: ../src/rss.c:625
+#: ../src/rss.c:630
 msgid "Enter User/Pass for feed"
 msgstr "Adja meg a felhasználónevet/jelszót a hírforráshoz"
 
-#: ../src/rss.c:681
+#: ../src/rss.c:686
 msgid "Enter your username and password for:"
 msgstr "Adja meg a felhasználónevet és jelszót ehhez:"
 
-#: ../src/rss.c:699
+#: ../src/rss.c:704
 msgid "Username: "
 msgstr "Felhasználónév: "
 
-#: ../src/rss.c:720 ../src/rss-main.ui.h:37
+#: ../src/rss.c:725 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Jelszó: "
 
-#: ../src/rss.c:757
+#: ../src/rss.c:762
 msgid "_Remember this password"
 msgstr "_Emlékezzen erre a jelszóra"
 
-#: ../src/rss.c:871 ../src/rss.c:875
+#: ../src/rss.c:876 ../src/rss.c:880
 msgid "Cancelling..."
 msgstr "Megszakítás…"
 
-#: ../src/rss.c:1157
+#: ../src/rss.c:1162
 msgid "_Copy"
 msgstr "_Másolás"
 
-#: ../src/rss.c:1158
+#: ../src/rss.c:1163
 msgid "Select _All"
 msgstr "Ö_sszes kijelölése"
 
-#: ../src/rss.c:1160 ../src/rss.c:1171
+#: ../src/rss.c:1165 ../src/rss.c:1176
 msgid "Zoom _In"
 msgstr "_Nagyítás"
 
-#: ../src/rss.c:1161 ../src/rss.c:1172
+#: ../src/rss.c:1166 ../src/rss.c:1177
 msgid "Zoom _Out"
 msgstr "_Kicsinyítés"
 
-#: ../src/rss.c:1162 ../src/rss.c:1173
+#: ../src/rss.c:1167 ../src/rss.c:1178
 msgid "_Normal Size"
 msgstr "N_ormál méret"
 
-#: ../src/rss.c:1164
+#: ../src/rss.c:1169
 msgid "_Open Link"
 msgstr "_Hivatkozás megnyitása"
 
-#: ../src/rss.c:1165 ../src/rss.c:1179
+#: ../src/rss.c:1170 ../src/rss.c:1184
 msgid "_Copy Link Location"
 msgstr "Hivatkozás _címének másolása"
 
-#: ../src/rss.c:1175
+#: ../src/rss.c:1180
 msgid "_Print..."
 msgstr "_Nyomtatás…"
 
-#: ../src/rss.c:1176
+#: ../src/rss.c:1181
 msgid "Save _As"
 msgstr "Menté_s másként"
 
-#: ../src/rss.c:1178
+#: ../src/rss.c:1183
 msgid "_Open Link in Browser"
 msgstr "Hivatkozás _megnyitása böngészőben"
 
-#: ../src/rss.c:1467
+#: ../src/rss.c:1471
 msgid "Fetching feed"
 msgstr "Hírforrás lekérése"
 
-#: ../src/rss.c:1779 ../src/rss.c:2057
+#: ../src/rss.c:1783 ../src/rss.c:2061
 msgid "Unnamed feed"
 msgstr "Névtelen hírforrás"
 
-#: ../src/rss.c:1780
+#: ../src/rss.c:1784
 msgid "Error while setting up feed."
 msgstr "Hiba a hírforrás beállításakor."
 
-#: ../src/rss.c:1988 ../src/rss.c:2058
+#: ../src/rss.c:1992 ../src/rss.c:2062
 msgid "Error while fetching feed."
 msgstr "Hiba a hírforrás lekérésekor."
 
-#: ../src/rss.c:1989
+#: ../src/rss.c:1993
 msgid "Invalid Feed"
 msgstr "Érvénytelen hírforrás"
 
-#: ../src/rss.c:2031
+#: ../src/rss.c:2035
 #, c-format
 msgid "Adding feed %s"
 msgstr "%s hírforrás hozzáadása"
 
-#: ../src/rss.c:2072 ../src/rss.c:2080
+#: ../src/rss.c:2076 ../src/rss.c:2084
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "%d/%d üzenet letöltése"
 
-#: ../src/rss.c:2165 ../src/rss.c:2168
+#: ../src/rss.c:2169 ../src/rss.c:2172
 msgid "Complete."
 msgstr "Kész."
 
-#: ../src/rss.c:2202 ../src/rss.c:2384 ../src/rss.c:2422 ../src/rss.c:2625
-#: ../src/rss.c:3213
+#: ../src/rss.c:2206 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2632
+#: ../src/rss.c:3220
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Hiba a hírforrás lekérésekor: %s"
 
-#: ../src/rss.c:2214 ../src/rss.c:2218
+#: ../src/rss.c:2218 ../src/rss.c:2222
 msgid "Canceled."
 msgstr "Megszakítva."
 
-#: ../src/rss.c:2269
+#: ../src/rss.c:2276
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Hiba a hírforrás feldolgozásakor: %s"
 
-#: ../src/rss.c:2273
+#: ../src/rss.c:2280
 msgid "illegal content type!"
 msgstr "érvénytelen tartalomtípus!"
 
-#: ../src/rss.c:2333 ../src/rss.c:2336
+#: ../src/rss.c:2340 ../src/rss.c:2343
 msgid "Complete"
 msgstr "Kész"
 
-#: ../src/rss.c:2468
+#: ../src/rss.c:2475
 msgid "Formatting error."
 msgstr "Formázási hiba."
 
-#: ../src/rss.c:3526
+#: ../src/rss.c:3533
 msgid "No RSS feeds configured!"
 msgstr "Nincs RSS hírforrás beállítva!"
 
-#: ../src/rss.c:3578
+#: ../src/rss.c:3585
 msgid "Waiting..."
 msgstr "Várakozás…"
 
