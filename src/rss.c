@@ -311,13 +311,9 @@ gboolean display_feed_async(gpointer key);
 gboolean fetch_one_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean fetch_feed(gpointer key, gpointer value, gpointer user_data);
 gboolean custom_fetch_feed(gpointer key, gpointer value, gpointer user_data);
-//void fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream);
-void fetch_comments(gchar *url, gchar *mainurl, EMailFormatter *stream);
 
 guint fallback_engine(void);
 
-//gchar *print_comments(gchar *url, gchar *stream, EMFormatHTML *format);
-gchar *print_comments(gchar *url, gchar *stream, EMailFormatter *format);
 
 //static void refresh_cb (GtkWidget *button, EMFormatHTMLPObject *pobject);
 
@@ -2551,10 +2547,14 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMailFormatter *user_
 	g_string_free(response, 0);
 
 	if (reload && !rf->cur_format) {
+#if EVOLUTION_VERSION >= 30501
+		e_web_view_reload(user_data);
+#else
 #if EVOLUTION_VERSION >= 23190
-		//em_format_queue_redraw((EMFormat *)user_data);
+		em_format_queue_redraw((EMFormat *)user_data);
 #else
 		em_format_redraw((EMFormat *)user_data);
+#endif
 #endif
 	}
 }
@@ -4541,35 +4541,42 @@ out:	if (CFL->file)
 				NULL);
 }
 
-gchar *update_comments(RDF *r);
+gchar *update_comments(RDF *r, EMailFormatter *format);
 
 gchar *
-update_comments(RDF *r)
+update_comments(RDF *r, EMailFormatter *format)
 {
 	guint i;
 	create_feed *CF;
 	xmlNodePtr el;
 	gchar *scomments;
 	GString *comments = g_string_new(NULL);
+	guint32 frame_col, cont_col, text_col;
+	frame_col = e_rgba_to_value (
+		e_mail_formatter_get_color (format, E_MAIL_FORMATTER_COLOR_FRAME));
+	cont_col = e_rgba_to_value (
+		e_mail_formatter_get_color (format, E_MAIL_FORMATTER_COLOR_CONTENT));
+	text_col = e_rgba_to_value (
+		e_mail_formatter_get_color (format, E_MAIL_FORMATTER_COLOR_TEXT));
 	for (i=0; NULL != (el = g_array_index(r->item, xmlNodePtr, i)); i++) {
 		CF = parse_channel_line(el->children, NULL, NULL, NULL);
 		g_string_append_printf (comments,
 			"<div style=\"border: solid #%06x 1px; background-color: #%06x; padding: 0px; color: #%06x;\">",
-			frame_colour & 0xffffff,
-			content_colour & 0xEDECEB & 0xffffff,
-			text_colour & 0xffffff);
+			frame_col & 0xffffff,
+			cont_col & 0xEDECEB & 0xffffff,
+			text_col & 0xffffff);
 		g_string_append_printf (comments,
 			"<div style=\"border: solid 0px; background-color: #%06x; padding: 2px; color: #%06x;\">"
 			"<a href=%s><b>%s</b></a> on %s</div>",
-			content_colour & 0xEDECEB & 0xffffff,
-			text_colour & 0xffffff,
+			cont_col & 0xEDECEB & 0xffffff,
+			text_col & 0xffffff,
 			CF->website, CF->subj, CF->date);
 		g_string_append_printf (comments,
 			"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">"
 			"%s</div>",
-			frame_colour & 0xffffff,
-			content_colour & 0xffffff,
-			text_colour & 0xffffff,
+			frame_col & 0xffffff,
+			cont_col & 0xffffff,
+			text_col & 0xffffff,
 				CF->body);
 		g_string_append_printf(comments, "</div>&nbsp;");
 		free_cf(CF);
@@ -4586,7 +4593,7 @@ display_comments (RDF *r, EMailFormatter *format)
 	gchar *tmp;
 	xmlNodePtr root = xmlDocGetRootElement (r->cache);
 	if (tree_walk (root, r)) {
-		gchar *comments = update_comments(r);
+		gchar *comments = update_comments(r, format);
 		tmp = process_images(comments, r->uri, TRUE, format);
 		g_free(comments);
 		if (r->maindate)

@@ -44,6 +44,15 @@
 #endif
 #include <mail/em-event.h>
 
+#if (EVOLUTION_VERSION > 30501)
+#include <em-format/e-mail-formatter.h>
+#else
+#include <mail/em-format-html.h>
+#if EVOLUTION_VERSION >= 30400
+#include <mail/em-format-hook.h>
+#endif
+#endif
+
 #ifdef HAVE_WEBKIT
 #include <webkit/webkitwebview.h>
 #endif
@@ -457,6 +466,8 @@ gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
 void update_progress_text(gchar *title);
 void update_feed_image(RDF *r);
+void fetch_comments(gchar *url, gchar *mainurl, EMailFormatter *stream);
+gchar *print_comments(gchar *url, gchar *stream, EMailFormatter *format);
 void cancel_comments_session(SoupSession *sess);
 gchar *search_rss(char *buffer, int len);
 void prepare_hashes(void);

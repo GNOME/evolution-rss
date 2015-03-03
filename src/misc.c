@@ -168,6 +168,12 @@ strextr(gchar *text, const gchar *substr)
 	return string;
 }
 
+gchar *
+get_feed_url_by_feed_id(gchar *feedid)
+{
+	return g_hash_table_lookup(rf->hr, g_strstrip(feedid));
+}
+
 //prefixes uri with http:// if it's misssing
 //resulting text should be freed when no longer needed
 gchar *

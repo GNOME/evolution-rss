@@ -39,6 +39,7 @@ gchar *get_url_basename(gchar *url);
 gboolean is_rfc822(char *in);
 gchar *extract_main_folder(gchar *folder);
 gchar *strextr(gchar *text, const gchar *substr);
+gchar *get_feed_url_by_feed_id(gchar *feedid);
 gchar *sanitize_url(gchar *text);
 gchar *sanitize_folder(gchar *text);
 void header_decode_lwsp(const char **in);

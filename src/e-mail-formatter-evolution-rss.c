@@ -36,6 +36,7 @@
 #include "rss-formatter.h"
 #include "e-mail-part-rss.h"
 
+extern gchar *commstream;
 
 typedef EMailFormatterExtension EMailFormatterRSS;
 typedef EMailFormatterExtensionClass EMailFormatterRSSClass;
@@ -115,7 +116,6 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	gboolean is_html = FALSE;
 	gchar *feed_dir, *tmp_file, *tmp_path, *iconfile;
 	GdkPixbuf *pixbuf;
-
 
 	CamelContentType *ct = camel_mime_part_get_content_type (message);
 	if (ct) {
@@ -245,6 +245,39 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 				G_MEMORY_OUTPUT_STREAM (decoded_stream));
 		src = rss_process_feed((gchar *)data, len);
 #endif
+#if EVOLUTION_VERSION < 30304
+		GConfClient *client = gconf_client_get_default();
+#else
+		GSettings *rss_settings = g_settings_new(RSS_CONF_SCHEMA);
+#endif
+#if EVOLUTION_VERSION < 30304
+		if (comments && gconf_client_get_bool (client, GCONF_KEY_SHOW_COMMENTS, NULL)) {
+#else
+		if (comments && g_settings_get_boolean (rss_settings, CONF_SHOW_COMMENTS)) {
+#endif
+			if (commstream) {
+				gchar *result = print_comments(comments, commstream, formatter);
+				g_free(commstream);
+				if (result && strlen(result)) {
+					gchar *fstr;
+					gchar *tmp = g_strdup_printf (
+						"<div style=\"border: solid #%06x 0px; background-color: #%06x; padding: 10px; color: #%06x;\">%s</div>",
+						frame_col & 0xffffff,
+						cont_col & 0xffffff,
+						text_col & 0xffffff,
+						result);
+					g_free(result);
+					fstr = g_strconcat(src, tmp, NULL);
+					g_free (tmp);
+					g_free (src);
+					src = fstr;
+				}
+				commstream = NULL;
+			} else {
+				gchar *uri = get_feed_url_by_feed_id(feedid);
+				fetch_comments(comments, g_strdup(uri), rss_get_display());
+			}
+		}
 
 #if EVOLUTION_VERSION < 31191
 		camel_stream_write_string(stream, src, cancellable, NULL);
