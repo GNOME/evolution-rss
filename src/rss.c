@@ -2131,6 +2131,7 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 #if (EVOLUTION_VERSION < 22900)
 	MailComponent *mc = mail_component_peek ();
 #endif
+	GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
 
 	//feed might get deleted while fetching
 	//so we need to test for the presence of key
@@ -2192,8 +2193,11 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 	if (rf->cancel_all)
 		goto out;
 
+
 	if (msg->status_code != SOUP_STATUS_OK &&
-	    msg->status_code != SOUP_STATUS_CANCELLED) {
+		msg->status_code != SOUP_STATUS_CANCELLED &&
+		g_settings_get_boolean (settings, CONF_SHOW_FEED_ERRORS)) {
+
 		g_set_error(&err,
 			NET_ERROR,
 			NET_ERROR_GENERIC,
@@ -2264,7 +2268,6 @@ generic_finish_feed(rfMessage *msg, gpointer user_data)
 		gchar *title;
 		xmlError *err;
 		gchar *tmsg;
-		GSettings *settings = g_settings_new(RSS_CONF_SCHEMA);
 		if (!g_settings_get_boolean (settings,
 			CONF_SHOW_XML_ERRORS))
 				goto out;

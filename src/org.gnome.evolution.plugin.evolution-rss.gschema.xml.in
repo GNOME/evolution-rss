@@ -140,6 +140,11 @@
       <summary>Report xml errors</summary>
       <description>Print xml errors in the feeds</description>
     </key>
+    <key name="show-feed-errors" type="b">
+      <default>false</default>
+      <summary>Report feed errors</summary>
+      <description>Report feed errors</description>
+    </key>
     <key name="use-proxy" type="b">
       <default>false</default>
       <summary>Use proxy server</summary>

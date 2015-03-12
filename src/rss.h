@@ -235,6 +235,7 @@ typedef struct _rssfeed {
 #define CONF_FEED_ICON "feed-icon"
 #define CONF_SHOW_COMMENTS "show-comments"
 #define CONF_SHOW_XML_ERRORS "show-xml-errors"
+#define CONF_SHOW_FEED_ERRORS "show-feed-errors"
 #endif
 
 enum {
