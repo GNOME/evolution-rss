@@ -1,0 +1,1004 @@
+# Bosnian translation for bosnianuniversetranslation
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the bosnianuniversetranslation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bosnianuniversetranslation\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-02-27 05:38+0000\n"
+"PO-Revision-Date: 2015-02-27 15:01+0100\n"
+"Last-Translator: Samir Ribic <samir.ribic@etf.unsa.ba>\n"
+"Language-Team: Bosnian <bs@li.org>\n"
+"Language: bs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2015-02-15 06:20+0000\n"
+"X-Generator: Launchpad (build 17341)\n"
+
+#: ../evolution-rss.desktop.in.in.h:1
+msgid "Evolution RSS Reader"
+msgstr "Evolution RSS čitač"
+
+#: ../evolution-rss.desktop.in.in.h:2
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr ""
+"Priključak za Evolution koji omogućava da Evolution Mail prikaže RSS dovode."
+
+#: ../evolution-rss.metainfo.xml.in.h:1
+msgid "RSS Reader"
+msgstr "RSS čitač"
+
+#: ../evolution-rss.metainfo.xml.in.h:2
+msgid "Read RSS feeds"
+msgstr "Čitaj RSS dovode"
+
+#: ../src/dbus.c:108 ../src/rss.c:1980 ../src/rss-config-factory.c:1188
+#: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
+msgid "Error adding feed."
+msgstr "Greška pri dodavanju dovoda."
+
+#: ../src/dbus.c:109 ../src/rss.c:1981 ../src/rss-config-factory.c:1189
+#: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
+msgid "Feed already exists!"
+msgstr "Dovod već postoji!"
+
+#: ../src/dbus.c:116
+#, c-format
+msgid "Importing URL: %s"
+msgstr "Unošenje URL: %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:212
+msgid "Posted under"
+msgstr "Postavljeno pod"
+
+#: ../src/e-mail-formatter-evolution-rss.c:380
+#: ../src/e-mail-formatter-evolution-rss.c:386
+msgid "Show Summary"
+msgstr "Prikaži Sažetak"
+
+#: ../src/e-mail-formatter-evolution-rss.c:381
+#: ../src/e-mail-formatter-evolution-rss.c:387
+msgid "Show Full Text"
+msgstr "Prikaži čitav tekst"
+
+#: ../src/e-mail-formatter-evolution-rss.c:402
+msgid "Evolution-RSS"
+msgstr "Evolution-RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:403
+msgid "Displaying RSS feed arcticles"
+msgstr "Prikazivanje RSS ažuriranih članaka"
+
+#: ../src/evolution-rss.schemas.in.in.h:1
+msgid "Proxy requires authentication"
+msgstr "Proxy zahtijeva ovjeru"
+
+#: ../src/evolution-rss.schemas.in.in.h:2
+msgid "Network proxy requires authentication."
+msgstr "Mrežni proxy zahtijeva ovjeru."
+
+#: ../src/evolution-rss.schemas.in.in.h:3
+msgid "Display article's summary"
+msgstr "Prikaži sažetak članka"
+
+#: ../src/evolution-rss.schemas.in.in.h:4
+msgid ""
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
+msgstr ""
+"Evolution će prikazati sažetak članka umjesto web stranicu članka. Sažetak "
+"također može biti HTML."
+
+#: ../src/evolution-rss.schemas.in.in.h:5
+msgid "Feeds list"
+msgstr "Lista dovoda"
+
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Sadrži listu trenutno postavljenih dovoda."
+
+#: ../src/evolution-rss.schemas.in.in.h:7
+msgid "Hostname of the proxy server"
+msgstr "Ime proxy servera"
+
+#: ../src/evolution-rss.schemas.in.in.h:8
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "Ime proxy servera korišteno za ažuriranja i sadržaj."
+
+#: ../src/evolution-rss.schemas.in.in.h:9
+msgid "HTML render"
+msgstr "HTML podnosilac"
+
+#: ../src/evolution-rss.schemas.in.in.h:10
+msgid "Type HTML Render used to display HTML pages."
+msgstr "Tip HTML podnosioca korišten za prikaz HTML stranica."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Koristiti prilagođeni font"
+
+#: ../src/evolution-rss.schemas.in.in.h:12
+msgid "Use a custom font size instead of system defaults."
+msgstr "Koristi prilagođenu veličinu fonta umjesto sistemski postavljene."
+
+#: ../src/evolution-rss.schemas.in.in.h:13
+msgid "Minimum font size"
+msgstr "Najmanja veličina fonta"
+
+#: ../src/evolution-rss.schemas.in.in.h:14
+msgid "The size of the font used in full text preview."
+msgstr "Veličina fonta korištena u prikazu cijelog teksta."
+
+#: ../src/evolution-rss.schemas.in.in.h:15
+msgid "Network timeout"
+msgstr "Prekovrijeme mreže"
+
+#: ../src/evolution-rss.schemas.in.in.h:16
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Interval u sekundama prije nego konekcija padne."
+
+#: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Veličina reda mreže"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Koliko mnogo simultanih preuzimanja."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "JavaScript Omogućen"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Java Omogućena"
+
+#: ../src/evolution-rss.schemas.in.in.h:21
+msgid "Accepts Cookies"
+msgstr "Prihvata Kolačiće"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Razvojni RSS će prihvatiti kolačiće iz članaka koje pretražujete."
+
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automatically Resize Images"
+msgstr "Automatski promijeni veličinu slika"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"Razvojni RSS će automatski promijeniti veličine slike većih od prikazanog "
+"područja."
+
+#: ../src/evolution-rss.schemas.in.in.h:25
+msgid "Scan web pages for RSS"
+msgstr "Skeniraj web stranice za RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:26
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Razvojni RSS će skenirati web stranice za RSS sadržaj"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "Preuzmi kućišta"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr ""
+"Razvoj će preuzeti sva ažurirana kućišta koja ažurirani članak može "
+"sadržavati."
+
+#: ../src/evolution-rss.schemas.in.in.h:29
+msgid "Limit enclosure size"
+msgstr "Granica veličine kućišta"
+
+#: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Granica maksimalne veličine kućišta programa Evolution će se preuzeti."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "Maksimalna veličina kućišta"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Omogući Statusnu Ikonu"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Omogući statusnu ikonu u području notifikacije"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Trepćuća Statusna Ikona"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Trepni statusnu ikonu kad je novi članak primljen"
+
+#: ../src/evolution-rss.schemas.in.in.h:36
+msgid "Enable Feed Icon"
+msgstr "Dozvoli Ažuriranu Ikonu"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Prikaži ažuriranu ikonu na ažuriranom folderu"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Šifra za proxy server"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr ""
+"Ako proxy server zahtijeva provjeru autentičnosti, ovo je prostor za šifru."
+
+#: ../src/evolution-rss.schemas.in.in.h:40
+msgid "Proxy server port"
+msgstr "Otvor za proxy server"
+
+#: ../src/evolution-rss.schemas.in.in.h:41
+msgid "The port number for proxy server used for feeds and content."
+msgstr "Broj otvora za proxy server korišten za ažuriranja i sadržaj."
+
+#: ../src/evolution-rss.schemas.in.in.h:42
+msgid "Remove feed folder"
+msgstr "Uklon ažuriranje foldera"
+
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "Brisanje ažuriranja ulaza će također ukloniti ažuriranje foldera."
+
+#: ../src/evolution-rss.schemas.in.in.h:44
+msgid "Check New articles"
+msgstr "Provjeri Nove članke"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Automatska provjera novih članaka."
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Istek vremena novih članaka"
+
+#: ../src/evolution-rss.schemas.in.in.h:47
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Učestalost za provjeru novih članaka (u minutama)."
+
+#: ../src/evolution-rss.schemas.in.in.h:48
+msgid "Checks articles on startup"
+msgstr "Provjeri članke na početku"
+
+#: ../src/evolution-rss.schemas.in.in.h:49
+msgid "Check for new articles every time Evolution is started."
+msgstr "Provjeri nove članke čim se Evolution pokrene."
+
+#: ../src/evolution-rss.schemas.in.in.h:50
+msgid "Show articles comments"
+msgstr "Prikaži komentare članaka"
+
+#: ../src/evolution-rss.schemas.in.in.h:51
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Ako ažurirani članak ima komentara, oni će biti prikazani."
+
+#: ../src/evolution-rss.schemas.in.in.h:52
+msgid "Use proxy server"
+msgstr "Koristi proxy server"
+
+#: ../src/evolution-rss.schemas.in.in.h:53
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Koristi proxy server za donošenje članaka i sadržaja."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Korisnik Proxy servera"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
+msgid "The username to use for proxy server authentication."
+msgstr "Korisničko ime za ovjeru proxy servera."
+
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "Kako obraditi adrese RSS-a"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr "Postaviti tačan program specificiran u komandi  RSS obradu adresa"
+
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for RSS feed URIs"
+msgstr "Obrada adresa za RSS ažuriranja URL-ova"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Pokreni program u terminalu (tekstualnom modu)"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
+msgid "True if the program to handle this URL should be run in a terminal"
+msgstr ""
+"Tačno ako program koji služi za obradu adresa treba biti pokrenut u "
+"terminalu (tekstualnom modu)"
+
+#: ../src/notification.c:288 ../src/rss.c:2148
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Dohvaćanje ažuriranja (%d omogućeno)"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point in having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view.\n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Evolution RSS Plugin Čitač.\n"
+"\n"
+"Ovaj plugin dodaje RSS ažuriranja dozvoljena za Evolution mail. RSS podrška "
+"je izgrađena na osnovu postojećih RSS podrška u razvoju-1.4 branch. "
+"Motivacija iza toga je bila da je RSS na istom mijestu kao i mailovi, u ovom "
+"trenutku ja ne vidim svrhu posjedovanja odvojenih RSS čitača budući da je "
+"RSS članak kao email poruka.\n"
+"\n"
+"Evolution RSS može prikazati članak koristeći sažeti pogled ili HTML "
+"pogled.\n"
+"\n"
+"HTML može biti prikazan koristeći sljedeće: gtkHTML, Apple-ov Webkit ili "
+"Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "Veličina"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "Učitavanje RSS Ažuriranja..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "Ažuriranje feedova..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "_Dismiss"
+msgstr "_Odbaci"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete \"{0}\"?"
+msgstr "Obriši \"{0}\"?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "Really delete feed '{0}'?"
+msgstr "Zaista obrisati dovod '{0}'?"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Update RSS feeds"
+msgstr "Ažuriraj RSS dovode"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "_Read RSS"
+msgstr "_Čitaj RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "Postavi RSS dovode"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "Postavi RSS"
+
+#. ATOM
+#: ../src/parser.c:1099
+msgid "No Information"
+msgstr "Nema informacija"
+
+#: ../src/parser.c:1198
+msgid "No information"
+msgstr "Nema informacija"
+
+#: ../src/rss.c:423 ../src/rss.c:2332
+msgid "Feed"
+msgstr "Dovod"
+
+#: ../src/rss.c:488 ../src/rss-config-factory.c:2883
+#: ../src/rss-config-factory.c:3057
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% urađeno"
+
+#: ../src/rss.c:630
+msgid "Enter User/Pass for feed"
+msgstr "Ukucaj Korisnik/Lozinka za dovod"
+
+#: ../src/rss.c:686
+msgid "Enter your username and password for:"
+msgstr "Ukucaj tvoje korisničko ime i šifru za:"
+
+#: ../src/rss.c:704
+msgid "Username: "
+msgstr "Korisničko ime: "
+
+#: ../src/rss.c:725 ../src/rss-main.ui.h:37
+msgid "Password: "
+msgstr "Lozinka: "
+
+#: ../src/rss.c:762
+msgid "_Remember this password"
+msgstr "_Zapamti ovu lozinku"
+
+#: ../src/rss.c:876 ../src/rss.c:880
+msgid "Cancelling..."
+msgstr "Otkazivanje..."
+
+#: ../src/rss.c:1162
+msgid "_Copy"
+msgstr "_Kopiraj"
+
+#: ../src/rss.c:1163
+msgid "Select _All"
+msgstr "Izaberi _sve"
+
+#: ../src/rss.c:1165 ../src/rss.c:1176
+msgid "Zoom _In"
+msgstr "_Uvećaj"
+
+#: ../src/rss.c:1166 ../src/rss.c:1177
+msgid "Zoom _Out"
+msgstr "U_manji"
+
+#: ../src/rss.c:1167 ../src/rss.c:1178
+msgid "_Normal Size"
+msgstr "_Normalna veličina"
+
+#: ../src/rss.c:1169
+msgid "_Open Link"
+msgstr "_Otvori vezu"
+
+#: ../src/rss.c:1170 ../src/rss.c:1184
+msgid "_Copy Link Location"
+msgstr "_Kopiraj lokaciju linka"
+
+#: ../src/rss.c:1180
+msgid "_Print..."
+msgstr "_Štampaj..."
+
+#: ../src/rss.c:1181
+msgid "Save _As"
+msgstr "Snimi _kao"
+
+#: ../src/rss.c:1183
+msgid "_Open Link in Browser"
+msgstr "_Otvori link u pretraživaču"
+
+#: ../src/rss.c:1471
+msgid "Fetching feed"
+msgstr "Dohvatanje dovoda"
+
+#: ../src/rss.c:1783 ../src/rss.c:2061
+msgid "Unnamed feed"
+msgstr "Neimenovani dovod"
+
+#: ../src/rss.c:1784
+msgid "Error while setting up feed."
+msgstr "Greška pri postavljanju dovoda."
+
+#: ../src/rss.c:1992 ../src/rss.c:2062
+msgid "Error while fetching feed."
+msgstr "Greška pri dohvatanju dovoda."
+
+#: ../src/rss.c:1993
+msgid "Invalid Feed"
+msgstr "Nevažeći dovod"
+
+#: ../src/rss.c:2035
+#, c-format
+msgid "Adding feed %s"
+msgstr "Dodavanje dovoda %s"
+
+#: ../src/rss.c:2076 ../src/rss.c:2084
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "Primam poruku %d od %d"
+
+#: ../src/rss.c:2169 ../src/rss.c:2172
+msgid "Complete."
+msgstr "Završeno."
+
+#: ../src/rss.c:2206 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2632
+#: ../src/rss.c:3220
+#, c-format
+msgid "Error fetching feed: %s"
+msgstr "Greška pri dodavanju dovoda: %s"
+
+#: ../src/rss.c:2218 ../src/rss.c:2222
+msgid "Canceled."
+msgstr "Otkazano."
+
+#: ../src/rss.c:2276
+#, c-format
+msgid "Error while parsing feed: %s"
+msgstr "Greška pri raščlanjivanju dovoda: %s"
+
+#: ../src/rss.c:2280
+msgid "illegal content type!"
+msgstr "nedozvoljeni tip sadržaja!"
+
+#: ../src/rss.c:2340 ../src/rss.c:2343
+msgid "Complete"
+msgstr "Završeno"
+
+#: ../src/rss.c:2475
+msgid "Formatting error."
+msgstr "Greška u formatiranju."
+
+#: ../src/rss.c:3533
+msgid "No RSS feeds configured!"
+msgstr "Nijedan RSS dovod nije konfigurisan!"
+
+#: ../src/rss.c:3585
+msgid "Waiting..."
+msgstr "Čekanje..."
+
+#: ../src/rss-config-factory.c:160
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:161
+msgid "WebKit"
+msgstr "Webkit"
+
+#: ../src/rss-config-factory.c:162
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:478
+msgid "day"
+msgid_plural "days"
+msgstr[0] "dan"
+msgstr[1] "dana"
+msgstr[2] "dana"
+
+#: ../src/rss-config-factory.c:493
+msgid "message"
+msgid_plural "messages"
+msgstr[0] "poruka"
+msgstr[1] "poruke"
+msgstr[2] "poruka"
+
+#: ../src/rss-config-factory.c:558 ../src/rss-config-factory.c:565
+#: ../src/rss-config-factory.c:579
+msgid "Move to Folder"
+msgstr "Premjesti u fasciklu"
+
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:565
+#: ../src/rss-config-factory.c:579
+msgid "M_ove"
+msgstr "Pre_mjesti"
+
+#: ../src/rss-config-factory.c:720
+msgid "Edit Feed"
+msgstr "Uredi Dovod"
+
+#: ../src/rss-config-factory.c:722
+msgid "Add Feed"
+msgstr "Dodaj dovod"
+
+#: ../src/rss-config-factory.c:1167 ../src/rss-config-factory.c:1736
+#, no-c-format
+msgid "0% done"
+msgstr "0% dovršeno"
+
+#: ../src/rss-config-factory.c:1555
+msgid "Disable"
+msgstr "Onemogući"
+
+#: ../src/rss-config-factory.c:1555
+msgid "Enable"
+msgstr "Omogući"
+
+#: ../src/rss-config-factory.c:1615 ../src/rss-main.ui.h:40
+msgid "Remove folder contents"
+msgstr "Ukloni sadržaj foldera"
+
+#: ../src/rss-config-factory.c:2007
+msgid "Import error."
+msgstr "Greška uvoza."
+
+#: ../src/rss-config-factory.c:2008
+msgid "Invalid file or this file does not contain any feeds."
+msgstr "Pogrešna datoteka ili ova datoteka ne posjeduje nikakva ažuriranja."
+
+#: ../src/rss-config-factory.c:2013
+msgid "Importing"
+msgstr "Uvozim"
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss-config-factory.c:2036 ../src/rss-config-factory.c:2932
+#: ../src/rss-config-factory.c:3092
+msgid "Please wait"
+msgstr "Molim sačekajte"
+
+#: ../src/rss-config-factory.c:2346 ../src/rss-config-factory.c:3212
+#: ../src/rss-config-factory.c:3275
+msgid "All Files"
+msgstr "Sve Datoteke"
+
+#: ../src/rss-config-factory.c:2357 ../src/rss-config-factory.c:3296
+msgid "OPML Files"
+msgstr "OPML Datoteke"
+
+#: ../src/rss-config-factory.c:2368 ../src/rss-config-factory.c:3285
+msgid "XML Files"
+msgstr "XML datoteke"
+
+#: ../src/rss-config-factory.c:2387
+msgid "Show article's summary"
+msgstr "Prikaži sažetke članaka"
+
+#: ../src/rss-config-factory.c:2400
+msgid "Feed Enabled"
+msgstr "Dovod Omogućen"
+
+#: ../src/rss-config-factory.c:2413
+msgid "Validate feed"
+msgstr "Potvrdi dovod"
+
+#: ../src/rss-config-factory.c:2470 ../src/rss-main.ui.h:38
+msgid "Select import file"
+msgstr "Označi uvoz fajla"
+
+#: ../src/rss-config-factory.c:2553 ../src/rss-main.ui.h:41
+msgid "Select file to export"
+msgstr "Označi fajl za izvoz"
+
+#: ../src/rss-config-factory.c:2915
+msgid "Exporting feeds..."
+msgstr "Izvoženje dovoda..."
+
+#: ../src/rss-config-factory.c:2979 ../src/rss-config-factory.c:2987
+msgid "Error exporting feeds!"
+msgstr "Greška pri izvoženju dovoda!"
+
+#: ../src/rss-config-factory.c:3068
+msgid "Importing cookies..."
+msgstr "Uvoženje kolačića..."
+
+#: ../src/rss-config-factory.c:3148
+msgid "Select file to import"
+msgstr "Izaberite datoteku za uvoz"
+
+#: ../src/rss-config-factory.c:3218
+msgid "Mozilla/Netscape Format"
+msgstr "Mozilla/Netscape Format"
+
+#: ../src/rss-config-factory.c:3224
+msgid "Firefox new Format"
+msgstr "Firefox novi Format"
+
+#: ../src/rss-config-factory.c:3334 ../src/rss-config-factory.c:3339
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr "Nijedan RSS dovod nije konfigurisan!."
+
+#: ../src/rss-config-factory.c:3502
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Bilješka: Da biste bili u mogućnosti koristiti Mozilla (Firefox) ili Apple "
+"Webkit, trebate instalirati firefox ili webkit razvojni paket i razvojni rss "
+"treba biti rekompajliran da biste vidjeli nove pakete."
+
+#: ../src/rss-config-factory.c:4106 ../src/rss-main.ui.h:45
+msgid "Enabled"
+msgstr "Uključen"
+
+#: ../src/rss-config-factory.c:4133
+msgid "Feed Name"
+msgstr "Ime dovoda"
+
+#: ../src/rss-config-factory.c:4146
+msgid "Type"
+msgstr "Tip"
+
+#: ../src/rss-config-factory.c:4463 ../src/rss.h:52
+msgid "News and Blogs"
+msgstr "Novosti i blogovi"
+
+#: ../src/rss.h:54
+msgid "Untitled channel"
+msgstr "Kanal bez naslova"
+
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Pogon: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Koristi isti font kao druge aplikacije"
+
+#: ../src/rss-html-rendering.ui.h:3
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Minimalna veličina fonta:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Blokiraj iskačuće prozore"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Omogući javu"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "Omogući JavaScript"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Prihvati kolačiće sa sajtova"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Uvozi Kolačiće"
+
+#: ../src/rss-html-rendering.ui.h:9
+msgid "Automatically resize images"
+msgstr "Automatski promijeni veličinu slika"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Istek vremena mreže:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "sekundi"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML iscrtavanje</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Prikazati ikonu u polju za notifikacije"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Prikazati ikonu dovoda"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Informacija o članku</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "minute"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "sati"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "dani"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Tabela certifikata"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Dodaj"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "_Izmijeni..."
+
+#: ../src/rss-main.ui.h:8
+msgid "I_mport"
+msgstr "_Uvezi"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "_Izvezi"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Dovodi"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Mašina "
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Omogući dodatke"
+
+#: ../src/rss-main.ui.h:15
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Pokretanje</span>"
+
+#: ../src/rss-main.ui.h:17
+msgid "Check for new articles every"
+msgstr "Provjeri nove članke svakih"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles at startup"
+msgstr "Provjeri nove članke na početku"
+
+#: ../src/rss-main.ui.h:19
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Prikaz dovoda</span>"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr "Po zadanom prikaži sažetak članka umjesto web stranice"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Skreniraj dovode unutar web stranica"
+
+#: ../src/rss-main.ui.h:22
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Dovodna kućišta</span>"
+
+#: ../src/rss-main.ui.h:23
+msgid "Show article comments"
+msgstr "Prikaži komentare na članke"
+
+#: ../src/rss-main.ui.h:24
+msgid "Download feed enclosures"
+msgstr "Preuzmi dovodna kućišta"
+
+#: ../src/rss-main.ui.h:25
+msgid "Do not download enclosures that exceeds"
+msgstr "Nemojte preuzimati kućišta koja prekorače"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:27
+msgid "Setup"
+msgstr "Podešavanje"
+
+#: ../src/rss-main.ui.h:28
+msgid "Use Proxy"
+msgstr "Korsiti Proxy"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "HTTP posrednik (proxy):"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Port:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Detalji"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Nema posrednika za:"
+
+#: ../src/rss-main.ui.h:33
+msgid "Network"
+msgstr "Mreža"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "Detalji o HTTP posredniku"
+
+#: ../src/rss-main.ui.h:35
+msgid "Use authentication"
+msgstr "Koristi ovjeru"
+
+#: ../src/rss-main.ui.h:36
+msgid "Username:"
+msgstr "Korisničko ime:"
+
+#: ../src/rss-main.ui.h:39
+msgid "Delete feed?"
+msgstr "Izbriši dovod?"
+
+#: ../src/rss-main.ui.h:42
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Ime dovoda: </b>"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr "<b>URL dovoda:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "<b>Location:</b>"
+msgstr "<b>Mjesto:</b>"
+
+#: ../src/rss-main.ui.h:46
+msgid "Validate"
+msgstr "Odobri"
+
+#: ../src/rss-main.ui.h:47
+msgid "Show feed full text"
+msgstr "Prikaži čitav tekst dovoda"
+
+#: ../src/rss-main.ui.h:48
+msgid "General"
+msgstr "Općenito"
+
+#: ../src/rss-main.ui.h:49
+msgid "Use global update interval"
+msgstr "Korsti globalni interval ažuriranja"
+
+#: ../src/rss-main.ui.h:50
+msgid "Update in"
+msgstr "Ažuriraj u"
+
+#: ../src/rss-main.ui.h:51
+msgid "Do not update feed"
+msgstr "Ne ažuriraj dovod"
+
+#: ../src/rss-main.ui.h:52
+msgid "Update"
+msgstr "Ažuriraj"
+
+#: ../src/rss-main.ui.h:53
+msgid "Do not delete feeds"
+msgstr "Ne brisati dovod"
+
+#: ../src/rss-main.ui.h:54
+msgid "Delete all but the last"
+msgstr "Izbriši sve osim zadnjeg"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete articles older than"
+msgstr "Izbriši članke starije od"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles that are no longer in the feed"
+msgstr "Izbriši članke koji nisu više u dovodu"
+
+#: ../src/rss-main.ui.h:57
+msgid "Always delete unread articles"
+msgstr "Uvijek izbriši nepročitane članke"
+
+#: ../src/rss-main.ui.h:58
+msgid "Storage"
+msgstr "Smještaj"
+
+#: ../src/rss-main.ui.h:59
+msgid "Authentication"
+msgstr "Provjera autentičnosti"
+
+#: ../src/rss-main.ui.h:60
+msgid "<b>Advanced options</b>"
+msgstr "<b>Napredne opcije</b>"
