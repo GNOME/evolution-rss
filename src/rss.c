@@ -22,6 +22,7 @@
 #endif
 
 int rss_verbose_debug = 0;
+int rss_init = 0;
 
 #define _GNU_SOURCE
 #include <string.h>
@@ -3398,6 +3399,7 @@ void org_gnome_cooly_rss_startup(void *ep, void *t)
 	custom_feed_timeout();
 
 	rss_init_images();
+	rss_init = 1;
 }
 
 /* check if rss folders exists and create'em otherwise */

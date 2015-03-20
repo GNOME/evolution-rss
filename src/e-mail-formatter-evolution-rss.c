@@ -37,6 +37,7 @@
 #include "e-mail-part-rss.h"
 
 extern gchar *commstream;
+extern int rss_init;
 
 typedef EMailFormatterExtension EMailFormatterRSS;
 typedef EMailFormatterExtensionClass EMailFormatterRSSClass;
@@ -127,6 +128,9 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	if (!dw) {
 		goto fail;
 	}
+
+	if (!rss_init)
+			goto fail;
 
 	h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
 
