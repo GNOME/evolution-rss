@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the evolution-rss package.
 #
 # Andrej Žnidaršič <andrej.znidarsic@gmail.com>, 2010.
-# Matej Urbančič <mateju@svn.gnome.org>, 2012-2014.
+# Matej Urbančič <mateju@svn.gnome.org>, 2012-2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-08-06 04:44+0000\n"
-"PO-Revision-Date: 2014-08-06 14:45+0100\n"
+"POT-Creation-Date: 2015-03-24 17:49+0000\n"
+"PO-Revision-Date: 2015-03-24 19:37+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -39,12 +39,12 @@ msgstr "Bralnik virov RSS"
 msgid "Read RSS feeds"
 msgstr "Branje virov RSS"
 
-#: ../src/dbus.c:108 ../src/rss.c:1971 ../src/rss-config-factory.c:1188
+#: ../src/dbus.c:108 ../src/rss.c:1977 ../src/rss-config-factory.c:1188
 #: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
 msgid "Error adding feed."
 msgstr "Napaka med dodajanjem vira."
 
-#: ../src/dbus.c:109 ../src/rss.c:1972 ../src/rss-config-factory.c:1189
+#: ../src/dbus.c:109 ../src/rss.c:1978 ../src/rss-config-factory.c:1189
 #: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
 msgid "Feed already exists!"
 msgstr "Vir že obstaja!"
@@ -54,21 +54,25 @@ msgstr "Vir že obstaja!"
 msgid "Importing URL: %s"
 msgstr "Uvažanje naslova URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:373
-#: ../src/e-mail-formatter-evolution-rss.c:379
+#: ../src/e-mail-formatter-evolution-rss.c:216
+msgid "Posted under"
+msgstr "Objavljeno pod"
+
+#: ../src/e-mail-formatter-evolution-rss.c:383
+#: ../src/e-mail-formatter-evolution-rss.c:389
 msgid "Show Summary"
 msgstr "Pokaži povzetek"
 
-#: ../src/e-mail-formatter-evolution-rss.c:374
-#: ../src/e-mail-formatter-evolution-rss.c:380
+#: ../src/e-mail-formatter-evolution-rss.c:384
+#: ../src/e-mail-formatter-evolution-rss.c:390
 msgid "Show Full Text"
 msgstr "Pokaži polno besedilo"
 
-#: ../src/e-mail-formatter-evolution-rss.c:395
+#: ../src/e-mail-formatter-evolution-rss.c:405
 msgid "Evolution-RSS"
 msgstr "Bralnik virov Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:396
+#: ../src/e-mail-formatter-evolution-rss.c:406
 msgid "Displaying RSS feed arcticles"
 msgstr "Prikazovanje virov prispevkov RSS"
 
@@ -327,7 +331,7 @@ msgstr ""
 "Izbrana možnost določa, da mora biti program, ki upravlja z naslovom URL, "
 "izveden v terminalu"
 
-#: ../src/notification.c:288 ../src/rss.c:2139
+#: ../src/notification.c:288 ../src/rss.c:2146
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Pridobivanje virov (%d omogočeno)"
@@ -409,154 +413,154 @@ msgid "Setup RSS"
 msgstr "Nastavitev RSS"
 
 #. ATOM
-#: ../src/parser.c:1092
+#: ../src/parser.c:1099
 msgid "No Information"
 msgstr "Ni podatkov"
 
-#: ../src/parser.c:1191
+#: ../src/parser.c:1198
 msgid "No information"
 msgstr "Ni podatkov"
 
-#: ../src/rss.c:423 ../src/rss.c:2323
+#: ../src/rss.c:420 ../src/rss.c:2332
 msgid "Feed"
 msgstr "Vir"
 
-#: ../src/rss.c:488 ../src/rss-config-factory.c:2883
+#: ../src/rss.c:485 ../src/rss-config-factory.c:2883
 #: ../src/rss-config-factory.c:3057
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% končano"
 
-#: ../src/rss.c:625
+#: ../src/rss.c:627
 msgid "Enter User/Pass for feed"
 msgstr "Vnesite uporabniško ime/geslo za vir"
 
-#: ../src/rss.c:681
+#: ../src/rss.c:683
 msgid "Enter your username and password for:"
 msgstr "Vnesite svoje uporabniško ime in geslo za:"
 
-#: ../src/rss.c:699
+#: ../src/rss.c:701
 msgid "Username: "
 msgstr "Uporabniško ime:"
 
-#: ../src/rss.c:720 ../src/rss-main.ui.h:37
+#: ../src/rss.c:722 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Geslo:"
 
-#: ../src/rss.c:757
+#: ../src/rss.c:759
 msgid "_Remember this password"
 msgstr "_Zapomni si geslo"
 
-#: ../src/rss.c:871 ../src/rss.c:875
+#: ../src/rss.c:873 ../src/rss.c:877
 msgid "Cancelling..."
 msgstr "Preklic ..."
 
-#: ../src/rss.c:1157
+#: ../src/rss.c:1159
 msgid "_Copy"
 msgstr "_Kopiraj"
 
-#: ../src/rss.c:1158
+#: ../src/rss.c:1160
 msgid "Select _All"
 msgstr "Izberi _vse"
 
-#: ../src/rss.c:1160 ../src/rss.c:1171
+#: ../src/rss.c:1162 ../src/rss.c:1173
 msgid "Zoom _In"
 msgstr "_Približaj"
 
-#: ../src/rss.c:1161 ../src/rss.c:1172
+#: ../src/rss.c:1163 ../src/rss.c:1174
 msgid "Zoom _Out"
 msgstr "_Oddalji"
 
-#: ../src/rss.c:1162 ../src/rss.c:1173
+#: ../src/rss.c:1164 ../src/rss.c:1175
 msgid "_Normal Size"
 msgstr "O_bičajna velikost"
 
-#: ../src/rss.c:1164
+#: ../src/rss.c:1166
 msgid "_Open Link"
 msgstr "_Odpri povezavo"
 
-#: ../src/rss.c:1165 ../src/rss.c:1179
+#: ../src/rss.c:1167 ../src/rss.c:1181
 msgid "_Copy Link Location"
 msgstr "_Kopiraj mesto povezave"
 
-#: ../src/rss.c:1175
+#: ../src/rss.c:1177
 msgid "_Print..."
 msgstr "_Natisni ..."
 
-#: ../src/rss.c:1176
+#: ../src/rss.c:1178
 msgid "Save _As"
 msgstr "Shrani _kot"
 
-#: ../src/rss.c:1178
+#: ../src/rss.c:1180
 msgid "_Open Link in Browser"
 msgstr "_Odpri povezavo v brskalniku"
 
-#: ../src/rss.c:1462
+#: ../src/rss.c:1468
 msgid "Fetching feed"
 msgstr "Pridobivanje vira"
 
-#: ../src/rss.c:1774 ../src/rss.c:2052
+#: ../src/rss.c:1780 ../src/rss.c:2058
 msgid "Unnamed feed"
 msgstr "Neimenovan vir"
 
-#: ../src/rss.c:1775
+#: ../src/rss.c:1781
 msgid "Error while setting up feed."
 msgstr "Napaka med nastavljanjem vira."
 
-#: ../src/rss.c:1983 ../src/rss.c:2053
+#: ../src/rss.c:1989 ../src/rss.c:2059
 msgid "Error while fetching feed."
 msgstr "Napaka med pridobivanjem vira."
 
-#: ../src/rss.c:1984
+#: ../src/rss.c:1990
 msgid "Invalid Feed"
 msgstr "Neveljaven vir"
 
-#: ../src/rss.c:2026
+#: ../src/rss.c:2032
 #, c-format
 msgid "Adding feed %s"
 msgstr "Dodajanje vira %s"
 
-#: ../src/rss.c:2067 ../src/rss.c:2075
+#: ../src/rss.c:2073 ../src/rss.c:2081
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Pridobivanje sporočila %d od %d"
 
-#: ../src/rss.c:2160 ../src/rss.c:2163
+#: ../src/rss.c:2167 ../src/rss.c:2170
 msgid "Complete."
 msgstr "Končano."
 
-#: ../src/rss.c:2197 ../src/rss.c:2382 ../src/rss.c:2420 ../src/rss.c:2623
-#: ../src/rss.c:3211
+#: ../src/rss.c:2207 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2636
+#: ../src/rss.c:3224
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Napaka med pridobivanjem vira: %s"
 
-#: ../src/rss.c:2209 ../src/rss.c:2213
+#: ../src/rss.c:2219 ../src/rss.c:2223
 msgid "Canceled."
 msgstr "Preklicano."
 
-#: ../src/rss.c:2267
+#: ../src/rss.c:2276
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Napaka med razčlenjevanjem vira: %s"
 
-#: ../src/rss.c:2271
+#: ../src/rss.c:2280
 msgid "illegal content type!"
 msgstr "neveljavna vrsta vsebine!"
 
-#: ../src/rss.c:2331 ../src/rss.c:2334
+#: ../src/rss.c:2340 ../src/rss.c:2343
 msgid "Complete"
 msgstr "Končano"
 
-#: ../src/rss.c:2466
+#: ../src/rss.c:2475
 msgid "Formatting error."
 msgstr "Napaka oblikovanja."
 
-#: ../src/rss.c:3524
+#: ../src/rss.c:3538
 msgid "No RSS feeds configured!"
 msgstr "Ni nastavljenih virov RSS!"
 
-#: ../src/rss.c:3576
+#: ../src/rss.c:3590
 msgid "Waiting..."
 msgstr "Čakanje ..."
 
@@ -728,11 +732,11 @@ msgstr "Ime vira"
 msgid "Type"
 msgstr "Vrsta"
 
-#: ../src/rss-config-factory.c:4463 ../src/rss.h:52
+#: ../src/rss-config-factory.c:4463 ../src/rss.h:61
 msgid "News and Blogs"
 msgstr "Novice in blogi"
 
-#: ../src/rss.h:54
+#: ../src/rss.h:63
 msgid "Untitled channel"
 msgstr "Neimenovan kanal"
 
