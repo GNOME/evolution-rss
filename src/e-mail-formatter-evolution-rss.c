@@ -183,6 +183,10 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			iconfile = g_strconcat("evo-file://", tmp_file, NULL);
 			g_free(tmp_file);
 		}
+	} else {
+		tmp_file = g_build_filename (EVOLUTION_ICONDIR, "rss-16.png", NULL);
+		iconfile = g_strconcat("evo-file://", tmp_file, NULL);
+		g_free(tmp_file);
 	}
 
 	frame_col = e_rgba_to_value (
