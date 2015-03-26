@@ -4494,6 +4494,7 @@ process_enclosure(create_feed *CF)
 			CFL,
 			1,
 			NULL);
+		return TRUE;
 	} else
 		return FALSE;
 }
