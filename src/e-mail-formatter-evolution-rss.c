@@ -407,7 +407,7 @@ e_mail_formatter_evolution_rss_class_init (EMailFormatterExtensionClass *class)
 	class->format = emfe_evolution_rss_format;
 	class->get_widget = emfe_evolution_rss_get_widget;
 	class->display_name = _("Evolution-RSS");
-	class->description = _("Displaying RSS feed arcticles");
+	class->description = _("Displaying RSS feed articles");
 }
 
 static void
