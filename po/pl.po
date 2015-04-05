@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-01 16:45+0100\n"
-"PO-Revision-Date: 2015-03-01 16:47+0100\n"
+"POT-Creation-Date: 2015-04-05 21:42+0200\n"
+"PO-Revision-Date: 2015-04-05 21:43+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -41,12 +41,12 @@ msgstr "Czytnik kanałów RSS"
 msgid "Read RSS feeds"
 msgstr "Odczytywanie kanałów RSS"
 
-#: ../src/dbus.c:108 ../src/rss.c:1980 ../src/rss-config-factory.c:1188
+#: ../src/dbus.c:108 ../src/rss.c:1977 ../src/rss-config-factory.c:1188
 #: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
 msgid "Error adding feed."
 msgstr "Błąd podczas dodawania kanału."
 
-#: ../src/dbus.c:109 ../src/rss.c:1981 ../src/rss-config-factory.c:1189
+#: ../src/dbus.c:109 ../src/rss.c:1978 ../src/rss-config-factory.c:1189
 #: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
 msgid "Feed already exists!"
 msgstr "Kanał już istnieje."
@@ -56,26 +56,26 @@ msgstr "Kanał już istnieje."
 msgid "Importing URL: %s"
 msgstr "Importowanie adresu URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:212
+#: ../src/e-mail-formatter-evolution-rss.c:220
 msgid "Posted under"
 msgstr "Opublikowano w"
 
-#: ../src/e-mail-formatter-evolution-rss.c:380
-#: ../src/e-mail-formatter-evolution-rss.c:386
+#: ../src/e-mail-formatter-evolution-rss.c:387
+#: ../src/e-mail-formatter-evolution-rss.c:393
 msgid "Show Summary"
 msgstr "Wyświetl podsumowanie"
 
-#: ../src/e-mail-formatter-evolution-rss.c:381
-#: ../src/e-mail-formatter-evolution-rss.c:387
+#: ../src/e-mail-formatter-evolution-rss.c:388
+#: ../src/e-mail-formatter-evolution-rss.c:394
 msgid "Show Full Text"
 msgstr "Wyświetl pełny tekst"
 
-#: ../src/e-mail-formatter-evolution-rss.c:402
+#: ../src/e-mail-formatter-evolution-rss.c:409
 msgid "Evolution-RSS"
 msgstr "Czytnik kanałów RSS dla programu Evolution"
 
-#: ../src/e-mail-formatter-evolution-rss.c:403
-msgid "Displaying RSS feed arcticles"
+#: ../src/e-mail-formatter-evolution-rss.c:410
+msgid "Displaying RSS feed articles"
 msgstr "Wyświetlanie artykułów kanałów RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
@@ -329,7 +329,7 @@ msgstr ""
 "Wartość \"true\", jeśli program do obsługiwania tego adresu URL powinien być "
 "uruchamiany w terminalu"
 
-#: ../src/notification.c:288 ../src/rss.c:2148
+#: ../src/notification.c:288 ../src/rss.c:2146
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Pobieranie kanałów (włączonych: %d)"
@@ -419,121 +419,121 @@ msgstr "Brak informacji"
 msgid "No information"
 msgstr "Brak informacji"
 
-#: ../src/rss.c:423 ../src/rss.c:2332
+#: ../src/rss.c:420 ../src/rss.c:2332
 msgid "Feed"
 msgstr "Kanał"
 
-#: ../src/rss.c:488 ../src/rss-config-factory.c:2883
+#: ../src/rss.c:485 ../src/rss-config-factory.c:2883
 #: ../src/rss-config-factory.c:3057
 #, c-format
 msgid "%2.0f%% done"
 msgstr "Ukończono: %2.0f%%"
 
-#: ../src/rss.c:630
+#: ../src/rss.c:627
 msgid "Enter User/Pass for feed"
 msgstr "Wprowadzanie użytkownika i hasła dla kanału"
 
-#: ../src/rss.c:686
+#: ../src/rss.c:683
 msgid "Enter your username and password for:"
 msgstr "Proszę wprowadzić nazwę użytkownika i hasło dla:"
 
-#: ../src/rss.c:704
+#: ../src/rss.c:701
 msgid "Username: "
 msgstr "Nazwa użytkownika: "
 
-#: ../src/rss.c:725 ../src/rss-main.ui.h:37
+#: ../src/rss.c:722 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Hasło: "
 
-#: ../src/rss.c:762
+#: ../src/rss.c:759
 msgid "_Remember this password"
 msgstr "_Zapamiętanie tego hasła"
 
-#: ../src/rss.c:876 ../src/rss.c:880
+#: ../src/rss.c:873 ../src/rss.c:877
 msgid "Cancelling..."
 msgstr "Anulowanie..."
 
-#: ../src/rss.c:1162
+#: ../src/rss.c:1159
 msgid "_Copy"
 msgstr "S_kopiuj"
 
-#: ../src/rss.c:1163
+#: ../src/rss.c:1160
 msgid "Select _All"
 msgstr "Zaznacz _wszystkie"
 
-#: ../src/rss.c:1165 ../src/rss.c:1176
+#: ../src/rss.c:1162 ../src/rss.c:1173
 msgid "Zoom _In"
 msgstr "Po_większ"
 
-#: ../src/rss.c:1166 ../src/rss.c:1177
+#: ../src/rss.c:1163 ../src/rss.c:1174
 msgid "Zoom _Out"
 msgstr "Po_mniejsz"
 
-#: ../src/rss.c:1167 ../src/rss.c:1178
+#: ../src/rss.c:1164 ../src/rss.c:1175
 msgid "_Normal Size"
 msgstr "_Zwykły rozmiar"
 
-#: ../src/rss.c:1169
+#: ../src/rss.c:1166
 msgid "_Open Link"
 msgstr "_Otwórz odnośnik"
 
-#: ../src/rss.c:1170 ../src/rss.c:1184
+#: ../src/rss.c:1167 ../src/rss.c:1181
 msgid "_Copy Link Location"
 msgstr "S_kopiuj adres odnośnika"
 
-#: ../src/rss.c:1180
+#: ../src/rss.c:1177
 msgid "_Print..."
 msgstr "Wy_drukuj..."
 
-#: ../src/rss.c:1181
+#: ../src/rss.c:1178
 msgid "Save _As"
 msgstr "Zapisz j_ako"
 
-#: ../src/rss.c:1183
+#: ../src/rss.c:1180
 msgid "_Open Link in Browser"
 msgstr "_Otwórz odnośnik w przeglądarce"
 
-#: ../src/rss.c:1471
+#: ../src/rss.c:1468
 msgid "Fetching feed"
 msgstr "Pobieranie kanału"
 
-#: ../src/rss.c:1783 ../src/rss.c:2061
+#: ../src/rss.c:1780 ../src/rss.c:2058
 msgid "Unnamed feed"
 msgstr "Kanał bez nazwy"
 
-#: ../src/rss.c:1784
+#: ../src/rss.c:1781
 msgid "Error while setting up feed."
 msgstr "Błąd podczas ustawiania kanału."
 
-#: ../src/rss.c:1992 ../src/rss.c:2062
+#: ../src/rss.c:1989 ../src/rss.c:2059
 msgid "Error while fetching feed."
 msgstr "Błąd podczas pobierania kanału."
 
-#: ../src/rss.c:1993
+#: ../src/rss.c:1990
 msgid "Invalid Feed"
 msgstr "Nieprawidłowy kanał"
 
-#: ../src/rss.c:2035
+#: ../src/rss.c:2032
 #, c-format
 msgid "Adding feed %s"
 msgstr "Dodawanie kanału %s"
 
-#: ../src/rss.c:2076 ../src/rss.c:2084
+#: ../src/rss.c:2073 ../src/rss.c:2081
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Pobieranie wiadomości: %d z %d"
 
-#: ../src/rss.c:2169 ../src/rss.c:2172
+#: ../src/rss.c:2167 ../src/rss.c:2170
 msgid "Complete."
 msgstr "Ukończono."
 
-#: ../src/rss.c:2206 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2632
-#: ../src/rss.c:3220
+#: ../src/rss.c:2207 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2636
+#: ../src/rss.c:3224
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Błąd podczas pobierania kanału: %s"
 
-#: ../src/rss.c:2218 ../src/rss.c:2222
+#: ../src/rss.c:2219 ../src/rss.c:2223
 msgid "Canceled."
 msgstr "Anulowano."
 
@@ -554,11 +554,11 @@ msgstr "Ukończono"
 msgid "Formatting error."
 msgstr "Błąd formatowania."
 
-#: ../src/rss.c:3533
+#: ../src/rss.c:3538
 msgid "No RSS feeds configured!"
 msgstr "Nie skonfigurowano żadnych kanałów RSS."
 
-#: ../src/rss.c:3585
+#: ../src/rss.c:3590
 msgid "Waiting..."
 msgstr "Oczekiwanie..."
 
@@ -729,11 +729,11 @@ msgstr "Nazwa kanału"
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/rss-config-factory.c:4463 ../src/rss.h:52
+#: ../src/rss-config-factory.c:4463 ../src/rss.h:61
 msgid "News and Blogs"
 msgstr "Aktualności i blogi"
 
-#: ../src/rss.h:54
+#: ../src/rss.h:63
 msgid "Untitled channel"
 msgstr "Kanał bez tytułu"
 
