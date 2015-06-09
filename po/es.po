@@ -2,15 +2,15 @@
 # Copyright (C) 2009 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Jorge González <jorgegonz@svn.gnome.org>, 2008, 2009, 2010, 2011.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2014.
 #
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-07-31 07:25+0000\n"
-"PO-Revision-Date: 2014-08-07 12:31+0200\n"
+"POT-Creation-Date: 2015-04-01 11:26+0000\n"
+"PO-Revision-Date: 2015-06-09 \n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -31,21 +31,19 @@ msgstr ""
 "proveedores de RSS."
 
 #: ../evolution-rss.metainfo.xml.in.h:1
-#| msgid "Evolution RSS Reader"
 msgid "RSS Reader"
 msgstr "Lector de RSS"
 
 #: ../evolution-rss.metainfo.xml.in.h:2
-#| msgid "Reading RSS feeds..."
 msgid "Read RSS feeds"
 msgstr "Leer proveedores RSS"
 
-#: ../src/dbus.c:108 ../src/rss.c:1976 ../src/rss-config-factory.c:1188
+#: ../src/dbus.c:108 ../src/rss.c:1977 ../src/rss-config-factory.c:1188
 #: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
 msgid "Error adding feed."
 msgstr "Error al añadir el proveedor."
 
-#: ../src/dbus.c:109 ../src/rss.c:1977 ../src/rss-config-factory.c:1189
+#: ../src/dbus.c:109 ../src/rss.c:1978 ../src/rss-config-factory.c:1189
 #: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
 msgid "Feed already exists!"
 msgstr "El proveedor ya existe"
@@ -55,22 +53,27 @@ msgstr "El proveedor ya existe"
 msgid "Importing URL: %s"
 msgstr "Importando URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:363
-#: ../src/e-mail-formatter-evolution-rss.c:369
+#: ../src/e-mail-formatter-evolution-rss.c:220
+msgid "Posted under"
+msgstr "Publicado bajo"
+
+#: ../src/e-mail-formatter-evolution-rss.c:387
+#: ../src/e-mail-formatter-evolution-rss.c:393
 msgid "Show Summary"
 msgstr "Mostrar resumen"
 
-#: ../src/e-mail-formatter-evolution-rss.c:364
-#: ../src/e-mail-formatter-evolution-rss.c:370
+#: ../src/e-mail-formatter-evolution-rss.c:388
+#: ../src/e-mail-formatter-evolution-rss.c:394
 msgid "Show Full Text"
 msgstr "Mostrar el texto completo"
 
-#: ../src/e-mail-formatter-evolution-rss.c:385
+#: ../src/e-mail-formatter-evolution-rss.c:409
 msgid "Evolution-RSS"
 msgstr "Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:386
-msgid "Displaying RSS feed arcticles"
+#: ../src/e-mail-formatter-evolution-rss.c:410
+#| msgid "Displaying RSS feed arcticles"
+msgid "Displaying RSS feed articles"
 msgstr "Mostrando artículos de proveedores RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
@@ -336,7 +339,7 @@ msgstr ""
 "Cierto si el programa para manipular esta URL debería ejecutarse en un "
 "terminal"
 
-#: ../src/notification.c:288 ../src/rss.c:2144
+#: ../src/notification.c:288 ../src/rss.c:2146
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Obteniendo proveedores (%d activado)"
@@ -420,154 +423,154 @@ msgid "Setup RSS"
 msgstr "Configurar RSS"
 
 #. ATOM
-#: ../src/parser.c:1084
+#: ../src/parser.c:1099
 msgid "No Information"
 msgstr "Sin información"
 
-#: ../src/parser.c:1183
+#: ../src/parser.c:1198
 msgid "No information"
 msgstr "Sin información"
 
-#: ../src/rss.c:423 ../src/rss.c:2325
+#: ../src/rss.c:420 ../src/rss.c:2332
 msgid "Feed"
 msgstr "Proveedor"
 
-#: ../src/rss.c:488 ../src/rss-config-factory.c:2883
+#: ../src/rss.c:485 ../src/rss-config-factory.c:2883
 #: ../src/rss-config-factory.c:3057
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% terminado"
 
-#: ../src/rss.c:625
+#: ../src/rss.c:627
 msgid "Enter User/Pass for feed"
 msgstr "Introducir usuario/contraseña para el proveedor"
 
-#: ../src/rss.c:681
+#: ../src/rss.c:683
 msgid "Enter your username and password for:"
 msgstr "Escriba su nombre de usuario y contraseña para:"
 
-#: ../src/rss.c:699
+#: ../src/rss.c:701
 msgid "Username: "
 msgstr "Usuario: "
 
-#: ../src/rss.c:720 ../src/rss-main.ui.h:37
+#: ../src/rss.c:722 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Contraseña: "
 
-#: ../src/rss.c:757
+#: ../src/rss.c:759
 msgid "_Remember this password"
 msgstr "_Recordar esta contraseña"
 
-#: ../src/rss.c:871 ../src/rss.c:875
+#: ../src/rss.c:873 ../src/rss.c:877
 msgid "Cancelling..."
 msgstr "Cancelando…"
 
-#: ../src/rss.c:1157
+#: ../src/rss.c:1159
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../src/rss.c:1158
+#: ../src/rss.c:1160
 msgid "Select _All"
 msgstr "Seleccionar _todo"
 
-#: ../src/rss.c:1160 ../src/rss.c:1171
+#: ../src/rss.c:1162 ../src/rss.c:1173
 msgid "Zoom _In"
 msgstr "_Ampliar"
 
-#: ../src/rss.c:1161 ../src/rss.c:1172
+#: ../src/rss.c:1163 ../src/rss.c:1174
 msgid "Zoom _Out"
 msgstr "_Reducir"
 
-#: ../src/rss.c:1162 ../src/rss.c:1173
+#: ../src/rss.c:1164 ../src/rss.c:1175
 msgid "_Normal Size"
 msgstr "Tamaño _normal"
 
-#: ../src/rss.c:1164
+#: ../src/rss.c:1166
 msgid "_Open Link"
 msgstr "_Abrir enlace"
 
-#: ../src/rss.c:1165 ../src/rss.c:1179
+#: ../src/rss.c:1167 ../src/rss.c:1181
 msgid "_Copy Link Location"
 msgstr "_Copiar dirección del enlace"
 
-#: ../src/rss.c:1175
+#: ../src/rss.c:1177
 msgid "_Print..."
 msgstr "_Imprimir…"
 
-#: ../src/rss.c:1176
+#: ../src/rss.c:1178
 msgid "Save _As"
 msgstr "Guardar _como"
 
-#: ../src/rss.c:1178
+#: ../src/rss.c:1180
 msgid "_Open Link in Browser"
 msgstr "_Abrir enlace en el navegador"
 
-#: ../src/rss.c:1467
+#: ../src/rss.c:1468
 msgid "Fetching feed"
 msgstr "Obteniendo proveedor"
 
-#: ../src/rss.c:1779 ../src/rss.c:2057
+#: ../src/rss.c:1780 ../src/rss.c:2058
 msgid "Unnamed feed"
 msgstr "Proveedor sin nombre"
 
-#: ../src/rss.c:1780
+#: ../src/rss.c:1781
 msgid "Error while setting up feed."
 msgstr "Error al configurar el proveedor."
 
-#: ../src/rss.c:1988 ../src/rss.c:2058
+#: ../src/rss.c:1989 ../src/rss.c:2059
 msgid "Error while fetching feed."
 msgstr "Error al obtener el proveedor."
 
-#: ../src/rss.c:1989
+#: ../src/rss.c:1990
 msgid "Invalid Feed"
 msgstr "Proveedor no válido"
 
-#: ../src/rss.c:2031
+#: ../src/rss.c:2032
 #, c-format
 msgid "Adding feed %s"
 msgstr "Añadiendo proveedor %s"
 
-#: ../src/rss.c:2072 ../src/rss.c:2080
+#: ../src/rss.c:2073 ../src/rss.c:2081
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Obteniendo mensaje %d de %d"
 
-#: ../src/rss.c:2165 ../src/rss.c:2168
+#: ../src/rss.c:2167 ../src/rss.c:2170
 msgid "Complete."
 msgstr "Completado."
 
-#: ../src/rss.c:2202 ../src/rss.c:2384 ../src/rss.c:2422 ../src/rss.c:2625
-#: ../src/rss.c:3213
+#: ../src/rss.c:2207 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2636
+#: ../src/rss.c:3224
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Error al obtener el proveedor: %s"
 
-#: ../src/rss.c:2214 ../src/rss.c:2218
+#: ../src/rss.c:2219 ../src/rss.c:2223
 msgid "Canceled."
 msgstr "Cancelado."
 
-#: ../src/rss.c:2269
+#: ../src/rss.c:2276
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Error al analizar el proveedor: %s"
 
-#: ../src/rss.c:2273
+#: ../src/rss.c:2280
 msgid "illegal content type!"
 msgstr "tipo de contenido ilegal."
 
-#: ../src/rss.c:2333 ../src/rss.c:2336
+#: ../src/rss.c:2340 ../src/rss.c:2343
 msgid "Complete"
 msgstr "Terminado"
 
-#: ../src/rss.c:2468
+#: ../src/rss.c:2475
 msgid "Formatting error."
 msgstr "Error de formateado."
 
-#: ../src/rss.c:3526
+#: ../src/rss.c:3538
 msgid "No RSS feeds configured!"
 msgstr "No hay proveedores RSS configurados"
 
-#: ../src/rss.c:3578
+#: ../src/rss.c:3590
 msgid "Waiting..."
 msgstr "Esperando…"
 
@@ -735,11 +738,11 @@ msgstr "Nombre del proveedor"
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/rss-config-factory.c:4463 ../src/rss.h:52
+#: ../src/rss-config-factory.c:4463 ../src/rss.h:61
 msgid "News and Blogs"
 msgstr "Noticias y blogs"
 
-#: ../src/rss.h:54
+#: ../src/rss.h:63
 msgid "Untitled channel"
 msgstr "Canal sin título"
 
@@ -1037,9 +1040,6 @@ msgstr "<b>Opciones avanzadas</b>"
 
 #~ msgid "Feed view"
 #~ msgstr "Vista de proveedores"
-
-#~ msgid "Posted under"
-#~ msgstr "Publicado bajo"
 
 #~ msgid "New feed imported: %s"
 #~ msgstr "Proveedor nuevo importado: %s"
