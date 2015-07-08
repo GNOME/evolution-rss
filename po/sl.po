@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-03-24 17:49+0000\n"
-"PO-Revision-Date: 2015-03-24 19:37+0100\n"
+"POT-Creation-Date: 2015-07-08 16:52+0000\n"
+"PO-Revision-Date: 2015-07-08 21:28+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.5\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
@@ -54,27 +54,27 @@ msgstr "Vir že obstaja!"
 msgid "Importing URL: %s"
 msgstr "Uvažanje naslova URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:216
+#: ../src/e-mail-formatter-evolution-rss.c:220
 msgid "Posted under"
 msgstr "Objavljeno pod"
 
-#: ../src/e-mail-formatter-evolution-rss.c:383
-#: ../src/e-mail-formatter-evolution-rss.c:389
+#: ../src/e-mail-formatter-evolution-rss.c:387
+#: ../src/e-mail-formatter-evolution-rss.c:393
 msgid "Show Summary"
 msgstr "Pokaži povzetek"
 
-#: ../src/e-mail-formatter-evolution-rss.c:384
-#: ../src/e-mail-formatter-evolution-rss.c:390
+#: ../src/e-mail-formatter-evolution-rss.c:388
+#: ../src/e-mail-formatter-evolution-rss.c:394
 msgid "Show Full Text"
 msgstr "Pokaži polno besedilo"
 
-#: ../src/e-mail-formatter-evolution-rss.c:405
+#: ../src/e-mail-formatter-evolution-rss.c:409
 msgid "Evolution-RSS"
 msgstr "Bralnik virov Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:406
-msgid "Displaying RSS feed arcticles"
-msgstr "Prikazovanje virov prispevkov RSS"
+#: ../src/e-mail-formatter-evolution-rss.c:410
+msgid "Displaying RSS feed articles"
+msgstr "Prikazovanje prispevkov vira RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Proxy requires authentication"
@@ -1008,6 +1008,9 @@ msgstr "Overitev"
 #: ../src/rss-main.ui.h:60
 msgid "<b>Advanced options</b>"
 msgstr "<b>Napredne možnosti<b>"
+
+#~ msgid "Displaying RSS feed arcticles"
+#~ msgstr "Prikazovanje virov prispevkov RSS"
 
 #~ msgid "News And Blogs"
 #~ msgstr "Novice in blogi"
