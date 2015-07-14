@@ -352,6 +352,12 @@ fi
 
 AM_CONDITIONAL([HAVE_BONOBO], [test "x$have_bonobo" = "xyes"])
 
+have_evolution_31704=no
+if test $evolution_int_version -ge 31704; then
+	have_evolution_31704=yes
+fi
+AM_CONDITIONAL([HAVE_EVOLUTION_31704], [test "x$have_evolution_31704" = "xyes"])
+
 dnl I18n stuff
 AC_PATH_PROG(GETTEXT, gettext, no)
 if test "x$GETTEXT" = "xno"; then
@@ -387,6 +393,10 @@ AC_SUBST(privdatadir)
 
 uidir="$privdatadir/ui"
 AC_SUBST(uidir)
+
+edsprivlibdir=`$PKG_CONFIG --variable=privlibdir libedataserver-1.2`
+edsmoduledir="$edsprivlibdir/registry-modules"
+AC_SUBST(edsmoduledir)
 
 if test $evolution_int_version -ge 31306; then
 privlibdir=`$PKG_CONFIG --variable=privlibdir evolution-shell-3.0`

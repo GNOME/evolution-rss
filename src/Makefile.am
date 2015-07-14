@@ -136,10 +136,28 @@ evolution_module_rss_la_LIBADD =			\
         $(EVOLUTION_RSS_EPLUGIN_LIBS)			\
 	$(DATASERVER_LIBS)
 
-
-
 evolution_module_rss_la_LDFLAGS =		\
         -avoid-version -module $(NO_UNDEFINED)
+
+if HAVE_EVOLUTION_31704
+
+edsmodule_LTLIBRARIES = module-eds-rss.la
+
+module_eds_rss_la_SOURCES =		\
+	module-eds-rss.c
+
+module_eds_rss_la_CPPFLAGS =		\
+        $(AM_CPPFLAGS)			\
+        -I$(top_srcdir)			\
+        -DG_LOG_DOMAIN=\"module-eds-rss\"
+
+module_eds_rss_la_LIBADD =		\
+	$(DATASERVER_LIBS)
+
+module_eds_rss_la_LDFLAGS =		\
+        -avoid-version -module $(NO_UNDEFINED)
+
+endif
 
 @EVO_SERVER_RULE@
 
