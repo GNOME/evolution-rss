@@ -1,0 +1,1009 @@
+# Turkish translation for evolution-rss.
+# Copyright (C) 2015 evolution-rss's COPYRIGHT HOLDER
+# This file is distributed under the same license as the evolution-rss package.
+# Simge Sezgin <simgesezgin88@gmail.com>, 2015.
+# Muhammet Kara <muhammetk@gmail.com>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution rss master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-06-01 04:50+0000\n"
+"PO-Revision-Date: 2015-08-09 19:07+0300\n"
+"Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
+"Language-Team: Türkçe <gnome-turk@gnome.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 2.91.7\n"
+"X-POOTLE-MTIME: 1428156594.000000\n"
+
+#: ../evolution-rss.desktop.in.in.h:1
+msgid "Evolution RSS Reader"
+msgstr "Evolution RSS Okuyucu"
+
+#: ../evolution-rss.desktop.in.in.h:2
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr ""
+"Evolution eklentisi Evolution Posta uygulamasında RSS beslemelerini "
+"görüntülemeyi sağlar."
+
+#: ../evolution-rss.metainfo.xml.in.h:1
+msgid "RSS Reader"
+msgstr "RSS Okuyucu"
+
+#: ../evolution-rss.metainfo.xml.in.h:2
+msgid "Read RSS feeds"
+msgstr "RSS beslemelerini oku"
+
+#: ../src/dbus.c:108 ../src/rss.c:1977 ../src/rss-config-factory.c:1188
+#: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
+msgid "Error adding feed."
+msgstr "Besleme eklenirken hata."
+
+#: ../src/dbus.c:109 ../src/rss.c:1978 ../src/rss-config-factory.c:1189
+#: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
+msgid "Feed already exists!"
+msgstr "Besleme zaten var!"
+
+#: ../src/dbus.c:116
+#, c-format
+msgid "Importing URL: %s"
+msgstr "URL içeri aktarılıyor: %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:220
+msgid "Posted under"
+msgstr "Şunun altında gönderildi:"
+
+#: ../src/e-mail-formatter-evolution-rss.c:387
+#: ../src/e-mail-formatter-evolution-rss.c:393
+msgid "Show Summary"
+msgstr "Özet Göster"
+
+#: ../src/e-mail-formatter-evolution-rss.c:388
+#: ../src/e-mail-formatter-evolution-rss.c:394
+msgid "Show Full Text"
+msgstr "Tüm Metni Göster"
+
+#: ../src/e-mail-formatter-evolution-rss.c:409
+msgid "Evolution-RSS"
+msgstr "Evolution-RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:410
+#| msgid "Displaying RSS feed arcticles"
+msgid "Displaying RSS feed articles"
+msgstr "RSS besleme yazıları gösteriliyor"
+
+#: ../src/evolution-rss.schemas.in.in.h:1
+msgid "Proxy requires authentication"
+msgstr "Vekil sunucu kimlik doğrulama gerektiriyor"
+
+#: ../src/evolution-rss.schemas.in.in.h:2
+msgid "Network proxy requires authentication."
+msgstr "Ağ vekil sunucu kimlik doğrulama gerektiriyor."
+
+#: ../src/evolution-rss.schemas.in.in.h:3
+msgid "Display article's summary"
+msgstr "Makalenin özetini görüntüle"
+
+#: ../src/evolution-rss.schemas.in.in.h:4
+msgid ""
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
+msgstr ""
+"Evolution makalenin web sayfası yerine makalenin özetini gösterecek.Ayrıca "
+"özet HTML olabilir."
+
+#: ../src/evolution-rss.schemas.in.in.h:5
+msgid "Feeds list"
+msgstr "Beslemelerin listesi"
+
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Mevcut kurulum beslemelerin listesini içerir."
+
+#: ../src/evolution-rss.schemas.in.in.h:7
+msgid "Hostname of the proxy server"
+msgstr "Vekil sunucusunun adı"
+
+#: ../src/evolution-rss.schemas.in.in.h:8
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "Besleme ve içerikleri için kullanılan vekil sunucu adı."
+
+#: ../src/evolution-rss.schemas.in.in.h:9
+msgid "HTML render"
+msgstr "HTML oluştur"
+
+#: ../src/evolution-rss.schemas.in.in.h:10
+msgid "Type HTML Render used to display HTML pages."
+msgstr "HTML sayfalarını görüntülemek için kullanılan HTML Render yaz."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Özel yazı tipi kullan"
+
+#: ../src/evolution-rss.schemas.in.in.h:12
+msgid "Use a custom font size instead of system defaults."
+msgstr "Sistem öntanımları yerine özel bir yazı tipi boyutu kullan."
+
+#: ../src/evolution-rss.schemas.in.in.h:13
+msgid "Minimum font size"
+msgstr "En küçük yazı tipi boyutu"
+
+#: ../src/evolution-rss.schemas.in.in.h:14
+msgid "The size of the font used in full text preview."
+msgstr "Tüm metin önizlemesinde kullanılan yazı tipi boyutu."
+
+#: ../src/evolution-rss.schemas.in.in.h:15
+msgid "Network timeout"
+msgstr "Ağ zaman aşımı"
+
+#: ../src/evolution-rss.schemas.in.in.h:16
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Bir bağlantı bırakılmadan önceki saniye cinsinden aralık."
+
+#: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Ağ kuyruk boyutu"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Eş zamanlı indirme miktarı."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "JavaScript Etkin"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Java Etkin"
+
+#: ../src/evolution-rss.schemas.in.in.h:21
+msgid "Accepts Cookies"
+msgstr "Çerezleri Kabul Et"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Evolution RSS gözattığınız makalelerden çerezleri kabul edecek."
+
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automatically Resize Images"
+msgstr "Görüntüleri Otomatik Yeniden Boyutlandır"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"Evolution RSS görüntüleri gösterilen alandan daha büyük bir şekilde otomatik "
+"olarak yeniden boyutlandıracak."
+
+#: ../src/evolution-rss.schemas.in.in.h:25
+msgid "Scan web pages for RSS"
+msgstr "RSS için web sayfalarını tara"
+
+#: ../src/evolution-rss.schemas.in.in.h:26
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution RSS, RSS içerik için web sayfalarını tarayacak"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "İlişkin ögeleri indir"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr ""
+"Evolution bir besleme maddesinin içerebileceği bütün ilişik ögeleri "
+"indirecek."
+
+#: ../src/evolution-rss.schemas.in.in.h:29
+msgid "Limit enclosure size"
+msgstr "İlişik öge boyutu sınırla"
+
+#: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr ""
+"Evolution uygulamasının indireceği en büyük ilişkin öge boyutunu sınırla."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "En büyük ilişkin öge boyutu"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Durum Simgesini Etkinleştir"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Bildirim alanında durum simgesini etkinleştir"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Yanıp Sönen Durum Simgesi"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Yeni bir madde alındığında durum simgesi yanıp söner"
+
+#: ../src/evolution-rss.schemas.in.in.h:36
+msgid "Enable Feed Icon"
+msgstr "Besleme Simgesini Etkinleştir"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Besleme klasöründe besleme simgesini göster"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Vekil sunucusu için parola"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr ""
+"Eğer vekil sunucusu kimlik doğrulaması gerektiriyorsa, bu parola alanıdır."
+
+#: ../src/evolution-rss.schemas.in.in.h:40
+msgid "Proxy server port"
+msgstr "Vekil sunucu bağlantı noktası"
+
+#: ../src/evolution-rss.schemas.in.in.h:41
+msgid "The port number for proxy server used for feeds and content."
+msgstr ""
+"Beslemeler ve içerik için kullanılan vekil sunucusu bağlantı noktası "
+"numarası."
+
+#: ../src/evolution-rss.schemas.in.in.h:42
+msgid "Remove feed folder"
+msgstr "Besleme klasörünü kaldır"
+
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "Besleme girdisi silme işlemi ayrıca besleme klasörünüde kaldıracak."
+
+#: ../src/evolution-rss.schemas.in.in.h:44
+msgid "Check New articles"
+msgstr "Yeni Maddeleri Kontrol Et"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Yeni maddeler için otomatik kontrol et."
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Yeni maddelerin zaman aşımı"
+
+#: ../src/evolution-rss.schemas.in.in.h:47
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Yeni maddelerin kontrol sıklığı (dakika cinsinden)."
+
+#: ../src/evolution-rss.schemas.in.in.h:48
+msgid "Checks articles on startup"
+msgstr "Başlangıçta maddeleri kontrol eder"
+
+#: ../src/evolution-rss.schemas.in.in.h:49
+msgid "Check for new articles every time Evolution is started."
+msgstr "Evolution her başladığında yeni maddeleri kontrol et."
+
+#: ../src/evolution-rss.schemas.in.in.h:50
+msgid "Show articles comments"
+msgstr "Madde açıklamalarını göster"
+
+#: ../src/evolution-rss.schemas.in.in.h:51
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Eğer bir besleme maddesi açıklamaları varsa, görüntülenecektir."
+
+#: ../src/evolution-rss.schemas.in.in.h:52
+msgid "Use proxy server"
+msgstr "Vekil sunucu kullan"
+
+#: ../src/evolution-rss.schemas.in.in.h:53
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Maddeler ve içerik getirmek için bir vekil sunucusu kullan."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Vekil sunucu kullanıcısı"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
+msgid "The username to use for proxy server authentication."
+msgstr "Vekil sunucu kimlik doğrulaması için kullanılacak kullanıcı adı."
+
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "RSS URL'lerinin nasıl işleneceği"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr ""
+"RSS URL'leri komut işleyicisinde belirtilen bir programa sahip olmak için "
+"doğru olarak ayarlayın"
+
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for RSS feed URIs"
+msgstr "RSS besleme URI'leri için URL işleyicisi"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Programı uçbirimde çalıştır"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
+msgid "True if the program to handle this URL should be run in a terminal"
+msgstr ""
+"Eğer programın bu URL'i işleyebilmesi için uç birimde çalışması gerekiyorsa "
+"doğru"
+
+#: ../src/notification.c:288 ../src/rss.c:2146
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Beslemeler Getiriliyor (%d etkin)"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point in having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view.\n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Evolution RSS Okuyucu Eklentisi.\n"
+"\n"
+"Bu eklenti Evolution postası için RSS Beslemeleri desteği sağlar. Bu, "
+"evolution-1.4 dalında kısmen varolan RSS desteğine dayanmaktadır. Bunun "
+"arkasındaki motivasyon RSS'lerin postalarla aynı yerde olmasıydı, şu anda "
+"RSS Maddesi eposta benzeri iletiler gönderebildiğinden beri ayrı RSS okuyucu "
+"olması için bir sebeb göremiyorum.\n"
+"\n"
+"Evolution RSS özet ya da HTML görünümü kullanan maddeleri gösterebilir.\n"
+"\n"
+"HTML şu motorları kullanarak görüntülenebilir: gtkHTML, Apple's Webkit ya da "
+"Firefox/Gecko.\n"
+"\n"
+"<b>Sürüm: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "Boyut"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "RSS Beslemeleri Okunuyor..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "Beslemeler Güncelleniyor..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "_Dismiss"
+msgstr "_Kapat"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete \"{0}\"?"
+msgstr "\"{0}\" silinsin mi?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "Really delete feed '{0}'?"
+msgstr "Besleme '{0}' gerçekten silinsin mi?"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Update RSS feeds"
+msgstr "RSS beslemelerini güncele"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "_Read RSS"
+msgstr "RSS _Oku"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "RSS beslemelerini kur"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "RSS kur"
+
+#. ATOM
+#: ../src/parser.c:1099
+msgid "No Information"
+msgstr "Bilgi Yok"
+
+#: ../src/parser.c:1198
+msgid "No information"
+msgstr "Bilgi yok"
+
+#: ../src/rss.c:420 ../src/rss.c:2332
+msgid "Feed"
+msgstr "Besle"
+
+#: ../src/rss.c:485 ../src/rss-config-factory.c:2883
+#: ../src/rss-config-factory.c:3057
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% yapıldı"
+
+#: ../src/rss.c:627
+msgid "Enter User/Pass for feed"
+msgstr "Besleme için Kullanıcı/Parola gir"
+
+#: ../src/rss.c:683
+msgid "Enter your username and password for:"
+msgstr "Kullanıcı adı ve parolanızı girin:"
+
+#: ../src/rss.c:701
+msgid "Username: "
+msgstr "Kullanıcı adı: "
+
+#: ../src/rss.c:722 ../src/rss-main.ui.h:37
+msgid "Password: "
+msgstr "Parola: "
+
+#: ../src/rss.c:759
+msgid "_Remember this password"
+msgstr "Bu parolayı _hatırla"
+
+#: ../src/rss.c:873 ../src/rss.c:877
+msgid "Cancelling..."
+msgstr "İptal ediliyor..."
+
+#: ../src/rss.c:1159
+msgid "_Copy"
+msgstr "_Kopyala"
+
+#: ../src/rss.c:1160
+msgid "Select _All"
+msgstr "_Tümünü Seç"
+
+#: ../src/rss.c:1162 ../src/rss.c:1173
+msgid "Zoom _In"
+msgstr "_Yakınlaştır"
+
+#: ../src/rss.c:1163 ../src/rss.c:1174
+msgid "Zoom _Out"
+msgstr "_Uzaklaştır"
+
+#: ../src/rss.c:1164 ../src/rss.c:1175
+msgid "_Normal Size"
+msgstr "_Normal Boyut"
+
+#: ../src/rss.c:1166
+msgid "_Open Link"
+msgstr "Bağlantı _Aç"
+
+#: ../src/rss.c:1167 ../src/rss.c:1181
+msgid "_Copy Link Location"
+msgstr "Bağlantı Konumu _Kopyala"
+
+#: ../src/rss.c:1177
+msgid "_Print..."
+msgstr "_Yazdır..."
+
+#: ../src/rss.c:1178
+msgid "Save _As"
+msgstr "_Farklı Kaydet"
+
+#: ../src/rss.c:1180
+msgid "_Open Link in Browser"
+msgstr "Bağlantıyı Tarayıcıda _Aç"
+
+#: ../src/rss.c:1468
+msgid "Fetching feed"
+msgstr "Besleme getiriliyor"
+
+#: ../src/rss.c:1780 ../src/rss.c:2058
+msgid "Unnamed feed"
+msgstr "İsimsiz besleme"
+
+#: ../src/rss.c:1781
+msgid "Error while setting up feed."
+msgstr "Besleme kurulurken hata."
+
+#: ../src/rss.c:1989 ../src/rss.c:2059
+msgid "Error while fetching feed."
+msgstr "Besleme getirilirken hata."
+
+#: ../src/rss.c:1990
+msgid "Invalid Feed"
+msgstr "Geçersiz Besleme"
+
+#: ../src/rss.c:2032
+#, c-format
+msgid "Adding feed %s"
+msgstr "Besleme %s ekleniyor"
+
+#: ../src/rss.c:2073 ../src/rss.c:2081
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "%d / %d ileti alınıyor"
+
+#: ../src/rss.c:2167 ../src/rss.c:2170
+msgid "Complete."
+msgstr "Tamamla."
+
+#: ../src/rss.c:2207 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2636
+#: ../src/rss.c:3224
+#, c-format
+msgid "Error fetching feed: %s"
+msgstr "Besleme getirilirken hata: %s"
+
+#: ../src/rss.c:2219 ../src/rss.c:2223
+msgid "Canceled."
+msgstr "İptal edildi."
+
+#: ../src/rss.c:2276
+#, c-format
+msgid "Error while parsing feed: %s"
+msgstr "Besleme ayrıştırılırken hata: %s"
+
+#: ../src/rss.c:2280
+msgid "illegal content type!"
+msgstr "geçersiz içerik türü!"
+
+#: ../src/rss.c:2340 ../src/rss.c:2343
+msgid "Complete"
+msgstr "Tamamla"
+
+#: ../src/rss.c:2475
+msgid "Formatting error."
+msgstr "Biçimlendirme hatası."
+
+#: ../src/rss.c:3538
+msgid "No RSS feeds configured!"
+msgstr "RSS beslemeler yapılandırılamadı!"
+
+#: ../src/rss.c:3590
+msgid "Waiting..."
+msgstr "Bekleniyor..."
+
+#: ../src/rss-config-factory.c:160
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:161
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:162
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:478
+msgid "day"
+msgid_plural "days"
+msgstr[0] "gün"
+
+#: ../src/rss-config-factory.c:493
+msgid "message"
+msgid_plural "messages"
+msgstr[0] "ileti"
+
+#: ../src/rss-config-factory.c:558 ../src/rss-config-factory.c:565
+#: ../src/rss-config-factory.c:579
+msgid "Move to Folder"
+msgstr "Klasöre Taşı"
+
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:565
+#: ../src/rss-config-factory.c:579
+msgid "M_ove"
+msgstr "T_aşı"
+
+#: ../src/rss-config-factory.c:720
+msgid "Edit Feed"
+msgstr "Besleme Düzenle"
+
+#: ../src/rss-config-factory.c:722
+msgid "Add Feed"
+msgstr "Besleme Ekle"
+
+#: ../src/rss-config-factory.c:1167 ../src/rss-config-factory.c:1736
+#, no-c-format
+msgid "0% done"
+msgstr "0% bitti"
+
+#: ../src/rss-config-factory.c:1555
+msgid "Disable"
+msgstr "Devredışı Bırak"
+
+#: ../src/rss-config-factory.c:1555
+msgid "Enable"
+msgstr "Etkinleştir"
+
+#: ../src/rss-config-factory.c:1615 ../src/rss-main.ui.h:40
+msgid "Remove folder contents"
+msgstr "Klasör içeriklerini kaldır"
+
+#: ../src/rss-config-factory.c:2007
+msgid "Import error."
+msgstr "İçeri aktarma hatası."
+
+#: ../src/rss-config-factory.c:2008
+msgid "Invalid file or this file does not contain any feeds."
+msgstr "Geçersiz dosya ya da bu dosya hiçbir besleme içermiyor."
+
+#: ../src/rss-config-factory.c:2013
+msgid "Importing"
+msgstr "İçeri aktarılıyor"
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss-config-factory.c:2036 ../src/rss-config-factory.c:2932
+#: ../src/rss-config-factory.c:3092
+msgid "Please wait"
+msgstr "Lütfen bekleyin"
+
+#: ../src/rss-config-factory.c:2346 ../src/rss-config-factory.c:3212
+#: ../src/rss-config-factory.c:3275
+msgid "All Files"
+msgstr "Tüm Dosyalar"
+
+#: ../src/rss-config-factory.c:2357 ../src/rss-config-factory.c:3296
+msgid "OPML Files"
+msgstr "OPML Dosyaları"
+
+#: ../src/rss-config-factory.c:2368 ../src/rss-config-factory.c:3285
+msgid "XML Files"
+msgstr "XML Dosyaları"
+
+#: ../src/rss-config-factory.c:2387
+msgid "Show article's summary"
+msgstr "Maddenin özetini göster"
+
+#: ../src/rss-config-factory.c:2400
+msgid "Feed Enabled"
+msgstr "Besleme Etkin"
+
+#: ../src/rss-config-factory.c:2413
+msgid "Validate feed"
+msgstr "Besleme onayla"
+
+#: ../src/rss-config-factory.c:2470 ../src/rss-main.ui.h:38
+msgid "Select import file"
+msgstr "İçeri aktarma dosyası seç"
+
+#: ../src/rss-config-factory.c:2553 ../src/rss-main.ui.h:41
+msgid "Select file to export"
+msgstr "Dışarı aktarmak için dosya seç"
+
+#: ../src/rss-config-factory.c:2915
+msgid "Exporting feeds..."
+msgstr "Beslemeler dışa aktarılıyor..."
+
+#: ../src/rss-config-factory.c:2979 ../src/rss-config-factory.c:2987
+msgid "Error exporting feeds!"
+msgstr "Beslemeler dışarı aktarılırken hata!"
+
+#: ../src/rss-config-factory.c:3068
+msgid "Importing cookies..."
+msgstr "Çerezler içeri aktarılıyor..."
+
+#: ../src/rss-config-factory.c:3148
+msgid "Select file to import"
+msgstr "İçeri aktarılacak dosya seç"
+
+#: ../src/rss-config-factory.c:3218
+msgid "Mozilla/Netscape Format"
+msgstr "Mozilla/Netscape Biçimi"
+
+#: ../src/rss-config-factory.c:3224
+msgid "Firefox new Format"
+msgstr "Firefox yeni Biçim"
+
+#: ../src/rss-config-factory.c:3334 ../src/rss-config-factory.c:3339
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"RSS beslemeleri yapılandırılamadı!\n"
+"Dışa aktarılamadı."
+
+#: ../src/rss-config-factory.c:3502
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Not: Gerçekleyici olarak Mozilla (Firefox) ya da Apple Webkit\n"
+" kullanabilmek için firefox ya da webkit devel paketinin kurulu olmasına\n"
+"ve paketleri görebilmek için evolution-rss'in yeniden derlenmiş olmasına\n"
+"ihtiyacınız var."
+
+#: ../src/rss-config-factory.c:4106 ../src/rss-main.ui.h:45
+msgid "Enabled"
+msgstr "Etkin"
+
+#: ../src/rss-config-factory.c:4133
+msgid "Feed Name"
+msgstr "Besleme Adı"
+
+#: ../src/rss-config-factory.c:4146
+msgid "Type"
+msgstr "Tür"
+
+#: ../src/rss-config-factory.c:4463 ../src/rss.h:61
+msgid "News and Blogs"
+msgstr "Haberler ve Bloglar"
+
+#: ../src/rss.h:63
+msgid "Untitled channel"
+msgstr "İsimsiz kanal"
+
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Motor: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Diğer uygulamalardaki yazı tipini kullan"
+
+#: ../src/rss-html-rendering.ui.h:3
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>En küçük yazı tipi boyutu:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Açılır pencereleri engelle"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Java Etkinleştir"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "JavaScript Etkinleştir"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Sitelerin çerezlerini kabul et"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Çerezleri İçeri Aktar"
+
+#: ../src/rss-html-rendering.ui.h:9
+msgid "Automatically resize images"
+msgstr "Görüntüleri otomatik olarak yeniden boyutlandır"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Ağ zaman aşımı:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "saniye"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML Oluşturma</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Bildirim alanında simge göster"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Besleme simgesini göster"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Madde Bildirimi</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "dakika"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "saat"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "gün"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Sertifika Tablosu"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Ekle"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "_Düzenle"
+
+#: ../src/rss-main.ui.h:8
+msgid "I_mport"
+msgstr "İ_çeri aktar"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "D_ışarı Aktar"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Beslemeler"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Motor: "
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Eklentileri Etkinleştir"
+
+#: ../src/rss-main.ui.h:15
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Başlangıç</span>"
+
+#: ../src/rss-main.ui.h:17
+msgid "Check for new articles every"
+msgstr "Yeni maddeleri kontrol etme sıklığı"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles at startup"
+msgstr "Başlangıçta yeni maddeleri kontrol et"
+
+#: ../src/rss-main.ui.h:19
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Besleme ekranı</span>"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr "Öntanımlı olarak, Web sayfası yerine madde özetini göster"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Web sayfalarında besleme ara"
+
+#: ../src/rss-main.ui.h:22
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Besleme kapsamı</span>"
+
+#: ../src/rss-main.ui.h:23
+msgid "Show article comments"
+msgstr "Madde açıklamalarını göster"
+
+#: ../src/rss-main.ui.h:24
+msgid "Download feed enclosures"
+msgstr "Beslemeye ilişkin ögeleri indir"
+
+#: ../src/rss-main.ui.h:25
+msgid "Do not download enclosures that exceeds"
+msgstr "Limiti aşan ilişkin ögeleri indirme"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:27
+msgid "Setup"
+msgstr "Kur"
+
+#: ../src/rss-main.ui.h:28
+msgid "Use Proxy"
+msgstr "Vekil sunucu Kullan"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "HTTP vekil:"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Bağlantı Noktası:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Ayrıntılar"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Vekili olmayan:"
+
+#: ../src/rss-main.ui.h:33
+msgid "Network"
+msgstr "Ağ"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "HTTP Vekil Ayrıntıları"
+
+#: ../src/rss-main.ui.h:35
+msgid "Use authentication"
+msgstr "Kimlik doğrulama kullan"
+
+#: ../src/rss-main.ui.h:36
+msgid "Username:"
+msgstr "Kullanıcı adı"
+
+#: ../src/rss-main.ui.h:39
+msgid "Delete feed?"
+msgstr "Besleme silinsin mi?"
+
+#: ../src/rss-main.ui.h:42
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Besleme Adı: </b>"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr "<b>Besleme URL:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "<b>Location:</b>"
+msgstr "<b>Konum:</b>"
+
+#: ../src/rss-main.ui.h:46
+msgid "Validate"
+msgstr "Onayla"
+
+#: ../src/rss-main.ui.h:47
+msgid "Show feed full text"
+msgstr "Tüm besleme metnini göster"
+
+#: ../src/rss-main.ui.h:48
+msgid "General"
+msgstr "Genel"
+
+#: ../src/rss-main.ui.h:49
+msgid "Use global update interval"
+msgstr "Genel güncelleme aralığını kullan"
+
+#: ../src/rss-main.ui.h:50
+msgid "Update in"
+msgstr "Güncelleme"
+
+#: ../src/rss-main.ui.h:51
+msgid "Do not update feed"
+msgstr "Besleme güncellenemez"
+
+#: ../src/rss-main.ui.h:52
+msgid "Update"
+msgstr "Güncelle"
+
+#: ../src/rss-main.ui.h:53
+msgid "Do not delete feeds"
+msgstr "Beslemeler silinemez"
+
+#: ../src/rss-main.ui.h:54
+msgid "Delete all but the last"
+msgstr "Son hariç tümünü sil"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete articles older than"
+msgstr "Daha eski maddeleri sil"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles that are no longer in the feed"
+msgstr "Beslemede artık bulunmayan maddeleri sil"
+
+#: ../src/rss-main.ui.h:57
+msgid "Always delete unread articles"
+msgstr "Okunmamış maddeleri her zaman sil"
+
+#: ../src/rss-main.ui.h:58
+msgid "Storage"
+msgstr "Depolama"
+
+#: ../src/rss-main.ui.h:59
+msgid "Authentication"
+msgstr "Kimlik Doğrulama"
+
+#: ../src/rss-main.ui.h:60
+msgid "<b>Advanced options</b>"
+msgstr "<b>Gelişmiş seçenekler</b>"
