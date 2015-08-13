@@ -134,13 +134,14 @@ fi
 PKG_CHECK_MODULES([EVOLUTION_DATASERVER], evolution-data-server-1.2, [have_ds=yes], [have_ds=no])
 if test "x$have_ds" == "xYES"; then
 	DATASERVER_VERSION=`$PKG_CONFIG --modversion evolution-data-server-1.2`
-	DATASERVER_LIBS=`$PKG_CONFIG --libs evolution-data-server-1.2`
 else
 	DATASERVER_VERSION=`$PKG_CONFIG --modversion libedataserver-1.2`
-	DATASERVER_LIBS=`$PKG_CONFIG --libs libedataserver-1.2`
 fi
+DATASERVER_CFLAGS=`$PKG_CONFIG --cflags libedataserver-1.2 libebackend-1.2`
+DATASERVER_LIBS=`$PKG_CONFIG --libs libedataserver-1.2 libebackend-1.2`
 DATASERVER_VERSION=`echo $DATASERVER_VERSION|$AWK -F . '{print $1 * 1000000 + $2 * 1000 + $3}'`
 AC_SUBST(DATASERVER_VERSION)
+AC_SUBST(DATASERVER_CFLAGS)
 AC_SUBST(DATASERVER_LIBS)
 
 dnl default renderer
@@ -413,7 +414,7 @@ AC_MSG_CHECKING([for Win32])
 case "$host" in
 *-mingw*)
     os_win32=yes
-    NO_UNDEFINED='-no-undefined'
+    NO_UNDEFINED='-Wl,--no-undefined'
 	if test $evolution_int_version -ge 23000; then
 		NO_UNDEFINED_LIBS='$(EVOLUTION_RSS_EPLUGIN_LIBS) -levolution-mail -lemiscwidgets -lemformat'
 	else
@@ -427,12 +428,21 @@ case "$host" in
 	PLUGINDIR_IN_SERVER_FILE="../../../lib/evolution/$EVOLUTION_EXEC_VERSION/plugins"
 	IMAGESDIR_IN_SERVER_FILE="../../../share/evolution/$EVOLUTION_EXEC_VERSION/images"
     ;;
-*)  os_win32=no
+*openbsd*|*freebsd*)
+    dnl Do not set '-Wl,--no-undefined' on freebsd/openbsd
+    os_win32=no
     NO_UNDEFINED=''
-       NO_UNDEFINED_LIBS=''
+    NO_UNDEFINED_LIBS=''
     SOEXT='.so'
-       PLUGINDIR_IN_SERVER_FILE="$PLUGIN_INSTALL_DIR"
-       IMAGESDIR_IN_SERVER_FILE="$ICON_DIR"
+    PLUGINDIR_IN_SERVER_FILE="$PLUGIN_INSTALL_DIR"
+    IMAGESDIR_IN_SERVER_FILE="$ICON_DIR"
+	;;
+*)  os_win32=no
+    NO_UNDEFINED='-Wl,--no-undefined'
+    NO_UNDEFINED_LIBS=''
+    SOEXT='.so'
+    PLUGINDIR_IN_SERVER_FILE="$PLUGIN_INSTALL_DIR"
+    IMAGESDIR_IN_SERVER_FILE="$ICON_DIR"
     ;;
 esac
 AC_MSG_RESULT([$os_win32])

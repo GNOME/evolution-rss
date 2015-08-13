@@ -24,7 +24,7 @@
 #include <gmodule.h>
 
 #include <libedataserver/libedataserver.h>
-#include <cache-reaper/e-cache-reaper.h>
+#include <libebackend/libebackend.h>
 
 /* Standard GObject macros */
 #define E_TYPE_RSS_CACHE_REAPER_EXT \

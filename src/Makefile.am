@@ -18,7 +18,8 @@ AM_CPPFLAGS =							\
 	-DWEBKIT_VERSION="$(WEBKIT_VERSION)"			\
 	-DRENDER=\""$(RENDER)"\"				\
 	-DRENDER_N=$(RENDER_N)					\
-	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)
+	$(EVOLUTION_RSS_EPLUGIN_CFLAGS)				\
+	$(DATASERVER_CFLAGS)
 
 if ! HAVE_XPCOM_GLUE
 AM_CPPFLAGS += -DGECKO_HOME=\""$(GECKO_HOME)"\"
@@ -90,8 +91,13 @@ SOURCES+=	gecko-utils.cpp
 endif
 
 liborg_gnome_evolution_rss_la_SOURCES = $(SOURCES)
-liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(DATASERVER_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(DBUS_LIBS) $(NO_UNDEFINED_LIBS)
+liborg_gnome_evolution_rss_la_LIBADD = $(WEBKIT_LIBS) $(DATASERVER_LIBS) $(GECKO_LIBS) $(LIBSOUP_LIBS) $(GTKHTML_EDITOR_LIBS) $(DBUS_LIBS) $(NO_UNDEFINED_LIBS) $(EVOLUTION_RSS_EPLUGIN_LIBS)
 liborg_gnome_evolution_rss_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
+liborg_gnome_evolution_rss_la_CPPFLAGS = 		\
+        $(AM_CPPFLAGS)					\
+        -I$(top_srcdir)					\
+        -DEVOLUTION_PRIVDATADIR=\""$(privdatadir)"\"	\
+        -DG_LOG_DOMAIN=\"org-gnome-evolution-rss\"
 
 evolution_import_rss_SOURCES = evolution-import-rss.c
 evolution_import_rss_LDFLAGS = $(EVOLUTION_RSS_EPLUGIN_LIBS)
