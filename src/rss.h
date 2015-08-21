@@ -559,6 +559,7 @@ gboolean check_if_enabled (
 void free_filter_uids (gpointer user_data, GObject *ex_msg);
 #if EVOLUTION_VERSION >= 22900
 void quit_cb(void *ep, EShellView *shell_view);
+EShellView *rss_get_mail_shell_view (gboolean with_mail_reader);
 #endif
 void rebase_feeds(gchar *old_name, gchar *new_name);
 

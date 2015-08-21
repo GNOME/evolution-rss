@@ -80,7 +80,7 @@ static gboolean
 feed_async(gpointer key)
 {
 	HD *hd = (HD *)key;
-	gchar *result;
+
 	e_mail_display_load_images(rss_get_display());
 	e_web_view_load_string (E_WEB_VIEW (rss_get_display()), hd->content);
 

@@ -69,7 +69,6 @@
 #endif
 
 extern int rss_verbose_debug;
-extern EShellView *rss_shell_view;
 
 #include "rss.h"
 #include "rss-formatter.h"
@@ -513,6 +512,7 @@ folder_cb (GtkWidget *widget, gpointer data)
 {
 	EMailBackend *backend;
 	EMailSession *session;
+	EShellView *shell_view;
 #if EVOLUTION_VERSION >= 30101
 	CamelStore *store = NULL;
 	gchar *folder_name = NULL;
@@ -540,7 +540,8 @@ folder_cb (GtkWidget *widget, gpointer data)
 
 	gchar *text = (gchar *)gtk_label_get_text(GTK_LABEL(data));
 
-	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	shell_view = rss_get_mail_shell_view (TRUE);
+	shell_content = e_shell_view_get_shell_content (shell_view);
 	reader = E_MAIL_READER (shell_content);
 	backend = e_mail_reader_get_backend (reader);
 

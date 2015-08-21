@@ -32,6 +32,6 @@ taskbar_op_abort(gpointer key);
 #endif
 void taskbar_op_set_progress(gchar *key, gchar *msg, gdouble progress);
 void taskbar_op_finish(gchar *key);
-void taskbar_push_message(gchar *message);
+void taskbar_push_message(const gchar *message);
 void taskbar_pop_message(void);
 

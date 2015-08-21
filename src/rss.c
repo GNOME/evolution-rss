@@ -260,7 +260,6 @@ struct _EMFormatRSSControlsPURI {
 GtkWidget *RSS_BTN_BACK;
 GtkWidget *RSS_BTN_FORW;
 GtkWidget *RSS_BTN_STOP;
-GtkWidget *evo_window;
 GHashTable *icons = NULL;
 #if (DATASERVER_VERSION >= 2023001)
 extern EProxy *proxy;
@@ -322,9 +321,6 @@ gboolean show_webkit(GtkWidget *webkit);
 void sync_folders(void);
 
 GtkTreeStore *evolution_store = NULL;
-#if EVOLUTION_VERSION >= 22900
-EShellView *rss_shell_view = NULL;
-#endif
 
 /*======================================================================*/
 
@@ -885,6 +881,38 @@ receive_cancel(GtkButton *button, struct _send_info *info)
 //	abort_all_soup();
 }
 
+#if EVOLUTION_VERSION >= 22900
+EShellView *
+rss_get_mail_shell_view (gboolean with_mail_reader)
+{
+	GList *windows, *link;
+	EShellView *adept_shell_view = NULL;
+
+	windows = gtk_application_get_windows (GTK_APPLICATION (e_shell_get_default ()));
+	for (link = windows; link; link = g_list_next (link)) {
+		if (E_IS_SHELL_WINDOW (link->data)) {
+			EShellWindow *shell_window = link->data;
+			EShellView *shell_view;
+
+			shell_view = e_shell_window_peek_shell_view (shell_window, "mail");
+			if (shell_view) {
+				EShellContent *shell_content;
+
+				shell_content = e_shell_view_get_shell_content (shell_view);
+				if (!with_mail_reader || E_IS_MAIL_READER (shell_content)) {
+					if (g_strcmp0 (e_shell_window_get_active_view (shell_window), "mail") == 0)
+						return shell_view;
+
+					adept_shell_view = shell_view;
+				}
+			}
+		}
+	}
+
+	return adept_shell_view;
+}
+#endif
+
 void
 rss_select_folder(gchar *folder_name)
 {
@@ -893,18 +921,24 @@ rss_select_folder(gchar *folder_name)
 #if EVOLUTION_VERSION >= 29101
 	const
 #endif
-	gchar *uri;
+	gchar *uri = NULL;
 	EShellSidebar *shell_sidebar;
+	EShellView *shell_view;
 
 	d("rss_select_folder() %s:%d\n", __FILE__, __LINE__);
 
 	g_return_if_fail(folder_name != NULL);
 
-	shell_sidebar  = e_shell_view_get_shell_sidebar(rss_shell_view);
-	g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
+	shell_view = rss_get_mail_shell_view (FALSE);
+	if (shell_view) {
+		shell_sidebar = e_shell_view_get_shell_sidebar (shell_view);
+		g_object_get (shell_sidebar, "folder-tree", &folder_tree, NULL);
 
-	uri = lookup_uri_by_folder_name(folder_name);
-	em_folder_tree_set_selected(folder_tree, uri, 0);
+		if (folder_tree) {
+			uri = lookup_uri_by_folder_name (folder_name);
+			em_folder_tree_set_selected (folder_tree, uri, 0);
+		}
+	}
 #endif
 #if EVOLUTION_VERSION < 29101
 	if (uri) g_free(uri);
@@ -1200,13 +1234,10 @@ rss_get_mail_session(void);
 EMailSession*
 rss_get_mail_session(void)
 {
-	EMailBackend *backend;
-	EMailReader *reader;
-	EShellContent *shell_content;
-	shell_content = e_shell_view_get_shell_content (rss_shell_view);
-	reader = E_MAIL_READER (shell_content);
-	backend = e_mail_reader_get_backend (reader);
-	return e_mail_backend_get_session (backend);
+	EShellBackend *shell_backend;
+
+	shell_backend = e_shell_get_backend_by_name (e_shell_get_default (), "mail");
+	return e_mail_backend_get_session (E_MAIL_BACKEND (shell_backend));
 }
 #endif
 
@@ -2679,7 +2710,7 @@ rss_component_peek_local_store(void)
 	EMailSession *session;
 	EShellBackend *shell_backend;
 
-	shell_backend = e_shell_view_get_shell_backend (rss_shell_view);
+	shell_backend = e_shell_get_backend_by_name (e_shell_get_default (), "mail");
 
 	backend = E_MAIL_BACKEND (shell_backend);
 	session = e_mail_backend_get_session (backend);
@@ -3454,11 +3485,18 @@ refresh_mail_folder(CamelFolder *mail_folder)
 #if EVOLUTION_VERSION < 30505
         mail_refresh_folder(mail_folder, NULL, NULL);
 #else
-        EShellContent *shell_content;
-        EMailReader *reader;
-        shell_content = e_shell_view_get_shell_content (rss_shell_view);
-        reader = E_MAIL_READER (shell_content);
-        e_mail_reader_refresh_folder(reader, mail_folder);
+	EShellView *shell_view;
+
+	shell_view = rss_get_mail_shell_view (TRUE);
+
+	if (shell_view) {
+		EShellContent *shell_content;
+
+		shell_content = e_shell_view_get_shell_content (shell_view);
+		if (E_IS_MAIL_READER (shell_content)) {
+			e_mail_reader_refresh_folder (E_MAIL_READER (shell_content), mail_folder);
+		}
+	}
 #endif
 #if (DATASERVER_VERSION >= 2033001)
                 camel_folder_synchronize (mail_folder, FALSE, G_PRIORITY_DEFAULT,
@@ -3744,23 +3782,22 @@ e_plugin_ui_init (GtkUIManager *ui_manager,
 {
 	EShellWindow *shell_window;
 
-	rss_shell_view = shell_view;
-	shell_window = e_shell_view_get_shell_window (rss_shell_view);
-	evo_window = (GtkWidget *)shell_window;
+	shell_window = e_shell_view_get_shell_window (shell_view);
+
 	g_signal_connect (
 		e_shell_window_get_action (
 			E_SHELL_WINDOW (shell_window),
 			"mail-folder-refresh"),
 			"activate",
 		G_CALLBACK (org_gnome_cooly_folder_refresh),
-		rss_shell_view);
+		shell_view);
 	g_signal_connect (
 		e_shell_window_get_action (
 			E_SHELL_WINDOW (shell_window),
 			"quit"),
 		"activate",
 		G_CALLBACK (quit_cb),
-		rss_shell_view);
+		shell_view);
 	rss_hooks_init();
 	return TRUE;
 }

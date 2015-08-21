@@ -31,7 +31,6 @@
 #include "rss-formatter.h"
 
 extern int rss_verbose_debug;
-extern EShellView *rss_shell_view;
 extern rssfeed *rf;
 
 gchar *
@@ -47,10 +46,12 @@ rss_process_feed(gchar *feed, guint len)
 	gchar *result;
 	EMailReader *reader;
 	EShellContent *shell_content;
+	EShellView *shell_view;
 	EMailDisplay *display;
 	GtkAllocation alloc;
 
-	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	shell_view = rss_get_mail_shell_view (TRUE);
+	shell_content = e_shell_view_get_shell_content (shell_view);
 	reader = E_MAIL_READER (shell_content);
 	display = e_mail_reader_get_mail_display (reader);
 	gtk_widget_get_allocation((GtkWidget *)display, &alloc);
@@ -167,8 +168,10 @@ rss_get_display(void)
 {
 	EMailReader *reader;
 	EShellContent *shell_content;
+	EShellView *shell_view;
 
-	shell_content = e_shell_view_get_shell_content (rss_shell_view);
+	shell_view = rss_get_mail_shell_view (TRUE);
+	shell_content = e_shell_view_get_shell_content (shell_view);
 	reader = E_MAIL_READER (shell_content);
 	return e_mail_reader_get_mail_display (reader);
 }

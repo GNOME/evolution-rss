@@ -33,7 +33,6 @@ extern int rss_verbose_debug;
 #include "network-soup.h"
 #include "notification.h"
 
-extern EShellView *rss_shell_view;
 extern rssfeed *rf;
 
 #if (EVOLUTION_VERSION < 29102)
@@ -168,21 +167,25 @@ out:    g_free(msg);
 
 
 void
-taskbar_push_message(gchar *message)
+taskbar_push_message (const gchar *message)
 {
+#if EVOLUTION_VERSION >= 22900
+	EShellView *shell_view;
 	EShellTaskbar *shell_taskbar;
-	g_return_if_fail(rss_shell_view != NULL);
-	shell_taskbar = e_shell_view_get_shell_taskbar (rss_shell_view);
+
+	shell_view = rss_get_mail_shell_view (FALSE);
+
+	g_return_if_fail (shell_view != NULL);
+
+	shell_taskbar = e_shell_view_get_shell_taskbar (shell_view);
 	e_shell_taskbar_set_message (shell_taskbar, message);
+#endif
 }
 
 void
 taskbar_pop_message(void)
 {
-	EShellTaskbar *shell_taskbar;
-	g_return_if_fail(rss_shell_view != NULL);
-	shell_taskbar = e_shell_view_get_shell_taskbar (rss_shell_view);
-	e_shell_taskbar_set_message (shell_taskbar, "");
+	taskbar_push_message ("");
 }
 
 void

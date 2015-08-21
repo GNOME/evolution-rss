@@ -26,7 +26,6 @@
 
 GtkStatusIcon *status_icon = NULL;
 gboolean winstatus;
-extern GtkWidget *evo_window;
 extern GQueue *status_msg;
 
 void status_text_free(StatusText *st);
@@ -159,6 +158,27 @@ toggle_window(void)
 		}
 	}
 #else
+	GtkWidget *evo_window = NULL;
+	GList *windows, *link;
+
+	windows = gtk_application_get_windows (GTK_APPLICATION (e_shell_get_default ()));
+	for (link = windows; link; link = g_list_next (link)) {
+		if (E_IS_SHELL_WINDOW (link->data)) {
+			EShellWindow *shell_window = link->data;
+			EShellView *shell_view;
+
+			shell_view = e_shell_window_peek_shell_view (shell_window, "mail");
+			if (shell_view) {
+				evo_window = GTK_WIDGET (shell_window);
+				if (g_strcmp0 (e_shell_window_get_active_view (shell_window), "mail") == 0)
+					break;
+			}
+		}
+	}
+
+	if (!evo_window)
+		return;
+
 	if (gtk_window_is_active(GTK_WINDOW(evo_window))) {
 		gtk_window_iconify(GTK_WINDOW(evo_window));
 		gtk_window_set_skip_taskbar_hint(
