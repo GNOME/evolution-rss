@@ -9,17 +9,17 @@ msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-25 19:08+0000\n"
-"PO-Revision-Date: 2015-03-15 20:55+0200\n"
+"POT-Creation-Date: 2015-04-01 11:26+0000\n"
+"PO-Revision-Date: 2015-09-09 16:59+0300\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
-"Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
+"Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
 "%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"X-Generator: Gtranslator 2.91.7\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
@@ -32,21 +32,19 @@ msgstr ""
 "įrašus."
 
 #: ../evolution-rss.metainfo.xml.in.h:1
-#| msgid "Evolution RSS Reader"
 msgid "RSS Reader"
 msgstr "RSS skaityklė"
 
 #: ../evolution-rss.metainfo.xml.in.h:2
-#| msgid "Reading RSS Feeds..."
 msgid "Read RSS feeds"
 msgstr "Skaityti RSS kanalus"
 
-#: ../src/dbus.c:108 ../src/rss.c:1980 ../src/rss-config-factory.c:1188
+#: ../src/dbus.c:108 ../src/rss.c:1977 ../src/rss-config-factory.c:1188
 #: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
 msgid "Error adding feed."
 msgstr "Klaida pridedant sklaidos kanalą."
 
-#: ../src/dbus.c:109 ../src/rss.c:1981 ../src/rss-config-factory.c:1189
+#: ../src/dbus.c:109 ../src/rss.c:1978 ../src/rss-config-factory.c:1189
 #: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
 msgid "Feed already exists!"
 msgstr "Sklaidos kanalas jau yra!"
@@ -56,26 +54,27 @@ msgstr "Sklaidos kanalas jau yra!"
 msgid "Importing URL: %s"
 msgstr "Importuojamas URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:212
+#: ../src/e-mail-formatter-evolution-rss.c:220
 msgid "Posted under"
 msgstr "Parašyta po"
 
-#: ../src/e-mail-formatter-evolution-rss.c:380
-#: ../src/e-mail-formatter-evolution-rss.c:386
+#: ../src/e-mail-formatter-evolution-rss.c:387
+#: ../src/e-mail-formatter-evolution-rss.c:393
 msgid "Show Summary"
 msgstr "Rodyti santrauką"
 
-#: ../src/e-mail-formatter-evolution-rss.c:381
-#: ../src/e-mail-formatter-evolution-rss.c:387
+#: ../src/e-mail-formatter-evolution-rss.c:388
+#: ../src/e-mail-formatter-evolution-rss.c:394
 msgid "Show Full Text"
 msgstr "Rodyti visą tekstą"
 
-#: ../src/e-mail-formatter-evolution-rss.c:402
+#: ../src/e-mail-formatter-evolution-rss.c:409
 msgid "Evolution-RSS"
 msgstr "Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:403
-msgid "Displaying RSS feed arcticles"
+#: ../src/e-mail-formatter-evolution-rss.c:410
+#| msgid "Displaying RSS feed arcticles"
+msgid "Displaying RSS feed articles"
 msgstr "Rodomi RSS sklaidos kanalų straipsniai"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
@@ -332,7 +331,7 @@ msgstr "Paleisti programą terminale"
 msgid "True if the program to handle this URL should be run in a terminal"
 msgstr "Teigiama, jei URL apdorojanti programa turi būti paleista terminale"
 
-#: ../src/notification.c:288 ../src/rss.c:2148
+#: ../src/notification.c:288 ../src/rss.c:2146
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Gaunami sklaidos kanalai (%d įjungta)"
@@ -394,7 +393,6 @@ msgid "Delete \"{0}\"?"
 msgstr "Ištrinti „{0}“?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-#| msgid "Really delete feed '{0}' ?"
 msgid "Really delete feed '{0}'?"
 msgstr "Tikrai ištrinti sklaidos kanalą „{0}“?"
 
@@ -423,121 +421,121 @@ msgstr "Nėra informacijos"
 msgid "No information"
 msgstr "Nėra informacijos"
 
-#: ../src/rss.c:423 ../src/rss.c:2332
+#: ../src/rss.c:420 ../src/rss.c:2332
 msgid "Feed"
 msgstr "Kanalas"
 
-#: ../src/rss.c:488 ../src/rss-config-factory.c:2883
+#: ../src/rss.c:485 ../src/rss-config-factory.c:2883
 #: ../src/rss-config-factory.c:3057
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% atlikta"
 
-#: ../src/rss.c:630
+#: ../src/rss.c:627
 msgid "Enter User/Pass for feed"
 msgstr "Įveskite naudotoją/slaptažodį kanalui"
 
-#: ../src/rss.c:686
+#: ../src/rss.c:683
 msgid "Enter your username and password for:"
 msgstr "Įveskite savo naudotojo vardą ir slaptažodį kanalui:"
 
-#: ../src/rss.c:704
+#: ../src/rss.c:701
 msgid "Username: "
 msgstr "Naudotojo vardas: "
 
-#: ../src/rss.c:725 ../src/rss-main.ui.h:37
+#: ../src/rss.c:722 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Slaptažodis: "
 
-#: ../src/rss.c:762
+#: ../src/rss.c:759
 msgid "_Remember this password"
 msgstr "Įsi_minti šį slaptažodį"
 
-#: ../src/rss.c:876 ../src/rss.c:880
+#: ../src/rss.c:873 ../src/rss.c:877
 msgid "Cancelling..."
 msgstr "Atsisakoma..."
 
-#: ../src/rss.c:1162
+#: ../src/rss.c:1159
 msgid "_Copy"
 msgstr "_Kopijuoti"
 
-#: ../src/rss.c:1163
+#: ../src/rss.c:1160
 msgid "Select _All"
 msgstr "Žymėti _viską"
 
-#: ../src/rss.c:1165 ../src/rss.c:1176
+#: ../src/rss.c:1162 ../src/rss.c:1173
 msgid "Zoom _In"
 msgstr "_Pritraukti"
 
-#: ../src/rss.c:1166 ../src/rss.c:1177
+#: ../src/rss.c:1163 ../src/rss.c:1174
 msgid "Zoom _Out"
 msgstr "_Atitolinti"
 
-#: ../src/rss.c:1167 ../src/rss.c:1178
+#: ../src/rss.c:1164 ../src/rss.c:1175
 msgid "_Normal Size"
 msgstr "Įprastinis _dydis"
 
-#: ../src/rss.c:1169
+#: ../src/rss.c:1166
 msgid "_Open Link"
 msgstr "_Atverti saitą"
 
-#: ../src/rss.c:1170 ../src/rss.c:1184
+#: ../src/rss.c:1167 ../src/rss.c:1181
 msgid "_Copy Link Location"
 msgstr "_Kopijuoti saito vietą"
 
-#: ../src/rss.c:1180
+#: ../src/rss.c:1177
 msgid "_Print..."
 msgstr "S_pausdinti..."
 
-#: ../src/rss.c:1181
+#: ../src/rss.c:1178
 msgid "Save _As"
 msgstr "Įrašyti _taip"
 
-#: ../src/rss.c:1183
+#: ../src/rss.c:1180
 msgid "_Open Link in Browser"
 msgstr "_Atverti saitą naršyklėje"
 
-#: ../src/rss.c:1471
+#: ../src/rss.c:1468
 msgid "Fetching feed"
 msgstr "Skaitomas kanalas"
 
-#: ../src/rss.c:1783 ../src/rss.c:2061
+#: ../src/rss.c:1780 ../src/rss.c:2058
 msgid "Unnamed feed"
 msgstr "Nepavadintas kanalas"
 
-#: ../src/rss.c:1784
+#: ../src/rss.c:1781
 msgid "Error while setting up feed."
 msgstr "Klaida nustatant sklaidos kanalą"
 
-#: ../src/rss.c:1992 ../src/rss.c:2062
+#: ../src/rss.c:1989 ../src/rss.c:2059
 msgid "Error while fetching feed."
 msgstr "Klaida skaitant sklaidos kanalą."
 
-#: ../src/rss.c:1993
+#: ../src/rss.c:1990
 msgid "Invalid Feed"
 msgstr "Netinkamas kanalas"
 
-#: ../src/rss.c:2035
+#: ../src/rss.c:2032
 #, c-format
 msgid "Adding feed %s"
 msgstr "Pridedamas kanalas %s"
 
-#: ../src/rss.c:2076 ../src/rss.c:2084
+#: ../src/rss.c:2073 ../src/rss.c:2081
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Gaunamas pranešimas %d iš %d"
 
-#: ../src/rss.c:2169 ../src/rss.c:2172
+#: ../src/rss.c:2167 ../src/rss.c:2170
 msgid "Complete."
 msgstr "Baigta."
 
-#: ../src/rss.c:2206 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2632
-#: ../src/rss.c:3220
+#: ../src/rss.c:2207 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2636
+#: ../src/rss.c:3224
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Klaida skaitant kanalą: %s"
 
-#: ../src/rss.c:2218 ../src/rss.c:2222
+#: ../src/rss.c:2219 ../src/rss.c:2223
 msgid "Canceled."
 msgstr "Atsisakyta."
 
@@ -558,11 +556,11 @@ msgstr "Baigta"
 msgid "Formatting error."
 msgstr "Formatavimo klaida."
 
-#: ../src/rss.c:3533
+#: ../src/rss.c:3538
 msgid "No RSS feeds configured!"
 msgstr "Nėra nustatytų RSS kanalų!"
 
-#: ../src/rss.c:3585
+#: ../src/rss.c:3590
 msgid "Waiting..."
 msgstr "Laukiama..."
 
@@ -732,11 +730,11 @@ msgstr "Kanalo pavadinimas"
 msgid "Type"
 msgstr "Tipas"
 
-#: ../src/rss-config-factory.c:4463 ../src/rss.h:52
+#: ../src/rss-config-factory.c:4463 ../src/rss.h:61
 msgid "News and Blogs"
 msgstr "Naujienos ir tinklaraščiai"
 
-#: ../src/rss.h:54
+#: ../src/rss.h:63
 msgid "Untitled channel"
 msgstr "Nepavadintas kanalas"
 
