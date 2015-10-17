@@ -110,11 +110,11 @@ got_chunk_blocking_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 	const char* clen;
 
 	if (info->total == 0) {
-#if LIBSOUP_VERSION < 2003000
+#if LIBSOUP_VERSION < 2048000
 		clen = soup_message_get_header(msg->response_headers,
 			"Content-length");
 #else
-		clen = soup_message_headers_get(msg->response_headers,
+		clen = soup_message_headers_get_one(msg->response_headers,
 			"Content-length");
 #endif
 		if (!clen)
@@ -138,8 +138,13 @@ got_chunk_cb(SoupMessage *msg, SoupBuffer *chunk, CallbackInfo *info) {
 	NetStatusProgress *progress = NULL;
 	const char* clen;
 
+#if LIBSOUP_VERSION < 2048000
 	clen = soup_message_headers_get(msg->response_headers,
 			"Content-length");
+#else
+	clen = soup_message_headers_get_one(msg->response_headers,
+			"Content-length");
+#endif
 	if (!clen)
 		info->total = 0;
 	else
@@ -754,7 +759,11 @@ redirect_handler (SoupMessage *msg, gpointer user_data)
 		SoupURI *new_uri;
 		const gchar *new_loc;
 
+#if LIBSOUP_VERSION < 2048000
 		new_loc = soup_message_headers_get (msg->response_headers, "Location");
+#else
+		new_loc = soup_message_headers_get_one (msg->response_headers, "Location");
+#endif
 		if (!new_loc)
 			return;
 
