@@ -433,6 +433,7 @@ case "$host" in
     os_win32=no
     NO_UNDEFINED=''
     NO_UNDEFINED_LIBS=''
+    NO_UNDEFINED_LIBS='-levolution-mail-formatter'
     SOEXT='.so'
     PLUGINDIR_IN_SERVER_FILE="$PLUGIN_INSTALL_DIR"
     IMAGESDIR_IN_SERVER_FILE="$ICON_DIR"

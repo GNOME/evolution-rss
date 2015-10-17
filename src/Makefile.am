@@ -140,6 +140,7 @@ evolution_module_rss_la_CPPFLAGS =			\
 
 evolution_module_rss_la_LIBADD =			\
         $(EVOLUTION_RSS_EPLUGIN_LIBS)			\
+        $(NO_UNDEFINED_LIBS)				\
 	$(DATASERVER_LIBS)
 
 evolution_module_rss_la_LDFLAGS =		\
