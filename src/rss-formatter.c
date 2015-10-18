@@ -128,7 +128,7 @@ rss_process_website(gchar *content, gchar *website)
 		htmlDocDumpMemory(src, &buff, &size);
 		d("htmlDocDumpMemory:%s\n", buff);
 		xmlFree(src);
-		return buff;
+		return (gchar *)buff;
 	}
 	return NULL;
 }
@@ -160,7 +160,9 @@ rss_set_changed_view(gboolean value)
 gboolean
 rss_get_is_html(gchar *feedid)
 {
-	return g_hash_table_lookup(rf->hrh, feedid); //feedid is modified
+	gpointer ret;
+	ret = g_hash_table_lookup(rf->hrh, feedid); //feedid is modified
+	return ret ? TRUE:FALSE;
 }
 
 EMailDisplay *

@@ -151,9 +151,6 @@ main (int argc, char *argv[])
 		feed = "";
 	}
 
-	g_type_init ();
-
-
 	loop = g_main_loop_new (NULL, FALSE);
 
 	if (!init_gdbus ())

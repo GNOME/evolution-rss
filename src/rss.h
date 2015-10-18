@@ -52,6 +52,7 @@
 #include <mail/em-format-hook.h>
 #endif
 #endif
+#include <mail/e-mail-display.h>
 
 #ifdef HAVE_WEBKIT
 #include <webkit/webkitwebview.h>
@@ -246,6 +247,7 @@ enum {
 
 typedef struct ADD_FEED {
 	GtkWidget	*dialog;
+	GtkWidget	*dialog_aarea;
 	GtkWidget	*progress;
 	GtkWidget	*child;		//the dialog child
 	GtkBuilder	*gui;
@@ -467,7 +469,7 @@ gchar *generate_safe_chn_name(gchar *chn_name);
 void update_sr_message(void);
 void update_progress_text(gchar *title);
 void update_feed_image(RDF *r);
-void fetch_comments(gchar *url, gchar *mainurl, EMailFormatter *stream);
+void fetch_comments(gchar *url, gchar *mainurl, EMailDisplay *stream);
 gchar *print_comments(gchar *url, gchar *stream, EMailFormatter *format);
 void cancel_comments_session(SoupSession *sess);
 gchar *search_rss(char *buffer, int len);

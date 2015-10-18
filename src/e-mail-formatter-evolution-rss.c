@@ -197,6 +197,11 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			e_mail_formatter_get_color (formatter, E_MAIL_FORMATTER_COLOR_TEXT));
 
 	if (!is_html && !rss_get_current_view()) {
+#if EVOLUTION_VERSION < 30304
+		GConfClient *client;
+#else
+		GSettings *rss_settings;
+#endif
 		str = g_strdup_printf (
 			"<div class=\"part-container\" style=\"border-color: #%06x; "
 			"background-color: #%06x; color: #%06x;\">"
@@ -254,9 +259,9 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		src = rss_process_feed((gchar *)data, len);
 #endif
 #if EVOLUTION_VERSION < 30304
-		GConfClient *client = gconf_client_get_default();
+		client = gconf_client_get_default();
 #else
-		GSettings *rss_settings = g_settings_new(RSS_CONF_SCHEMA);
+		rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
 #if EVOLUTION_VERSION < 30304
 		if (comments && gconf_client_get_bool (client, GCONF_KEY_SHOW_COMMENTS, NULL)) {
@@ -382,7 +387,7 @@ emfe_evolution_rss_get_widget (EMailFormatterExtension *extension,
 				GHashTable *params)
 {
 	GtkWidget *box, *button;
-	box = gtk_hbutton_box_new ();
+	box = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 
 	button = gtk_button_new_with_label (rss_get_current_view() ? _("Show Summary") :
 							_("Show Full Text"));

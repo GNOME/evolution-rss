@@ -949,12 +949,16 @@ build_dialog_add(gchar *url, gchar *feed_text)
 		G_CALLBACK(disable_widget_cb),
 		gui);
 
-	cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	cancel = gtk_button_new_with_mnemonic("_Cancel");
+	gtk_button_set_image(GTK_BUTTON(cancel),
+		gtk_image_new_from_icon_name("gtk-cancel", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (cancel);
 	gtk_dialog_add_action_widget (GTK_DIALOG(dialog1),
 		cancel, GTK_RESPONSE_CANCEL);
 
-	ok = gtk_button_new_from_stock (GTK_STOCK_OK);
+	ok = gtk_button_new_with_mnemonic ("_Ok");
+	gtk_button_set_image(GTK_BUTTON(ok),
+		gtk_image_new_from_icon_name("gtk-ok", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (ok);
 	gtk_dialog_add_action_widget (GTK_DIALOG(dialog1),
 		ok, GTK_RESPONSE_OK);
@@ -987,6 +991,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
 
 	feed->fetch_html = fhtml;
 	feed->dialog = dialog1;
+	feed->dialog_aarea = GTK_WIDGET(gtk_buildable_get_internal_child(GTK_BUILDABLE(dialog1),
+					gui, "action_area"));
 	feed->child = child;
 	feed->gui = gui;
 	if (flabel)
@@ -1567,7 +1573,6 @@ remove_feed_dialog(gchar *msg)
 	GtkWidget *dialog_vbox1;
 	GtkWidget *vbox1;
 	GtkWidget *checkbutton1;
-	GtkWidget *dialog_action_area1;
 #if EVOLUTION_VERSION < 30304
 	GConfClient *client = gconf_client_get_default();
 #else
@@ -1640,15 +1645,6 @@ remove_feed_dialog(gchar *msg)
 		FALSE,
 		0);
 
-#if GTK_CHECK_VERSION (2,14,0)
-	dialog_action_area1 = gtk_dialog_get_action_area(GTK_DIALOG (dialog1));
-#else
-	dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
-#endif
-	gtk_widget_show (dialog_action_area1);
-	gtk_button_box_set_layout (
-		GTK_BUTTON_BOX (dialog_action_area1),
-		GTK_BUTTONBOX_END);
 #if EVOLUTION_VERSION < 30304
 	g_object_unref(client);
 #else
@@ -2462,7 +2458,6 @@ create_import_dialog (void)
 {
 	GtkWidget *import_file_select;
 	GtkWidget *dialog_vbox5;
-	GtkWidget *dialog_action_area5;
 	GtkWidget *button1;
 	GtkWidget *button2;
 
@@ -2493,19 +2488,9 @@ create_import_dialog (void)
 #endif
 	gtk_widget_show (dialog_vbox5);
 
-#if GTK_CHECK_VERSION (2,14,0)
-	dialog_action_area5 = gtk_dialog_get_action_area(
-				GTK_DIALOG (import_file_select));
-#else
-	dialog_action_area5 = GTK_DIALOG (import_file_select)->action_area;
-#endif
-
-	gtk_widget_show (dialog_action_area5);
-	gtk_button_box_set_layout (
-		GTK_BUTTON_BOX (dialog_action_area5),
-		GTK_BUTTONBOX_END);
-
-	button1 = gtk_button_new_from_stock ("gtk-cancel");
+	button1 = gtk_button_new_with_mnemonic ("_Cancel");
+	gtk_button_set_image(GTK_BUTTON(button1),
+		gtk_image_new_from_icon_name("gtk-cancel", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (button1);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (import_file_select),
@@ -2521,7 +2506,9 @@ create_import_dialog (void)
 		GTK_CAN_DEFAULT);
 #endif
 
-	button2 = gtk_button_new_from_stock ("gtk-open");
+	button2 = gtk_button_new_with_mnemonic ("_Open");
+	gtk_button_set_image(GTK_BUTTON(button2),
+		gtk_image_new_from_icon_name("gtk-open", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (button2);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (import_file_select),
@@ -2546,7 +2533,6 @@ create_export_dialog (void)
 {
 	GtkWidget *export_file_select;
 	GtkWidget *vbox26;
-	GtkWidget *hbuttonbox1;
 	GtkWidget *button3;
 	GtkWidget *button4;
 
@@ -2583,18 +2569,9 @@ create_export_dialog (void)
 #endif
 	gtk_widget_show (vbox26);
 
-#if GTK_CHECK_VERSION (2,14,0)
-	hbuttonbox1 = gtk_dialog_get_action_area(
-			GTK_DIALOG (export_file_select));
-#else
-	hbuttonbox1 = GTK_DIALOG (export_file_select)->action_area;
-#endif
-	gtk_widget_show (hbuttonbox1);
-	gtk_button_box_set_layout (
-		GTK_BUTTON_BOX (hbuttonbox1),
-		GTK_BUTTONBOX_END);
-
-	button3 = gtk_button_new_from_stock ("gtk-cancel");
+	button3 = gtk_button_new_with_mnemonic ("_Cancel");
+	gtk_button_set_image(GTK_BUTTON(button3),
+		gtk_image_new_from_icon_name("gtk-cancel", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (button3);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (export_file_select),
@@ -2607,7 +2584,9 @@ create_export_dialog (void)
 		button3,
 		GTK_CAN_DEFAULT);
 #endif
-	button4 = gtk_button_new_from_stock ("gtk-save");
+	button4 = gtk_button_new_with_mnemonic ("_Save");
+	gtk_button_set_image(GTK_BUTTON(button4),
+		gtk_image_new_from_icon_name("gtk-save", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (button4);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (export_file_select),
@@ -3141,7 +3120,6 @@ create_import_cookies_dialog (void)
 {
 	GtkWidget *import_file_select;
 	GtkWidget *vbox26;
-	GtkWidget *hbuttonbox1;
 	GtkWidget *button3;
 	GtkWidget *button4;
 
@@ -3175,13 +3153,9 @@ create_import_cookies_dialog (void)
 	vbox26 = gtk_dialog_get_content_area(GTK_DIALOG (import_file_select));
 	gtk_widget_show (vbox26);
 
-	hbuttonbox1 = GTK_WIDGET(gtk_dialog_get_action_area(GTK_DIALOG(import_file_select)));
-	gtk_widget_show (hbuttonbox1);
-	gtk_button_box_set_layout (
-		GTK_BUTTON_BOX (hbuttonbox1),
-		GTK_BUTTONBOX_END);
-
-	button3 = gtk_button_new_from_stock ("gtk-cancel");
+	button3 = gtk_button_new_with_mnemonic ("_Cancel");
+	gtk_button_set_image(GTK_BUTTON(button3),
+		gtk_image_new_from_icon_name("gtk-cancel", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (button3);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (import_file_select),
@@ -3189,7 +3163,9 @@ create_import_cookies_dialog (void)
 		GTK_RESPONSE_CANCEL);
 	gtk_widget_set_can_default(button3, TRUE);
 
-	button4 = gtk_button_new_from_stock ("gtk-save");
+	button4 = gtk_button_new_with_mnemonic ("_Save");
+	gtk_button_set_image(GTK_BUTTON(button4),
+		gtk_image_new_from_icon_name("gtk-save", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (button4);
 	gtk_dialog_add_action_widget (
 		GTK_DIALOG (import_file_select),
@@ -3972,7 +3948,6 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	gchar *folder = target->folder->full_name;
 #endif
 	add_feed *feed = NULL;
-	GtkWidget *action_area;
 	gpointer key;
 	gboolean found;
 
@@ -3993,13 +3968,7 @@ rss_folder_factory (EPlugin *epl, EConfigHookItemFactoryData *data)
 	if (url) {
 		feed = build_dialog_add(url, ofolder);
 		//we do not need ok/cancel buttons here
-
-#if GTK_CHECK_VERSION (2,14,0)
-		action_area = gtk_dialog_get_action_area(GTK_DIALOG(feed->dialog));
-#else
-		action_area = GTK_DIALOG (feed->dialog)->action_area;
-#endif
-		gtk_widget_hide(action_area);
+		gtk_widget_hide(feed->dialog_aarea);
 		g_object_ref(feed->child);
 		gtk_container_remove (
 			GTK_CONTAINER (gtk_widget_get_parent(feed->child)),
@@ -4084,10 +4053,6 @@ rss_config_control_new (void)
 	treeview = (GtkTreeView *)gtk_builder_get_object(
 					gui, "feeds-treeview");
 	rf->treeview = (GtkWidget *)treeview;
-
-	gtk_tree_view_set_rules_hint (
-		treeview,
-		TRUE);
 
 	store = gtk_list_store_new (
 			5,
