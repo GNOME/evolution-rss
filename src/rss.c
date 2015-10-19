@@ -532,16 +532,17 @@ download_chunk(
 		}
 		progress = (NetStatusProgress*)statusdata;
 		if (progress->current > 0 && progress->total > 0) {
+			guint encl_max_size;
 #if EVOLUTION_VERSION < 30304
 			rss_gconf = gconf_client_get_default();
 #else
 			rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
 #if EVOLUTION_VERSION < 30304
-			guint encl_max_size = (gint)gconf_client_get_float(
+			encl_max_size = (gint)gconf_client_get_float(
 				rss_gconf, GCONF_KEY_ENCLOSURE_SIZE, NULL);
 #else
-			guint encl_max_size = g_settings_get_double(
+			encl_max_size = g_settings_get_double(
 				rss_settings, CONF_ENCLOSURE_SIZE);
 #endif
 			if (progress->total > encl_max_size * 1024) { //TOLERANCE!!!
@@ -615,22 +616,33 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	GtkWidget *password;
 	GtkWidget *checkbutton1;
 	GtkWidget *container, *container2;
-	GtkWidget *widget, *action_area;
+	GtkWidget *widget;
 	GtkWidget *content_area, *password_dialog;
+	GtkWidget *cbut, *okbut;
+	GtkWidget *mainwindow;
+	EShellView *shell_view;
 	gchar *markup;
 
-	widget = gtk_dialog_new_with_buttons (
-		_("Enter User/Pass for feed"), NULL, 0,
-		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-		GTK_STOCK_OK, GTK_RESPONSE_OK,
-		NULL);
+	widget = gtk_dialog_new();
+	gtk_window_set_title(GTK_WINDOW(widget),
+			_("Enter Username/Password for feed"));
+	cbut = gtk_dialog_add_button(GTK_DIALOG(widget),
+			_("_Cancel"), GTK_RESPONSE_CANCEL);
+	gtk_button_set_image(GTK_BUTTON(cbut),
+		gtk_image_new_from_icon_name("gtk-cancel", GTK_ICON_SIZE_BUTTON));
+	okbut = gtk_dialog_add_button(GTK_DIALOG(widget),
+			_("_Ok"), GTK_RESPONSE_OK);
+	gtk_button_set_image(GTK_BUTTON(okbut),
+		gtk_image_new_from_icon_name("gtk-ok", GTK_ICON_SIZE_BUTTON));
 #if GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 22
 	gtk_dialog_set_has_separator (GTK_DIALOG (widget), FALSE);
 #endif
 	gtk_dialog_set_default_response (
 		GTK_DIALOG (widget), GTK_RESPONSE_OK);
 	gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
-//        gtk_window_set_transient_for (GTK_WINDOW (widget), widget->parent);
+	shell_view = rss_get_mail_shell_view (TRUE);
+	mainwindow = (GtkWidget *)e_shell_view_get_shell_window(shell_view);
+	gtk_window_set_transient_for (GTK_WINDOW (widget), GTK_WINDOW(mainwindow));
 	gtk_window_set_position (
 		GTK_WINDOW (widget),
 		GTK_WIN_POS_CENTER_ON_PARENT);
@@ -638,25 +650,18 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	password_dialog = GTK_WIDGET (widget);
 
 #if GTK_CHECK_VERSION (2,14,0)
-	action_area = gtk_dialog_get_action_area (GTK_DIALOG(password_dialog));
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG(password_dialog));
 #else
-	action_area = GTK_DIALOG (password_dialog)->action_area;
 	content_area = NULL;
 #endif
 
 	/* Override GtkDialog defaults */
-	gtk_box_set_spacing (GTK_BOX (action_area), 12);
-	gtk_container_set_border_width (GTK_CONTAINER (action_area), 0);
 	gtk_box_set_spacing (GTK_BOX (content_area), 12);
 	gtk_container_set_border_width (GTK_CONTAINER (content_area), 0);
 
-	/* Table */
-	container = gtk_table_new (2, 3, FALSE);
-	gtk_table_set_col_spacings (GTK_TABLE (container), 12);
-	gtk_table_set_row_spacings (GTK_TABLE (container), 6);
-	gtk_table_set_row_spacing (GTK_TABLE (container), 0, 12);
-	gtk_table_set_row_spacing (GTK_TABLE (container), 1, 0);
+	container = gtk_grid_new ();
+	gtk_grid_set_column_spacing (GTK_GRID(container), 12);
+	gtk_grid_set_row_spacing (GTK_GRID (container), 6);
 	gtk_widget_show (container);
 
 	gtk_box_pack_start (
@@ -665,50 +670,45 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	/* Password Image */
 	widget = gtk_image_new_from_icon_name (
 		"dialog-password", GTK_ICON_SIZE_DIALOG);
-	gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.0);
+	gtk_widget_set_halign (widget, GTK_ALIGN_FILL);
+	gtk_widget_set_valign (widget, GTK_ALIGN_FILL);
 	gtk_widget_show (widget);
 
-	gtk_table_attach (
-		GTK_TABLE (container), widget,
-		0, 1, 0, 3, GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_grid_attach( GTK_GRID(container), widget,
+			0, 0, 1, 3);
 
 	widget = gtk_label_new (NULL);
-	gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
+	gtk_label_set_line_wrap (GTK_LABEL (widget), FALSE);
 
-	markup = g_markup_printf_escaped ("%s '%s'\n",
+	markup = g_markup_printf_escaped ("%s\n '%s'\n",
 			_("Enter your username and password for:"),
 			auth->url);
 	gtk_label_set_markup (GTK_LABEL (widget), markup);
 	g_free (markup);
-	gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+	gtk_label_set_xalign(GTK_LABEL(widget), 0.0);
+	gtk_label_set_yalign(GTK_LABEL(widget), 0.5);
 	gtk_widget_show (widget);
 
-	gtk_table_attach (
-		GTK_TABLE (container), widget,
-		1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (
+		GTK_GRID (container), widget, 1, 0, 2, 1);
 
-	container2 = gtk_table_new (2, 2, FALSE);
+	container2 = gtk_grid_new ();
 	gtk_widget_show (container2);
-	gtk_table_attach (
-		GTK_TABLE (container), container2,
-		1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach(GTK_GRID(container), container2, 1, 1, 2, 2);
 
 	widget = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (widget), _("Username: "));
-	gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+	gtk_label_set_xalign(GTK_LABEL(widget), 0.0);
+	gtk_label_set_yalign(GTK_LABEL(widget), 0.5);
 	gtk_widget_show (widget);
-	gtk_table_attach (
-		GTK_TABLE (container2), widget,
-		0, 1, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (container2), widget, 0, 0, 1, 1);
 
 	username = gtk_entry_new ();
 	gtk_entry_set_visibility (GTK_ENTRY (username), TRUE);
 	gtk_entry_set_activates_default (GTK_ENTRY (username), TRUE);
 	gtk_widget_grab_focus (username);
 	gtk_widget_show (username);
-	gtk_table_attach (
-		GTK_TABLE (container2), username,
-		1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (container2), username, 1, 0, 2, 1);
 	if (auth->user)
 		gtk_entry_set_text (GTK_ENTRY (username), auth->user);
 	auth->username = username;
@@ -716,20 +716,17 @@ create_user_pass_dialog(RSS_AUTH *auth)
 
 	widget = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (widget), _("Password: "));
-	gtk_misc_set_alignment (GTK_MISC (widget), 0.0, 0.5);
+	gtk_label_set_xalign(GTK_LABEL(widget), 0.0);
+	gtk_label_set_yalign(GTK_LABEL(widget), 0.5);
 	gtk_widget_show (widget);
-	gtk_table_attach (
-		GTK_TABLE (container2), widget,
-		0, 1, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (container2), widget, 0, 1, 1, 2);
 
 	password = gtk_entry_new ();
 	gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
 	gtk_entry_set_activates_default (GTK_ENTRY (password), TRUE);
 	gtk_widget_grab_focus (password);
 	gtk_widget_show (password);
-	gtk_table_attach (
-		GTK_TABLE (container2), password,
-		1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (container2), password, 1, 2, 1, 2);
 	if (auth->pass)
 		gtk_entry_set_text (GTK_ENTRY (password), auth->pass);
 	auth->password = password;
@@ -739,9 +736,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
 //        update_capslock_state (NULL, NULL, widget);
 	gtk_widget_show (widget);
 
-	gtk_table_attach (
-		GTK_TABLE (container), widget,
-		1, 2, 2, 3, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (container), widget, 1, 2, 2, 3);
 
 //        g_signal_connect (
 //              password_dialog, "key-release-event",
@@ -761,9 +756,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	gtk_widget_show (checkbutton1);
 	auth->rememberpass = checkbutton1;
 
-	gtk_table_attach (
-		GTK_TABLE (container), checkbutton1,
-		1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (container), checkbutton1, 1, 3, 2, 4);
 
 	gtk_widget_show_all(password_dialog);
 	return GTK_DIALOG(password_dialog);
@@ -1435,12 +1428,12 @@ void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view);
 
 void org_gnome_cooly_folder_refresh(void *ep, EShellView *shell_view)
 {
-	gchar *folder_name;
+	gchar *folder_name = NULL;
 	gchar *main_folder = get_main_folder();
 	gchar *ofolder, *name, *fname, *key, *rss_folder;
 	gboolean online;
 #if EVOLUTION_VERSION > 22900 //kb//
-	CamelFolder *folder;
+	CamelFolder *folder = NULL;
 #if EVOLUTION_VERSION >= 30505
 	CamelStore *selected_store = NULL;
 	gchar *selected_folder_name = NULL;
@@ -1842,7 +1835,6 @@ finish_setup_feed(
 		chn_name = process_feed(r);
 //		taskbar_op_set_progress(tmsgkey, tmsg, 0.6);
 
-add:
 		//feed name can only come from an import so we rather prefer
 		//resulted channel name instead of supplied one
 		if (feed->feed_name && !chn_name) {
@@ -2492,7 +2484,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 #endif
 {
 	GString *response;
-	gchar *tmsg, *str;
+	gchar *str;
 	gint len;
 	UB* ub = (UB*)user_data;
 
@@ -2503,7 +2495,7 @@ finish_website (SoupSession *soup_sess, SoupMessage *msg, gpointer user_data)
 	d("browser full:%d\n", (int)response->len);
 	d("browser fill:%d\n", (int)browser_fill);
 	if (!response->len) {
-		tmsg = g_strdup(_("Formatting error."));
+		//gchar *tmsg = g_strdup(_("Formatting error."));
 		//browser_write(
 		//	tmsg, strlen(tmsg),
 		//	(gchar *)"file:///fakefile#index");
@@ -2583,7 +2575,7 @@ finish_comments (SoupSession *soup_sess, SoupMessage *msg, EMailFormatter *user_
 
 	if (reload && !rf->cur_format) {
 #if EVOLUTION_VERSION >= 30501
-		e_web_view_reload(user_data);
+		e_web_view_reload((EWebView *)user_data);
 #else
 #if EVOLUTION_VERSION >= 23190
 		em_format_queue_redraw((EMFormat *)user_data);
@@ -2637,8 +2629,7 @@ print_comments(gchar *url, gchar *stream, EMailFormatter *format)
 
 
 void
-//fetch_comments(gchar *url, gchar *mainurl, EMFormatHTML *stream)
-fetch_comments(gchar *url, gchar *mainurl, EMailFormatter *stream)
+fetch_comments(gchar *url, gchar *mainurl, EMailDisplay *stream)
 {
 	GError *err = NULL;
 	SoupSession *comm_sess = NULL;
@@ -3595,7 +3586,7 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 	info->state = SEND_ACTIVE;
 	g_hash_table_insert (data->active, info->uri, info);
 
-	recv_icon = gtk_image_new_from_stock (
+	recv_icon = gtk_image_new_from_icon_name (
 			"rss-main", GTK_ICON_SIZE_LARGE_TOOLBAR);
 	gtk_widget_set_valign (recv_icon, GTK_ALIGN_START);
 
@@ -3628,11 +3619,14 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 		_("Waiting..."));
 	gtk_widget_set_margin_bottom (progress_bar, 12);
 
-	cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	cancel_button = gtk_button_new_with_mnemonic ("_Cancel");
+	gtk_button_set_image(GTK_BUTTON(cancel_button),
+		gtk_image_new_from_icon_name("gtk-cancel", GTK_ICON_SIZE_BUTTON));
 	gtk_widget_set_valign (cancel_button, GTK_ALIGN_END);
 	gtk_widget_set_margin_bottom (cancel_button, 12);
 
-	gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
+	gtk_label_set_xalign(GTK_LABEL(label), 0.0);
+	gtk_label_set_yalign(GTK_LABEL(label), 0.5);
 	//gtk_misc_set_alignment (GTK_MISC (status_label), 0, .5);
 
 #if EVOLUTION_VERSION < 30501
@@ -3819,10 +3813,6 @@ e_plugin_lib_enable(EPlugin *ep, int enable)
 {
 	char *d;
 	guint render;
-#if (EVOLUTION_VERSION >= 30905)
-	EShell *shell;
-	GApplication *app;
-#endif
 
 	if (enable) {
 		bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
@@ -3954,7 +3944,7 @@ create_mail(create_feed *CF)
 	gchar *tmp, *tmp2, *safe_subj;
 	CamelMimePart *part, *msgp;
 	CamelMultipart *mp;
-	GString *cats;
+	GString *cats = NULL;
 	GList *p, *l;
 	gchar *time_str, *buf;
 	gint offset;
@@ -4077,6 +4067,7 @@ create_mail(create_feed *CF)
 #endif
 
 	if (CF->attachedfiles) {
+			gdouble encl_max_size;
 			mp = camel_multipart_new();
 			camel_multipart_set_boundary(mp, NULL);
 
@@ -4106,7 +4097,7 @@ create_mail(create_feed *CF)
 #else
 		rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
-		gdouble encl_max_size = g_settings_get_double(
+			encl_max_size = g_settings_get_double(
 					rss_settings, CONF_ENCLOSURE_SIZE)*1024;
 		for (l = g_list_first(CF->attachedfiles); l != NULL; l = l->next) {
 			gdouble emax;
@@ -4393,9 +4384,10 @@ process_attachments(create_feed *CF)
 	gdouble emax;
 	guint proc = 0;
 
-	g_return_if_fail(CF->attachments != NULL);
+	g_return_val_if_fail(CF->attachments != NULL, FALSE);
 
 	do {
+		gdouble encl_max_size;
 		if (!strlen(l->data))
 			continue;
 		if (g_list_find_custom(rf->enclist, l->data,
@@ -4407,7 +4399,7 @@ process_attachments(create_feed *CF)
 #else
 		rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
-		gdouble encl_max_size = g_settings_get_double(
+		encl_max_size = g_settings_get_double(
 					rss_settings, CONF_ENCLOSURE_SIZE)*1024;
 		if (CF->encl) {
 			emaxstr = g_hash_table_lookup(CF->attlengths, get_url_basename(CF->encl));
@@ -4499,7 +4491,7 @@ gboolean
 process_enclosure(create_feed *CF)
 {
 	cfl *CFL;
-	gdouble emax;
+	gdouble emax, encl_max_size;
 	gchar *emaxstr;
 
 	if (g_list_find_custom(rf->enclist, CF->encl,
@@ -4511,7 +4503,7 @@ process_enclosure(create_feed *CF)
 #else
 	rss_settings = g_settings_new(RSS_CONF_SCHEMA);
 #endif
-	gdouble encl_max_size = g_settings_get_double(
+	encl_max_size = g_settings_get_double(
 				rss_settings, CONF_ENCLOSURE_SIZE)*1024;
 	emaxstr = g_hash_table_lookup(CF->attlengths, get_url_basename(CF->encl));
 	if (emaxstr)

@@ -700,6 +700,8 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	GtkWidget *spinbutton1, *spinbutton2;
 	GtkWidget *checkbutton4;
 	GtkImage *image;
+	EShellView *shell_view;
+	GtkWidget *mainwindow;
 	GError* error = NULL;
 
 	feed->enabled = TRUE;
@@ -988,6 +990,9 @@ build_dialog_add(gchar *url, gchar *feed_text)
 	gtk_window_add_accel_group (
 		GTK_WINDOW (dialog1),
 		accel_group);
+	shell_view = rss_get_mail_shell_view (TRUE);
+	mainwindow = (GtkWidget *)e_shell_view_get_shell_window(shell_view);
+	gtk_window_set_transient_for (GTK_WINDOW (dialog1), GTK_WINDOW(mainwindow));
 
 	feed->fetch_html = fhtml;
 	feed->dialog = dialog1;
