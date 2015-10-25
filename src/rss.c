@@ -631,7 +631,7 @@ create_user_pass_dialog(RSS_AUTH *auth)
 	gtk_button_set_image(GTK_BUTTON(cbut),
 		gtk_image_new_from_icon_name("gtk-cancel", GTK_ICON_SIZE_BUTTON));
 	okbut = gtk_dialog_add_button(GTK_DIALOG(widget),
-			_("_Ok"), GTK_RESPONSE_OK);
+			_("_OK"), GTK_RESPONSE_OK);
 	gtk_button_set_image(GTK_BUTTON(okbut),
 		gtk_image_new_from_icon_name("gtk-ok", GTK_ICON_SIZE_BUTTON));
 #if GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 22
