@@ -1,27 +1,23 @@
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Aviary.pl
-# Jeśli masz jakiekolwiek uwagi odnoszące się do tłumaczenia lub chcesz
-# pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
-# gnomepl@aviary.pl
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Piotr Drąg <piotrdrag@gmail.com>, 2011-2015.
-# Aviary.pl <gnomepl@aviary.pl>, 2011-2015.
+# Polish translation for evolution-rss.
+# Copyright © 2011-2016 the evolution-rss authors.
+# This file is distributed under the same license as the evolution-rss package.
+# Piotr Drąg <piotrdrag@gmail.com>, 2011-2016.
+# Aviary.pl <community-poland@mozilla.org>, 2011-2016.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-25 19:51+0100\n"
-"PO-Revision-Date: 2015-10-25 19:52+0100\n"
+"POT-Creation-Date: 2016-08-15 13:34+0200\n"
+"PO-Revision-Date: 2016-08-15 13:35+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
-"Language-Team: Polish <gnomepl@aviary.pl>\n"
+"Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Poedit-Language: Polish\n"
-"X-Poedit-Country: Poland\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
@@ -30,8 +26,8 @@ msgstr "Czytnik kanałów RSS Evolution"
 #: ../evolution-rss.desktop.in.in.h:2
 msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
 msgstr ""
-"Wtyczka dla programu Evolution umożliwiająca wyświetlanie kanałów RSS w "
-"kliencie poczty."
+"Wtyczka dla programu Evolution umożliwiająca wyświetlanie kanałów RSS "
+"w kliencie poczty."
 
 #: ../evolution-rss.metainfo.xml.in.h:1
 msgid "RSS Reader"
@@ -96,7 +92,7 @@ msgid ""
 "can also be HTML."
 msgstr ""
 "Wyświetlanie podsumowania artykułu zamiast jego strony WWW. Podsumowanie "
-"może być w formacie HTML."
+"może być w formacie HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:5
 msgid "Feeds list"
@@ -112,7 +108,7 @@ msgstr "Nazwa komputera serwera pośrednika"
 
 #: ../src/evolution-rss.schemas.in.in.h:8
 msgid "Hostname of the proxy server used for feeds and content."
-msgstr "Nazwa komputera serwera pośrednika używanego dla kanałów i treści."
+msgstr "Nazwa komputera serwera pośrednika używanego dla kanałów i treści."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
 msgid "HTML render"
@@ -136,7 +132,7 @@ msgstr "Minimalny rozmiar czcionki"
 
 #: ../src/evolution-rss.schemas.in.in.h:14
 msgid "The size of the font used in full text preview."
-msgstr "Rozmiar czcionki używanej w podglądzie pełnego tekstu."
+msgstr "Rozmiar czcionki używanej w podglądzie pełnego tekstu."
 
 #: ../src/evolution-rss.schemas.in.in.h:15
 msgid "Network timeout"
@@ -144,7 +140,7 @@ msgstr "Czas oczekiwania na sieć"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
 msgid "Interval in seconds before a connection is dropped."
-msgstr "Czas w sekundach, zanim połączenie zostanie zerwane."
+msgstr "Czas w sekundach, zanim połączenie zostanie zerwane."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
 msgid "Network queue size"
@@ -168,7 +164,7 @@ msgstr "Akceptowanie ciasteczek"
 
 #: ../src/evolution-rss.schemas.in.in.h:22
 msgid "Evolution RSS will accept cookies from articles you browse."
-msgstr "Akceptowanie ciasteczek z przeglądanych artykułów."
+msgstr "Akceptowanie ciasteczek z przeglądanych artykułów."
 
 #: ../src/evolution-rss.schemas.in.in.h:23
 msgid "Automatically Resize Images"
@@ -214,7 +210,7 @@ msgstr "Włączenie ikony stanu"
 
 #: ../src/evolution-rss.schemas.in.in.h:33
 msgid "Enable status icon in notification area"
-msgstr "Włączenie ikony stanu w obszarze powiadamiania"
+msgstr "Włączenie ikony stanu w obszarze powiadamiania"
 
 #: ../src/evolution-rss.schemas.in.in.h:34
 msgid "Blink Status Icon"
@@ -247,7 +243,7 @@ msgstr "Port serwera pośrednika"
 
 #: ../src/evolution-rss.schemas.in.in.h:41
 msgid "The port number for proxy server used for feeds and content."
-msgstr "Numer portu dla serwera pośrednika używanego dla kanałów i treści."
+msgstr "Numer portu dla serwera pośrednika używanego dla kanałów i treści."
 
 #: ../src/evolution-rss.schemas.in.in.h:42
 msgid "Remove feed folder"
@@ -295,7 +291,7 @@ msgstr "Użycie serwera pośrednika"
 
 #: ../src/evolution-rss.schemas.in.in.h:53
 msgid "Use a proxy server to fetch articles and content."
-msgstr "Użycie serwera pośrednika do pobierania artykułów i treści."
+msgstr "Użycie serwera pośrednika do pobierania artykułów i treści."
 
 #: ../src/evolution-rss.schemas.in.in.h:54
 msgid "Proxy server user"
@@ -313,7 +309,7 @@ msgstr "Jak obsługiwać adresy URL kanałów RSS"
 msgid "Set to true to have a program specified in command handle RSS URLs"
 msgstr ""
 "Ustawienie na wartość „true” powoduje obsługiwanie adresów URL kanałów RSS "
-"przez program podany w poleceniu"
+"przez program podany w poleceniu"
 
 #: ../src/evolution-rss.schemas.in.in.h:58
 msgid "URL handler for RSS feed URIs"
@@ -321,13 +317,13 @@ msgstr "Obsługa adresów URL dla adresów URI kanałów RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
-msgstr "Uruchomienie programu w terminalu"
+msgstr "Uruchomienie programu w terminalu"
 
 #: ../src/evolution-rss.schemas.in.in.h:60
 msgid "True if the program to handle this URL should be run in a terminal"
 msgstr ""
 "Wartość „true”, jeśli program do obsługiwania tego adresu URL powinien być "
-"uruchamiany w terminalu"
+"uruchamiany w terminalu"
 
 #: ../src/notification.c:291 ../src/rss.c:2169
 #, c-format
@@ -356,14 +352,14 @@ msgstr ""
 "Wtyczka czytnika kanałów RSS dla programu Evolution.\n"
 "\n"
 "Ta wtyczka dodaje obsługę kanałów RSS do klienta poczty programu Evolution. "
-"Obsługa kanałów RSS została zbudowana na istniejącej obsłudze kanałów w "
-"gałęzi evolution-1.4. Celem projektu jest wyświetlanie kanałów RSS w ten sam "
-"sposób, co wiadomości e-mail, ponieważ artykuły RSS są całkiem podobne do "
-"poczty i posiadanie oddzielnego czytnika jest niepotrzebne.\n"
+"Obsługa kanałów RSS została zbudowana na istniejącej obsłudze kanałów "
+"w gałęzi evolution-1.4. Celem projektu jest wyświetlanie kanałów RSS w ten "
+"sam sposób, co wiadomości e-mail, ponieważ artykuły RSS są całkiem podobne "
+"do poczty i posiadanie oddzielnego czytnika jest niepotrzebne.\n"
 "\n"
 "Można wyświetlać artykuły używając widoku podsumowania lub widoku HTML.\n"
 "\n"
-"Format HTML może być wyświetlany używając jednego z mechanizmów: GtkHTML, "
+"Format HTML może być wyświetlany używając jednego z mechanizmów: GtkHTML, "
 "WebKit firmy Apple lub Firefox/Gecko.\n"
 "\n"
 "<b>Wersja: evolution-rss +VERSION+</b>\n"
@@ -431,7 +427,7 @@ msgstr "Ukończono: %2.0f%%"
 
 #: ../src/rss.c:628
 msgid "Enter Username/Password for feed"
-msgstr "Użytkownik i hasło dla kanału"
+msgstr "Użytkownik i hasło dla kanału"
 
 #: ../src/rss.c:630
 msgid "_Cancel"
@@ -443,7 +439,7 @@ msgstr "_OK"
 
 #: ../src/rss.c:684
 msgid "Enter your username and password for:"
-msgstr "Proszę wprowadzić nazwę użytkownika i hasło dla:"
+msgstr "Proszę wprowadzić nazwę użytkownika i hasło dla:"
 
 #: ../src/rss.c:700
 msgid "Username: "
@@ -499,7 +495,7 @@ msgstr "Zapisz j_ako"
 
 #: ../src/rss.c:1207
 msgid "_Open Link in Browser"
-msgstr "_Otwórz odnośnik w przeglądarce"
+msgstr "_Otwórz odnośnik w przeglądarce"
 
 #: ../src/rss.c:1492
 msgid "Fetching feed"
@@ -529,7 +525,7 @@ msgstr "Dodawanie kanału %s"
 #: ../src/rss.c:2096 ../src/rss.c:2104
 #, c-format
 msgid "Getting message %d of %d"
-msgstr "Pobieranie wiadomości: %d z %d"
+msgstr "Pobieranie wiadomości: %d z %d"
 
 #: ../src/rss.c:2190 ../src/rss.c:2193
 msgid "Complete."
@@ -718,7 +714,7 @@ msgid ""
 msgstr ""
 "Uwaga: aby używać przeglądarki Mozilla (Firefox) lub Apple WebKit jako \n"
 "mechanizm renderujący, należy posiadać zainstalowany pakiet \n"
-"programistyczny firefox lub webkit i ponownie skompilować \n"
+"programistyczny firefox lub webkit i ponownie skompilować \n"
 "program evolution-rss."
 
 #: ../src/rss-config-factory.c:4077 ../src/rss-main.ui.h:45
@@ -735,7 +731,7 @@ msgstr "Typ"
 
 #: ../src/rss-config-factory.c:4434 ../src/rss.h:62
 msgid "News and Blogs"
-msgstr "Aktualności i blogi"
+msgstr "Aktualności i blogi"
 
 #: ../src/rss.h:64
 msgid "Untitled channel"
@@ -747,7 +743,7 @@ msgstr "<b>Mechanizm: </b>"
 
 #: ../src/rss-html-rendering.ui.h:2
 msgid "Use the same fonts as other applications"
-msgstr "Użycie takich samych czcionek, co w innych programach"
+msgstr "Takie same czcionki, co w innych programach"
 
 #: ../src/rss-html-rendering.ui.h:3
 msgid "<b>Minimum font size:</b>"
@@ -767,7 +763,7 @@ msgstr "Obsługa języka JavaScript"
 
 #: ../src/rss-html-rendering.ui.h:7
 msgid "Accept cookies from sites"
-msgstr "Akceptowanie ciasteczek z witryn"
+msgstr "Akceptowanie ciasteczek z witryn"
 
 #: ../src/rss-html-rendering.ui.h:8
 msgid "Import Cookies"
@@ -791,15 +787,15 @@ msgstr "<b>Wyświetlanie HTML</b>"
 
 #: ../src/rss-html-rendering.ui.h:13
 msgid "Show icon in notification area"
-msgstr "Wyświetlanie ikony w obszarze powiadamiania"
+msgstr "Ikona w obszarze powiadamiania"
 
 #: ../src/rss-html-rendering.ui.h:14
 msgid "Show feed icon"
-msgstr "Wyświetlanie ikony kanału"
+msgstr "Ikona kanału"
 
 #: ../src/rss-html-rendering.ui.h:15
 msgid "<b>Article Notification</b>"
-msgstr "<b>Powiadomienia o artykułach</b>"
+msgstr "<b>Powiadomienia o artykułach</b>"
 
 #. to translators: label part of Check for new articles every X minutes" message
 #: ../src/rss-main.ui.h:2
