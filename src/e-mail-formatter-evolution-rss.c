@@ -52,6 +52,7 @@ G_DEFINE_DYNAMIC_TYPE (
 
 static const gchar* rss_formatter_mime_types[] = { "x-evolution/evolution-rss-feed", NULL };
 
+#if EVOLUTION_VERSION < 32190
 static void
 set_view_cb (GtkWidget *button,
 		gpointer *data)
@@ -60,6 +61,8 @@ set_view_cb (GtkWidget *button,
 	rss_set_changed_view(1);
 	e_mail_display_reload (rss_get_display());
 }
+#endif
+
 #include "fetch.h"
 
 typedef struct _HD HD;
@@ -132,7 +135,11 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 	if (!rss_init)
 			goto fail;
 
+#if EVOLUTION_VERSION >= 32190
+	h = e_web_view_get_content_html_sync (E_WEB_VIEW (rss_get_display()), NULL, NULL);
+#else
 	h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
+#endif
 
 	website = (gchar *)camel_medium_get_header (
 			CAMEL_MEDIUM (message), "Website");
@@ -380,6 +387,7 @@ e_mail_formatter_evolution_rss_type_register (GTypeModule *type_module)
 	e_mail_formatter_evolution_rss_register_type (type_module);
 }
 
+#if EVOLUTION_VERSION < 32190
 static GtkWidget *
 emfe_evolution_rss_get_widget (EMailFormatterExtension *extension,
 				EMailPartList *context,
@@ -404,13 +412,16 @@ emfe_evolution_rss_get_widget (EMailFormatterExtension *extension,
 	gtk_widget_show(box);
 	return box;
 }
+#endif
 
 static void
 e_mail_formatter_evolution_rss_class_init (EMailFormatterExtensionClass *class)
 {
 	class->mime_types = rss_formatter_mime_types;
 	class->format = emfe_evolution_rss_format;
+#if EVOLUTION_VERSION < 32190
 	class->get_widget = emfe_evolution_rss_get_widget;
+#endif
 	class->display_name = _("Evolution-RSS");
 	class->description = _("Displaying RSS feed articles");
 }

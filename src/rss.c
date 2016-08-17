@@ -1326,15 +1326,24 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 
 #if EVOLUTION_VERSION >= 31303
 	EHTMLEditor *editor;
+#if EVOLUTION_VERSION >= 32190
+	EContentEditor *cnt_editor;
+#else
 	EHTMLEditorView *view;
+#endif
 
 	editor = e_msg_composer_get_editor (t->composer);
+#if EVOLUTION_VERSION >= 32190
+	cnt_editor = e_html_editor_get_content_editor (editor);
+	text = e_content_editor_get_content (cnt_editor, E_CONTENT_EDITOR_GET_TEXT_HTML, NULL, NULL);
+#else
 	view = e_html_editor_get_view (editor);
 #if EVOLUTION_VERSION >= 31390
 	text = e_html_editor_view_get_text_html (view, NULL, NULL);
 #else
 	text = e_html_editor_view_get_text_html (view);
 #endif
+#endif /* EVOLUTION_VERSION >= 32190 */
 	length = strlen (text);
 #else
 	/* unfortunately e_msg_composer does not have raw get/set text body
@@ -1352,8 +1361,17 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 		g_free (text);
 		text = g_strndup ((gchar *) buff, size);
 		editor = e_msg_composer_get_editor (t->composer);
+#if EVOLUTION_VERSION >= 32190
+		cnt_editor = e_html_editor_get_content_editor (editor);
+		e_content_editor_insert_content (
+			cnt_editor,
+			text,
+			E_CONTENT_EDITOR_INSERT_TEXT_HTML |
+			E_CONTENT_EDITOR_INSERT_REPLACE_ALL);
+#else
 		view = e_html_editor_get_view (editor);
 		e_html_editor_view_set_text_html (view, text);
+#endif
 #else
 		gtkhtml_editor_set_text_html((GtkhtmlEditor *)t->composer, (gchar *)buff, size);
 #endif
