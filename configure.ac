@@ -259,6 +259,9 @@ AC_MSG_CHECKING([whether to include Webkit support])
 AC_ARG_ENABLE([webkit],
 	AS_HELP_STRING([--disable-webkit],[Disable Webkit (Apple Upstream Webkit) support (default: enabled)]),
 	[],[enable_webkit=yes])
+if test "$evolution_version_int" -ge "32190"; then
+	enable_webkit="no, due to evolution 3.21.90+"
+fi
 AC_MSG_RESULT([$enable_webkit])
 
 if test "$enable_webkit" = "yes"; then
