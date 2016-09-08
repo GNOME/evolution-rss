@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-15 13:34+0200\n"
-"PO-Revision-Date: 2016-08-15 13:35+0200\n"
+"POT-Creation-Date: 2016-09-08 03:07+0200\n"
+"PO-Revision-Date: 2016-09-08 03:08+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -37,12 +37,12 @@ msgstr "Czytnik kanałów RSS"
 msgid "Read RSS feeds"
 msgstr "Odczytywanie kanałów RSS"
 
-#: ../src/dbus.c:108 ../src/rss.c:2000 ../src/rss-config-factory.c:1200
+#: ../src/dbus.c:108 ../src/rss.c:2018 ../src/rss-config-factory.c:1200
 #: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1944
 msgid "Error adding feed."
 msgstr "Błąd podczas dodawania kanału."
 
-#: ../src/dbus.c:109 ../src/rss.c:2001 ../src/rss-config-factory.c:1201
+#: ../src/dbus.c:109 ../src/rss.c:2019 ../src/rss-config-factory.c:1201
 #: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1945
 msgid "Feed already exists!"
 msgstr "Kanał już istnieje."
@@ -52,25 +52,25 @@ msgstr "Kanał już istnieje."
 msgid "Importing URL: %s"
 msgstr "Importowanie adresu URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:225
+#: ../src/e-mail-formatter-evolution-rss.c:232
 msgid "Posted under"
 msgstr "Opublikowano w"
 
-#: ../src/e-mail-formatter-evolution-rss.c:392
-#: ../src/e-mail-formatter-evolution-rss.c:398
+#: ../src/e-mail-formatter-evolution-rss.c:400
+#: ../src/e-mail-formatter-evolution-rss.c:406
 msgid "Show Summary"
 msgstr "Wyświetl podsumowanie"
 
-#: ../src/e-mail-formatter-evolution-rss.c:393
-#: ../src/e-mail-formatter-evolution-rss.c:399
+#: ../src/e-mail-formatter-evolution-rss.c:401
+#: ../src/e-mail-formatter-evolution-rss.c:407
 msgid "Show Full Text"
 msgstr "Wyświetl pełny tekst"
 
-#: ../src/e-mail-formatter-evolution-rss.c:414
+#: ../src/e-mail-formatter-evolution-rss.c:425
 msgid "Evolution-RSS"
 msgstr "Czytnik kanałów RSS dla programu Evolution"
 
-#: ../src/e-mail-formatter-evolution-rss.c:415
+#: ../src/e-mail-formatter-evolution-rss.c:426
 msgid "Displaying RSS feed articles"
 msgstr "Wyświetlanie artykułów kanałów RSS"
 
@@ -283,7 +283,7 @@ msgstr "Wyświetlanie komentarzy artykułów"
 
 #: ../src/evolution-rss.schemas.in.in.h:51
 msgid "If a feed article has comments, it will be displayed."
-msgstr "Wyświetlanie komentarzy, jeśli artykuł kanału je posiada."
+msgstr "Wyświetlanie komentarzy, jeśli artykuł kanału je ma."
 
 #: ../src/evolution-rss.schemas.in.in.h:52
 msgid "Use proxy server"
@@ -325,7 +325,7 @@ msgstr ""
 "Wartość „true”, jeśli program do obsługiwania tego adresu URL powinien być "
 "uruchamiany w terminalu"
 
-#: ../src/notification.c:291 ../src/rss.c:2169
+#: ../src/notification.c:291 ../src/rss.c:2187
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Pobieranie kanałów (włączonych: %d)"
@@ -355,11 +355,11 @@ msgstr ""
 "Obsługa kanałów RSS została zbudowana na istniejącej obsłudze kanałów "
 "w gałęzi evolution-1.4. Celem projektu jest wyświetlanie kanałów RSS w ten "
 "sam sposób, co wiadomości e-mail, ponieważ artykuły RSS są całkiem podobne "
-"do poczty i posiadanie oddzielnego czytnika jest niepotrzebne.\n"
+"do poczty i oddzielny czytnik jest niepotrzebny.\n"
 "\n"
-"Można wyświetlać artykuły używając widoku podsumowania lub widoku HTML.\n"
+"Można wyświetlać artykuły za pomocą widoku podsumowania lub widoku HTML.\n"
 "\n"
-"Format HTML może być wyświetlany używając jednego z mechanizmów: GtkHTML, "
+"Format HTML może być wyświetlany za pomocą jednego z mechanizmów: GtkHTML, "
 "WebKit firmy Apple lub Firefox/Gecko.\n"
 "\n"
 "<b>Wersja: evolution-rss +VERSION+</b>\n"
@@ -415,7 +415,7 @@ msgstr "Brak informacji"
 msgid "No information"
 msgstr "Brak informacji"
 
-#: ../src/rss.c:416 ../src/rss.c:2355
+#: ../src/rss.c:416 ../src/rss.c:2373
 msgid "Feed"
 msgstr "Kanał"
 
@@ -497,68 +497,68 @@ msgstr "Zapisz j_ako"
 msgid "_Open Link in Browser"
 msgstr "_Otwórz odnośnik w przeglądarce"
 
-#: ../src/rss.c:1492
+#: ../src/rss.c:1510
 msgid "Fetching feed"
 msgstr "Pobieranie kanału"
 
-#: ../src/rss.c:1804 ../src/rss.c:2081
+#: ../src/rss.c:1822 ../src/rss.c:2099
 msgid "Unnamed feed"
 msgstr "Kanał bez nazwy"
 
-#: ../src/rss.c:1805
+#: ../src/rss.c:1823
 msgid "Error while setting up feed."
 msgstr "Błąd podczas ustawiania kanału."
 
-#: ../src/rss.c:2012 ../src/rss.c:2082
+#: ../src/rss.c:2030 ../src/rss.c:2100
 msgid "Error while fetching feed."
 msgstr "Błąd podczas pobierania kanału."
 
-#: ../src/rss.c:2013
+#: ../src/rss.c:2031
 msgid "Invalid Feed"
 msgstr "Nieprawidłowy kanał"
 
-#: ../src/rss.c:2055
+#: ../src/rss.c:2073
 #, c-format
 msgid "Adding feed %s"
 msgstr "Dodawanie kanału %s"
 
-#: ../src/rss.c:2096 ../src/rss.c:2104
+#: ../src/rss.c:2114 ../src/rss.c:2122
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Pobieranie wiadomości: %d z %d"
 
-#: ../src/rss.c:2190 ../src/rss.c:2193
+#: ../src/rss.c:2208 ../src/rss.c:2211
 msgid "Complete."
 msgstr "Ukończono."
 
-#: ../src/rss.c:2230 ../src/rss.c:2414 ../src/rss.c:2452 ../src/rss.c:2658
-#: ../src/rss.c:3246
+#: ../src/rss.c:2248 ../src/rss.c:2432 ../src/rss.c:2470 ../src/rss.c:2676
+#: ../src/rss.c:3264
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Błąd podczas pobierania kanału: %s"
 
-#: ../src/rss.c:2242 ../src/rss.c:2246
+#: ../src/rss.c:2260 ../src/rss.c:2264
 msgid "Canceled."
 msgstr "Anulowano."
 
-#: ../src/rss.c:2299
+#: ../src/rss.c:2317
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Błąd podczas przetwarzania kanału: %s"
 
-#: ../src/rss.c:2303
+#: ../src/rss.c:2321
 msgid "illegal content type!"
 msgstr "niedozwolony typ treści"
 
-#: ../src/rss.c:2363 ../src/rss.c:2366
+#: ../src/rss.c:2381 ../src/rss.c:2384
 msgid "Complete"
 msgstr "Ukończono"
 
-#: ../src/rss.c:3567
+#: ../src/rss.c:3585
 msgid "No RSS feeds configured!"
 msgstr "Nie skonfigurowano żadnych kanałów RSS."
 
-#: ../src/rss.c:3619
+#: ../src/rss.c:3637
 msgid "Waiting..."
 msgstr "Oczekiwanie…"
 
@@ -713,7 +713,7 @@ msgid ""
 "installed and evolution-rss should be recompiled to see those packages."
 msgstr ""
 "Uwaga: aby używać przeglądarki Mozilla (Firefox) lub Apple WebKit jako \n"
-"mechanizm renderujący, należy posiadać zainstalowany pakiet \n"
+"mechanizm renderujący, należy mieć zainstalowany pakiet \n"
 "programistyczny firefox lub webkit i ponownie skompilować \n"
 "program evolution-rss."
 
