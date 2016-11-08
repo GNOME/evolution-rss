@@ -3978,7 +3978,8 @@ create_mail(create_feed *CF)
 #endif
 
 	info = camel_message_info_new(NULL);
-	camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN, 1);
+	/* Unset the Seen flag, thus the messages are marked as new/unread */
+	camel_message_info_set_flags(info, CAMEL_MESSAGE_SEEN, 0);
 
 	tmp = decode_entities(CF->subj);
 	tmp2 = markup_decode(tmp);
@@ -4267,7 +4268,11 @@ out:
 	camel_object_unref(mail_folder);
 #endif
 #if (DATASERVER_VERSION >= 3011001)
+	#if (DATASERVER_VERSION >= 3023002)
+	g_clear_object (&info);
+	#else
 	camel_message_info_unref(info);
+	#endif
 #else
 	camel_message_info_free(info);
 #endif
@@ -4746,10 +4751,18 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 		if (info) {
 			if (rf->current_uid && !strcmp(rf->current_uid, uids->pdata[i]))
 				goto out;
+			#if (DATASERVER_VERSION >= 3023002)
+			date = camel_message_info_get_date_sent (info);
+			#else
 			date = camel_message_info_date_sent(info);
+			#endif
 			if (!date)
 				goto out;
+			#if (DATASERVER_VERSION >= 3023002)
+			flags = camel_message_info_get_flags (info);
+			#else
 			flags = camel_message_info_flags(info);
+			#endif
 			if (flags & CAMEL_MESSAGE_FLAGGED)
 				goto out;
 			if (flags & CAMEL_MESSAGE_DELETED)
@@ -4782,7 +4795,11 @@ delete_oldest_article(CamelFolder *folder, guint unread)
 //			i, j, q, min_date, ctime(&min_date), imax);
 out:
 #if (DATASERVER_VERSION >= 3011001)
+		#if (DATASERVER_VERSION >= 3023002)
+		g_clear_object (&info);
+		#else
 		camel_message_info_unref(info);
+		#endif
 #else
 		camel_message_info_free(info);
 #endif
@@ -4869,7 +4886,11 @@ get_feed_age(RDF *r, gpointer name)
 			}
 			if (!match) {
 				info = camel_folder_get_message_info(folder, uids->pdata[i]);
+				#if (DATASERVER_VERSION >= 3023002)
+				flags = camel_message_info_get_flags (info);
+				#else
 				flags = camel_message_info_flags(info);
+				#endif
 				if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED)) {
 					gchar *feed_dir, *feed_name;
 					camel_folder_delete_message(folder, uids->pdata[i]);
@@ -4882,7 +4903,11 @@ get_feed_age(RDF *r, gpointer name)
 					g_free(feed_name);
 				}
 #if (DATASERVER_VERSION >= 3011001)
+				#if (DATASERVER_VERSION >= 3023002)
+				g_clear_object (&info);
+				#else
 				camel_message_info_unref(info);
+				#endif
 #else
 				camel_folder_free_message_info(folder, info);
 #endif
@@ -4911,9 +4936,17 @@ get_feed_age(RDF *r, gpointer name)
 			if (info == NULL)
 				continue;
 			if (rf->current_uid && strcmp(rf->current_uid, uids->pdata[i])) {
+				#if (DATASERVER_VERSION >= 3023002)
+				date = camel_message_info_get_date_sent (info);
+				#else
 				date = camel_message_info_date_sent(info);
+				#endif
 				if (date < now - del_days * 86400) {
+					#if (DATASERVER_VERSION >= 3023002)
+					flags = camel_message_info_get_flags (info);
+					#else
 					flags = camel_message_info_flags(info);
+					#endif
 					if (!(flags & CAMEL_MESSAGE_SEEN)) {
 						if ((del_unread) && !(flags & CAMEL_MESSAGE_FLAGGED)) {
 							camel_folder_delete_message(folder, uids->pdata[i]);
@@ -4925,7 +4958,11 @@ get_feed_age(RDF *r, gpointer name)
 				}
 			}
 #if (DATASERVER_VERSION >= 3011001)
+			#if (DATASERVER_VERSION >= 3023002)
+			g_clear_object (&info);
+			#else
 			camel_message_info_unref(info);
+			#endif
 #else
 			camel_folder_free_message_info(folder, info);
 #endif
