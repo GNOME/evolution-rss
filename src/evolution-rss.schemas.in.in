@@ -22,9 +22,9 @@
       <type>bool</type>
       <default>true</default>
       <locale name="C">
-        <short>Display article's summary</short>
+        <short>Display article’s summary</short>
         <long>
-    	    Evolution will show article's summary instead of article's
+    	    Evolution will show article’s summary instead of article’s
     	    web page. Summary can also be HTML.
         </long>
       </locale>

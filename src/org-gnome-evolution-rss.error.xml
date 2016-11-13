@@ -4,12 +4,12 @@
   translation-domain="+GETTEXT_PACKAGE+"
   translation-localedir="+LOCALEDIR+">
   <error id="readrss" type="info">
-    <_primary>Reading RSS Feeds...</_primary>
+    <_primary>Reading RSS Feeds…</_primary>
     <button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
   </error>
 
   <error id="rssmsg" type="info">
-    <_primary>Updating Feeds...</_primary>
+    <_primary>Updating Feeds…</_primary>
     <button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
   </error>
 
@@ -25,8 +25,8 @@
   </error>
 
 <error type="question" id="ask-delete-feed" default="GTK_RESPONSE_CANCEL">
-	<_title>Delete "{0}"?</_title>
-	<_primary>Really delete feed '{0}'?</_primary>
+	<_title>Delete “{0}”?</_title>
+	<_primary>Really delete feed “{0}”?</_primary>
 	<button stock="gtk-cancel" response="GTK_RESPONSE_CANCEL"/>
 	<button stock="gtk-delete" response="GTK_RESPONSE_OK"/>
 </error>
