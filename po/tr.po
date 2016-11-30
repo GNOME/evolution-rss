@@ -2,15 +2,15 @@
 # Copyright (C) 2015 evolution-rss's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evolution-rss package.
 # Simge Sezgin <simgesezgin88@gmail.com>, 2015.
-# Muhammet Kara <muhammetk@gmail.com>, 2015.
+# Muhammet Kara <muhammetk@gmail.com>, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution rss master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-01 04:50+0000\n"
-"PO-Revision-Date: 2015-08-09 19:07+0300\n"
+"POT-Creation-Date: 2015-10-25 18:52+0000\n"
+"PO-Revision-Date: 2016-12-01 00:09+0300\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -39,13 +39,13 @@ msgstr "RSS Okuyucu"
 msgid "Read RSS feeds"
 msgstr "RSS beslemelerini oku"
 
-#: ../src/dbus.c:108 ../src/rss.c:1977 ../src/rss-config-factory.c:1188
-#: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
+#: ../src/dbus.c:108 ../src/rss.c:2000 ../src/rss-config-factory.c:1200
+#: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1944
 msgid "Error adding feed."
 msgstr "Besleme eklenirken hata."
 
-#: ../src/dbus.c:109 ../src/rss.c:1978 ../src/rss-config-factory.c:1189
-#: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
+#: ../src/dbus.c:109 ../src/rss.c:2001 ../src/rss-config-factory.c:1201
+#: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1945
 msgid "Feed already exists!"
 msgstr "Besleme zaten var!"
 
@@ -54,26 +54,25 @@ msgstr "Besleme zaten var!"
 msgid "Importing URL: %s"
 msgstr "URL içeri aktarılıyor: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:220
+#: ../src/e-mail-formatter-evolution-rss.c:225
 msgid "Posted under"
 msgstr "Şunun altında gönderildi:"
 
-#: ../src/e-mail-formatter-evolution-rss.c:387
-#: ../src/e-mail-formatter-evolution-rss.c:393
+#: ../src/e-mail-formatter-evolution-rss.c:392
+#: ../src/e-mail-formatter-evolution-rss.c:398
 msgid "Show Summary"
 msgstr "Özet Göster"
 
-#: ../src/e-mail-formatter-evolution-rss.c:388
-#: ../src/e-mail-formatter-evolution-rss.c:394
+#: ../src/e-mail-formatter-evolution-rss.c:393
+#: ../src/e-mail-formatter-evolution-rss.c:399
 msgid "Show Full Text"
 msgstr "Tüm Metni Göster"
 
-#: ../src/e-mail-formatter-evolution-rss.c:409
+#: ../src/e-mail-formatter-evolution-rss.c:414
 msgid "Evolution-RSS"
 msgstr "Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:410
-#| msgid "Displaying RSS feed arcticles"
+#: ../src/e-mail-formatter-evolution-rss.c:415
 msgid "Displaying RSS feed articles"
 msgstr "RSS besleme yazıları gösteriliyor"
 
@@ -335,7 +334,7 @@ msgstr ""
 "Eğer programın bu URL'i işleyebilmesi için uç birimde çalışması gerekiyorsa "
 "doğru"
 
-#: ../src/notification.c:288 ../src/rss.c:2146
+#: ../src/notification.c:291 ../src/rss.c:2169
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Beslemeler Getiriliyor (%d etkin)"
@@ -425,282 +424,288 @@ msgstr "Bilgi Yok"
 msgid "No information"
 msgstr "Bilgi yok"
 
-#: ../src/rss.c:420 ../src/rss.c:2332
+#: ../src/rss.c:416 ../src/rss.c:2355
 msgid "Feed"
 msgstr "Besle"
 
-#: ../src/rss.c:485 ../src/rss-config-factory.c:2883
-#: ../src/rss-config-factory.c:3057
+#: ../src/rss.c:481 ../src/rss-config-factory.c:2868
+#: ../src/rss-config-factory.c:3042
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% yapıldı"
 
-#: ../src/rss.c:627
-msgid "Enter User/Pass for feed"
-msgstr "Besleme için Kullanıcı/Parola gir"
+#: ../src/rss.c:628
+#| msgid "Enter User/Pass for feed"
+msgid "Enter Username/Password for feed"
+msgstr "Besleme için Kullanıcı/Parola girin"
 
-#: ../src/rss.c:683
+#: ../src/rss.c:630
+#| msgid "Canceled."
+msgid "_Cancel"
+msgstr "_Vazgeç"
+
+#: ../src/rss.c:634
+msgid "_OK"
+msgstr "_Tamam"
+
+#: ../src/rss.c:684
 msgid "Enter your username and password for:"
 msgstr "Kullanıcı adı ve parolanızı girin:"
 
-#: ../src/rss.c:701
+#: ../src/rss.c:700
 msgid "Username: "
 msgstr "Kullanıcı adı: "
 
-#: ../src/rss.c:722 ../src/rss-main.ui.h:37
+#: ../src/rss.c:718 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Parola: "
 
-#: ../src/rss.c:759
+#: ../src/rss.c:750
 msgid "_Remember this password"
 msgstr "Bu parolayı _hatırla"
 
-#: ../src/rss.c:873 ../src/rss.c:877
+#: ../src/rss.c:862 ../src/rss.c:866
 msgid "Cancelling..."
 msgstr "İptal ediliyor..."
 
-#: ../src/rss.c:1159
+#: ../src/rss.c:1186
 msgid "_Copy"
 msgstr "_Kopyala"
 
-#: ../src/rss.c:1160
+#: ../src/rss.c:1187
 msgid "Select _All"
 msgstr "_Tümünü Seç"
 
-#: ../src/rss.c:1162 ../src/rss.c:1173
+#: ../src/rss.c:1189 ../src/rss.c:1200
 msgid "Zoom _In"
 msgstr "_Yakınlaştır"
 
-#: ../src/rss.c:1163 ../src/rss.c:1174
+#: ../src/rss.c:1190 ../src/rss.c:1201
 msgid "Zoom _Out"
 msgstr "_Uzaklaştır"
 
-#: ../src/rss.c:1164 ../src/rss.c:1175
+#: ../src/rss.c:1191 ../src/rss.c:1202
 msgid "_Normal Size"
 msgstr "_Normal Boyut"
 
-#: ../src/rss.c:1166
+#: ../src/rss.c:1193
 msgid "_Open Link"
 msgstr "Bağlantı _Aç"
 
-#: ../src/rss.c:1167 ../src/rss.c:1181
+#: ../src/rss.c:1194 ../src/rss.c:1208
 msgid "_Copy Link Location"
 msgstr "Bağlantı Konumu _Kopyala"
 
-#: ../src/rss.c:1177
+#: ../src/rss.c:1204
 msgid "_Print..."
 msgstr "_Yazdır..."
 
-#: ../src/rss.c:1178
+#: ../src/rss.c:1205
 msgid "Save _As"
 msgstr "_Farklı Kaydet"
 
-#: ../src/rss.c:1180
+#: ../src/rss.c:1207
 msgid "_Open Link in Browser"
 msgstr "Bağlantıyı Tarayıcıda _Aç"
 
-#: ../src/rss.c:1468
+#: ../src/rss.c:1492
 msgid "Fetching feed"
 msgstr "Besleme getiriliyor"
 
-#: ../src/rss.c:1780 ../src/rss.c:2058
+#: ../src/rss.c:1804 ../src/rss.c:2081
 msgid "Unnamed feed"
 msgstr "İsimsiz besleme"
 
-#: ../src/rss.c:1781
+#: ../src/rss.c:1805
 msgid "Error while setting up feed."
 msgstr "Besleme kurulurken hata."
 
-#: ../src/rss.c:1989 ../src/rss.c:2059
+#: ../src/rss.c:2012 ../src/rss.c:2082
 msgid "Error while fetching feed."
 msgstr "Besleme getirilirken hata."
 
-#: ../src/rss.c:1990
+#: ../src/rss.c:2013
 msgid "Invalid Feed"
 msgstr "Geçersiz Besleme"
 
-#: ../src/rss.c:2032
+#: ../src/rss.c:2055
 #, c-format
 msgid "Adding feed %s"
 msgstr "Besleme %s ekleniyor"
 
-#: ../src/rss.c:2073 ../src/rss.c:2081
+#: ../src/rss.c:2096 ../src/rss.c:2104
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "%d / %d ileti alınıyor"
 
-#: ../src/rss.c:2167 ../src/rss.c:2170
+#: ../src/rss.c:2190 ../src/rss.c:2193
 msgid "Complete."
 msgstr "Tamamla."
 
-#: ../src/rss.c:2207 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2636
-#: ../src/rss.c:3224
+#: ../src/rss.c:2230 ../src/rss.c:2414 ../src/rss.c:2452 ../src/rss.c:2658
+#: ../src/rss.c:3246
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Besleme getirilirken hata: %s"
 
-#: ../src/rss.c:2219 ../src/rss.c:2223
+#: ../src/rss.c:2242 ../src/rss.c:2246
 msgid "Canceled."
 msgstr "İptal edildi."
 
-#: ../src/rss.c:2276
+#: ../src/rss.c:2299
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Besleme ayrıştırılırken hata: %s"
 
-#: ../src/rss.c:2280
+#: ../src/rss.c:2303
 msgid "illegal content type!"
 msgstr "geçersiz içerik türü!"
 
-#: ../src/rss.c:2340 ../src/rss.c:2343
+#: ../src/rss.c:2363 ../src/rss.c:2366
 msgid "Complete"
 msgstr "Tamamla"
 
-#: ../src/rss.c:2475
-msgid "Formatting error."
-msgstr "Biçimlendirme hatası."
-
-#: ../src/rss.c:3538
+#: ../src/rss.c:3567
 msgid "No RSS feeds configured!"
 msgstr "RSS beslemeler yapılandırılamadı!"
 
-#: ../src/rss.c:3590
+#: ../src/rss.c:3619
 msgid "Waiting..."
 msgstr "Bekleniyor..."
 
-#: ../src/rss-config-factory.c:160
+#: ../src/rss-config-factory.c:159
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:161
+#: ../src/rss-config-factory.c:160
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:162
+#: ../src/rss-config-factory.c:161
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:478
+#: ../src/rss-config-factory.c:477
 msgid "day"
 msgid_plural "days"
 msgstr[0] "gün"
 
-#: ../src/rss-config-factory.c:493
+#: ../src/rss-config-factory.c:492
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "ileti"
 
-#: ../src/rss-config-factory.c:558 ../src/rss-config-factory.c:565
-#: ../src/rss-config-factory.c:579
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
 msgid "Move to Folder"
 msgstr "Klasöre Taşı"
 
-#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:565
-#: ../src/rss-config-factory.c:579
+#: ../src/rss-config-factory.c:560 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
 msgid "M_ove"
 msgstr "T_aşı"
 
-#: ../src/rss-config-factory.c:720
+#: ../src/rss-config-factory.c:723
 msgid "Edit Feed"
 msgstr "Besleme Düzenle"
 
-#: ../src/rss-config-factory.c:722
+#: ../src/rss-config-factory.c:725
 msgid "Add Feed"
 msgstr "Besleme Ekle"
 
-#: ../src/rss-config-factory.c:1167 ../src/rss-config-factory.c:1736
+#: ../src/rss-config-factory.c:1179 ../src/rss-config-factory.c:1738
 #, no-c-format
 msgid "0% done"
 msgstr "0% bitti"
 
-#: ../src/rss-config-factory.c:1555
+#: ../src/rss-config-factory.c:1567
 msgid "Disable"
 msgstr "Devredışı Bırak"
 
-#: ../src/rss-config-factory.c:1555
+#: ../src/rss-config-factory.c:1567
 msgid "Enable"
 msgstr "Etkinleştir"
 
-#: ../src/rss-config-factory.c:1615 ../src/rss-main.ui.h:40
+#: ../src/rss-config-factory.c:1626 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Klasör içeriklerini kaldır"
 
-#: ../src/rss-config-factory.c:2007
+#: ../src/rss-config-factory.c:2009
 msgid "Import error."
 msgstr "İçeri aktarma hatası."
 
-#: ../src/rss-config-factory.c:2008
+#: ../src/rss-config-factory.c:2010
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Geçersiz dosya ya da bu dosya hiçbir besleme içermiyor."
 
-#: ../src/rss-config-factory.c:2013
+#: ../src/rss-config-factory.c:2015
 msgid "Importing"
 msgstr "İçeri aktarılıyor"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:2036 ../src/rss-config-factory.c:2932
-#: ../src/rss-config-factory.c:3092
+#: ../src/rss-config-factory.c:2038 ../src/rss-config-factory.c:2917
+#: ../src/rss-config-factory.c:3077
 msgid "Please wait"
 msgstr "Lütfen bekleyin"
 
-#: ../src/rss-config-factory.c:2346 ../src/rss-config-factory.c:3212
-#: ../src/rss-config-factory.c:3275
+#: ../src/rss-config-factory.c:2348 ../src/rss-config-factory.c:3194
+#: ../src/rss-config-factory.c:3257
 msgid "All Files"
 msgstr "Tüm Dosyalar"
 
-#: ../src/rss-config-factory.c:2357 ../src/rss-config-factory.c:3296
+#: ../src/rss-config-factory.c:2359 ../src/rss-config-factory.c:3278
 msgid "OPML Files"
 msgstr "OPML Dosyaları"
 
-#: ../src/rss-config-factory.c:2368 ../src/rss-config-factory.c:3285
+#: ../src/rss-config-factory.c:2370 ../src/rss-config-factory.c:3267
 msgid "XML Files"
 msgstr "XML Dosyaları"
 
-#: ../src/rss-config-factory.c:2387
+#: ../src/rss-config-factory.c:2389
 msgid "Show article's summary"
 msgstr "Maddenin özetini göster"
 
-#: ../src/rss-config-factory.c:2400
+#: ../src/rss-config-factory.c:2402
 msgid "Feed Enabled"
 msgstr "Besleme Etkin"
 
-#: ../src/rss-config-factory.c:2413
+#: ../src/rss-config-factory.c:2415
 msgid "Validate feed"
 msgstr "Besleme onayla"
 
-#: ../src/rss-config-factory.c:2470 ../src/rss-main.ui.h:38
+#: ../src/rss-config-factory.c:2471 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "İçeri aktarma dosyası seç"
 
-#: ../src/rss-config-factory.c:2553 ../src/rss-main.ui.h:41
+#: ../src/rss-config-factory.c:2545 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Dışarı aktarmak için dosya seç"
 
-#: ../src/rss-config-factory.c:2915
+#: ../src/rss-config-factory.c:2900
 msgid "Exporting feeds..."
 msgstr "Beslemeler dışa aktarılıyor..."
 
-#: ../src/rss-config-factory.c:2979 ../src/rss-config-factory.c:2987
+#: ../src/rss-config-factory.c:2964 ../src/rss-config-factory.c:2972
 msgid "Error exporting feeds!"
 msgstr "Beslemeler dışarı aktarılırken hata!"
 
-#: ../src/rss-config-factory.c:3068
+#: ../src/rss-config-factory.c:3053
 msgid "Importing cookies..."
 msgstr "Çerezler içeri aktarılıyor..."
 
-#: ../src/rss-config-factory.c:3148
+#: ../src/rss-config-factory.c:3132
 msgid "Select file to import"
 msgstr "İçeri aktarılacak dosya seç"
 
-#: ../src/rss-config-factory.c:3218
+#: ../src/rss-config-factory.c:3200
 msgid "Mozilla/Netscape Format"
 msgstr "Mozilla/Netscape Biçimi"
 
-#: ../src/rss-config-factory.c:3224
+#: ../src/rss-config-factory.c:3206
 msgid "Firefox new Format"
 msgstr "Firefox yeni Biçim"
 
-#: ../src/rss-config-factory.c:3334 ../src/rss-config-factory.c:3339
+#: ../src/rss-config-factory.c:3316 ../src/rss-config-factory.c:3321
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -708,7 +713,7 @@ msgstr ""
 "RSS beslemeleri yapılandırılamadı!\n"
 "Dışa aktarılamadı."
 
-#: ../src/rss-config-factory.c:3502
+#: ../src/rss-config-factory.c:3484
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -719,23 +724,23 @@ msgstr ""
 "ve paketleri görebilmek için evolution-rss'in yeniden derlenmiş olmasına\n"
 "ihtiyacınız var."
 
-#: ../src/rss-config-factory.c:4106 ../src/rss-main.ui.h:45
+#: ../src/rss-config-factory.c:4077 ../src/rss-main.ui.h:45
 msgid "Enabled"
 msgstr "Etkin"
 
-#: ../src/rss-config-factory.c:4133
+#: ../src/rss-config-factory.c:4104
 msgid "Feed Name"
 msgstr "Besleme Adı"
 
-#: ../src/rss-config-factory.c:4146
+#: ../src/rss-config-factory.c:4117
 msgid "Type"
 msgstr "Tür"
 
-#: ../src/rss-config-factory.c:4463 ../src/rss.h:61
+#: ../src/rss-config-factory.c:4434 ../src/rss.h:62
 msgid "News and Blogs"
 msgstr "Haberler ve Bloglar"
 
-#: ../src/rss.h:63
+#: ../src/rss.h:64
 msgid "Untitled channel"
 msgstr "İsimsiz kanal"
 
@@ -1007,3 +1012,6 @@ msgstr "Kimlik Doğrulama"
 #: ../src/rss-main.ui.h:60
 msgid "<b>Advanced options</b>"
 msgstr "<b>Gelişmiş seçenekler</b>"
+
+#~ msgid "Formatting error."
+#~ msgstr "Biçimlendirme hatası."
