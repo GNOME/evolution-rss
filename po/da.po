@@ -1,43 +1,54 @@
 # Danish translation for evolution-rss.
-# Copyright (C) 2012 evolution-rss's COPYRIGHT HOLDER
+# Copyright (C) 2017 evolution-rss's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evolution-rss package.
 # Joe Hansen <joedalton2@yahoo.dk>, 2010, 2011, 2012.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2017.
 #
-# Bug 626943 
+# Bug 626943
 #
 # maximum -> maksimal (eller måske maksimum i sammensætninger).
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-03 12:06+0100\n"
-"PO-Revision-Date: 2012-01-02 18:29+0200\n"
-"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-10-25 18:52+0000\n"
+"PO-Revision-Date: 2017-03-28 20:39+0200\n"
+"Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
 msgstr "Evolutions RSS-læser"
 
 #: ../evolution-rss.desktop.in.in.h:2
-msgid "Evolution plugin that enables Evolution Mail to display rss feeds."
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
 msgstr ""
-"Udvidelsesmodul for Evolution som gør at Evolution Mail kan vise rss-"
+"Udvidelsesmodul til Evolution som gør, at Evolution Mail kan vise RSS-"
 "nyhedskilder."
 
-#: ../src/dbus.c:108 ../src/rss.c:3180 ../src/rss-config-factory.c:1120
-#: ../src/rss-config-factory.c:1664 ../src/rss-config-factory.c:1831
+#: ../evolution-rss.metainfo.xml.in.h:1
+msgid "RSS Reader"
+msgstr "RSS-læser"
+
+#: ../evolution-rss.metainfo.xml.in.h:2
+msgid "Read RSS feeds"
+msgstr "Læs RSS-nyhedskilder"
+
+#: ../src/dbus.c:108 ../src/rss.c:2000 ../src/rss-config-factory.c:1200
+#: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1944
 msgid "Error adding feed."
 msgstr "Fejl ved tilføjelse af nyhedskilde."
 
-#: ../src/dbus.c:109 ../src/rss.c:3181 ../src/rss-config-factory.c:1121
-#: ../src/rss-config-factory.c:1665 ../src/rss-config-factory.c:1832
+#: ../src/dbus.c:109 ../src/rss.c:2001 ../src/rss-config-factory.c:1201
+#: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1945
 msgid "Feed already exists!"
 msgstr "Nyhedskilde eksisterer allerede!"
 
@@ -46,260 +57,282 @@ msgstr "Nyhedskilde eksisterer allerede!"
 msgid "Importing URL: %s"
 msgstr "Importerer adresse (URL): %s"
 
+#: ../src/e-mail-formatter-evolution-rss.c:225
+msgid "Posted under"
+msgstr "Posteret under"
+
+#: ../src/e-mail-formatter-evolution-rss.c:392
+#: ../src/e-mail-formatter-evolution-rss.c:398
+msgid "Show Summary"
+msgstr "Vis resume"
+
+#: ../src/e-mail-formatter-evolution-rss.c:393
+#: ../src/e-mail-formatter-evolution-rss.c:399
+msgid "Show Full Text"
+msgstr "Vis fuld tekst"
+
+#: ../src/e-mail-formatter-evolution-rss.c:414
+msgid "Evolution-RSS"
+msgstr "Evolution-RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:415
+msgid "Displaying RSS feed articles"
+msgstr "Viser artikler fra RSS-nyhedskilde"
+
 #: ../src/evolution-rss.schemas.in.in.h:1
-msgid "Accepts Cookies"
-msgstr "Accepter cookier"
+msgid "Proxy requires authentication"
+msgstr "Proxy kræver godkendelse"
 
 #: ../src/evolution-rss.schemas.in.in.h:2
-msgid "Auto check for new articles."
-msgstr "Autotjek efter nye artikler."
+msgid "Network proxy requires authentication."
+msgstr "Netværksproxy kræver godkendelse."
 
 #: ../src/evolution-rss.schemas.in.in.h:3
-msgid "Automaticaly Resize Images"
-msgstr "Ændr automatisk størrelse på billeder"
-
-#: ../src/evolution-rss.schemas.in.in.h:4
-msgid "Blink Status Icon"
-msgstr "Blink statusikon"
-
-#: ../src/evolution-rss.schemas.in.in.h:5
-msgid "Blink status icon when new article received"
-msgstr "Blink statusikon når ny artikel ankommer"
-
-#: ../src/evolution-rss.schemas.in.in.h:6
-msgid "Check New articles"
-msgstr "Tjek nye artikler"
-
-#: ../src/evolution-rss.schemas.in.in.h:7
-msgid "Check for new articles everytime Evolution is started."
-msgstr "Tjek om der er nye artikler hver gang Evolution er startet."
-
-#: ../src/evolution-rss.schemas.in.in.h:8
-msgid "Checks articles on startup"
-msgstr "Tjekker artikler ved opstart"
-
-#: ../src/evolution-rss.schemas.in.in.h:9
-msgid "Contains list of the currently setup feeds."
-msgstr "Indeholder liste over de aktuelt opsatte nyhedskilder."
-
-#: ../src/evolution-rss.schemas.in.in.h:10
-msgid "Deleting feed entry will also remove feed folder."
-msgstr "Sletning af nyhedskildepunkt vil også fjerne mappen for nyhedskilder."
-
-#: ../src/evolution-rss.schemas.in.in.h:11
 msgid "Display article's summary"
 msgstr "Vis artikels resume"
 
+#: ../src/evolution-rss.schemas.in.in.h:4
+msgid ""
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
+msgstr ""
+"Evolution vil vise artiklens resume i stedet for artiklens internetside. "
+"Resume kan også være HTML."
+
+#: ../src/evolution-rss.schemas.in.in.h:5
+msgid "Feeds list"
+msgstr "Nyhedskildeliste"
+
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Indeholder liste over de aktuelt opsatte nyhedskilder."
+
+#: ../src/evolution-rss.schemas.in.in.h:7
+msgid "Hostname of the proxy server"
+msgstr "Værtsnavn på proxyserveren"
+
+#: ../src/evolution-rss.schemas.in.in.h:8
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "Værtsnavn på proxyserveren brugt til nyhedskilder og indhold."
+
+#: ../src/evolution-rss.schemas.in.in.h:9
+msgid "HTML render"
+msgstr "HTML-optegner"
+
+#: ../src/evolution-rss.schemas.in.in.h:10
+msgid "Type HTML Render used to display HTML pages."
+msgstr "Type HTML-optegner brugt til at vise HTML-sider."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Brug tilpasset skrifttype"
+
 #: ../src/evolution-rss.schemas.in.in.h:12
-msgid "Display feed icon on feed folder"
-msgstr "Vis nyhedskildeikon på mappen for nyhedskilder"
+msgid "Use a custom font size instead of system defaults."
+msgstr "Brug en tilpasset skriftstørrelse i stedet for systemstandarder."
 
 #: ../src/evolution-rss.schemas.in.in.h:13
-msgid "Download enclosures"
-msgstr "Hent vedhæftninger"
+msgid "Minimum font size"
+msgstr "Minimal skriftstørrelse"
 
 #: ../src/evolution-rss.schemas.in.in.h:14
-msgid "Enable Feed Icon"
-msgstr "Aktiver nyhedskildeikon"
+msgid "The size of the font used in full text preview."
+msgstr "Skrifttypens størrelse brugt i forhåndsvisning af fuld tekst."
 
 #: ../src/evolution-rss.schemas.in.in.h:15
-msgid "Enable Status Icon"
-msgstr "Aktiver statusikon"
+msgid "Network timeout"
+msgstr "Tidsudløb på netværk"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-msgid "Enable status icon in notification area"
-msgstr "Aktiver statusikon i statusfeltet"
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Interval i sekunder før en forbindelse smides."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Størrelse på netværkskø"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Hvor mange samtidige overførsler."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "JavaScript aktiveret"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Java aktiveret"
+
+#: ../src/evolution-rss.schemas.in.in.h:21
+msgid "Accepts Cookies"
+msgstr "Acceptér cookier"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
 msgid "Evolution RSS will accept cookies from articles you browse."
 msgstr "Evolution RSS vil acceptere cookier, fra artikler du gennemser."
 
-#: ../src/evolution-rss.schemas.in.in.h:18
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automatically Resize Images"
+msgstr "Ændr automatisk billeders størrelse"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
 msgid ""
 "Evolution RSS will automatically resize images larger than displayed area."
 msgstr ""
 "Evolution RSS vil automatisk ændre størrelse på billeder større end det "
 "viste område."
 
-#: ../src/evolution-rss.schemas.in.in.h:19
-msgid "Evolution RSS will scan web pages for rss content"
-msgstr "Evolution RSS vil skanne internetsider for rss-indhold"
-
-#: ../src/evolution-rss.schemas.in.in.h:20
-msgid "Evolution will download all feed enclosures a feed article may contain."
-msgstr "Evolution vil hente alle vedhæftninger som en nyhedskilde indeholder."
-
-#: ../src/evolution-rss.schemas.in.in.h:21
-msgid ""
-"Evolution will show article's summary instead of article's webpage. Summary "
-"can also be html."
-msgstr ""
-"Evolution vil vise artiklens resume i steden for artiklens internetside. "
-"Resume kan også være html."
-
-#: ../src/evolution-rss.schemas.in.in.h:22
-msgid "Feeds list"
-msgstr "Nyhedskildeliste"
-
-#: ../src/evolution-rss.schemas.in.in.h:23
-msgid "Frequency to check for new articles (in minutes)."
-msgstr "Frekvens hvormed der skal tjekkes om der er artikler (i minutter)."
-
-#: ../src/evolution-rss.schemas.in.in.h:24
-msgid "Hostname of the proxy server"
-msgstr "Værtsnavn på proxyserveren"
-
 #: ../src/evolution-rss.schemas.in.in.h:25
-msgid "Hostname of the proxy server used for feeds and content."
-msgstr "Værtsnavn på proxyserveren brugt til nyhedskilder og indhold."
-
-#: ../src/evolution-rss.schemas.in.in.h:26
-msgid "How many simultaneous downloads."
-msgstr "Hvor mange samtidige overførsler."
-
-#: ../src/evolution-rss.schemas.in.in.h:27
-msgid "How to handle RSS URLs"
-msgstr "Hvordan RSS URL'er skal håndteres"
-
-#: ../src/evolution-rss.schemas.in.in.h:28
-msgid "Html render"
-msgstr "Html-optegner"
-
-#: ../src/evolution-rss.schemas.in.in.h:29
-msgid "If a feed article has comments, it will be displayed."
-msgstr "Hvis en nyhedsartikel har kommentarer, vil de blive vist."
-
-#: ../src/evolution-rss.schemas.in.in.h:30
-msgid ""
-"If the proxy server requires authentication. This is the password field."
-msgstr "Hvis proxyserveren kræver godkendelse. Dette er et adgangskodefelt."
-
-#: ../src/evolution-rss.schemas.in.in.h:31
-msgid "Interval in seconds before a conection is dropped."
-msgstr "Interval i sekunder før en forbindelse smides."
-
-#: ../src/evolution-rss.schemas.in.in.h:32
-msgid "Java Enabled"
-msgstr "Java aktiveret"
-
-#: ../src/evolution-rss.schemas.in.in.h:33
-msgid "JavaScript Enabled"
-msgstr "JavaScript aktiveret"
-
-#: ../src/evolution-rss.schemas.in.in.h:34
-msgid "Limit enclosure size"
-msgstr "Begræns størrelse på vedhæftning"
-
-#: ../src/evolution-rss.schemas.in.in.h:35
-msgid "Limit maximum enclosure size evolution will download."
-msgstr "Begræns maksmimal størrelse for vedhæftning som evolution vil hente."
-
-#: ../src/evolution-rss.schemas.in.in.h:36
-msgid "Max enclosure size"
-msgstr "Maks. størrelse vedhæftning"
-
-#: ../src/evolution-rss.schemas.in.in.h:37
-msgid "Minimum font size"
-msgstr "Minimal skriftstørrelse"
-
-#: ../src/evolution-rss.schemas.in.in.h:38
-msgid "Network proxy requires authentication."
-msgstr "Netværksproxy kræver godkendelse."
-
-#: ../src/evolution-rss.schemas.in.in.h:39
-msgid "Network queue size"
-msgstr "Størrelse på netværkskø"
-
-#: ../src/evolution-rss.schemas.in.in.h:40
-msgid "Network timeout"
-msgstr "Tidsudløb på netværk"
-
-#: ../src/evolution-rss.schemas.in.in.h:41
-msgid "New articles timeout"
-msgstr "Tidsudløb på nye artikler"
-
-#: ../src/evolution-rss.schemas.in.in.h:42
-msgid "Password for proxy server"
-msgstr "Adgangskode for proxyserver"
-
-#: ../src/evolution-rss.schemas.in.in.h:43
-msgid "Proxy requires authentication"
-msgstr "Proxy kræver godkendelse"
-
-#: ../src/evolution-rss.schemas.in.in.h:44
-msgid "Proxy server port"
-msgstr "Serverport på proxy"
-
-#: ../src/evolution-rss.schemas.in.in.h:45
-msgid "Proxy server user"
-msgstr "Serverbruger på proxy"
-
-#: ../src/evolution-rss.schemas.in.in.h:46
-msgid "Remove feed folder"
-msgstr "Fjern mappe for nyhedskilde"
-
-#: ../src/evolution-rss.schemas.in.in.h:47
-msgid "Run program in terminal"
-msgstr "Kør program i terminal"
-
-#: ../src/evolution-rss.schemas.in.in.h:48
 msgid "Scan web pages for RSS"
 msgstr "Skan internetsider for RSS"
 
+#: ../src/evolution-rss.schemas.in.in.h:26
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution RSS vil skanne internetsider for RSS-indhold"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "Hent vedhæftninger"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr "Evolution vil hente alle vedhæftninger som en nyhedskilde indeholder."
+
+#: ../src/evolution-rss.schemas.in.in.h:29
+msgid "Limit enclosure size"
+msgstr "Begræns størrelse på vedhæftning"
+
+#: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Begræns maksimal størrelse for vedhæftning som Evolution vil hente."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "Maks. størrelse vedhæftning"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Aktiver statusikon"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Aktiver statusikon i statusfeltet"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Blink statusikon"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Blink statusikon når ny artikel ankommer"
+
+#: ../src/evolution-rss.schemas.in.in.h:36
+msgid "Enable Feed Icon"
+msgstr "Aktiver nyhedskildeikon"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Vis nyhedskildeikon på mappen for nyhedskilder"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Adgangskode for proxyserver"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr "Hvis proxyserveren kræver godkendelse, er dette adgangskodefeltet."
+
+#: ../src/evolution-rss.schemas.in.in.h:40
+msgid "Proxy server port"
+msgstr "Serverport på proxy"
+
+#: ../src/evolution-rss.schemas.in.in.h:41
+msgid "The port number for proxy server used for feeds and content."
+msgstr "Portnummeret for proxyserver brugt til nyhedskilder og indhold."
+
+#: ../src/evolution-rss.schemas.in.in.h:42
+msgid "Remove feed folder"
+msgstr "Fjern mappe for nyhedskilde"
+
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "Sletning af nyhedskildepunkt vil også fjerne mappen for nyhedskilder."
+
+#: ../src/evolution-rss.schemas.in.in.h:44
+msgid "Check New articles"
+msgstr "Tjek nye artikler"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Autotjek efter nye artikler."
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Tidsudløb på nye artikler"
+
+#: ../src/evolution-rss.schemas.in.in.h:47
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Frekvens hvormed der skal tjekkes om der er artikler (i minutter)."
+
+#: ../src/evolution-rss.schemas.in.in.h:48
+msgid "Checks articles on startup"
+msgstr "Tjekker artikler ved opstart"
+
 #: ../src/evolution-rss.schemas.in.in.h:49
-msgid "Set to true to have a program specified in command handle RSS URLs"
-msgstr ""
-"Angiv som true (sand) hvis et program angivet i kommando skal håndtere RSS "
-"URL'er"
+msgid "Check for new articles every time Evolution is started."
+msgstr "Tjek om der er nye artikler, hver gang Evolution startes op."
 
 #: ../src/evolution-rss.schemas.in.in.h:50
 msgid "Show articles comments"
 msgstr "Vis artiklens kommentarer"
 
 #: ../src/evolution-rss.schemas.in.in.h:51
-msgid "The port number for proxy server used for feeds and content."
-msgstr "Portnummeret for proxyserver brugt til nyhedskilder og indhold."
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Hvis en nyhedsartikel har kommentarer, vil de blive vist."
 
 #: ../src/evolution-rss.schemas.in.in.h:52
-msgid "The size of the font used in full text preview."
-msgstr "Skrifttypens størrelse brugt i forhåndsvisning af fuld tekst."
+msgid "Use proxy server"
+msgstr "Brug proxyserver"
 
 #: ../src/evolution-rss.schemas.in.in.h:53
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Brug en proxyserver til at indhente artikler og indhold."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Serverbruger på proxy"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
 msgid "The username to use for proxy server authentication."
 msgstr "Brugernavnet der skal bruges for godkendelse på proxyserveren."
 
-#: ../src/evolution-rss.schemas.in.in.h:54
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "Hvordan RSS URL'er skal håndteres"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr ""
+"Angiv som true (sand) hvis et program angivet i kommando skal håndtere RSS "
+"URL'er"
+
+# arg hvad står der her!
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for RSS feed URIs"
+msgstr "URL-håndtering for RSS-nyhedskildens URI'er"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Kør program i terminal"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
 msgid "True if the program to handle this URL should be run in a terminal"
 msgstr ""
 "True (sand) hvis programmet til håndtering af denne URL skal køres i en "
 "terminal"
 
-#: ../src/evolution-rss.schemas.in.in.h:55
-msgid "Type HTML Render used to display html pages."
-msgstr "Type HTML-optegner brugt til at vise html-sider."
-
-# arg hvad står der her!
-#: ../src/evolution-rss.schemas.in.in.h:56
-msgid "URL handler for rss feed uris"
-msgstr "URL-håndtering for rss-nyhedskilden uri'er"
-
-#: ../src/evolution-rss.schemas.in.in.h:57
-msgid "Use a custom font size instead of system defaults."
-msgstr "Brug en tilpasset skriftstørrelse i stedet for systemstandarder."
-
-#: ../src/evolution-rss.schemas.in.in.h:58
-msgid "Use a proxy server to fetch articles and content."
-msgstr "Brug en proxyserver til at indhente artikler og indhold."
-
-#: ../src/evolution-rss.schemas.in.in.h:59
-msgid "Use custom font"
-msgstr "Brug tilpasset skrifttype"
-
-#: ../src/evolution-rss.schemas.in.in.h:60
-msgid "Use proxy server"
-msgstr "Brug proxyserver"
-
-#: ../src/notification.c:431 ../src/rss.c:3361
+#: ../src/notification.c:291 ../src/rss.c:2169
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Henter nyhedskilder (%d aktiveret)"
@@ -308,10 +341,10 @@ msgstr "Henter nyhedskilder (%d aktiveret)"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
-"This plugin adds RSS Feeds support for evolution mail. RSS support was built "
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
 "upon the somewhat existing RSS support in evolution-1.4 branch. The "
 "motivation behind this was to have RSS in same place as mails, at this "
-"moment I do not see the point having a separate RSS reader since a RSS "
+"moment I do not see the point in having a separate RSS reader since a RSS "
 "Article is like an email message.\n"
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
@@ -325,12 +358,12 @@ msgid ""
 msgstr ""
 "Udvidelsesmodulet Evolution RSS-læser.\n"
 "\n"
-"Dette udvidelsesmodul tilfører RSS-nyhedskildeunderstøttelse for "
+"Dette udvidelsesmodul tilfører RSS-nyhedskildeunderstøttelse til "
 "postprogrammet evolution. RSS-understøttelse blev bygget på den delvist "
-"eksisterende RSS-understøttelse i evolution-1.4 gren. Motivationen for at "
-"have RSS på samme sted som e-post. På dette tidspunkt kan jeg ikke se "
-"pointen ved at have en separat RSS-læser, da en RSS-artikel er som en e-post-"
-"besked.\n"
+"eksisterende RSS-understøttelse i grenen evolution-1.4. Motivationen er at "
+"have RSS på samme sted som e-mail. På nuværende tidspunkt giver det ikke "
+"mening at have en separat RSS-læser, da en RSS-artikel er som en e-"
+"mailbesked.\n"
 "\n"
 "Evolution RSS kan vise artikler med brug af resumevisning eller HTML-"
 "visning.\n"
@@ -347,366 +380,335 @@ msgid "Size"
 msgstr "Størrelse"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
-msgid "Delete \"{0}\"?"
-msgstr "Slet \"{0}\"?"
-
-#: ../src/org-gnome-evolution-rss.error.xml.h:2
 msgid "Reading RSS Feeds..."
 msgstr "Læser RSS-nyhedskilde..."
 
-#: ../src/org-gnome-evolution-rss.error.xml.h:3
-msgid "Really delete feed '{0}' ?"
-msgstr "Slet nyhedskilde '{0}' ?"
-
-#: ../src/org-gnome-evolution-rss.error.xml.h:4
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
 msgid "Updating Feeds..."
 msgstr "Opdaterer nyhedskilder..."
 
-#: ../src/org-gnome-evolution-rss.error.xml.h:5
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "_Dismiss"
 msgstr "_Forkast"
 
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete \"{0}\"?"
+msgstr "Slet \"{0}\"?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "Really delete feed '{0}'?"
+msgstr "Slet nyhedskilden \"{0}\"?"
+
 #: ../src/org-gnome-evolution-rss.xml.h:1
-msgid "Setup RSS"
-msgstr "Opsæt RSS"
-
-#: ../src/org-gnome-evolution-rss.xml.h:2
-msgid "Setup RSS feeds"
-msgstr "Opsæt RSS-nyhedskilder"
-
-#: ../src/org-gnome-evolution-rss.xml.h:3
 msgid "Update RSS feeds"
 msgstr "Opdater RSS-nyhedskilder"
 
-#: ../src/org-gnome-evolution-rss.xml.h:4
+#: ../src/org-gnome-evolution-rss.xml.h:2
 msgid "_Read RSS"
 msgstr "_Læs RSS"
 
-#: ../src/rss.c:381 ../src/rss.c:3525
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "Opsæt RSS-nyhedskilder"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "Opsæt RSS"
+
+#. ATOM
+#: ../src/parser.c:1099
+msgid "No Information"
+msgstr "Ingen information"
+
+#: ../src/parser.c:1198
+msgid "No information"
+msgstr "Ingen information"
+
+#: ../src/rss.c:416 ../src/rss.c:2355
 msgid "Feed"
 msgstr "Nyhedskilde"
 
-#: ../src/rss.c:461 ../src/rss-config-factory.c:2772
-#: ../src/rss-config-factory.c:2946
+#: ../src/rss.c:481 ../src/rss-config-factory.c:2868
+#: ../src/rss-config-factory.c:3042
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% færdig"
 
-#: ../src/rss.c:711
-msgid "Enter User/Pass for feed"
-msgstr "Indtast bruger/adgangskode for nyhedskilde"
+#: ../src/rss.c:628
+msgid "Enter Username/Password for feed"
+msgstr "Indtast bruger/adgangskode til nyhedskilden"
 
-#: ../src/rss.c:767
+# Engelsk fejl
+#: ../src/rss.c:630
+msgid "_Cancel"
+msgstr "_Annullér"
+
+#: ../src/rss.c:634
+msgid "_OK"
+msgstr "_OK"
+
+#: ../src/rss.c:684
 msgid "Enter your username and password for:"
 msgstr "Indtast dit brugernavn og adgangskode for:"
 
-#: ../src/rss.c:785
+#: ../src/rss.c:700
 msgid "Username: "
 msgstr "Brugernavn: "
 
-#: ../src/rss.c:806
+#: ../src/rss.c:718 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Adgangskode: "
 
-#: ../src/rss.c:843
+#: ../src/rss.c:750
 msgid "_Remember this password"
 msgstr "_Husk denne adgangskode"
 
-#. e_clipped_label_set_text (
-#. E_CLIPPED_LABEL (info->status_label),
-#: ../src/rss.c:948
+#: ../src/rss.c:862 ../src/rss.c:866
 msgid "Cancelling..."
 msgstr "Afbryder..."
 
-#: ../src/rss.c:1113
-msgid "Formatting Message..."
-msgstr "Formaterer besked..."
-
-#: ../src/rss.c:1337
+#: ../src/rss.c:1186
 msgid "_Copy"
 msgstr "_Kopier"
 
-#: ../src/rss.c:1338
+#: ../src/rss.c:1187
 msgid "Select _All"
 msgstr "Vælg _alle"
 
-#: ../src/rss.c:1340 ../src/rss.c:1351
+#: ../src/rss.c:1189 ../src/rss.c:1200
 msgid "Zoom _In"
 msgstr "Zoom _ind"
 
-#: ../src/rss.c:1341 ../src/rss.c:1352
+#: ../src/rss.c:1190 ../src/rss.c:1201
 msgid "Zoom _Out"
 msgstr "Zoom _ud"
 
-#: ../src/rss.c:1342 ../src/rss.c:1353
+#: ../src/rss.c:1191 ../src/rss.c:1202
 msgid "_Normal Size"
 msgstr "_Normal størrelse"
 
-#: ../src/rss.c:1344
+#: ../src/rss.c:1193
 msgid "_Open Link"
 msgstr "_Åbn henvisning"
 
-#: ../src/rss.c:1345 ../src/rss.c:1359
+#: ../src/rss.c:1194 ../src/rss.c:1208
 msgid "_Copy Link Location"
 msgstr "_Kopier henvisningsplacering"
 
-#: ../src/rss.c:1355
+#: ../src/rss.c:1204
 msgid "_Print..."
 msgstr "_Udskriv..."
 
-#: ../src/rss.c:1356
+#: ../src/rss.c:1205
 msgid "Save _As"
 msgstr "Gem _som"
 
-#: ../src/rss.c:1358
+#: ../src/rss.c:1207
 msgid "_Open Link in Browser"
 msgstr "_Åbn henvisning i browser"
 
-#: ../src/rss.c:1462 ../src/rss.c:1645
-msgid "Click to open"
-msgstr "Klik for at åbne"
-
-#: ../src/rss.c:1921
-msgid "Comments"
-msgstr "Kommentarer"
-
-#: ../src/rss.c:1926
-msgid "Refresh"
-msgstr "Opdater"
-
-#: ../src/rss.c:1950
-msgid "Feed view"
-msgstr "Nyhedskildevisning"
-
-#: ../src/rss.c:1965
-msgid "Show Summary"
-msgstr "Vis resume"
-
-#: ../src/rss.c:1966
-msgid "Show Full Text"
-msgstr "Vis fuld tekst"
-
-#: ../src/rss.c:2369
-msgid "Posted under"
-msgstr "Posteret under"
-
-#: ../src/rss.c:2685
+#: ../src/rss.c:1492
 msgid "Fetching feed"
 msgstr "Indhenter nyhedskilde"
 
 # unnamed
-#: ../src/rss.c:2987
+#: ../src/rss.c:1804 ../src/rss.c:2081
 msgid "Unnamed feed"
 msgstr "Unavngivet nyhedskilde"
 
-#: ../src/rss.c:2988
+#: ../src/rss.c:1805
 msgid "Error while setting up feed."
 msgstr "Fejl ved opsætning af nyhedskilde."
 
-#: ../src/rss.c:3192 ../src/rss.c:3262
+#: ../src/rss.c:2012 ../src/rss.c:2082
 msgid "Error while fetching feed."
 msgstr "Fejl under indhentning af nyhedskilde."
 
-#: ../src/rss.c:3193
+#: ../src/rss.c:2013
 msgid "Invalid Feed"
 msgstr "Ugyldig nyhedskilde"
 
-#: ../src/rss.c:3235
+#: ../src/rss.c:2055
 #, c-format
 msgid "Adding feed %s"
 msgstr "Tilføjer nyhedskilde %s"
 
-# unnamed
-#: ../src/rss.c:3261
-msgid "Unamed feed"
-msgstr "Unavngivet nyhedskilde"
-
-#: ../src/rss.c:3275
+#: ../src/rss.c:2096 ../src/rss.c:2104
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Henter besked %d af %d"
 
-#: ../src/rss.c:3381
+#: ../src/rss.c:2190 ../src/rss.c:2193
 msgid "Complete."
 msgstr "Færdig."
 
-#: ../src/rss.c:3413 ../src/rss.c:3578 ../src/rss.c:3616 ../src/rss.c:3813
-#: ../src/rss.c:4425
+#: ../src/rss.c:2230 ../src/rss.c:2414 ../src/rss.c:2452 ../src/rss.c:2658
+#: ../src/rss.c:3246
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Fejl ved indhentning af nyhedskilde: %s"
 
 # Engelsk fejl
-#: ../src/rss.c:3426
+#: ../src/rss.c:2242 ../src/rss.c:2246
 msgid "Canceled."
 msgstr "Afbrudt."
 
-#: ../src/rss.c:3469
+#: ../src/rss.c:2299
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Fejl ved fortolkning af nyhedskilde: %s"
 
-#: ../src/rss.c:3473
+#: ../src/rss.c:2303
 msgid "illegal content type!"
 msgstr "ulovlig indholdstype!"
 
-#: ../src/rss.c:3534
+#: ../src/rss.c:2363 ../src/rss.c:2366
 msgid "Complete"
 msgstr "Færdig"
 
-#: ../src/rss.c:3662
-msgid "Formatting error."
-msgstr "Formatfejl."
-
-#: ../src/rss.c:4698
+#: ../src/rss.c:3567
 msgid "No RSS feeds configured!"
 msgstr "Ingen RSS-nyhedskilder konfigureret!"
 
-#: ../src/rss.c:4750
+#: ../src/rss.c:3619
 msgid "Waiting..."
 msgstr "Venter..."
 
-#: ../src/rss.h:54
-msgid "News and Blogs"
-msgstr "Nyheder og blog"
-
-#: ../src/rss.h:56
-msgid "Untitled channel"
-msgstr "Unavngivet kanal"
-
-#: ../src/rss-config-factory.c:182
+#: ../src/rss-config-factory.c:159
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:183
+#: ../src/rss-config-factory.c:160
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:184
+#: ../src/rss-config-factory.c:161
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:417
+#: ../src/rss-config-factory.c:477
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dag"
 msgstr[1] "dage"
 
-#: ../src/rss-config-factory.c:432
+#: ../src/rss-config-factory.c:492
 msgid "message"
 msgid_plural "messages"
 msgstr[0] "besked"
 msgstr[1] "beskeder"
 
-#: ../src/rss-config-factory.c:498 ../src/rss-config-factory.c:511
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
 msgid "Move to Folder"
 msgstr "Flyt til mappe"
 
-#: ../src/rss-config-factory.c:498 ../src/rss-config-factory.c:511
+#: ../src/rss-config-factory.c:560 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
 msgid "M_ove"
 msgstr "_Flyt"
 
-#: ../src/rss-config-factory.c:652
+#: ../src/rss-config-factory.c:723
 msgid "Edit Feed"
 msgstr "Rediger nyhedskilde"
 
-#: ../src/rss-config-factory.c:654
+#: ../src/rss-config-factory.c:725
 msgid "Add Feed"
 msgstr "Tilføj nyhedskilde"
 
-#: ../src/rss-config-factory.c:1099 ../src/rss-config-factory.c:1636
+#: ../src/rss-config-factory.c:1179 ../src/rss-config-factory.c:1738
 #, no-c-format
 msgid "0% done"
 msgstr "0 % færdig"
 
-#: ../src/rss-config-factory.c:1471
+#: ../src/rss-config-factory.c:1567
 msgid "Disable"
 msgstr "Deaktiver"
 
-#: ../src/rss-config-factory.c:1471
+#: ../src/rss-config-factory.c:1567
 msgid "Enable"
 msgstr "Aktiver"
 
-#: ../src/rss-config-factory.c:1527
+#: ../src/rss-config-factory.c:1626 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Fjern mappeindhold"
 
-#: ../src/rss-config-factory.c:1896
+#: ../src/rss-config-factory.c:2009
 msgid "Import error."
 msgstr "Importfejl."
 
-#: ../src/rss-config-factory.c:1897
+#: ../src/rss-config-factory.c:2010
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Ugyldig fil eller denne fil indeholder ikke nogen nyhedskilder."
 
-#: ../src/rss-config-factory.c:1902
+#: ../src/rss-config-factory.c:2015
 msgid "Importing"
 msgstr "Importerer"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:1925 ../src/rss-config-factory.c:2821
-#: ../src/rss-config-factory.c:2981
+#: ../src/rss-config-factory.c:2038 ../src/rss-config-factory.c:2917
+#: ../src/rss-config-factory.c:3077
 msgid "Please wait"
 msgstr "Vent venligst"
 
-#: ../src/rss-config-factory.c:2235 ../src/rss-config-factory.c:3101
-#: ../src/rss-config-factory.c:3164
+#: ../src/rss-config-factory.c:2348 ../src/rss-config-factory.c:3194
+#: ../src/rss-config-factory.c:3257
 msgid "All Files"
 msgstr "Alle filer"
 
-#: ../src/rss-config-factory.c:2246 ../src/rss-config-factory.c:3185
+#: ../src/rss-config-factory.c:2359 ../src/rss-config-factory.c:3278
 msgid "OPML Files"
 msgstr "OPML-filer"
 
-#: ../src/rss-config-factory.c:2257 ../src/rss-config-factory.c:3174
+#: ../src/rss-config-factory.c:2370 ../src/rss-config-factory.c:3267
 msgid "XML Files"
 msgstr "XML-filer"
 
-#: ../src/rss-config-factory.c:2276
+#: ../src/rss-config-factory.c:2389
 msgid "Show article's summary"
 msgstr "Vis artikels resume"
 
-#: ../src/rss-config-factory.c:2289
+#: ../src/rss-config-factory.c:2402
 msgid "Feed Enabled"
 msgstr "Nyhedskilde aktiveret"
 
-#: ../src/rss-config-factory.c:2302
+#: ../src/rss-config-factory.c:2415
 msgid "Validate feed"
 msgstr "Valider nyhedskilde"
 
-#: ../src/rss-config-factory.c:2359
+#: ../src/rss-config-factory.c:2471 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Vælg importfil"
 
-#: ../src/rss-config-factory.c:2442
+#: ../src/rss-config-factory.c:2545 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Vælg fil at eksportere"
 
-#: ../src/rss-config-factory.c:2804
+#: ../src/rss-config-factory.c:2900
 msgid "Exporting feeds..."
 msgstr "Eksporterer nyhedskilder..."
 
-#: ../src/rss-config-factory.c:2868 ../src/rss-config-factory.c:2876
+#: ../src/rss-config-factory.c:2964 ../src/rss-config-factory.c:2972
 msgid "Error exporting feeds!"
 msgstr "Fejl ved eksport af nyhedskilder!"
 
-#: ../src/rss-config-factory.c:2957
+#: ../src/rss-config-factory.c:3053
 msgid "Importing cookies..."
 msgstr "Importerer cookier..."
 
-#: ../src/rss-config-factory.c:3037
+#: ../src/rss-config-factory.c:3132
 msgid "Select file to import"
 msgstr "Vælg fil til import"
 
-#: ../src/rss-config-factory.c:3107
+#: ../src/rss-config-factory.c:3200
 msgid "Mozilla/Netscape Format"
 msgstr "Mozilla-/Netscapeformat"
 
-#: ../src/rss-config-factory.c:3113
+#: ../src/rss-config-factory.c:3206
 msgid "Firefox new Format"
 msgstr "Firefox nyt format"
 
-#: ../src/rss-config-factory.c:3223 ../src/rss-config-factory.c:3228
+#: ../src/rss-config-factory.c:3316 ../src/rss-config-factory.c:3321
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -714,7 +716,7 @@ msgstr ""
 "Ingen RSS-nyhedskilder konfigureret!\n"
 "Kan ikke eksportere."
 
-#: ../src/rss-config-factory.c:3364
+#: ../src/rss-config-factory.c:3484
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -724,36 +726,323 @@ msgstr ""
 "som optegnere skal du have udviklingspakken til firefox eller webkit "
 "installeret og evolution-rss skal rekompileres, så den kan se disse pakker."
 
-#: ../src/rss-config-factory.c:3878
+#: ../src/rss-config-factory.c:4077 ../src/rss-main.ui.h:45
 msgid "Enabled"
 msgstr "Aktiveret"
 
-#: ../src/rss-config-factory.c:3905
+#: ../src/rss-config-factory.c:4104
 msgid "Feed Name"
 msgstr "Nyhedskildenavn"
 
-#: ../src/rss-config-factory.c:3918
+#: ../src/rss-config-factory.c:4117
 msgid "Type"
 msgstr "Type"
 
-#: ../src/rss-config-factory.c:4175
-msgid "News And Blogs"
+#: ../src/rss-config-factory.c:4434 ../src/rss.h:62
+msgid "News and Blogs"
 msgstr "Nyheder og blog"
 
-#. ATOM
-#: ../src/parser.c:1052
-msgid "No Information"
-msgstr "Ingen information"
+#: ../src/rss.h:64
+msgid "Untitled channel"
+msgstr "Unavngivet kanal"
 
-#: ../src/parser.c:1151
-msgid "No information"
-msgstr "Ingen information"
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Motor: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Brug samme skrifttype som andre programmer"
+
+#: ../src/rss-html-rendering.ui.h:3
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Minimal skriftstørrelse:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Blokér pop op-vinduer"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Aktivér Java"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "Aktivér JavaScript"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Acceptér cookier fra websteder"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Importér cookier"
+
+#: ../src/rss-html-rendering.ui.h:9
+msgid "Automatically resize images"
+msgstr "Ændr automatisk billeders størrelse"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Tidsudløb på netværk:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "sekunder"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>HTML-optegning</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Vis ikon i statusfeltet"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Vis nyhedskildeikon"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Artikelpåmindelse</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "minutter"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "timer"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "dage"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Certifikattabel"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Tilføj"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "_Redigér"
+
+#: ../src/rss-main.ui.h:8
+msgid "I_mport"
+msgstr "I_mportér"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "E_ksportér"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Nyhedskilder"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Motor: "
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Aktivér udvidelsesmoduler"
+
+#: ../src/rss-main.ui.h:15
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Begynd</span>"
+
+# Har valgt denne form i stedet for "hver(t)", da det ville kræve ordenstal: hvert 5. minut
+#: ../src/rss-main.ui.h:17
+msgid "Check for new articles every"
+msgstr "Kig efter nye artikler efter"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles at startup"
+msgstr "Kig efter nye artikler ved opstart"
+
+#: ../src/rss-main.ui.h:19
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Nyhedskildevisning</span>"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr "Vis som standard artikelresume i stedet for webside"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Led efter nyhedskilde inden i websider"
+
+#: ../src/rss-main.ui.h:22
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Nyhedskildevedhæftning</span>"
+
+#: ../src/rss-main.ui.h:23
+msgid "Show article comments"
+msgstr "Vis artiklens kommentarer"
+
+#: ../src/rss-main.ui.h:24
+msgid "Download feed enclosures"
+msgstr "Hent nyhedskildevedhæftninger"
+
+#: ../src/rss-main.ui.h:25
+msgid "Do not download enclosures that exceeds"
+msgstr "Hent ikke vedhæftninger som overstiger"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "kB"
+
+#: ../src/rss-main.ui.h:27
+msgid "Setup"
+msgstr "Opsætning"
+
+#: ../src/rss-main.ui.h:28
+msgid "Use Proxy"
+msgstr "Brug proxy"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "HTTP-proxy:"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Port:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Detaljer"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Ingen proxy for:"
+
+#: ../src/rss-main.ui.h:33
+msgid "Network"
+msgstr "Netværk"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "Detaljer for HTTP-proxy"
+
+#: ../src/rss-main.ui.h:35
+msgid "Use authentication"
+msgstr "Brug godkendelse"
+
+#: ../src/rss-main.ui.h:36
+msgid "Username:"
+msgstr "Brugernavn:"
+
+#: ../src/rss-main.ui.h:39
+msgid "Delete feed?"
+msgstr "Slet nyhedskilde?"
+
+#: ../src/rss-main.ui.h:42
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Nyhedskildenavn: </b>"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr "<b>Nyhedskildens URL:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "<b>Location:</b>"
+msgstr "<b>Placering:</b>"
+
+#: ../src/rss-main.ui.h:46
+msgid "Validate"
+msgstr "Validér"
+
+#: ../src/rss-main.ui.h:47
+msgid "Show feed full text"
+msgstr "Vis nyhedskildens fulde tekst"
+
+#: ../src/rss-main.ui.h:48
+msgid "General"
+msgstr "Generelt"
+
+#: ../src/rss-main.ui.h:49
+msgid "Use global update interval"
+msgstr "Brug globalt opdateringsinterval"
+
+#: ../src/rss-main.ui.h:50
+msgid "Update in"
+msgstr "Opdatér om"
+
+#: ../src/rss-main.ui.h:51
+msgid "Do not update feed"
+msgstr "Opdatér ikke nyhedskilde"
+
+#: ../src/rss-main.ui.h:52
+msgid "Update"
+msgstr "Opdatér"
+
+#: ../src/rss-main.ui.h:53
+msgid "Do not delete feeds"
+msgstr "Slet ikke nyhedskilder"
+
+#: ../src/rss-main.ui.h:54
+msgid "Delete all but the last"
+msgstr "Slet alle undtagen den sidste"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete articles older than"
+msgstr "Slet artikler som er ældre end"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles that are no longer in the feed"
+msgstr "Slet artikler som ikke længere er i nyhedskilden"
+
+#: ../src/rss-main.ui.h:57
+msgid "Always delete unread articles"
+msgstr "Slet altid ulæste artikler"
+
+#: ../src/rss-main.ui.h:58
+msgid "Storage"
+msgstr "Lager"
+
+#: ../src/rss-main.ui.h:59
+msgid "Authentication"
+msgstr "Godkendelse"
+
+#: ../src/rss-main.ui.h:60
+msgid "<b>Advanced options</b>"
+msgstr "<b>Avancerede indstillinger</b>"
+
+#~ msgid "Formatting Message..."
+#~ msgstr "Formaterer besked..."
+
+#~ msgid "Click to open"
+#~ msgstr "Klik for at åbne"
+
+#~ msgid "Comments"
+#~ msgstr "Kommentarer"
+
+#~ msgid "Refresh"
+#~ msgstr "Opdater"
+
+#~ msgid "Feed view"
+#~ msgstr "Nyhedskildevisning"
+
+# unnamed
+#~ msgid "Unamed feed"
+#~ msgstr "Unavngivet nyhedskilde"
+
+#~ msgid "Formatting error."
+#~ msgstr "Formatfejl."
+
+#~ msgid "News And Blogs"
+#~ msgstr "Nyheder og blog"
 
 #~ msgid "New feed imported: %s"
 #~ msgstr "Ny nyhedskilde importeret: %s"
-
-#~ msgid "Reading RSS feeds..."
-#~ msgstr "Læser RSS-nyhedskilder..."
 
 #~ msgid ""
 #~ "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
