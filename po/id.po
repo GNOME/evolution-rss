@@ -1,0 +1,1007 @@
+# Indonesian translation for evolution-rss.
+# Copyright (C) 2017 evolution-rss's COPYRIGHT HOLDER
+# This file is distributed under the same license as the evolution-rss package.
+# Andika Triwidada <atriwidada@gnome.org>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss master\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evolution-rss&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-03-28 18:46+0000\n"
+"PO-Revision-Date: 2017-04-14 19:52+0000\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.0.1\n"
+
+#: ../evolution-rss.desktop.in.in.h:1
+msgid "Evolution RSS Reader"
+msgstr "Evolution Pembaca RSS"
+
+#: ../evolution-rss.desktop.in.in.h:2
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr ""
+"Pengaya Evolution yang memungkinkan Evolution Mail menampilkan asupan RSS."
+
+#: ../evolution-rss.metainfo.xml.in.h:1
+msgid "RSS Reader"
+msgstr "Pembaca RSS"
+
+#: ../evolution-rss.metainfo.xml.in.h:2
+msgid "Read RSS feeds"
+msgstr "Baca asupan RSS"
+
+#: ../src/dbus.c:108 ../src/rss.c:2018 ../src/rss-config-factory.c:1200
+#: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1944
+msgid "Error adding feed."
+msgstr "Galat saat menambah asupan."
+
+#: ../src/dbus.c:109 ../src/rss.c:2019 ../src/rss-config-factory.c:1201
+#: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1945
+msgid "Feed already exists!"
+msgstr "Asupan telah ada!"
+
+#: ../src/dbus.c:116
+#, c-format
+msgid "Importing URL: %s"
+msgstr "Mengimpor URL: %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:232
+msgid "Posted under"
+msgstr "Ditulis di bawah"
+
+#: ../src/e-mail-formatter-evolution-rss.c:400
+#: ../src/e-mail-formatter-evolution-rss.c:406
+msgid "Show Summary"
+msgstr "Tampilkan Rangkuman"
+
+#: ../src/e-mail-formatter-evolution-rss.c:401
+#: ../src/e-mail-formatter-evolution-rss.c:407
+msgid "Show Full Text"
+msgstr "Tampilkan Teks Lengkap"
+
+#: ../src/e-mail-formatter-evolution-rss.c:425
+msgid "Evolution-RSS"
+msgstr "Evolution-RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:426
+msgid "Displaying RSS feed articles"
+msgstr "Menampilkan artikel asupan RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:1
+msgid "Proxy requires authentication"
+msgstr "Proksi memerlukan otentikasi"
+
+#: ../src/evolution-rss.schemas.in.in.h:2
+msgid "Network proxy requires authentication."
+msgstr "Proksi jaringan memerlukan otentikasi."
+
+#: ../src/evolution-rss.schemas.in.in.h:3
+msgid "Display article's summary"
+msgstr "Tampilkan ringkasan artikel"
+
+#: ../src/evolution-rss.schemas.in.in.h:4
+msgid ""
+"Evolution will show article's summary instead of article's web page. Summary "
+"can also be HTML."
+msgstr ""
+"Evolution akan menampilkan ringkasan artikel sebagai pengganti halaman web "
+"artikel. Ringkasan juga bisa berupa HTML."
+
+#: ../src/evolution-rss.schemas.in.in.h:5
+msgid "Feeds list"
+msgstr "Daftar asupan"
+
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Memuat daftar asupan yang saat ini tertata."
+
+#: ../src/evolution-rss.schemas.in.in.h:7
+msgid "Hostname of the proxy server"
+msgstr "Nama host server proksi"
+
+#: ../src/evolution-rss.schemas.in.in.h:8
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "Nama host dari server proksi yang dipakai untuk asupan dan isi."
+
+#: ../src/evolution-rss.schemas.in.in.h:9
+msgid "HTML render"
+msgstr "Render HTML"
+
+#: ../src/evolution-rss.schemas.in.in.h:10
+msgid "Type HTML Render used to display HTML pages."
+msgstr "Tipe Render HTML yang dipakai untuk menampilkan halaman HTML."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Gunakan fonta ubahan"
+
+#: ../src/evolution-rss.schemas.in.in.h:12
+msgid "Use a custom font size instead of system defaults."
+msgstr "Gunakan ukuran fonta ubahan sebagai pengganti nilai baku sistem."
+
+#: ../src/evolution-rss.schemas.in.in.h:13
+msgid "Minimum font size"
+msgstr "Ukuran fonta minimal"
+
+#: ../src/evolution-rss.schemas.in.in.h:14
+msgid "The size of the font used in full text preview."
+msgstr "Ukuran fonta yang dipakai dalam pratinjau teks penuh."
+
+#: ../src/evolution-rss.schemas.in.in.h:15
+msgid "Network timeout"
+msgstr "Jaringan habis waktu"
+
+#: ../src/evolution-rss.schemas.in.in.h:16
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Selang waktu dalam detik sebelum suatu koneksi diputus."
+
+#: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Ukuran antrian jaringan"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Berapa banyak pengunduhan simultan."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "JavaScript Difungsikan"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Java Difungsikan"
+
+#: ../src/evolution-rss.schemas.in.in.h:21
+msgid "Accepts Cookies"
+msgstr "Terima Cookies"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr "Evolution RSS akan menerima cookies dari artikel yang Anda ramban."
+
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automatically Resize Images"
+msgstr "Otomatis Ubah Ukuran Gambar"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"Evolution RSS akan secara otomatis mengubah ukuran citra yang lebih besar "
+"daripada wilayah yang ditampilkan."
+
+#: ../src/evolution-rss.schemas.in.in.h:25
+msgid "Scan web pages for RSS"
+msgstr "Pindai halaman web untuk RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:26
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution RSS akan memindai halaman web untuk isi RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "Unduh wadah"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr ""
+"Evolution akan mengunduh semua wadah asupan yang mungkin dimuat oleh artikel "
+"asupan."
+
+#: ../src/evolution-rss.schemas.in.in.h:29
+msgid "Limit enclosure size"
+msgstr "Batasi ukuran wadah"
+
+#: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Batasi ukuran wadah maksimum yang akan diunduh Evolution."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "Ukuran wadah maks"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Fungsikan Ikon Status"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Fungsikan ikon status di area pemberitahuan"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Kedipkan Ikon Status"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Kedipkan ikon status ketika artikel baru telah diterima"
+
+#: ../src/evolution-rss.schemas.in.in.h:36
+msgid "Enable Feed Icon"
+msgstr "Fungsikan Ikon Asupan"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Tampilkan ikon asupan pada folder asupan"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Sandi untuk server proksi"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr "Bila server proksi perlu otentikasi, ini adalah ruas sandi."
+
+#: ../src/evolution-rss.schemas.in.in.h:40
+msgid "Proxy server port"
+msgstr "Port server proksi"
+
+#: ../src/evolution-rss.schemas.in.in.h:41
+msgid "The port number for proxy server used for feeds and content."
+msgstr "Nomor port bagi server proksi yang dipakai untuk asupan dan isi."
+
+#: ../src/evolution-rss.schemas.in.in.h:42
+msgid "Remove feed folder"
+msgstr "Hapus folder asupan"
+
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "Menghapus entri asupan juga akan menghapus folder asupan."
+
+#: ../src/evolution-rss.schemas.in.in.h:44
+msgid "Check New articles"
+msgstr "Periksa Artikel Baru"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Periksa otomatis adanya artikel baru."
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Tenggat waktu artikel baru"
+
+#: ../src/evolution-rss.schemas.in.in.h:47
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Frekuensi pemeriksaan artikel baru (dalam menit)."
+
+#: ../src/evolution-rss.schemas.in.in.h:48
+msgid "Checks articles on startup"
+msgstr "Periksa artikel saat awal mula"
+
+#: ../src/evolution-rss.schemas.in.in.h:49
+msgid "Check for new articles every time Evolution is started."
+msgstr "Periksa artikel baru setiap kali Evolution dijalankan."
+
+#: ../src/evolution-rss.schemas.in.in.h:50
+msgid "Show articles comments"
+msgstr "Tampilkan komentar artikel"
+
+#: ../src/evolution-rss.schemas.in.in.h:51
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Bila artikel asupan punya komentar, itu akan ditampilkan."
+
+#: ../src/evolution-rss.schemas.in.in.h:52
+msgid "Use proxy server"
+msgstr "Gunakan server proksi"
+
+#: ../src/evolution-rss.schemas.in.in.h:53
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Gunakan sebuah server proksi untuk mengambil artikel dan isi."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Pengguna server proksi"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
+msgid "The username to use for proxy server authentication."
+msgstr "Nama pengguna untuk otentikasi server proksi."
+
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "Bagaimana menangani URL RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr ""
+"Isi dengan true untuk memakai suatu program yang dinyatakan dalam perintah "
+"agar menangani URL RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for RSS feed URIs"
+msgstr "Penangan URL bagi URI asupan RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Jalankan program dalam terminal"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
+msgid "True if the program to handle this URL should be run in a terminal"
+msgstr ""
+"True bila program yang menangani URL ini mesti dijalankan dalam sebuah "
+"terminal"
+
+#: ../src/notification.c:291 ../src/rss.c:2187
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Mengambil asupan (%d difungsikan)"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point in having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view.\n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Pengaya Pembaca RSS Evolution.\n"
+"\n"
+"Pengaya ini menambahkan dukungan Asupan RSS bagi Evolution mail. Dukungan "
+"RSS dibangun di atas dukungan RSS yang telah sebagian ada dalam cabang "
+"evolution-1.4. Motivasi di belakang ini adalah untuk mendapatkan RSS di "
+"tempat yang sama dengan surel, saat ini saya tidak melihat ada gunanya punya "
+"pembaca RSS terpisah karena suatu Artikel RSS mirip dengan sebuah pesan "
+"surel.\n"
+"\n"
+"Evolution RSS dapat menampilkan artikel memakai tilikan ringkasan atau "
+"tilikan HTML.\n"
+"\n"
+"HTML dapat ditampilkan memakai mesin berikut: gtkHTML, Webkit Apple, atau "
+"Firefox/Gecko.\n"
+"\n"
+"<b>Versi: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "Ukuran"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds..."
+msgstr "Membaca Asupan RSS..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds..."
+msgstr "Memutakhirkan Asupan..."
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "_Dismiss"
+msgstr "_Tutup"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete \"{0}\"?"
+msgstr "Hapus \"{0}\"?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "Really delete feed '{0}'?"
+msgstr "Yakin menghapus asupan '{0}'?"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Update RSS feeds"
+msgstr "Mutakhirkan asupan RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "_Read RSS"
+msgstr "Baca _RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "Siapkan asupan RSS"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "Siapkan RSS"
+
+#. ATOM
+#: ../src/parser.c:1099
+msgid "No Information"
+msgstr "Tidak Ada Informasi"
+
+#: ../src/parser.c:1198
+msgid "No information"
+msgstr "Tidak ada informasi"
+
+#: ../src/rss.c:416 ../src/rss.c:2373
+msgid "Feed"
+msgstr "Asupan"
+
+#: ../src/rss.c:481 ../src/rss-config-factory.c:2868
+#: ../src/rss-config-factory.c:3042
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% usai"
+
+#: ../src/rss.c:628
+msgid "Enter Username/Password for feed"
+msgstr "Masukkan Nama Pengguna/Sandi untuk asupan"
+
+#: ../src/rss.c:630
+msgid "_Cancel"
+msgstr "_Batal"
+
+#: ../src/rss.c:634
+msgid "_OK"
+msgstr "_OK"
+
+#: ../src/rss.c:684
+msgid "Enter your username and password for:"
+msgstr "Masukkan nama pengguna dan sandi Anda untuk:"
+
+#: ../src/rss.c:700
+msgid "Username: "
+msgstr "Nama pengguna: "
+
+#: ../src/rss.c:718 ../src/rss-main.ui.h:37
+msgid "Password: "
+msgstr "Sandi: "
+
+#: ../src/rss.c:750
+msgid "_Remember this password"
+msgstr "_Ingat sandi ini"
+
+#: ../src/rss.c:862 ../src/rss.c:866
+msgid "Cancelling..."
+msgstr "Membatalkan..."
+
+#: ../src/rss.c:1186
+msgid "_Copy"
+msgstr "_Salin"
+
+#: ../src/rss.c:1187
+msgid "Select _All"
+msgstr "Pilih Semu_a"
+
+#: ../src/rss.c:1189 ../src/rss.c:1200
+msgid "Zoom _In"
+msgstr "Per_besar"
+
+#: ../src/rss.c:1190 ../src/rss.c:1201
+msgid "Zoom _Out"
+msgstr "Per_kecil"
+
+#: ../src/rss.c:1191 ../src/rss.c:1202
+msgid "_Normal Size"
+msgstr "Ukuran _Normal"
+
+#: ../src/rss.c:1193
+msgid "_Open Link"
+msgstr "_Buka Tautan"
+
+#: ../src/rss.c:1194 ../src/rss.c:1208
+msgid "_Copy Link Location"
+msgstr "Sa_lin Lokasi Tautan"
+
+#: ../src/rss.c:1204
+msgid "_Print..."
+msgstr "_Cetak..."
+
+#: ../src/rss.c:1205
+msgid "Save _As"
+msgstr "Simp_an Sebagai"
+
+#: ../src/rss.c:1207
+msgid "_Open Link in Browser"
+msgstr "_Buka Tautan dalam Peramban"
+
+#: ../src/rss.c:1510
+msgid "Fetching feed"
+msgstr "Mengambil asupan"
+
+#: ../src/rss.c:1822 ../src/rss.c:2099
+msgid "Unnamed feed"
+msgstr "Asupan tanpa nama"
+
+#: ../src/rss.c:1823
+msgid "Error while setting up feed."
+msgstr "Galat saat menyiapkan asupan."
+
+#: ../src/rss.c:2030 ../src/rss.c:2100
+msgid "Error while fetching feed."
+msgstr "Galat saat mengambil asupan."
+
+#: ../src/rss.c:2031
+msgid "Invalid Feed"
+msgstr "Asupan Tidak Valid"
+
+#: ../src/rss.c:2073
+#, c-format
+msgid "Adding feed %s"
+msgstr "Menambahkan asupan %s"
+
+#: ../src/rss.c:2114 ../src/rss.c:2122
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "Mengambil pesan %d dari %d"
+
+#: ../src/rss.c:2208 ../src/rss.c:2211
+msgid "Complete."
+msgstr "Komplit."
+
+#: ../src/rss.c:2248 ../src/rss.c:2432 ../src/rss.c:2470 ../src/rss.c:2676
+#: ../src/rss.c:3264
+#, c-format
+msgid "Error fetching feed: %s"
+msgstr "Galat saat mengambil asupan: %s"
+
+#: ../src/rss.c:2260 ../src/rss.c:2264
+msgid "Canceled."
+msgstr "Dibatalkan."
+
+#: ../src/rss.c:2317
+#, c-format
+msgid "Error while parsing feed: %s"
+msgstr "Kesalahan saat mengurai asupan: %s"
+
+#: ../src/rss.c:2321
+msgid "illegal content type!"
+msgstr "tipe isi ilegal!"
+
+#: ../src/rss.c:2381 ../src/rss.c:2384
+msgid "Complete"
+msgstr "Komplit"
+
+#: ../src/rss.c:3585
+msgid "No RSS feeds configured!"
+msgstr "Tidak ada asupan RSS yang ditata!"
+
+#: ../src/rss.c:3637
+msgid "Waiting..."
+msgstr "Sedang menunggu..."
+
+#: ../src/rss-config-factory.c:159
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:160
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:161
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:477
+msgid "day"
+msgid_plural "days"
+msgstr[0] "hari"
+
+#: ../src/rss-config-factory.c:492
+msgid "message"
+msgid_plural "messages"
+msgstr[0] "pesan"
+
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
+msgid "Move to Folder"
+msgstr "Pindah ke Folder"
+
+#: ../src/rss-config-factory.c:560 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
+msgid "M_ove"
+msgstr "Pind_ah"
+
+#: ../src/rss-config-factory.c:723
+msgid "Edit Feed"
+msgstr "Sunting Asupan"
+
+#: ../src/rss-config-factory.c:725
+msgid "Add Feed"
+msgstr "Tambah Asupan"
+
+#: ../src/rss-config-factory.c:1179 ../src/rss-config-factory.c:1738
+#, no-c-format
+msgid "0% done"
+msgstr "0% selesai"
+
+#: ../src/rss-config-factory.c:1567
+msgid "Disable"
+msgstr "Nonaktifkan"
+
+#: ../src/rss-config-factory.c:1567
+msgid "Enable"
+msgstr "Fungsikan"
+
+#: ../src/rss-config-factory.c:1626 ../src/rss-main.ui.h:40
+msgid "Remove folder contents"
+msgstr "Hapus isi folder"
+
+#: ../src/rss-config-factory.c:2009
+msgid "Import error."
+msgstr "Galat impor."
+
+#: ../src/rss-config-factory.c:2010
+msgid "Invalid file or this file does not contain any feeds."
+msgstr "Berkas tidak valid atau berkas ini tidak memuat asupan apapun."
+
+#: ../src/rss-config-factory.c:2015
+msgid "Importing"
+msgstr "Mengimpor"
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss-config-factory.c:2038 ../src/rss-config-factory.c:2917
+#: ../src/rss-config-factory.c:3077
+msgid "Please wait"
+msgstr "Mohon tunggu"
+
+#: ../src/rss-config-factory.c:2348 ../src/rss-config-factory.c:3194
+#: ../src/rss-config-factory.c:3257
+msgid "All Files"
+msgstr "Semua Berkas"
+
+#: ../src/rss-config-factory.c:2359 ../src/rss-config-factory.c:3278
+msgid "OPML Files"
+msgstr "Berkas OPML"
+
+#: ../src/rss-config-factory.c:2370 ../src/rss-config-factory.c:3267
+msgid "XML Files"
+msgstr "Berkas XML"
+
+#: ../src/rss-config-factory.c:2389
+msgid "Show article's summary"
+msgstr "Tampilkan ringkasan artikel"
+
+#: ../src/rss-config-factory.c:2402
+msgid "Feed Enabled"
+msgstr "Asupan Difungsikan"
+
+#: ../src/rss-config-factory.c:2415
+msgid "Validate feed"
+msgstr "Validasikan asupan"
+
+#: ../src/rss-config-factory.c:2471 ../src/rss-main.ui.h:38
+msgid "Select import file"
+msgstr "Pilih berkas impor"
+
+#: ../src/rss-config-factory.c:2545 ../src/rss-main.ui.h:41
+msgid "Select file to export"
+msgstr "Pilih berkas untuk diekspor"
+
+#: ../src/rss-config-factory.c:2900
+msgid "Exporting feeds..."
+msgstr "Mengekspor asupan..."
+
+#: ../src/rss-config-factory.c:2964 ../src/rss-config-factory.c:2972
+msgid "Error exporting feeds!"
+msgstr "Galat ketika mengekspor asupan!"
+
+#: ../src/rss-config-factory.c:3053
+msgid "Importing cookies..."
+msgstr "Mengimpor cookie..."
+
+#: ../src/rss-config-factory.c:3132
+msgid "Select file to import"
+msgstr "Pilih berkas untuk diimpor"
+
+#: ../src/rss-config-factory.c:3200
+msgid "Mozilla/Netscape Format"
+msgstr "Format Mozilla/Netscape"
+
+#: ../src/rss-config-factory.c:3206
+msgid "Firefox new Format"
+msgstr "Format baru Firefox"
+
+#: ../src/rss-config-factory.c:3316 ../src/rss-config-factory.c:3321
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"Tidak ada asupan RSS yang dikonfigurasi!\n"
+"Tidak bisa mengekspor."
+
+#: ../src/rss-config-factory.c:3484
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Catatan: Agar bisa memakai Mozilla (Firefox) atau Apple Webkit \n"
+"sebagai perender Anda perlu memasang paket pengembangan firefox atau "
+"webkit \n"
+"dan evolution-rss mesti dikompail ulang agar melihat paket-paket tersebut."
+
+#: ../src/rss-config-factory.c:4077 ../src/rss-main.ui.h:45
+msgid "Enabled"
+msgstr "Difungsikan"
+
+#: ../src/rss-config-factory.c:4104
+msgid "Feed Name"
+msgstr "Nama Asupan"
+
+#: ../src/rss-config-factory.c:4117
+msgid "Type"
+msgstr "Tipe"
+
+#: ../src/rss-config-factory.c:4434 ../src/rss.h:62
+msgid "News and Blogs"
+msgstr "Berita dan Blog"
+
+#: ../src/rss.h:64
+msgid "Untitled channel"
+msgstr "Kanal tanpa judul"
+
+#: ../src/rss-html-rendering.ui.h:1
+msgid "<b>Engine: </b>"
+msgstr "<b>Mesin: </b>"
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Gunakan fonta yang sama dengan aplikasi lain"
+
+#: ../src/rss-html-rendering.ui.h:3
+msgid "<b>Minimum font size:</b>"
+msgstr "<b>Ukuran fonta minimum:</b>"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Blok jendela pop-up"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Fungsikan Java"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "Fungsikan JavaScript"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Terima cookies dari situs-situs"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Impor Cookie"
+
+#: ../src/rss-html-rendering.ui.h:9
+msgid "Automatically resize images"
+msgstr "Secara otomatis ubah ukuran gambar"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "<b>Network timeout:</b>"
+msgstr "<b>Tenggat waktu jaringan:</b>"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "detik"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "<b>HTML Rendering</b>"
+msgstr "<b>Perenderan HTML</b>"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Tampilkan ikon di area pemberitahuan"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Tampilkan ikon asupan"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "<b>Article Notification</b>"
+msgstr "<b>Pemberitahuan Artikel</b>"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "menit"
+
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "jam"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "hari"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Tabel Sertifikat"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "T_ambah"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "Sunt_ing"
+
+#: ../src/rss-main.ui.h:8
+msgid "I_mport"
+msgstr "I_mpor"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "E_kspor"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Asupan"
+
+#: ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Mesin:"
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Fungsikan Pengaya"
+
+#: ../src/rss-main.ui.h:15
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "<span weight=\"bold\">Start up</span>"
+msgstr "<span weight=\"bold\">Awal mula</span>"
+
+#: ../src/rss-main.ui.h:17
+msgid "Check for new articles every"
+msgstr "Periksa artikel baru setiap"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles at startup"
+msgstr "Periksa artikel baru saat awal mula"
+
+#: ../src/rss-main.ui.h:19
+msgid "<span weight=\"bold\">Feed display</span>"
+msgstr "<span weight=\"bold\">Tampilan asupan</span>"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr "Secara baku tampilkan ringkasan artikel bukan halaman webnya"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Pindai asupan di dalam halaman web"
+
+#: ../src/rss-main.ui.h:22
+msgid "<span weight=\"bold\">Feed enclosures</span>"
+msgstr "<span weight=\"bold\">Wadah asupan</span>"
+
+#: ../src/rss-main.ui.h:23
+msgid "Show article comments"
+msgstr "Tampilkan komentar artikel"
+
+#: ../src/rss-main.ui.h:24
+msgid "Download feed enclosures"
+msgstr "Unduh wadah asupan"
+
+#: ../src/rss-main.ui.h:25
+msgid "Do not download enclosures that exceeds"
+msgstr "Jangan unduh wadah yang melampaui"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:27
+msgid "Setup"
+msgstr "Siapkan"
+
+#: ../src/rss-main.ui.h:28
+msgid "Use Proxy"
+msgstr "Pakai Proksi"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "Proksi HTTP:"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Port:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Rincian"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Tanpa proksi untuk:"
+
+#: ../src/rss-main.ui.h:33
+msgid "Network"
+msgstr "Jaringan"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "Rincian Proksi HTTP"
+
+#: ../src/rss-main.ui.h:35
+msgid "Use authentication"
+msgstr "Pakai otentikasi"
+
+#: ../src/rss-main.ui.h:36
+msgid "Username:"
+msgstr "Nama pengguna:"
+
+#: ../src/rss-main.ui.h:39
+msgid "Delete feed?"
+msgstr "Hapus asupan?"
+
+#: ../src/rss-main.ui.h:42
+msgid "<b>Feed Name: </b>"
+msgstr "<b>Nama Asupan: </b>"
+
+#: ../src/rss-main.ui.h:43
+msgid "<b>Feed URL:</b>"
+msgstr "<b>URL Asupan:</b>"
+
+#: ../src/rss-main.ui.h:44
+msgid "<b>Location:</b>"
+msgstr "<b>Lokasi:</b>"
+
+#: ../src/rss-main.ui.h:46
+msgid "Validate"
+msgstr "Validasikan"
+
+#: ../src/rss-main.ui.h:47
+msgid "Show feed full text"
+msgstr "Tampilkan teks lengkap asupan"
+
+#: ../src/rss-main.ui.h:48
+msgid "General"
+msgstr "Umum"
+
+#: ../src/rss-main.ui.h:49
+msgid "Use global update interval"
+msgstr "Pakai selang waktu pemutakhiran global"
+
+#: ../src/rss-main.ui.h:50
+msgid "Update in"
+msgstr "Mutakhirkan dalam"
+
+#: ../src/rss-main.ui.h:51
+msgid "Do not update feed"
+msgstr "Jangan mutakhirkan asupan"
+
+#: ../src/rss-main.ui.h:52
+msgid "Update"
+msgstr "Mutakhirkan"
+
+#: ../src/rss-main.ui.h:53
+msgid "Do not delete feeds"
+msgstr "Jangan hapus asupan"
+
+#: ../src/rss-main.ui.h:54
+msgid "Delete all but the last"
+msgstr "Hapus semua kecuali yang terakhir"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete articles older than"
+msgstr "Hapus artikel yang lebih lama dari"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles that are no longer in the feed"
+msgstr "Hapus artikel yang tidak ada dalam asupan lagi"
+
+#: ../src/rss-main.ui.h:57
+msgid "Always delete unread articles"
+msgstr "Selalu hapus artikel yang belum dibaca"
+
+#: ../src/rss-main.ui.h:58
+msgid "Storage"
+msgstr "Penyimpanan"
+
+#: ../src/rss-main.ui.h:59
+msgid "Authentication"
+msgstr "Otentikasi"
+
+#: ../src/rss-main.ui.h:60
+msgid "<b>Advanced options</b>"
+msgstr "<b>Opsi tingkat lanjut</b>"
