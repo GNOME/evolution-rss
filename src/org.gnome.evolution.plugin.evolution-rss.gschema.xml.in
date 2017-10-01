@@ -1,5 +1,5 @@
 <schemalist>
-  <schema path="/org/gnome/evolution/plugin/rss/" id="org.gnome.evolution.plugin.rss" gettext-domain="evolution">
+  <schema path="/org/gnome/evolution/plugin/rss/" id="org.gnome.evolution.plugin.rss" gettext-domain="evolution-rss">
     <key name="auth-proxy" type="b">
       <default>false</default>
       <summary>Proxy requires authentication</summary>
