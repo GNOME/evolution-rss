@@ -11,9 +11,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-10-25 18:52+0000\n"
+"POT-Creation-Date: 2017-03-28 18:46+0000\n"
 "PO-Revision-Date: 2017-03-28 20:39+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -42,12 +42,12 @@ msgstr "RSS-læser"
 msgid "Read RSS feeds"
 msgstr "Læs RSS-nyhedskilder"
 
-#: ../src/dbus.c:108 ../src/rss.c:2000 ../src/rss-config-factory.c:1200
+#: ../src/dbus.c:108 ../src/rss.c:2018 ../src/rss-config-factory.c:1200
 #: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1944
 msgid "Error adding feed."
 msgstr "Fejl ved tilføjelse af nyhedskilde."
 
-#: ../src/dbus.c:109 ../src/rss.c:2001 ../src/rss-config-factory.c:1201
+#: ../src/dbus.c:109 ../src/rss.c:2019 ../src/rss-config-factory.c:1201
 #: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1945
 msgid "Feed already exists!"
 msgstr "Nyhedskilde eksisterer allerede!"
@@ -57,25 +57,25 @@ msgstr "Nyhedskilde eksisterer allerede!"
 msgid "Importing URL: %s"
 msgstr "Importerer adresse (URL): %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:225
+#: ../src/e-mail-formatter-evolution-rss.c:232
 msgid "Posted under"
 msgstr "Posteret under"
 
-#: ../src/e-mail-formatter-evolution-rss.c:392
-#: ../src/e-mail-formatter-evolution-rss.c:398
+#: ../src/e-mail-formatter-evolution-rss.c:400
+#: ../src/e-mail-formatter-evolution-rss.c:406
 msgid "Show Summary"
 msgstr "Vis resume"
 
-#: ../src/e-mail-formatter-evolution-rss.c:393
-#: ../src/e-mail-formatter-evolution-rss.c:399
+#: ../src/e-mail-formatter-evolution-rss.c:401
+#: ../src/e-mail-formatter-evolution-rss.c:407
 msgid "Show Full Text"
 msgstr "Vis fuld tekst"
 
-#: ../src/e-mail-formatter-evolution-rss.c:414
+#: ../src/e-mail-formatter-evolution-rss.c:425
 msgid "Evolution-RSS"
 msgstr "Evolution-RSS"
 
-#: ../src/e-mail-formatter-evolution-rss.c:415
+#: ../src/e-mail-formatter-evolution-rss.c:426
 msgid "Displaying RSS feed articles"
 msgstr "Viser artikler fra RSS-nyhedskilde"
 
@@ -332,7 +332,7 @@ msgstr ""
 "True (sand) hvis programmet til håndtering af denne URL skal køres i en "
 "terminal"
 
-#: ../src/notification.c:291 ../src/rss.c:2169
+#: ../src/notification.c:291 ../src/rss.c:2187
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Henter nyhedskilder (%d aktiveret)"
@@ -381,11 +381,11 @@ msgstr "Størrelse"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
 msgid "Reading RSS Feeds..."
-msgstr "Læser RSS-nyhedskilde..."
+msgstr "Læser RSS-nyhedskilde …"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:2
 msgid "Updating Feeds..."
-msgstr "Opdaterer nyhedskilder..."
+msgstr "Opdaterer nyhedskilder …"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "_Dismiss"
@@ -393,11 +393,11 @@ msgstr "_Forkast"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:4
 msgid "Delete \"{0}\"?"
-msgstr "Slet \"{0}\"?"
+msgstr "Slet “{0}”?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
 msgid "Really delete feed '{0}'?"
-msgstr "Slet nyhedskilden \"{0}\"?"
+msgstr "Slet nyhedskilden “{0}”?"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
 msgid "Update RSS feeds"
@@ -424,7 +424,7 @@ msgstr "Ingen information"
 msgid "No information"
 msgstr "Ingen information"
 
-#: ../src/rss.c:416 ../src/rss.c:2355
+#: ../src/rss.c:416 ../src/rss.c:2373
 msgid "Feed"
 msgstr "Nyhedskilde"
 
@@ -465,7 +465,7 @@ msgstr "_Husk denne adgangskode"
 
 #: ../src/rss.c:862 ../src/rss.c:866
 msgid "Cancelling..."
-msgstr "Afbryder..."
+msgstr "Afbryder …"
 
 #: ../src/rss.c:1186
 msgid "_Copy"
@@ -497,7 +497,7 @@ msgstr "_Kopier henvisningsplacering"
 
 #: ../src/rss.c:1204
 msgid "_Print..."
-msgstr "_Udskriv..."
+msgstr "_Udskriv …"
 
 #: ../src/rss.c:1205
 msgid "Save _As"
@@ -507,72 +507,72 @@ msgstr "Gem _som"
 msgid "_Open Link in Browser"
 msgstr "_Åbn henvisning i browser"
 
-#: ../src/rss.c:1492
+#: ../src/rss.c:1510
 msgid "Fetching feed"
 msgstr "Indhenter nyhedskilde"
 
 # unnamed
-#: ../src/rss.c:1804 ../src/rss.c:2081
+#: ../src/rss.c:1822 ../src/rss.c:2099
 msgid "Unnamed feed"
 msgstr "Unavngivet nyhedskilde"
 
-#: ../src/rss.c:1805
+#: ../src/rss.c:1823
 msgid "Error while setting up feed."
 msgstr "Fejl ved opsætning af nyhedskilde."
 
-#: ../src/rss.c:2012 ../src/rss.c:2082
+#: ../src/rss.c:2030 ../src/rss.c:2100
 msgid "Error while fetching feed."
 msgstr "Fejl under indhentning af nyhedskilde."
 
-#: ../src/rss.c:2013
+#: ../src/rss.c:2031
 msgid "Invalid Feed"
 msgstr "Ugyldig nyhedskilde"
 
-#: ../src/rss.c:2055
+#: ../src/rss.c:2073
 #, c-format
 msgid "Adding feed %s"
 msgstr "Tilføjer nyhedskilde %s"
 
-#: ../src/rss.c:2096 ../src/rss.c:2104
+#: ../src/rss.c:2114 ../src/rss.c:2122
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Henter besked %d af %d"
 
-#: ../src/rss.c:2190 ../src/rss.c:2193
+#: ../src/rss.c:2208 ../src/rss.c:2211
 msgid "Complete."
 msgstr "Færdig."
 
-#: ../src/rss.c:2230 ../src/rss.c:2414 ../src/rss.c:2452 ../src/rss.c:2658
-#: ../src/rss.c:3246
+#: ../src/rss.c:2248 ../src/rss.c:2432 ../src/rss.c:2470 ../src/rss.c:2676
+#: ../src/rss.c:3264
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Fejl ved indhentning af nyhedskilde: %s"
 
 # Engelsk fejl
-#: ../src/rss.c:2242 ../src/rss.c:2246
+#: ../src/rss.c:2260 ../src/rss.c:2264
 msgid "Canceled."
 msgstr "Afbrudt."
 
-#: ../src/rss.c:2299
+#: ../src/rss.c:2317
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Fejl ved fortolkning af nyhedskilde: %s"
 
-#: ../src/rss.c:2303
+#: ../src/rss.c:2321
 msgid "illegal content type!"
 msgstr "ulovlig indholdstype!"
 
-#: ../src/rss.c:2363 ../src/rss.c:2366
+#: ../src/rss.c:2381 ../src/rss.c:2384
 msgid "Complete"
 msgstr "Færdig"
 
-#: ../src/rss.c:3567
+#: ../src/rss.c:3585
 msgid "No RSS feeds configured!"
 msgstr "Ingen RSS-nyhedskilder konfigureret!"
 
-#: ../src/rss.c:3619
+#: ../src/rss.c:3637
 msgid "Waiting..."
-msgstr "Venter..."
+msgstr "Venter …"
 
 #: ../src/rss-config-factory.c:159
 msgid "GtkHTML"
@@ -686,7 +686,7 @@ msgstr "Vælg fil at eksportere"
 
 #: ../src/rss-config-factory.c:2900
 msgid "Exporting feeds..."
-msgstr "Eksporterer nyhedskilder..."
+msgstr "Eksporterer nyhedskilder …"
 
 #: ../src/rss-config-factory.c:2964 ../src/rss-config-factory.c:2972
 msgid "Error exporting feeds!"
@@ -694,7 +694,7 @@ msgstr "Fejl ved eksport af nyhedskilder!"
 
 #: ../src/rss-config-factory.c:3053
 msgid "Importing cookies..."
-msgstr "Importerer cookier..."
+msgstr "Importerer cookier …"
 
 #: ../src/rss-config-factory.c:3132
 msgid "Select file to import"
@@ -1017,7 +1017,7 @@ msgid "<b>Advanced options</b>"
 msgstr "<b>Avancerede indstillinger</b>"
 
 #~ msgid "Formatting Message..."
-#~ msgstr "Formaterer besked..."
+#~ msgstr "Formaterer besked …"
 
 #~ msgid "Click to open"
 #~ msgstr "Klik for at åbne"
