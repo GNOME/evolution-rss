@@ -1906,6 +1906,7 @@ import_dialog_response(
 {
 	if (response == GTK_RESPONSE_CANCEL) {
 		gtk_widget_destroy(rf->progress_dialog);
+		rf->progress_dialog = NULL;
 		rf->import_cancel = 1;
 		rf->display_cancel = 1;
 		progress = 0;
@@ -1925,13 +1926,13 @@ import_one_feed(gchar *url, gchar *title, gchar *prefix)
 	feed->validate = feed_validate;
 	feed->enabled = feed_enabled;
 	feed->feed_url = g_strdup(url);
-	tmp = decode_html_entities(title);
-	if (strlen(tmp) > 40) {
+	tmp = title ? decode_html_entities(title) : NULL;
+	if (tmp && strlen(tmp) > 40) {
 		gchar *t = tmp;
 		tmp = g_strndup(tmp, 40);
 		g_free(t);
 	}
-	feed->feed_name = sanitize_folder(tmp);
+	feed->feed_name = tmp ? sanitize_folder(tmp) : NULL;
 	g_free(tmp);
 	feed->prefix = g_strdup(prefix);
 	rf->progress_bar = import_progress;
@@ -2217,6 +2218,10 @@ error:		rss_error(NULL,
 					rsstitle = (gchar *)xmlGetProp(
 							src,
 							(xmlChar *)"title");
+					if (!rsstitle)
+						rsstitle = (gchar *)xmlGetProp(
+							src,
+							(xmlChar *)"text");
 
 					d("rssprefix:%s|rssurl:%s|rsstitle:%s|\n",
 						rssprefix,
@@ -2280,7 +2285,8 @@ out:	g_hash_table_destroy(tmphash);
 	rf->import_cancel = 0;
 	if (maintitle) xmlFree(maintitle);
 	if (doc) xmlFree(doc);
-	if (import_dialog) {
+	if (import_dialog && !rf->import) {
+		rf->progress_dialog = NULL;
 		gtk_widget_destroy(import_dialog);
 		import_dialog = NULL;
 	}
