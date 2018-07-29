@@ -1,21 +1,23 @@
 # Catalan translation of evolution-rss.
 # Copyright (C) 2009 evolution-rss's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evolution-rss package.
-# David Planella <david.planella@gmail.com>, 2009.
 #
+# David Planella <david.planella@gmail.com>, 2009.
+# Carles Ferrando Garcia <carles.ferrando@gmail.com>, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-04-01 11:26+0000\n"
-"PO-Revision-Date: 2010-08-14 00:12+0200\n"
-"Last-Translator: David Planella <david.planella@gmail.com>\n"
-"Language-Team: Catalan <gnome@llistes.softcatala.org>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evolution-rss/issues\n"
+"POT-Creation-Date: 2018-06-10 16:04+0000\n"
+"PO-Revision-Date: 2018-07-29 13:29+0100\n"
+"Last-Translator: Carles Ferrando Garcia <carles.ferrando@gmail.com>\n"
+"Language-Team: Catalan <info@softcatala.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 2.0\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
@@ -24,59 +26,57 @@ msgstr "Lector d'RSS de l'Evolution"
 #: ../evolution-rss.desktop.in.in.h:2
 msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
 msgstr ""
+"Connector d'Evolution que habilita el correu Evolution a mostrar canals de"
+" noticies RSS"
 
 #: ../evolution-rss.metainfo.xml.in.h:1
-#, fuzzy
 #| msgid "Evolution RSS Reader"
 msgid "RSS Reader"
-msgstr "Lector d'RSS de l'Evolution"
+msgstr "Lector d'RSS"
 
 #: ../evolution-rss.metainfo.xml.in.h:2
-#, fuzzy
 #| msgid "Reading RSS feeds..."
 msgid "Read RSS feeds"
-msgstr "S'estan llegint els canals RSS.."
+msgstr "Llegeix els canals RSS"
 
-#: ../src/dbus.c:108 ../src/rss.c:1977 ../src/rss-config-factory.c:1188
-#: ../src/rss-config-factory.c:1764 ../src/rss-config-factory.c:1942
+#: ../src/dbus.c:108 ../src/rss.c:2018 ../src/rss-config-factory.c:1200
+#: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1945
 msgid "Error adding feed."
 msgstr "S'ha produït un error en afegir el canal."
 
-#: ../src/dbus.c:109 ../src/rss.c:1978 ../src/rss-config-factory.c:1189
-#: ../src/rss-config-factory.c:1765 ../src/rss-config-factory.c:1943
+#: ../src/dbus.c:109 ../src/rss.c:2019 ../src/rss-config-factory.c:1201
+#: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1946
 msgid "Feed already exists!"
-msgstr "Ja existeix el canal"
+msgstr "Ja existeix el canal!"
 
 #: ../src/dbus.c:116
-#, fuzzy, c-format
+#, c-format
 msgid "Importing URL: %s"
-msgstr "Importa"
+msgstr "Importa URL: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:220
+#: ../src/e-mail-formatter-evolution-rss.c:232
 msgid "Posted under"
-msgstr ""
+msgstr "Enviat amb"
 
-#: ../src/e-mail-formatter-evolution-rss.c:387
-#: ../src/e-mail-formatter-evolution-rss.c:393
+#: ../src/e-mail-formatter-evolution-rss.c:400
+#: ../src/e-mail-formatter-evolution-rss.c:406
 msgid "Show Summary"
 msgstr "Mostra el resum"
 
-#: ../src/e-mail-formatter-evolution-rss.c:388
-#: ../src/e-mail-formatter-evolution-rss.c:394
+#: ../src/e-mail-formatter-evolution-rss.c:401
+#: ../src/e-mail-formatter-evolution-rss.c:407
 msgid "Show Full Text"
 msgstr "Mostra el text complet"
 
-#: ../src/e-mail-formatter-evolution-rss.c:409
-#, fuzzy
+#: ../src/e-mail-formatter-evolution-rss.c:425
 #| msgid "Evolution RSS Reader"
 msgid "Evolution-RSS"
-msgstr "Lector d'RSS de l'Evolution"
+msgstr "RSS de l'Evolution"
 
-#: ../src/e-mail-formatter-evolution-rss.c:410
-#, fuzzy
+#: ../src/e-mail-formatter-evolution-rss.c:426
 #| msgid "Display article's summary"
 msgid "Displaying RSS feed articles"
-msgstr "Mostra el sumari de l'article"
+msgstr "Mostra els articles del canal RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Proxy requires authentication"
@@ -91,7 +91,6 @@ msgid "Display article's summary"
 msgstr "Mostra el sumari de l'article"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
-#, fuzzy
 #| msgid ""
 #| "Evolution will show article's summary instead of article's webpage. "
 #| "Summary can also be html."
@@ -99,8 +98,8 @@ msgid ""
 "Evolution will show article's summary instead of article's web page. Summary "
 "can also be HTML."
 msgstr ""
-"L'Evolution mostrarà el resum de l'article en lloc del lloc de la seva "
-"pàgina web. El sumari també pot ser en HTML."
+"L'Evolution mostrarà el resum de l'article en lloc de la seva "
+"pàgina web de l'article. El sumari també pot ser en HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:5
 msgid "Feeds list"
@@ -115,56 +114,53 @@ msgid "Hostname of the proxy server"
 msgstr "Nom del servidor intermediari"
 
 #: ../src/evolution-rss.schemas.in.in.h:8
-#, fuzzy
 msgid "Hostname of the proxy server used for feeds and content."
-msgstr "Nom del servidor del servidor intermediari."
+msgstr ""
+"Nom del servidor intermediari usat per al canal de noticies i de continguts."
 
 #: ../src/evolution-rss.schemas.in.in.h:9
-#, fuzzy
 #| msgid "Html render"
 msgid "HTML render"
 msgstr "Renderització d'HTML"
 
 #: ../src/evolution-rss.schemas.in.in.h:10
-#, fuzzy
 #| msgid "Type HTML Render used to display html pages."
 msgid "Type HTML Render used to display HTML pages."
 msgstr "El tipus de renderitzador d'HTML utilitzat per a mostrar pàgines HTML."
 
 #: ../src/evolution-rss.schemas.in.in.h:11
 msgid "Use custom font"
-msgstr ""
+msgstr "Usa tipus de lletra personalitzada"
 
 #: ../src/evolution-rss.schemas.in.in.h:12
 msgid "Use a custom font size instead of system defaults."
 msgstr ""
+"Usa tipus de lletra personalitzada en lloc de la del sistema per defecte."
 
 #: ../src/evolution-rss.schemas.in.in.h:13
 msgid "Minimum font size"
-msgstr ""
+msgstr "Mida del tipus de lletra mínim"
 
 #: ../src/evolution-rss.schemas.in.in.h:14
 msgid "The size of the font used in full text preview."
-msgstr ""
+msgstr "La mida de la lletra usada a la visualització de tot el text."
 
 #: ../src/evolution-rss.schemas.in.in.h:15
 msgid "Network timeout"
 msgstr "Temps d'espera de la xarxa"
 
 #: ../src/evolution-rss.schemas.in.in.h:16
-#, fuzzy
 #| msgid "Interval in seconds before a conection is dropped."
 msgid "Interval in seconds before a connection is dropped."
 msgstr "Interval en segons abans que es talli la connexió."
 
 #: ../src/evolution-rss.schemas.in.in.h:17
-#, fuzzy
 msgid "Network queue size"
-msgstr "Temps d'espera de la xarxa"
+msgstr "Mida de la cua de la xarxa"
 
 #: ../src/evolution-rss.schemas.in.in.h:18
 msgid "How many simultaneous downloads."
-msgstr ""
+msgstr "Quantes descarregues simultànies."
 
 #: ../src/evolution-rss.schemas.in.in.h:19
 msgid "JavaScript Enabled"
@@ -175,50 +171,53 @@ msgid "Java Enabled"
 msgstr "Java habilitat"
 
 #: ../src/evolution-rss.schemas.in.in.h:21
-#, fuzzy
 msgid "Accepts Cookies"
-msgstr "Importa les galetes"
+msgstr "Accepta les galetes"
 
 #: ../src/evolution-rss.schemas.in.in.h:22
 msgid "Evolution RSS will accept cookies from articles you browse."
-msgstr ""
+msgstr "El RSS d'Evolution acceptarà galetes d'articles per on navegueu."
 
 #: ../src/evolution-rss.schemas.in.in.h:23
 msgid "Automatically Resize Images"
-msgstr ""
+msgstr "Redimensiona les imatges de forma automàtica"
 
 #: ../src/evolution-rss.schemas.in.in.h:24
 msgid ""
 "Evolution RSS will automatically resize images larger than displayed area."
 msgstr ""
+"El RSS de l'Evolution redimensionarà automàticament les imatges grans que"
+" mostri a l'àrea."
 
 #: ../src/evolution-rss.schemas.in.in.h:25
 msgid "Scan web pages for RSS"
-msgstr ""
+msgstr "Escaneja pàgines web per al RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:26
 msgid "Evolution RSS will scan web pages for RSS content"
-msgstr ""
+msgstr "El RSS d'Evolution escanejarà pagina web per al contingut RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:27
 msgid "Download enclosures"
-msgstr ""
+msgstr "Descarrega objectes adjunts"
 
 #: ../src/evolution-rss.schemas.in.in.h:28
 msgid "Evolution will download all feed enclosures a feed article may contain."
 msgstr ""
+"Evolution descarregarà totes els objectes adjunts del canal que el article"
+" del canal contingui."
 
 #: ../src/evolution-rss.schemas.in.in.h:29
 msgid "Limit enclosure size"
-msgstr ""
+msgstr "Mida límit del objecte adjunt"
 
 #: ../src/evolution-rss.schemas.in.in.h:30
 msgid "Limit maximum enclosure size Evolution will download."
-msgstr ""
+msgstr "Mida límit màxima del objecte adjunt que Evolution pot descarregar."
 
 #: ../src/evolution-rss.schemas.in.in.h:31
 msgid "Max enclosure size"
-msgstr ""
+msgstr "Mida màxima del objecte adjunt"
 
 #: ../src/evolution-rss.schemas.in.in.h:32
 msgid "Enable Status Icon"
@@ -249,7 +248,6 @@ msgid "Password for proxy server"
 msgstr "Contrasenya del servidor intermediari"
 
 #: ../src/evolution-rss.schemas.in.in.h:39
-#, fuzzy
 #| msgid ""
 #| "If the proxy server requires authentication. This is the password field."
 msgid ""
@@ -263,9 +261,10 @@ msgid "Proxy server port"
 msgstr "Port del servidor intermediari"
 
 #: ../src/evolution-rss.schemas.in.in.h:41
-#, fuzzy
 msgid "The port number for proxy server used for feeds and content."
-msgstr "El número de port del servidor intermediari."
+msgstr ""
+"El número de port del servidor intermediari usat per als canals i el"
+" contingut."
 
 #: ../src/evolution-rss.schemas.in.in.h:42
 msgid "Remove feed folder"
@@ -298,7 +297,6 @@ msgid "Checks articles on startup"
 msgstr "Comprova si hi ha articles nous en iniciar"
 
 #: ../src/evolution-rss.schemas.in.in.h:49
-#, fuzzy
 #| msgid "Check for new articles everytime Evolution is started."
 msgid "Check for new articles every time Evolution is started."
 msgstr "Comprova si hi ha articles nous cada cop que s'iniciï l'Evolution."
@@ -309,16 +307,16 @@ msgstr "Mostra els comentaris dels articles"
 
 #: ../src/evolution-rss.schemas.in.in.h:51
 msgid "If a feed article has comments, it will be displayed."
-msgstr ""
+msgstr "Si un article del canal té comentaris, aquests es mostraran."
 
 #: ../src/evolution-rss.schemas.in.in.h:52
 msgid "Use proxy server"
 msgstr "Utilitza un servidor intermediari"
 
 #: ../src/evolution-rss.schemas.in.in.h:53
-#, fuzzy
 msgid "Use a proxy server to fetch articles and content."
-msgstr "Utilitza un servidor intermediari per a recollir els articles"
+msgstr ""
+"Utilitza un servidor intermediari per a recollir els articles i els contingut."
 
 #: ../src/evolution-rss.schemas.in.in.h:54
 msgid "Proxy server user"
@@ -326,36 +324,36 @@ msgstr "Usuari del servidor intermediari"
 
 #: ../src/evolution-rss.schemas.in.in.h:55
 msgid "The username to use for proxy server authentication."
-msgstr ""
-"El nom d'usuari per a l'autenticació en el servidor intermediari."
+msgstr "El nom d'usuari per a l'autenticació en el servidor intermediari."
 
 #: ../src/evolution-rss.schemas.in.in.h:56
 msgid "How to handle RSS URLs"
-msgstr ""
+msgstr "Com gestionar els URL del RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:57
 msgid "Set to true to have a program specified in command handle RSS URLs"
 msgstr ""
+"Marca com a cert per tindre un programa especific per gestionar les URL de RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:58
 msgid "URL handler for RSS feed URIs"
-msgstr ""
+msgstr "Gestor de URL per les URLs de RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
-msgstr ""
+msgstr "Executa el programa al terminal"
 
 #: ../src/evolution-rss.schemas.in.in.h:60
 msgid "True if the program to handle this URL should be run in a terminal"
 msgstr ""
+"Cert si el programa per gestionar aquesta URL s'ha d'executar en un terminal"
 
-#: ../src/notification.c:288 ../src/rss.c:2146
+#: ../src/notification.c:291 ../src/rss.c:2187
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "S'estan recollint els canals (%d habilitats)"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
-#, fuzzy
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
@@ -374,7 +372,7 @@ msgid ""
 "\n"
 "+URL+"
 msgstr ""
-"Connector de lector d'RSS de l'Evolution.\n"
+"Connector del lector d'RSS de l'Evolution.\n"
 "\n"
 "Aquest connector afegeix compatibilitat amb canals d'RSS per a l'Evolution, "
 "la qual es basa en la que en certa manera s'oferia a la branca de "
@@ -406,14 +404,13 @@ msgstr "S'estan actualitzant els canals..."
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "_Dismiss"
-msgstr ""
+msgstr "_Ignora"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:4
 msgid "Delete \"{0}\"?"
 msgstr "Voleu suprimir «{0}»?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-#, fuzzy
 #| msgid "Really delete feed '{0}' ?"
 msgid "Really delete feed '{0}'?"
 msgstr "Realment voleu suprimir el canal «{0}»?"
@@ -440,308 +437,299 @@ msgid "No Information"
 msgstr "Sense informació"
 
 #: ../src/parser.c:1198
-#, fuzzy
 msgid "No information"
 msgstr "Sense informació"
 
-#: ../src/rss.c:420 ../src/rss.c:2332
+#: ../src/rss.c:416 ../src/rss.c:2373
 msgid "Feed"
 msgstr "Canal"
 
-#: ../src/rss.c:485 ../src/rss-config-factory.c:2883
-#: ../src/rss-config-factory.c:3057
+#: ../src/rss.c:481 ../src/rss-config-factory.c:2874
+#: ../src/rss-config-factory.c:3048
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% completat"
 
-#: ../src/rss.c:627
-msgid "Enter User/Pass for feed"
+#: ../src/rss.c:628
+#| msgid "Enter User/Pass for feed"
+msgid "Enter Username/Password for feed"
 msgstr "Introduïu el nom d'usuari i la contrasenya per al canal"
 
-#: ../src/rss.c:683
-#, fuzzy
+#: ../src/rss.c:630
+#| msgid "Canceled."
+msgid "_Cancel"
+msgstr "_Cancel·la"
+
+#: ../src/rss.c:634
+msgid "_OK"
+msgstr "D'ac_ord"
+
+#: ../src/rss.c:684
 #| msgid ""
 #| "Enter your username and password for:\n"
 #| " '%s'"
 msgid "Enter your username and password for:"
-msgstr ""
-"Introduïu el nom d'usuari i la contrasenya per a:\n"
-" «%s»"
+msgstr "Introduïu el vostre nom d'usuari i contrasenya per a:"
 
-#: ../src/rss.c:701
+#: ../src/rss.c:700
 msgid "Username: "
 msgstr "Nom d'usuari: "
 
-#: ../src/rss.c:722 ../src/rss-main.ui.h:37
+#: ../src/rss.c:718 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Contrasenya: "
 
-#: ../src/rss.c:759
+#: ../src/rss.c:750
 msgid "_Remember this password"
 msgstr "_Recorda't d'aquesta contrasenya"
 
-#: ../src/rss.c:873 ../src/rss.c:877
-#, fuzzy
+#: ../src/rss.c:862 ../src/rss.c:866
 msgid "Cancelling..."
 msgstr "S'està cancel·lant..."
 
-#: ../src/rss.c:1159
+#: ../src/rss.c:1186
 msgid "_Copy"
 msgstr "_Copia"
 
-#: ../src/rss.c:1160
+#: ../src/rss.c:1187
 msgid "Select _All"
-msgstr ""
+msgstr "Selecciona-ho _tot"
 
-#: ../src/rss.c:1162 ../src/rss.c:1173
+#: ../src/rss.c:1189 ../src/rss.c:1200
 msgid "Zoom _In"
 msgstr "_Amplia"
 
-#: ../src/rss.c:1163 ../src/rss.c:1174
+#: ../src/rss.c:1190 ../src/rss.c:1201
 msgid "Zoom _Out"
 msgstr "_Redueix"
 
-#: ../src/rss.c:1164 ../src/rss.c:1175
+#: ../src/rss.c:1191 ../src/rss.c:1202
 msgid "_Normal Size"
 msgstr "_Mida normal"
 
-#: ../src/rss.c:1166
-#, fuzzy
+#: ../src/rss.c:1193
 msgid "_Open Link"
-msgstr "_Obre l'enllaç al navegador"
+msgstr "_Obre l'enllaç"
 
-#: ../src/rss.c:1167 ../src/rss.c:1181
+#: ../src/rss.c:1194 ../src/rss.c:1208
 msgid "_Copy Link Location"
 msgstr "_Copia la ubicació de l'enllaç"
 
-#: ../src/rss.c:1177
+#: ../src/rss.c:1204
 msgid "_Print..."
 msgstr "_Imprimeix..."
 
-#: ../src/rss.c:1178
+#: ../src/rss.c:1205
 msgid "Save _As"
 msgstr "Anomena i de_sa"
 
-#: ../src/rss.c:1180
+#: ../src/rss.c:1207
 msgid "_Open Link in Browser"
 msgstr "_Obre l'enllaç al navegador"
 
-#: ../src/rss.c:1468
+#: ../src/rss.c:1510
 msgid "Fetching feed"
 msgstr "S'està recuperant el canal"
 
-#: ../src/rss.c:1780 ../src/rss.c:2058
-#, fuzzy
+#: ../src/rss.c:1822 ../src/rss.c:2099
 msgid "Unnamed feed"
 msgstr "Canal sense nom"
 
-#: ../src/rss.c:1781
-#, fuzzy
+#: ../src/rss.c:1823
 msgid "Error while setting up feed."
-msgstr "S'ha produïu un error en recollir el canal."
+msgstr "Error mentre es configurava el canal."
 
-#: ../src/rss.c:1989 ../src/rss.c:2059
+#: ../src/rss.c:2030 ../src/rss.c:2100
 msgid "Error while fetching feed."
 msgstr "S'ha produït un error en recollir el canal."
 
-#: ../src/rss.c:1990
+#: ../src/rss.c:2031
 msgid "Invalid Feed"
 msgstr "Canal no vàlid"
 
-#: ../src/rss.c:2032
-#, fuzzy, c-format
+#: ../src/rss.c:2073
+#, c-format
 msgid "Adding feed %s"
-msgstr "Afegeix el canal"
+msgstr "S'està afegint el canal %s"
 
-#: ../src/rss.c:2073 ../src/rss.c:2081
+#: ../src/rss.c:2114 ../src/rss.c:2122
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "S'està obtenint el missatge %d de %d"
 
-#: ../src/rss.c:2167 ../src/rss.c:2170
+#: ../src/rss.c:2208 ../src/rss.c:2211
 msgid "Complete."
 msgstr "Completat."
 
-#: ../src/rss.c:2207 ../src/rss.c:2391 ../src/rss.c:2429 ../src/rss.c:2636
-#: ../src/rss.c:3224
-#, fuzzy, c-format
+#: ../src/rss.c:2248 ../src/rss.c:2432 ../src/rss.c:2470 ../src/rss.c:2676
+#: ../src/rss.c:3264
+#, c-format
 #| msgid "Error fetching feed."
 msgid "Error fetching feed: %s"
-msgstr "S'ha produït un error en recollir el canal."
+msgstr "S'ha produït un error en recollir el canal: %s"
 
-#: ../src/rss.c:2219 ../src/rss.c:2223
+#: ../src/rss.c:2260 ../src/rss.c:2264
 msgid "Canceled."
 msgstr "S'ha cancel·lat."
 
-#: ../src/rss.c:2276
-#, fuzzy, c-format
+#: ../src/rss.c:2317
+#, c-format
 #| msgid "Error while parsing feed."
 msgid "Error while parsing feed: %s"
-msgstr "S'ha produït un error en analitzar el canal."
+msgstr "S'ha produït un error en analitzar el canal: %s"
 
-#: ../src/rss.c:2280
+#: ../src/rss.c:2321
 msgid "illegal content type!"
-msgstr ""
+msgstr "Tipus de contingut il·legal!"
 
-#: ../src/rss.c:2340 ../src/rss.c:2343
+#: ../src/rss.c:2381 ../src/rss.c:2384
 msgid "Complete"
 msgstr "Completat"
 
-#: ../src/rss.c:2475
-msgid "Formatting error."
-msgstr "Error de formatació."
-
-#: ../src/rss.c:3538
+#: ../src/rss.c:3585
 msgid "No RSS feeds configured!"
-msgstr "No hi ha cap canal RSS configurat"
+msgstr "No hi ha cap canal RSS configurat!"
 
-#: ../src/rss.c:3590
+#: ../src/rss.c:3637
 msgid "Waiting..."
 msgstr "S'està esperant..."
 
-#: ../src/rss-config-factory.c:160
+#: ../src/rss-config-factory.c:159
 msgid "GtkHTML"
 msgstr "GtkHTML"
 
-#: ../src/rss-config-factory.c:161
+#: ../src/rss-config-factory.c:160
 msgid "WebKit"
 msgstr "WebKit"
 
-#: ../src/rss-config-factory.c:162
+#: ../src/rss-config-factory.c:161
 msgid "Mozilla"
 msgstr "Mozilla"
 
-#: ../src/rss-config-factory.c:478
-#, fuzzy
+#: ../src/rss-config-factory.c:477
 msgid "day"
 msgid_plural "days"
-msgstr[0] "dies"
+msgstr[0] "dia"
 msgstr[1] "dies"
 
-#: ../src/rss-config-factory.c:493
-#, fuzzy
+#: ../src/rss-config-factory.c:492
 msgid "message"
 msgid_plural "messages"
-msgstr[0] "missatges"
+msgstr[0] "missatge"
 msgstr[1] "missatges"
 
-#: ../src/rss-config-factory.c:558 ../src/rss-config-factory.c:565
-#: ../src/rss-config-factory.c:579
-#, fuzzy
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
 #| msgid "Remove feed folder"
 msgid "Move to Folder"
-msgstr "Suprimeix la carpeta del canal"
+msgstr "Mou a la carpeta"
 
-#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:565
-#: ../src/rss-config-factory.c:579
+#: ../src/rss-config-factory.c:560 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
 msgid "M_ove"
-msgstr ""
+msgstr "M_ou"
 
-#: ../src/rss-config-factory.c:720
+#: ../src/rss-config-factory.c:723
 msgid "Edit Feed"
 msgstr "Edita el canal"
 
-#: ../src/rss-config-factory.c:722
+#: ../src/rss-config-factory.c:725
 msgid "Add Feed"
 msgstr "Afegeix el canal"
 
-#: ../src/rss-config-factory.c:1167 ../src/rss-config-factory.c:1736
+#: ../src/rss-config-factory.c:1179 ../src/rss-config-factory.c:1738
 #, no-c-format
 msgid "0% done"
 msgstr "0% completat"
 
-#: ../src/rss-config-factory.c:1555
+#: ../src/rss-config-factory.c:1567
 msgid "Disable"
 msgstr "Inhabilita"
 
-#: ../src/rss-config-factory.c:1555
+#: ../src/rss-config-factory.c:1567
 msgid "Enable"
 msgstr "Habilita"
 
-#: ../src/rss-config-factory.c:1615 ../src/rss-main.ui.h:40
+#: ../src/rss-config-factory.c:1626 ../src/rss-main.ui.h:40
 msgid "Remove folder contents"
 msgstr "Suprimeix el contingut de la carpeta"
 
-#: ../src/rss-config-factory.c:2007
-#, fuzzy
+#: ../src/rss-config-factory.c:2010
 msgid "Import error."
-msgstr "Error de formatació"
+msgstr "Error d'importació"
 
-#: ../src/rss-config-factory.c:2008
+#: ../src/rss-config-factory.c:2011
 msgid "Invalid file or this file does not contain any feeds."
-msgstr ""
+msgstr "Fitxer no vàlid o aquest fitxer no conté canals."
 
-#: ../src/rss-config-factory.c:2013
-#, fuzzy
+#: ../src/rss-config-factory.c:2016
 msgid "Importing"
-msgstr "Importa"
+msgstr "S'està important"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:2036 ../src/rss-config-factory.c:2932
-#: ../src/rss-config-factory.c:3092
+#: ../src/rss-config-factory.c:2039 ../src/rss-config-factory.c:2923
+#: ../src/rss-config-factory.c:3083
 msgid "Please wait"
 msgstr "Espereu"
 
-#: ../src/rss-config-factory.c:2346 ../src/rss-config-factory.c:3212
-#: ../src/rss-config-factory.c:3275
+#: ../src/rss-config-factory.c:2354 ../src/rss-config-factory.c:3200
+#: ../src/rss-config-factory.c:3263
 msgid "All Files"
 msgstr "Tots els fitxers"
 
-#: ../src/rss-config-factory.c:2357 ../src/rss-config-factory.c:3296
+#: ../src/rss-config-factory.c:2365 ../src/rss-config-factory.c:3284
 msgid "OPML Files"
 msgstr "Fitxers OPML"
 
-#: ../src/rss-config-factory.c:2368 ../src/rss-config-factory.c:3285
+#: ../src/rss-config-factory.c:2376 ../src/rss-config-factory.c:3273
 msgid "XML Files"
 msgstr "Fitxers XML"
 
-#: ../src/rss-config-factory.c:2387
+#: ../src/rss-config-factory.c:2395
 msgid "Show article's summary"
 msgstr "Mostra el sumari de l'article"
 
-#: ../src/rss-config-factory.c:2400
+#: ../src/rss-config-factory.c:2408
 msgid "Feed Enabled"
 msgstr "Canal habilitat"
 
-#: ../src/rss-config-factory.c:2413
+#: ../src/rss-config-factory.c:2421
 msgid "Validate feed"
 msgstr "Valida el canal"
 
-#: ../src/rss-config-factory.c:2470 ../src/rss-main.ui.h:38
+#: ../src/rss-config-factory.c:2477 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Seleccioneu el fitxer d'importació"
 
-#: ../src/rss-config-factory.c:2553 ../src/rss-main.ui.h:41
+#: ../src/rss-config-factory.c:2551 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Seleccioneu el fitxer a exportar"
 
-#: ../src/rss-config-factory.c:2915
+#: ../src/rss-config-factory.c:2906
 msgid "Exporting feeds..."
 msgstr "S'estan exportant els canals..."
 
-#: ../src/rss-config-factory.c:2979 ../src/rss-config-factory.c:2987
+#: ../src/rss-config-factory.c:2970 ../src/rss-config-factory.c:2978
 msgid "Error exporting feeds!"
-msgstr "S'ha produït un error en exportar els canals"
+msgstr "S'ha produït un error en exportar els canals!"
 
-#: ../src/rss-config-factory.c:3068
-#, fuzzy
+#: ../src/rss-config-factory.c:3059
 msgid "Importing cookies..."
-msgstr "S'estan important els canals..."
+msgstr "S'estan important les galetes..."
 
-#: ../src/rss-config-factory.c:3148
-#, fuzzy
+#: ../src/rss-config-factory.c:3138
 msgid "Select file to import"
 msgstr "Seleccioneu el fitxer a exportar"
 
-#: ../src/rss-config-factory.c:3218
+#: ../src/rss-config-factory.c:3206
 msgid "Mozilla/Netscape Format"
-msgstr ""
+msgstr "Format Mozilla/Netscape"
 
-#: ../src/rss-config-factory.c:3224
+#: ../src/rss-config-factory.c:3212
 msgid "Firefox new Format"
-msgstr ""
+msgstr "Format nou Firefox"
 
-#: ../src/rss-config-factory.c:3334 ../src/rss-config-factory.c:3339
+#: ../src/rss-config-factory.c:3322 ../src/rss-config-factory.c:3327
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -749,7 +737,7 @@ msgstr ""
 "No hi ha cap canal RSS configurat.\n"
 "No es pot realitzar l'exportació."
 
-#: ../src/rss-config-factory.c:3502
+#: ../src/rss-config-factory.c:3490
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -759,23 +747,23 @@ msgstr ""
 "com a renderitzadors, us caldrà instal·lar el paquet de desenvolupament \n"
 "del Firefox o del Webkit i haureu de tornar a muntar l'evolution-rss."
 
-#: ../src/rss-config-factory.c:4106 ../src/rss-main.ui.h:45
+#: ../src/rss-config-factory.c:4083 ../src/rss-main.ui.h:45
 msgid "Enabled"
 msgstr "Habilitat"
 
-#: ../src/rss-config-factory.c:4133
+#: ../src/rss-config-factory.c:4110
 msgid "Feed Name"
 msgstr "Nom del canal"
 
-#: ../src/rss-config-factory.c:4146
+#: ../src/rss-config-factory.c:4123
 msgid "Type"
 msgstr "Tipus"
 
-#: ../src/rss-config-factory.c:4463 ../src/rss.h:61
+#: ../src/rss-config-factory.c:4440 ../src/rss.h:62
 msgid "News and Blogs"
 msgstr "Notícies i blocs"
 
-#: ../src/rss.h:63
+#: ../src/rss.h:64
 msgid "Untitled channel"
 msgstr "Canal sense títol"
 
@@ -785,13 +773,12 @@ msgstr "<b>Motor: </b>"
 
 #: ../src/rss-html-rendering.ui.h:2
 msgid "Use the same fonts as other applications"
-msgstr ""
+msgstr "Usa els mateix tipus de lletra que les altres aplicacions"
 
 #: ../src/rss-html-rendering.ui.h:3
-#, fuzzy
 #| msgid "<b>Engine: </b>"
 msgid "<b>Minimum font size:</b>"
-msgstr "<b>Motor: </b>"
+msgstr "<b>Mida de la lletra mínima: </b>"
 
 #: ../src/rss-html-rendering.ui.h:4
 msgid "Block pop-up windows"
@@ -810,13 +797,12 @@ msgid "Accept cookies from sites"
 msgstr "Accepta galetes dels llocs web"
 
 #: ../src/rss-html-rendering.ui.h:8
-#, fuzzy
 msgid "Import Cookies"
-msgstr "S'estan important els canals..."
+msgstr "Importa galetes"
 
 #: ../src/rss-html-rendering.ui.h:9
 msgid "Automatically resize images"
-msgstr ""
+msgstr "Redimensiona imatges automàticament"
 
 #: ../src/rss-html-rendering.ui.h:10
 msgid "<b>Network timeout:</b>"
@@ -849,11 +835,11 @@ msgstr "minuts"
 
 #: ../src/rss-main.ui.h:3
 msgid "hours"
-msgstr ""
+msgstr "hores"
 
 #: ../src/rss-main.ui.h:4
 msgid "days"
-msgstr ""
+msgstr "dies"
 
 #: ../src/rss-main.ui.h:5
 msgid "Certificates Table"
@@ -861,24 +847,21 @@ msgstr "Taula de certificats"
 
 #: ../src/rss-main.ui.h:6
 msgid "_Add"
-msgstr ""
+msgstr "_Afegeix"
 
 #: ../src/rss-main.ui.h:7
-#, fuzzy
 #| msgid "Edit"
 msgid "_Edit"
-msgstr "Edita"
+msgstr "_Edita"
 
 #: ../src/rss-main.ui.h:8
-#, fuzzy
 msgid "I_mport"
-msgstr "Importa"
+msgstr "I_mporta"
 
 #: ../src/rss-main.ui.h:9
-#, fuzzy
 #| msgid "Export"
 msgid "E_xport"
-msgstr "Exporta"
+msgstr "E_xporta"
 
 #: ../src/rss-main.ui.h:10
 msgid "Feeds"
@@ -897,10 +880,9 @@ msgid "HTML"
 msgstr "HTML"
 
 #: ../src/rss-main.ui.h:16
-#, fuzzy
 #| msgid "<span weight=\"bold\">Settings</span>"
 msgid "<span weight=\"bold\">Start up</span>"
-msgstr "<span weight=\"bold\">Configuració</span>"
+msgstr "<span weight=\"bold\">Inici</span>"
 
 #: ../src/rss-main.ui.h:17
 msgid "Check for new articles every"
@@ -911,10 +893,9 @@ msgid "Check for new articles at startup"
 msgstr "Comprova si hi ha articles nous en iniciar"
 
 #: ../src/rss-main.ui.h:19
-#, fuzzy
 #| msgid "<span weight=\"bold\">Settings</span>"
 msgid "<span weight=\"bold\">Feed display</span>"
-msgstr "<span weight=\"bold\">Configuració</span>"
+msgstr "<span weight=\"bold\">Mostra el canal</span>"
 
 #: ../src/rss-main.ui.h:20
 msgid "By default show article summary instead of webpage"
@@ -924,13 +905,12 @@ msgstr ""
 
 #: ../src/rss-main.ui.h:21
 msgid "Scan for feed inside webpages"
-msgstr ""
+msgstr "Escaneja per cercar canals dins les pàgines web"
 
 #: ../src/rss-main.ui.h:22
-#, fuzzy
 #| msgid "<span weight=\"bold\">Settings</span>"
 msgid "<span weight=\"bold\">Feed enclosures</span>"
-msgstr "<span weight=\"bold\">Configuració</span>"
+msgstr "<span weight=\"bold\">Objectes adjunts del canal</span>"
 
 #: ../src/rss-main.ui.h:23
 msgid "Show article comments"
@@ -938,15 +918,15 @@ msgstr "Mostra els comentaris de l'article"
 
 #: ../src/rss-main.ui.h:24
 msgid "Download feed enclosures"
-msgstr ""
+msgstr "Descarrega els objectes adjunts del canal"
 
 #: ../src/rss-main.ui.h:25
 msgid "Do not download enclosures that exceeds"
-msgstr ""
+msgstr "No descarreguis els objectes adjunts del canal que superin"
 
 #: ../src/rss-main.ui.h:26
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: ../src/rss-main.ui.h:27
 msgid "Setup"
@@ -970,7 +950,7 @@ msgstr "Detalls"
 
 #: ../src/rss-main.ui.h:32
 msgid "No proxy for:"
-msgstr "No utilitzis el servidor intermediari per a:"
+msgstr "Sense servidor intermediari per a:"
 
 #: ../src/rss-main.ui.h:33
 msgid "Network"
@@ -1009,10 +989,9 @@ msgid "Validate"
 msgstr "Valida"
 
 #: ../src/rss-main.ui.h:47
-#, fuzzy
 #| msgid "Show Full Text"
 msgid "Show feed full text"
-msgstr "Mostra el text complet"
+msgstr "Mostra el text complet del canal"
 
 #: ../src/rss-main.ui.h:48
 msgid "General"
@@ -1027,7 +1006,6 @@ msgid "Update in"
 msgstr "Actualitza en"
 
 #: ../src/rss-main.ui.h:51
-#, fuzzy
 #| msgid "Do no update feed"
 msgid "Do not update feed"
 msgstr "No actualitzis el canal"
@@ -1067,6 +1045,9 @@ msgstr "Autenticació"
 #: ../src/rss-main.ui.h:60
 msgid "<b>Advanced options</b>"
 msgstr "<b>Options avançades</b>"
+
+#~ msgid "Formatting error."
+#~ msgstr "Error de formatació."
 
 #~ msgid "New feed imported: %s"
 #~ msgstr "S'ha importat un canal nou: %s"
