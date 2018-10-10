@@ -244,6 +244,11 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			strlen(str), NULL, cancellable, NULL);
 #endif
 
+		g_free (str);
+
+		if (g_cancellable_is_cancelled (cancellable))
+			goto fail;
+
 #if EVOLUTION_VERSION < 31191
 		decoded_stream = camel_stream_mem_new ();
 #else
@@ -252,6 +257,11 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 
 		e_mail_formatter_format_text (
 			formatter, part, decoded_stream, cancellable);
+
+		if (g_cancellable_is_cancelled (cancellable)) {
+			g_clear_object (&decoded_stream);
+			goto fail;
+		}
 
 #if EVOLUTION_VERSION < 31191
 		g_seekable_seek (G_SEEKABLE (decoded_stream), 0, G_SEEK_SET, cancellable, NULL);
@@ -265,6 +275,11 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 				G_MEMORY_OUTPUT_STREAM (decoded_stream));
 		src = rss_process_feed((gchar *)data, len);
 #endif
+		if (g_cancellable_is_cancelled (cancellable) || !src) {
+			g_clear_object (&decoded_stream);
+			g_free (src);
+			goto fail;
+		}
 #if EVOLUTION_VERSION < 30304
 		client = gconf_client_get_default();
 #else
@@ -318,6 +333,8 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		g_free(tstr);
 		}
 #endif
+		if (g_cancellable_is_cancelled (cancellable))
+			goto fail;
 	} else {
 		GString *content;
 		GError *err = NULL;
@@ -360,6 +377,10 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 			}
 #endif
 			g_free (str);
+
+			if (g_cancellable_is_cancelled (cancellable))
+				goto fail;
+
 			goto success;
 		}
 
