@@ -9,7 +9,7 @@
 
   <homepage rdf:resource="http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin" />
   <download-page rdf:resource="http://gnome.eu.org/evo/index.php/Evolution_RSS_Reader_Plugin#Download" />
-  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=evolution-rss" />
+  <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/evolution-rss/issues/" />
   <programming-language>C</programming-language>
 
   <maintainer>
