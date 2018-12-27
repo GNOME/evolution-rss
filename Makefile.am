@@ -6,7 +6,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 appdata_in_files = evolution-rss.metainfo.xml.in
-appdatadir = $(datadir)/appdata
+appdatadir = $(datadir)/metainfo
 appdata_files = $(appdata_in_files:.xml.in=.xml)
 dist_appdata_DATA = $(appdata_files)
 @INTLTOOL_XML_RULE@
