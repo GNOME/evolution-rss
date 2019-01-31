@@ -2392,7 +2392,7 @@ decorate_import_fs (gpointer data)
 	vbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 #endif
 	checkbutton1 = gtk_check_button_new_with_mnemonic (
-			_("Show article's summary"));
+			_("Show article’s summary"));
 	gtk_widget_show (checkbutton1);
 	gtk_box_pack_start (
 		GTK_BOX (vbox1),
@@ -2903,7 +2903,7 @@ export_opml(gchar *file)
 	struct tm *tmp;
 	FILE *f;
 
-	gchar *msg = g_strdup(_("Exporting feeds..."));
+	gchar *msg = g_strdup(_("Exporting feeds…"));
 #if EVOLUTION_VERSION < 22904
 	import_dialog = e_error_new(
 			GTK_WINDOW(rf->preferences),
@@ -3056,7 +3056,7 @@ void
 process_cookies(SoupCookieJar *jar)
 {
 	GSList *list = NULL;
-	gchar *msg = g_strdup(_("Importing cookies..."));
+	gchar *msg = g_strdup(_("Importing cookies…"));
 	GtkWidget *import_dialog, *import_label, *import_progress;
 	GtkWidget *content_area;
 

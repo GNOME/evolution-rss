@@ -13,7 +13,7 @@ This plugin adds RSS Feeds support for Evolution mail. RSS support was built upo
 
 Evolution RSS can display article using summary view or HTML view.
 
-HTML can be displayed using the following engines: gtkHTML, Apple's Webkit or Firefox/Gecko.
+HTML can be displayed using the following engines: gtkHTML, Apple’s Webkit or Firefox/Gecko.
 
 <b>Version: evolution-rss +VERSION+</b>
 

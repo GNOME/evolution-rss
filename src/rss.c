@@ -859,11 +859,11 @@ receive_cancel(GtkButton *button, struct _send_info *info)
 #if EVOLUTION_VERSION < 30504
 		if (info->status_label)
 			gtk_label_set_markup (GTK_LABEL (info->status_label),
-				_("Cancelling..."));
+				_("Cancelling…"));
 #else
 		if (info->progress_bar)
 			gtk_progress_bar_set_text ((GtkProgressBar *)info->progress_bar,
-				_("Cancelling..."));
+				_("Cancelling…"));
 #endif
 		info->state = SEND_CANCELLED;
 		readrss_dialog_cb(NULL, NULL);
@@ -1201,7 +1201,7 @@ EPopupItem rss_menu_items[] = {
 	{ E_POPUP_ITEM, "05.rss-browser.03", N_("Zoom _Out"), rss_popup_zoom_out, NULL, "zoom-out", EM_POPUP_URI_HTTP },
 	{ E_POPUP_ITEM, "05.rss-browser.04", N_("_Normal Size"), rss_popup_zoom_orig, NULL, "zoom-original", EM_POPUP_URI_HTTP },
 	{ E_POPUP_BAR, "05.rss-browser.05", NULL, NULL, NULL, NULL },
-	{ E_POPUP_ITEM, "05.rss-browser.06", N_("_Print..."), NULL, NULL, "document-print", EM_POPUP_SELECT_ONE },
+	{ E_POPUP_ITEM, "05.rss-browser.06", N_("_Print…"), NULL, NULL, "document-print", EM_POPUP_SELECT_ONE },
 	{ E_POPUP_ITEM, "05.rss-browser.07", N_("Save _As"), NULL, NULL, "document-save-as", 0},
 	{ E_POPUP_BAR, "05.rss-browser.08", NULL, NULL, NULL, NULL },
 	{ E_POPUP_ITEM, "05.rss-browser.09", N_("_Open Link in Browser"), rss_popup_link_open, NULL, NULL, EM_POPUP_URI_HTTP },
@@ -3634,7 +3634,7 @@ org_gnome_evolution_rss(void *ep, EMEventTargetSendReceive *t)
 		GTK_PROGRESS_BAR (progress_bar), TRUE);
 	gtk_progress_bar_set_text (
 		GTK_PROGRESS_BAR (progress_bar),
-		_("Waiting..."));
+		_("Waiting…"));
 	gtk_widget_set_margin_bottom (progress_bar, 12);
 
 	cancel_button = gtk_button_new_with_mnemonic ("_Cancel");
