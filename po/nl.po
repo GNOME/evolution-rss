@@ -1,0 +1,1007 @@
+# Dutch translation for evolution-rss.
+# Copyright (C) 2019 evolution-rss's COPYRIGHT HOLDER
+# This file is distributed under the same license as the evolution-rss package.
+# Nathan Follens <nthn@unseen.is>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evolution-rss master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evolution-rss/issues\n"
+"POT-Creation-Date: 2019-02-28 06:53+0000\n"
+"PO-Revision-Date: 2019-03-05 09:35+0100\n"
+"Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
+"X-Generator: Poedit 2.2.1\n"
+
+#: ../evolution-rss.desktop.in.in.h:1
+msgid "Evolution RSS Reader"
+msgstr "RSS-lezer voor Evolution"
+
+#: ../evolution-rss.desktop.in.in.h:2
+msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
+msgstr ""
+"Evolution-plug-in die Evolution de mogelijkheid biedt om RSS-feeds weer te "
+"geven."
+
+#: ../evolution-rss.metainfo.xml.in.h:1
+msgid "RSS Reader"
+msgstr "RSS-lezer"
+
+#: ../evolution-rss.metainfo.xml.in.h:2
+msgid "Read RSS feeds"
+msgstr "Lees RSS-feeds"
+
+#: ../src/dbus.c:108 ../src/rss.c:2018 ../src/rss-config-factory.c:1200
+#: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1945
+msgid "Error adding feed."
+msgstr "Fout bij toevoegen van feed."
+
+#: ../src/dbus.c:109 ../src/rss.c:2019 ../src/rss-config-factory.c:1201
+#: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1946
+msgid "Feed already exists!"
+msgstr "Feed bestaat al!"
+
+#: ../src/dbus.c:116
+#, c-format
+msgid "Importing URL: %s"
+msgstr "URL importeren: %s"
+
+#: ../src/e-mail-formatter-evolution-rss.c:232
+msgid "Posted under"
+msgstr "Geplaatst onder"
+
+#: ../src/e-mail-formatter-evolution-rss.c:421
+#: ../src/e-mail-formatter-evolution-rss.c:427
+msgid "Show Summary"
+msgstr "Samenvatting tonen"
+
+#: ../src/e-mail-formatter-evolution-rss.c:422
+#: ../src/e-mail-formatter-evolution-rss.c:428
+msgid "Show Full Text"
+msgstr "Volledige tekst tonen"
+
+#: ../src/e-mail-formatter-evolution-rss.c:446
+msgid "Evolution-RSS"
+msgstr "Evolution-RSS"
+
+#: ../src/e-mail-formatter-evolution-rss.c:447
+msgid "Displaying RSS feed articles"
+msgstr "RSS-feed-artikels weergeven"
+
+#: ../src/evolution-rss.schemas.in.in.h:1
+msgid "Proxy requires authentication"
+msgstr "Proxy vereist authenticatie"
+
+#: ../src/evolution-rss.schemas.in.in.h:2
+msgid "Network proxy requires authentication."
+msgstr "Netwerkproxy vereist authenticatie."
+
+#: ../src/evolution-rss.schemas.in.in.h:3
+msgid "Display article’s summary"
+msgstr "Samenvatting van artikel weergeven"
+
+#: ../src/evolution-rss.schemas.in.in.h:4
+msgid ""
+"Evolution will show article’s summary instead of article’s web page. Summary "
+"can also be HTML."
+msgstr ""
+"Evolution zal de samenvatting van artikels weergeven in plaats van hun "
+"webpagina. Deze samenvatting kan ook HTML zijn."
+
+#: ../src/evolution-rss.schemas.in.in.h:5
+msgid "Feeds list"
+msgstr "Feeds-lijst"
+
+#: ../src/evolution-rss.schemas.in.in.h:6
+msgid "Contains list of the currently setup feeds."
+msgstr "Bevat een lijst met de huidig ingestelde feeds."
+
+#: ../src/evolution-rss.schemas.in.in.h:7
+msgid "Hostname of the proxy server"
+msgstr "Hostnaam van proxyserver"
+
+#: ../src/evolution-rss.schemas.in.in.h:8
+msgid "Hostname of the proxy server used for feeds and content."
+msgstr "Hostnaam van de proxyserver gebruikt voor feeds en inhoud."
+
+#: ../src/evolution-rss.schemas.in.in.h:9
+msgid "HTML render"
+msgstr "HTML-renderer"
+
+#: ../src/evolution-rss.schemas.in.in.h:10
+msgid "Type HTML Render used to display HTML pages."
+msgstr "Soort HTML-renderer om te gebruiken voor weergave van HTML-pagina’s."
+
+#: ../src/evolution-rss.schemas.in.in.h:11
+msgid "Use custom font"
+msgstr "Aangepast lettertype gebruiken"
+
+#: ../src/evolution-rss.schemas.in.in.h:12
+msgid "Use a custom font size instead of system defaults."
+msgstr ""
+"Gebruik een aangepaste lettergrootte in plaats van de systeemstandaarden."
+
+#: ../src/evolution-rss.schemas.in.in.h:13
+msgid "Minimum font size"
+msgstr "Minimale lettergrootte"
+
+#: ../src/evolution-rss.schemas.in.in.h:14
+msgid "The size of the font used in full text preview."
+msgstr ""
+"De grootte van het lettertype gebruikt voor weergave van de volledige tekst."
+
+#: ../src/evolution-rss.schemas.in.in.h:15
+msgid "Network timeout"
+msgstr "Netwerktime-out"
+
+#: ../src/evolution-rss.schemas.in.in.h:16
+msgid "Interval in seconds before a connection is dropped."
+msgstr "Interval in seconden vooraleer een verbinding wordt verbroken."
+
+#: ../src/evolution-rss.schemas.in.in.h:17
+msgid "Network queue size"
+msgstr "Netwerkwachtrijgrootte"
+
+#: ../src/evolution-rss.schemas.in.in.h:18
+msgid "How many simultaneous downloads."
+msgstr "Hoeveel gelijktijdige downloads."
+
+#: ../src/evolution-rss.schemas.in.in.h:19
+msgid "JavaScript Enabled"
+msgstr "JavaScript ingeschakeld"
+
+#: ../src/evolution-rss.schemas.in.in.h:20
+msgid "Java Enabled"
+msgstr "Java ingeschakeld"
+
+#: ../src/evolution-rss.schemas.in.in.h:21
+msgid "Accepts Cookies"
+msgstr "Cookies aanvaarden"
+
+#: ../src/evolution-rss.schemas.in.in.h:22
+msgid "Evolution RSS will accept cookies from articles you browse."
+msgstr ""
+"Evolution-RSS zal automatisch de cookies van de artikels die u leest "
+"aanvaarden."
+
+#: ../src/evolution-rss.schemas.in.in.h:23
+msgid "Automatically Resize Images"
+msgstr "Afbeeldingen automatisch schalen"
+
+#: ../src/evolution-rss.schemas.in.in.h:24
+msgid ""
+"Evolution RSS will automatically resize images larger than displayed area."
+msgstr ""
+"Evolution-RSS zal afbeeldingen groter dan het weergegeven gebied automatisch "
+"schalen."
+
+#: ../src/evolution-rss.schemas.in.in.h:25
+msgid "Scan web pages for RSS"
+msgstr "Webpagina’s scannen op RSS"
+
+#: ../src/evolution-rss.schemas.in.in.h:26
+msgid "Evolution RSS will scan web pages for RSS content"
+msgstr "Evolution-RSS zal webpagina’s scannen op RSS-inhoud"
+
+#: ../src/evolution-rss.schemas.in.in.h:27
+msgid "Download enclosures"
+msgstr "Bijlagen downloaden"
+
+#: ../src/evolution-rss.schemas.in.in.h:28
+msgid "Evolution will download all feed enclosures a feed article may contain."
+msgstr "Evolution zal alle mogelijke bijlagen bij een feed-artikel downloaden."
+
+#: ../src/evolution-rss.schemas.in.in.h:29
+msgid "Limit enclosure size"
+msgstr "Bijlagegroottelimiet"
+
+#: ../src/evolution-rss.schemas.in.in.h:30
+msgid "Limit maximum enclosure size Evolution will download."
+msgstr "Beperk de maximale grootte van bijlagen die Evolution zal downloaden."
+
+#: ../src/evolution-rss.schemas.in.in.h:31
+msgid "Max enclosure size"
+msgstr "Maximale bijlagegrootte"
+
+#: ../src/evolution-rss.schemas.in.in.h:32
+msgid "Enable Status Icon"
+msgstr "Statuspictogram inschakelen"
+
+#: ../src/evolution-rss.schemas.in.in.h:33
+msgid "Enable status icon in notification area"
+msgstr "Schakel statuspictogram in meldingsgebied in"
+
+#: ../src/evolution-rss.schemas.in.in.h:34
+msgid "Blink Status Icon"
+msgstr "Statuspictogram knipperen"
+
+#: ../src/evolution-rss.schemas.in.in.h:35
+msgid "Blink status icon when new article received"
+msgstr "Knipper statuspictogram wanneer er een nieuw artikel wordt ontvangen"
+
+#: ../src/evolution-rss.schemas.in.in.h:36
+msgid "Enable Feed Icon"
+msgstr "Feedpictogram inschakelen"
+
+#: ../src/evolution-rss.schemas.in.in.h:37
+msgid "Display feed icon on feed folder"
+msgstr "Geef een feedpictogram weer op de feedmap"
+
+#: ../src/evolution-rss.schemas.in.in.h:38
+msgid "Password for proxy server"
+msgstr "Wachtwoord voor proxyserver"
+
+#: ../src/evolution-rss.schemas.in.in.h:39
+msgid ""
+"If the proxy server requires authentication, this is the password field."
+msgstr ""
+"Als de proxyserver aanmeldingscontrole vereist, is dit het wachtwoordveld."
+
+#: ../src/evolution-rss.schemas.in.in.h:40
+msgid "Proxy server port"
+msgstr "Proxyserverpoort"
+
+#: ../src/evolution-rss.schemas.in.in.h:41
+msgid "The port number for proxy server used for feeds and content."
+msgstr "Het poortnummer voor de proxyserver gebruikt voor feeds en inhoud."
+
+#: ../src/evolution-rss.schemas.in.in.h:42
+msgid "Remove feed folder"
+msgstr "Feedmap verwijderen"
+
+#: ../src/evolution-rss.schemas.in.in.h:43
+msgid "Deleting feed entry will also remove feed folder."
+msgstr "Een feed-item verwijderen zal ook de feedmap verwijderen."
+
+#: ../src/evolution-rss.schemas.in.in.h:44
+msgid "Check New articles"
+msgstr "Controleren op nieuwe artikels"
+
+#: ../src/evolution-rss.schemas.in.in.h:45
+msgid "Auto check for new articles."
+msgstr "Automatisch controleren op nieuwe artikels."
+
+#: ../src/evolution-rss.schemas.in.in.h:46
+msgid "New articles timeout"
+msgstr "Time-out voor nieuwe artikels"
+
+#: ../src/evolution-rss.schemas.in.in.h:47
+msgid "Frequency to check for new articles (in minutes)."
+msgstr "Frequentie om te controleren op nieuwe artikels (in minuten)."
+
+#: ../src/evolution-rss.schemas.in.in.h:48
+msgid "Checks articles on startup"
+msgstr "Artikels controleren bij opstarten"
+
+#: ../src/evolution-rss.schemas.in.in.h:49
+msgid "Check for new articles every time Evolution is started."
+msgstr "Controleer op nieuwe artikels telkens Evolution wordt gestart."
+
+#: ../src/evolution-rss.schemas.in.in.h:50
+msgid "Show articles comments"
+msgstr "Reacties op artikels weergeven"
+
+#: ../src/evolution-rss.schemas.in.in.h:51
+msgid "If a feed article has comments, it will be displayed."
+msgstr "Als een feed-artikel reacties heeft, worden deze weergegeven."
+
+#: ../src/evolution-rss.schemas.in.in.h:52
+msgid "Use proxy server"
+msgstr "Proxyserver gebruiken"
+
+#: ../src/evolution-rss.schemas.in.in.h:53
+msgid "Use a proxy server to fetch articles and content."
+msgstr "Gebruik een proxyserver om artikels en inhoud op te halen."
+
+#: ../src/evolution-rss.schemas.in.in.h:54
+msgid "Proxy server user"
+msgstr "Gebruiker voor proxyserver"
+
+#: ../src/evolution-rss.schemas.in.in.h:55
+msgid "The username to use for proxy server authentication."
+msgstr ""
+"De te gebruiken gebruikersnaam voor aanmeldingscontrole voor proxyserver."
+
+#: ../src/evolution-rss.schemas.in.in.h:56
+msgid "How to handle RSS URLs"
+msgstr "Hoe RSS-URL’s te verwerken"
+
+#: ../src/evolution-rss.schemas.in.in.h:57
+msgid "Set to true to have a program specified in command handle RSS URLs"
+msgstr "Schakel dit in om een opgegeven programma RSS-URL’s te laten verwerken"
+
+#: ../src/evolution-rss.schemas.in.in.h:58
+msgid "URL handler for RSS feed URIs"
+msgstr "URL-verwerker voor RSS-feed-URL’s"
+
+#: ../src/evolution-rss.schemas.in.in.h:59
+msgid "Run program in terminal"
+msgstr "Programma uitvoeren in terminal"
+
+#: ../src/evolution-rss.schemas.in.in.h:60
+msgid "True if the program to handle this URL should be run in a terminal"
+msgstr ""
+"Schakel dit in als het programma om deze URL te verwerken in een terminal "
+"uitgevoerd zou moeten worden"
+
+#: ../src/notification.c:291 ../src/rss.c:2187
+#, c-format
+msgid "Fetching Feeds (%d enabled)"
+msgstr "Feeds ophalen (%d ingeschakeld)"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+msgid ""
+"Evolution RSS Reader Plugin.\n"
+"\n"
+"This plugin adds RSS Feeds support for Evolution mail. RSS support was built "
+"upon the somewhat existing RSS support in evolution-1.4 branch. The "
+"motivation behind this was to have RSS in same place as mails, at this "
+"moment I do not see the point in having a separate RSS reader since a RSS "
+"Article is like an email message.\n"
+"\n"
+"Evolution RSS can display article using summary view or HTML view.\n"
+"\n"
+"HTML can be displayed using the following engines: gtkHTML, Apple’s Webkit "
+"or Firefox/Gecko.\n"
+"\n"
+"<b>Version: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+msgstr ""
+"Evolution-RSS-lezerplug-in.\n"
+"\n"
+"Deze plug-in voegt ondersteuning voor RSS-feeds toe aan Evolution. RSS-"
+"ondersteuning is gebaseerd op de enigszins bestaande RSS-ondersteunde in de "
+"evolution-1.4-tak. De reden hiervoor was om RSS op dezelfde plaats als e-"
+"mails te hebben, want op dit moment zie ik het punt van een aparte RSS-lezer "
+"niet in, aangezien een RSS-artikel zoals een e-mailbericht is.\n"
+"\n"
+"Evolution-RSS kan artikels weergeven als samenvatting of als HTML.\n"
+"\n"
+"HTML kan weergegeven worden met volgende motoren: gtkHTML, Apples WebKit of "
+"Firefox/Gecko.\n"
+"\n"
+"<b>Versie: evolution-rss +VERSION+</b>\n"
+"\n"
+"+URL+"
+
+#: ../src/org-gnome-evolution-rss.eplug.xml.h:12
+msgid "Size"
+msgstr "Afmetingen"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:1
+msgid "Reading RSS Feeds…"
+msgstr "Bezig met lezen van RSS-feeds…"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:2
+msgid "Updating Feeds…"
+msgstr "Bezig met bijwerken van feeds…"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:3
+msgid "_Dismiss"
+msgstr "_Verwerpen"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:4
+msgid "Delete “{0}”?"
+msgstr "‘{0}’ verwijderen?"
+
+#: ../src/org-gnome-evolution-rss.error.xml.h:5
+msgid "Really delete feed “{0}”?"
+msgstr "Feed ‘{0}’ echt verwijderen?"
+
+#: ../src/org-gnome-evolution-rss.xml.h:1
+msgid "Update RSS feeds"
+msgstr "RSS-feeds bijwerken"
+
+#: ../src/org-gnome-evolution-rss.xml.h:2
+msgid "_Read RSS"
+msgstr "_RSS lezen"
+
+#: ../src/org-gnome-evolution-rss.xml.h:3
+msgid "Setup RSS feeds"
+msgstr "RSS-feeds instellen"
+
+#: ../src/org-gnome-evolution-rss.xml.h:4
+msgid "Setup RSS"
+msgstr "RSS instellen"
+
+#. ATOM
+#: ../src/parser.c:1099
+msgid "No Information"
+msgstr "Geen informatie"
+
+#: ../src/parser.c:1198
+msgid "No information"
+msgstr "Geen informatie"
+
+#: ../src/rss.c:416 ../src/rss.c:2373
+msgid "Feed"
+msgstr "Feed"
+
+#: ../src/rss.c:481 ../src/rss-config-factory.c:2874
+#: ../src/rss-config-factory.c:3048
+#, c-format
+msgid "%2.0f%% done"
+msgstr "%2.0f%% klaar"
+
+#: ../src/rss.c:628
+msgid "Enter Username/Password for feed"
+msgstr "Voer gebruikersnaam/wachtwoord voor feed in"
+
+#: ../src/rss.c:630
+msgid "_Cancel"
+msgstr "_Annuleren"
+
+#: ../src/rss.c:634
+msgid "_OK"
+msgstr "_Oké"
+
+#: ../src/rss.c:684
+msgid "Enter your username and password for:"
+msgstr "Voer uw gebruikersnaam en wachtwoord in voor:"
+
+#: ../src/rss.c:700
+msgid "Username: "
+msgstr "Gebruikersnaam: "
+
+#: ../src/rss.c:718 ../src/rss-main.ui.h:37
+msgid "Password: "
+msgstr "Wachtwoord: "
+
+#: ../src/rss.c:750
+msgid "_Remember this password"
+msgstr "Dit wachtwoord o_nthouden"
+
+#: ../src/rss.c:862 ../src/rss.c:866
+msgid "Cancelling…"
+msgstr "Annuleren…"
+
+#: ../src/rss.c:1186
+msgid "_Copy"
+msgstr "_Kopiëren"
+
+#: ../src/rss.c:1187
+msgid "Select _All"
+msgstr "_Alles selecteren"
+
+#: ../src/rss.c:1189 ../src/rss.c:1200
+msgid "Zoom _In"
+msgstr "_Inzoomen"
+
+#: ../src/rss.c:1190 ../src/rss.c:1201
+msgid "Zoom _Out"
+msgstr "_Uitzoomen"
+
+#: ../src/rss.c:1191 ../src/rss.c:1202
+msgid "_Normal Size"
+msgstr "_Normale grootte"
+
+#: ../src/rss.c:1193
+msgid "_Open Link"
+msgstr "Verwijzing _openen"
+
+#: ../src/rss.c:1194 ../src/rss.c:1208
+msgid "_Copy Link Location"
+msgstr "Verwijzingslocatie _kopiëren"
+
+#: ../src/rss.c:1204
+msgid "_Print…"
+msgstr "Af_drukken…"
+
+#: ../src/rss.c:1205
+msgid "Save _As"
+msgstr "Op_slaan als"
+
+#: ../src/rss.c:1207
+msgid "_Open Link in Browser"
+msgstr "Verwijzing _openen in browser"
+
+#: ../src/rss.c:1510
+msgid "Fetching feed"
+msgstr "Feed wordt opgehaald"
+
+#: ../src/rss.c:1822 ../src/rss.c:2099
+msgid "Unnamed feed"
+msgstr "Naamloze feed"
+
+#: ../src/rss.c:1823
+msgid "Error while setting up feed."
+msgstr "Fout bij instellen van feed."
+
+#: ../src/rss.c:2030 ../src/rss.c:2100
+msgid "Error while fetching feed."
+msgstr "Fout bij ophalen van feed."
+
+#: ../src/rss.c:2031
+msgid "Invalid Feed"
+msgstr "Ongeldige feed"
+
+#: ../src/rss.c:2073
+#, c-format
+msgid "Adding feed %s"
+msgstr "Feed %s wordt toegevoegd"
+
+#: ../src/rss.c:2114 ../src/rss.c:2122
+#, c-format
+msgid "Getting message %d of %d"
+msgstr "Bericht %d van %d wordt opgehaald"
+
+#: ../src/rss.c:2208 ../src/rss.c:2211
+msgid "Complete."
+msgstr "Voltooid."
+
+#: ../src/rss.c:2248 ../src/rss.c:2432 ../src/rss.c:2470 ../src/rss.c:2676
+#: ../src/rss.c:3264
+#, c-format
+msgid "Error fetching feed: %s"
+msgstr "Fout bij ophalen van feed: %s"
+
+#: ../src/rss.c:2260 ../src/rss.c:2264
+msgid "Canceled."
+msgstr "Geannuleerd."
+
+#: ../src/rss.c:2317
+#, c-format
+msgid "Error while parsing feed: %s"
+msgstr "Fout bij ontleden van feed: %s"
+
+#: ../src/rss.c:2321
+msgid "illegal content type!"
+msgstr "ongeldig inhoudstype!"
+
+#: ../src/rss.c:2381 ../src/rss.c:2384
+msgid "Complete"
+msgstr "Voltooid"
+
+#: ../src/rss.c:3585
+msgid "No RSS feeds configured!"
+msgstr "Geen RSS-feeds ingesteld!"
+
+#: ../src/rss.c:3637
+msgid "Waiting…"
+msgstr "Aan het wachten…"
+
+#: ../src/rss-config-factory.c:159
+msgid "GtkHTML"
+msgstr "GtkHTML"
+
+#: ../src/rss-config-factory.c:160
+msgid "WebKit"
+msgstr "WebKit"
+
+#: ../src/rss-config-factory.c:161
+msgid "Mozilla"
+msgstr "Mozilla"
+
+#: ../src/rss-config-factory.c:477
+msgid "day"
+msgid_plural "days"
+msgstr[0] "dag"
+msgstr[1] "dagen"
+
+#: ../src/rss-config-factory.c:492
+msgid "message"
+msgid_plural "messages"
+msgstr[0] "bericht"
+msgstr[1] "berichten"
+
+#: ../src/rss-config-factory.c:559 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
+msgid "Move to Folder"
+msgstr "Naar map verplaatsen"
+
+#: ../src/rss-config-factory.c:560 ../src/rss-config-factory.c:566
+#: ../src/rss-config-factory.c:580
+msgid "M_ove"
+msgstr "Verpl_aatsen"
+
+#: ../src/rss-config-factory.c:723
+msgid "Edit Feed"
+msgstr "Feed bewerken"
+
+#: ../src/rss-config-factory.c:725
+msgid "Add Feed"
+msgstr "Feed toevoegen"
+
+#: ../src/rss-config-factory.c:1179 ../src/rss-config-factory.c:1738
+#, no-c-format
+msgid "0% done"
+msgstr "0% klaar"
+
+#: ../src/rss-config-factory.c:1567
+msgid "Disable"
+msgstr "Uitschakelen"
+
+#: ../src/rss-config-factory.c:1567
+msgid "Enable"
+msgstr "Inschakelen"
+
+#: ../src/rss-config-factory.c:1626 ../src/rss-main.ui.h:40
+msgid "Remove folder contents"
+msgstr "Mapinhoud verwijderen"
+
+#: ../src/rss-config-factory.c:2010
+msgid "Import error."
+msgstr "Importeerfout."
+
+#: ../src/rss-config-factory.c:2011
+msgid "Invalid file or this file does not contain any feeds."
+msgstr "Ongeldig bestand, of dit bestand bevat geen feeds."
+
+#: ../src/rss-config-factory.c:2016
+msgid "Importing"
+msgstr "Bezig met importeren"
+
+#. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
+#: ../src/rss-config-factory.c:2039 ../src/rss-config-factory.c:2923
+#: ../src/rss-config-factory.c:3083
+msgid "Please wait"
+msgstr "Even geduld"
+
+#: ../src/rss-config-factory.c:2354 ../src/rss-config-factory.c:3200
+#: ../src/rss-config-factory.c:3263
+msgid "All Files"
+msgstr "Alle bestanden"
+
+#: ../src/rss-config-factory.c:2365 ../src/rss-config-factory.c:3284
+msgid "OPML Files"
+msgstr "OPML-bestanden"
+
+#: ../src/rss-config-factory.c:2376 ../src/rss-config-factory.c:3273
+msgid "XML Files"
+msgstr "XML-bestanden"
+
+#: ../src/rss-config-factory.c:2395
+msgid "Show article’s summary"
+msgstr "Samenvatting van artikel tonen"
+
+#: ../src/rss-config-factory.c:2408
+msgid "Feed Enabled"
+msgstr "Feed ingeschakeld"
+
+#: ../src/rss-config-factory.c:2421
+msgid "Validate feed"
+msgstr "Feed verifiëren"
+
+#: ../src/rss-config-factory.c:2477 ../src/rss-main.ui.h:38
+msgid "Select import file"
+msgstr "Selecteer importbestand"
+
+#: ../src/rss-config-factory.c:2551 ../src/rss-main.ui.h:41
+msgid "Select file to export"
+msgstr "Selecteer bestand om te exporteren"
+
+#: ../src/rss-config-factory.c:2906
+msgid "Exporting feeds…"
+msgstr "Bezig met exporteren van feeds…"
+
+#: ../src/rss-config-factory.c:2970 ../src/rss-config-factory.c:2978
+msgid "Error exporting feeds!"
+msgstr "Fout bij exporteren van feeds!"
+
+#: ../src/rss-config-factory.c:3059
+msgid "Importing cookies…"
+msgstr "Bezig met importeren van cookies…"
+
+#: ../src/rss-config-factory.c:3138
+msgid "Select file to import"
+msgstr "Selecteer bestand om te importeren"
+
+#: ../src/rss-config-factory.c:3206
+msgid "Mozilla/Netscape Format"
+msgstr "Mozilla/Netscape-formaat"
+
+#: ../src/rss-config-factory.c:3212
+msgid "Firefox new Format"
+msgstr "Firefox - nieuw formaat"
+
+#: ../src/rss-config-factory.c:3322 ../src/rss-config-factory.c:3327
+msgid ""
+"No RSS feeds configured!\n"
+"Unable to export."
+msgstr ""
+"Geen RSS-feeds ingesteld!\n"
+"Kan niet exporteren."
+
+#: ../src/rss-config-factory.c:3490
+msgid ""
+"Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
+"as renders you need firefox or webkit devel package \n"
+"installed and evolution-rss should be recompiled to see those packages."
+msgstr ""
+"Let op: om Mozilla (Firefox) of Apple Webkit te gebruiken \n"
+"als renderers, dient het firefox- of webkit-devel-pakket geïnstalleerd te "
+"zijn, en \n"
+"moet evolution-rss opnieuw gecompileerd worden om die pakketten te zien."
+
+#: ../src/rss-config-factory.c:4083 ../src/rss-main.ui.h:45
+msgid "Enabled"
+msgstr "Ingeschakeld"
+
+#: ../src/rss-config-factory.c:4110
+msgid "Feed Name"
+msgstr "Feednaam"
+
+#: ../src/rss-config-factory.c:4123
+msgid "Type"
+msgstr "Soort"
+
+#: ../src/rss-config-factory.c:4440 ../src/rss.h:62
+msgid "News and Blogs"
+msgstr "Nieuws en blogs"
+
+#: ../src/rss.h:64
+msgid "Untitled channel"
+msgstr "Naamloos kanaal"
+
+#: ../src/rss-html-rendering.ui.h:1 ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Motor: "
+
+#: ../src/rss-html-rendering.ui.h:2
+msgid "Use the same fonts as other applications"
+msgstr "Dezelfde lettertypen gebruiken als bij andere toepassingen"
+
+#: ../src/rss-html-rendering.ui.h:3
+msgid "Minimum font size:"
+msgstr "Minimale lettergrootte:"
+
+#: ../src/rss-html-rendering.ui.h:4
+msgid "Block pop-up windows"
+msgstr "Pop-upvensters blokkeren"
+
+#: ../src/rss-html-rendering.ui.h:5
+msgid "Enable Java"
+msgstr "Java inschakelen"
+
+#: ../src/rss-html-rendering.ui.h:6 ../src/rss-main.ui.h:13
+msgid "Enable JavaScript"
+msgstr "JavaScript inschakelen"
+
+#: ../src/rss-html-rendering.ui.h:7
+msgid "Accept cookies from sites"
+msgstr "Cookies van sites aanvaarden"
+
+#: ../src/rss-html-rendering.ui.h:8
+msgid "Import Cookies"
+msgstr "Cookies importeren"
+
+#: ../src/rss-html-rendering.ui.h:9
+msgid "Automatically resize images"
+msgstr "Afbeeldingen automatisch schalen"
+
+#: ../src/rss-html-rendering.ui.h:10
+msgid "Network timeout:"
+msgstr "Netwerktime-out:"
+
+#: ../src/rss-html-rendering.ui.h:11
+msgid "seconds"
+msgstr "seconden"
+
+#: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
+msgid "HTML Rendering"
+msgstr "HTML-rendering"
+
+#: ../src/rss-html-rendering.ui.h:13
+msgid "Show icon in notification area"
+msgstr "Pictogram tonen in meldingsgebied"
+
+#: ../src/rss-html-rendering.ui.h:14
+msgid "Show feed icon"
+msgstr "Feedpictogram tonen"
+
+#: ../src/rss-html-rendering.ui.h:15
+msgid "Article Notification"
+msgstr "Artikelmelding"
+
+#. to translators: label part of Check for new articles every X minutes" message
+#: ../src/rss-main.ui.h:2
+msgid "minutes"
+msgstr "minuten"
+
+# Misschien uren, context onduidelijk - Nathan
+#: ../src/rss-main.ui.h:3
+msgid "hours"
+msgstr "uur"
+
+#: ../src/rss-main.ui.h:4
+msgid "days"
+msgstr "dagen"
+
+#: ../src/rss-main.ui.h:5
+msgid "Certificates Table"
+msgstr "Certificatentabel"
+
+#: ../src/rss-main.ui.h:6
+msgid "_Add"
+msgstr "_Toevoegen"
+
+#: ../src/rss-main.ui.h:7
+msgid "_Edit"
+msgstr "B_ewerken"
+
+#: ../src/rss-main.ui.h:8
+msgid "I_mport"
+msgstr "I_mporteren"
+
+#: ../src/rss-main.ui.h:9
+msgid "E_xport"
+msgstr "E_xporteren"
+
+#: ../src/rss-main.ui.h:10
+msgid "Feeds"
+msgstr "Feeds"
+
+#: ../src/rss-main.ui.h:14
+msgid "Enable Plugins"
+msgstr "Plug-ins inschakelen"
+
+#: ../src/rss-main.ui.h:15
+msgid "HTML"
+msgstr "HTML"
+
+#: ../src/rss-main.ui.h:16
+msgid "Start up"
+msgstr "Opstarten"
+
+#: ../src/rss-main.ui.h:17
+msgid "Check for new articles every"
+msgstr "Controleren op nieuwe artikels elke"
+
+#: ../src/rss-main.ui.h:18
+msgid "Check for new articles at startup"
+msgstr "Controleren op nieuwe artikels bij opstarten"
+
+#: ../src/rss-main.ui.h:19
+msgid "Feed display"
+msgstr "Feedweergave"
+
+#: ../src/rss-main.ui.h:20
+msgid "By default show article summary instead of webpage"
+msgstr ""
+"Standaard de samenvatting van artikels weergeven in plaats van de webpagina"
+
+#: ../src/rss-main.ui.h:21
+msgid "Scan for feed inside webpages"
+msgstr "Webpagina’s doorzoeken naar feeds"
+
+#: ../src/rss-main.ui.h:22
+msgid "Feed enclosures"
+msgstr "Feedbijlagen"
+
+#: ../src/rss-main.ui.h:23
+msgid "Show article comments"
+msgstr "Reacties op artikels weergeven"
+
+#: ../src/rss-main.ui.h:24
+msgid "Download feed enclosures"
+msgstr "Feedbijlagen downloaden"
+
+#: ../src/rss-main.ui.h:25
+msgid "Do not download enclosures that exceeds"
+msgstr "Geen feedbijlagen downloaden groter dan"
+
+#: ../src/rss-main.ui.h:26
+msgid "KB"
+msgstr "KB"
+
+#: ../src/rss-main.ui.h:27
+msgid "Setup"
+msgstr "Configuratie"
+
+#: ../src/rss-main.ui.h:28
+msgid "Use Proxy"
+msgstr "Proxy gebruiken"
+
+#: ../src/rss-main.ui.h:29
+msgid "HTTP proxy:"
+msgstr "HTTP-proxy:"
+
+#: ../src/rss-main.ui.h:30
+msgid "Port:"
+msgstr "Poort:"
+
+#: ../src/rss-main.ui.h:31
+msgid "Details"
+msgstr "Gegevens"
+
+#: ../src/rss-main.ui.h:32
+msgid "No proxy for:"
+msgstr "Geen proxy voor:"
+
+#: ../src/rss-main.ui.h:33
+msgid "Network"
+msgstr "Netwerk"
+
+#: ../src/rss-main.ui.h:34
+msgid "HTTP Proxy Details"
+msgstr "HTTP-proxygegevens"
+
+#: ../src/rss-main.ui.h:35
+msgid "Use authentication"
+msgstr "Aanmeldingscontrole gebruiken"
+
+#: ../src/rss-main.ui.h:36
+msgid "Username:"
+msgstr "Gebruikersnaam:"
+
+#: ../src/rss-main.ui.h:39
+msgid "Delete feed?"
+msgstr "Feed verwijderen?"
+
+#: ../src/rss-main.ui.h:42
+msgid "Feed Name: "
+msgstr "Feednaam: "
+
+#: ../src/rss-main.ui.h:43
+msgid "Feed URL:"
+msgstr "Feed-URL:"
+
+#: ../src/rss-main.ui.h:44
+msgid "Location:"
+msgstr "Locatie:"
+
+#: ../src/rss-main.ui.h:46
+msgid "Validate"
+msgstr "Verifiëren"
+
+#: ../src/rss-main.ui.h:47
+msgid "Show feed full text"
+msgstr "Volledige tekst van feed tonen"
+
+#: ../src/rss-main.ui.h:48
+msgid "General"
+msgstr "Algemeen"
+
+#: ../src/rss-main.ui.h:49
+msgid "Use global update interval"
+msgstr "Globaal update-interval gebruiken"
+
+#: ../src/rss-main.ui.h:50
+msgid "Update in"
+msgstr "Bijwerken over"
+
+#: ../src/rss-main.ui.h:51
+msgid "Do not update feed"
+msgstr "Feed niet bijwerken"
+
+#: ../src/rss-main.ui.h:52
+msgid "Update"
+msgstr "Bijwerken"
+
+#: ../src/rss-main.ui.h:53
+msgid "Do not delete feeds"
+msgstr "Feeds niet verwijderen"
+
+#: ../src/rss-main.ui.h:54
+msgid "Delete all but the last"
+msgstr "Alles behalve de laatste verwijderen"
+
+#: ../src/rss-main.ui.h:55
+msgid "Delete articles older than"
+msgstr "Artikels verwijderen ouder dan"
+
+#: ../src/rss-main.ui.h:56
+msgid "Delete articles that are no longer in the feed"
+msgstr "Artikels die niet meer in de feed staan verwijderen"
+
+#: ../src/rss-main.ui.h:57
+msgid "Always delete unread articles"
+msgstr "Ongelezen artikels altijd verwijderen"
+
+#: ../src/rss-main.ui.h:58
+msgid "Storage"
+msgstr "Opslag"
+
+#: ../src/rss-main.ui.h:59
+msgid "Authentication"
+msgstr "Aanmeldingscontrole"
+
+#: ../src/rss-main.ui.h:60
+msgid "Advanced options"
+msgstr "Geavanceerde opties"
