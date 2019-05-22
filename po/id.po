@@ -2,13 +2,13 @@
 # Copyright (C) 2017 evolution-rss's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evolution-rss package.
 # Andika Triwidada <atriwidada@gnome.org>, 2017.
-#
+# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evolution-rss/issues\n"
-"POT-Creation-Date: 2019-01-31 15:33+0000\n"
-"PO-Revision-Date: 2019-02-28 13:51+0700\n"
+"POT-Creation-Date: 2019-02-28 06:53+0000\n"
+"PO-Revision-Date: 2019-05-22 13:47+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -74,11 +74,11 @@ msgstr "Menampilkan artikel asupan RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:1
 msgid "Proxy requires authentication"
-msgstr "Proksi memerlukan otentikasi"
+msgstr "Proksi memerlukan autentikasi"
 
 #: ../src/evolution-rss.schemas.in.in.h:2
 msgid "Network proxy requires authentication."
-msgstr "Proksi jaringan memerlukan otentikasi."
+msgstr "Proksi jaringan memerlukan autentikasi."
 
 #: ../src/evolution-rss.schemas.in.in.h:3
 msgid "Display article’s summary"
@@ -236,7 +236,7 @@ msgstr "Sandi untuk server proksi"
 #: ../src/evolution-rss.schemas.in.in.h:39
 msgid ""
 "If the proxy server requires authentication, this is the password field."
-msgstr "Bila server proksi perlu otentikasi, ini adalah ruas sandi."
+msgstr "Bila server proksi perlu autentikasi, ini adalah ruas sandi."
 
 #: ../src/evolution-rss.schemas.in.in.h:40
 msgid "Proxy server port"
@@ -300,7 +300,7 @@ msgstr "Pengguna server proksi"
 
 #: ../src/evolution-rss.schemas.in.in.h:55
 msgid "The username to use for proxy server authentication."
-msgstr "Nama pengguna untuk otentikasi server proksi."
+msgstr "Nama pengguna untuk autentikasi server proksi."
 
 #: ../src/evolution-rss.schemas.in.in.h:56
 msgid "How to handle RSS URLs"
@@ -919,7 +919,7 @@ msgstr "Rincian Proksi HTTP"
 
 #: ../src/rss-main.ui.h:35
 msgid "Use authentication"
-msgstr "Pakai otentikasi"
+msgstr "Pakai autentikasi"
 
 #: ../src/rss-main.ui.h:36
 msgid "Username:"
@@ -995,7 +995,7 @@ msgstr "Penyimpanan"
 
 #: ../src/rss-main.ui.h:59
 msgid "Authentication"
-msgstr "Otentikasi"
+msgstr "Autentikasi"
 
 #: ../src/rss-main.ui.h:60
 msgid "Advanced options"
