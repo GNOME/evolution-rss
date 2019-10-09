@@ -69,7 +69,6 @@ typedef struct _HD HD;
 struct _HD {
 	gchar *website;
 	gchar *content;
-	gchar *current_html;
 	EMailFormatter *formatter;
 	gchar *header;
 #if EVOLUTION_VERSION < 31191
@@ -104,7 +103,6 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 {
 	CamelDataWrapper *dw;
 	gchar *str;
-	gchar *h;
 #if EVOLUTION_VERSION < 31191
 	CamelStream *decoded_stream;
 	GByteArray *ba;
@@ -134,12 +132,6 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 
 	if (!rss_init)
 			goto fail;
-
-#if EVOLUTION_VERSION >= 32190
-	h = e_web_view_get_content_html_sync (E_WEB_VIEW (rss_get_display()), NULL, NULL);
-#else
-	h = g_strdup(e_web_view_get_html (E_WEB_VIEW (rss_get_display())));
-#endif
 
 	website = (gchar *)camel_medium_get_header (
 			CAMEL_MEDIUM (message), "Website");
@@ -340,7 +332,6 @@ emfe_evolution_rss_format (EMailFormatterExtension *extension,
 		GError *err = NULL;
 		gchar *str;
 		HD *hd = g_malloc0(sizeof(*hd));
-		hd->current_html = h;
 		hd->formatter = formatter;
 		hd->header = e_mail_formatter_get_html_header(formatter);
 		hd->stream = stream;
