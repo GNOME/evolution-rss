@@ -85,7 +85,6 @@ typedef struct {
 	gpointer cb2;
 	gpointer cbdata2;
 	gchar *url;
-	gchar *host;
 	SoupAddress *addr;
 	pCallback callback;
 	gpointer data;
@@ -356,7 +355,7 @@ rss_resolve_callback (SoupAddress *addr, guint status, gpointer data)
 	STNET *stnet = (STNET *)data;
 	SoupURI *proxy_uri = NULL;
 	if (status == SOUP_STATUS_OK) {
-		if (rss_ep_need_proxy_http (proxy, stnet->host, stnet->addr)) {
+		if (rss_ep_need_proxy_http (proxy, soup_address_get_name (stnet->addr), stnet->addr)) {
 #if (DATASERVER_VERSION >=2026000)
 			proxy_uri = e_proxy_peek_uri_for (proxy, stnet->url);
 #else
@@ -433,7 +432,6 @@ proxify_session_async(EProxy *proxy, STNET *stnet)
 #endif
 	case 2:
 		su = soup_uri_new (stnet->url);
-		stnet->host = su->host;
 		if (su) {
 			if (su->scheme == SOUP_URI_SCHEME_HTTPS) {
 				if (rss_ep_need_proxy_https (proxy, su->host)) {
