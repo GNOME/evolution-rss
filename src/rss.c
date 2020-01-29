@@ -208,6 +208,20 @@ typedef struct CFL {
 	create_feed *CF;
 } cfl;
 
+static guint farticle;
+static guint ftotal;
+
+void
+rss_inc_farticle (void)
+{
+	farticle++;
+}
+
+void
+rss_inc_ftotal (void)
+{
+	ftotal++;
+}
 
 static volatile int org_gnome_rss_controls_counter_id = 0;
 
@@ -266,7 +280,7 @@ extern EProxy *proxy;
 #endif
 SoupSession *webkit_session = NULL;
 #if LIBSOUP_VERSION > 2024000
-SoupCookieJar *rss_soup_jar;
+extern SoupCookieJar *rss_soup_jar;
 #endif
 extern guint rsserror;
 gboolean single_pending = FALSE;

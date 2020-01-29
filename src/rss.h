@@ -379,9 +379,6 @@ struct _rfMessage {
 };
 typedef struct _rfMessage rfMessage;
 
-guint ftotal;
-guint farticle;
-
 void compare_enabled(
 	gpointer key,
 	gpointer value,
@@ -565,6 +562,8 @@ EShellView *rss_get_mail_shell_view (gboolean with_mail_reader);
 #endif
 void rebase_feeds(gchar *old_name, gchar *new_name);
 
+void rss_inc_farticle (void);
+void rss_inc_ftotal (void);
 
 #ifdef _WIN32
 char *strcasestr(const char *a, const char *b);

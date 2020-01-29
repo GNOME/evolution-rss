@@ -1251,7 +1251,7 @@ parse_channel_line(xmlNode *top, gchar *feed_name, RDF *r, gchar **article_uid)
 		d("date:%s\n", d2);
 		d("body:%s\n", b);
 
-		ftotal++;
+		rss_inc_ftotal();
 		sp =  decode_html_entities (p);
 		tmp = decode_utf8_entities (b);
 		g_free(b);
@@ -1369,7 +1369,7 @@ display_channel_items_sync(AsyncData *asyncr)
 		}
 		subj = g_strdup(CF->subj);
 
-		ftotal++;
+		rss_inc_ftotal();
 #if EVOLUTION_VERSION < 30304
 		GConfClient *client = gconf_client_get_default();
 #else
@@ -1398,7 +1398,7 @@ display_channel_items_sync(AsyncData *asyncr)
 			CF->feed_fname, CF->feed_uri);
 		free_cf(CF);
 
-done:		farticle++;
+done:		rss_inc_farticle();
 		d("put success()\n");
 		update_status_icon_text(status_msg, chn_name, subj);
 		g_free(subj);
