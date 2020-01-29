@@ -1,3 +1,62 @@
+Evolution-RSS 0.3.96 2020-01-31
+-------------------------------
+
+Bug Fixes:
+	Bug 752197 - Correct undefined cache reaper symbols from the link time (Milan Crha)
+	Bug 752197 - Teach cache-reaper of 3rd-party private directories (Milan Crha)
+	Bug 764065 - [Camel] Port more classes to GObject (Milan Crha)
+
+Miscellaneous:
+	Do not use global variables for EShellView and EShellWindow (Milan Crha)
+	add formater libs to the missing libs defs (Lucian Langa)
+	various cleanups (Lucian Langa)
+	Fix spelling of "OK" in a translatable string (Piotr Drąg)
+	Adapt to changes in evolution 3.21.90 (Milan Crha)
+	Auto-disable WebKit support when compiled against evolution 3.21.90+ (Milan Crha)
+	gschema: Fix gettext-domain (Piotr Drąg)
+	Crash when importing OPML file with feeds without 'title' attribute (Milan Crha)
+	Avoid crash when feed formatting is cancelled (Milan Crha)
+	Replace Bugzilla by Gitlab URL in DOAP file (Andre Klapper)
+	Don't use legacy path for AppStream metainfo file (Balló György)
+	Fix AppStream metainfo validation (Balló György)
+	Use Unicode in translatable strings (Piotr Drąg)
+	Remove markup from strings in UI files (Piotr Drąg)
+	EMailFormatterRSS: Remove unneeded fetch of EWebView content (Milan Crha)
+	Fix use-after-free under rss_ep_need_proxy_http() (Milan Crha)
+
+Translations:
+	Marek Černocký (cs)
+	Piotr Drąg (pl)
+	Jordi Mas (ca)
+	Daniel Mustieles (es)
+	Balázs Úr (hu)
+	Matej Urbančič (sl)
+	Necdet Yücel (tr)
+	Pedro Albuquerque (pt)
+	Aurimas Černius (lt)
+	Мирослав Николић (sr)
+	Мирослав Николић (sr@latin)
+	Mario Blättermann (de)
+	Rafael Fontenelle (pt_BR)
+	Rūdolfs Mazurs (v)
+	Cédric Valmary (oc)
+	Sebastian Rasmussen (sv)
+	Jeremy Bicha (es)
+	Chris Leonard (en_GB)
+	David King (en_GB)
+	Muhammet Kara (tr)
+	Alan Mortensen (da)
+	Andika Triwidada (id)
+	Ask Hjorth Larsen (da)
+	Carles Ferrando Garcia (ca)
+	Jordi Mas (ca)
+	Anders Jonsson (sv)
+	Kukuh Syafaat (id)
+	Rafael Fontenelle (pt_BR)
+	Nathan Follens (nl)
+	Serdar Sağlam (tr)
+	Petr Kovář (cs)
+
 Evolution-RSS 0.2.0
 ------------------------------
 
