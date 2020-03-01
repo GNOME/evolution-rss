@@ -802,7 +802,7 @@ msgstr "Pokaži ikono vira"
 
 #: ../src/rss-html-rendering.ui.h:15
 msgid "<b>Article Notification</b>"
-msgstr "<b>Obvestilo o prispevku<b>"
+msgstr "<b>Obvestilo o prispevku</b>"
 
 #. to translators: label part of Check for new articles every X minutes" message
 #: ../src/rss-main.ui.h:2
@@ -1011,7 +1011,7 @@ msgstr "Overitev"
 
 #: ../src/rss-main.ui.h:60
 msgid "<b>Advanced options</b>"
-msgstr "<b>Napredne možnosti<b>"
+msgstr "<b>Napredne možnosti</b>"
 
 #~ msgid "Enter User/Pass for feed"
 #~ msgstr "Vnesite uporabniško ime/geslo za vir"
