@@ -502,9 +502,9 @@ static const char tz_months [][4] = {
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
-static const char tz_days [][4] = {
+/*static const char tz_days [][4] = {
 	"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-};
+};*/
 
 gboolean
 is_rfc822(char *in)

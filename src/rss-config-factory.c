@@ -1237,22 +1237,22 @@ rss_delete_rec (CamelStore *store, CamelFolderInfo *fi, GError **error)
 #endif
 			return;
 
-			uids = camel_folder_get_uids (folder);
+		uids = camel_folder_get_uids (folder);
 
-			camel_folder_freeze (folder);
-			for (i = 0; i < uids->len; i++)
-				camel_folder_delete_message (
-					folder,
-					uids->pdata[i]);
+		camel_folder_freeze (folder);
+		for (i = 0; i < uids->len; i++)
+			camel_folder_delete_message (
+				folder,
+				uids->pdata[i]);
 
-			camel_folder_free_uids (folder, uids);
+		camel_folder_free_uids (folder, uids);
 
 #if (DATASERVER_VERSION >= 2033001)
-			camel_folder_synchronize_sync (folder, TRUE, NULL, NULL);
+		camel_folder_synchronize_sync (folder, TRUE, NULL, NULL);
 #else
-			camel_folder_sync (folder, TRUE, NULL);
+		camel_folder_sync (folder, TRUE, NULL);
 #endif
-			camel_folder_thaw (folder);
+		camel_folder_thaw (folder);
 
 		d("do camel_store_delete_folder()\n");
 
