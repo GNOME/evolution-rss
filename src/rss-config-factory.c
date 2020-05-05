@@ -2760,13 +2760,12 @@ create_folder_feeds(gchar *folder)
 	gchar *tf;
 	GList *names;
 	gchar *mf = get_main_folder();
-	GHashTable *nhash = g_hash_table_new(
-				g_str_hash,
-				g_str_equal);
 	strbuf = NULL;
 	if (folder && strcmp(folder, mf))
 		tf = extract_main_folder(folder);
 	else {
+		GHashTable *nhash = g_hash_table_new(g_str_hash, g_str_equal);
+
 		tf = g_strdup(".");
 		//get list of "unfoldered" feeds - silly approach
 		names = g_hash_table_get_keys(rf->hrname);
