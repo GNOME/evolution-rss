@@ -63,10 +63,6 @@ rss_cache_init(void)
 	if (!cache)
 		return;
 
-	// expire in a month max
-	// and one week if not accessed sooner
-	camel_data_cache_set_expire_age(cache, 24*60*60*30);
-	camel_data_cache_set_expire_access(cache, 24*60*60*7);
 }
 
 char *
