@@ -273,9 +273,10 @@ rss_ep_need_proxy_http (EProxy* proxy, const gchar * host, SoupAddress *addr)
 	so_addr = soup_address_get_sockaddr (myaddr, &addr_len);
 #endif
 
-	if (!so_addr)
+	if (!so_addr) {
 		g_object_unref (myaddr);
 		return TRUE;
+	}
 
 	if (so_addr->sa_family == AF_INET) {
 		struct in_addr in, *mask, *addr_in;
