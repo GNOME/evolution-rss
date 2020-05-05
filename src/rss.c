@@ -1348,8 +1348,12 @@ org_gnome_evolution_presend (EPlugin *ep, EMEventTargetComposer *t)
 
 	editor = e_msg_composer_get_editor (t->composer);
 #if EVOLUTION_VERSION >= 32190
+#if EVOLUTION_VERSION >= 33702
+	text = g_strdup (e_content_editor_util_get_content_data (e_msg_composer_get_content_hash (t->composer), E_CONTENT_EDITOR_GET_TO_SEND_HTML));
+#else
 	cnt_editor = e_html_editor_get_content_editor (editor);
 	text = e_content_editor_get_content (cnt_editor, E_CONTENT_EDITOR_GET_TEXT_HTML, NULL, NULL);
+#endif
 #else
 	view = e_html_editor_get_view (editor);
 #if EVOLUTION_VERSION >= 31390
