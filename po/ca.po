@@ -328,7 +328,7 @@ msgstr ""
 
 #: ../src/evolution-rss.schemas.in.in.h:58
 msgid "URL handler for RSS feed URIs"
-msgstr "Gestor d'URL per els URL de RSS"
+msgstr "Gestor d'URL per als URL de RSS"
 
 #: ../src/evolution-rss.schemas.in.in.h:59
 msgid "Run program in terminal"
@@ -1017,4 +1017,4 @@ msgstr "Autenticació"
 
 #: ../src/rss-main.ui.h:60
 msgid "Advanced options"
-msgstr "Options avançades"
+msgstr "Opcions avançades"
