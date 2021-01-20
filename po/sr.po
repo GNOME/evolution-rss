@@ -1,28 +1,27 @@
 # Serbian translation for evolution-rss.
-# Courtesy of Prevod.org team (http://prevod.org/) -- 2012—2015.
-# Copyright (C) 2012 evolution-rss's COPYRIGHT HOLDER
+# Courtesy of Prevod.org team (http://prevod.org/) -- 2012—2021.
+# Copyright © 2012 evolution-rss's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evolution-rss package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2015.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: evolution-rss master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product"
-"=evolution-rss&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-10-25 18:52+0000\n"
-"PO-Revision-Date: 2015-12-30 09:08+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evolution-rss/issues\n"
+"POT-Creation-Date: 2020-07-07 16:20+0000\n"
+"PO-Revision-Date: 2021-01-20 07:53+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
-"Language-Team: Serbian <gnom@prevod.org>\n"
+"Language-Team: српски <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
-"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Project-Style: gnome\n"
 
 #: ../evolution-rss.desktop.in.in.h:1
 msgid "Evolution RSS Reader"
-msgstr "cd Еволуцијин РСС читач"
+msgstr "Еволуцијин РСС читач"
 
 #: ../evolution-rss.desktop.in.in.h:2
 msgid "Evolution plugin that enables Evolution Mail to display RSS feeds."
@@ -37,13 +36,13 @@ msgstr "РСС читач"
 msgid "Read RSS feeds"
 msgstr "Читајте РСС доводе"
 
-#: ../src/dbus.c:108 ../src/rss.c:2000 ../src/rss-config-factory.c:1200
-#: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1944
+#: ../src/dbus.c:108 ../src/rss.c:2036 ../src/rss-config-factory.c:1200
+#: ../src/rss-config-factory.c:1766 ../src/rss-config-factory.c:1945
 msgid "Error adding feed."
 msgstr "Грешка додавања довода."
 
-#: ../src/dbus.c:109 ../src/rss.c:2001 ../src/rss-config-factory.c:1201
-#: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1945
+#: ../src/dbus.c:109 ../src/rss.c:2037 ../src/rss-config-factory.c:1201
+#: ../src/rss-config-factory.c:1767 ../src/rss-config-factory.c:1946
 msgid "Feed already exists!"
 msgstr "Довод већ постоји!"
 
@@ -52,26 +51,25 @@ msgstr "Довод већ постоји!"
 msgid "Importing URL: %s"
 msgstr "Увозим адресу: %s"
 
-#: ../src/e-mail-formatter-evolution-rss.c:225
+#: ../src/e-mail-formatter-evolution-rss.c:224
 msgid "Posted under"
 msgstr "Објављено под"
 
-#: ../src/e-mail-formatter-evolution-rss.c:392
-#: ../src/e-mail-formatter-evolution-rss.c:398
+#: ../src/e-mail-formatter-evolution-rss.c:412
+#: ../src/e-mail-formatter-evolution-rss.c:418
 msgid "Show Summary"
 msgstr "Прикажи сажетак"
 
-#: ../src/e-mail-formatter-evolution-rss.c:393
-#: ../src/e-mail-formatter-evolution-rss.c:399
+#: ../src/e-mail-formatter-evolution-rss.c:413
+#: ../src/e-mail-formatter-evolution-rss.c:419
 msgid "Show Full Text"
 msgstr "Прикажи пун текст"
 
-#: ../src/e-mail-formatter-evolution-rss.c:414
+#: ../src/e-mail-formatter-evolution-rss.c:437
 msgid "Evolution-RSS"
 msgstr "Еволуцијин-РСС"
 
-#: ../src/e-mail-formatter-evolution-rss.c:415
-#| msgid "Displaying RSS feed arcticles"
+#: ../src/e-mail-formatter-evolution-rss.c:438
 msgid "Displaying RSS feed articles"
 msgstr "Приказујем чланке РСС довода"
 
@@ -84,12 +82,16 @@ msgid "Network proxy requires authentication."
 msgstr "Мрежни посредник захтева потврђивање идентитета."
 
 #: ../src/evolution-rss.schemas.in.in.h:3
-msgid "Display article's summary"
+#| msgid "Display article's summary"
+msgid "Display article’s summary"
 msgstr "Приказ сажетка чланака"
 
 #: ../src/evolution-rss.schemas.in.in.h:4
+#| msgid ""
+#| "Evolution will show article's summary instead of article's web page. "
+#| "Summary can also be HTML."
 msgid ""
-"Evolution will show article's summary instead of article's web page. Summary "
+"Evolution will show article’s summary instead of article’s web page. Summary "
 "can also be HTML."
 msgstr ""
 "Еволуција ће приказати сажетак чланака уместо веб страница чланака. Сажетак "
@@ -331,12 +333,29 @@ msgid "True if the program to handle this URL should be run in a terminal"
 msgstr ""
 "Означено ако програм за управљање овом адресом треба покренути у терминалу"
 
-#: ../src/notification.c:291 ../src/rss.c:2169
+#: ../src/notification.c:291 ../src/rss.c:2205
 #, c-format
 msgid "Fetching Feeds (%d enabled)"
 msgstr "Довлачим доводе (укључених %d)"
 
 #: ../src/org-gnome-evolution-rss.eplug.xml.h:1
+#| msgid ""
+#| "Evolution RSS Reader Plugin.\n"
+#| "\n"
+#| "This plugin adds RSS Feeds support for Evolution mail. RSS support was "
+#| "built upon the somewhat existing RSS support in evolution-1.4 branch. The "
+#| "motivation behind this was to have RSS in same place as mails, at this "
+#| "moment I do not see the point in having a separate RSS reader since a RSS "
+#| "Article is like an email message.\n"
+#| "\n"
+#| "Evolution RSS can display article using summary view or HTML view.\n"
+#| "\n"
+#| "HTML can be displayed using the following engines: gtkHTML, Apple's "
+#| "Webkit or Firefox/Gecko.\n"
+#| "\n"
+#| "<b>Version: evolution-rss +VERSION+</b>\n"
+#| "\n"
+#| "+URL+"
 msgid ""
 "Evolution RSS Reader Plugin.\n"
 "\n"
@@ -348,7 +367,7 @@ msgid ""
 "\n"
 "Evolution RSS can display article using summary view or HTML view.\n"
 "\n"
-"HTML can be displayed using the following engines: gtkHTML, Apple's Webkit "
+"HTML can be displayed using the following engines: gtkHTML, Apple’s Webkit "
 "or Firefox/Gecko.\n"
 "\n"
 "<b>Version: evolution-rss +VERSION+</b>\n"
@@ -378,23 +397,27 @@ msgid "Size"
 msgstr "Величина"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:1
-msgid "Reading RSS Feeds..."
-msgstr "Читам РСС доводе..."
+#| msgid "Reading RSS Feeds..."
+msgid "Reading RSS Feeds…"
+msgstr "Читам РСС доводе…"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:2
-msgid "Updating Feeds..."
-msgstr "Освежавам доводе..."
+#| msgid "Updating Feeds..."
+msgid "Updating Feeds…"
+msgstr "Освежавам доводе…"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:3
 msgid "_Dismiss"
 msgstr "_Занемари"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:4
-msgid "Delete \"{0}\"?"
+#| msgid "Delete \"{0}\"?"
+msgid "Delete “{0}”?"
 msgstr "Да обришем „{0}“?"
 
 #: ../src/org-gnome-evolution-rss.error.xml.h:5
-msgid "Really delete feed '{0}'?"
+#| msgid "Really delete feed '{0}'?"
+msgid "Really delete feed “{0}”?"
 msgstr "Да обришем довод „{0}“?"
 
 #: ../src/org-gnome-evolution-rss.xml.h:1
@@ -422,154 +445,155 @@ msgstr "Нема податка"
 msgid "No information"
 msgstr "Нема податка"
 
-#: ../src/rss.c:416 ../src/rss.c:2355
+#: ../src/rss.c:430 ../src/rss.c:2391
 msgid "Feed"
 msgstr "Довод"
 
-#: ../src/rss.c:481 ../src/rss-config-factory.c:2868
-#: ../src/rss-config-factory.c:3042
+#: ../src/rss.c:495 ../src/rss-config-factory.c:2873
+#: ../src/rss-config-factory.c:3047
 #, c-format
 msgid "%2.0f%% done"
 msgstr "%2.0f%% је урађено"
 
-#: ../src/rss.c:628
-#| msgid "Enter User/Pass for feed"
+#: ../src/rss.c:642
 msgid "Enter Username/Password for feed"
 msgstr "Унесите корисника/лозинку за довод"
 
-#: ../src/rss.c:630
-#| msgid "Canceled."
+#: ../src/rss.c:644
 msgid "_Cancel"
 msgstr "_Откажи"
 
-#: ../src/rss.c:634
+#: ../src/rss.c:648
 msgid "_OK"
 msgstr "У _реду"
 
-#: ../src/rss.c:684
+#: ../src/rss.c:698
 msgid "Enter your username and password for:"
 msgstr "Унесите ваше корисничко име и лозинку за:"
 
-#: ../src/rss.c:700
+#: ../src/rss.c:714
 msgid "Username: "
 msgstr "Корисничко име: "
 
-#: ../src/rss.c:718 ../src/rss-main.ui.h:37
+#: ../src/rss.c:732 ../src/rss-main.ui.h:37
 msgid "Password: "
 msgstr "Лозинка: "
 
-#: ../src/rss.c:750
+#: ../src/rss.c:764
 msgid "_Remember this password"
 msgstr "_Запамти ову лозинку"
 
-#: ../src/rss.c:862 ../src/rss.c:866
-msgid "Cancelling..."
-msgstr "Отказујем..."
+#: ../src/rss.c:876 ../src/rss.c:880
+#| msgid "Cancelling..."
+msgid "Cancelling…"
+msgstr "Отказујем…"
 
-#: ../src/rss.c:1186
+#: ../src/rss.c:1200
 msgid "_Copy"
 msgstr "_Умножи"
 
-#: ../src/rss.c:1187
+#: ../src/rss.c:1201
 msgid "Select _All"
 msgstr "_Изабери све"
 
-#: ../src/rss.c:1189 ../src/rss.c:1200
+#: ../src/rss.c:1203 ../src/rss.c:1214
 msgid "Zoom _In"
 msgstr "У_већај"
 
-#: ../src/rss.c:1190 ../src/rss.c:1201
+#: ../src/rss.c:1204 ../src/rss.c:1215
 msgid "Zoom _Out"
 msgstr "У_мањи"
 
-#: ../src/rss.c:1191 ../src/rss.c:1202
+#: ../src/rss.c:1205 ../src/rss.c:1216
 msgid "_Normal Size"
 msgstr "_Обична величина"
 
-#: ../src/rss.c:1193
+#: ../src/rss.c:1207
 msgid "_Open Link"
 msgstr "_Отвори везу"
 
-#: ../src/rss.c:1194 ../src/rss.c:1208
+#: ../src/rss.c:1208 ../src/rss.c:1222
 msgid "_Copy Link Location"
 msgstr "_Умножи место везе"
 
-#: ../src/rss.c:1204
-msgid "_Print..."
-msgstr "_Штампај..."
+#: ../src/rss.c:1218
+#| msgid "_Print..."
+msgid "_Print…"
+msgstr "_Штампај…"
 
-#: ../src/rss.c:1205
+#: ../src/rss.c:1219
 msgid "Save _As"
 msgstr "Сачувај _као"
 
-#: ../src/rss.c:1207
+#: ../src/rss.c:1221
 msgid "_Open Link in Browser"
 msgstr "_Отвори везу у прегледнику"
 
-#: ../src/rss.c:1492
+#: ../src/rss.c:1528
 msgid "Fetching feed"
 msgstr "Довлачим довод"
 
-#: ../src/rss.c:1804 ../src/rss.c:2081
+#: ../src/rss.c:1840 ../src/rss.c:2117
 msgid "Unnamed feed"
 msgstr "Неименовани довод"
 
-#: ../src/rss.c:1805
+#: ../src/rss.c:1841
 msgid "Error while setting up feed."
 msgstr "Грешка приликом подешавања довода."
 
-#: ../src/rss.c:2012 ../src/rss.c:2082
+#: ../src/rss.c:2048 ../src/rss.c:2118
 msgid "Error while fetching feed."
 msgstr "Грешка приликом довлачења довода."
 
-#: ../src/rss.c:2013
+#: ../src/rss.c:2049
 msgid "Invalid Feed"
 msgstr "Неисправан довод"
 
-#: ../src/rss.c:2055
+#: ../src/rss.c:2091
 #, c-format
 msgid "Adding feed %s"
 msgstr "Додајем довод „%s“"
 
-#: ../src/rss.c:2096 ../src/rss.c:2104
+#: ../src/rss.c:2132 ../src/rss.c:2140
 #, c-format
 msgid "Getting message %d of %d"
 msgstr "Добављам поруку %d од %d"
 
-#: ../src/rss.c:2190 ../src/rss.c:2193
+#: ../src/rss.c:2226 ../src/rss.c:2229
 msgid "Complete."
 msgstr "Завршено."
 
-#: ../src/rss.c:2230 ../src/rss.c:2414 ../src/rss.c:2452 ../src/rss.c:2658
-#: ../src/rss.c:3246
+#: ../src/rss.c:2266 ../src/rss.c:2450 ../src/rss.c:2488 ../src/rss.c:2694
+#: ../src/rss.c:3282
 #, c-format
 msgid "Error fetching feed: %s"
 msgstr "Грешка довлачења довода: %s"
 
-#: ../src/rss.c:2242 ../src/rss.c:2246
+#: ../src/rss.c:2278 ../src/rss.c:2282
 msgid "Canceled."
 msgstr "Отказано."
 
-#: ../src/rss.c:2299
+#: ../src/rss.c:2335
 #, c-format
 msgid "Error while parsing feed: %s"
 msgstr "Грешка приликом обраде довода: %s"
 
-#: ../src/rss.c:2303
+#: ../src/rss.c:2339
 msgid "illegal content type!"
 msgstr "неисправна врста садржаја!"
 
-#: ../src/rss.c:2363 ../src/rss.c:2366
+#: ../src/rss.c:2399 ../src/rss.c:2402
 msgid "Complete"
 msgstr "Завршено"
 
-#: ../src/rss.c:3567
+#: ../src/rss.c:3603
 msgid "No RSS feeds configured!"
 msgstr "Нема подешених РСС довода!"
 
-#: ../src/rss.c:3619
-msgid "Waiting..."
-msgstr "Чекам..."
+#: ../src/rss.c:3655
+#| msgid "Waiting..."
+msgid "Waiting…"
+msgstr "Чекам…"
 
 #: ../src/rss-config-factory.c:159
 msgid "GtkHTML"
@@ -634,82 +658,85 @@ msgstr "Укључи"
 msgid "Remove folder contents"
 msgstr "Уклони садржаје фасцикле"
 
-#: ../src/rss-config-factory.c:2009
+#: ../src/rss-config-factory.c:2010
 msgid "Import error."
 msgstr "Грешка увоза."
 
-#: ../src/rss-config-factory.c:2010
+#: ../src/rss-config-factory.c:2011
 msgid "Invalid file or this file does not contain any feeds."
 msgstr "Неисправна датотека или ова датотека не садржи ниједан довод."
 
-#: ../src/rss-config-factory.c:2015
+#: ../src/rss-config-factory.c:2016
 msgid "Importing"
 msgstr "Увозим"
 
 #. g_signal_connect(import_dialog, "response", G_CALLBACK(import_dialog_response), NULL);
-#: ../src/rss-config-factory.c:2038 ../src/rss-config-factory.c:2917
-#: ../src/rss-config-factory.c:3077
+#: ../src/rss-config-factory.c:2039 ../src/rss-config-factory.c:2922
+#: ../src/rss-config-factory.c:3082
 msgid "Please wait"
 msgstr "Молим сачекајте"
 
-#: ../src/rss-config-factory.c:2348 ../src/rss-config-factory.c:3194
-#: ../src/rss-config-factory.c:3257
+#: ../src/rss-config-factory.c:2354 ../src/rss-config-factory.c:3199
+#: ../src/rss-config-factory.c:3262
 msgid "All Files"
 msgstr "Све датотеке"
 
-#: ../src/rss-config-factory.c:2359 ../src/rss-config-factory.c:3278
+#: ../src/rss-config-factory.c:2365 ../src/rss-config-factory.c:3283
 msgid "OPML Files"
 msgstr "ОПМЛ датотеке"
 
-#: ../src/rss-config-factory.c:2370 ../src/rss-config-factory.c:3267
+#: ../src/rss-config-factory.c:2376 ../src/rss-config-factory.c:3272
 msgid "XML Files"
 msgstr "ИксМЛ датотеке"
 
-#: ../src/rss-config-factory.c:2389
-msgid "Show article's summary"
+#: ../src/rss-config-factory.c:2395
+#| msgid "Show article's summary"
+msgid "Show article’s summary"
 msgstr "Прикажи сажетак чланка"
 
-#: ../src/rss-config-factory.c:2402
+#: ../src/rss-config-factory.c:2408
 msgid "Feed Enabled"
 msgstr "Довод је укључен"
 
-#: ../src/rss-config-factory.c:2415
+#: ../src/rss-config-factory.c:2421
 msgid "Validate feed"
 msgstr "Потврди довод"
 
-#: ../src/rss-config-factory.c:2471 ../src/rss-main.ui.h:38
+#: ../src/rss-config-factory.c:2477 ../src/rss-main.ui.h:38
 msgid "Select import file"
 msgstr "Изаберите датотеку увоза"
 
-#: ../src/rss-config-factory.c:2545 ../src/rss-main.ui.h:41
+#: ../src/rss-config-factory.c:2551 ../src/rss-main.ui.h:41
 msgid "Select file to export"
 msgstr "Изаберите датотеку за извоз"
 
-#: ../src/rss-config-factory.c:2900
-msgid "Exporting feeds..."
-msgstr "Извозим доводе..."
+#: ../src/rss-config-factory.c:2905
+#| msgid "Exporting feeds..."
+msgid "Exporting feeds…"
+msgstr "Извозим доводе…"
 
-#: ../src/rss-config-factory.c:2964 ../src/rss-config-factory.c:2972
+#: ../src/rss-config-factory.c:2969 ../src/rss-config-factory.c:2977
 msgid "Error exporting feeds!"
 msgstr "Грешка извоза довода!"
 
-#: ../src/rss-config-factory.c:3053
-msgid "Importing cookies..."
-msgstr "Увозим колачиће..."
+#: ../src/rss-config-factory.c:3058
+#| msgid "Importing cookies..."
+msgid "Importing cookies…"
+msgstr "Увозим колачиће…"
 
-#: ../src/rss-config-factory.c:3132
+#: ../src/rss-config-factory.c:3137
 msgid "Select file to import"
 msgstr "Изаберите датотеку за увоз"
 
-#: ../src/rss-config-factory.c:3200
+#: ../src/rss-config-factory.c:3205
 msgid "Mozilla/Netscape Format"
 msgstr "Мозила/Нетскејп запис"
 
-#: ../src/rss-config-factory.c:3206
+#: ../src/rss-config-factory.c:3211
 msgid "Firefox new Format"
 msgstr "Фајерфоксов нови запис"
 
-#: ../src/rss-config-factory.c:3316 ../src/rss-config-factory.c:3321
+#: ../src/rss-config-factory.c:3321 ../src/rss-config-factory.c:3326
 msgid ""
 "No RSS feeds configured!\n"
 "Unable to export."
@@ -717,7 +744,7 @@ msgstr ""
 "Нема подешених РСС довода!\n"
 "Не могу да извезем."
 
-#: ../src/rss-config-factory.c:3484
+#: ../src/rss-config-factory.c:3489
 msgid ""
 "Note: In order to be able to use Mozilla (Firefox) or Apple Webkit \n"
 "as renders you need firefox or webkit devel package \n"
@@ -727,19 +754,19 @@ msgstr ""
 "као исцртаваче треба да инсталирате развојни пакет фајерфокса или вебкита \n"
 "а еволуција-рсс треба да буде поново преведена да би видела те пакете."
 
-#: ../src/rss-config-factory.c:4077 ../src/rss-main.ui.h:45
+#: ../src/rss-config-factory.c:4082 ../src/rss-main.ui.h:45
 msgid "Enabled"
 msgstr "Укључен"
 
-#: ../src/rss-config-factory.c:4104
+#: ../src/rss-config-factory.c:4109
 msgid "Feed Name"
 msgstr "Назив довода"
 
-#: ../src/rss-config-factory.c:4117
+#: ../src/rss-config-factory.c:4122
 msgid "Type"
 msgstr "Врста"
 
-#: ../src/rss-config-factory.c:4434 ../src/rss.h:62
+#: ../src/rss-config-factory.c:4439 ../src/rss.h:62
 msgid "News and Blogs"
 msgstr "Новости и блогови"
 
@@ -747,17 +774,18 @@ msgstr "Новости и блогови"
 msgid "Untitled channel"
 msgstr "Неименовани канал"
 
-#: ../src/rss-html-rendering.ui.h:1
-msgid "<b>Engine: </b>"
-msgstr "<b>Погон: </b>"
+#: ../src/rss-html-rendering.ui.h:1 ../src/rss-main.ui.h:12
+msgid "Engine: "
+msgstr "Погони: "
 
 #: ../src/rss-html-rendering.ui.h:2
 msgid "Use the same fonts as other applications"
 msgstr "Користи исте словне ликове као други програми"
 
 #: ../src/rss-html-rendering.ui.h:3
-msgid "<b>Minimum font size:</b>"
-msgstr "<b>Најмања величина словног лика:</b>"
+#| msgid "Minimum font size"
+msgid "Minimum font size:"
+msgstr "Најмања величина слова:"
 
 #: ../src/rss-html-rendering.ui.h:4
 msgid "Block pop-up windows"
@@ -784,16 +812,18 @@ msgid "Automatically resize images"
 msgstr "Сам промени величину слика"
 
 #: ../src/rss-html-rendering.ui.h:10
-msgid "<b>Network timeout:</b>"
-msgstr "<b>Време истека мреже:</b>"
+#| msgid "Network timeout"
+msgid "Network timeout:"
+msgstr "Временски истек мреже:"
 
 #: ../src/rss-html-rendering.ui.h:11
 msgid "seconds"
 msgstr "секунде"
 
 #: ../src/rss-html-rendering.ui.h:12 ../src/rss-main.ui.h:11
-msgid "<b>HTML Rendering</b>"
-msgstr "<b>ХТМЛ исцртавање</b>"
+#| msgid "<b>HTML Rendering</b>"
+msgid "HTML Rendering"
+msgstr "ХТМЛ исцртавање"
 
 #: ../src/rss-html-rendering.ui.h:13
 msgid "Show icon in notification area"
@@ -804,8 +834,9 @@ msgid "Show feed icon"
 msgstr "Прикажи иконицу довода"
 
 #: ../src/rss-html-rendering.ui.h:15
-msgid "<b>Article Notification</b>"
-msgstr "<b>Обавештења о чланку</b>"
+#| msgid "<b>Article Notification</b>"
+msgid "Article Notification"
+msgstr "Обавештења о чланку"
 
 #. to translators: label part of Check for new articles every X minutes" message
 #: ../src/rss-main.ui.h:2
@@ -844,10 +875,6 @@ msgstr "_Извези"
 msgid "Feeds"
 msgstr "Доводи"
 
-#: ../src/rss-main.ui.h:12
-msgid "Engine: "
-msgstr "Погони: "
-
 #: ../src/rss-main.ui.h:14
 msgid "Enable Plugins"
 msgstr "Укључи прикључке"
@@ -857,8 +884,8 @@ msgid "HTML"
 msgstr "ХТМЛ"
 
 #: ../src/rss-main.ui.h:16
-msgid "<span weight=\"bold\">Start up</span>"
-msgstr "<span weight=\"bold\">Покретање</span>"
+msgid "Start up"
+msgstr "Покретање"
 
 #: ../src/rss-main.ui.h:17
 msgid "Check for new articles every"
@@ -869,8 +896,9 @@ msgid "Check for new articles at startup"
 msgstr "Провери има ли нових чланака при покретању"
 
 #: ../src/rss-main.ui.h:19
-msgid "<span weight=\"bold\">Feed display</span>"
-msgstr "<span weight=\"bold\">Приказивање довода</span>"
+#| msgid "Feeds list"
+msgid "Feed display"
+msgstr "Приказ довода"
 
 #: ../src/rss-main.ui.h:20
 msgid "By default show article summary instead of webpage"
@@ -881,8 +909,9 @@ msgid "Scan for feed inside webpages"
 msgstr "Потражи довод унутар веб странице"
 
 #: ../src/rss-main.ui.h:22
-msgid "<span weight=\"bold\">Feed enclosures</span>"
-msgstr "<span weight=\"bold\">Прилози довода</span>"
+#| msgid "Download feed enclosures"
+msgid "Feed enclosures"
+msgstr "Угнежденост довода"
 
 #: ../src/rss-main.ui.h:23
 msgid "Show article comments"
@@ -945,16 +974,19 @@ msgid "Delete feed?"
 msgstr "Да обришем довод?"
 
 #: ../src/rss-main.ui.h:42
-msgid "<b>Feed Name: </b>"
-msgstr "<b>Назив довода: </b>"
+#| msgid "Feed Name"
+msgid "Feed Name: "
+msgstr "Назив довода: "
 
 #: ../src/rss-main.ui.h:43
-msgid "<b>Feed URL:</b>"
-msgstr "<b>Адреса довода:</b>"
+#| msgid "<b>Feed URL:</b>"
+msgid "Feed URL:"
+msgstr "Адреса довода:"
 
 #: ../src/rss-main.ui.h:44
-msgid "<b>Location:</b>"
-msgstr "<b>Место:</b>"
+#| msgid "<b>Location:</b>"
+msgid "Location:"
+msgstr "Место:"
 
 #: ../src/rss-main.ui.h:46
 msgid "Validate"
@@ -1013,8 +1045,30 @@ msgid "Authentication"
 msgstr "Потврђивање идентитета"
 
 #: ../src/rss-main.ui.h:60
-msgid "<b>Advanced options</b>"
-msgstr "<b>Напредне опције</b>"
+#| msgid "<b>Advanced options</b>"
+msgid "Advanced options"
+msgstr "Напредне опције"
+
+#~ msgid "<b>Engine: </b>"
+#~ msgstr "<b>Погон: </b>"
+
+#~ msgid "<b>Minimum font size:</b>"
+#~ msgstr "<b>Најмања величина словног лика:</b>"
+
+#~ msgid "<b>Network timeout:</b>"
+#~ msgstr "<b>Време истека мреже:</b>"
+
+#~ msgid "<span weight=\"bold\">Start up</span>"
+#~ msgstr "<span weight=\"bold\">Покретање</span>"
+
+#~ msgid "<span weight=\"bold\">Feed display</span>"
+#~ msgstr "<span weight=\"bold\">Приказивање довода</span>"
+
+#~ msgid "<span weight=\"bold\">Feed enclosures</span>"
+#~ msgstr "<span weight=\"bold\">Прилози довода</span>"
+
+#~ msgid "<b>Feed Name: </b>"
+#~ msgstr "<b>Назив довода: </b>"
 
 #~ msgid "Formatting error."
 #~ msgstr "Грешка обликовања."
